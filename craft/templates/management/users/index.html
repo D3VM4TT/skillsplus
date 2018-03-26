@@ -1,0 +1,40 @@
+{% extends "_layout" %}
+
+{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
+{% set lantraCompanies = craft.entries.section('companies').relatedTo(lantraScheme).ids() %}
+{% set lantraTeams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
+
+{% set metaTitle = "Management > Users" %}
+
+{% block content %}
+
+<section class="list">
+    <h2>Users</h2>
+    {% set users = craft.users.relatedTo(lantraTeams) %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr class="item">
+                <th>{{ user.id }}</th>
+                <th>{{ user.fullname }}</th>
+                <th>
+                    <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                    <a class="action" href="#" data-action="users/deleteUser" data-id="{{ user.id }}">delete</a>
+                </th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
+
+{% endblock %}

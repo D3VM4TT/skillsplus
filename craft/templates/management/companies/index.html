@@ -1,0 +1,41 @@
+{% extends "_layout" %}
+
+{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
+
+{% set metaTitle = "Management > Companies" %}
+
+{% block content %}
+
+<section class="list">
+    <h2>Companies</h2>
+    {% set companies = craft.entries.section('companies').relatedTo(lantraScheme) %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Parent</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for company in companies %}
+            {% set parent = company.companyParent.first %}
+                <tr class="item">
+                    <th>{{ company.id }}</th>
+                    <th>{{ company.title }}</th>
+                    <th>{{ parent.title|default('~ none ~') }}</th>
+                    <th>
+                        <a href="/management/companies/edit/{{ company.id }}">edit</a> |
+                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                    </th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="freetext-procedure"><a href="/management/companies/new">Create company</a></div>
+
+{% endblock %}

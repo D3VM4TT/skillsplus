@@ -1,0 +1,41 @@
+{% extends "_layout" %}
+
+{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
+{% set lantraCompanies = craft.entries.section('companies').relatedTo(lantraScheme).ids() %}
+
+{% set metaTitle = "Management > Teams" %}
+
+{% block content %}
+
+<section class="list">
+    <h2>Teams</h2>
+    {% set teams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company</th>
+                    <th>Name</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for team in teams %}
+                <tr class="item">
+                    <th>{{ team.id }}</th>
+                    <th>{{ team.teamCompany.first.title }}</th>
+                    <th>{{ team.title }}</th>
+                    <th>
+                        <a href="/management/teams/edit/{{ team.id }}">edit</a> |
+                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ team.id }}">delete</a>
+                    </th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="freetext-procedure"><a href="/management/teams/new">Create team</a></div>
+
+{% endblock %}

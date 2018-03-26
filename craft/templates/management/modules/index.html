@@ -1,0 +1,39 @@
+{% extends "_layout" %}
+
+{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
+{% set lantraRoles = craft.categories('roles').relatedTo(lantraScheme).ids() %}
+
+{% set metaTitle = "Management > Modules" %}
+
+{% block content %}
+
+<section class="list">
+    <h2>Modules</h2>
+    {% set modules = craft.entries.section('modules').relatedTo(lantraRoles) %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                <tr class="item">
+                    <th>{{ module.id }}</th>
+                    <th>{{ module.title }}</th>
+                    <th>
+                        <a href="/management/modules/edit/{{ module.id }}">edit</a> |
+                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                    </th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="freetext-procedure"><a href="/management/modules/new">Create module</a></div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "_layout" %}
+
+{% block content %}
+
+    <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+    <h2>{{ currentUser.fullName }}</h2>
+    <div class="text-muted">Stoneleigh, Coventry</div>
+
+    <div class="welcome-back"><p class="text-bold">Hello {{ currentUser.firstName }}, welcome back to the Lantra Administrator dashboard.</p></div>
+
+    {% include 'includes/_profile' %}
+    {% include 'includes/_cpd' %}
+
+    <section class="row">
+        <div class="col-4"><h2>E-Learning</h2></div>
+        <div class="col-4"><h2>My Webpage</h2></div>
+        <div class="col-4"><h2>CV Builder</h2></div>
+    </section>
+
+    {% include 'includes/_admin' %}
+    {% include 'includes/_reporting' %}
+
+{% endblock %}

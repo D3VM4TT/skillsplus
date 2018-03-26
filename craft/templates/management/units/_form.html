@@ -1,0 +1,30 @@
+{% extends "_layout" %}
+{% set metaTitle = "Management > Skills" %}
+
+{% block content %}
+    <div class="page-header"><h2>Create a Skill</h2></div>
+    <form role="form">
+        <div class="form-group-lantra float-label-control">
+            <label for="">Skill title:</label>
+            <input type="text" class="5000" placeholder="Skill title">
+        </div>
+        <div class="form-group">
+            <div class="form-subheader"><p>Skill type</p></div>
+            <select class="form-control" id="sel1">
+                <option>Mandatory</option>
+                <option>Relevant</option>
+            </select>
+            <br />
+            <br />
+        </div>
+        <div class="form-group-lantra">
+            <div class="form-subheader"><p>Allocate Skills units to this skill</p></div>
+            <div class="checkbox-option"><input type="checkbox" value=""><span>Skill Unit 1</span></div>
+            <div class="checkbox-option"><input type="checkbox" value=""><span>Skill Unit 2</span></div>
+            <div class="checkbox-option"><input type="checkbox" value=""><span>Skill Unit 3</span></div>
+        </div>
+    </form>
+    <br />
+    <br />
+    <div class="freetext-procedure"><a href="#">Create Skill</a></div>
+{% endblock %}
