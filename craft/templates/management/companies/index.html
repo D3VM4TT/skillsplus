@@ -1,14 +1,12 @@
 {% extends "_layout" %}
 
-{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
-
 {% set metaTitle = "Management > Companies" %}
 
 {% block content %}
 
 <section class="list">
     <h2>Companies</h2>
-    {% set companies = craft.entries.section('companies').relatedTo(lantraScheme) %}
+    {% set companies = craft.entries.section('companies') %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>

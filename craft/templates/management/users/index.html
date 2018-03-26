@@ -1,7 +1,6 @@
 {% extends "_layout" %}
 
-{% set lantraScheme = craft.entries.section('schemes').id(craft.config.schemeId) %}
-{% set lantraCompanies = craft.entries.section('companies').relatedTo(lantraScheme).ids() %}
+{% set lantraCompanies = craft.entries.section('companies').ids() %}
 {% set lantraTeams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
 
 {% set metaTitle = "Management > Users" %}
