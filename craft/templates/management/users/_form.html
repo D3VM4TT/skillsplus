@@ -31,11 +31,11 @@
             <ul>
                 <li>
                     <strong>Team manager:</strong>
-                    <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                    <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
                 </li>
                 <li>
                     <strong>Company manager:</strong>
-                    <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                    <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
                 </li>
             </ul>
         </div>
