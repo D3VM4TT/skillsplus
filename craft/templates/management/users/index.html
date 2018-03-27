@@ -1,15 +1,12 @@
 {% extends "_layout" %}
 
-{% set lantraCompanies = craft.entries.section('companies').ids() %}
-{% set lantraTeams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
-
 {% set metaTitle = "Management > Users" %}
 
 {% block content %}
 
 <section class="list">
     <h2>Users</h2>
-    {% set users = craft.users.relatedTo(lantraTeams) %}
+    {% set users = craft.users.group('users, teamManagers, companyManagers') %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>

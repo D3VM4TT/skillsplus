@@ -3,8 +3,9 @@
 {% set metaTitle = "Management > Users" %}
 
 {% set userId = craft.request.getSegment(4) %}
-{% if userId and account is not defined %}
+{% if account is not defined and userId %}
     {% set account = craft.users.id(userId).first %}
+    {% if not account %}{% exit 404 %}{% endif %}
 {% endif %}
 
 {% block content %}
@@ -23,28 +24,27 @@
 
 <form method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="users/saveUser">
-    <input type="hidden" name="redirect" value="management/users">
-    <input type="hidden" name="enabled" value="1">
-    <input type="hidden" name="userId" value="{{ account.id|default('') }}">
-
-    <input type="hidden" name="groups" value="" />
-    <div class="form-group">
-        <label for="groups">Groups:</label>
-        {% set groups = craft.userGroups.getAllGroups() %}
-        <select multiple data-relation="groups" id="groups" >
-            {% for group in groups %}
-            <option value="{{ group.id }}"
-                    {% if account is defined and account.isInGroup(group.handle) %} selected="selected{% endif %}">{{ group.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+    <input type="hidden" name="action" value="lantra/users/saveUser">
+    <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
+    <div class="form-group-lantra float-label-control">
+        <label for="teamManagers">Roles:</label>
+            <ul>
+                <li>
+                    <strong>Team manager:</strong>
+                    <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                </li>
+                <li>
+                    <strong>Company manager:</strong>
+                    <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                </li>
+            </ul>
+        </div>
     <div class="form-group-lantra float-label-control">
         <label for="firstName">First name:</label>
         <input id="firstName" name="firstName" class="5000" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
-        <label for="lastName">First name:</label>
+        <label for="lastName">Last name:</label>
         <input id="lastName" name="lastName" class="5000" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
