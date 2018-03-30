@@ -50,14 +50,14 @@ class LantraVariable
             $user = craft()->userSession->getUser();
         }
 
-        if ( ! $user->userTeam) {
+        if ( ! $user || ! $user->userTeam) {
             return null;
         }
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = 1;
-        $criteria->relatedTo = $user->userTeam;
+        $criteria->relatedTo = $user->getContent()->userTeam;
 
         return $criteria->first();
     }
