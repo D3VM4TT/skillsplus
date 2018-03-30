@@ -12,7 +12,9 @@
         </li>
     </ul>
 
+    {% if craft.lantra.canManage() %}
     <ul class="nav nav-pills flex-column">
+        {% if currentUser.can('editEntries:3') %}
         <li class="nav-item">
             <a href="#CompanyManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Company Management</a>
             <ul class="collapse list-unstyled" id="CompanyManagementSubMenu">
@@ -20,6 +22,8 @@
 
             </ul>
         </li>
+        {% endif %}
+        {% if currentUser.can('editEntries:5') %}
         <li class="nav-item">
             <a href="#TeamManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Team Management</a>
             <ul class="collapse list-unstyled" id="TeamManagementSubMenu">
@@ -27,6 +31,8 @@
 
             </ul>
         </li>
+        {% endif %}
+        {% if currentUser.can('editUsers') %}
         <li class="nav-item">
             <a href="#UserManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">User Management</a>
             <ul class="collapse list-unstyled" id="UserManagementSubMenu">
@@ -35,17 +41,25 @@
 
             </ul>
         </li>
+        {% endif %}
+        {% if currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
         <li class="nav-item">
             <a href="#LearningManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Learning Management</a>
             <ul class="collapse list-unstyled" id="LearningManagement">
-                <li class="nav-item"><a href="/management/modules" class="nav-link">Create / Edit modules</a></li>
-                <li class="nav-item"><a href="/management/units" class="nav-link">Create / Edit units</a></li>
+                {% if currentUser.can('editEntries:6') %}
+                    <li class="nav-item"><a href="/management/modules" class="nav-link">Create / Edit modules</a></li>
+                {% endif %}
+                {% if currentUser.can('editEntries:7') %}
+                    <li class="nav-item"><a href="/management/units" class="nav-link">Create / Edit units</a></li>
+                {% endif %}
             </ul>
         </li>
+        {% endif %}
         <li class="nav-item">
             <a class="nav-link" href="/reporting">Reporting</a>
         </li>
     </ul>
+    {% endif %}
 
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">

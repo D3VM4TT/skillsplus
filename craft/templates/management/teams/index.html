@@ -1,3 +1,5 @@
+{% requirePermission 'editEntries:5' %}
+
 {% extends "_layout" %}
 
 {% set lantraCompanies = craft.entries.section('companies').ids() %}
