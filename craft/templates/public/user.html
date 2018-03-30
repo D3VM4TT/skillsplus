@@ -1,0 +1,10 @@
+{% set userId = craft.request.getSegment(3) %}
+{% set userProfile = craft.users.id(userId).first %}
+{% if not userProfile %}{% exit 404 %}{% endif %}
+{% extends "_layout" %}
+{% set metaTitle = "User Profile" %}
+
+{% block content %}
+    <h1>User Profile</h1>
+    <h2>Name: {{ userProfile.getFullName() }}</h2>
+{% endblock %}

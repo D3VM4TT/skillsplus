@@ -1,4 +1,4 @@
-{% if craft.request.firstSegment != "login" %}{% requireLogin %}{% endif %}
+{% if craft.request.firstSegment != "login" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
 <!DOCTYPE HTML>
 <html class="no-js" lang="">
 <head>
@@ -23,9 +23,8 @@
 </head>
 <body>
 	<div class="container-fluid">
-
 		<div class="row">
-			{% if currentUser %}
+			{% if currentUser and craft.request.firstSegment != "public" %}
 				{% include 'includes/_nav' %}
 			{% endif %}
 			<main class="col-sm-9 ml-sm-auto col-md-10 pt-3 main-content" role="main">
