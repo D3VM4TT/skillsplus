@@ -50,7 +50,7 @@ class LantraVariable
             $user = craft()->userSession->getUser();
         }
 
-        if ( ! $user || ! $user->userTeam) {
+        if ( ! $user || ! $user->getContent()->userTeam) {
             return null;
         }
 
