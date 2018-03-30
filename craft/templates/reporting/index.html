@@ -1,0 +1,13 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Reporting" %}
+
+{% block content %}
+
+<section class="list">
+    <h1>Reporting</h1>
+</section>
+
+{% endblock %}
