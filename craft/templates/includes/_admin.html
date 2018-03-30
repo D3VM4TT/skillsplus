@@ -1,43 +1,52 @@
 <h2>Administrator tools</h2>
-<section class="row text-center placeholders">
-    <div class="col-6 col-sm-3 placeholder">
-        <img src="/assets/img/img-company-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>Company Management</h4>
-        <div class="text-muted">Edit and create companies</div>
-    </div>
-    <div class="col-6 col-sm-3 placeholder">
-        <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>Team Management</h4>
-        <div class="text-muted">Edit and create teams</div>
-    </div>
-    <div class="col-6 col-sm-3 placeholder">
-        <img src="/assets/img/img-user-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>User Management</h4>
-        <div class="text-muted">Edit and create users</div>
-    </div>
-    <div class="col-6 col-sm-3 placeholder">
-    </div>
-</section>
+{% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}
+    <section class="row text-center placeholders">
+        {% if currentUser.can('editEntries:3') %}
+        <div class="col-8 col-sm-3 placeholder">
+            <img src="/assets/img/img-company-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+            <h4>Company Management</h4>
+            <div class="text-muted"><a href="/management/companies">Edit and create companies</a></div>
+        </div>
+        {% endif %}
+        {% if currentUser.can('editEntries:5') %}
+        <div class="col-8 col-sm-3 placeholder">
+            <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+            <h4>Team Management</h4>
+            <div class="text-muted"><a href="/management/teams">Edit and create teams</a></div>
+        </div>
+        {% endif %}
+        {% if currentUser.can('editUsers') %}
+        <div class="col-8 col-sm-3 placeholder">
+            <img src="/assets/img/img-user-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+            <h4>User Management</h4>
+            <div class="text-muted"><a href="/management/users">Edit and create users</a></div>
+        </div>
+        {% endif %}
+    </section>
+{% endif %}
 
+{% if currentUser.can('editCategories:1') or currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
 <section class="row text-center placeholders">
-    <div class="col-6 col-sm-3 placeholder">
+    {% if currentUser.can('editCategories(1)') %}
+    <div class="col-8 col-sm-3 placeholder">
         <img src="/assets/img/img-job-role-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
         <h4>Job Role Management</h4>
-        <div class="text-muted">Edit and create Job Roles</div>
+        <div class="text-muted"><a href="/management/roles">Edit and create Job Roles</div>
     </div>
-    <div class="col-6 col-sm-3 placeholder">
+    {% endif %}
+    {% if currentUser.can('editEntries:6') %}
+    <div class="col-8 col-sm-3 placeholder">
         <img src="/assets/img/img-skills-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>Skills Management</h4>
-        <div class="text-muted">Edit and create skills</div>
+        <h4>Modules Management</h4>
+        <div class="text-muted"><a href="/management/modules">Edit and create modules</a></div>
     </div>
-    <div class="col-6 col-sm-3 placeholder">
+    {% endif %}
+    {% if currentUser.can('editEntries:7') %}
+    <div class="col-8 col-sm-3 placeholder">
         <img src="/assets/img/img-qualification-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>Qualifications Management</h4>
-        <div class="text-muted">Edit and create qualifications</div>
+        <h4>Units Management</h4>
+        <div class="text-muted"><a href="/management/units">Edit and create units</a></div>
     </div>
-    <div class="col-6 col-sm-3 placeholder">
-        <img src="/assets/img/img-learning-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h4>E-Learning Management</h4>
-        <div class="text-muted">Edit and create E-Learning courses</div>
-    </div>
+    {% endif %}
 </section>
+{% endif %}
