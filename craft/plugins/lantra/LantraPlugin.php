@@ -6,7 +6,7 @@ class LantraPlugin extends BasePlugin
 {
     function getName()
     {
-        return Craft::t('Lantra Tools');
+        return Craft::t('Lantra');
     }
 
     function getVersion()
@@ -26,6 +26,19 @@ class LantraPlugin extends BasePlugin
 
     public function init()
     {
+        parent::init();
 
+        craft()->on('elements.onBeforePerformAction ', function(Event $event) {
+            $action = $event->params['action']->classHandle;
+            if ($action == 'Delete' && ! craft()->request->isCpRequest()){
+                $event->performAction = false;
+            }
+        });
+
+        craft()->on('users.onBeforeDeleteUser', function(Event $event) {
+            if ( ! craft()->request->isCpRequest()){
+                $event->performAction = false;
+            }
+        });
     }
 }

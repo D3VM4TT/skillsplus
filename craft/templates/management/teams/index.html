@@ -2,7 +2,7 @@
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
 {% else %}
-    {% set teams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
+    {% set teams = craft.entries.section('teams') %}
 {% endif %}
 
 {% requirePermission 'editEntries:5' %}
@@ -33,7 +33,7 @@
                     <th>{{ team.title }}</th>
                     <th>
                         <a href="/management/teams/edit/{{ team.id }}">edit</a> |
-                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ team.id }}">delete</a>
+                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
                     </th>
                 </tr>
             {% endfor %}

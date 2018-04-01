@@ -28,7 +28,7 @@
                     <th>{{ parent.title|default('~ none ~') }}</th>
                     <th>
                         <a href="/management/companies/edit/{{ company.id }}">edit</a> |
-                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
                     </th>
                 </tr>
             {% endfor %}

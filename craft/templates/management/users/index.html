@@ -35,7 +35,7 @@
                 <th>{{ user.fullname }}</th>
                 <th>
                     <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                    <a class="action" href="#" data-action="users/deleteUser" data-id="{{ user.id }}">delete</a>
+                    <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
                 </th>
             </tr>
             {% endfor %}

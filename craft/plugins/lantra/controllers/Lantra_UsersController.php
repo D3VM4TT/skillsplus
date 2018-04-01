@@ -2,9 +2,9 @@
 
 namespace Craft;
 
-class Lantra_UsersController extends BaseController {
+class Lantra_UsersController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionSaveUser');
+    public $allowAnonymous = array('actionSaveUser', 'actionDeleteUser');
 
     /**
      * Saves user from the management form
@@ -26,12 +26,10 @@ class Lantra_UsersController extends BaseController {
 
             $user = craft()->users->getUserById($userId);
 
-            if ( ! $user)
-            {
+            if (!$user) {
                 throw new Exception(Craft::t('No user exists with the ID “{id}”.', array('id' => $userId)));
             }
-        }
-        // new user
+        } // new user
         else {
 
             craft()->userSession->requirePermission('registerUsers');
@@ -70,11 +68,34 @@ class Lantra_UsersController extends BaseController {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
 
             $this->returnSuccess($user->id, $redirect);
-        }
-        else {
+        } else {
 
             $this->returnError($user->getAllErrors(), array('account' => $user));
         }
+    }
+
+    /**
+     * Deletes users from the front end
+     *
+     * @throws Exception
+     */
+    public function actionDeleteUser()
+    {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+
+        $userId = craft()->request->getPost('userId');
+        if (FALSE == $user = craft()->users->getUserById($userId)) {
+            $this->_returnError('Invalid user ID.');
+        }
+
+        $user->suspended = true;
+
+        if ( ! craft()->users->saveUser($user)) {
+            $this->_returnError('Error updating user record.');
+        }
+
+        $this->_returnMessage('User has been removed.');
     }
 
     /**
