@@ -1,8 +1,13 @@
+{% if currentUser.isInGroup('companyManagers') %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
+    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
+{% else %}
+    {% set teams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
+{% endif %}
+
 {% requirePermission 'editEntries:5' %}
 
 {% extends "_layout" %}
-
-{% set lantraCompanies = craft.entries.section('companies').ids() %}
 
 {% set metaTitle = "Management > Teams" %}
 
@@ -10,7 +15,6 @@
 
 <section class="list">
     <h2>Teams</h2>
-    {% set teams = craft.entries.section('teams').relatedTo(lantraCompanies) %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
