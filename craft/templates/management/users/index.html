@@ -1,7 +1,7 @@
 {% if currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set users = craft.users.group('users, teamManagers').relatedTo({ sourceElement: entry, field: "entriesFieldHandle" }) %}
+    {% set users = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id) %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
     {% set users = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id) %}
