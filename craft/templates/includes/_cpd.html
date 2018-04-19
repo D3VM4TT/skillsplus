@@ -15,6 +15,7 @@
                 <div id="exTab">
                     <div class="tab-content clearfix">
                     {% for module in modules %}
+                        {% set totalPoints = 0 %}
                         <div class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="t{{ loop.index }}">
                             <div class="tab-pane-sub-title"><h4>{{ module.title }}</h4></div>
                             <div class="table-responsive">
@@ -38,32 +39,47 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <div id="u{{ unitGroup.id }}" class="collapse">
+                                                <div id="u{{ unitGroup.id }}" class="">
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
-                                                            <tr>
-                                                                <th style="width: 30%">Unit title</th>
-                                                                <th>Source</th>
-                                                                <th>Unit value</th>
-                                                                <th>Endorsed status</th>
-                                                                <th>Date endorsed</th>
-                                                                <th>PDP</th>
-                                                                <th>Comments</th>
-                                                                <th>Upload a file</th>
-                                                            </tr>
+                                                                <tr>
+                                                                    <th style="width: 30%">Unit title</th>
+                                                                    <th>Type</th>
+                                                                    <th>Value</th>
+                                                                    <th>Status</th>
+                                                                    <th>Date endorsed</th>
+                                                                    <th>Comments</th>
+                                                                </tr>
                                                             </thead>
                                                             <tbody>
                                                             {% for unitEntry in unitGroupEntries %}
                                                                 <tr>
-                                                                    <td><a class="test" href="#" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a></td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
-                                                                    <td>-</td>
+                                                                    <td><a href="unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a></td>
+                                                                    <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
+                                                                    <td>{{ unitEntry.unitValue }}</td>
+                                                                    {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
+                                                                    {% if resultEntry %}
+                                                                    {% if (unitEntry.unitType == 'evidence' and resultEntry.resultStatus == 'endorsed') or
+                                                                          (unitEntry.unitType == 'elearning' and resultEntry.resultPassed) %}
+                                                                        {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                                                    {% endif %}
+                                                                        <td>
+                                                                            {% if unitEntry.unitType == 'evidence' %}
+                                                                                {{ resultEntry.resultStatus|ucwords }}
+                                                                            {% elseif resultEntry.resultPassed %}
+                                                                                Passed
+                                                                            {% else %}
+                                                                                Failed
+                                                                            {% endif %}
+                                                                        </td>
+                                                                        <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date('d/m/y') }}{% endif %}</td>
+                                                                        <td>{{ resultEntry.resultComments }}</td>
+                                                                    {% else %}
+                                                                        <td>Incomplete</td>
+                                                                        <td>-</td>
+                                                                        <td>-</td>
+                                                                    {% endif %}
                                                                 </tr>
                                                             {% endfor %}
                                                             </tbody>
@@ -75,6 +91,9 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="tab-pane-sub-title">
+                                <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
                             </div>
                         </div>
                     {% endfor %}

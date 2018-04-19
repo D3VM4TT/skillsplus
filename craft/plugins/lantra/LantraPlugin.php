@@ -6,6 +6,7 @@ class LantraPlugin extends BasePlugin
 {
     public $sectionIdResults = 10;
     public $sectionIdAttempts = 12;
+    public $sectionIdQualifications = 13;
 
     function getName()
     {
@@ -46,12 +47,16 @@ class LantraPlugin extends BasePlugin
             }
         });
 
-        // Mark attempt and create result
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
+            // Mark attempt and create result
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
                 $this->markAttempt($entry);
                 $this->saveResult($entry);
+            }
+            // Check result for new qualifications
+            if ($entry->sectionId == $this->sectionIdResults) {
+                $this->checkResult($entry);
             }
         });
     }
@@ -87,9 +92,9 @@ class LantraPlugin extends BasePlugin
         }
     }
 
-    function saveResult($entry) {
+    function saveResult($attemptEntry) {
 
-        $attemptEntry = craft()->entries->getEntryById($entry->id);
+        $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
         $user = craft()->userSession->getUser();
 
@@ -122,5 +127,122 @@ class LantraPlugin extends BasePlugin
         if ( ! craft()->entries->saveEntry($resultEntry)) {
 
         }
+    }
+
+    function checkResult($resultEntry) {
+        // the related unit id
+        $unitId = $resultEntry->resultUnit->first()->id;
+        // get the user job roles
+        $user = craft()->userSession->getUser();
+        $jobRoles = $user->userRole;
+        if ( ! count($jobRoles)) {
+            return;
+        }
+        // get all modules related to their job roles
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'modules';
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $jobRoles];
+        $moduleEntries = $criteria->find();
+
+        // search for the relevant module (this unit may be part of multiple modules)
+        foreach ($moduleEntries as $moduleEntry) {
+            $unitIds = $this->getModuleUnitIds($moduleEntry);
+            if (in_array($unitId, $unitIds)) {
+                $this->checkModuleQualification($moduleEntry);
+            }
+        }
+    }
+
+    /**
+     * Check whether to award a qualification
+     *
+     * @param $moduleEntry
+     */
+    function checkModuleQualification($moduleEntry) {
+
+        $resultEntries = $this->getModuleUserResults($moduleEntry);
+        $points = 0;
+
+        foreach ($resultEntries as $resultEntry) {
+            $unitEntry = $resultEntry->resultUnit->first();
+            if ($unitEntry->unitType == 'evidence' && $resultEntry->resultStatus == 'endorsed' || $unitEntry->unitType == 'elearning' && $resultEntry->resultPassed) {
+                $points += $unitEntry->unitValue;
+            }
+        }
+
+        if ($points >= $moduleEntry->moduleCompletedValue) {
+            $this->saveQualification($moduleEntry);
+        }
+    }
+
+    function saveQualification($moduleEntry) {
+        $user = craft()->userSession->getUser();
+
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'qualifications';
+        $criteria->limit = 1;
+        $criteria->authorId = $user->id;
+        $criteria->relatedTo = ['targetElement' => $moduleEntry];
+
+        if ($criteria->count()) {
+            return;
+        }
+
+        $qualificationEntry = new EntryModel();
+
+        $qualificationEntry->sectionId = $this->sectionIdQualifications;
+        $qualificationEntry->enabled = true;
+        $qualificationEntry->authorId = $user->id;
+        $qualificationEntry->setContentFromPost([
+            'qualificationModule' => array($moduleEntry->id),
+        ]);
+
+        // set a qualification expiry
+        if ($moduleEntry->moduleExpiryDays) {
+            $qualificationEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+        }
+
+        if ( ! craft()->entries->saveEntry($qualificationEntry)) {
+
+        }
+    }
+
+    /**
+     * Get all the module unit IDs
+     *
+     * @param $moduleEntry
+     */
+    function getModuleUnitIds($moduleEntry) {
+        $unitIds = [];
+        foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
+            foreach ($unitGroup->unitEntries as $unitEntry) {
+                $unitIds[] = $unitEntry->id;
+            }
+        }
+
+        return $unitIds;
+    }
+
+    /**
+     * Get module user results grouped by unit ID
+     *
+     * @param $moduleEntry
+     * @return array
+     */
+    function getModuleUserResults($moduleEntry) {
+        $unitIds = $this->getModuleUnitIds($moduleEntry);
+
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $unitIds];
+        $resultEntries = $criteria->find();
+
+        $return = [];
+        foreach ($resultEntries as $resultEntry) {
+            $return[$resultEntry->resultUnit->first()->id] = $resultEntry;
+        }
+        return $return;
     }
 }
