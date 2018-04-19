@@ -15,7 +15,7 @@
                 <div id="exTab">
                     <div class="tab-content clearfix">
                     {% for module in modules %}
-                        <div class="tab-pane active" id="t{{ loop.index }}">
+                        <div class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="t{{ loop.index }}">
                             <div class="tab-pane-sub-title"><h4>{{ module.title }}</h4></div>
                             <div class="table-responsive">
                                 <table class="table table-striped">
