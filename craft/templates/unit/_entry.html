@@ -3,14 +3,17 @@
 {% if entry is not defined %}
     {% set entry = craft.entries.id(craft.request.getSegment(2)).first() %}
 {% endif %}
+{% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(entry).first() %}
 {% set metaTitle = "Unit " ~ entry.id %}
 
 {% block content %}
 
 <section class="list">
     <h2>Unit {{ entry.id }}</h2>
-    {% if craft.request.getSegment(3) == 'saved' %}
-        <p>TEST SAVED</p>
+    {% if resultEntry|length %}
+        <p>You have already completed this unit.</p>
+    {% elseif craft.request.getSegment(3) == 'saved' %}
+        <p>RESULT SAVED</p>
     {% elseif craft.request.getSegment(3) == 'test' %}
 
         {% if entry is defined %}
@@ -54,7 +57,30 @@
 
     {% else %}
         <p>UNIT CONTENT</p>
-        <p><a href="/unit/{{ entry.id }}/test">Complete Test</a></p>
+        {% if entry.unitType == 'evidence' %}
+
+            {% if entry is defined %}
+            {{ ui.errorList(entry.getAllErrors()) }}
+            {% endif %}
+
+            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+                {{ getCsrfInput() }}
+                <input type="hidden" name="action" value="entries/saveEntry">
+                <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
+                <input type="hidden" name="sectionId" value="10">
+                <input type="hidden" name="enabled" value="1">
+                <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
+                <div class="form-group-lantra">
+                    <input type="file" name="fields[resultEvidence][]" multiple>
+                </div>
+                <div class="freetext-procedure">
+                    <button type="submit">Submit Evidence</button>
+                </div>
+            </form>
+
+        {% else %}
+            <p><a href="/unit/{{ entry.id }}/test">Complete Test</a></p>
+        {% endif %}
     {% endif %}
 </section>
 {% endblock %}
