@@ -6,7 +6,6 @@ class LantraPlugin extends BasePlugin
 {
     public $sectionIdResults = 10;
     public $sectionIdAttempts = 12;
-    public $sectionIdQualifications = 13;
 
     function getName()
     {
@@ -92,7 +91,7 @@ class LantraPlugin extends BasePlugin
         }
     }
 
-    function saveResult($attemptEntry) {
+    function saveUnitResult($attemptEntry) {
 
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
@@ -113,6 +112,7 @@ class LantraPlugin extends BasePlugin
         $resultEntry = new EntryModel();
 
         $resultEntry->sectionId = $this->sectionIdResults;
+        $resultEntry->type = 'unitResult';
         $resultEntry->enabled = true;
         $resultEntry->authorId = $user->id;
         $resultEntry->setContentFromPost([
@@ -129,7 +129,7 @@ class LantraPlugin extends BasePlugin
         }
     }
 
-    function checkResult($resultEntry) {
+    function checkUnitResult($resultEntry) {
         // the related unit id
         $unitId = $resultEntry->resultUnit->first()->id;
         // get the user job roles
@@ -149,19 +149,19 @@ class LantraPlugin extends BasePlugin
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
             if (in_array($unitId, $unitIds)) {
-                $this->checkModuleQualification($moduleEntry);
+                $this->checkModuleResult($moduleEntry);
             }
         }
     }
 
     /**
-     * Check whether to award a qualification
+     * Check whether to award the module result
      *
      * @param $moduleEntry
      */
-    function checkModuleQualification($moduleEntry) {
+    function checkModuleResult($moduleEntry) {
 
-        $resultEntries = $this->getModuleUserResults($moduleEntry);
+        $resultEntries = $this->getModuleUnitResults($moduleEntry);
         $points = 0;
 
         foreach ($resultEntries as $resultEntry) {
@@ -172,15 +172,16 @@ class LantraPlugin extends BasePlugin
         }
 
         if ($points >= $moduleEntry->moduleCompletedValue) {
-            $this->saveQualification($moduleEntry);
+            $this->saveModuleResult($moduleEntry);
         }
     }
 
-    function saveQualification($moduleEntry) {
+    function saveModuleResult($moduleEntry) {
         $user = craft()->userSession->getUser();
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'qualifications';
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
         $criteria->limit = 1;
         $criteria->authorId = $user->id;
         $criteria->relatedTo = ['targetElement' => $moduleEntry];
@@ -189,21 +190,22 @@ class LantraPlugin extends BasePlugin
             return;
         }
 
-        $qualificationEntry = new EntryModel();
+        $resultEntry = new EntryModel();
 
-        $qualificationEntry->sectionId = $this->sectionIdQualifications;
-        $qualificationEntry->enabled = true;
-        $qualificationEntry->authorId = $user->id;
-        $qualificationEntry->setContentFromPost([
-            'qualificationModule' => array($moduleEntry->id),
+        $resultEntry->sectionId = $this->sectionIdResults;
+        $resultEntry->type = 'moduleResult';
+        $resultEntry->enabled = true;
+        $resultEntry->authorId = $user->id;
+        $resultEntry->setContentFromPost([
+            'resultModule' => array($moduleEntry->id),
         ]);
 
         // set a qualification expiry
         if ($moduleEntry->moduleExpiryDays) {
-            $qualificationEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+            $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
         }
 
-        if ( ! craft()->entries->saveEntry($qualificationEntry)) {
+        if ( ! craft()->entries->saveEntry($resultEntry)) {
 
         }
     }
@@ -230,11 +232,12 @@ class LantraPlugin extends BasePlugin
      * @param $moduleEntry
      * @return array
      */
-    function getModuleUserResults($moduleEntry) {
+    function getModuleUnitResults($moduleEntry) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
+        $criteria->type = 'unitResult';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $unitIds];
         $resultEntries = $criteria->find();
