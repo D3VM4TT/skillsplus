@@ -9,14 +9,13 @@
             {% else %}
                 <ul class="nav nav-pills">
                 {% for module in modules %}
-                    <li class="{% if loop.index == 1 %}active{% endif %}"><a  href="#t{{ loop.index }}" data-toggle="tab">Module {{ loop.index }}</a></li>
+                    <li class="{% if loop.index == 1 %}active{% endif %}"><a  href="#t{{ loop.index }}" data-toggle="tab">Module {{ module.title }}</a></li>
                 {% endfor %}
                 </ul>
                 <div id="exTab">
                     <div class="tab-content clearfix">
                     {% for module in modules %}
                         {% set totalPoints = 0 %}
-                        {% set moduleResultEntry = craft.entries.section('moduleResults').relatedTo(module).first() %}
                         <div class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="t{{ loop.index }}">
                             <div class="tab-pane-sub-title"><h4>{{ module.title }}</h4></div>
                             <div class="table-responsive">
@@ -87,8 +86,16 @@
                                 </table>
                             </div>
                             <div class="tab-pane-sub-title">
-                                <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
-
+                                <h4>
+                                    Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}
+                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).first() %}
+                                {% if moduleResultEntry %}
+                                    Completed: {{ moduleResultEntry.postDate|date('d/m/y') }}
+                                    {% if moduleResultEntry.expiryDate %}
+                                        Expires: {{ moduleResultEntry.expiryDate|date('d/m/y') }}
+                                    {% endif %}
+                                {% endif %}
+                                </h4>
                             </div>
                         </div>
                     {% endfor %}
