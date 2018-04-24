@@ -67,6 +67,7 @@
                 {{ getCsrfInput() }}
                 <input type="hidden" name="action" value="entries/saveEntry">
                 <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
+                <input type="hidden" name="typeId" value="10">
                 <input type="hidden" name="sectionId" value="10">
                 <input type="hidden" name="enabled" value="1">
                 <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">

@@ -16,6 +16,7 @@
                     <div class="tab-content clearfix">
                     {% for module in modules %}
                         {% set totalPoints = 0 %}
+                        {% set moduleResultEntry = craft.entries.section('moduleResults').relatedTo(module).first() %}
                         <div class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="t{{ loop.index }}">
                             <div class="tab-pane-sub-title"><h4>{{ module.title }}</h4></div>
                             <div class="table-responsive">
@@ -60,18 +61,11 @@
                                                                     <td>{{ unitEntry.unitValue }}</td>
                                                                     {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
                                                                     {% if resultEntry %}
-                                                                    {% if (unitEntry.unitType == 'evidence' and resultEntry.resultStatus == 'endorsed') or
-                                                                          (unitEntry.unitType == 'elearning' and resultEntry.resultPassed) %}
+                                                                    {% if (resultEntry.resultStatus == 'endorsed') %}
                                                                         {% set totalPoints = totalPoints + unitEntry.unitValue %}
                                                                     {% endif %}
                                                                         <td>
-                                                                            {% if unitEntry.unitType == 'evidence' %}
-                                                                                {{ resultEntry.resultStatus|ucwords }}
-                                                                            {% elseif resultEntry.resultPassed %}
-                                                                                Passed
-                                                                            {% else %}
-                                                                                Failed
-                                                                            {% endif %}
+                                                                            {{ resultEntry.resultStatus|ucwords }}
                                                                         </td>
                                                                         <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date('d/m/y') }}{% endif %}</td>
                                                                         <td>{{ resultEntry.resultComments }}</td>
@@ -94,6 +88,7 @@
                             </div>
                             <div class="tab-pane-sub-title">
                                 <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
+
                             </div>
                         </div>
                     {% endfor %}

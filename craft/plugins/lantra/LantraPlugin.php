@@ -6,6 +6,8 @@ class LantraPlugin extends BasePlugin
 {
     public $sectionIdResults = 10;
     public $sectionIdAttempts = 12;
+    public $typeIdUnitResult = 10;
+    public $typeIdModuleResult = 14;
 
     function getName()
     {
@@ -48,14 +50,14 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // Mark attempt and create result
+            // Mark unit attempt and create result entry
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
                 $this->markAttempt($entry);
-                $this->saveResult($entry);
+                $this->saveUnitResult($entry);
             }
-            // Check result for new qualifications
-            if ($entry->sectionId == $this->sectionIdResults) {
-                $this->checkResult($entry);
+            // Check unit result for new module result
+            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                $this->checkUnitResult($entry);
             }
         });
     }
@@ -112,17 +114,21 @@ class LantraPlugin extends BasePlugin
         $resultEntry = new EntryModel();
 
         $resultEntry->sectionId = $this->sectionIdResults;
-        $resultEntry->type = 'unitResult';
+        $resultEntry->typeId = $this->typeIdUnitResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $user->id;
         $resultEntry->setContentFromPost([
-            'resultEndorsedDate' => time(),
-            'resultStatus' => 'endorsed',
+            'resultStatus' => $passed ? 'endorsed' : 'failed',
             'resultUnit' => array($unitEntry->id),
             'resultAttempt' => array($attemptEntry->id),
-            'resultScore' => $score,
-            'resultPassed' => $passed
+            'resultScore' => $score
         ]);
+
+        if ($passed) {
+            $resultEntry->setContentFromPost([
+                'resultEndorsedDate' => time()
+            ]);
+        }
 
         if ( ! craft()->entries->saveEntry($resultEntry)) {
 
@@ -131,7 +137,10 @@ class LantraPlugin extends BasePlugin
 
     function checkUnitResult($resultEntry) {
         // the related unit id
-        $unitId = $resultEntry->resultUnit->first()->id;
+        $resultUnitEntry = $resultEntry->resultUnit->first();
+        if ( ! $resultUnitEntry) {
+            return;
+        };
         // get the user job roles
         $user = craft()->userSession->getUser();
         $jobRoles = $user->userRole;
@@ -144,12 +153,11 @@ class LantraPlugin extends BasePlugin
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoles];
         $moduleEntries = $criteria->find();
-
         // search for the relevant module (this unit may be part of multiple modules)
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
-            if (in_array($unitId, $unitIds)) {
-                $this->checkModuleResult($moduleEntry);
+            if (in_array($resultUnitEntry->id, $unitIds)) {
+                $this->checkModuleResult($moduleEntry, $user->id);
             }
         }
     }
@@ -158,32 +166,37 @@ class LantraPlugin extends BasePlugin
      * Check whether to award the module result
      *
      * @param $moduleEntry
+     * @param $userId
      */
-    function checkModuleResult($moduleEntry) {
-
-        $resultEntries = $this->getModuleUnitResults($moduleEntry);
+    function checkModuleResult($moduleEntry, $userId) {
+        $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+        if ( ! count($resultEntries)) {
+            return null;
+        }
         $points = 0;
-
         foreach ($resultEntries as $resultEntry) {
             $unitEntry = $resultEntry->resultUnit->first();
-            if ($unitEntry->unitType == 'evidence' && $resultEntry->resultStatus == 'endorsed' || $unitEntry->unitType == 'elearning' && $resultEntry->resultPassed) {
+            if ($resultEntry->resultStatus == 'endorsed') {
                 $points += $unitEntry->unitValue;
             }
         }
-
         if ($points >= $moduleEntry->moduleCompletedValue) {
             $this->saveModuleResult($moduleEntry);
         }
     }
 
-    function saveModuleResult($moduleEntry) {
-        $user = craft()->userSession->getUser();
-
+    /**
+     * Save a module result
+     *
+     * @param $moduleEntry
+     * @param $userId
+     */
+    function saveModuleResult($moduleEntry, $userId) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
-        $criteria->authorId = $user->id;
+        $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleEntry];
 
         if ($criteria->count()) {
@@ -193,9 +206,9 @@ class LantraPlugin extends BasePlugin
         $resultEntry = new EntryModel();
 
         $resultEntry->sectionId = $this->sectionIdResults;
-        $resultEntry->type = 'moduleResult';
+        $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
-        $resultEntry->authorId = $user->id;
+        $resultEntry->authorId = $userId;
         $resultEntry->setContentFromPost([
             'resultModule' => array($moduleEntry->id),
         ]);
@@ -222,7 +235,6 @@ class LantraPlugin extends BasePlugin
                 $unitIds[] = $unitEntry->id;
             }
         }
-
         return $unitIds;
     }
 
@@ -232,12 +244,13 @@ class LantraPlugin extends BasePlugin
      * @param $moduleEntry
      * @return array
      */
-    function getModuleUnitResults($moduleEntry) {
+    function getModuleUnitResults($moduleEntry, $userId) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $unitIds];
         $resultEntries = $criteria->find();
