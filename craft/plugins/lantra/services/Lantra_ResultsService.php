@@ -8,25 +8,19 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private $typeIdModuleResult = 14;
 
     function saveAttemptResult($attemptEntry) {
-
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
         $user = craft()->userSession->getUser();
-
         $total = count($attemptEntry->attemptAnswers);
         $correct = 0;
-
         foreach ($attemptEntry->attemptAnswers as $answerBlock) {
             if ($answerBlock->correct) {
                 $correct++;
             }
         }
-
         $score = round($correct / $total * 100);
         $passed = $score >= $unitEntry->getContent()->testPassPercent;
-
         $resultEntry = new EntryModel();
-
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdUnitResult;
         $resultEntry->enabled = true;
@@ -37,16 +31,15 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'resultAttempt' => array($attemptEntry->id),
             'resultScore' => $score
         ]);
-
         if ($passed) {
             $resultEntry->setContentFromPost([
                 'resultEndorsedDate' => time()
             ]);
         }
-
         if ( ! craft()->entries->saveEntry($resultEntry)) {
-
+            return;
         }
+        return;
     }
 
     /**
@@ -77,6 +70,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $this->checkModuleResult($moduleEntry, $user->id);
             }
         }
+        return;
     }
 
     /**
@@ -118,13 +112,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleEntry];
-
         if ($criteria->count()) {
             return;
         }
-
         $resultEntry = new EntryModel();
-
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
@@ -132,16 +123,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultEntry->setContentFromPost([
             'resultModule' => array($moduleEntry->id),
         ]);
-
-        // set a qualification expiry
         if ($moduleEntry->moduleExpiryDays) {
             $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
         }
-
         if ( ! craft()->entries->saveEntry($resultEntry)) {
             return;
         }
-
         return;
     }
 
@@ -170,7 +157,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     function getModuleUnitResults($moduleEntry, $userId) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
-
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
@@ -178,7 +164,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $unitIds];
         $resultEntries = $criteria->find();
-
         $return = [];
         foreach ($resultEntries as $resultEntry) {
             $return[$resultEntry->resultUnit->first()->id] = $resultEntry;
