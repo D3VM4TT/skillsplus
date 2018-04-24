@@ -9,7 +9,7 @@ class LantraVariable
             $user = craft()->userSession->getUser();
         }
 
-        if ($user->admin or $user->isInGroup('schemeManagers') or $user->isInGroup('companyManagers') or $user->isInGroup('teamManagers')) {
+        if ($user->admin or $user->isInGroup('companyManagers') or $user->isInGroup('teamManagers')) {
             return true;
         }
 
@@ -27,10 +27,6 @@ class LantraVariable
         }
         else {
             $type = 'User';
-
-            if ($user->isInGroup('schemeManagers')) {
-                $type .= ', Scheme Manager';
-            }
 
             if ($user->isInGroup('companyManagers')) {
                 $type .= ', Company Manager';
