@@ -118,4 +118,35 @@ class LantraVariable
         $criteria->fixedOrder = true;
         return $criteria->find();
     }
+
+    /**
+     * Return all result entries requiring endorsement for a manager
+     *
+     * @param null $userId
+     * @return mixed
+     * @throws Exception
+     */
+    public function managerEndorsementEntries($userId = null) {
+
+        if ( ! is_null($userId)) {
+            $user = craft()->users->getUserById($userId);
+        }
+        else {
+            $user = craft()->userSession->getUser();
+        }
+        if ( ! $user) {
+            return null;
+        }
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->resultStatus = 'pending';
+        $criteria->authorId = $subordinateIds;
+
+        return $criteria->find();
+    }
 }
