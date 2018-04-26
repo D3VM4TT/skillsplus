@@ -40,7 +40,6 @@ class LantraVariable
                 $type .= ', Team Manager';
             }
         }
-
         return $type;
     }
 
@@ -56,16 +55,13 @@ class LantraVariable
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-
         if ( ! $user || ! $user->getContent()->userTeam) {
             return null;
         }
-
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = 1;
         $criteria->relatedTo = $user->getContent()->userTeam;
-
         return $criteria->first();
     }
 
@@ -83,19 +79,15 @@ class LantraVariable
         else {
             $user = craft()->userSession->getUser();
         }
-
         $companyIds = craft()->lantra_users->getCompanyManagerCompanyIds($user, $includeChildren);
-
         if ( ! count($companyIds)) {
             return null;
         }
-
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = null;
         $criteria->id = $companyIds;
         $criteria->fixedOrder = true;
-
         return $criteria->find();
     }
 
@@ -115,19 +107,15 @@ class LantraVariable
         else {
             $user = craft()->userSession->getUser();
         }
-
         $teamIds = craft()->lantra_users->getManagerTeamIds($user, $includeHierarchy);
-
         if ( ! count($teamIds)) {
             return null;
         }
-
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
         $criteria->limit = null;
         $criteria->id = $teamIds;
         $criteria->fixedOrder = true;
-
         return $criteria->find();
     }
 }
