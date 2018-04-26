@@ -16,11 +16,34 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $authorFullName = $author->getFullName();
         $company = craft()->lantra_users->userCompany($author);
         $subject = "Module ["  . $module->id . "] " . $authorFullName;
-        $body = "User: " . $authorFullName  . "\n\n";
-        $body .= "Company: " . $company->title . "\n\n";
-        $body .= "Module Completed: " . $module->title . "\n\n";
+        $message = "User: " . $authorFullName  . "\n\n";
+        $message .= "Company: " . $company->title . "\n\n";
+        $message .= "Module Completed: " . $module->title . "\n\n";
         // send the emails to managers
-        $this->notifyManagers($entry->getAuthor(), $subject, $body);
+        $this->notifyManagers($entry->getAuthor(), $subject, $message);
+    }
+    
+    /**
+     * Send a message to a user
+     *
+     * @param $toEmail
+     * @param $subject
+     * @param $message
+     * @return mixed
+     * @throws Exception
+     */
+    function notify($toEmail, $subject, $message) {
+
+        $email = new EmailModel();
+        $email->subject = $subject;
+        $email->body = $message;
+        $email->toEmail = $toEmail;
+        try {
+            return craft()->email->sendEmail($email);
+        } catch (\Exception $e) {
+            Craft::log('notify() failed: ' . $e->getMessage(),LogLevel::Warning, false, 'notify', 'lantra');
+            return false;
+        }
     }
 
     /**
@@ -30,27 +53,17 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param $subject
      * @param $body
      * @return bool
+     * @throws Exception
      */
-    function notifyManagers($user, $subject, $body) {
+    function notifyManagers($user, $subject, $message) {
 
         $managers = craft()->lantra_users->getTeamMangers($user);
-        $email = new EmailModel();
-        $email->subject = $subject;
-        $email->body = $body;
 
         foreach ($managers as $manager) {
-            try {
-                // in dev mode, all notifications sent to system email
-                // @todo $toEmail = $manager->email;
-                $toEmail = craft()->systemSettings->getSetting('email', 'emailAddress');
-                $email->body = $body . "\n\n\nNotification sent to: " . $manager->email;
-                $email->toEmail = $toEmail;
-                // send the message
-                craft()->email->sendEmail($email);
-            } catch (\Exception $e) {
-                Craft::log('notifyManagers() failed: ' . $e->getMessage(),LogLevel::Warning, false, 'notify', 'lantra');
-                return false;
-            }
+            // in dev mode, all notifications sent to system email
+            // @todo $this->notify($manager->email, $subject, $message);
+            $toEmail = craft()->systemSettings->getSetting('email', 'emailAddress');
+            $this->notify($toEmail, $subject, $message . "\n\n\nNotification sent to: " . $manager->email);
         }
     }
 }
