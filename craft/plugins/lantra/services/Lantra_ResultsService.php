@@ -66,7 +66,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         // get the user job roles
         $user = craft()->userSession->getUser();
         $jobRoles = $user->userRole;
-        if ( ! count($jobRoles)) {
+        if ( ! $jobRoles->total()) {
             return;
         }
         // get all modules related to their job roles
