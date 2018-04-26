@@ -34,6 +34,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
      */
     function notify($toEmail, $subject, $message) {
 
+        // in dev mode, all notifications sent to system email
+        $message .= "\n\n\nNotification sent to: " . $toEmail;
+        $toEmail = craft()->systemSettings->getSetting('email', 'emailAddress');
+
         $email = new EmailModel();
         $email->subject = $subject;
         $email->body = $message;
@@ -84,14 +88,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @throws Exception
      */
     function notifyManagers($user, $subject, $message) {
-
         $managers = craft()->lantra_users->getTeamMangers($user);
-
         foreach ($managers as $manager) {
-            // in dev mode, all notifications sent to system email
-            // @todo $this->notify($manager->email, $subject, $message);
-            $toEmail = craft()->systemSettings->getSetting('email', 'emailAddress');
-            $this->notify($toEmail, $subject, $message . "\n\n\nNotification sent to: " . $manager->email);
+            $this->notify($manager->email, $subject, $message);
         }
     }
 }
