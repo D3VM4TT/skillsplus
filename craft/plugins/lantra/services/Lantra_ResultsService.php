@@ -13,7 +13,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      * @param $attemptEntry
      * @return null
-     * @throws \Exception
+     * @throws Exception
      */
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
