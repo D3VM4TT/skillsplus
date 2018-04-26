@@ -180,7 +180,7 @@ class LantraVariable
      * @throws Exception
      */
     public function managerExpiringResults($userId = null, $count = false, $futureDays = null) {
-        $result = craft()->lantra_results->getManagerExpiringResults($userId);
-        return ($count) ? $result->count() : $result->find();
+        $criteria = craft()->lantra_results->getManagerExpiringResults($userId);
+        return ($count) ? $criteria->count() : $criteria->find();
     }
 }
