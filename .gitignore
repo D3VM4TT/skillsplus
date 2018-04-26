@@ -5,6 +5,8 @@ public_html/assets/js/*
 public_html/store/*
 public_html/dev
 
+assets/*
+
 # Craft CMS #
 ###################
 craft/storage/userphotos/*
