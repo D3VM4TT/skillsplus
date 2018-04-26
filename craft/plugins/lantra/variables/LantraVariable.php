@@ -123,10 +123,11 @@ class LantraVariable
      * Return all result entries requiring endorsement for a manager
      *
      * @param null $userId
+     * @param bool $count
      * @return mixed
      * @throws Exception
      */
-    public function managerEndorsementEntries($userId = null) {
+    public function managerEndorsementEntries($userId = null, $count = false) {
 
         if ( ! is_null($userId)) {
             $user = craft()->users->getUserById($userId);
@@ -147,6 +148,6 @@ class LantraVariable
         $criteria->resultStatus = 'pending';
         $criteria->authorId = $subordinateIds;
 
-        return $criteria->find();
+        return ($count) ? $criteria->count() : $criteria->find();
     }
 }
