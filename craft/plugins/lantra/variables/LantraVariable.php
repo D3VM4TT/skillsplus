@@ -120,6 +120,33 @@ class LantraVariable
     }
 
     /**
+     * Return all subordinate users for a manager
+     *
+     * @param null $userId
+     * @param bool $includeHierarchy
+     * @return mixed
+     * @throws Exception
+     */
+    public function managerSubordinates($userId = null, $includeHierarchy = false) {
+
+        if ( ! is_null($userId)) {
+            $user = craft()->users->getUserById($userId);
+        }
+        else {
+            $user = craft()->userSession->getUser();
+        }
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, $includeHierarchy);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = null;
+        $criteria->id = $subordinateIds;
+        $criteria->fixedOrder = true;
+        return $criteria->find();
+    }
+
+    /**
      * Return all result entries requiring endorsement for a manager
      *
      * @param null $userId
@@ -150,6 +177,38 @@ class LantraVariable
         $criteria->resultStatus = 'pending';
         $criteria->authorId = $subordinateIds;
         $criteria->order = 'postDate desc';
+        return ($count) ? $criteria->count() : $criteria->find();
+    }
+
+    /**
+     * Return all expiring module result entries
+     *
+     * @param null $userId
+     * @param bool $count
+     * @return mixed
+     * @throws Exception
+     */
+    public function managerExpiringResults($userId = null, $count = false) {
+        if ( ! is_null($userId)) {
+            $user = craft()->users->getUserById($userId);
+        }
+        else {
+            $user = craft()->userSession->getUser();
+        }
+        if ( ! $user) {
+            return null;
+        }
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->expiryDate = ':notempty:';
+        $criteria->limit = null;
+        $criteria->authorId = $subordinateIds;
+        $criteria->order = 'expiryDate asc';
         return ($count) ? $criteria->count() : $criteria->find();
     }
 }

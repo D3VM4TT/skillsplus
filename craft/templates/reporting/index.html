@@ -1,13 +1,59 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
-
 {% extends "_layout" %}
-
+{% import "_macros" as ui %}
 {% set metaTitle = "Reporting" %}
 
 {% block content %}
-
 <section class="list">
     <h1>Reporting</h1>
+    <h3>Subordinates</h3>
+    {% set subordinates = craft.lantra.managerSubordinates(null, true) %}
+    {% if subordinates|length %}
+        <table width="100%">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Company</th>
+                <th>Team</th>
+            </thead>
+            <tbody>
+            {% for user in subordinates %}
+                {% set userCompany = craft.lantra.userCompany(user) %}
+            <tr>
+                <td>{{ user.getFullName() }}</td>
+                <td>{{ craft.lantra.userType(user) }}</td>
+                <td>{{ userCompany.title|default('') }}</td>
+                <td>{{ user.userTeam.first.title }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h4>You do not have any subordinates.</h4>
+    {% endif %}
+    <h3>Expiring Results</h3>
+    {% set expiringResultEntries = craft.lantra.managerExpiringResults() %}
+    {% if expiringResultEntries|length %}
+        <table width="100%">
+            <thead>
+            <tr>
+                <th>Author</th>
+                <th>Module</th>
+                <th>Expiry Date</th>
+            </thead>
+            <tbody>
+                {% for entry in expiringResultEntries %}
+                <tr>
+                    <td>{{ entry.author.getFullName() }}</td>
+                    <td>Module {{ entry.resultModule.first.id }} {{ entry.resultModule.first.title }}</td>
+                    <td>{{ entry.expiryDate|date('d/m/y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h4>None of your subordinates have expiring results.</h4>
+    {% endif %}
 </section>
-
 {% endblock %}
