@@ -52,15 +52,7 @@ class LantraVariable
      */
     public function userCompany($user = null)
     {
-        if (is_null($user)) {
-            $user = craft()->userSession->getUser();
-        }
-        $team = $user->userTeam;
-        if ( ! $user || ! $team) {
-            return null;
-        }
-        $company = $team->first()->teamCompany;
-        return $company ? $company->first() : null;
+        return craft()->lantra_users->userCompany($user);
     }
 
     /**

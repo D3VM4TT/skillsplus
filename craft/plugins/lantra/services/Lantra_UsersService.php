@@ -23,6 +23,26 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Return user company (team company)
+     *
+     * @param null $user
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    public function userCompany($user = null)
+    {
+        if (is_null($user)) {
+            $user = craft()->userSession->getUser();
+        }
+        $team = $user->userTeam;
+        if ( ! $user || ! $team) {
+            return null;
+        }
+        $company = $team->first()->teamCompany;
+        return $company ? $company->first() : null;
+    }
+
+    /**
      * Return all company ids (recursive)
      *
      * @param $entryId
@@ -196,5 +216,27 @@ class Lantra_UsersService extends BaseApplicationComponent
         );
 
         return $criteria->ids();
+    }
+
+    /**
+     * Returns all managers for a user
+     *
+     * @param $user
+     * @param $includeHierarchy
+     * @return array
+     * @throws Exception
+     */
+    function getTeamMangers(UserModel $user)
+    {
+        $return = [];
+        $team = $user->userTeam->first();
+        if ( ! $team) {
+            return $return;
+        }
+        $return[] = $team->teamPrimaryManager->first();
+        foreach ($team->teamSecondaryManagers as $manager) {
+            $return[] = $manager;
+        }
+        return $return;
     }
 }
