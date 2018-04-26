@@ -3,10 +3,18 @@ namespace Craft;
 
 class Lantra_ResultsService extends BaseApplicationComponent
 {
+    ## @todo move ids to config?
     private $sectionIdResults = 10;
     private $typeIdUnitResult = 10;
     private $typeIdModuleResult = 14;
 
+    /**
+     * Save a test attempt
+     *
+     * @param $attemptEntry
+     * @return null
+     * @throws \Exception
+     */
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
@@ -43,7 +51,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether a unit result has completed a module
+     *
      * @param $resultEntry
+     * @return null
+     * @throws null
      */
     function checkUnitResult($resultEntry) {
         // the related unit id
@@ -79,6 +91,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $moduleEntry
      * @param $userId
      * @return null
+     * @throws Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
         $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
@@ -104,6 +117,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $moduleEntry
      * @param $userId
      * @return null
+     * @throws Exception
      */
     function saveModuleResult($moduleEntry, $userId) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
@@ -154,6 +168,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $moduleEntry
      * @param $userId
      * @return array
+     * @throws Exception
      */
     function getModuleUnitResults($moduleEntry, $userId) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
