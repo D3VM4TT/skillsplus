@@ -4,7 +4,7 @@ namespace Craft;
 class LantraVariable
 {
     /**
-     * Check user is teamManager or companyManager
+     * Check whether this user can manage teams or companies
      *
      * @param null $user
      * @return bool
