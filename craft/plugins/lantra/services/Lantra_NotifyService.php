@@ -22,7 +22,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         // send the emails to managers
         $this->notifyManagers($entry->getAuthor(), $subject, $message);
     }
-    
+
     /**
      * Send a message to a user
      *
@@ -44,6 +44,34 @@ class Lantra_NotifyService extends BaseApplicationComponent
             Craft::log('notify() failed: ' . $e->getMessage(),LogLevel::Warning, false, 'notify', 'lantra');
             return false;
         }
+    }
+
+    /**
+     * Notify managers of expiring results
+     *
+     * @param $manager
+     * @param int $futureDays
+     * @return null
+     * @throws Exception
+     */
+    function notifyExpiringResults(UserModel $manager, $futureDays = 7) {
+
+        $results = craft()->lantra_results->getManagerExpiringResults($manager->id, $futureDays)->find();
+        if (count($results)) {
+            return null;
+        }
+
+        $subject = "Expiring Results";
+        $message = "The following modules results expire in the next " . $futureDays . " days:\n\n";
+        foreach($results as $result) {
+            $message .= "User: " . $result->author  . "\n\n";
+            $message .= "Module: " . $result->resultModule->first()->title  . "\n\n";
+            $message .= "Expires: " . date('d/m/y', $result->expiryDate) . "\n\n";
+            $message .= "\n\n";
+        }
+
+        // send the emails to managers
+        $this->notify($manager->email, $subject, $message);
     }
 
     /**
