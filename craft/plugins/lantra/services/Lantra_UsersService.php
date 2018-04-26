@@ -65,7 +65,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     function getCompanyTeamIds($companyId)
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
+        $criteria->section = 'teams';
         $criteria->relatedTo = array(
             'targetElement' => $companyId,
             'field' => 'teamCompany'
