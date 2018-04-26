@@ -21,13 +21,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $user = craft()->userSession->getUser();
         $total = count($attemptEntry->attemptAnswers);
         $correct = 0;
+        // loop through answers and count correct
         foreach ($attemptEntry->attemptAnswers as $answerBlock) {
             if ($answerBlock->correct) {
                 $correct++;
             }
         }
+        // calculate percentage
         $score = round($correct / $total * 100);
+        // passed if greater than unit setting
         $passed = $score >= $unitEntry->getContent()->testPassPercent;
+        // create result entry
         $resultEntry = new EntryModel();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdUnitResult;
