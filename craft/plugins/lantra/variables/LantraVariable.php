@@ -55,14 +55,12 @@ class LantraVariable
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-        if ( ! $user || ! $user->getContent()->userTeam) {
+        $team = $user->userTeam;
+        if ( ! $user || ! $team) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
-        $criteria->limit = 1;
-        $criteria->relatedTo = $user->getContent()->userTeam;
-        return $criteria->first();
+        $company = $team->first()->teamCompany;
+        return $company ? $company->first() : null;
     }
 
     /**
@@ -142,7 +140,7 @@ class LantraVariable
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->limit = null;
         $criteria->id = $subordinateIds;
-        $criteria->fixedOrder = true;
+        $criteria->order = 'lastName asc';
         return $criteria->find();
     }
 
