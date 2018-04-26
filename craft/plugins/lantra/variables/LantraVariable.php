@@ -145,9 +145,11 @@ class LantraVariable
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
+        $criteria->resultEvidence = ':notempty:';
+        $criteria->limit = null;
         $criteria->resultStatus = 'pending';
         $criteria->authorId = $subordinateIds;
-
+        $criteria->order = 'postDate desc';
         return ($count) ? $criteria->count() : $criteria->find();
     }
 }

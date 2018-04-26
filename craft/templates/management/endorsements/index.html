@@ -1,0 +1,44 @@
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Endorsements" %}
+{% set entries = craft.lantra.managerEndorsementEntries() %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>Endorsements</h2>
+    </div>
+    {% if entries|length %}
+        <form method="post" role="form" accept-charset="UTF-8">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="lantra/entries/endorseEvidence">
+            <input type="hidden" value="" name="entryIds[]" />
+            <div class="form-group-lantra">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Date</th>
+                            <th>Author</th>
+                            <th>Evidence</th>
+                            <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
+                        <td>{{ entry.postDate|date('d/m/y') }}</td>
+                        <td>{{ entry.author.getFullName }}</td>
+                        <td><a target="_blank" href="/internal/{{ entry.resultEvidence.first.id }}">{{ entry.resultEvidence.first.filename }}</a></td>
+                        <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <div class="freetext-procedure"><button type="submit">Endorse Selected</button></div>
+        </form>
+    {% else %}
+        <h4>You have no more evidence to endorse.</h4>
+    {% endif %}
+{% endblock %}
