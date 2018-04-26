@@ -1,3 +1,4 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Endorsements" %}
@@ -16,18 +17,18 @@
                 <table width="100%">
                     <thead>
                         <tr>
+                            <th>Author</th>
                             <th>Unit</th>
                             <th>Date</th>
-                            <th>Author</th>
                             <th>Evidence</th>
                             <th>&nbsp;</th>
                     </thead>
                     <tbody>
                     {% for entry in entries %}
                     <tr>
+                        <td>{{ entry.author.getFullName }}</td>
                         <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
                         <td>{{ entry.postDate|date('d/m/y') }}</td>
-                        <td>{{ entry.author.getFullName }}</td>
                         <td><a target="_blank" href="/internal/{{ entry.resultEvidence.first.id }}">{{ entry.resultEvidence.first.filename }}</a></td>
                         <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
                     </tr>
