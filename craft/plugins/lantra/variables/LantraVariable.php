@@ -175,30 +175,12 @@ class LantraVariable
      *
      * @param null $userId
      * @param bool $count
+     * @package null $futureDays
      * @return mixed
      * @throws Exception
      */
-    public function managerExpiringResults($userId = null, $count = false) {
-        if ( ! is_null($userId)) {
-            $user = craft()->users->getUserById($userId);
-        }
-        else {
-            $user = craft()->userSession->getUser();
-        }
-        if ( ! $user) {
-            return null;
-        }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'results';
-        $criteria->type = 'moduleResult';
-        $criteria->expiryDate = ':notempty:';
-        $criteria->limit = null;
-        $criteria->authorId = $subordinateIds;
-        $criteria->order = 'expiryDate asc';
-        return ($count) ? $criteria->count() : $criteria->find();
+    public function managerExpiringResults($userId = null, $count = false, $futureDays = null) {
+        $result = craft()->lantra_results->getManagerExpiringResults($userId);
+        return ($count) ? $result->count() : $result->find();
     }
 }

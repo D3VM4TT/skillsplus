@@ -198,4 +198,37 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         return $return;
     }
+
+    /**
+     * Return all expiring module result entries
+     *
+     * @param null $userId
+     * @param null $futureDays
+     * @return mixed
+     * @throws Exception
+     */
+    public function getManagerExpiringResults($userId = null, $futureDays = null) {
+        if ( ! is_null($userId)) {
+            $user = craft()->users->getUserById($userId);
+        }
+        else {
+            $user = craft()->userSession->getUser();
+        }
+        if ( ! $user) {
+            return null;
+        }
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->expiryDate = $futureDays ? '<'. (time() + ($futureDays*86400)) : ':notempty:';
+        $criteria->limit = null;
+        $criteria->authorId = $subordinateIds;
+        $criteria->order = 'expiryDate asc';
+
+        return $criteria;
+    }
 }
