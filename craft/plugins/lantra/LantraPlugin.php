@@ -63,4 +63,11 @@ class LantraPlugin extends BasePlugin
             }
         });
     }
+
+    public function registerSiteRoutes()
+    {
+        return array(
+            'lantra/cron' => array('action' => 'lantra/cron/runCron'),
+        );
+    }
 }
