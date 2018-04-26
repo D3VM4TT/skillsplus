@@ -3,7 +3,7 @@ namespace Craft;
 
 class Lantra_ResultsService extends BaseApplicationComponent
 {
-    ## @todo move ids to config?
+    // @todo move ids to config?
     private $sectionIdResults = 10;
     private $typeIdUnitResult = 10;
     private $typeIdModuleResult = 14;
@@ -44,6 +44,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 'resultEndorsedDate' => time()
             ]);
         }
+        // @todo error reporting?
         if ( ! craft()->entries->saveEntry($resultEntry)) {
             return;
         }
@@ -105,6 +106,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $points += $unitEntry->unitValue;
             }
         }
+        // @todo error reporting?
         if ($points >= $moduleEntry->moduleCompletedValue) {
             $this->saveModuleResult($moduleEntry, $userId);
         }
@@ -120,6 +122,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws Exception
      */
     function saveModuleResult($moduleEntry, $userId) {
+        // check a module result doesn't already exist
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
@@ -137,9 +140,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultEntry->setContentFromPost([
             'resultModule' => array($moduleEntry->id),
         ]);
+        // add expiry date based on module setting
         if ($moduleEntry->moduleExpiryDays) {
             $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
         }
+        // @todo error reporting?
         if ( ! craft()->entries->saveEntry($resultEntry)) {
             return;
         }
