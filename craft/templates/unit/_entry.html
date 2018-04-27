@@ -4,6 +4,7 @@
     {% set entry = craft.entries.id(craft.request.getSegment(2)).first() %}
 {% endif %}
 {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(entry).first() %}
+{% set attemptTotal = resultEntry.resultAttempts|length %}
 {% set metaTitle = "Unit " ~ entry.id %}
 
 {% block content %}
@@ -19,46 +20,47 @@
     {% endif %}
 
     {% if craft.request.getSegment(3) == 'test' %}
-
-        {% if entry is defined %}
-        {{ ui.errorList(entry.getAllErrors()) }}
+        {% if entry.testMaxAttempts and attemptTotal >= entry.testMaxAttempts %}
+            <p>YOU HAVE NO MORE ATTEMPTS LEFT</p>
+        {% else %}
+            {% if entry is defined %}
+                {{ ui.errorList(entry.getAllErrors()) }}
+            {% endif %}
+            <form method="post" role="form" accept-charset="UTF-8">
+                {{ getCsrfInput() }}
+                <input type="hidden" name="action" value="entries/saveEntry">
+                <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
+                <input type="hidden" name="sectionId" value="12">
+                <input type="hidden" name="enabled" value="1">
+                <input type="hidden" name="fields[attemptUnit][]" value="{{ entry.id }}">
+                {% for question in entry.testQuestions %}
+                {% set questionNumber = loop.index  %}
+                {% set questionId = 'new_' ~ (questionNumber - 1)  %}
+                <div class="form-group-lantra float-label-control">
+                    <label for="question_{{ loop.index }}"><em>{{ questionNumber }} {{ question.question }}</em></label>
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
+                    {% if question.type == "trueFalse" %}
+                    <ul class="choices">
+                        <li>TRUE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"></li>
+                        <li>FALSE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"></li>
+                    </ul>
+                    {% elseif question.type == "choices" %}
+                    <ul>
+                        {% for choice in question.answers %}
+                        <li>{{ choice.answer }}<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"></li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <br />
+                <div class="freetext-procedure"><button type="submit">Submit Answers</button></div>
+            </form>
         {% endif %}
-
-        <form method="post" role="form" accept-charset="UTF-8">
-            {{ getCsrfInput() }}
-            <input type="hidden" name="action" value="entries/saveEntry">
-            <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
-            <input type="hidden" name="sectionId" value="12">
-            <input type="hidden" name="enabled" value="1">
-            <input type="hidden" name="fields[attemptUnit][]" value="{{ entry.id }}">
-            {% for question in entry.testQuestions %}
-            {% set questionNumber = loop.index  %}
-            {% set questionId = 'new_' ~ (questionNumber - 1)  %}
-            <div class="form-group-lantra float-label-control">
-                <label for="question_{{ loop.index }}"><em>{{ questionNumber }} {{ question.question }}</em></label>
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
-                {% if question.type == "trueFalse" %}
-                <ul class="choices">
-                    <li>TRUE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"></li>
-                    <li>FALSE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"></li>
-                </ul>
-                {% elseif question.type == "choices" %}
-                <ul>
-                    {% for choice in question.answers %}
-                    <li>{{ choice.answer }}<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"></li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
-                {% endif %}
-            </div>
-            {% endfor %}
-            <br />
-            <div class="freetext-procedure"><button type="submit">Submit Answers</button></div>
-        </form>
-
     {% else %}
         <p>UNIT CONTENT</p>
         {% if entry.unitType == 'evidence' %}
