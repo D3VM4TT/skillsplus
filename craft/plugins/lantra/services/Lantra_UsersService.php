@@ -93,6 +93,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             'targetElement' => $companyId,
             'field' => 'teamCompany'
         );
+        $criteria->order = 'title';
         return $criteria->ids();
     }
 
