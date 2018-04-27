@@ -1,14 +1,14 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 {% extends "_layout" %}
 {% import "_macros" as ui %}
-{% set metaTitle = "Reporting > Results" %}
-{% set filterDays = craft.request.getParam('days')|default('all') %}
+{% set metaTitle = "Reporting > Expiring Results" %}
+{% set filterDays = craft.request.getParam('days')|default(30) %}
 
 {% block content %}
 <section class="list">
     <h1>Expiring Results</h1>
     {% set expiringResultEntries = craft.lantra.managerExpiringResults(currentUser.id, filterDays) %}
-    {% include 'reporting/_filter' with{filterDays:filterDays} %}
+    {% include 'reporting/_filter' with{filterDays:filterDays, expiring:true} %}
     <table width="100%">
         {% if expiringResultEntries|length %}
             <thead>
