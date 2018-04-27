@@ -181,6 +181,9 @@ class LantraVariable
      */
     public function managerExpiringResults($userId = null, $count = false, $futureDays = null) {
         $criteria = craft()->lantra_results->getManagerExpiringResults($userId);
+        if ( ! $criteria) {
+            return null;
+        }
         return ($count) ? $criteria->count() : $criteria->find();
     }
 }
