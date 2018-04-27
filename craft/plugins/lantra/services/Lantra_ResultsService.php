@@ -203,32 +203,58 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * Return all expiring module result entries
      *
      * @param null $userId
-     * @param null $futureDays
+     * @param null $days
      * @return mixed
      * @throws Exception
      */
-    public function getManagerExpiringResults($userId = null, $futureDays = null) {
+    public function getManagerExpiringResults($userId = null, $days = null) {
+        return $this->getManagerResults($userId, true, $days);
+    }
+
+    /**
+     * Return all recent module result entries
+     *
+     * @param null $userId
+     * @param null $days
+     * @return mixed
+     * @throws Exception
+     */
+    public function getManagerRecentResults($userId = null, $days = null) {
+        return $this->getManagerResults($userId, false, $days);
+    }
+
+    /**
+     * Return user module results for a manager
+     *
+     * @param null $userId
+     * @param bool $expiring
+     * @param int $days
+     * @return mixed
+     * @throws Exception
+     */
+    private function getManagerResults($userId = null, $expiring = true, $days = 7) {
         if ( ! is_null($userId)) {
-            $user = craft()->users->getUserById($userId);
+            $manager = craft()->users->getUserById($userId);
         }
         else {
-            $user = craft()->userSession->getUser();
+            $manager = craft()->userSession->getUser();
         }
-        if ( ! $user) {
+        if ( ! $manager) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
-        $criteria->expiryDate = $futureDays ? '<'. (time() + ($futureDays*86400)) : ':notempty:';
+        if ($expiring) {
+            $criteria->expiryDate = $days ? '<'. (time() + ($days*86400)) : ':notempty:';
+            $criteria->order = 'expiryDate asc';
+        }
+        else {
+            $criteria->postDate = '>' . time() - ($days*86400);
+        }
         $criteria->limit = null;
         $criteria->authorId = $subordinateIds;
-        $criteria->order = 'expiryDate asc';
-
         return $criteria;
     }
 }
