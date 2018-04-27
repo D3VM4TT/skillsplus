@@ -13,7 +13,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      * @param $attemptEntry
      * @return null
-     * @throws Exception
+     * @throws Mixed
      */
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
@@ -69,7 +69,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             return;
         };
         // get the user job roles
-        $user = craft()->userSession->getUser();
+        $user = $resultEntry->author;
         $jobRoles = $user->userRole;
         if ( ! $jobRoles->total()) {
             return;
@@ -133,6 +133,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleEntry];
+        // @todo error reporting?
         if ($criteria->count()) {
             return;
         }
