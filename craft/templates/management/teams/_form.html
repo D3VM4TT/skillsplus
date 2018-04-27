@@ -34,9 +34,13 @@
         <label for="title">Team name:</label>
         <input id="title" name="fields[teamName]" class="5000" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
     </div>
+    {% if user.isInGroup('companyManagers') %}
+        {% set companyEntries = craft.lantra.managerCompanies() %}
+    {% else %}
+        {% set companyEntries = craft.entries.section('companies') %}
+    {% endif %}
     <div class="form-group-lantra float-label-control">
         <label for="teamCompany">Team company:</label>
-        {% set companyEntries = craft.entries.section('companies') %}
         <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default('') }}" id="teamCompany" >
             <option value="">~ none selected ~</option>
             {% for companyEntry in companyEntries %}
