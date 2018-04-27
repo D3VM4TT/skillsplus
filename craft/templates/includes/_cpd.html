@@ -1,23 +1,24 @@
 {% if currentUser.userRole.total %}
     <section id="my-skills-quals" class="section-dashboard">
-        <h2>My CPD</h2>
         {% for role in currentUser.userRole %}
             <h2>Job Role: {{ role.title }}</h2>
             {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
                 <p>No modules have been assigned yet for this role.</p>
             {% else %}
-                <ul class="nav nav-pills">
+                <div class="module-wrapper">
                 {% for module in modules %}
-                    <li class="{% if loop.index == 1 %}active{% endif %}"><a  href="#t{{ loop.index }}" data-toggle="tab">{{ module.title }}</a></li>
-                {% endfor %}
-                </ul>
-                <div id="exTab">
-                    <div class="tab-content clearfix">
-                    {% for module in modules %}
+                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).first() %}
+                    <div class="module clearfix">
                         {% set totalPoints = 0 %}
-                        <div class="tab-pane{% if loop.index == 1 %} active{% endif %}" id="t{{ loop.index }}">
-                            <div class="tab-pane-sub-title"><h4>{{ module.title }}</h4></div>
+                        <div data-toggle="collapse" data-target="#m{{ module.id }}" class="accordion-toggle clearfix">
+                            <div class="accordion-title"><h4>{{ module.title }}</h4></div>
+                            <div class="accordion-icon">
+                                <div class="accordion-title">{% if moduleResultEntry %}Complete{% else %}In Progress{% endif %} : View module</div>
+                                <img src="/assets/img/img-arrow-down-trans.png">
+                            </div>
+                        </div>
+                        <div id="m{{ module.id }}" class="clearfix collapse">
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <thead>
@@ -33,13 +34,13 @@
                                                 <div class="accordion-title"><p>{{ unitGroup.groupName }}</p></div>
                                                 <div class="accordion-icon">
                                                     <div class="accordion-title">View status and Endorsements</div>
-                                                    <img src="/assets/img/img-arrow-down.jpg">
+                                                    <img src="/assets/img/img-arrow-down-trans.png">
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <div id="u{{ unitGroup.id }}" class="">
+                                                <div id="u{{ unitGroup.id }}" class="collapse">
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
@@ -55,7 +56,13 @@
                                                             <tbody>
                                                             {% for unitEntry in unitGroupEntries %}
                                                                 <tr>
-                                                                    <td><a href="unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a></td>
+                                                                    <td>
+                                                                        {% if moduleResultEntry %}
+                                                                            {{ unitEntry.title }}
+                                                                        {% else %}
+                                                                            <a href="unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a>
+                                                                        {% endif %}
+                                                                    </td>
                                                                     <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
                                                                     <td>{{ unitEntry.unitValue }}</td>
                                                                     {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
@@ -86,20 +93,15 @@
                                 </table>
                             </div>
                             <div class="tab-pane-sub-title">
-                                <h4>
-                                    Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}
-                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).first() %}
+                                <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
+                                <h4>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
                                 {% if moduleResultEntry %}
-                                    Completed: {{ moduleResultEntry.postDate|date('d/m/y') }}
-                                    {% if moduleResultEntry.expiryDate %}
-                                        Expires: {{ moduleResultEntry.expiryDate|date('d/m/y') }}
-                                    {% endif %}
+                                <h4>Result Expires: {% if moduleResultEntry.expiryDate %}{{ moduleResultEntry.expiryDate|date('d/m/y') }}{% else %}Never{% endif %}</h4>
                                 {% endif %}
-                                </h4>
                             </div>
                         </div>
-                    {% endfor %}
                     </div>
+                {% endfor %}
                 </div>
             {% endif %}
         {% endfor %}
