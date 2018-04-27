@@ -34,11 +34,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-        $team = $user->userTeam;
-        if ( ! $user || ! $team) {
+        if ( ! $user) {
             return null;
         }
-        $company = $team->first()->teamCompany;
+        $company = $user->userTeam->first()->teamCompany;
         return $company ? $company->first() : null;
     }
 
