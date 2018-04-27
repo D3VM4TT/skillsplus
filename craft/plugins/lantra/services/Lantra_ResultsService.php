@@ -208,7 +208,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    public function getManagerExpiringResults($userId = null, $days = 7) {
+    public function getManagerExpiringResults($userId = null, $days = null) {
         return $this->getManagerResults($userId, true, $days);
     }
 
@@ -220,7 +220,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    public function getManagerRecentResults($userId = null, $days = 7) {
+    public function getManagerRecentResults($userId = null, $days = null) {
         return $this->getManagerResults($userId, false, $days);
     }
 
@@ -251,7 +251,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $criteria->expiryDate = $days ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
         }
-        else {
+        elseif ($days) {
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
         $criteria->limit = null;
