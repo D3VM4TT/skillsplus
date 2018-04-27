@@ -176,11 +176,11 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Returns all user ids that belong to teams (or companies) managed by a manager
      *
      * @param $user
-     * @param $includeHierarchy
+     * @param $includeCompanyTeams
      * @return array
      * @throws Exception
      */
-    function getManagerSubordinateIds(UserModel $user, $includeHierarchy = true)
+    function getManagerSubordinateIds(UserModel $user, $includeCompanyTeams = true)
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
@@ -189,7 +189,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ( ! $this->canManage($user)) {
             return $return;
         }
-        $teamIds = $this->getManagerTeamIds($user, $includeHierarchy);
+        $teamIds = $this->getManagerTeamIds($user, $includeCompanyTeams);
         // get all users who belong to any of the manager's teams
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = array(

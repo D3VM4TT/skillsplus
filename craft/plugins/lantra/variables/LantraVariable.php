@@ -155,7 +155,7 @@ class LantraVariable
         if ( ! $user) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user);
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
         if ( ! count($subordinateIds)) {
             return null;
         }
