@@ -15,6 +15,7 @@
                 <th>User</th>
                 <th>Team</th>
                 <th>Module</th>
+                <th>Completed Date</th>
                 <th>Expiry Date</th>
             </thead>
             <tbody>
@@ -25,6 +26,7 @@
                 <td>{{ entry.author.getFullName() }}</td>
                 <td>{{ userTeam.title|default('') }}</td>
                 <td>{{ resultModule.title|default('') }}</td>
+                <td>{{ entry.postDate|date('d/m/y') }}</td>
                 <td>{{ entry.expiryDate|date('d/m/y') }}</td>
             </tr>
             {% endfor %}
@@ -33,6 +35,7 @@
     {% else %}
         <h4>There are no expiring results to display.</h4>
     {% endif %}
+    <p>&nbsp;</p>
     {% set recentResultEntries = craft.lantra.managerRecentResults() %}
     {% if recentResultEntries|length %}
         <h4>Recent Results</h4>
@@ -42,17 +45,19 @@
                 <th>User</th>
                 <th>Team</th>
                 <th>Module</th>
+                <th>Completed Date</th>
                 <th>Expiry Date</th>
             </thead>
             <tbody>
-            {% for entry in expiringResultEntries %}
+            {% for entry in recentResultEntries %}
             {% set userTeam = entry.author.userTeam.first() %}
             {% set resultModule = entry.resultModule.first() %}
             <tr>
                 <td>{{ entry.author.getFullName() }}</td>
                 <td>{{ userTeam.title|default('') }}</td>
                 <td>{{ resultModule.title|default('') }}</td>
-                <td>{{ entry.expiryDate|date('d/m/y') }}</td>
+                <td>{{ entry.postDate|date('d/m/y') }}</td>
+                <td>{% if entry.expiryDate %}{{ entry.expiryDate|date('d/m/y') }}{% endif %}</td>
             </tr>
             {% endfor %}
             </tbody>
