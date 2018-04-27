@@ -175,11 +175,11 @@ class LantraVariable
      *
      * @param null $userId
      * @param bool $count
-     * @param null $days
+     * @param int $days
      * @return mixed
      * @throws Exception
      */
-    public function managerExpiringResults($userId = null, $count = false, $days = null) {
+    public function managerExpiringResults($userId = null, $count = false, $days = 7) {
         $criteria = craft()->lantra_results->getManagerExpiringResults($userId, $days);
         if ( ! $criteria) {
             return null;
@@ -192,11 +192,11 @@ class LantraVariable
      *
      * @param null $userId
      * @param bool $count
-     * @package null $days
+     * @package int $days
      * @return mixed
      * @throws Exception
      */
-    public function managerRecentResults($userId = null, $count = false, $days = null) {
+    public function managerRecentResults($userId = null, $count = false, $days = 7) {
         $criteria = craft()->lantra_results->getManagerRecentResults($userId, $days);
         if ( ! $criteria) {
             return null;
