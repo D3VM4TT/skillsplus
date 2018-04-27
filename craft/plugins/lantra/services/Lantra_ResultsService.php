@@ -9,6 +9,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private $typeIdModuleResult = 14;
 
     /**
+     * Get a unit result entry
+     *
+     * @param $user
+     * @param $unitEntry
+     * @return null
+     * @throws Mixed
+     */
+    function getUnitResult($userId, $unitId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->limit = 1;
+        $criteria->authorId = $userId;
+        $criteria->relatedTo = ['targetElement' => $unitId];
+        return $criteria->first();
+    }
+
+    /**
      * Save a test attempt
      *
      * @param $attemptEntry
@@ -31,17 +49,31 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $score = round($correct / $total * 100);
         // passed if greater than unit setting
         $passed = $score >= $unitEntry->getContent()->testPassPercent;
-        // create result entry
-        $resultEntry = new EntryModel();
-        $resultEntry->sectionId = $this->sectionIdResults;
-        $resultEntry->typeId = $this->typeIdUnitResult;
-        $resultEntry->enabled = true;
-        $resultEntry->authorId = $user->id;
+        $resultStatus = $passed ? 'endorsed' : 'failed';
+        $resultScore = $score;
+        // does a result exist?
+        if (FALSE == $resultEntry = $this->getUnitResult($user->id, $unitEntry->id)) {
+            $resultEntry = new EntryModel();
+            $resultEntry->sectionId = $this->sectionIdResults;
+            $resultEntry->typeId = $this->typeIdUnitResult;
+            $resultEntry->enabled = true;
+            $resultEntry->authorId = $user->id;
+            $resultAttempts = array($attemptEntry->id);
+        }
+        else {
+            // append new result attempt
+            $resultAttempts = array_merge($resultEntry->resultAttempts->ids(), array($attemptEntry->id));
+            // only change if better than previous
+            if ($resultEntry->resultStatus == 'failed' && $passed) {
+                $resultStatus = $passed ? 'endorsed' : 'failed';
+                $resultScore = $score;
+            }
+        }
         $resultEntry->setContentFromPost([
-            'resultStatus' => $passed ? 'endorsed' : 'failed',
             'resultUnit' => array($unitEntry->id),
-            'resultAttempt' => array($attemptEntry->id),
-            'resultScore' => $score
+            'resultStatus' => $resultStatus,
+            'resultAttempts' => $resultAttempts,
+            'resultScore' => $resultScore
         ]);
         if ($passed) {
             $resultEntry->setContentFromPost([

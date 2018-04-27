@@ -10,11 +10,15 @@
 
 <section class="list">
     <h2>Unit {{ entry.id }}</h2>
-    {% if resultEntry|length %}
-        <p>You have already completed this unit.</p>
-    {% elseif craft.request.getSegment(3) == 'saved' %}
+    {% if craft.request.getSegment(3) == 'saved' %}
         <p>RESULT SAVED</p>
-    {% elseif craft.request.getSegment(3) == 'test' %}
+    {% endif %}
+
+    {% if resultEntry|length %}
+        <p>YOU HAVE MADE {{ resultEntry.resultAttempts|length }} ATTEMPTS</p>
+    {% endif %}
+
+    {% if craft.request.getSegment(3) == 'test' %}
 
         {% if entry is defined %}
         {{ ui.errorList(entry.getAllErrors()) }}
