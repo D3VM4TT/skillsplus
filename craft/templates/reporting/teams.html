@@ -16,13 +16,13 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Type</th>
+                        <th style="text-align: right">Type</th>
                     </thead>
                     <tbody>
                     {% for user in users %}
                     <tr>
                         <td>{{ user.getFullName() }}</td>
-                        <td>{{ craft.lantra.userType(user) }}</td>
+                        <td style="text-align: right">{{ craft.lantra.userType(user) }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
