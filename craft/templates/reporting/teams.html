@@ -1,0 +1,36 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Reporting" %}
+
+{% block content %}
+<section class="list">
+    <h1>My Teams</h1>
+    {% set teams = craft.lantra.managerTeams(null, true) %}
+    {% if teams|length %}
+        {% for team in teams %}
+            <h4>{{ team.title }}</h4>
+            {% set users = craft.users.relatedTo(team).find() %}
+            {% if users|length %}
+                <table width="100%">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.getFullName() }}</td>
+                        <td>{{ craft.lantra.userType(user) }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h4>You do not manage any teams.</h4>
+    {% endif %}
+</section>
+{% endblock %}

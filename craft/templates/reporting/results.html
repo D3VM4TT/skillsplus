@@ -1,0 +1,36 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Reporting > Results" %}
+
+{% block content %}
+<section class="list">
+    <h1>Expiring Results</h1>
+    {% set expiringResultEntries = craft.lantra.managerExpiringResults() %}
+    {% if expiringResultEntries|length %}
+    <table width="100%">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Team</th>
+            <th>Module</th>
+            <th>Expiry Date</th>
+        </thead>
+        <tbody>
+        {% for entry in expiringResultEntries %}
+            {% set userTeam = entry.author.userTeam.first() %}
+            {% set resultModule = entry.resultModule.first() %}
+        <tr>
+            <td>{{ entry.author.getFullName() }}</td>
+            <td>{{ userTeam.title|default('') }}</td>
+            <td>{{ resultModule.title|default('') }}</td>
+            <td>{{ entry.expiryDate|date('d/m/y') }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h4>There are no expiring results to display.</h4>
+    {% endif %}
+</section>
+{% endblock %}

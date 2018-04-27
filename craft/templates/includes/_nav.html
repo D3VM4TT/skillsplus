@@ -55,7 +55,11 @@
         </li>
         {% endif %}
         <li class="nav-item">
-            <a class="nav-link" href="/reporting">Reporting</a>
+            <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
+            <ul class="collapse list-unstyled" id="navReporting">
+                <li class="nav-item"><a href="/reporting/teams" class="nav-link">My Teams</a></li>
+                <li class="nav-item"><a href="/reporting/results" class="nav-link">Results</a></li>
+            </ul>
         </li>
         {% set pendingEntryCount = craft.lantra.managerEndorsementEntries(null, true) %}
         {% if (pendingEntryCount) %}
