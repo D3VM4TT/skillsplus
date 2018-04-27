@@ -3,13 +3,13 @@
         <h2>My CPD</h2>
         {% for role in currentUser.userRole %}
             <h2>Job Role: {{ role.title }}</h2>
-            {% set modules = craft.entries.relatedTo(role) %}
+            {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
                 <p>No modules have been assigned yet for this role.</p>
             {% else %}
                 <ul class="nav nav-pills">
                 {% for module in modules %}
-                    <li class="{% if loop.index == 1 %}active{% endif %}"><a  href="#t{{ loop.index }}" data-toggle="tab">Module {{ module.title }}</a></li>
+                    <li class="{% if loop.index == 1 %}active{% endif %}"><a  href="#t{{ loop.index }}" data-toggle="tab">{{ module.title }}</a></li>
                 {% endfor %}
                 </ul>
                 <div id="exTab">
