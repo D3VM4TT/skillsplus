@@ -208,7 +208,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    public function getManagerExpiringResults($userId = null, $days = null) {
+    public function getManagerExpiringResults($userId = null, $days = 'all') {
         return $this->getManagerResults($userId, true, $days);
     }
 
@@ -220,7 +220,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    public function getManagerRecentResults($userId = null, $days = null) {
+    public function getManagerRecentResults($userId = null, $days = 'all') {
         return $this->getManagerResults($userId, false, $days);
     }
 
@@ -233,7 +233,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    private function getManagerResults($userId = null, $expiring = true, $days = null) {
+    private function getManagerResults($userId = null, $expiring = true, $days = 'all') {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -248,10 +248,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         if ($expiring) {
-            $criteria->expiryDate = $days ? '<'. (time() + ($days*86400)) : ':notempty:';
+            $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
         }
-        elseif ($days) {
+        elseif ($days != 'all') {
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
         $criteria->limit = null;
