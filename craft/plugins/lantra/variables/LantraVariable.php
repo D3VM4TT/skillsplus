@@ -85,11 +85,11 @@ class LantraVariable
      * Return managaer
      *
      * @param null $userId
-     * @param
+     * @param bool $includeCompanyTeams
      * @return BaseElementModel|null
      * @throws Exception
      */
-    public function managerTeams($userId = null, $includeHierarchy = FALSE)
+    public function managerTeams($userId = null, $includeCompanyTeams = false)
     {
         if ( ! is_null($userId)) {
             $user = craft()->users->getUserById($userId);
@@ -97,7 +97,7 @@ class LantraVariable
         else {
             $user = craft()->userSession->getUser();
         }
-        $teamIds = craft()->lantra_users->getManagerTeamIds($user, $includeHierarchy);
+        $teamIds = craft()->lantra_users->getManagerTeamIds($user, $includeCompanyTeams);
         if ( ! count($teamIds)) {
             return null;
         }
