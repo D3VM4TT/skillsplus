@@ -58,7 +58,7 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->checkUnitResult($entry);
             }
             // Send notifications on new module result
-            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult') {
+            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult') {
                 craft()->lantra_notify->notifyModuleResult($entry);
             }
         });

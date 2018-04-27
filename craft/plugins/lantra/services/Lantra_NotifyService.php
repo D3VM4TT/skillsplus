@@ -4,7 +4,7 @@ namespace Craft;
 class Lantra_NotifyService extends BaseApplicationComponent
 {
     /**
-     * Notify managers of module result
+     * Notify users and managers of module result
      *
      * @param $entry
      * @return null
@@ -14,12 +14,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $module = $entry->resultModule->first();
         $author = $entry->getAuthor();
         $authorFullName = $author->getFullName();
-        $company = craft()->lantra_users->userCompany($author);
-        $subject = "Module ["  . $module->id . "] " . $authorFullName;
-        $message = "User: " . $authorFullName  . "\n\n";
-        $message .= "Company: " . $company->title . "\n\n";
-        $message .= "Module Completed: " . $module->title . "\n\n";
+        $subject = "Module ["  . $module->id . "] Completed";
+        $message = $authorFullName  . " has completed " . $module->title;
         // send the emails to managers
+        $this->notify($entry->getAuthor()->email, $subject, $message);
         $this->notifyManagers($entry->getAuthor(), $subject, $message);
     }
 
