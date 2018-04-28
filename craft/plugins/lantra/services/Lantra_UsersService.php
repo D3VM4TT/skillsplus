@@ -215,6 +215,27 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Get available teams for a user
+     *
+     * @param UserModel $user
+     * @return array
+     * @throws mixed
+     */
+    function getAvailableTeams(UserModel $user) {
+        $teams = $this->getManagerTeams($user, ($user->isInGroup('companyManagers') || $user->isInGroup('schemeManagers')));
+        if (empty($teams)){
+            return null;
+        }
+        $return = [];
+        foreach ($teams as $team) {
+            if (craft()->lantra_licence->getTeamCompanyLicences($team)) {
+                $return[] = $team;
+            }
+        }
+        return $return;
+    }
+
+    /**
      * Returns all user ids that belong to teams (or companies) managed by a manager
      *
      * @param $user

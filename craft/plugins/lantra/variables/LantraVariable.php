@@ -120,17 +120,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $teams = $this->managerTeams($user, ($user->isInGroup('companyManagers') || $user->isInGroup('schemeManagers')));
-        if (empty($teams)){
-            return null;
-        }
-        $return = [];
-        foreach ($teams as $team) {
-            if (craft()->lantra_licence->getTeamCompanyLicences($team)) {
-                $return[] = $team;
-            }
-        }
-        return $return;
+        return craft()->lantra_users->getAvailableTeams($user);
     }
 
     /**
