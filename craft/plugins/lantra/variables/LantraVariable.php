@@ -27,21 +27,21 @@ class LantraVariable
             return '';
         }
         if ($user->admin) {
-            $type = 'Admin';
+            $type = 'Lantra Admin';
         }
         else {
-            $type = 'User';
-
+            $type = '';
+            if ($user->isInGroup('user')) {
+                $type .= 'User';
+            }
             if ($user->isInGroup('schemeManagers')) {
-                $type .= ', Scheme Manager';
+                $type .= ($type ? ', ': '') . 'Scheme Manager';
             }
-
             if ($user->isInGroup('companyManagers')) {
-                $type .= ', Company Manager';
+                $type .= ($type ? ', ': '') . 'Company Manager';
             }
-
             if ($user->isInGroup('teamManagers')) {
-                $type .= ', Team Manager';
+                $type .= ($type ? ', ': '') . 'Team Manager';
             }
         }
         return $type;
