@@ -230,6 +230,30 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Return all result entries requiring endorsement for a manager
+     *
+     * @param UserModel $user
+     * @param bool $count
+     * @return mixed
+     * @throws Exception
+     */
+    public function getManagerEndorsementResults(UserModel $user, $count = false) {
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->resultEvidence = ':notempty:';
+        $criteria->limit = null;
+        $criteria->resultStatus = 'pending';
+        $criteria->authorId = $subordinateIds;
+        $criteria->order = 'postDate desc';
+        return ($count) ? $criteria->count() : $criteria->find();
+    }
+
+    /**
      * Return all expiring module result entries
      *
      * @param null $userId

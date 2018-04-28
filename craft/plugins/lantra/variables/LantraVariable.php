@@ -159,23 +159,11 @@ class LantraVariable
      * @return mixed
      * @throws Exception
      */
-    public function managerEndorsementEntries($userId = null, $count = false) {
+    public function managerEndorsementResults($userId = null, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'results';
-        $criteria->type = 'unitResult';
-        $criteria->resultEvidence = ':notempty:';
-        $criteria->limit = null;
-        $criteria->resultStatus = 'pending';
-        $criteria->authorId = $subordinateIds;
-        $criteria->order = 'postDate desc';
-        return ($count) ? $criteria->count() : $criteria->find();
+        return craft()->lantra_results->getManagerEndorsementResults($user, $count);
     }
 
     /**
