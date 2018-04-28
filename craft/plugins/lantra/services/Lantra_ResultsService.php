@@ -301,7 +301,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
-        ## $criteria->type = 'moduleResult';
+        $criteria->type = 'moduleResult';
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
