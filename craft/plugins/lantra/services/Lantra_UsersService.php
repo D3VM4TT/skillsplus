@@ -122,7 +122,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
-        $criteria->relatedTo = ['or', ['targetElement' => $user, 'field' => 'teamPrimaryManager'], ['targetElement' => $user, 'field' => 'teamSecondaryManagers']]
+        $criteria->relatedTo = ['or', ['targetElement' => $user, 'field' => 'teamPrimaryManager'], ['targetElement' => $user, 'field' => 'teamSecondaryManagers']];
         return $criteria->ids();
     }
 
