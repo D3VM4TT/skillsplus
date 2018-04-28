@@ -241,6 +241,7 @@ class LantraVariable
      *
      * @param $name
      * @param $data
+     * @throws HttpException
      */
     private function sendReport($name, $data) {
         ob_start();
