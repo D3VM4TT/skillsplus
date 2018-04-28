@@ -131,7 +131,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
-        $resultEntries = $this->getModuleBestResults($moduleEntry, $userId);
+        $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
         if ( ! count($resultEntries)) {
             return;
         }
@@ -205,14 +205,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
-     * Get module best user results grouped by unit ID
+     * Get module unit results grouped by unit ID
      *
      * @param $moduleEntry
      * @param $userId
      * @return array
      * @throws Exception
      */
-    function getModuleBestResults($moduleEntry, $userId) {
+    function getModuleUnitResults($moduleEntry, $userId) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
@@ -224,10 +224,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $return = [];
         foreach ($resultEntries as $resultEntry) {
             $unitId = $resultEntry->resultUnit->first()->id;
-            // only add result if new or better score
-            if ( ! isset($return[$unitId]) || ($resultEntry->resultScore > $return[$unitId]->resultScore)) {
-                $return[$unitId] = $resultEntry;
-            }
+            $return[$unitId] = $resultEntry;
         }
         return $return;
     }
