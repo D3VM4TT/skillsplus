@@ -1,3 +1,4 @@
+{% requirePermission 'editUsers' %}
 {% if currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
@@ -8,8 +9,6 @@
 {% else %}
     {% set users = craft.users.group('users, teamManagers, companyManagers') %}
 {% endif %}
-
-{% requirePermission 'editUsers' %}
 
 {% extends "_layout" %}
 
