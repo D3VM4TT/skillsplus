@@ -229,6 +229,52 @@ class LantraVariable
     }
 
     /**
+     * Export a report
+     *
+    */
+    public function resultsReport($report) {
+
+        if ($report == 'expiring') {
+            $results = $this->managerExpiringResults();
+        }
+        else {
+            $results = $this->managerRecentResults();
+        }
+
+        $data = [];
+        foreach ($results as $result) {
+            $userTeam = $result->author->userTeam->first();
+            $resultModule = $result->resultModule->first();
+            $data[] = [
+                $result->author->getFullName(),
+                $userTeam ? $userTeam->title : '',
+                $resultModule ? $resultModule->title : '',
+                $result->postDate->format('d/m/y'),
+                $result->expiryDate ? $result->expiryDate->format('d/m/y') : ''
+            ];
+        }
+        $this->sendReport($report, $data);
+    }
+
+    /**
+     * Send the csv report to the browser
+     *
+     * @param $name
+     * @param $data
+     */
+    private function sendReport($name, $data) {
+        ob_start();
+        $export = fopen('php://output', 'w');
+        foreach ($data as $row) {
+            fputcsv($export, $row);
+        }
+        fclose($export);
+        $content = ob_get_clean();
+        $content = str_replace("\n", "\r\n", $content);
+        craft()->request->sendFile('report-' . $name . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+    }
+
+    /**
      * Get the user
      *
      * @param null $userId
