@@ -3,8 +3,6 @@ namespace Craft;
 
 class Lantra_AttemptsService extends BaseApplicationComponent
 {
-    private $sectionIdAttempts = 12;
-
     /**
      * Mark an attempt entry
      *
@@ -12,7 +10,6 @@ class Lantra_AttemptsService extends BaseApplicationComponent
      * @throws mixed
      */
     public function markAttempt($attemptEntry) {
-        /* @var $answerBlock MatrixBlockModel */
         foreach ($attemptEntry->attemptAnswers as $answerBlock) {
             $questionBlock = craft()->matrix->getBlockById($answerBlock->questionId);
             $correct = $this->markQuestion($questionBlock, $answerBlock->answer);
