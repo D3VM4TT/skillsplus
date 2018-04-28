@@ -243,8 +243,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    function getManagerSubordinateIds(UserModel $user, $includeCompanyTeams = true)
-    {
+    function getManagerSubordinateIds(UserModel $user, $includeCompanyTeams = true) {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
@@ -257,6 +256,26 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $teamIds, 'field' => 'userTeam'];
         return $criteria->ids();
+    }
+
+    /**
+     * Return all subordinate users for a manager
+     *
+     * @param UserModel $user
+     * @param bool $includeHierarchy
+     * @return mixed
+     * @throws Exception
+     */
+    public function getManagerSubordinates(UserModel $user, $includeHierarchy = false) {
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, $includeHierarchy);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = null;
+        $criteria->id = $subordinateIds;
+        $criteria->order = 'lastName asc';
+        return $criteria->find();
     }
 
     /**

@@ -148,15 +148,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, $includeHierarchy);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->limit = null;
-        $criteria->id = $subordinateIds;
-        $criteria->order = 'lastName asc';
-        return $criteria->find();
+        return craft()->lantra_users->getManagerSubordinates($user, $includeHierarchy);
     }
 
     /**
