@@ -44,6 +44,20 @@ class LantraVariable
     }
 
     /**
+     * Return user company (team company)
+     *
+     * @param null $userId
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    public function userCompany($userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return craft()->lantra_users->userCompany($user);
+    }
+
+    /**
      * Display remaining attempts
      *
      * @param EntryModel $unitEntry
@@ -59,20 +73,6 @@ class LantraVariable
             $resultEntry = craft()->lantra_results->getUnitResult($user->id, $unitEntry->id);
         }
         return craft()->lantra_attempts->remainingAttempts($unitEntry, $resultEntry, $user->id);
-    }
-
-    /**
-     * Return user company (team company)
-     *
-     * @param null $userId
-     * @return BaseElementModel|null
-     * @throws Exception
-     */
-    public function userCompany($userId = null) {
-        if (false == $user = $this->getUser($userId)) {
-            return null;
-        }
-        return craft()->lantra_users->userCompany($user);
     }
 
     /**
