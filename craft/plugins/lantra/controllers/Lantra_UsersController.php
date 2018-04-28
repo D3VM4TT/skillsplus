@@ -51,25 +51,22 @@ class Lantra_UsersController extends Lantra_BaseController {
         // username is email
         $user->username = $user->email;
 
+        // assign user to groups (always in 'user' group from front end)
+        $groupIds = array(4);
+        if (craft()->request->getPost('companyManagers')) {
+            $groupIds[] = 2;
+        }
+        if (craft()->request->getPost('teamManagers')) {
+            $groupIds[] = 3;
+        }
+        // mimic cp form for onSaveUser event
+        $_POST['groups'] = $groupIds;
+
         // save user
         if (craft()->users->saveUser($user)) {
-
-            // assign user to groups
-            $groupIds = array(4);
-
-            if (craft()->request->getPost('companyManagers')) {
-                $groupIds[] = 2;
-            }
-
-            if (craft()->request->getPost('teamManagers')) {
-                $groupIds[] = 3;
-            }
-
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
-
             $this->returnSuccess($user->id, $redirect);
         } else {
-
             $this->returnError($user->getAllErrors(), array('account' => $user));
         }
     }
