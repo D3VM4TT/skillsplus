@@ -46,7 +46,7 @@ class LantraPlugin extends BasePlugin
                 // assign scheme licence
                 elseif (false == craft()->lantra_licence->assignSchemeLicence()) {
                     $event->performAction = false;
-                    $user->addError('username', 'There are insufficient scheme licences.');
+                    $user->addError('userTeam', 'There are insufficient scheme licences.');
                 }
             }
         });
