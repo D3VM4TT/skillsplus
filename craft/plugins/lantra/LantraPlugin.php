@@ -38,13 +38,13 @@ class LantraPlugin extends BasePlugin
             if ($event->params['isNewUser'] && ! $user->admin) {
                 // assign company licence if joining a team
                 if ($user->userTeam) {
-                    if (false == craft()->lantra_users->assignCompanyLicence($user)) {
+                    if (false == craft()->lantra_licence->assignCompanyLicence($user)) {
                         $event->performAction = false;
                         $user->addError('userTeam', 'There are insufficient company licences to join this team.');
                     }
                 }
                 // assign scheme licence
-                elseif (false == craft()->lantra_users->assignSchemeLicence()) {
+                elseif (false == craft()->lantra_licence->assignSchemeLicence()) {
                     $event->performAction = false;
                     $user->addError('username', 'There are insufficient scheme licences.');
                 }
