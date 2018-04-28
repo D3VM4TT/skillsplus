@@ -280,4 +280,22 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         return $return;
     }
+
+    /**
+     * Check whether they can add a new user
+     *
+     * @param UserModel $user
+     * @return bool
+     * @throws Exception
+     */
+    function canAddUser(UserModel $user) {
+        // check there are scheme licences available
+        if ($user->isInGroup('SchemeManager')) {
+           return (bool) craft()->lantra_licence->getSchemeLicences();
+        }
+        else {
+            $availableTeams = $this->getAvailableTeams($user, $user->isInGroup('CompanyManager'));
+            return (bool) $availableTeams ? count($availableTeams) : false;
+        }
+    }
 }

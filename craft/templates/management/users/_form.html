@@ -1,4 +1,7 @@
 {% requirePermission 'editUsers' %}
+{% if not craft.lantra.canAddUser() %}
+    {% exit 404 %}
+{% endif %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
@@ -28,7 +31,7 @@
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/users/saveUser">
     <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
-    {% if user.isInGroup('companyManagers') %}
+    {% if user.isInGroup('companyManagers') or user.isInGroup('schemeManagers') %}
     <div class="form-group-lantra float-label-control">
         <label for="teamManagers">Roles:</label>
             <ul>
@@ -36,10 +39,12 @@
                     <strong>Team manager:</strong>
                     <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
                 </li>
+                {% if user.isInGroup('schemeManagers') %}
                 <li>
                     <strong>Company manager:</strong>
                     <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
                 </li>
+                {% endif %}
             </ul>
         </div>
     {% endif %}

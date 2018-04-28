@@ -17,6 +17,19 @@ class LantraVariable
     }
 
     /**
+     * Can add user
+     *
+     * @param null $userId
+     * @return bool
+     */
+    public function canAddUser($userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        return craft()->lantra_users->canAddUser($user);
+    }
+
+    /**
      * Display list of user types
      *
      * @param null $userId

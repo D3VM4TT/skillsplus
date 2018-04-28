@@ -15,36 +15,36 @@
 {% set metaTitle = "Management > Users" %}
 
 {% block content %}
-
-<section class="list">
-    <h2>Users</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Team</th>
-                <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-            {% set team = user.userTeam.first() %}
-            <tr class="item">
-                <th>{{ user.id }}</th>
-                <th>{{ user.fullname }}</th>
-                <th>{{ team.title|default('') }}</th>
-                <th>
-                    <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                    <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
-                </th>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
-<div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
-
+    <section class="list">
+        <h2>Users</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                {% set team = user.userTeam.first() %}
+                <tr class="item">
+                    <th>{{ user.id }}</th>
+                    <th>{{ user.fullname }}</th>
+                    <th>{{ team.title|default('') }}</th>
+                    <th>
+                        <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                        <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
+                    </th>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% if craft.lantra.canAddUser() %}
+        <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
+    {% endif %}
 {% endblock %}
