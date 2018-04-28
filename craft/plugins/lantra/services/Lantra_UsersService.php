@@ -58,13 +58,8 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->order = 'title';
-        $criteria->relatedTo = array(
-            'targetElement' => $entryId,
-            'field' => 'companyParent'
-        );
-
+        $criteria->relatedTo = ['targetElement' => $entryId, 'field' => 'companyParent'];
         $ids = $criteria->ids();
-
         if (count($ids)) {
             foreach($ids as $id) {
                 $return[] = $id;
@@ -89,10 +84,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
-        $criteria->relatedTo = array(
-            'targetElement' => $companyId,
-            'field' => 'teamCompany'
-        );
+        $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
         $criteria->order = 'title';
         return $criteria->ids();
     }
@@ -111,10 +103,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
-        $criteria->relatedTo = array(
-            'targetElement' => $user->id,
-            'field' => 'companyManager'
-        );
+        $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyManager'];
         $criteria->order = 'title';
         return $criteria->ids();
     }
@@ -133,11 +122,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
-        $criteria->relatedTo = array(
-            'or',
-            ['targetElement' => $user, 'field' => 'teamPrimaryManager'],
-            ['targetElement' => $user, 'field' => 'teamSecondaryManagers']
-        );
+        $criteria->relatedTo = ['or', ['targetElement' => $user, 'field' => 'teamPrimaryManager'], ['targetElement' => $user, 'field' => 'teamSecondaryManagers']]
         return $criteria->ids();
     }
 
@@ -192,11 +177,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $teamIds = $this->getManagerTeamIds($user, $includeCompanyTeams);
         // get all users who belong to any of the manager's teams
         $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->relatedTo = array(
-            'targetElement' => $teamIds,
-            'field' => 'userTeam'
-        );
-
+        $criteria->relatedTo = ['targetElement' => $teamIds, 'field' => 'userTeam'];
         return $criteria->ids();
     }
 

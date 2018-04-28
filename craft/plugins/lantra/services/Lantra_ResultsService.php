@@ -22,7 +22,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->type = 'unitResult';
         $criteria->limit = 1;
         $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $unitId];
+        $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         return $criteria->first();
     }
 
@@ -110,7 +110,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'modules';
         $criteria->limit = null;
-        $criteria->relatedTo = ['targetElement' => $jobRoles];
+        $criteria->relatedTo = ['targetElement' => $jobRoles, 'field' => 'moduleRoles'];
         $moduleEntries = $criteria->find();
         // search for the relevant module (this unit may be part of multiple modules)
         foreach ($moduleEntries as $moduleEntry) {
@@ -164,7 +164,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
         $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $moduleEntry];
+        $criteria->relatedTo = ['targetElement' => $moduleEntry , 'field' => 'resultModule'];
         // @todo error reporting?
         if ($criteria->count()) {
             return;
@@ -219,7 +219,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
         $criteria->limit = null;
-        $criteria->relatedTo = ['targetElement' => $unitIds];
+        $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
         $resultEntries = $criteria->find();
         $return = [];
         foreach ($resultEntries as $resultEntry) {
