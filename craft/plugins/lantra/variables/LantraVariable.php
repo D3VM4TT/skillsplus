@@ -102,7 +102,7 @@ class LantraVariable
     }
 
     /**
-     * Return managaer
+     * Return manager teams
      *
      * @param null $userId
      * @param bool $includeCompanyTeams
