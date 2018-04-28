@@ -61,7 +61,7 @@
                 <li class="nav-item"><a href="/reporting/results-recent" class="nav-link">Recent Results</a></li>
             </ul>
         </li>
-        {% set pendingEntryCount = craft.lantra.managerEndorsementEntries(null, true) %}
+        {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, true) %}
         {% if (pendingEntryCount) %}
             <li class="nav-item">
                 <a class="nav-link" href="/management/endorsements">Endorsements ({{ pendingEntryCount }})</a>
