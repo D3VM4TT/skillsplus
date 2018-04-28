@@ -11,7 +11,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @throws mixed
      */
     function assignCompanyLicence($user) {
-        $companyEntry = $this->userCompany($user);
+        $companyEntry = craft()->lantra_users->userCompany($user);
         // return false if none remaining
         if ( ! $companyEntry || ! $companyEntry->companyRemainingLicences) {
             return false;
