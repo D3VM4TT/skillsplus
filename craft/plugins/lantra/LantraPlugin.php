@@ -68,6 +68,14 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onBeforeSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
+            // Check endorsed change
+            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                // update endorsed date
+                $oldEntry = craft()->entries->getEntryById($entry->id);
+                if ($oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
+                    $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                }
+            }
             // check remaining attempts
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts) {
                 $unitEntry = $entry->attemptUnit->first();
