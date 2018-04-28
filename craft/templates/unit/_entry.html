@@ -4,7 +4,7 @@
     {% set entry = craft.entries.id(craft.request.getSegment(2)).first() %}
 {% endif %}
 {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(entry).first() %}
-{% set attemptTotal = resultEntry.resultAttempts|length %}
+{% set remainingAttempts = craft.lantra.remainingAttempts(entry, resultEntry) %}
 {% set metaTitle = "Unit " ~ entry.id %}
 
 {% block content %}
@@ -17,10 +17,11 @@
 
     {% if resultEntry|length %}
         <p>YOU HAVE MADE {{ resultEntry.resultAttempts|length }} ATTEMPTS</p>
+        <p>YOU HAVE {{ remainingAttempts }} ATTEMPTS REMAINING</p>
     {% endif %}
 
     {% if craft.request.getSegment(3) == 'test' %}
-        {% if entry.testMaxAttempts and attemptTotal >= entry.testMaxAttempts %}
+        {% if not remainingAttempts %}
             <p>YOU HAVE NO MORE ATTEMPTS LEFT</p>
         {% else %}
             {% if entry is defined %}

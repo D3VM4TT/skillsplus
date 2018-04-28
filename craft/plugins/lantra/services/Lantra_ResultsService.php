@@ -11,8 +11,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
     /**
      * Get a unit result entry
      *
-     * @param $user
-     * @param $unitEntry
+     * @param $userId
+     * @param $unitId
      * @return null
      * @throws Mixed
      */
@@ -52,7 +52,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultStatus = $passed ? 'endorsed' : 'failed';
         $resultScore = $score;
         // does a result exist?
-        if (FALSE == $resultEntry = $this->getUnitResult($user->id, $unitEntry->id)) {
+        if (false == $resultEntry = $this->getUnitResult($user->id, $unitEntry->id)) {
             $resultEntry = new EntryModel();
             $resultEntry->sectionId = $this->sectionIdResults;
             $resultEntry->typeId = $this->typeIdUnitResult;
