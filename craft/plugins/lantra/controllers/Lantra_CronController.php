@@ -12,9 +12,12 @@ class Lantra_CronController extends Lantra_BaseController {
      * @return null
      * @throws Exception
      */
-    function actionRunCron()
-    {
-        $this->notifyManagersExpiringResults();
+    function actionRunCron(array $variables = array()) {
+        if ($variables['frequency'] == 'weekly') {
+            Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
+            $this->notifyManagerSummary();
+            $this->notifyLicencesRemaining();
+        }
     }
 
     /**
@@ -22,15 +25,23 @@ class Lantra_CronController extends Lantra_BaseController {
      *
      * @throws Exception
      */
-    function notifyManagersExpiringResults()
-    {
+    function notifyManagerSummary() {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->limit = null;
         $criteria->groupId = array(2, 3);
         $managers = $criteria->find();
 
         foreach($managers as $manager) {
-            craft()->lantra_notify->notifyExpiringResults($manager);
+            craft()->lantra_notify->sendManagerSummary($manager);
         }
+    }
+
+    /**
+     * Loop though all the scheme and company managers and send notifications about remaining licences
+     *
+     * @throws Exception
+     */
+    function notifyLicencesRemaining() {
+        craft()->lantra_notify->sendLicencesRemaining();
     }
 }

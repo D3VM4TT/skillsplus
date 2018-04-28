@@ -4,13 +4,46 @@ namespace Craft;
 class Lantra_NotifyService extends BaseApplicationComponent
 {
     /**
-     * Notify users and managers of module result
+     * Notify managers of licences remaining
      *
-     * @param $entry
-     * @return null
      * @throws Exception
      */
-    function notifyModuleResult(EntryModel $entry) {
+    function sendLicencesRemaining() {
+        // send scheme managers remaining scheme licences
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = 1;
+        $criteria->limit = null;
+        foreach ($criteria->find() as $manager) {
+            $remainingLicences = craft()->lantra_licence->getSchemeLicences();
+            if ($remainingLicences <= 10) {
+                $subject = "Limited Licences Remaining";
+                $message = "Your scheme has  " . craft()->lantra_licence->getSchemeLicences() . " remaining licences.";
+                $this->notify($manager->email, $subject, $message);
+            }
+        }
+        // send company managers remaining company licences
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->limit = null;
+        foreach ($criteria->find() as $company) {
+            $remainingLicences = $company->companyRemainingLicences;
+            if ($remainingLicences <= 10) {
+                $manager = $company->companyManager->first();
+                $subject = "Limited Licences Remaining";
+                $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
+                $this->notify($manager->email, $subject, $message);
+            }
+        }
+    }
+
+     /**
+    * Notify users and managers of module result
+    *
+    * @param $entry
+    * @return null
+    * @throws Exception
+    */
+    function sendModuleResult(EntryModel $entry) {
         $module = $entry->resultModule->first();
         $author = $entry->getAuthor();
         $authorFullName = $author->getFullName();
@@ -19,6 +52,68 @@ class Lantra_NotifyService extends BaseApplicationComponent
         // send the emails to managers
         $this->notify($entry->getAuthor()->email, $subject, $message);
         $this->notifyManagers($entry->getAuthor(), $subject, $message);
+    }
+    /**
+     * Notify managers summary
+     *
+     * @param $manager
+     * @param int $days
+     * @return null
+     * @throws Exception
+     */
+    function sendManagerSummary(UserModel $manager, $days = 7) {
+        $subject = "Manager Summary";
+        $criteria = craft()->lantra_results->getManagerExpiringResults($manager->id, $days);
+        if ($criteria && $criteria->total()) {
+            $message = "The following user results expire in the next " . $days . " days:\n\n";
+            foreach ($criteria->find() as $result) {
+                $moduleEntry = $result->resultModule->first();
+                $message .= "User: " . $result->author->getFullName() . "\n\n";
+                $message .= "Team: " . $result->author->userTeam->first()->title . "\n\n";
+                $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~'). "\n\n";
+                $message .= "Expires: " . $result->expiryDate . "\n\n";
+                $message .= "\n##########################\n\n";
+            }
+        }
+        else {
+            $message = "There are no expiring results in the next " . $days . " days:\n\n";
+        }
+
+        $criteria = craft()->lantra_results->getManagerRecentResults($manager->id, $days);
+        if ($criteria && $criteria->total()) {
+            $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
+            foreach ($criteria->find() as $result) {
+                $moduleEntry = $result->resultModule->first();
+                $message .= "User: " . $result->author->getFullName() . "\n\n";
+                $message .= "Team: " . $result->author->userTeam->first()->title . "\n\n";
+                $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~') . "\n\n";
+                $message .= "Expires: " . $result->expiryDate . "\n\n";
+                $message .= "\n##########################\n\n";
+            }
+        }
+        else {
+            $message = "There are no expiring results in the next " . $days . " days:\n\n";
+        }
+        // send the emails to managers
+        $this->notify($manager->email, $subject, $message);
+    }
+
+    /**
+     * Send a message to a user's team managers
+     *
+     * @param $user
+     * @param $subject
+     * @param $message
+     * @return bool
+     * @throws Exception
+     */
+    function notifyManagers($user, $subject, $message) {
+        $managers = craft()->lantra_users->getTeamMangers($user);
+        if ($managers && count($managers)) {
+            foreach ($managers as $manager) {
+                $this->notify($manager->email, $subject, $message);
+            }
+        }
     }
 
     /**
@@ -35,60 +130,18 @@ class Lantra_NotifyService extends BaseApplicationComponent
         // in dev mode, all notifications sent to system email
         $message .= "\n\n\nNotification sent to: " . $toEmail;
         $toEmail = craft()->systemSettings->getSetting('email', 'emailAddress');
+        // remove in live
 
         $email = new EmailModel();
         $email->subject = $subject;
         $email->body = $message;
         $email->toEmail = $toEmail;
         try {
+            Craft::log('notify(' .  $toEmail . ') ' . $message,LogLevel::Info, true, 'notify', 'lantra');
             return craft()->email->sendEmail($email);
         } catch (\Exception $e) {
-            Craft::log('notify() failed: ' . $e->getMessage(),LogLevel::Warning, false, 'notify', 'lantra');
+            Craft::log('notify(' .  $toEmail . ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
             return false;
-        }
-    }
-
-    /**
-     * Notify managers of expiring results
-     *
-     * @param $manager
-     * @param int $futureDays
-     * @return null
-     * @throws Exception
-     */
-    function notifyExpiringResults(UserModel $manager, $futureDays = 7) {
-
-        $results = craft()->lantra_results->getManagerExpiringResults($manager->id, $futureDays)->find();
-        if (count($results)) {
-            return null;
-        }
-
-        $subject = "Expiring Results";
-        $message = "The following modules results expire in the next " . $futureDays . " days:\n\n";
-        foreach($results as $result) {
-            $message .= "User: " . $result->author  . "\n\n";
-            $message .= "Module: " . $result->resultModule->first()->title  . "\n\n";
-            $message .= "Expires: " . date('d/m/y', $result->expiryDate) . "\n\n";
-            $message .= "\n\n";
-        }
-
-        // send the emails to managers
-        $this->notify($manager->email, $subject, $message);
-    }
-
-    /**
-     * Send a message to a user's team managers
-     *
-     * @param $user
-     * @param $subject
-     * @param $body
-     * @return bool
-     * @throws Exception
-     */
-    function notifyManagers($user, $subject, $message) {
-        $managers = craft()->lantra_users->getTeamMangers($user);
-        foreach ($managers as $manager) {
-            $this->notify($manager->email, $subject, $message);
         }
     }
 }

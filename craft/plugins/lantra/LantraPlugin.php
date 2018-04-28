@@ -106,7 +106,7 @@ class LantraPlugin extends BasePlugin
             }
             // Send notifications on new module result
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult') {
-                craft()->lantra_notify->notifyModuleResult($entry);
+                craft()->lantra_notify->sendModuleResult($entry);
             }
         });
     }
@@ -114,7 +114,7 @@ class LantraPlugin extends BasePlugin
     public function registerSiteRoutes()
     {
         return array(
-            'lantra/cron' => array('action' => 'lantra/cron/runCron'),
+            'lantra/cron/(?P<frequency>[^/]+)' => array('action' => 'lantra/cron/runCron'),
         );
     }
 }
