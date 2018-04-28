@@ -42,6 +42,17 @@ class Lantra_LicenceService extends BaseApplicationComponent
     }
 
     /**
+     * Check a team companies remaining licences
+     *
+     * @param $teamEntry
+     * @return int
+     * @throws mixed
+     */
+    function getTeamCompanyLicences($teamEntry) {
+        return (int) $teamEntry->teamCompany->first()->companyRemainingLicences;
+    }
+
+    /**
      * Handle company licence changes
      *
      * @param $companyEntry

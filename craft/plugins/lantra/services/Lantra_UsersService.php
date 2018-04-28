@@ -73,6 +73,20 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Returns all team ids for the whole scheme
+     *
+     * @return array
+     * @throws Exception
+     */
+    function getSchemeTeamIds()
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'teams';
+        $criteria->order = 'title';
+        return $criteria->ids();
+    }
+
+    /**
      * Returns all team ids for a company
      *
      * @param $companyId
@@ -138,6 +152,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
+        // add the scheme manager teams (all of them)
+        if ($includeCompanyTeams && $user->isInGroup('schemeManagers')) {
+            return $this->getSchemeTeamIds();
+        }
         $return = [];
         // add the direct teamPrimaryManager and teamSecondaryManager teams
         if (FALSE != $teamManagerTeamIds = $this->getTeamManagerTeamIds($user)) {
@@ -152,7 +170,6 @@ class Lantra_UsersService extends BaseApplicationComponent
                 }
             }
         }
-
         return $return;
     }
 

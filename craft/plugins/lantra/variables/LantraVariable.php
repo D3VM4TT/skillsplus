@@ -126,6 +126,30 @@ class LantraVariable
     }
 
     /**
+     * Return available teams (company licences available)
+     *
+     * @param null $userId
+     * @return array|null
+     * @throws Exception
+     */
+    public function availableTeams($userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        $teams = $this->managerTeams($user, ($user->isInGroup('companyManagers') || $user->isInGroup('schemeManagers')));
+        if (empty($teams)){
+            return null;
+        }
+        $return = [];
+        foreach ($teams as $team) {
+            if (craft()->lantra_licence->getTeamCompanyLicences($team)) {
+                $return[] = $team;
+            }
+        }
+        return $return;
+    }
+
+    /**
      * Return all subordinate users for a manager
      *
      * @param null $userId

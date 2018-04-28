@@ -63,13 +63,7 @@
         <label for="licence">PIL Licence number:</label>
         <input id="licence" name="fields[licence]" type="text" class="5000" placeholder="PIL Licence number" value="">
     </div>
-    {% if user.isInGroup('companyManagers') %}
-        {% set teamEntries = craft.lantra.managerTeams(null, true) %}
-    {% elseif user.isInGroup('teamManagers') %}
-        {% set teamEntries = craft.lantra.managerTeams() %}
-    {% else %}
-        {% set teamEntries = craft.entries.section('teams') %}
-    {% endif %}
+    {% set teamEntries = craft.lantra.availableTeams() %}
     <div class="form-group-lantra float-label-control">
         <label for="userTeam">User team:</label>
         <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default('') }}" id="userTeam" >
