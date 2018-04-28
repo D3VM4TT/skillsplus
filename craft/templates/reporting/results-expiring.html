@@ -3,6 +3,7 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Reporting > Expiring Results" %}
 {% set filterDays = craft.request.getParam('days')|default(30) %}
+{% set dateFormat = systemGlobals.dateFormat|default('d/m/y') %}
 
 {% block content %}
 <section class="list">
@@ -33,8 +34,8 @@
                     <td>{{ entry.author.getFullName() }}</td>
                     <td>{{ userTeam.title|default('') }}</td>
                     <td>{{ resultModule.title|default('') }}</td>
-                    <td>{{ entry.postDate|date('d/m/y') }}</td>
-                    <td>{{ entry.expiryDate|date('d/m/y') }}</td>
+                    <td>{{ entry.postDate|date(dateFormat) }}</td>
+                    <td>{{ entry.expiryDate|date(dateFormat) }}</td>
                 </tr>
             {% endfor %}
             </tbody>
