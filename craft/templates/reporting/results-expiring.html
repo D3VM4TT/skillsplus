@@ -2,14 +2,16 @@
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Reporting > Expiring Results" %}
-{% set filterDays = craft.request.getParam('days')|default(30) %}
+{% set filterDays = craft.request.segment(3)|default(30) %}
 {% set dateFormat = systemGlobals.dateFormat|default('d/m/y') %}
+{% set entryLimit = systemGlobals.defaultLimit|default(10) %}
 
 {% block content %}
 <section class="list">
     <h1>Expiring Results</h1>
-    {% set expiringResultEntries = craft.lantra.managerExpiringResults(currentUser.id, filterDays) %}
-    {% include 'reporting/_filter' with{filterDays:filterDays, expiring:true} %}
+    {% set criteria = craft.lantra.managerExpiringResults(currentUser.id, filterDays, entryLimit) %}
+    {% paginate criteria as pageInfo, expiringResultEntries %}
+    {% include 'includes/_filter' with{filterDays:filterDays, expiring:true} %}
     <table width="100%">
         {% if expiringResultEntries|length %}
             <thead>
@@ -41,5 +43,6 @@
             </tbody>
         {% endif %}
     </table>
+    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
 {% endblock %}

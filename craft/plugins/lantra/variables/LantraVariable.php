@@ -191,19 +191,20 @@ class LantraVariable
      *
      * @param null $userId
      * @param mixed $days
+     * @param int $limit
      * @param bool $count
      * @return mixed
      * @throws Exception
      */
-    public function managerExpiringResults($userId = null, $days = 'all', $count = false) {
+    public function managerExpiringResults($userId = null, $days = 'all', $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days);
+        $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
         if ( ! $criteria) {
             return null;
         }
-        return ($count) ? $criteria->count() : $criteria->find();
+        return ($count) ? $criteria->count() : $criteria;
     }
 
     /**
@@ -211,19 +212,20 @@ class LantraVariable
      *
      * @param null $userId
      * @param mixed $days
+     * @param int $limit
      * @param bool $count
      * @return mixed
      * @throws Exception
      */
-    public function managerRecentResults($userId = null,  $days = 'all', $count = false) {
+    public function managerRecentResults($userId = null,  $days = 'all', $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days);
+        $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
         if ( ! $criteria) {
             return null;
         }
-        return ($count) ? $criteria->count() : $criteria->find();
+        return ($count) ? $criteria->count() : $criteria;
     }
 
     /**

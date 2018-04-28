@@ -1,0 +1,7 @@
+{% for page, url in pageInfo.getPrevUrls(5) %}
+    <a href="{{ url }}">{{ page }}</a>
+{% endfor %}
+<span class="current">{{ pageInfo.currentPage }}</span>
+{% for page, url in pageInfo.getNextUrls(5) %}
+    <a href="{{ url }}">{{ page }}</a>
+{% endfor %}
