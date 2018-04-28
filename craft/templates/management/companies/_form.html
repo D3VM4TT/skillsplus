@@ -58,7 +58,7 @@
     </div>
     {% if scheme.schemeRemainingLicences %}
         <div class="form-group-lantra float-label-control">
-            <label for="companyRemainingLicences">Company Remaining Licences ({{ scheme.schemeRemainingLicences }}):</label>
+            <label for="companyRemainingLicences">Company Licences ({{ scheme.schemeRemainingLicences }}):</label>
             <input id="companyRemainingLicences" type="text" value="{{ entry.companyRemainingLicences|default('') }}" name="fields[companyRemainingLicences]" />
         </div>
     {% else %}
