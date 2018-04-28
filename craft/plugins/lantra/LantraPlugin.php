@@ -6,6 +6,7 @@ class LantraPlugin extends BasePlugin
 {
     private $sectionIdAttempts = 12;
     private $sectionIdResults = 10;
+    private $sectionIdCompanies = 3;
 
     function getName()
     {
@@ -54,6 +55,39 @@ class LantraPlugin extends BasePlugin
                 if ( ! is_object($unitEntry) || ! craft()->lantra_attempts->canAttempt($entry->authorId, $unitEntry)) {
                     $event->performAction = false;
                     craft()->request->redirect('/unit/' . $unitEntry->id);
+                }
+            }
+            // handle scheme licences
+            if ($entry->sectionId == $this->sectionIdCompanies){
+                $oldEntry = craft()->entries->getEntryById($entry->id);
+                $existingCompanyLicences = ($oldEntry) ? $oldEntry->companyRemainingLicences : 0;
+                $globalsScheme = craft()->globals->getSetByHandle('scheme');
+                // look for change
+                if ($existingCompanyLicences != $entry->companyRemainingLicences) {
+                    $content = false;
+                    // return scheme licences
+                    if ($existingCompanyLicences > $entry->companyRemainingLicences) {
+                        $returnedLicences = $existingCompanyLicences - $entry->companyRemainingLicences;
+                        $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences + $returnedLicences];
+                    }
+                    // remove scheme licences
+                    else {
+                        $newLicences = $entry->companyRemainingLicences - $existingCompanyLicences;
+                        // check scheme remaining licences
+                        if ($newLicences > $globalsScheme->schemeRemainingLicences) {
+                            $entry->addError('companyRemainingLicences', 'There are insufficient scheme licences.');
+                            $event->performAction = false;
+                        }
+                        else {
+                            // update scheme remaining licences
+                            $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences - $newLicences];
+                        }
+                    }
+                    // update the global
+                    if ($content) {
+                        $globalsScheme->setContentFromPost($content);
+                        craft()->globals->saveContent($globalsScheme);
+                    }
                 }
             }
         });

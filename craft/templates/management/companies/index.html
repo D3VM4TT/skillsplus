@@ -16,6 +16,7 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Parent</th>
+                    <th>Remaining Licences</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
@@ -26,6 +27,7 @@
                     <th>{{ company.id }}</th>
                     <th>{{ company.title }}</th>
                     <th>{{ parent.title|default('~ none ~') }}</th>
+                    <th>{{ company.companyRemainingLicences }}</th>
                     <th>
                         <a href="/management/companies/edit/{{ company.id }}">edit</a> |
                         <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>

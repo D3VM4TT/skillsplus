@@ -56,6 +56,14 @@
             {% endfor %}
         </select>
     </div>
+    {% if scheme.schemeRemainingLicences %}
+        <div class="form-group-lantra float-label-control">
+            <label for="companyRemainingLicences">Company Remaining Licences ({{ scheme.schemeRemainingLicences }}):</label>
+            <input id="companyRemainingLicences" type="number" value="{{ entry.companyRemainingLicences }}" name="fields[companyRemainingLicences]" />
+        </div>
+    {% else %}
+        <h4>There are no more licences to assign.</h4>
+    {% endif %}
     <br />
     <div class="freetext-procedure"><button type="submit">Save company</button></div>
 </form>
