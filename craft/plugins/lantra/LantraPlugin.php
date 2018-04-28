@@ -46,6 +46,18 @@ class LantraPlugin extends BasePlugin
             }
         });
 
+        craft()->on('entries.onBeforeSaveEntry', function(Event $event) {
+            $entry = $event->params['entry'];
+            // check remaining attempts
+            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts) {
+                $unitEntry = $entry->attemptUnit->first();
+                if ( ! is_object($unitEntry) || ! craft()->lantra_attempts->canAttempt($entry->authorId, $unitEntry)) {
+                    $event->performAction = false;
+                    craft()->request->redirect('/unit/' . $unitEntry->id);
+                }
+            }
+        });
+
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
             // Mark unit attempt and create result entry

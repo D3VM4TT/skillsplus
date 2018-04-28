@@ -22,6 +22,21 @@ class Lantra_AttemptsService extends BaseApplicationComponent
     }
 
     /**
+     * Check a user can attempt
+     *
+     * @param $userId
+     * @param $unitId
+     * @return bool
+     */
+    public function canAttempt($userId, $unitEntry) {
+        // result does not exist for user
+        if (! is_object($unitEntry) || false == $resultEntry = craft()->lantra_results->getUnitResult($userId, $unitEntry->id)) {
+            return true;
+        }
+        return (bool) $this->remainingAttempts($unitEntry, $resultEntry);
+    }
+
+    /**
      * Return remaining number of attempts for a user on a unit
      *
      * @param EntryModel $unitEntry
