@@ -1,3 +1,4 @@
+{% set dateFormat = systemGlobals.dateFormat|default('d/m/y') %}
 {% if currentUser.userRole.total %}
     <section id="my-skills-quals" class="section-dashboard">
         {% for role in currentUser.userRole %}
@@ -73,7 +74,7 @@
                                                                         <td>
                                                                             {{ resultEntry.resultStatus|ucwords }}
                                                                         </td>
-                                                                        <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date('d/m/y') }}{% endif %}</td>
+                                                                        <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
                                                                         <td>{{ resultEntry.resultComments }}</td>
                                                                     {% else %}
                                                                         <td>Incomplete</td>
@@ -96,7 +97,7 @@
                                 <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
                                 <h4>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
                                 {% if moduleResultEntry %}
-                                <h4>Result Expires: {% if moduleResultEntry.expiryDate %}{{ moduleResultEntry.expiryDate|date('d/m/y') }}{% else %}Never{% endif %}</h4>
+                                    <h4>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h4>
                                 {% endif %}
                             </div>
                         </div>
