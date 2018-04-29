@@ -28,6 +28,12 @@
 				{% include 'includes/_nav' %}
 			{% endif %}
 			<main class="col-sm-9 ml-sm-auto col-md-10 pt-3 main-content" role="main">
+				{% set notice = craft.session.getFlash('notice') %}
+				{% set error = craft.session.getFlash('error') %}
+				<div id="notifications">
+					{% if notice %}<div class="alert alert-success"><strong>Success!</strong> {{ notice }}</div>{% endif %}
+					{% if error %}<div class="alert alert-error"><strong>Error!</strong> {{ error }}</div>{% endif %}
+				</div>
 				{% block content %}{% endblock %}
 			</main>
 		</div>
