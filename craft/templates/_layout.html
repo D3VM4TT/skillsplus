@@ -25,7 +25,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			{% if currentUser and craft.request.firstSegment != "public" %}
-				{% include 'includes/_nav' %}
+				{% include '_includes/nav' %}
 			{% endif %}
 			<main class="col-sm-9 ml-sm-auto col-md-10 pt-3 main-content" role="main">
 				{% set notice = craft.session.getFlash('notice') %}

@@ -51,7 +51,7 @@
                 </tbody>
             </table>
         </div>
-        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
         {% if craft.lantra.canAddUser() %}
             <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
         {% endif %}
