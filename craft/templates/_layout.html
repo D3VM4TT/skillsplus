@@ -1,4 +1,4 @@
-{% if craft.request.firstSegment != "login" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
+{% if craft.request.firstSegment != "login" and craft.request.firstSegment != "actions" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
 <!DOCTYPE HTML>
 <html class="no-js" lang="">
 <head>
