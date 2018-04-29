@@ -1,15 +1,19 @@
-{% if currentUser.isInGroup('companyManagers') %}
-    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
-    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-{% else %}
-    {% set teams = craft.entries.section('teams') %}
-{% endif %}
-
 {% requirePermission 'editEntries:5' %}
 
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Teams" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% if currentUser.isInGroup('companyManagers') %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
+    {% set criteria = craft.entries.section('teams').relatedTo(companies).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.entries.section('teams').limit(pageLimit) %}
+{% endif %}
+
+{% paginate criteria as pageInfo, teamEntries %}
 
 {% block content %}
 
@@ -26,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for team in teams %}
+            {% for team in teamEntries %}
                 <tr class="item">
                     <th>{{ team.id }}</th>
                     <th>{{ team.teamCompany.first.title }}</th>
@@ -40,6 +44,7 @@
             </tbody>
         </table>
     </div>
+    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
 <div class="freetext-procedure"><a href="/management/teams/new">Create team</a></div>
 

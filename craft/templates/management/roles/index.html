@@ -3,12 +3,16 @@
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Roles" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.categories('roles').limit(pageLimit) %}
+{% paginate criteria as pageInfo, roleCategories %}
 
 {% block content %}
 
 <section class="list">
     <h2>Roles</h2>
-    {% set roles = craft.categories('roles') %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -19,7 +23,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for role in roles %}
+            {% for role in roleCategories %}
             <tr class="item">
                 <th>{{ role.id }}</th>
                 <th>{{ role.title }}</th>
@@ -32,6 +36,7 @@
             </tbody>
         </table>
     </div>
+    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
 <div class="freetext-procedure"><a href="/management/roles/new">Create role</a></div>
 

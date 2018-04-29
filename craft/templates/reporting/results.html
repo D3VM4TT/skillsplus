@@ -10,9 +10,9 @@
 
 {% set metaTitle = "Reporting > " ~ reportType|ucwords ~ " Results" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-{% set entryLimit = globalsSystem.defaultLimit|default(10) %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
-{% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, entryLimit) %}
+{% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, pageLimit) %}
 {% paginate criteria as pageInfo, resultEntries %}
 
 {% block content %}

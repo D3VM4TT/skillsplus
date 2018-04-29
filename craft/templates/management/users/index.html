@@ -1,18 +1,23 @@
 {% requirePermission 'editUsers' %}
-{% if currentUser.isInGroup('companyManagers') %}
-    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
-    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set users = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id) %}
-{% elseif currentUser.isInGroup('teamManagers') %}
-    {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set users = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id) %}
-{% else %}
-    {% set users = craft.users.group('users, teamManagers, companyManagers') %}
-{% endif %}
 
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Users" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% if currentUser.isInGroup('companyManagers') %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
+    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id).limit(pageLimit) %}
+{% elseif currentUser.isInGroup('teamManagers') %}
+    {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers').limit(pageLimit) %}
+{% endif %}
+
+{% paginate criteria as pageInfo, userEntries %}
 
 {% block content %}
     <section class="list">
@@ -28,7 +33,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in users %}
+                {% for user in userEntries %}
                 {% set team = user.userTeam.first() %}
                 <tr class="item">
                     <th>{{ user.id }}</th>
@@ -43,6 +48,7 @@
                 </tbody>
             </table>
         </div>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
     </section>
     {% if craft.lantra.canAddUser() %}
         <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>

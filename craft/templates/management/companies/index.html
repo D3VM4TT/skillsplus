@@ -2,13 +2,17 @@
 
 {% extends "_layout" %}
 
-{% set metaTitle = "Management > Companies" %}
+{% set metaTitle = "Management > companies" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.entries.section('companies').limit(pageLimit) %}
+{% paginate criteria as pageInfo, companyEntries %}
 
 {% block content %}
 
 <section class="list">
     <h2>Companies</h2>
-    {% set companies = craft.entries.section('companies') %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -21,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for company in companies %}
+            {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
                 <tr class="item">
                     <th>{{ company.id }}</th>
@@ -37,6 +41,7 @@
             </tbody>
         </table>
     </div>
+    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
 <div class="freetext-procedure"><a href="/management/companies/new">Create company</a></div>
 
