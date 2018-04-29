@@ -2,29 +2,33 @@
 
 {% extends "_layout" %}
 
-{% set lantraRoles = craft.categories('roles').ids() %}
-
 {% set metaTitle = "Management > Modules" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.entries.section('modules').order('title').limit(pageLimit) %}
+{% paginate criteria as pageInfo, moduleEntries %}
 
 {% block content %}
 
 <section class="list">
     <h2>Modules</h2>
-    {% set modules = craft.entries.section('modules').relatedTo(lantraRoles) %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>&nbsp;</th>
+                    <th>Job Joles</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-            {% for module in modules %}
+            {% for module in moduleEntries %}
                 <tr class="item">
                     <th>{{ module.id }}</th>
                     <th>{{ module.title }}</th>
+                    <th>{{ module.moduleRoles.find()|join(", ") }}</th>
                     <th>
                         <a href="/management/modules/edit/{{ module.id }}">edit</a> |
                         <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ module.id }}">delete</a>
@@ -34,7 +38,6 @@
             </tbody>
         </table>
     </div>
+    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
-<div class="freetext-procedure"><a href="/management/modules/new">Create module</a></div>
-
 {% endblock %}

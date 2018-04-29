@@ -43,13 +43,10 @@
         {% endif %}
         {% if currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
         <li class="nav-item">
-            <a href="#LearningManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Learning Management</a>
-            <ul class="collapse list-unstyled" id="LearningManagement">
+            <a href="#ModuleManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Module Management</a>
+            <ul class="collapse list-unstyled" id="ModuleManagement">
                 {% if currentUser.can('editEntries:6') %}
-                    <li class="nav-item"><a href="/management/modules" class="nav-link">Create / Edit modules</a></li>
-                {% endif %}
-                {% if currentUser.can('editEntries:7') %}
-                    <li class="nav-item"><a href="/management/units" class="nav-link">Create / Edit units</a></li>
+                    <li class="nav-item"><a href="/management/modules" class="nav-link">Assign module job joles</a></li>
                 {% endif %}
             </ul>
         </li>
