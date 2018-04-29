@@ -54,14 +54,13 @@ Craft.AuthManager = Garnish.Base.extend(
 			{
 				if (textStatus == 'success')
 				{
-					this.updateAuthTimeout(jqXHR.responseJSON.timeout);
-
-					this.submitLoginIfLoggedOut = false;
-
 					if (typeof jqXHR.responseJSON.csrfTokenValue !== 'undefined' && typeof Craft.csrfTokenValue !== 'undefined')
 					{
 						Craft.csrfTokenValue = jqXHR.responseJSON.csrfTokenValue;
 					}
+
+					this.updateAuthTimeout(jqXHR.responseJSON.timeout);
+					this.submitLoginIfLoggedOut = false;
 				}
 				else
 				{
@@ -178,7 +177,7 @@ Craft.AuthManager = Garnish.Base.extend(
 					{
 						// Auto-focus the renew button
 						setTimeout(function() {
-							$renewSessionBtn.focus();
+							$renewSessionBtn.trigger('focus');
 						}, 100);
 					}
 				}
@@ -300,7 +299,7 @@ Craft.AuthManager = Garnish.Base.extend(
 					{
 						// Auto-focus the password input
 						setTimeout($.proxy(function() {
-							this.$passwordInput.focus();
+							this.$passwordInput.trigger('focus');
 						}, this), 100);
 					}
 				}, this),
@@ -436,7 +435,7 @@ Craft.AuthManager = Garnish.Base.extend(
 
 					if (!Garnish.isMobileBrowser(true))
 					{
-						this.$passwordInput.focus();
+						this.$passwordInput.trigger('focus');
 					}
 				}
 			}
