@@ -72,7 +72,7 @@ class LantraPlugin extends BasePlugin
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
                 // update endorsed date
                 $oldEntry = craft()->entries->getEntryById($entry->id);
-                if ($oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
+                if ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                 }
             }
