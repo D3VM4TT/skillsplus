@@ -30,7 +30,7 @@ class Lantra_CronController extends Lantra_BaseController {
         $criteria->limit = null;
         $criteria->groupId = array(2, 3);
         $managers = $criteria->find();
-
+        // loop managers and send notifications
         foreach($managers as $manager) {
             craft()->lantra_notify->sendManagerSummary($manager);
         }

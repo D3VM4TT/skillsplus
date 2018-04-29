@@ -12,42 +12,38 @@ class Lantra_EntriesController extends Lantra_BaseController {
     /**
      * Deletes entries from the front end
      *
-     * @throws Exception
+     * @throws mixed
      */
-    public function actionDeleteEntry()
-    {
+    public function actionDeleteEntry() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-
+        // get the posted entryId
         $entryId = craft()->request->getPost('entryId');
-        if (FALSE == $entry = craft()->entries->getEntryById($entryId)) {
-            $this->_returnError('Invalid entry ID.');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-
-        // company
+        // if removing a company, disable teams and children
         if ($entry->section->id == 3) {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
-
+        // save disabled category
         $this->_disableEntry($entry);
-
         $this->_returnMessage('Entry has been removed.', TRUE, craft()->request->getUrlReferrer());
     }
 
     /**
      * Endorses evidence
      *
-     * @throws Exception
+     * @throws mixed
      */
-    public function actionEndorseEvidence()
-    {
+    public function actionEndorseEvidence() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-
+        // get all the posted entryIds
         $entryIds = craft()->request->getPost('entryIds');
         $count = 0;
-
+        // loop entries and update status
         foreach ($entryIds as $entryId) {
             if (FALSE != $entry = craft()->entries->getEntryById($entryId)) {
                 $entry->setContentFromPost(['resultStatus' => 'endorsed']);
@@ -55,16 +51,23 @@ class Lantra_EntriesController extends Lantra_BaseController {
                 $count ++;
             }
         }
-
-        $this->_returnMessage('Evidence endorsed for ' . $count . ' entries.');
+        $this->_returnMessage($count . ' results endorsed.');
     }
 
-    protected function _disableEntry ($entry) {
+    /**
+     * @param $entry
+     * @throws mixed
+     */
+    private function _disableEntry ($entry) {
         $entry->enabled = false;
         craft()->entries->saveEntry($entry);
     }
 
-    protected function _disableTeams($company) {
+    /**
+     * @param $company
+     * @throws Exception
+     */
+    private function _disableTeams($company) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->relatedTo = array(
             'targetElement' => $company,
@@ -76,7 +79,11 @@ class Lantra_EntriesController extends Lantra_BaseController {
         }
     }
 
-    protected function _disableChildren($company) {
+    /**
+     * @param $company
+     * @throws Exception
+     */
+    private function _disableChildren($company) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->relatedTo = array(
             'targetElement' => $company,
