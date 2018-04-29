@@ -103,6 +103,7 @@ class LantraPlugin extends BasePlugin
             // Check unit result for new module result
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
                 craft()->lantra_results->checkUnitResult($entry);
+                craft()->lantra_results->checkRemainingAttempts($entry);
             }
             // Send notifications on new module result
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult') {

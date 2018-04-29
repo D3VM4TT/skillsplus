@@ -88,6 +88,21 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether a user has any remaining attempts
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function checkRemainingAttempts($resultEntry) {
+        $resultUnitEntry = $resultEntry->resultUnit->first();
+        $totalAttempts = $resultEntry->resultAttempts->total();
+        if ($resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
+            craft()->lantra_notify->sendNoAttemptsRemaining($resultEntry);
+        }
+    }
+
+    /**
      * Check whether a unit result has completed a module
      *
      * @param $resultEntry

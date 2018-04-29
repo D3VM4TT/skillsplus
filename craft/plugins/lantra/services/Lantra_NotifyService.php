@@ -53,6 +53,22 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $this->notify($entry->getAuthor()->email, $subject, $message);
         $this->notifyManagers($entry->getAuthor(), $subject, $message);
     }
+
+    /**
+     * Notify managers of no attempts remaining
+     *
+     * @throws Exception
+     */
+    function sendNoAttemptsRemaining(EntryModel $resultEntry) {
+        $unitEntry = $resultEntry->resultUnit->first();
+        $author = $resultEntry->getAuthor();
+        $authorFullName = $author->getFullName();
+        $subject = "No Attempts Remaining ["  . $authorFullName  . "]";
+        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . '.';
+        // send the emails to managers
+        $this->notifyManagers($author, $subject, $message);
+    }
+
     /**
      * Notify managers summary
      *
