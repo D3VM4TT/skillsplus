@@ -50,10 +50,10 @@
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="teamPrimaryManager">Team primary manager:</label>
-        {% set usersCompanyManagers = craft.users.group('companyManagers') %}
+        {% set usersTeamManagers = craft.users.group('teamManagers') %}
         <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
             <option value="">~ none selected ~</option>
-            {% for userEntry in usersCompanyManagers %}
+            {% for userEntry in usersTeamManagers %}
                 <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
