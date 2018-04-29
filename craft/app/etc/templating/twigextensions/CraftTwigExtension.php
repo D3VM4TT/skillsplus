@@ -96,6 +96,7 @@ class CraftTwigExtension extends \Twig_Extension
 			'currency'           => new \Twig_Filter_Function('\Craft\craft()->numberFormatter->formatCurrency'),
 			'date'               => new \Twig_Filter_Method($this, 'dateFilter', array('needs_environment' => true)),
 			'datetime'           => new \Twig_Filter_Function('\Craft\craft()->dateFormatter->formatDateTime'),
+			'encenc'             => new \Twig_Filter_Method($this, 'encencFilter'),
 			'filesize'           => new \Twig_Filter_Function('\Craft\craft()->formatter->formatSize'),
 			'filter'             => new \Twig_Filter_Function('array_filter'),
 			'group'              => new \Twig_Filter_Method($this, 'groupFilter'),
@@ -125,6 +126,18 @@ class CraftTwigExtension extends \Twig_Extension
 			'values'             => new \Twig_Filter_Function('array_values'),
 			'without'            => new \Twig_Filter_Method($this, 'withoutFilter'),
 		);
+	}
+
+	/**
+	 * Encrypts and base64-encodes a string.
+	 *
+	 * @param string $string The string.
+	 *
+	 * @return string
+	 */
+	public function encencFilter($string)
+	{
+		return StringHelper::encenc($string);
 	}
 
 	/**
@@ -563,7 +576,7 @@ class CraftTwigExtension extends \Twig_Extension
 			// Technically deprecated, though.
 			$globals['user'] = $globals['currentUser'];
 
-			if (craft()->request->isCpRequest())
+			if (craft()->templates->getTemplateMode() === TemplateMode::CP)
 			{
 				$globals['CraftEdition']  = craft()->getEdition();
 				$globals['CraftPersonal'] = Craft::Personal;
@@ -579,7 +592,7 @@ class CraftTwigExtension extends \Twig_Extension
 			$globals['siteName'] = craft()->getSiteName();
 			$globals['siteUrl'] = craft()->getSiteUrl();
 
-			if (craft()->request->isSiteRequest())
+			if (craft()->templates->getTemplateMode() === TemplateMode::Site)
 			{
 				foreach (craft()->globals->getAllSets() as $globalSet)
 				{

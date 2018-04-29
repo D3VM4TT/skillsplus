@@ -1,0 +1,52 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set metaTitle = "Management > Endorsements" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.lantra.managerEndorsementResults(null, pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>Endorsements</h2>
+    </div>
+    {% if resultEntries is defined and resultEntries|length %}
+        <form method="post" role="form" accept-charset="UTF-8">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="lantra/entries/endorseEvidence">
+            <input type="hidden" value="" name="entryIds[]" />
+            <div class="form-group-lantra">
+                <table width="100%" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Unit</th>
+                            <th>Date</th>
+                            <th>Evidence</th>
+                            <th>&nbsp;</th>
+                    </thead>
+                    <tbody>
+                    {% for entry in resultEntries %}
+                    <tr>
+                        <td>{{ entry.author.getFullName }}</td>
+                        <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
+                        <td>{{ entry.postDate|date(dateFormat) }}</td>
+                        <td><a target="_blank" href="/internal/{{ entry.resultEvidence.first.id }}">{{ entry.resultEvidence.first.filename }}</a></td>
+                        <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <div class="freetext-procedure"><button type="submit">Endorse Selected</button></div>
+        </form>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <h4>You have no more evidence to endorse.</h4>
+    {% endif %}
+{% endblock %}

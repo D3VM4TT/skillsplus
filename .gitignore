@@ -1,9 +1,10 @@
 # Site Specific #
 ###################
-public_html/assets/css/*
 public_html/assets/js/*
 public_html/store/*
 public_html/dev
+
+assets/*
 
 # Craft CMS #
 ###################

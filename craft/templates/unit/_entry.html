@@ -1,87 +1,46 @@
 {% extends "_layout" %}
-{% import "_macros" as ui %}
+
 {% if entry is not defined %}
     {% set entry = craft.entries.id(craft.request.getSegment(2)).first() %}
 {% endif %}
+
 {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(entry).first() %}
+{% set remainingAttempts = craft.lantra.remainingAttempts(entry, resultEntry) %}
+
 {% set metaTitle = "Unit " ~ entry.id %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 
 {% block content %}
 
 <section class="list">
-    <h2>Unit {{ entry.id }}</h2>
-    {% if resultEntry|length %}
-        <p>You have already completed this unit.</p>
-    {% elseif craft.request.getSegment(3) == 'saved' %}
-        <p>RESULT SAVED</p>
-    {% elseif craft.request.getSegment(3) == 'test' %}
-
-        {% if entry is defined %}
-        {{ ui.errorList(entry.getAllErrors()) }}
-        {% endif %}
-
-        <form method="post" role="form" accept-charset="UTF-8">
-            {{ getCsrfInput() }}
-            <input type="hidden" name="action" value="entries/saveEntry">
-            <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
-            <input type="hidden" name="sectionId" value="12">
-            <input type="hidden" name="enabled" value="1">
-            <input type="hidden" name="fields[attemptUnit][]" value="{{ entry.id }}">
-            {% for question in entry.testQuestions %}
-            {% set questionNumber = loop.index  %}
-            {% set questionId = 'new_' ~ (questionNumber - 1)  %}
-            <div class="form-group-lantra float-label-control">
-                <label for="question_{{ loop.index }}"><em>{{ questionNumber }} {{ question.question }}</em></label>
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
-                <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
-                {% if question.type == "trueFalse" %}
-                <ul class="choices">
-                    <li>TRUE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"></li>
-                    <li>FALSE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"></li>
-                </ul>
-                {% elseif question.type == "choices" %}
-                <ul>
-                    {% for choice in question.answers %}
-                    <li>{{ choice.answer }}<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"></li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
-                {% endif %}
-            </div>
-            {% endfor %}
-            <br />
-            <div class="freetext-procedure"><button type="submit">Submit Answers</button></div>
-        </form>
-
-    {% else %}
-        <p>UNIT CONTENT</p>
-        {% if entry.unitType == 'evidence' %}
-
-            {% if entry is defined %}
-            {{ ui.errorList(entry.getAllErrors()) }}
-            {% endif %}
-
-            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
-                {{ getCsrfInput() }}
-                <input type="hidden" name="action" value="entries/saveEntry">
-                <input type="hidden" name="redirect" value="unit/{{ entry.id }}/saved">
-                <input type="hidden" name="sectionId" value="10">
-                <input type="hidden" name="enabled" value="1">
-                <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
-                <input type="hidden" name="fields[resultStatus]" value="pending">
-                <div class="form-group-lantra">
-                    <input type="file" name="fields[resultEvidence][]" multiple>
-                </div>
-                <div class="freetext-procedure">
-                    <button type="submit">Submit Evidence</button>
-                </div>
-            </form>
-
+    <div class="page-header">
+        <h1>Unit {{ entry.id}}</h1>
+    </div>
+    <h3>{{ entry.title }}</h3>
+    {% if entry.unitType == 'evidence' %}
+        <p>[[ UNIT CONTENT ]]</p>
+        {% if resultEntry|length %}
+            <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }}.</p>
+            <p>Your result status is {{ resultEntry.resultStatus }}.</p>
         {% else %}
-            <p><a href="/unit/{{ entry.id }}/test">Complete Test</a></p>
+            {% include 'unit/_evidence' with{entry:entry} %}
         {% endif %}
+    {% else %}
+        {% if resultEntry|length %}
+            <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+            {% if resultEntry.resultStatus == 'endorsed' %}
+                <p>You have passed this test.</p>
+            {% endif %}
+        {% endif %}
+        {% if not remainingAttempts %}
+            <p>You have no remaining attempts, contact support.</p>
+        {% elseif craft.request.getSegment(3) == 'test' %}
+           {% include 'unit/_test' with{entry:entry} %}
+        {% else %}
+            <p>[[ UNIT CONTENT ]]</p>
+            <p><a href="/unit/{{ entry.id }}/test">Complete unit test</a></p>
+         {% endif %}
     {% endif %}
+    <p><a href="/">Back to dashboard</a></p>
 </section>
 {% endblock %}

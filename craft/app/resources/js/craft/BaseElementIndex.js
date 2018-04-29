@@ -263,7 +263,7 @@ Craft.BaseElementIndex = Garnish.Base.extend(
 
 			if (!Garnish.isMobileBrowser(true))
 			{
-				this.$search.focus();
+				this.$search.trigger('focus');
 			}
 
 			this.stopSearching();
@@ -275,7 +275,7 @@ Craft.BaseElementIndex = Garnish.Base.extend(
 		// Auto-focus the Search box
 		if (!Garnish.isMobileBrowser(true))
 		{
-			this.$search.focus();
+			this.$search.trigger('focus');
 		}
 
 		// Initialize the sort menu
@@ -554,6 +554,11 @@ Craft.BaseElementIndex = Garnish.Base.extend(
 
 		if (this.getSelectedSortAttribute() == 'structure')
 		{
+			if (typeof this.instanceState.collapsedElementIds === 'undefined')
+			{
+				this.instanceState.collapsedElementIds = [];
+			}
+
 			params.collapsedElementIds = this.instanceState.collapsedElementIds;
 		}
 

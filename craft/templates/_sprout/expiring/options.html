@@ -1,0 +1,13 @@
+{% import "_includes/forms" as forms %}
+{{ forms.selectField({
+    label: "Duration"|t,
+    name: "days",
+    options: {
+        "1" : "a day",
+        "7" : "a week",
+        "28" : "four weeks",
+        "365" : "a year",
+        "all" : "all time"
+    },
+    value: options.days is defined ? options.days : "all"
+}) }}

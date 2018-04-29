@@ -1,0 +1,409 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+/*body {
+  padding-top: 3.5rem;
+}*/
+
+/*
+ * Typography
+ */
+
+ body,
+button,
+input,
+select,
+optgroup,
+textarea,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6
+ {
+  color: #000000;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+
+h1 {
+  font-size: 42px !important;
+  font-weight: 300 !important;
+}
+
+h2 {
+  font-size: 32px !important;
+  font-weight: 300 !important;
+}
+
+h4 {
+    font-size: 22px !important;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-muted {
+  text-transform: uppercase;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  font-size: 12px !important;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed !important;
+  top: 0px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 50px 0px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.sidebar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/*.sidebar .nav {
+  margin-bottom: 20px;
+}*/
+
+.sidebar .nav-item {
+  font-weight: 600 !important;
+  width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0 !important;
+}
+
+.nav-pills .nav-link:hover {
+background-color: rgba(0,0,0,.05);
+}
+
+.nav-pills .nav-link[aria-expanded="true"] {
+    color: #FFFFFF !important;
+    background-color: #343a40 !important;
+}
+
+.nav-pills .nav-item:last-child { margin-bottom: 40px;}
+
+.sidebar .nav-link {
+  color: #343a40 !important;
+}
+
+.sidebar li.sign-out .nav-link {
+  font-weight: 700;
+}
+
+/*
+ * Dashboard
+ */
+
+main {
+  padding-bottom: 120px;
+}
+
+ .welcome-back {
+  padding:  20px 0px;
+ }
+
+.main-content {
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+  margin-top: 30px;
+}
+
+ /*Forms*/
+/*.form-control {
+    color: #FFFFFF !important;
+    background-color: rgba(255,255,255,.1) !important;
+    border: 0px solid rgba(0,0,0,.15) !important;
+    border-radius: 0rem !important;
+}
+
+.btn-outline-success {
+    color: #FFF !important;
+    background-color: transparent;
+    background-image: none;
+    border-color: #FFF !important;
+}
+.btn {
+    border: 0px solid transparent !important;
+}*/
+
+.dashboard-title {
+  padding-bottom: 40px;
+}
+
+.section-dashboard {
+  padding: 30px 0px;
+}
+
+.section-dashboard h2 {
+  padding-bottom: 30px;
+}
+
+/*Tables*/
+.module {
+    border: 2px solid #e9ecef;
+    border-top:none;
+    padding: 35px 20px;
+}
+
+.module-wrapper {
+    border-top: 2px solid #e9ecef;
+}
+
+#exTab .tab-pane-title {
+  color : #000;
+  background-color: #e9ecef;
+  padding : 15px 15px 5px 15px;
+  margin-bottom: 40px;
+}
+
+#exTab .tab-pane-sub-title {
+  padding : 0px 15px 5px 15px;
+}
+
+#exTab {
+  border: 2px solid #e9ecef;
+  padding: 35px 20px;
+      margin-bottom: 40px;
+}
+
+#exTab ul.nav {
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 35px;
+}
+
+/* remove border radius for the tab */
+
+.nav-pills > li > a {
+  color: #000;
+  border-radius: 0;
+  text-decoration: none;
+  position: relative;
+  display: block;
+  padding : 10px 15px;
+}
+
+.nav-pills > li > a:hover {
+background-color: rgba(0,0,0,.05);
+  padding : 10px 15px;
+}
+
+.nav-pills > li.active > a, .nav-pills > li > a.active {
+background-color: rgba(0,0,0,.05);
+}
+
+.nav-pills .nav-link.active, .show > .nav-pills .nav-link {
+background-color: rgba(0,0,0,.05) !important;
+}
+
+#collapseOne .accordion-content {
+    padding: 10px 15px 30px 15px;
+}
+
+.accordion-content h4 {
+  padding-bottom: 20px;
+}
+
+tr.accordion-toggle {
+  background-color: #f8f9fa !important;
+  cursor: pointer;
+}
+
+.table-striped tbody tr.accordion-toggle:hover {
+background-color: rgba(0,0,0,.05) !important;
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) {
+    background-color: #f8f9fa !important;
+}
+
+.accordion-toggle p {
+  padding-left: 5px;
+  margin: 0;
+  font-weight: 700;
+}
+
+div.accordion-title, div.profile-field, div.profile-data {
+  position: relative;
+  float: left;
+}
+
+div.accordion-icon {
+  position: relative;
+  float: right;
+}
+
+div.accordion-icon img {
+  padding: 0px 5px 0px 20px;
+}
+
+.table thead th {
+    border: 0;
+    background-color: #fff;
+}
+
+div.request-endorsement {
+  padding-top: 40px;
+  position: relative;
+  float: right;
+}
+
+div.freetext-procedure {
+    padding-top: 40px;
+  position: relative;
+  float: left;
+}
+
+.request-endorsement a, .freetext-procedure a {
+  text-decoration: none;
+padding: 15px 20px;
+background-color: rgba(0, 0, 0, 1.0);
+color: #fff;
+}
+
+.request-endorsement a:hover, .freetext-procedure a:hover {
+background-color: rgba(0, 0, 0, 0.7);
+color: #fff;
+text-decoration: none;
+}
+
+/* PageLinks */
+div.links {
+    padding-top: 40px;
+    position: relative;
+    clear:both;
+    margin-bottom:20px;
+}
+
+div.links a,
+div.links span {
+    text-decoration: none;
+    padding: 5px 8px;
+    background-color: rgba(0, 0, 0, 1.0);
+    color: #fff;
+}
+
+div.links a:hover,
+div.links span {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Tooltip */
+  a.test + .tooltip > .tooltip-inner {
+      background-color: #73AD21; 
+      color: #FFFFFF; 
+      border: 1px solid green; 
+      padding: 15px;
+      font-size: 20px;
+  }
+  /* Tooltip on top */
+  a.test + .tooltip.top > .tooltip-arrow {
+      border-top: 5px solid green;
+  }
+
+  #lantra-table { margin-bottom: 50px; }
+
+ /* Placeholders */
+.placeholders {
+  padding-bottom: 3rem;
+}
+
+.placeholder img {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+div.page-header {
+  padding-bottom: 40px;
+}
+
+div.form-subheader {
+  padding-top: 40px;
+}
+
+.checkbox-option span {
+  padding-left: 20px;
+}
+
+/*Forms*/
+.float-label-control { position: relative; margin-bottom: 1.5em; }
+    .float-label-control ::-webkit-input-placeholder { color: transparent; }
+    .float-label-control :-moz-placeholder { color: transparent; }
+    .float-label-control ::-moz-placeholder { color: transparent; }
+    .float-label-control :-ms-input-placeholder { color: transparent; }
+    .float-label-control input:-webkit-autofill,
+    .float-label-control textarea:-webkit-autofill { background-color: transparent !important; -webkit-box-shadow: 0 0 0 1000px white inset !important; -moz-box-shadow: 0 0 0 1000px white inset !important; box-shadow: 0 0 0 1000px white inset !important; }
+    .float-label-control input, .float-label-control textarea, .float-label-control label { font-size: 1.3em; box-shadow: none; -webkit-box-shadow: none; }
+        .float-label-control input:focus,
+        .float-label-control textarea:focus { box-shadow: none; -webkit-box-shadow: none; border-bottom-width: 2px; padding-bottom: 0; }
+        .float-label-control textarea:focus { padding-bottom: 4px; }
+    .float-label-control input, .float-label-control textarea { display: block; width: 100%; padding: 0.1em 0em 1px 0em; border: none; border-radius: 0px; border-bottom: 2px solid #e8e8e8; outline: none; margin: 0px; background: none; }
+    .float-label-control textarea { padding: 0.1em 0em 5px 0em; }
+    .float-label-control label { position: absolute; font-weight: normal; top: -1.5em; left: 0.08em; color: #999999; z-index: -1; font-size: 0.85em; -moz-animation: float-labels 300ms none ease-out; -webkit-animation: float-labels 300ms none ease-out; -o-animation: float-labels 300ms none ease-out; -ms-animation: float-labels 300ms none ease-out; -khtml-animation: float-labels 300ms none ease-out; animation: float-labels 300ms none ease-out; /* There is a bug sometimes pausing the animation. This avoids that.*/ animation-play-state: running !important; -webkit-animation-play-state: running !important; }
+    .float-label-control input.empty + label,
+    .float-label-control textarea.empty + label { top: 0.1em; font-size: 16px; animation: none; -webkit-animation: none; }
+    .float-label-control input:not(.empty) + label,
+    .float-label-control textarea:not(.empty) + label { z-index: 1; }
+    .float-label-control input:not(.empty):focus + label,
+    .float-label-control textarea:not(.empty):focus + label { color: #aaaaaa; }
+    .float-label-control.label-bottom label { -moz-animation: float-labels-bottom 300ms none ease-out; -webkit-animation: float-labels-bottom 300ms none ease-out; -o-animation: float-labels-bottom 300ms none ease-out; -ms-animation: float-labels-bottom 300ms none ease-out; -khtml-animation: float-labels-bottom 300ms none ease-out; animation: float-labels-bottom 300ms none ease-out; }
+    .float-label-control.label-bottom input:not(.empty) + label,
+    .float-label-control.label-bottom textarea:not(.empty) + label { top: 3em; }
+
+
+@keyframes float-labels {
+    0% { opacity: 1; color: #aaa; top: 0.1em; font-size: 1.5em; }
+    20% { font-size: 1.5em; opacity: 0; }
+    30% { top: 0.1em; }
+    50% { opacity: 0; font-size: 0.85em; }
+    100% { top: -1em; opacity: 1; }
+}
+
+@-webkit-keyframes float-labels {
+    0% { opacity: 1; color: #aaa; top: 0.1em; font-size: 1.5em; }
+    20% { font-size: 1.5em; opacity: 0; }
+    30% { top: 0.1em; }
+    50% { opacity: 0; font-size: 0.85em; }
+    100% { top: -1em; opacity: 1; }
+}
+
+@keyframes float-labels-bottom {
+    0% { opacity: 1; color: #aaa; top: 0.1em; font-size: 1.5em; }
+    20% { font-size: 1.5em; opacity: 0; }
+    30% { top: 0.1em; }
+    50% { opacity: 0; font-size: 0.85em; }
+    100% { top: 3em; opacity: 1; }
+}
+
+@-webkit-keyframes float-labels-bottom {
+    0% { opacity: 1; color: #aaa; top: 0.1em; font-size: 1.5em; }
+    20% { font-size: 1.5em; opacity: 0; }
+    30% { top: 0.1em; }
+    50% { opacity: 0; font-size: 0.85em; }
+    100% { top: 3em; opacity: 1; }
+}

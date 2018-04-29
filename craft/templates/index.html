@@ -9,12 +9,16 @@
 
     <div class="welcome-back"><p class="text-bold">Hello {{ currentUser.firstName }}, welcome back to the Lantra dashboard.</p></div>
 
-    {% include 'includes/_profile' %}
-    {% include 'includes/_cpd' %}
+    {% include '_includes/cpd' %}
+    {% include '_includes/profile' %}
+
+    {% if craft.lantra.canManage(null, true) %}
+        {% include '_includes/scheme' %}
+    {% endif %}
 
     {% if craft.lantra.canManage() %}
-        {% include 'includes/_admin' %}
-        {% include 'includes/_reporting' %}
+        {% include '_includes/admin' %}
+        {% include '_includes/reporting' %}
     {% endif %}
 
 {% endblock %}

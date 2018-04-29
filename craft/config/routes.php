@@ -19,5 +19,7 @@
  */
 
 return array(
-
+    'reporting/results/(?P<reportType>[^\/]+)' => 'reporting/results',
+    'reporting/results/(?P<reportType>[^\/]+)/(?P<filterDays>[^\/]+)' => 'reporting/results',
+    'reporting/results/(?P<reportType>[^\/]+)/(?P<filterDays>[^\/]+)/csv' => 'reporting/results'
 );

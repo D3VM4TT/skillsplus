@@ -2,40 +2,51 @@
 
 {% extends "_layout" %}
 
-{% set metaTitle = "Management > Companies" %}
+{% set metaTitle = "Management > companies" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.entries.section('companies').limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
 {% block content %}
-
 <section class="list">
-    <h2>Companies</h2>
-    {% set companies = craft.entries.section('companies') %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Parent</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for company in companies %}
-            {% set parent = company.companyParent.first %}
-                <tr class="item">
-                    <th>{{ company.id }}</th>
-                    <th>{{ company.title }}</th>
-                    <th>{{ parent.title|default('~ none ~') }}</th>
-                    <th>
-                        <a href="/management/companies/edit/{{ company.id }}">edit</a> |
-                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
-                    </th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="page-header">
+        <h2>Companies</h2>
     </div>
+    {% if companyEntries is defined and companyEntries|length %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Parent</th>
+                        <th>Remaining Licences</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for company in companyEntries %}
+                {% set parent = company.companyParent.first %}
+                    <tr class="item">
+                        <th>{{ company.id }}</th>
+                        <th>{{ company.title }}</th>
+                        <th>{{ parent.title|default('~ none ~') }}</th>
+                        <th>{{ company.companyRemainingLicences }}</th>
+                        <th>
+                            <a href="/management/companies/edit/{{ company.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+        <div class="freetext-procedure"><a href="/management/companies/new">Create company</a></div>
+    {% else %}
+        <h4>There are no companies to display.</h4>
+    {% endif %}
 </section>
-<div class="freetext-procedure"><a href="/management/companies/new">Create company</a></div>
-
 {% endblock %}

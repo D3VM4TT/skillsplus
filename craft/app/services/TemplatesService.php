@@ -162,7 +162,7 @@ class TemplatesService extends BaseApplicationComponent
 
 		$options = array_merge(array('safe_mode' => false), $options);
 
-		$cacheKey = $loaderClass.':'.md5(serialize($options));
+		$cacheKey = $this->getTemplateMode().':'.$loaderClass.':'.md5(serialize($options));
 
 		if (!isset($this->_twigs[$cacheKey]))
 		{
@@ -1372,7 +1372,8 @@ class TemplatesService extends BaseApplicationComponent
 
 		if (PathHelper::ensurePathIsContained($name) === false)
 		{
-			throw new \Twig_Error_Loader(Craft::t('Looks like you try to load a template outside the template folder: {template}.', array('template' => $name)));
+		    Craft::log('Someone tried to load a template outside the templates folder: '. $name, LogLevel::Error);
+			throw new \Twig_Error_Loader(Craft::t('Looks like you try to load a template outside the template folder.'));
 		}
 	}
 

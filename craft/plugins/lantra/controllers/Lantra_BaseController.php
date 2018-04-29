@@ -4,12 +4,20 @@ namespace Craft;
 
 class Lantra_BaseController extends BaseController {
 
+    /**
+     * @param $message
+     */
     public function _returnError($message) {
         $this->_returnMessage($message, FALSE);
     }
 
+    /**
+     * @param $message
+     * @param bool $success
+     * @param bool $redirect
+     */
     public function _returnMessage($message, $success = TRUE, $redirect = FALSE) {
-        if(craft()->request->isAjaxRequest()) {
+         if(craft()->request->isAjaxRequest()) {
             craft()->controller->returnJson(['success' => $success, 'message' => $message, 'redirect' => $redirect]);
         }
         else {
@@ -27,5 +35,4 @@ class Lantra_BaseController extends BaseController {
             }
         }
     }
-
 }

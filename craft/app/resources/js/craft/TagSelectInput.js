@@ -141,6 +141,12 @@ Craft.TagSelectInput = Craft.BaseElementSelectInput.extend(
 
 			Craft.postActionRequest('tags/searchForTags', data, $.proxy(function(response, textStatus)
 			{
+				// Just in case
+				if (this.searchMenu)
+				{
+					this.killSearchMenu();
+				}
+
 				this.$spinner.addClass('hidden');
 
 				if (textStatus == 'success')
@@ -193,7 +199,7 @@ Craft.TagSelectInput = Craft.BaseElementSelectInput.extend(
 			$input = $('<input type="hidden" name="'+this.settings.name+'[]" value="'+id+'"/>').appendTo($element);
 
 		$('<a class="delete icon" title="'+Craft.t('Remove')+'"></a>').appendTo($element);
-		$('<span class="label">'+title+'</span>').appendTo($element);
+		$('<span class="label"/>').text(title).appendTo($element);
 
 		var margin = -($element.outerWidth()+10);
 		this.$addTagInput.css('margin-'+Craft.left, margin+'px');
@@ -208,7 +214,7 @@ Craft.TagSelectInput = Craft.BaseElementSelectInput.extend(
 
 		this.killSearchMenu();
 		this.$addTagInput.val('');
-		this.$addTagInput.focus();
+		this.$addTagInput.trigger('focus');
 
 		if (!id)
 		{
