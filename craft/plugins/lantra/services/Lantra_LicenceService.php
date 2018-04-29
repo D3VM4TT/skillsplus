@@ -94,7 +94,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function addSchemeLicences($number = 1) {
-        $globalsScheme = craft()->globals->getSetByHandle('scheme');
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences + (int) $number];
         $globalsScheme->setContentFromPost($content);
         return craft()->globals->saveContent($globalsScheme);
@@ -108,7 +108,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function subtractSchemeLicences($number = 1) {
-        $globalsScheme = craft()->globals->getSetByHandle('scheme');
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences - (int) $number];
         $globalsScheme->setContentFromPost($content);
         return craft()->globals->saveContent($globalsScheme);
@@ -120,7 +120,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return int $number
      */
     function getSchemeLicences() {
-        $globalsScheme = craft()->globals->getSetByHandle('scheme');
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         return (int) $globalsScheme->schemeRemainingLicences;
     }
 }
