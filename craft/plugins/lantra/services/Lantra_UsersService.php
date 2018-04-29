@@ -309,7 +309,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     function canAddUser(UserModel $user) {
         // check there are scheme licences available
-        if ($user->isInGroup('SchemeManager')) {
+        if ($user->admin or $user->isInGroup('SchemeManager')) {
            return (bool) craft()->lantra_licence->getSchemeLicences();
         }
         else {
