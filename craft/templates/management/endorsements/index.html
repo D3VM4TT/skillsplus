@@ -34,7 +34,7 @@
                     <tr>
                         <td>{{ entry.author.getFullName }}</td>
                         <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
-                        <td>{{ entry.postDate|date('d/m/y') }}</td>
+                        <td>{{ entry.postDate|date(dateFormat) }}</td>
                         <td><a target="_blank" href="/internal/{{ entry.resultEvidence.first.id }}">{{ entry.resultEvidence.first.filename }}</a></td>
                         <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
                     </tr>

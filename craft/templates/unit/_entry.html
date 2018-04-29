@@ -20,7 +20,7 @@
     {% if entry.unitType == 'evidence' %}
         <p>[[ UNIT CONTENT ]]</p>
         {% if resultEntry|length %}
-            <p>You submitted evidence for this unit on {{ resultEntry.postDate(dateFormat) }}.</p>
+            <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }}.</p>
             <p>Your result status is {{ resultEntry.resultStatus }}.</p>
         {% else %}
             {% include 'unit/_evidence' with{entry:entry} %}
