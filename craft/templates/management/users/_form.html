@@ -60,14 +60,6 @@
         <label for="email">Email:</label>
         <input id="email" name="email" class="5000" placeholder="Enter the email" value="{{ account.email|default('') }}">
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="telephone">Telephone:</label>
-        <input id="telephone" name="fields[telephone]" class="5000" placeholder="Enter the telephone" value="">
-    </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="licence">PIL Licence number:</label>
-        <input id="licence" name="fields[licence]" type="text" class="5000" placeholder="PIL Licence number" value="">
-    </div>
     {% set teamEntries = craft.lantra.availableTeams() %}
     <div class="form-group-lantra float-label-control">
         <label for="userTeam">User team:</label>
