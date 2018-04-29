@@ -7,17 +7,19 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Check whether this user can manage teams or companies
      *
      * @param null $user
+     * @param bool $scheme
      * @return bool
      */
-    function canManage($user = null) {
+    function canManage($user = null, $scheme = false) {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-
-        if ($user->admin or $user->isInGroup('schemeManagers') or $user->isInGroup('companyManagers') or $user->isInGroup('teamManagers')) {
+        if ($scheme && ($user->admin or $user->isInGroup('schemeManagers'))){
             return true;
         }
-
+        elseif ($user->admin or $user->isInGroup('schemeManagers') or $user->isInGroup('companyManagers') or $user->isInGroup('teamManagers')) {
+            return true;
+        }
         return false;
     }
 

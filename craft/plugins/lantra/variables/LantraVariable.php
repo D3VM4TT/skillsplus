@@ -7,13 +7,14 @@ class LantraVariable
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
+     * @param bool $scheme
      * @return bool
      */
-    public function canManage($userId = null) {
+    public function canManage($userId = null, $scheme = false) {
         if (false == $user = $this->getUser($userId)) {
             return false;
         }
-        return craft()->lantra_users->canManage($user);
+        return craft()->lantra_users->canManage($user, $scheme);
     }
 
     /**
