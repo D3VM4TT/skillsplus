@@ -28,6 +28,9 @@
     {% else %}
         {% if resultEntry|length %}
             <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+            {% if resultEntry.resultStatus == 'endorsed' %}
+                <p>You have passed this test.</p>
+            {% endif %}
         {% endif %}
         {% if not remainingAttempts %}
             <p>You have no remaining attempts, contact support.</p>
