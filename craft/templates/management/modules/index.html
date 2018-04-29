@@ -34,7 +34,7 @@
                         <th>{{ module.moduleRoles.find()|join(", ") }}</th>
                         <th>
                             <a href="/management/modules/edit/{{ module.id }}">edit</a> |
-                            <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ module.id }}">delete</a>
                         </th>
                     </tr>
                 {% endfor %}
