@@ -14,43 +14,45 @@
 {% block content %}
 <section class="list">
     <h1>Results Report</h1>
+    {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
     {% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, entryLimit) %}
     {% paginate criteria as pageInfo, resultEntries %}
-    {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
-    <div class="table-responsive">
+    {% if resultEntries|length %}
+        <div class="table-responsive">
             <table width="100%" class="table table-striped">
-            {% if resultEntries|length %}
-            <thead>
-            <tr>
-                <th colspan="5">{{ reportType|ucwords }} Results</th>
-            </tr>
-            <tr>
-            </tr>
-            <tr>
-                <th>User</th>
-                <th>Team</th>
-                <th>Module</th>
-                <th>Completed Date</th>
-                <th>Expiry Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for entry in resultEntries %}
-            {% set userTeam = entry.author.userTeam.first() %}
-            {% set resultModule = entry.resultModule.first() %}
-            <tr>
-                <td>{{ entry.author.getFullName() }}</td>
-                <td>{{ userTeam.title|default('') }}</td>
-                <td>{{ resultModule.title|default('') }}</td>
-                <td>{{ entry.postDate|date(dateFormat) }}</td>
-                <td>{{ entry.expiryDate|date(dateFormat) }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-            {% endif %}
-        </table>
-    </div>
-    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
-    <div class="freetext-procedure"><a href="/reporting/results/{{ reportType }}/{{ filterDays }}/csv">Download as CSV</a></div>
+                <thead>
+                <tr>
+                    <th colspan="5">{{ reportType|ucwords }} Results</th>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                    <th>User</th>
+                    <th>Team</th>
+                    <th>Module</th>
+                    <th>Completed Date</th>
+                    <th>Expiry Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entry in resultEntries %}
+                {% set userTeam = entry.author.userTeam.first() %}
+                {% set resultModule = entry.resultModule.first() %}
+                <tr>
+                    <td>{{ entry.author.getFullName() }}</td>
+                    <td>{{ userTeam.title|default('') }}</td>
+                    <td>{{ resultModule.title|default('') }}</td>
+                    <td>{{ entry.postDate|date(dateFormat) }}</td>
+                    <td>{{ entry.expiryDate|date(dateFormat) }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+        <div class="freetext-procedure"><a href="/reporting/results/{{ reportType }}/{{ filterDays }}/csv">Download as CSV</a></div>
+    {% else %}
+        <p>There are no results to display.</p>
+    {% endif %}
 </section>
 {% endblock %}
