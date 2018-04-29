@@ -1,4 +1,4 @@
-{% set dateFormat = systemGlobals.dateFormat|default('d/m/y') %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% if currentUser.userRole.total %}
     <section id="my-skills-quals" class="section-dashboard">
         {% for role in currentUser.userRole %}
