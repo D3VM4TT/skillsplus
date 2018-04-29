@@ -1,22 +1,24 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 {% if not craft.request.segment(3) %}{% redirect 'reporting/results/recent/all' %}{% endif %}
+
 {% set reportType = reportType|default('recent') %}
 {% set filterDays = filterDays|default(28) %}
 {% if craft.request.segment(5) == 'csv' %}{% do craft.lantra.exportResultsReport(reportType, filterDays) %}{% endif %}
-{% extends "_layout" %}
 
+{% extends "_layout" %}
 {% import "_macros" as ui %}
 
 {% set metaTitle = "Reporting > " ~ reportType|ucwords ~ " Results" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set entryLimit = globalsSystem.defaultLimit|default(10) %}
 
+{% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, entryLimit) %}
+{% paginate criteria as pageInfo, resultEntries %}
+
 {% block content %}
 <section class="list">
     <h1>Results Report</h1>
     {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
-    {% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, entryLimit) %}
-    {% paginate criteria as pageInfo, resultEntries %}
     {% if resultEntries|length %}
         <div class="table-responsive">
             <table width="100%" class="table table-striped">
