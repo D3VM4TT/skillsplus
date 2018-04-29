@@ -1,20 +1,26 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+
 {% extends "_layout" %}
 {% import "_macros" as ui %}
+
 {% set metaTitle = "Management > Endorsements" %}
-{% set entries = craft.lantra.managerEndorsementResults() %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.lantra.managerEndorsementResults(null, pageLimit) %}
+{% paginate criteria as pageInfo, resultEntries %}
 
 {% block content %}
     <div class="page-header">
         <h2>Endorsements</h2>
     </div>
-    {% if entries|length %}
+    {% if resultEntries|length %}
         <form method="post" role="form" accept-charset="UTF-8">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="lantra/entries/endorseEvidence">
             <input type="hidden" value="" name="entryIds[]" />
             <div class="form-group-lantra">
-                <table width="100%">
+                <table width="100%" class="table table-striped">
                     <thead>
                         <tr>
                             <th>Author</th>
@@ -24,7 +30,7 @@
                             <th>&nbsp;</th>
                     </thead>
                     <tbody>
-                    {% for entry in entries %}
+                    {% for entry in resultEntries %}
                     <tr>
                         <td>{{ entry.author.getFullName }}</td>
                         <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
@@ -39,6 +45,7 @@
             <br />
             <div class="freetext-procedure"><button type="submit">Endorse Selected</button></div>
         </form>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
         <h4>You have no more evidence to endorse.</h4>
     {% endif %}

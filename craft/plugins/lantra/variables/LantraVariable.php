@@ -155,15 +155,16 @@ class LantraVariable
      * Return all result entries requiring endorsement for a manager
      *
      * @param null $userId
+     * @param bool $limit
      * @param bool $count
      * @return mixed
      * @throws Exception
      */
-    public function managerEndorsementResults($userId = null, $count = false) {
+    public function managerEndorsementResults($userId = null, $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return craft()->lantra_results->getManagerEndorsementResults($user, $count);
+        return craft()->lantra_results->getManagerEndorsementResults($user, ($count == false ? $limit : null), $count);
     }
 
     /**
