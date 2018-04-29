@@ -12,6 +12,10 @@
     {% include 'includes/_cpd' %}
     {% include 'includes/_profile' %}
 
+    {% if craft.lantra.canManage(null, true) %}
+        {% include 'includes/_scheme' %}
+    {% endif %}
+
     {% if craft.lantra.canManage() %}
         {% include 'includes/_admin' %}
         {% include 'includes/_reporting' %}

@@ -1,0 +1,13 @@
+<section id="scheme-profile" class="row section-dashboard">
+    <div class="col-6">
+        <h2>Scheme Profile</h2>
+        <div class="col-6 profile-field">
+            <p>Scheme name:</p>
+            <p>Remaining licences:</p>
+        </div>
+        <div class="col-6 profile-data">
+            <p>{{ globalsScheme.schemeName|default('unknown') }}</p>
+            <p>{{ globalsScheme.schemeRemainingLicences|default('unlimited') }}</p>
+        </div>
+    </div>
+</section>
