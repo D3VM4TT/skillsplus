@@ -62,7 +62,7 @@ class Lantra_AttemptsService extends BaseApplicationComponent
      */
     private function markQuestion($questionBlock, $answer) {
         if ($questionBlock->type == 'trueFalse') {
-            return $questionBlock->answer && ($answer == 'true');
+            return ($questionBlock->answer == 0 && $answer == 'false') || ($questionBlock->answer == 1 && $answer == 'true');
         }
         elseif ($questionBlock->type == 'choices') {
             foreach($questionBlock->answers as $row) {
