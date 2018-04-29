@@ -241,7 +241,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerEndorsementResults(UserModel $user, $limit = null,  $count = false) {
         $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
         if ( ! count($subordinateIds)) {
-            ## return null;
+            return null;
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
