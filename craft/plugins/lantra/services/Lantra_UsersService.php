@@ -14,8 +14,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-        if ($scheme && ($user->admin or $user->isInGroup('schemeManagers'))){
-            return true;
+        if ($scheme) {
+            if ($user->admin or $user->isInGroup('schemeManagers')) {
+                return true;
+            }
         }
         elseif ($user->admin or $user->isInGroup('schemeManagers') or $user->isInGroup('companyManagers') or $user->isInGroup('teamManagers')) {
             return true;
