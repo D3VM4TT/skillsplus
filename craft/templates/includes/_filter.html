@@ -1,5 +1,9 @@
 <form class="filter">
-    Results {% if reportType == 'expiring' %}expiring in{% else %}from {% endif %}
+    {% if reportType == 'expiring' %}
+        Results expiring in
+    {% else %}
+        Results completed in
+    {% endif %}
     <select name="days" data-base="reporting/results/{{ reportType }}">
         <option value="1"{% if filterDays == '1' %} selected="selected"{% endif %}>a day</option>
         <option value="7"{% if filterDays == '7' %} selected="selected"{% endif %}>a week</option>

@@ -1,6 +1,6 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
-{% if not craft.request.segment(3) %}{% redirect 'reporting/results/expiring/all' %}{% endif %}
-{% set reportType = reportType|default('expiring') %}
+{% if not craft.request.segment(3) %}{% redirect 'reporting/results/recent/all' %}{% endif %}
+{% set reportType = reportType|default('recent') %}
 {% set filterDays = filterDays|default(28) %}
 {% if craft.request.segment(5) == 'csv' %}{% do craft.lantra.exportResultsReport(reportType, filterDays) %}{% endif %}
 {% extends "_layout" %}
@@ -18,37 +18,39 @@
     {% paginate criteria as pageInfo, resultEntries %}
     {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
     <p><a href="/reporting/results/{{ reportType }}/{{ filterDays }}/csv">Download as CSV</a></p>
-    <table width="100%">
-        {% if resultEntries|length %}
-        <thead>
-        <tr>
-            <th colspan="5">{{ reportType|ucwords }} Results</th>
-        </tr>
-        <tr>
-        </tr>
-        <tr>
-            <th>User</th>
-            <th>Team</th>
-            <th>Module</th>
-            <th>Completed Date</th>
-            <th>Expiry Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for entry in resultEntries %}
-        {% set userTeam = entry.author.userTeam.first() %}
-        {% set resultModule = entry.resultModule.first() %}
-        <tr>
-            <td>{{ entry.author.getFullName() }}</td>
-            <td>{{ userTeam.title|default('') }}</td>
-            <td>{{ resultModule.title|default('') }}</td>
-            <td>{{ entry.postDate|date(dateFormat) }}</td>
-            <td>{{ entry.expiryDate|date(dateFormat) }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-        {% endif %}
-    </table>
+    <div class="table-responsive">
+            <table width="100%" class="table table-striped">
+            {% if resultEntries|length %}
+            <thead>
+            <tr>
+                <th colspan="5">{{ reportType|ucwords }} Results</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Module</th>
+                <th>Completed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entry in resultEntries %}
+            {% set userTeam = entry.author.userTeam.first() %}
+            {% set resultModule = entry.resultModule.first() %}
+            <tr>
+                <td>{{ entry.author.getFullName() }}</td>
+                <td>{{ userTeam.title|default('') }}</td>
+                <td>{{ resultModule.title|default('') }}</td>
+                <td>{{ entry.postDate|date(dateFormat) }}</td>
+                <td>{{ entry.expiryDate|date(dateFormat) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
     {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
 </section>
 {% endblock %}

@@ -177,16 +177,16 @@ class LantraVariable
      * @return mixed
      * @throws Exception
      */
-    public function managerResultsReport($reportType = 'expiring', $userId = null,  $days = 'all', $limit = 10, $count = false) {
+    public function managerResultsReport($reportType = 'recent', $userId = null,  $days = 'all', $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
         switch ($reportType) {
-            case 'recent':
-                $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
+            case 'expiring':
+                $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
             break;
             default :
-                $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
+                $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
             break;
         }
         if ($criteria) {
@@ -203,7 +203,7 @@ class LantraVariable
      * @throws mixed
      * @return string
     */
-    public function exportResultsReport($reportType = 'expiring', $days = 28) {
+    public function exportResultsReport($reportType = 'recent', $days = 28) {
         $data = [];
         if (false != $results = $this->managerResultsReport($reportType, null, $days)) {
             foreach ($results as $result) {
