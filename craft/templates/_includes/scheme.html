@@ -1,4 +1,4 @@
-{% set licencesAssigned = craft.users.group('users, teamManagers, companyManagers, schemeManagers').total() %}
+{% set licencesAssigned = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).total() %}
 {% set licencesCompany = craft.lantra.totalCompanyLicences() %}
 {% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 <section id="scheme-profile" class="row section-dashboard">
