@@ -17,7 +17,9 @@
 
 {% block content %}
 <section class="list">
-    <h1>Results Report</h1>
+    <div class="page-header">
+        <h1>Results Report</h1>
+    </div>
     {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
     {% if resultEntries|length %}
         <div class="table-responsive">

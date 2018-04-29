@@ -13,39 +13,43 @@
     {% set criteria = craft.entries.section('teams').limit(pageLimit) %}
 {% endif %}
 
-{% paginate criteria as pageInfo, teamEntries %}
+{% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}
 
 {% block content %}
-
 <section class="list">
-    <h2>Teams</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Company</th>
-                    <th>Name</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for team in teamEntries %}
-                <tr class="item">
-                    <th>{{ team.id }}</th>
-                    <th>{{ team.teamCompany.first.title }}</th>
-                    <th>{{ team.title }}</th>
-                    <th>
-                        <a href="/management/teams/edit/{{ team.id }}">edit</a> |
-                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
-                    </th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="page-header">
+        <h2>Teams</h2>
     </div>
-    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+    {% if teamEntries is defined and teamEntries|length %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Company</th>
+                        <th>Name</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for team in teamEntries %}
+                    <tr class="item">
+                        <th>{{ team.id }}</th>
+                        <th>{{ team.teamCompany.first.title }}</th>
+                        <th>{{ team.title }}</th>
+                        <th>
+                            <a href="/management/teams/edit/{{ team.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+        <div class="freetext-procedure"><a href="/management/teams/new">Create team</a></div>
+    {% else %}
+        <h4>There are no teams to display.</h4>
+    {% endif %}
 </section>
-<div class="freetext-procedure"><a href="/management/teams/new">Create team</a></div>
-
 {% endblock %}

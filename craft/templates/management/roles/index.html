@@ -7,37 +7,41 @@
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
 {% set criteria = craft.categories('roles').limit(pageLimit) %}
-{% paginate criteria as pageInfo, roleCategories %}
+{% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
-
 <section class="list">
-    <h2>Roles</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for role in roleCategories %}
-            <tr class="item">
-                <th>{{ role.id }}</th>
-                <th>{{ role.title }}</th>
-                <th>
-                    <a href="/management/roles/edit/{{ role.id }}">edit</a> |
-                    <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
-                </th>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="page-header">
+        <h2>Roles</h2>
     </div>
-    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+    {% if roleCategories is defined and roleCategories|length %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for role in roleCategories %}
+                <tr class="item">
+                    <th>{{ role.id }}</th>
+                    <th>{{ role.title }}</th>
+                    <th>
+                        <a href="/management/roles/edit/{{ role.id }}">edit</a> |
+                        <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
+                    </th>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+        <div class="freetext-procedure"><a href="/management/roles/new">Create role</a></div>
+    {% else %}
+        <h4>There are no roles to display.</h4>
+    {% endif %}
 </section>
-<div class="freetext-procedure"><a href="/management/roles/new">Create role</a></div>
-
 {% endblock %}

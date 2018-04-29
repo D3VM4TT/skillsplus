@@ -17,11 +17,14 @@
     {% set criteria = craft.users.group('users, teamManagers, companyManagers').limit(pageLimit) %}
 {% endif %}
 
-{% paginate criteria as pageInfo, userEntries %}
+{% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
 
 {% block content %}
-    <section class="list">
+<section class="list">
+    <div class="page-header">
         <h2>Users</h2>
+    </div>
+    {% if userEntries is defined and userEntries|length %}
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -49,8 +52,11 @@
             </table>
         </div>
         {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
-    </section>
-    {% if craft.lantra.canAddUser() %}
-        <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
+        {% if craft.lantra.canAddUser() %}
+            <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
+        {% endif %}
+    {% else %}
+        <h4>There are no users to display.</h4>
     {% endif %}
+</section>
 {% endblock %}

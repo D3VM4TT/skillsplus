@@ -8,13 +8,13 @@
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
 {% set criteria = craft.lantra.managerEndorsementResults(null, pageLimit) %}
-{% paginate criteria as pageInfo, resultEntries %}
+{% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}
 
 {% block content %}
     <div class="page-header">
         <h2>Endorsements</h2>
     </div>
-    {% if resultEntries|length %}
+    {% if resultEntries is defined and resultEntries|length %}
         <form method="post" role="form" accept-charset="UTF-8">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="lantra/entries/endorseEvidence">

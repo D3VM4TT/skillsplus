@@ -7,37 +7,43 @@
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
 {% set criteria = craft.entries.section('modules').order('title').limit(pageLimit) %}
-{% paginate criteria as pageInfo, moduleEntries %}
+{% if criteria %}{% paginate criteria as pageInfo, moduleEntries %}{% endif %}
 
 {% block content %}
 
 <section class="list">
-    <h2>Modules</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Job Joles</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for module in moduleEntries %}
-                <tr class="item">
-                    <th>{{ module.id }}</th>
-                    <th>{{ module.title }}</th>
-                    <th>{{ module.moduleRoles.find()|join(", ") }}</th>
-                    <th>
-                        <a href="/management/modules/edit/{{ module.id }}">edit</a> |
-                        <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ module.id }}">delete</a>
-                    </th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="page-header">
+        <h2>Modules</h2>
     </div>
-    {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+    {% if moduleEntries is defined and moduleEntries|length %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Job Joles</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for module in moduleEntries %}
+                    <tr class="item">
+                        <th>{{ module.id }}</th>
+                        <th>{{ module.title }}</th>
+                        <th>{{ module.moduleRoles.find()|join(", ") }}</th>
+                        <th>
+                            <a href="/management/modules/edit/{{ module.id }}">edit</a> |
+                            <a class="action" href="#" data-action="entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <h4>There are no modules to display.</h4>
+    {% endif %}
 </section>
 {% endblock %}

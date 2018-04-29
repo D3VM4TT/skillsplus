@@ -296,7 +296,8 @@ text-decoration: none;
 div.links {
     padding-top: 40px;
     position: relative;
-    float: left;
+    clear:both;
+    margin-bottom:20px;
 }
 
 div.links a,
