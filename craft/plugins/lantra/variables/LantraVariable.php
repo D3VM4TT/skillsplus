@@ -62,6 +62,20 @@ class LantraVariable
     }
 
     /**
+     * Return total number of company licences
+     *
+     * @return int
+     * @throws Exception
+     */
+    public function totalCompanyLicences() {
+        $result = craft()->db->createCommand()
+            ->from('{{content}}')
+            ->select("SUM(field_companyRemainingLicences) as total")
+            ->queryRow();
+        return $result['total'];
+    }
+
+    /**
      * Return user company (team company)
      *
      * @param null $userId
