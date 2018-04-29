@@ -167,8 +167,9 @@ class LantraVariable
     }
 
     /**
-     * Return all expiring module result entries
+     * Return a manager report
      *
+     * @param string $reportType
      * @param null $userId
      * @param mixed $days
      * @param int $limit
@@ -176,77 +177,58 @@ class LantraVariable
      * @return mixed
      * @throws Exception
      */
-    public function managerExpiringResults($userId = null, $days = 'all', $limit = 10, $count = false) {
+    public function managerResultsReport($reportType = 'expiring', $userId = null,  $days = 'all', $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
-        if ( ! $criteria) {
-            return null;
+        switch ($reportType) {
+            case 'recent':
+                $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
+            break;
+            default :
+                $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
+            break;
         }
-        return ($count) ? $criteria->count() : $criteria;
+        if ($criteria) {
+            return ($count) ? $criteria->count() : $criteria;
+        }
+        return null;
     }
 
     /**
-     * Return all recent module result entries
+     * Export a results report
      *
-     * @param null $userId
-     * @param mixed $days
-     * @param int $limit
-     * @param bool $count
-     * @return mixed
-     * @throws Exception
-     */
-    public function managerRecentResults($userId = null,  $days = 'all', $limit = 10, $count = false) {
-        if (false == $user = $this->getUser($userId)) {
-            return null;
-        }
-        $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
-        if ( ! $criteria) {
-            return null;
-        }
-        return ($count) ? $criteria->count() : $criteria;
-    }
-
-    /**
-     * Export a report
-     * @param $report
-     * @param $days
+     * @param string $reportType
+     * @param int $days
      * @throws mixed
-     *
+     * @return string
     */
-    public function resultsReport($report, $days) {
-
-        if ($report == 'expiring') {
-            $results = $this->managerExpiringResults(null, $days);
-        }
-        else {
-            $results = $this->managerRecentResults(null, $days);
-        }
-
+    public function exportResultsReport($reportType = 'expiring', $days = 28) {
         $data = [];
-        foreach ($results as $result) {
-            $userTeam = $result->author->userTeam->first();
-            $resultModule = $result->resultModule->first();
-            $data[] = [
-                $result->author->getFullName(),
-                $userTeam ? $userTeam->title : '',
-                $resultModule ? $resultModule->title : '',
-                $result->postDate->format('d/m/y'),
-                $result->expiryDate ? $result->expiryDate->format('d/m/y') : ''
-            ];
+        if (false != $results = $this->managerResultsReport($reportType, null, $days)) {
+            foreach ($results as $result) {
+                $userTeam = $result->author->userTeam->first();
+                $resultModule = $result->resultModule->first();
+                $data[] = [
+                    $result->author->getFullName(),
+                    $userTeam ? $userTeam->title : '',
+                    $resultModule ? $resultModule->title : '',
+                    $result->postDate->format('d/m/y'),
+                    $result->expiryDate ? $result->expiryDate->format('d/m/y') : ''
+                ];
+            }
         }
-        $this->sendReport($report, $data);
+        $this->sendReport($reportType, $data);
     }
 
     /**
      * Send the csv report to the browser
      *
-     * @param $name
+     * @param $reportType
      * @param $data
      * @throws HttpException
      */
-    private function sendReport($name, $data) {
+    private function sendReport($reportType, $data) {
         ob_start();
         $export = fopen('php://output', 'w');
         foreach ($data as $row) {
@@ -255,7 +237,7 @@ class LantraVariable
         fclose($export);
         $content = ob_get_clean();
         $content = str_replace("\n", "\r\n", $content);
-        craft()->request->sendFile('report-' . $name . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+        craft()->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
     }
 
     /**

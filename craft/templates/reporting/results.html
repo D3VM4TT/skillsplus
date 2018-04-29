@@ -1,21 +1,31 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
-{% set filterDays = craft.request.segment(3)|default(30) %}
-{% if craft.request.segment(4) == 'csv' %}{% do craft.lantra.resultsReport('recent', filterDays) %}{% endif %}
+{% if not craft.request.segment(3) %}{% redirect 'reporting/results/expiring/all' %}{% endif %}
+{% set reportType = reportType|default('expiring') %}
+{% set filterDays = filterDays|default(28) %}
+{% if craft.request.segment(5) == 'csv' %}{% do craft.lantra.exportResultsReport(reportType, filterDays) %}{% endif %}
 {% extends "_layout" %}
+
 {% import "_macros" as ui %}
-{% set metaTitle = "Reporting > Recent Results" %}
+
+{% set metaTitle = "Reporting > " ~ reportType|ucwords ~ " Results" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set entryLimit = globalsSystem.defaultLimit|default(10) %}
 
 {% block content %}
 <section class="list">
-    <h1>Recent Results</h1>
-    {% set criteria = craft.lantra.managerRecentResults(currentUser.id, filterDays, entryLimit) %}
-    {% paginate criteria as pageInfo, recentResultEntries %}
-    {% include 'includes/_filter' with{filterDays:filterDays, expiring:false} %}
+    <h1>Results Report</h1>
+    {% set criteria = craft.lantra.managerResultsReport(reportType, currentUser.id, filterDays, entryLimit) %}
+    {% paginate criteria as pageInfo, resultEntries %}
+    {% include 'includes/_filter' with{filterDays:filterDays, reportType:reportType} %}
+    <p><a href="/reporting/results/{{ reportType }}/{{ filterDays }}/csv">Download as CSV</a></p>
     <table width="100%">
-        {% if recentResultEntries|length %}
+        {% if resultEntries|length %}
         <thead>
+        <tr>
+            <th colspan="5">{{ reportType|ucwords }} Results</th>
+        </tr>
+        <tr>
+        </tr>
         <tr>
             <th>User</th>
             <th>Team</th>
@@ -25,7 +35,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for entry in recentResultEntries %}
+        {% for entry in resultEntries %}
         {% set userTeam = entry.author.userTeam.first() %}
         {% set resultModule = entry.resultModule.first() %}
         <tr>
@@ -33,13 +43,12 @@
             <td>{{ userTeam.title|default('') }}</td>
             <td>{{ resultModule.title|default('') }}</td>
             <td>{{ entry.postDate|date(dateFormat) }}</td>
-            <td>{{ entry.expiryDate is empty ? "~" : entry.expiryDate|date(dateFormat) }}</td>
+            <td>{{ entry.expiryDate|date(dateFormat) }}</td>
         </tr>
         {% endfor %}
         </tbody>
         {% endif %}
     </table>
     {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
-    <a href="/reporting/results-recent/{{ filterDays }}/csv">Download as CSV</a>
 </section>
 {% endblock %}

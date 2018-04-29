@@ -1,6 +1,6 @@
 <form class="filter">
-    Results {% if expiring|default(false) %}expiring in{% else %}from {% endif %}
-    <select name="days" data-base="reporting/{{ craft.request.segment(2) }}">
+    Results {% if reportType == 'expiring' %}expiring in{% else %}from {% endif %}
+    <select name="days" data-base="reporting/results/{{ reportType }}">
         <option value="1"{% if filterDays == '1' %} selected="selected"{% endif %}>a day</option>
         <option value="7"{% if filterDays == '7' %} selected="selected"{% endif %}>a week</option>
         <option value="28"{% if filterDays == '28' %} selected="selected"{% endif %}>four weeks</option>
