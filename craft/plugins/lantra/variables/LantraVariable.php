@@ -210,15 +210,18 @@ class LantraVariable
 
     /**
      * Export a report
+     * @param $report
+     * @param $days
+     * @throws mixed
      *
     */
-    public function resultsReport($report) {
+    public function resultsReport($report, $days) {
 
         if ($report == 'expiring') {
-            $results = $this->managerExpiringResults();
+            $results = $this->managerExpiringResults(null, $days);
         }
         else {
-            $results = $this->managerRecentResults();
+            $results = $this->managerRecentResults(null, $days);
         }
 
         $data = [];

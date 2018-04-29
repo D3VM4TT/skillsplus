@@ -1,9 +1,9 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
-{% if craft.request.segment(3) == 'csv' %}{% do craft.lantra.resultsReport('recent') %}{% endif %}
+{% set filterDays = craft.request.segment(3)|default(30) %}
+{% if craft.request.segment(4) == 'csv' %}{% do craft.lantra.resultsReport('recent', filterDays) %}{% endif %}
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Reporting > Recent Results" %}
-{% set filterDays = craft.request.segment(3)|default(30) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set entryLimit = globalsSystem.defaultLimit|default(10) %}
 
@@ -40,6 +40,6 @@
         {% endif %}
     </table>
     {% include 'includes/_pagelinks' with {pageInfo:pageInfo} %}
-    <a href="/reporting/results-recent/csv">Download as CSV</a>
+    <a href="/reporting/results-recent/{{ filterDays }}/csv">Download as CSV</a>
 </section>
 {% endblock %}
