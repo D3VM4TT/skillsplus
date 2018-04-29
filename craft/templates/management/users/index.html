@@ -14,7 +14,7 @@
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
     {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id).limit(pageLimit) %}
 {% else %}
-    {% set criteria = craft.users.group('users, teamManagers, companyManagers').limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').limit(pageLimit) %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
