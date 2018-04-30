@@ -247,25 +247,28 @@ class Lantra_ResultsService extends BaseApplicationComponent
     /**
      * Return all result entries requiring endorsement for a manager
      *
-     * @param UserModel $user
+     * @param UserModel $manager
      * @param int|null $limit
      * @param bool $count
      * @return mixed
-     * @throws Exception
+     * @throws mixed
      */
-    public function getManagerEndorsementResults(UserModel $user, $limit = null,  $count = false) {
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
+    public function getManagerEndorsementResults(UserModel $manager, $limit = null,  $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->resultEvidence = ':notempty:';
         $criteria->limit = $limit;
         $criteria->resultStatus = 'pending';
-        $criteria->authorId = $subordinateIds;
         $criteria->order = 'postDate desc';
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
         return ($count) ? $criteria->count() : $criteria;
     }
 
@@ -302,7 +305,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param bool $expiring
      * @param int $days
      * @return ElementCriteriaModel|null
-     * @throws Exception
+     * @throws mixed
      */
     private function getManagerResults($userId = null, $expiring = true, $days = 'all', $limit = 10) {
         if ( ! is_null($userId)) {
@@ -314,7 +317,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $manager) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
@@ -326,7 +328,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
         $criteria->limit = $limit;
-        $criteria->authorId = $subordinateIds;
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
         return $criteria;
     }
 }
