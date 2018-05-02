@@ -27,7 +27,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
-        // save disabled category
+        // save disabled entry
         $this->_disableEntry($entry);
         $this->_returnMessage('Entry has been removed.', TRUE, craft()->request->getUrlReferrer());
     }
