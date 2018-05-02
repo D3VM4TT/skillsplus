@@ -338,4 +338,101 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         return $criteria;
     }
+
+    /**
+     * Return all unit result entries
+     *
+     * @param null $userId
+     * @param int $limit
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerUnitResults($userId = null, $limit = 10) {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->limit = $limit;
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
+        return $criteria;
+    }
+
+    /**
+     * Return all blocked unit result entries
+     *
+     * @param null $userId
+     * @param int $limit
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerBlockedUnitResults($userId = null, $limit = 10) {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        // This is a fairly complex query which may cause performance issues when we have lots of results to query.
+        // It looks for unitResult type results and counts the existing attempts and returns the ids where that
+        // total is equal or greater than testMaxAttempts value for the unit.
+        $query = craft()->db->createCommand();
+        $subAttempts = '(SELECT COUNT(*) FROM {{relations}} AS r WHERE r.fieldId = 58 AND r.sourceId = el.id)';
+        $subUnitId = '(SELECT targetId FROM {{relations}} AS r WHERE r.fieldId = 26 AND r.sourceId = el.id)';
+        $query->select([
+            'el.id',
+            $subAttempts . ' as resultAttempts',
+            'unitEntry.field_testMaxAttempts as maxAttempts',
+            'unitRelation.targetId as unitEntryId'
+            ])
+            ->from('{{elements}} as el')
+            ->join('{{entries}} AS e', 'e.id = el.id')
+            ->join('{{content}} AS c', 'c.elementId = el.id')
+            ->join('{{relations}} AS unitRelation', 'unitRelation.sourceId = el.id')
+            ->join('{{content}} AS unitEntry', 'unitEntry.elementId = ' . $subUnitId)
+            ->where('e.sectionId = 10 AND e.typeId = 10 AND unitRelation.fieldId = 26 AND unitRelation.sourceId = el.id')
+            ->having('maxAttempts > 0 AND resultAttempts >= maxAttempts');
+        // get all blocked results
+        $results = $query->queryAll();
+        $blockedResultsIds = [];
+        foreach($results as $row) {
+            $blockedResultsIds[] = $row['id'];
+        }
+        // no blocked results exist
+        if (! count($blockedResultsIds)) {
+            return;
+        }
+        // now get this managers blocked results
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->limit = $limit;
+        $criteria->id = $blockedResultsIds;
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
+        return $criteria;
+    }
 }

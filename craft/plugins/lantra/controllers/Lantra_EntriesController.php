@@ -6,8 +6,27 @@ class Lantra_EntriesController extends Lantra_BaseController {
 
     public $allowAnonymous = array(
         'actionDeleteEntry',
-        'actionEndorseEvidence'
+        'actionEndorseEvidence',
+        'actionResetResult'
     );
+
+    /**
+     * Unlinks unit result attempts
+     *
+     * @throws mixed
+     */
+    public function actionResetResult() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted entryId
+        $entryId = craft()->request->getPost('entryId');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
+        }
+        $entry->setContentFromPost(['resultAttempts' => []]);
+        craft()->entries->saveEntry($entry);
+        $this->_returnMessage( 'Result attempts unlinked.', true, craft()->request->getUrlReferrer());
+    }
 
     /**
      * Deletes entries from the front end

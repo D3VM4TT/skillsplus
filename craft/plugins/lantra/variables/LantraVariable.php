@@ -198,6 +198,9 @@ class LantraVariable
             return null;
         }
         switch ($reportType) {
+            case 'blocked':
+                $criteria = craft()->lantra_results->getManagerBlockedUnitResults($user->id, $days, $limit);
+                break;
             case 'expiring':
                 $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
             break;
