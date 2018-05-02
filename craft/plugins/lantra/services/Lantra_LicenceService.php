@@ -115,6 +115,16 @@ class Lantra_LicenceService extends BaseApplicationComponent
     }
 
     /**
+     * Get scheme expiry date
+     *
+     * @return DateTime $schemeExpiryDate
+     */
+    function getSchemeExpiryDate() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->schemeExpiryDate;
+    }
+
+    /**
      * Get scheme licences
      *
      * @return int $number

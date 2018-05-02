@@ -4,6 +4,24 @@ namespace Craft;
 class Lantra_NotifyService extends BaseApplicationComponent
 {
     /**
+     * Notify scheme managers of scheme expiry
+     *
+     * @param $expiryDate
+     * @throws Exception
+     */
+    function sendSchemeExpiry($expiryDate) {
+        // send scheme managers remaining scheme licences
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = 1;
+        $criteria->limit = null;
+        $subject = "Scheme Expiry Date";
+        $message = "Your scheme expires on " . date('d/m/y', $expiryDate->getTimestamp()) . ".";
+        foreach ($criteria->find() as $manager) {
+            $this->notify($manager->email, $subject, $message);
+        }
+    }
+
+    /**
      * Notify managers of licences remaining
      *
      * @throws Exception

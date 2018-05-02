@@ -17,6 +17,7 @@ class Lantra_CronController extends Lantra_BaseController {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
             $this->notifyManagerSummary();
             $this->notifyLicencesRemaining();
+            $this->notifySchemeExpiry();
         }
     }
 
@@ -43,5 +44,18 @@ class Lantra_CronController extends Lantra_BaseController {
      */
     function notifyLicencesRemaining() {
         craft()->lantra_notify->sendLicencesRemaining();
+    }
+
+    /**
+     * Notify scheme managers of scheme expiry
+     *
+     * @throws Exception
+     */
+    function notifySchemeExpiry() {
+        $expiryDate = craft()->lantra_licence->getSchemeExpiryDate();
+        $warningDate = strtotime("+4 weeks");
+        if ($expiryDate->getTimestamp() < $warningDate) {
+            craft()->lantra_notify->sendSchemeExpiry($expiryDate);
+        }
     }
 }
