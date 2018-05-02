@@ -1,0 +1,48 @@
+{% extends "_layout" %}
+
+{% set moduleEntry = craft.entries.id(craft.request.getSegment(2)).first() %}
+{% if not moduleEntry %}{% exit 404 %}{% endif %}
+{% set unitEntry = craft.entries.id(craft.request.getSegment(4)).first() %}
+{% if not unitEntry %}{% exit 404 %}{% endif %}
+{% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
+{% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry) %}
+
+{% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+
+{% block content %}
+
+<section class="list">
+    <div class="page-header">
+        <h1>{{ moduleEntry.title }}</h1>
+    </div>
+    <h3>{{ unitEntry.title }}</h3>
+    {{ unitEntry.unitDescription }}
+    {% if unitEntry.unitUrl %}
+        <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+    {% endif %}
+    {% if unitEntry.unitType == 'elearning' %}
+        {% if resultEntry|length and resultEntry.resultStatus == 'endorsed' %}
+            <p>You have passed this test.</p>
+        {% elseif not remainingAttempts %}
+            <p>You have no remaining attempts, contact your team manager.</p>
+        {% else %}
+            {% if resultEntry|length %}
+                <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+            {% endif %}
+            {% if craft.request.getSegment(5) == 'test' %}
+                {% include 'module/_test' with{entry:unitEntry} %}
+            {% elseif unitEntry.testQuestions|length %}
+                <p><a href="/module/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/test">Complete unit test</a></p>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if resultEntry|length %}
+            <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
+        {% else %}
+            {% include 'module/_evidence' with{entry:unitEntry} %}
+        {% endif %}
+    {% endif %}
+    <p><a href="/">Back to dashboard</a></p>
+</section>
+{% endblock %}
