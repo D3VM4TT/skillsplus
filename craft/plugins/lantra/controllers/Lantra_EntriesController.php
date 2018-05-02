@@ -59,6 +59,11 @@ class Lantra_EntriesController extends Lantra_BaseController {
      * @throws mixed
      */
     private function _disableEntry ($entry) {
+        // return company licences back to scheme
+        if ($entry->section->id == 3) {
+            craft()->lantra_licence->addSchemeLicences($entry->companyRemainingLicences);
+            $entry->setContentFromPost(['companyRemainingLicences' => 0]);
+        }
         $entry->enabled = false;
         craft()->entries->saveEntry($entry);
     }
