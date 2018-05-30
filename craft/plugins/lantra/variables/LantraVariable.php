@@ -197,6 +197,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
+        $criteria = null;
         switch ($reportType) {
             case 'units-blocked':
                 $criteria = craft()->lantra_results->getManagerUnitBlockedResults($user->id, $days, $limit);
@@ -204,13 +205,16 @@ class LantraVariable
             case 'units-expiring':
                 $criteria = craft()->lantra_results->getManagerUnitExpiringResults($user->id, $days, $limit);
             break;
+            case 'units-endorsed':
+                $criteria = craft()->lantra_results->getManagerUnitEndorsedResults($user->id, $days, $limit);
+                break;
             case 'modules-active':
                 $criteria = craft()->lantra_results->getManagerModuleActiveResults($user->id, $days, $limit);
             break;
             case 'modules-expiring':
                 $criteria = craft()->lantra_results->getManagerModuleExpiringResults($user->id, $days, $limit);
             break;
-            default :
+            case 'modules-recent':
                 $criteria = craft()->lantra_results->getManagerModuleRecentResults($user->id, $days, $limit);
             break;
         }

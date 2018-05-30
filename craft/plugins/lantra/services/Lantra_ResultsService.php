@@ -405,7 +405,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10) {
         $blockedResultsIds = $this->getBlockedUnitResultIds();
-        return $this->getManagerUnitResults($userId, $days, $limit, false, $blockedResultsIds);
+        return $this->getManagerUnitResults($userId, $days, $limit, false, false, $blockedResultsIds);
     }
 
     /**
@@ -422,17 +422,32 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Return all endorsed unit result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @return ElementCriteriaModel
+     * @throws Exception
+     */
+    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10) {
+        return $this->getManagerUnitResults($userId, $days, $limit,false, 'endorsed', false, 'elearning');
+    }
+
+    /**
      * Return all unit result entries
      *
      * @param null $userId
      * @param string $days
      * @param int $limit
      * @param bool $expiring
+     * @param bool $status
      * @param bool $id
+     * @param bool $type
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $id = false) {
+    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false) {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -445,6 +460,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
+        $criteria->limit = $limit;
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
@@ -452,7 +468,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         elseif ($days != 'all') {
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
-        $criteria->limit = $limit;
+        if ($status) {
+            $criteria->resultStatus = $status;
+        }
         // from specific ids (i.e. blocked results)
         if ($id) {
             $criteria->id = $id;
@@ -471,6 +489,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     /**
      * Return all blocked unit result ids
      *
+     * @throws \Exception
      * @return array
      */
     private function getBlockedUnitResultIds() {
