@@ -12,15 +12,29 @@
         <input type="hidden" name="fields[resultStatus]" value="pending">
         <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
         <div class="form-group-lantra dateField" style="margin-bottom:20px;">
-            <input class="date" type="hidden" name="expiryDate[date]" value="">
-            <input type="hidden" name="expiryDate[time]" value="12:00">
             <label>Enter expiry date dd/mm/yyyy (if applicable)</label>
             <div>
-                <input class="day" maxlength="2" type="text" name="expiryDate[day]" style="width:30px;">
+                <select style="display:inline;width:40px;" name="userExpiryDate[day]">
+                    <option value="">-</option>
+                    {% for d in 1..31 %}
+                    <option value="{{ d }}">{{ d }}</option>
+                    {% endfor %}
+                </select>
                 /
-                <input class="month" maxlength="2" type="text" name="expiryDate[month]" style="width:30px;">
+                <select style="display:inline;width:40px;" name="userExpiryDate[month]">
+                    <option value="">-</option>
+                    {% for m in 1..12 %}
+                    <option value="{{ m }}">{{ m }}</option>
+                    {% endfor %}
+                </select>
                 /
-                <input class="year" maxlength="4" type="text" name="expiryDate[month]" style="width:60px;">
+                <select style="display:inline;width:70px;" name="userExpiryDate[year]">
+                    <option value="">-</option>
+                    {% set year = 'now'|date('Y') %}
+                    {% for y in year..(year+20) %}
+                    <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div class="form-group-lantra">
