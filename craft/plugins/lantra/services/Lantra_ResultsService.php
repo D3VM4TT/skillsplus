@@ -307,26 +307,39 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * Return all expiring module result entries
      *
      * @param null $userId
-     * @param int $days
+     * @param string $days
      * @param int $limit
      * @return ElementCriteriaModel
      * @throws Exception
      */
     public function getManagerExpiringResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerResults($userId, true, $days, $limit);
+        return $this->getManagerResults($userId, true, 'complete', $days, $limit);
     }
 
     /**
      * Return all recent module result entries
      *
      * @param null $userId
-     * @param int $days
+     * @param string $days
      * @param int $limit
      * @return ElementCriteriaModel
      * @throws Exception
      */
     public function getManagerRecentResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerResults($userId, false, $days, $limit);
+        return $this->getManagerResults($userId, false, 'complete', $days, $limit);
+    }
+
+    /**
+     * Return all active module result entries
+     *
+     * @param null $userId
+     * @param int $limit
+     * @param string $days
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerActiveResults($userId = null, $days = 'all', $limit = 10) {
+        return $this->getManagerResults($userId, false, 'active', $days, $limit);
     }
 
     /**
@@ -334,11 +347,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      * @param null $userId
      * @param bool $expiring
-     * @param int $days
+     * @param string $status
+     * @param string $days
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerResults($userId = null, $expiring = true, $days = 'all', $limit = 10) {
+    private function getManagerResults($userId = null, $expiring = true, $status = 'active', $days = 'all', $limit = 10) {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -351,6 +365,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
+        $criteria->resultStatus = $status;
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';

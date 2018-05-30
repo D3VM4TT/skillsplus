@@ -204,6 +204,8 @@ class LantraVariable
             case 'expiring':
                 $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
             break;
+            case 'active' :
+                $criteria = craft()->lantra_results->getManagerActiveResults($user->id, $days, $limit);
             default :
                 $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
             break;
