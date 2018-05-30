@@ -474,6 +474,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return array
      */
     private function getBlockedUnitResultIds() {
+        // @todo change to set resultStatus = blocked when we save an attempt?
         // This is a fairly complex query which may cause performance issues when we have lots of results to query.
         // It looks for unitResult type results and counts the existing attempts and returns the ids where that
         // total is equal or greater than testMaxAttempts value for the unit.
