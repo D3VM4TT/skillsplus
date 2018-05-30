@@ -4,29 +4,36 @@
 {% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 <section id="scheme-profile" class="row section-dashboard">
-    <div class="col-6">
+    <div class="col-8">
         <h2>Scheme Profile</h2>
         <div class="col-6 profile-field">
             <p>Scheme name:</p>
-            <p>Scheme expiry date:</p>
-            <p>Scheme remaining licences:</p>
-            <p>Company remaining licences:</p>
-            <p>Total remaining licences:</p>
-            <p>Active users:</p>
-            <p>Inactive users:</p>
-            <p>Total users:</p>
-            <p>Total scheme licences:</p>
+            <p>User licences - Total purchased:</p>
+            <p>User licences - Renewal date:</p>
+            <p>User licences - Active Users (inc. Scheme Manager):</p>
+            <p>User licences - Inactive users:</p>
+            <p>User Licences - Total Remaining:</p>
+            {#
+            <p>User Licences - Available in Scheme:</p>
+            <p>User licences - Available in Companies:</p>
+            <p>Scheme Licences remaining:</p>
+            <p>Total users (inc. Scheme Manager):</p>
+            #}
         </div>
         <div class="col-6 profile-data">
             <p>{{ globalsScheme.schemeName|default('unknown') }}</p>
+            <p>{{ usersAll + licencesCompany + licencesScheme }}</p>
             <p>{{ globalsScheme.schemeExpiryDate|date(dateFormat) }}</p>
-            <p>{{ licencesScheme }}</p>
-            <p>{{ licencesCompany }}</p>
-            <p>{{ licencesScheme + licencesCompany }}</p>
             <p>{{ usersActive }}</p>
             <p>{{ usersAll - usersActive }}</p>
+            <p>{{ licencesScheme + licencesCompany }}</p>
+            {#
+                        <p>{{ licencesScheme }}</p>
+            <p>{{ licencesCompany }}</p>
+            <p>{{ licencesScheme }}</p>
             <p>{{ usersAll }}</p>
-            <p>{{ usersAll + licencesCompany + licencesScheme }}</p>
+            #}
+            
         </div>
     </div>
 </section>

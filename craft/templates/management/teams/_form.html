@@ -34,29 +34,27 @@
         <label for="title">Team name:</label>
         <input id="title" name="fields[teamName]" class="5000" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
     </div>
-    {% if user.isInGroup('companyManagers') %}
-        {% set companyEntries = craft.lantra.managerCompanies() %}
-    {% else %}
-        {% set companyEntries = craft.entries.section('companies') %}
-    {% endif %}
     <div class="form-group-lantra float-label-control">
-        <label for="teamCompany">Team company:</label>
+        {#<label for="teamCompany">Team company:</label>#}
+        {% set companyEntries = craft.entries.section('companies') %}
         <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default('') }}" id="teamCompany" >
-            <option value="">~ none selected ~</option>
+            <option value="">Team company:</option>
             {% for companyEntry in companyEntries %}
                 <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
             {% endfor %}
         </select>
+        <hr>
     </div>
     <div class="form-group-lantra float-label-control">
-        <label for="teamPrimaryManager">Team primary manager:</label>
-        {% set usersTeamManagers = craft.users.group('teamManagers') %}
+        {#<label for="teamPrimaryManager">Team primary manager:</label>#}
+        {% set usersCompanyManagers = craft.users.group('companyManagers') %}
         <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
-            <option value="">~ none selected ~</option>
-            {% for userEntry in usersTeamManagers %}
+            <option value="">Team primary manager:</option>
+            {% for userEntry in usersCompanyManagers %}
                 <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
+        <hr>
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="teamSecondaryManagers">Team secondary managers:</label>
@@ -68,6 +66,7 @@
                 {% if entry is defined and userEntry.id in entry.teamSecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
+        <hr>
     </div>
     <br />
     <div class="freetext-procedure"><button type="submit">Save team</button></div>
