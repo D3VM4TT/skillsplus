@@ -29,14 +29,14 @@
             </ul>
         </li>
         {% endif %}
-        {% if currentUser.can('editUsers') or currentUser.can('editCategories(1)') %}
+        {% if currentUser.can('editUsers') or currentUser.can('editCategories:1') %}
         <li class="nav-item">
             <a href="#UserManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">User Management</a>
             <ul class="collapse list-unstyled" id="UserManagementSubMenu">
                 {% if currentUser.can('editUsers') %}
                     <li class="nav-item"><a href="/management/users" class="nav-link">Create / Edit users</a></li>
                 {% endif %}
-                {% if currentUser.can('editCategories(1)') %}
+                {% if currentUser.can('editCategories:1') %}
                     <li class="nav-item"><a href="/management/roles" class="nav-link">Create / Edit roles</a></li>
                 {% endif %}
             </ul>
