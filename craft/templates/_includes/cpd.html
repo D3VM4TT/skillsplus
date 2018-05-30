@@ -50,7 +50,8 @@
                                                                     <th>Type</th>
                                                                     <th>Value</th>
                                                                     <th>Status</th>
-                                                                    <th>Date endorsed</th>
+                                                                    <th>Endorsed Date</th>
+                                                                    <th>Expiry Date</th>
                                                                     <th>Comments</th>
                                                                 </tr>
                                                             </thead>
@@ -75,9 +76,11 @@
                                                                             {{ resultEntry.resultStatus|ucwords }}
                                                                         </td>
                                                                         <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                                                                        <td>{% if resultEntry.expiryDate %}{{ resultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
                                                                         <td>{{ resultEntry.resultComments }}</td>
                                                                     {% else %}
                                                                         <td>Incomplete</td>
+                                                                        <td>-</td>
                                                                         <td>-</td>
                                                                         <td>-</td>
                                                                     {% endif %}
