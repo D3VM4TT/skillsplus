@@ -45,7 +45,7 @@ class LantraVariable
         }
         else {
             $type = '';
-            if ($user->isInGroup('user')) {
+            if ($user->isInGroup('users')) {
                 $type .= 'User';
             }
             if ($user->isInGroup('schemeManagers')) {
