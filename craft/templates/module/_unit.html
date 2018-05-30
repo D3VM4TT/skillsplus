@@ -18,9 +18,9 @@
     </div>
     <h3>{{ unitEntry.title }}</h3>
     {{ unitEntry.unitDescription }}
-    {% if unitEntry.unitImage.length %}
+    {% if unitEntry.unitImage|length %}
         {% set unitImage = unitEntry.unitImage.first %}
-        <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.getUrl }}" /></p>
+        <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
     {% endif %}
     {% if unitEntry.unitUrl %}
         <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
