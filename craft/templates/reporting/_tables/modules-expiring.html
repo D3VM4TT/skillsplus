@@ -1,7 +1,7 @@
 <table width="100%" class="table table-striped">
     <thead>
     <tr>
-        <th colspan="5">{{ reportType|ucwords }} Results</th>
+        <th colspan="5">Modules Expiring Report</th>
     </tr>
     <tr>
     </tr>
@@ -9,6 +9,8 @@
         <th>User</th>
         <th>Team</th>
         <th>Module</th>
+        <th>Completed Date</th>
+        <th>Expiry Date</th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +21,8 @@
         <td>{{ entry.author.getFullName() }}</td>
         <td>{{ userTeam.title|default('') }}</td>
         <td>{{ resultModule.title|default('') }}</td>
+        <td>{{ entry.postDate|date(dateFormat) }}</td>
+        <td>{{ entry.expiryDate|date(dateFormat) }}</td>
     </tr>
     {% endfor %}
     </tbody>

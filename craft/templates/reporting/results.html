@@ -23,7 +23,7 @@
     <div class="page-header">
         <h1>Results Report</h1>
     </div>
-    {% if reportType == 'recent' or reportType == 'expiring' %}
+    {% if reportType == 'modules-recent' or reportType == 'modules-expiring' or reportType == 'units-expiring' %}
         {% include '_includes/filter' with{filterDays:filterDays, reportType:reportType} %}
     {% endif %}
     {% if resultEntries|length %}

@@ -198,16 +198,20 @@ class LantraVariable
             return null;
         }
         switch ($reportType) {
-            case 'blocked':
-                $criteria = craft()->lantra_results->getManagerBlockedUnitResults($user->id, $days, $limit);
-                break;
-            case 'expiring':
-                $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
+            case 'units-blocked':
+                $criteria = craft()->lantra_results->getManagerUnitBlockedResults($user->id, $days, $limit);
             break;
-            case 'active' :
-                $criteria = craft()->lantra_results->getManagerActiveResults($user->id, $days, $limit);
+            case 'units-expiring':
+                $criteria = craft()->lantra_results->getManagerUnitExpiringResults($user->id, $days, $limit);
+            break;
+            case 'modules-active':
+                $criteria = craft()->lantra_results->getManagerModuleActiveResults($user->id, $days, $limit);
+            break;
+            case 'modules-expiring':
+                $criteria = craft()->lantra_results->getManagerModuleExpiringResults($user->id, $days, $limit);
+            break;
             default :
-                $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
+                $criteria = craft()->lantra_results->getManagerModuleRecentResults($user->id, $days, $limit);
             break;
         }
         if ($criteria) {
