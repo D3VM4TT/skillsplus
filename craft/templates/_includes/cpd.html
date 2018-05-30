@@ -9,7 +9,7 @@
             {% else %}
                 <div class="module-wrapper">
                 {% for module in modules %}
-                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).first() %}
+                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).resultStatus('complete').first() %}
                     <div class="module clearfix">
                         {% set totalPoints = 0 %}
                         <div data-toggle="collapse" data-target="#m{{ module.id }}" class="accordion-toggle clearfix">

@@ -27,6 +27,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Get a module result entry
+     *
+     * @param $userId
+     * @param $moduleId
+     * @return null
+     * @throws Mixed
+     */
+    function getModuleResult($userId, $moduleId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->limit = 1;
+        $criteria->authorId = $userId;
+        $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        return $criteria->first();
+    }
+
+    /**
      * Save a test attempt
      *
      * @param $attemptEntry
@@ -150,6 +168,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! count($resultEntries)) {
             return;
         }
+        // create module result
+        if ( ! $this->getModuleResult($userId, $moduleEntry->id)) {
+            $this->createModuleResult($userId, $moduleEntry->id);
+        }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
             $unitEntry = $resultEntry->resultUnit->first();
@@ -159,39 +181,48 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         // @todo error reporting?
         if ($points >= $moduleEntry->moduleCompletedValue) {
-            $this->saveModuleResult($moduleEntry, $userId);
+            $this->completeModuleResult($moduleEntry, $userId);
         }
         return;
     }
 
     /**
-     * Save a module result
+     * Create a module result
      *
-     * @param $moduleEntry
+     * @param $moduleEntryId
      * @param $userId
      * @return null
-     * @throws Exception
+     * @throws \Exception
      */
-    function saveModuleResult($moduleEntry, $userId) {
-        // check a module result doesn't already exist
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'results';
-        $criteria->type = 'moduleResult';
-        $criteria->limit = 1;
-        $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $moduleEntry , 'field' => 'resultModule'];
-        // @todo error reporting?
-        if ($criteria->count()) {
-            return;
-        }
+    function createModuleResult($userId, $moduleEntryId) {
         $resultEntry = new EntryModel();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
-        $resultEntry->setContentFromPost([
-            'resultModule' => array($moduleEntry->id),
-        ]);
+        $resultEntry->setContentFromPost(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
+        // @todo error reporting?
+        if ( ! craft()->entries->saveEntry($resultEntry)) {
+            return;
+        }
+        return;
+    }
+
+    /**
+     * Complete a module result
+     *
+     * @param $moduleEntry
+     * @param $userId
+     * @return null
+     * @throws /Exception
+     */
+    function completeModuleResult($moduleEntry, $userId) {
+        $resultEntry = $this->getModuleResult($userId, $moduleEntry->id);
+        // @todo error reporting
+        if ( ! $resultEntry) {
+            return;
+        }
+        $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
         // add expiry date based on module setting
         if ($moduleEntry->moduleExpiryDays) {
             $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
