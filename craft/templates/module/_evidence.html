@@ -11,6 +11,18 @@
         <input type="hidden" name="enabled" value="1">
         <input type="hidden" name="fields[resultStatus]" value="pending">
         <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
+        <div class="form-group-lantra dateField" style="margin-bottom:20px;">
+            <input class="date" type="hidden" name="expiryDate[date]" value="">
+            <input type="hidden" name="expiryDate[time]" value="12:00">
+            <label>Enter expiry date dd/mm/yyyy (if applicable)</label>
+            <div>
+                <input class="day" maxlength="2" type="text" name="expiryDate[day]" style="width:30px;">
+                /
+                <input class="month" maxlength="2" type="text" name="expiryDate[month]" style="width:30px;">
+                /
+                <input class="year" maxlength="4" type="text" name="expiryDate[month]" style="width:60px;">
+            </div>
+        </div>
         <div class="form-group-lantra">
             <input type="file" name="fields[resultEvidence][]" multiple>
             <button type="submit">Submit Evidence</button>

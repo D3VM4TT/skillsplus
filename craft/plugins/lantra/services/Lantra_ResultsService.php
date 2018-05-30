@@ -172,16 +172,25 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $this->getModuleResult($userId, $moduleEntry->id)) {
             $this->createModuleResult($userId, $moduleEntry->id);
         }
+        $moduleResultExpiryTime = null;
+        // set default module result expiry
+        if ($moduleEntry->moduleExpiryDays) {
+            $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+        }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
             $unitEntry = $resultEntry->resultUnit->first();
             if ($resultEntry->resultStatus == 'endorsed') {
                 $points += $unitEntry->unitValue;
+                // check if unit expiry is before default module expiry)
+                if ($resultEntry->expiryDate && $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime) {
+                    $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
+                }
             }
         }
         // @todo error reporting?
         if ($points >= $moduleEntry->moduleCompletedValue) {
-            $this->completeModuleResult($moduleEntry, $userId);
+            $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
         }
         return;
     }
@@ -213,20 +222,19 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      * @param $moduleEntry
      * @param $userId
+     * @param $expiryDate
      * @return null
      * @throws /Exception
      */
-    function completeModuleResult($moduleEntry, $userId) {
+    function completeModuleResult($moduleEntry, $userId, $expiryDate = null) {
         $resultEntry = $this->getModuleResult($userId, $moduleEntry->id);
         // @todo error reporting
         if ( ! $resultEntry) {
             return;
         }
+        // either no expiry, default module expiry or set by unit
+        $resultEntry->expiryDate = $expiryDate;
         $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
-        // add expiry date based on module setting
-        if ($moduleEntry->moduleExpiryDays) {
-            $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
-        }
         // @todo error reporting?
         if ( ! craft()->entries->saveEntry($resultEntry)) {
             return;

@@ -1,5 +1,19 @@
 $(document).ready(function(){
 
+    // set datefield values
+    $('div.dateField').each(function(){
+        var dateField = $(this),
+            hidden = dateField.find('input[type="hidden"].date');
+        dateField.find('input').change(function(){
+            var day = dateField.find('input.day').val(),
+                month = dateField.find('input.month').val(),
+                year = dateField.find('input.year').val();
+            if (day && month && year) {
+                hidden.val(day + '/' + month + '/' + year);
+            }
+        })
+    })
+
     // set select values
     $('select[data-value]').each(function(){
         $(this).val($(this).data('value'));
