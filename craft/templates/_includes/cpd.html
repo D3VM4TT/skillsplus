@@ -61,7 +61,7 @@
                                                                         {% if moduleResultEntry %}
                                                                             {{ unitEntry.title }}
                                                                         {% else %}
-                                                                            <a href="/module/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a>
+                                                                            <a href="/module/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                                         {% endif %}
                                                                     </td>
                                                                     <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
