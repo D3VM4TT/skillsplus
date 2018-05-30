@@ -1,30 +1,31 @@
 {% set currentUserCompany = craft.lantra.userCompany() %}
 <section id="my-profile" class="row section-dashboard">
-    <div class="col-6">
+    <div class="col-8">
         <h2>My Profile</h2>
         <div class="col-6 profile-field">
-            <p>Email address:</p>
-            <p>User ID:</p>
-            <p>User type:</p>
-            <p>First name:</p>
-            <p>Last name:</p>
-            <p>Company:</p>
-            <p>Team:</p>
-            <p>Job Role(s):</p>
+            <p>Email address:&nbsp;</p>
+            <p>User ID:&nbsp;</p>
+            <p>User type:&nbsp;</p>
+            <p>First name:&nbsp;</p>
+            <p>Last name:&nbsp;</p>
+            <p>Company:&nbsp;</p>
+            <p>Team:&nbsp;</p>
+            <p>Job Role(s):&nbsp;</p>
         </div>
         <div class="col-6 profile-data">
-            <p>{{ currentUser.email }}</p>
-            <p>{{ currentUser.id }}</p>
-            <p>{{ craft.lantra.userType() }}</p>
-            <p>{{ currentUser.firstName }}</p>
-            <p>{{ currentUser.lastName }}</p>
-            <p>{{ currentUserCompany|default('~') }}</p>
-            <p>{{ currentUser.userTeam.first.teamName|default('~') }}</p>
+            <p>{{ currentUser.email }}&nbsp;</p>
+            <p>{{ currentUser.id }}&nbsp;</p>
+            <p>{{ craft.lantra.userType() }}&nbsp;</p>
+            <p>{{ currentUser.firstName }}&nbsp;</p>
+            <p>{{ currentUser.lastName }}&nbsp;</p>
+            <p>{{ currentUserCompany|default('~') }}&nbsp;</p>
+            <p>{{ currentUser.userTeam.first.teamName|default('~') }}&nbsp;</p>
             <p>{% if currentUser.userRole.total %}
                     {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
                 {% else %}
                     ~
                 {% endif %}
+                &nbsp;
             </p>
         </div>
     </div>
