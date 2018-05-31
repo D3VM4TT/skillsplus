@@ -1,4 +1,5 @@
 {% if craft.request.firstSegment != "login" and craft.request.firstSegment != "actions" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
+{% if currentUser and craft.request.firstSegment != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}{% redirect "licence" %}{% endif %}
 <!DOCTYPE HTML>
 <html class="no-js" lang="">
 <head>
