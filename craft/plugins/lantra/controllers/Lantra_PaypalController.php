@@ -37,7 +37,7 @@ class Lantra_PaypalController extends Lantra_BaseController
         // save payment
         craft()->matrix->saveBlock($payment);
         // add user to user group
-        craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
+        craft()->lantra_users->activateIndividualUser($user);
         // add to Lantra team
         craft()->lantra_users->addUserToIndividualTeam($user);
         // set account expiry

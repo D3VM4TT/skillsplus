@@ -339,6 +339,26 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Activate individual user (add to Users and Individuals groups)
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function activateIndividualUser(UserModel $user) {
+        craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
+    }
+
+    /**
+     * Deactivate individual user (removed from Users group)
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function deactivateIndividualUser(UserModel $user) {
+        craft()->userGroups->assignUserToGroups($user->id, array(5));
+    }
+
+    /**
      * Set user expiry days
      *
      * @param $user
@@ -358,5 +378,30 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getIndividualTeam() {
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         return $globalsScheme->individualTeam->first();
+    }
+
+    /** Get expired users
+     *
+     * @return object
+     * @throws Exception
+     */
+    public function getExpiredUsers() {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->userExpiryDate = '< '. time();
+        $criteria->limit = null;
+        return $criteria;
+    }
+
+    /** Get expiring users
+     *
+     * @param $expiryDate
+     * @return object
+     * @throws Exception
+     */
+    public function getExpiringUsers($expiryDate) {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->userExpiryDate = '< '. $expiryDate;
+        $criteria->limit = null;
+        return $criteria;
     }
 }

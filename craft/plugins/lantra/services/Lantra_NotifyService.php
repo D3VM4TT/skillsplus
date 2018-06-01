@@ -20,6 +20,22 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $this->notify($manager->email, $subject, $message);
         }
     }
+    /**
+     * Notify users of user expiry
+     *
+     * @param $expiryDate
+     * @throws Exception
+     */
+    function sendUserExpiry($expiryDate) {
+       $criteria = craft()->lantra_users->getExpiringUsers($expiryDate);
+       if ($criteria->total()) {
+           $subject = "User Expiry";
+           foreach ($criteria->find() as $user) {
+               $message = "Your individual licence expires on " . date('d/m/y', $user->userExpiryDate->getTimestamp()) . ".";
+               $this->notify($user->email, $subject, $message);
+           }
+       }
+    }
 
     /**
      * Notify managers of licences remaining
