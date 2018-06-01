@@ -386,10 +386,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     public function getExpiredUsers() {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->userExpiryDate = '< '. time();
-        $criteria->limit = null;
-        return $criteria;
+        return $this->getExpiringUsers(time());
     }
 
     /** Get expiring users
