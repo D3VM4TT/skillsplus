@@ -38,6 +38,11 @@ class Lantra_PaypalController extends Lantra_BaseController
         craft()->matrix->saveBlock($payment);
         // add user to user group
         craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
+        // add to Lantra team
+        craft()->lantra_users->addUserToIndividualTeam($user);
+        // set account expiry
+        $days = craft()->lantra_licence->getIndividualLicenceDays();
+        craft()->lantra_users->setUserExpiryDate($user, $days);
         // log success message
         Craft::log('IPN request received [' . $payerEmail . ']',LogLevel::Info, true, 'paypal', 'lantra');
         die();

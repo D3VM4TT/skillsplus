@@ -133,4 +133,14 @@ class Lantra_LicenceService extends BaseApplicationComponent
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         return (int) $globalsScheme->schemeRemainingLicences;
     }
+
+    /** Get individual days till expiry
+     *
+     * @param null $user
+     * @return null
+     */
+    public function getIndividualLicenceDays() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return (int) $globalsScheme->individualLicenceDays;
+    }
 }

@@ -321,4 +321,42 @@ class Lantra_UsersService extends BaseApplicationComponent
             return (bool) $availableTeams ? count($availableTeams) : false;
         }
     }
+
+    /**
+     * Add user to Lantra individual team
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function addUserToIndividualTeam(UserModel $user) {
+        // get the individualTeam
+        $team = $this->getIndividualTeam();
+        // @todo error reporting?
+        if($team) {
+            $user->setContentFromPost(['userTeam' => array($team->id)]);
+            craft()->users->saveUser($user);
+        }
+    }
+
+    /**
+     * Set user expiry days
+     *
+     * @param $user
+     * @param $days
+     * @throws \Exception
+     */
+    public function setUserExpiryDate(UserModel $user, $days) {
+        // set date in future
+        $user->setContentFromPost(['userExpiryDate' => strtotime('+' . $days . ' days')]);
+        craft()->users->saveUser($user);
+    }
+
+    /** Get individual team
+     *
+     * @return null
+     */
+    public function getIndividualTeam() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->individualTeam->first();
+    }
 }
