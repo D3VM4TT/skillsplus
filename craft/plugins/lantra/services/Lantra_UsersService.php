@@ -339,6 +339,22 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Add user to Lantra default job role
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function addUserToIndividualJobRole(UserModel $user) {
+        // get the jobRole
+        $jobRole = $this->getIndividualJobRole();
+        // @todo error reporting?
+        if($jobRole) {
+            $user->setContentFromPost(['userRole' => array($jobRole->id)]);
+            craft()->users->saveUser($user);
+        }
+    }
+
+    /**
      * Activate individual user (add to Users and Individuals groups)
      *
      * @param $user
@@ -378,6 +394,15 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getIndividualTeam() {
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         return $globalsScheme->individualTeam->first();
+    }
+
+    /** Get individual job role
+     *
+     * @return null
+     */
+    public function getIndividualJobRole() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->individualJobRole->first();
     }
 
     /** Get expired users

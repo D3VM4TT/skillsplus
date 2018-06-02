@@ -40,6 +40,8 @@ class Lantra_PaypalController extends Lantra_BaseController
         craft()->lantra_users->activateIndividualUser($user);
         // add to Lantra team
         craft()->lantra_users->addUserToIndividualTeam($user);
+        // add to Lantra job role
+        craft()->lantra_users->addUserToIndividualJobRole($user);
         // set account expiry
         $days = craft()->lantra_licence->getIndividualLicenceDays();
         craft()->lantra_users->setUserExpiryDate($user, $days);
