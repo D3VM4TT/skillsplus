@@ -89,16 +89,16 @@ class Lantra_NotifyService extends BaseApplicationComponent
     }
 
     /**
-     * Notify managers of no attempts remaining
+     * Notify managers of no attempts remaining (blocked result)
      *
      * @throws Exception
      */
-    function sendNoAttemptsRemaining(EntryModel $resultEntry) {
+    function sendManagerBlockedResult(EntryModel $resultEntry) {
         $unitEntry = $resultEntry->resultUnit->first();
         $author = $resultEntry->getAuthor();
         $authorFullName = $author->getFullName();
         $subject = "No Attempts Remaining ["  . $authorFullName  . "]";
-        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . '.';
+        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . ' and the result is blocked.';
         // send the emails to managers
         $this->notifyManagers($author, $subject, $message);
     }

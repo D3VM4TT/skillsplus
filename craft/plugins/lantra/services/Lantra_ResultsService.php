@@ -116,8 +116,50 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultUnitEntry = $resultEntry->resultUnit->first();
         $totalAttempts = $resultEntry->resultAttempts->total();
         if ($resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
-            craft()->lantra_notify->sendNoAttemptsRemaining($resultEntry);
+            $this->blockResult($resultEntry);
         }
+    }
+
+    /**
+     * Set a unitResult resultStatus
+     *
+     * @param $resultEntry
+     * @param $resultStatus
+     * @return null
+     * @throws null
+     */
+    function setResultStatus($resultEntry, $resultStatus) {
+        $resultEntry->setContentFromPost(['resultStatus' => $resultStatus]);
+        // @todo error reporting?
+        if ( ! craft()->entries->saveEntry($resultEntry)) {
+            return;
+        }
+        return;
+    }
+
+    /**
+     * Set a unitResult resultStatus to blocked
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function blockResult($resultEntry) {
+        $this->setResultStatus($resultEntry,'blocked');
+        craft()->lantra_notify->sendManagerBlockedResult($resultEntry);
+    }
+
+    /**
+     * Unlink unitResult attempts and set resultStatus to active
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function unblockResult($resultEntry) {
+        $resultEntry->setContentFromPost(['resultAttempts' => []]);
+        $this->setResultStatus($resultEntry,'active');
+        craft()->entries->saveEntry($resultEntry);
     }
 
     /**
@@ -404,8 +446,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws mixed
      */
     public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10) {
-        $blockedResultsIds = $this->getBlockedUnitResultIds();
-        return $this->getManagerUnitResults($userId, $days, $limit, false, false, $blockedResultsIds);
+        return $this->getManagerUnitResults($userId, $days, $limit, false, 'blocked');
     }
 
     /**
@@ -484,41 +525,5 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $criteria->authorId = $subordinateIds;
         }
         return $criteria;
-    }
-
-    /**
-     * Return all blocked unit result ids
-     *
-     * @throws \Exception
-     * @return array
-     */
-    private function getBlockedUnitResultIds() {
-        // @todo change to set resultStatus = blocked when we save an attempt?
-        // This is a fairly complex query which may cause performance issues when we have lots of results to query.
-        // It looks for unitResult type results and counts the existing attempts and returns the ids where that
-        // total is equal or greater than testMaxAttempts value for the unit.
-        $query = craft()->db->createCommand();
-        $subAttempts = '(SELECT COUNT(*) FROM {{relations}} AS r WHERE r.fieldId = 58 AND r.sourceId = el.id)';
-        $subUnitId = '(SELECT targetId FROM {{relations}} AS r WHERE r.fieldId = 26 AND r.sourceId = el.id)';
-        $query->select([
-            'el.id',
-            $subAttempts . ' as resultAttempts',
-            'unitEntry.field_testMaxAttempts as maxAttempts',
-            'unitRelation.targetId as unitEntryId'
-        ])
-            ->from('{{elements}} as el')
-            ->join('{{entries}} AS e', 'e.id = el.id')
-            ->join('{{content}} AS c', 'c.elementId = el.id')
-            ->join('{{relations}} AS unitRelation', 'unitRelation.sourceId = el.id')
-            ->join('{{content}} AS unitEntry', 'unitEntry.elementId = ' . $subUnitId)
-            ->where('e.sectionId = 10 AND e.typeId = 10 AND unitRelation.fieldId = 26 AND unitRelation.sourceId = el.id')
-            ->having('maxAttempts > 0 AND resultAttempts >= maxAttempts');
-        // get all blocked results
-        $results = $query->queryAll();
-        $blockedResultsIds = [];
-        foreach($results as $row) {
-            $blockedResultsIds[] = $row['id'];
-        }
-        return $blockedResultsIds;
     }
 }

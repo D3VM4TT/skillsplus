@@ -11,7 +11,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
     );
 
     /**
-     * Unlinks unit result attempts
+     * Unlinks unit result attempts and unblocks result
      *
      * @throws mixed
      */
@@ -23,9 +23,8 @@ class Lantra_EntriesController extends Lantra_BaseController {
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        $entry->setContentFromPost(['resultAttempts' => []]);
-        craft()->entries->saveEntry($entry);
-        $this->_returnMessage( 'Result attempts unlinked.', true, craft()->request->getUrlReferrer());
+        craft()->lantra_results->unblockResult($entry);
+        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, craft()->request->getUrlReferrer());
     }
 
     /**
