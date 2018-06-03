@@ -52,11 +52,12 @@
                                                                     <th>Status</th>
                                                                     <th>Endorsed Date</th>
                                                                     <th>Expiry Date</th>
-                                                                    <th>Comments</th>
+                                                                    <th>Evidence &amp; Comments</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                             {% for unitEntry in unitGroupEntries %}
+                                                            {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
                                                                 <tr>
                                                                     <td>
                                                                         {% if moduleResultEntry %}
@@ -67,17 +68,24 @@
                                                                     </td>
                                                                     <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
                                                                     <td>{{ unitEntry.unitValue }}</td>
-                                                                    {% set resultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
-                                                                    {% if resultEntry %}
-                                                                    {% if (resultEntry.resultStatus == 'endorsed') %}
+
+                                                                    {% if unitResultEntry %}
+                                                                    {% if (unitResultEntry.resultStatus == 'endorsed') %}
                                                                         {% set totalPoints = totalPoints + unitEntry.unitValue %}
                                                                     {% endif %}
                                                                         <td>
-                                                                            {{ resultEntry.resultStatus|ucwords }}
+                                                                            {{ unitResultEntry.resultStatus|ucwords }}
                                                                         </td>
-                                                                        <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
-                                                                        <td>{% if resultEntry.expiryDate %}{{ resultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
-                                                                        <td>{{ resultEntry.resultComments }}</td>
+                                                                        <td>{% if unitResultEntry.resultEndorsedDate %}{{ unitResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                                                                        <td>{% if unitResultEntry.expiryDate %}{{ unitResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                                                                        <td>
+                                                                            {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
+                                                                                {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
+                                                                                    <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                            {{ unitResultEntry.resultComments }}
+                                                                        </td>
                                                                     {% else %}
                                                                         <td>Incomplete</td>
                                                                         <td>-</td>
