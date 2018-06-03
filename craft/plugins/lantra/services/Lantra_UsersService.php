@@ -106,6 +106,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
         $criteria->order = 'title';
+        $individualTeam = $this->getIndividualTeam();
+        if ($individualTeam) {
+            $criteria->id = 'not ' . $individualTeam->id;
+        }
         return $criteria->ids();
     }
 
@@ -413,6 +417,15 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getIndividualTeam() {
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         return $globalsScheme->individualTeam->first();
+    }
+
+    /** Get individual company
+     *
+     * @return null
+     */
+    public function getIndividualCompany() {
+        $team = $this->getIndividualTeam();
+        return $team->teamCompany->first();
     }
 
     /** Get individual job role

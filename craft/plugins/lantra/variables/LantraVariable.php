@@ -266,6 +266,26 @@ class LantraVariable
     }
 
     /**
+     * Get the individual team id
+     *
+     * @return int
+     */
+    public function individualTeamId() {
+        $team = craft()->lantra_users->getIndividualTeam();
+        return ($team) ? $team->id : null;
+    }
+
+    /**
+     * Get the individual company id
+     *
+     * @return int
+     */
+    public function individualCompanyId() {
+        $company = craft()->lantra_users->getIndividualCompany();
+        return ($company) ? $company->id : null;
+    }
+
+    /**
      * Send the csv report to the browser
      *
      * @param $reportType

@@ -6,15 +6,21 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
+{% set excludeIds = ['and'] %}
+{% set excludeIds = excludeIds|merge([currentUser.id]) %}
+{% set individualIds = craft.users.group('individuals').ids() %}
+{% if individualIds %}{% set excludeIds = excludeIds|merge(individualIds) %}{% endif %}
+{% set excludeIdsString = excludeIds|join(', not ') %}
+
 {% if currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id).limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString) %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id('not ' ~ currentUser.id).limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).limit(pageLimit) %}
 {% else %}
-    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').id(excludeIdsString).limit(pageLimit) %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
