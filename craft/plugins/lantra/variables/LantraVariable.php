@@ -18,6 +18,18 @@ class LantraVariable
     }
 
     /**
+     * Check whether this user manages the subordinate
+     *
+     * @param null $subordinateId
+     * @param bool $managerId
+     * @return bool
+     */
+    public function isManager($subordinateId = null, $managerId = null) {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return craft()->lantra_users->isManager($subordinateId, $manager);
+    }
+
+    /**
      * Can add user
      *
      * @param null $userId
@@ -216,6 +228,9 @@ class LantraVariable
             break;
             case 'modules-recent':
                 $criteria = craft()->lantra_results->getManagerModuleRecentResults($user->id, $days, $limit);
+            break;
+            case 'users':
+                $criteria = craft()->lantra_results->getManagerUsers($user->id, $limit);
             break;
         }
         if ($criteria) {

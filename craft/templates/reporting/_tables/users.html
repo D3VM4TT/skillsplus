@@ -1,0 +1,26 @@
+<table width="100%" class="table table-striped">
+    <thead>
+    <tr>
+        <th colspan="5">Users Report</th>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+        <th>User</th>
+        <th>Team</th>
+        <th>Company</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for subordinate in resultEntries %}
+    {% set userTeam = subordinate.userTeam.first() %}
+    <tr>
+        <td><a href="/reporting/user/{{ subordinate.id }}">{{ subordinate.getFullName() }}</a></td>
+        <td>{{ userTeam.title }}</td>
+        <td>{{ userTeam.teamCompany.first.title }}</td>
+        <td><a href="mailto:{{ subordinate.email }}">{{ subordinate.email }}</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -9,7 +9,7 @@
 
     <div class="welcome-back"><p class="text-bold">Hello {{ currentUser.firstName }}, welcome back to the Lantra dashboard.</p></div>
 
-    {% include '_includes/cpd' %}
+    {% include '_includes/cpd' with{cpdUser:currentUser} %}
     {% include '_includes/profile' %}
 
     {% if craft.lantra.canManage(null, true) %}

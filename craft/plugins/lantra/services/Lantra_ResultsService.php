@@ -526,4 +526,50 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         return $criteria;
     }
+
+    /**
+     * Return all users for a manager
+     *
+     * @param null $userId
+     * @param int $limit
+     * @return ElementCriteriaModel|null
+     * @throws mixed
+     */
+    public function getManagerUsers($userId = null, $limit = 10) {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        // get the subordinate ids
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        // build the criteria model
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = $limit;
+        $criteria->id = $subordinateIds;
+        $criteria->order = 'lastName asc';
+        return $criteria;
+    }
+
+    /**
+     * Get all modules for a job role
+     *
+     * @param $roleId
+     * @return array
+     * @throws Exception
+     */
+    private function getRoleModules($roleId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'modules';
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
+        return $criteria->total() ? $criteria->find() : [];
+    }
 }

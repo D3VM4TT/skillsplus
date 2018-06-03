@@ -1,7 +1,7 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-{% if currentUser.userRole.total %}
+{% if cpdUser.userRole.total %}
     <section id="my-skills-quals" class="section-dashboard">
-        {% for role in currentUser.userRole %}
+        {% for role in cpdUser.userRole %}
             <h2>Job Role: {{ role.title }}</h2>
             {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
@@ -9,7 +9,7 @@
             {% else %}
                 <div class="module-wrapper">
                 {% for module in modules %}
-                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).resultStatus('complete').first() %}
+                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
                     <div class="module clearfix">
                         {% set totalPoints = 0 %}
                         <div data-toggle="collapse" data-target="#m{{ module.id }}" class="accordion-toggle clearfix">
@@ -67,7 +67,7 @@
                                                                     </td>
                                                                     <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
                                                                     <td>{{ unitEntry.unitValue }}</td>
-                                                                    {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
+                                                                    {% set resultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
                                                                     {% if resultEntry %}
                                                                     {% if (resultEntry.resultStatus == 'endorsed') %}
                                                                         {% set totalPoints = totalPoints + unitEntry.unitValue %}

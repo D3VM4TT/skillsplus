@@ -26,6 +26,25 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether this user manages the subordinate
+     *
+     * @param null $subordinateId
+     * @param mixed $manager
+     * @return bool
+     * @throws \Exception
+     */
+    public function isManager($subordinateId = null, $manager = null) {
+        if (is_null($manager)) {
+            $manager = craft()->userSession->getUser();
+        }
+        $subordinateIds = $this->getManagerSubordinateIds($manager);
+        if ( ! count($subordinateIds)) {
+            return false;
+        }
+        return $subordinateIds && in_array($subordinateId, $subordinateIds);
+    }
+
+    /**
      * Return user company (team company)
      *
      * @param null $user
