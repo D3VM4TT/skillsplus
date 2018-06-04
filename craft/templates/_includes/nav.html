@@ -55,13 +55,13 @@
         <li class="nav-item">
             <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
             <ul class="collapse list-unstyled" id="navReporting">
-                <li class="nav-item"><a href="/reporting/results/users" class="nav-link">Users Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/modules-expiring" class="nav-link">Modules Expiring Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/modules-recent" class="nav-link">Modules Completed Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/modules-active" class="nav-link">Modules Active Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/units-blocked" class="nav-link">Units Blocked Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/units-endorsed" class="nav-link">Units Endorsed Report</a></li>
-                <li class="nav-item"><a href="/reporting/results/units-expiring" class="nav-link">Units Expiring Report</a></li>
+                <li class="nav-item"><a href="/reporting/users" class="nav-link">Users Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-expiring" class="nav-link">Modules Expiring Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-completed" class="nav-link">Modules Completed Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-active" class="nav-link">Modules Active Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-blocked" class="nav-link">Units Blocked Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-endorsed" class="nav-link">Units Endorsed Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-expiring" class="nav-link">Units Expiring Report</a></li>
             </ul>
         </li>
         {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}

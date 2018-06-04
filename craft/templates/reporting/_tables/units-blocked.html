@@ -1,29 +1,30 @@
-<table width="100%" class="table table-striped">
-    <thead>
-    <tr>
-        <th colspan="5">Units Blocked Report</th>
-    </tr>
-    <tr>
-    </tr>
-    <tr>
-        <th>User</th>
-        <th>Team</th>
-        <th>Unit</th>
-        <th>Total Attempts</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for entry in resultEntries %}
-    {% set userTeam = entry.author.userTeam.first() %}
-    {% set resultUnit = entry.resultUnit.first() %}
-    <tr>
-        <td>{{ entry.author.getFullName() }}</td>
-        <td>{{ userTeam.title|default('') }}</td>
-        <td>{{ resultUnit.title|default('') }}</td>
-        <td>{{ entry.resultAttempts|length }}</td>
-        <td><a class="action" href="#" data-action="lantra/entries/resetResult" data-id="{{ entry.id }}">Reset Result</a></td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% include '_includes/filter' with{filterDays:filterDays, reportType:'units-blocked'} %}
+<p><strong>Units Blocked Report</strong></p>
+{% if reportEntries|length %}
+<div class="table-responsive">
+    <table width="100%" class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Unit</th>
+                <th>Total Attempts</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in reportEntries %}
+        {% set userTeam = entry.author.userTeam.first() %}
+        {% set resultUnit = entry.resultUnit.first() %}
+        <tr>
+            <td>{{ entry.author.getFullName() }}</td>
+            <td>{{ userTeam.title|default('') }}</td>
+            <td>{{ resultUnit.title|default('') }}</td>
+            <td>{{ entry.resultAttempts|length }}</td>
+            <td><a class="action" href="#" data-action="lantra/entries/resetResult" data-id="{{ entry.id }}">Reset Result</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

@@ -93,6 +93,6 @@ $(document).ready(function(){
 
     // submit select filter
     $('form.filter select').on('change', function(){
-        window.location.href = '/' + $(this).data('base') + '/' +  $(this).val();
+        // $(this).closest('form').submit();
     });
 });

@@ -294,7 +294,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     public function getManagerSubordinates(UserModel $user, $includeHierarchy = false) {
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, $includeHierarchy);
+        $subordinateIds = $this->getManagerSubordinateIds($user, $includeHierarchy);
         if ( ! count($subordinateIds)) {
             return null;
         }
@@ -303,6 +303,41 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
         return $criteria->find();
+    }
+
+    /**
+     * Return subordinate users (as criteria for report) for a manager (similar to above)
+     *
+     * @param null $userId
+     * @param int $limit
+     * @param string $search
+     * @return ElementCriteriaModel|null
+     * @throws mixed
+     */
+    public function getManagerUsers($userId = null, $limit = 10, $search = '') {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        // get the subordinate ids
+        $subordinateIds = $this->getManagerSubordinateIds($manager, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        // build the criteria model
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = $limit;
+        $criteria->id = $subordinateIds;
+        $criteria->order = 'lastName asc';
+        if ($search) {
+            $criteria->search = $search;
+        }
+        return $criteria;
     }
 
     /**

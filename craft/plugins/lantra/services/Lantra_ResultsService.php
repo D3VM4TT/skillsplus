@@ -359,37 +359,40 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerModuleExpiringResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerModuleResults($userId, $days, $limit, true,'complete');
+    public function getManagerModuleExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit, true,'complete', $search);
     }
 
     /**
-     * Return all recent module result entries
+     * Return all completed module result entries
      *
      * @param null $userId
      * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerModuleRecentResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerModuleResults($userId, $days, $limit,false,'complete');
+    public function getManagerModuleCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit,false,'complete', $search);
     }
 
     /**
      * Return all active module result entries
      *
      * @param null $userId
-     * @param int $limit
      * @param string $days
+     * @param int $limit
+     * @param string $search
      * @return mixed
      * @throws mixed
      */
-    public function getManagerModuleActiveResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerModuleResults($userId, $days, $limit, false,'active');
+    public function getManagerModuleActiveResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit, false,'active', $search);
     }
 
     /**
@@ -400,10 +403,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param int $limit
      * @param bool $expiring
      * @param string $status
+     * @param string $search
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active') {
+    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '') {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -424,6 +428,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         elseif ($days != 'all') {
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
+        if ($search) {
+            $criteria->search = $search;
+        }
         $criteria->limit = $limit;
         // limit by subordinates if team or company manager
         if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
@@ -442,11 +449,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param string $days
      * @param int $limit
+     * @param string $search
      * @return mixed
      * @throws mixed
      */
-    public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerUnitResults($userId, $days, $limit, false, 'blocked');
+    public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit, false, 'blocked', false, $search);
     }
 
     /**
@@ -455,11 +463,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerUnitExpiringResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerUnitResults($userId, $days, $limit,true);
+    public function getManagerUnitExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit,true, false, false, $search);
     }
 
     /**
@@ -468,11 +477,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerUnitResults($userId, $days, $limit,false, 'endorsed', false, 'elearning');
+    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit,false, 'endorsed', false, $search);
     }
 
     /**
@@ -484,11 +494,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param bool $expiring
      * @param bool $status
      * @param bool $id
-     * @param bool $type
+     * @param string $search
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false) {
+    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '') {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -516,6 +526,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ($id) {
             $criteria->id = $id;
         }
+        if ($search) {
+            $criteria->search = $search;
+        }
         // limit by subordinates if team or company manager
         if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
             $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
@@ -524,37 +537,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
             $criteria->authorId = $subordinateIds;
         }
-        return $criteria;
-    }
-
-    /**
-     * Return all users for a manager
-     *
-     * @param null $userId
-     * @param int $limit
-     * @return ElementCriteriaModel|null
-     * @throws mixed
-     */
-    public function getManagerUsers($userId = null, $limit = 10) {
-        if ( ! is_null($userId)) {
-            $manager = craft()->users->getUserById($userId);
-        }
-        else {
-            $manager = craft()->userSession->getUser();
-        }
-        if ( ! $manager) {
-            return null;
-        }
-        // get the subordinate ids
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
-        // build the criteria model
-        $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->limit = $limit;
-        $criteria->id = $subordinateIds;
-        $criteria->order = 'lastName asc';
         return $criteria;
     }
 
