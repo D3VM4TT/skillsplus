@@ -1,0 +1,42 @@
+{% set userId = craft.request.getSegment(3) %}
+{% set userProfile = craft.users.id(userId).first %}
+{% if not userProfile %}{% exit 404 %}{% endif %}
+{% extends "_layout" %}
+
+{% set metaTitle = userProfile.getFullName() ~ " Passport" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+
+{% block content %}
+    <h1>User Passport</h1>
+    <h2>Name: {{ userProfile.getFullName() }}</h2>
+    {% set moduleResults = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete') %}
+    {% if moduleResults|length %}
+    <div class="table-responsive">
+        <table width="100%" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Module</th>
+                <th>Completed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entry in moduleResults %}
+            {% set moduleEntry = entry.resultModule.first %}
+            <tr>
+                <td>{{ moduleEntry.title|default('') }}</td>
+                <td>{{ entry.postDate|date(dateFormat) }}</td>
+                <td>
+                    {% if entry.expiryDate %}
+                        {{ entry.expiryDate|date(dateFormat) }}
+                    {% else %}
+                        ~
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}
