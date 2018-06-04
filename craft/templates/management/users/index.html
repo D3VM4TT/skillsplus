@@ -19,8 +19,10 @@
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
     {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).limit(pageLimit) %}
-{% else %}
+{% elseif currentUser.isInGroup('schemeManagers') %}
     {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').id(excludeIdsString).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').limit(pageLimit) %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
