@@ -9,8 +9,10 @@
 {% if currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set criteria = craft.entries.section('teams').relatedTo(companies).id('not ' ~ craft.lantra.individualTeamId()).limit(pageLimit) %}
-{% else %}
+{% elseif currentUser.isInGroup('schemeManagers') %}
     {% set criteria = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.entries.section('teams').limit(pageLimit) %}
 {% endif %}
 
 {% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}

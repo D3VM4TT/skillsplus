@@ -6,7 +6,11 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 
-{% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(pageLimit) %}
+{% if currentUser.isInGroup('schemeManagers') %}
+    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.entries.section('companies').limit(pageLimit) %}
+{% endif %}
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
 {% block content %}
