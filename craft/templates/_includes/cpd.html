@@ -109,6 +109,9 @@
                                 <h4>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
                                 {% if moduleResultEntry %}
                                     <h4>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h4>
+                                    {% if moduleResultEntry %}
+                                    <h4><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>
