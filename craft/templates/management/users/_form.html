@@ -33,11 +33,15 @@
             <ul>
                 <li>Account permissions (if applicable):</li>
                 <li class="float-left">
-                    <div class="float-left" id="account-permissions"><input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}></div>
+                    <div class="float-left" id="account-permissions">
+                        <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                    </div>
                     <div class="float-left" id="account-permissions"><strong>Team manager:</strong></div>
                 </li>
                 <li class="float-left clear">
-                    <div class="float-left" id="account-permissions"><input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}></div>
+                    <div class="float-left" id="account-permissions">
+                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                    </div>
                     <div class="float-left" id="account-permissions"><strong>Company manager:</strong></div>
                     
                 </li>
@@ -45,15 +49,15 @@
         </div>
     <div class="form-group-lantra float-label-control">
         <label for="firstName">First name:</label>
-        <input id="firstName" name="firstName" class="5000" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+        <input required="required" id="firstName" name="firstName" class="5000" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="lastName">Last name:</label>
-        <input id="lastName" name="lastName" class="5000" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+        <input required="required" id="lastName" name="lastName" class="5000" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="email">Email:</label>
-        <input id="email" name="email" class="5000" placeholder="Enter the email" value="{{ account.email|default('') }}">
+        <input required="required" id="email" name="email" class="5000" placeholder="Enter the email" value="{{ account.email|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="telephone">Telephone:</label>
@@ -61,7 +65,7 @@
     </div>
     <div class="form-group-lantra float-label-control">
         {#<label for="userTeam">User team:</label>#}
-        {% set teamEntries = craft.entries.section('teams') %}
+        {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
         <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default('') }}" id="userTeam" >
             <option value="">User team:</option>
             {% for teamEntry in teamEntries %}
