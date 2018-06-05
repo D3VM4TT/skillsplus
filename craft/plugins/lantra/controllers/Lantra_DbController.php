@@ -87,6 +87,6 @@ class Lantra_DbController extends Lantra_BaseController
         $query->update('matrixcontent_userpayments', $cleansedPayment, '1=1');
 
         $total = count($users);
-        die('Cleansed database updated with data, ' . $total . ' users updated.');
+        die('Cleansed database updated. ' . $total . ' users updated.');
     }
 }
