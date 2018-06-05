@@ -115,7 +115,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      */
     function sendManagerSummary(UserModel $manager, $days = 7) {
         $subject = "Manager Summary";
-        $criteria = craft()->lantra_results->getManagerExpiringResults($manager->id, $days);
+        $criteria = craft()->lantra_results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {
@@ -131,7 +131,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $message = "There are no expiring results in the next " . $days . " days:\n\n";
         }
 
-        $criteria = craft()->lantra_results->getManagerRecentResults($manager->id, $days);
+        $criteria = craft()->lantra_results->getManagerModuleCompletedResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {
