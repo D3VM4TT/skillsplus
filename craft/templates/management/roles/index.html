@@ -5,8 +5,9 @@
 {% set metaTitle = "Management > Roles" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.categories('roles').limit(pageLimit) %}
+{% set criteria = craft.categories('roles').search(filterSearch).limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
@@ -14,6 +15,7 @@
     <div class="page-header">
         <h2>Roles</h2>
     </div>
+    {% include '_includes/filter' with{filterDays:false} %}
     {% if roleCategories is defined and roleCategories|length %}
         <div class="table-responsive">
             <table class="table table-striped">

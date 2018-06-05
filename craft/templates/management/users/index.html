@@ -5,6 +5,7 @@
 {% set metaTitle = "Management > Users" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
 
 {% set excludeIds = ['and'] %}
 {% set excludeIds = excludeIds|merge([currentUser.id]) %}
@@ -15,14 +16,14 @@
 {% if currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
 {% elseif currentUser.isInGroup('schemeManagers') %}
-    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').id(excludeIdsString).limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
 {% else %}
-    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').limit(pageLimit) %}
+    {% set criteria = craft.users.group('users, teamManagers, companyManagers, schemeManagers').search(filterSearch).limit(pageLimit) %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
@@ -32,6 +33,7 @@
     <div class="page-header">
         <h2>Users</h2>
     </div>
+    {% include '_includes/filter' with{filterDays:false} %}
     {% if userEntries is defined and userEntries|length %}
         <div class="table-responsive">
             <table class="table table-striped">

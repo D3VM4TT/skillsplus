@@ -5,11 +5,12 @@
 {% set metaTitle = "Management > companies" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
 
 {% if currentUser.isInGroup('schemeManagers') %}
-    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(pageLimit) %}
+    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit) %}
 {% else %}
-    {% set criteria = craft.entries.section('companies').limit(pageLimit) %}
+    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit) %}
 {% endif %}
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
@@ -18,6 +19,7 @@
     <div class="page-header">
         <h2>Companies</h2>
     </div>
+    {% include '_includes/filter' with{filterDays:false} %}
     {% if companyEntries is defined and companyEntries|length %}
         <div class="table-responsive">
             <table class="table table-striped">
