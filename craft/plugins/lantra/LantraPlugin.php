@@ -135,8 +135,6 @@ class LantraPlugin extends BasePlugin
 
     public function registerSiteRoutes()
     {
-        return array(
-            'lantra/cron/(?P<frequency>[^/]+)' => array('action' => 'lantra/cron/runCron'),
-        );
+        return array();
     }
 }
