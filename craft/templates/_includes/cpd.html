@@ -1,7 +1,7 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-{% if currentUser.userRole.total %}
+{% if cpdUser.userRole.total %}
     <section id="my-skills-quals" class="section-dashboard">
-        {% for role in currentUser.userRole %}
+        {% for role in cpdUser.userRole %}
             <h2>Job Role: {{ role.title }}</h2>
             {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
@@ -9,7 +9,7 @@
             {% else %}
                 <div class="module-wrapper">
                 {% for module in modules %}
-                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').author(currentUser.id).relatedTo(module).first() %}
+                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
                     <div class="module clearfix">
                         {% set totalPoints = 0 %}
                         <div data-toggle="collapse" data-target="#m{{ module.id }}" class="accordion-toggle clearfix">
@@ -50,34 +50,45 @@
                                                                     <th>Type</th>
                                                                     <th>Value</th>
                                                                     <th>Status</th>
-                                                                    <th>Date endorsed</th>
-                                                                    <th>Comments</th>
+                                                                    <th>Endorsed Date</th>
+                                                                    <th>Expiry Date</th>
+                                                                    <th>Evidence &amp; Comments</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                             {% for unitEntry in unitGroupEntries %}
+                                                            {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
                                                                 <tr>
                                                                     <td>
                                                                         {% if moduleResultEntry %}
                                                                             {{ unitEntry.title }}
                                                                         {% else %}
-                                                                            <a href="unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription }}">{{ unitEntry.title }}</a>
+                                                                            <a href="/module/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                                         {% endif %}
                                                                     </td>
                                                                     <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
                                                                     <td>{{ unitEntry.unitValue }}</td>
-                                                                    {% set resultEntry = craft.entries.section('results').authorId(currentUser.id).relatedTo(unitEntry).first() %}
-                                                                    {% if resultEntry %}
-                                                                    {% if (resultEntry.resultStatus == 'endorsed') %}
+
+                                                                    {% if unitResultEntry %}
+                                                                    {% if (unitResultEntry.resultStatus == 'endorsed') %}
                                                                         {% set totalPoints = totalPoints + unitEntry.unitValue %}
                                                                     {% endif %}
                                                                         <td>
-                                                                            {{ resultEntry.resultStatus|ucwords }}
+                                                                            {{ unitResultEntry.resultStatus|ucwords }}
                                                                         </td>
-                                                                        <td>{% if resultEntry.resultEndorsedDate %}{{ resultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
-                                                                        <td>{{ resultEntry.resultComments }}</td>
+                                                                        <td>{% if unitResultEntry.resultEndorsedDate %}{{ unitResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                                                                        <td>{% if unitResultEntry.expiryDate %}{{ unitResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                                                                        <td>
+                                                                            {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
+                                                                                {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
+                                                                                    <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                            {{ unitResultEntry.resultComments }}
+                                                                        </td>
                                                                     {% else %}
                                                                         <td>Incomplete</td>
+                                                                        <td>-</td>
                                                                         <td>-</td>
                                                                         <td>-</td>
                                                                     {% endif %}
@@ -98,6 +109,9 @@
                                 <h4>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
                                 {% if moduleResultEntry %}
                                     <h4>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h4>
+                                    {% if moduleResultEntry %}
+                                    <h4><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>

@@ -5,8 +5,9 @@
 {% set metaTitle = "Management > Modules" %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.entries.section('modules').order('title').limit(pageLimit) %}
+{% set criteria = craft.entries.section('modules').order('title').search(filterSearch).limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, moduleEntries %}{% endif %}
 
 {% block content %}
@@ -15,6 +16,7 @@
     <div class="page-header">
         <h2>Modules</h2>
     </div>
+    {% include '_includes/filter' with{filterDays:false} %}
     {% if moduleEntries is defined and moduleEntries|length %}
         <div class="table-responsive">
             <table class="table table-striped">

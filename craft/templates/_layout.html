@@ -1,4 +1,5 @@
 {% if craft.request.firstSegment != "login" and craft.request.firstSegment != "actions" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
+{% if currentUser and craft.request.firstSegment != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}{% redirect "licence" %}{% endif %}
 <!DOCTYPE HTML>
 <html class="no-js" lang="">
 <head>
@@ -31,8 +32,18 @@
 				{% set notice = craft.session.getFlash('notice') %}
 				{% set error = craft.session.getFlash('error') %}
 				<div id="notifications">
-					{% if notice %}<div class="alert alert-success"><strong>Success!</strong> {{ notice }}</div>{% endif %}
-					{% if error %}<div class="alert alert-warning"><strong>Error!</strong> {{ error }}</div>{% endif %}
+					{% if notice %}
+						<div class="alert alert-success">
+							<strong>Success!</strong>
+							{% if notice is iterable %}{% for n in notice %}{{ n.notice }} {% endfor %}{% else %}{{ notice }}{% endif %}
+						</div>
+					{% endif %}
+					{% if error %}
+						<div class="alert alert-warning">
+							<strong>Error!</strong>
+							{% if error is iterable %}{% for e in error %}{{ e.error }}{% endfor %}{% else %}{{ error }}{% endif %}
+						</div>
+					{% endif %}
 				</div>
 				{% block content %}{% endblock %}
 			</main>

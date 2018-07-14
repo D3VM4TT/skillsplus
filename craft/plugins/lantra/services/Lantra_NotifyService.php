@@ -4,6 +4,40 @@ namespace Craft;
 class Lantra_NotifyService extends BaseApplicationComponent
 {
     /**
+     * Notify scheme managers of scheme expiry
+     *
+     * @param $expiryDate
+     * @throws Exception
+     */
+    function sendSchemeExpiry($expiryDate) {
+        // send scheme managers remaining scheme licences
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = 1;
+        $criteria->limit = null;
+        $subject = "Scheme Expiry Date";
+        $message = "Your scheme expires on " . date('d/m/y', $expiryDate->getTimestamp()) . ".";
+        foreach ($criteria->find() as $manager) {
+            $this->notify($manager->email, $subject, $message);
+        }
+    }
+    /**
+     * Notify users of user expiry
+     *
+     * @param $expiryDate
+     * @throws Exception
+     */
+    function sendUserExpiry($expiryDate) {
+       $criteria = craft()->lantra_users->getExpiringUsers($expiryDate);
+       if ($criteria->total()) {
+           $subject = "User Expiry";
+           foreach ($criteria->find() as $user) {
+               $message = "Your individual licence expires on " . date('d/m/y', $user->userExpiryDate->getTimestamp()) . ".";
+               $this->notify($user->email, $subject, $message);
+           }
+       }
+    }
+
+    /**
      * Notify managers of licences remaining
      *
      * @throws Exception
@@ -29,9 +63,11 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $remainingLicences = $company->companyRemainingLicences;
             if ($remainingLicences <= 10) {
                 $manager = $company->companyManager->first();
-                $subject = "Limited Licences Remaining";
-                $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
-                $this->notify($manager->email, $subject, $message);
+                if ($manager) {
+                    $subject = "Limited Licences Remaining";
+                    $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
+                    $this->notify($manager->email, $subject, $message);
+                }
             }
         }
     }
@@ -55,16 +91,16 @@ class Lantra_NotifyService extends BaseApplicationComponent
     }
 
     /**
-     * Notify managers of no attempts remaining
+     * Notify managers of no attempts remaining (blocked result)
      *
      * @throws Exception
      */
-    function sendNoAttemptsRemaining(EntryModel $resultEntry) {
+    function sendManagerBlockedResult(EntryModel $resultEntry) {
         $unitEntry = $resultEntry->resultUnit->first();
         $author = $resultEntry->getAuthor();
         $authorFullName = $author->getFullName();
         $subject = "No Attempts Remaining ["  . $authorFullName  . "]";
-        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . '.';
+        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . ' and the result is blocked.';
         // send the emails to managers
         $this->notifyManagers($author, $subject, $message);
     }
@@ -79,7 +115,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      */
     function sendManagerSummary(UserModel $manager, $days = 7) {
         $subject = "Manager Summary";
-        $criteria = craft()->lantra_results->getManagerExpiringResults($manager->id, $days);
+        $criteria = craft()->lantra_results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {
@@ -95,7 +131,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $message = "There are no expiring results in the next " . $days . " days:\n\n";
         }
 
-        $criteria = craft()->lantra_results->getManagerRecentResults($manager->id, $days);
+        $criteria = craft()->lantra_results->getManagerModuleCompletedResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {

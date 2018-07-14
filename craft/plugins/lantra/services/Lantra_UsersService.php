@@ -26,6 +26,25 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether this user manages the subordinate
+     *
+     * @param null $subordinateId
+     * @param mixed $manager
+     * @return bool
+     * @throws \Exception
+     */
+    public function isManager($subordinateId = null, $manager = null) {
+        if (is_null($manager)) {
+            $manager = craft()->userSession->getUser();
+        }
+        $subordinateIds = $this->getManagerSubordinateIds($manager);
+        if ( ! count($subordinateIds)) {
+            return false;
+        }
+        return $subordinateIds && in_array($subordinateId, $subordinateIds);
+    }
+
+    /**
      * Return user company (team company)
      *
      * @param null $user
@@ -40,7 +59,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ( ! $user) {
             return null;
         }
-        $team = $company = $user->userTeam->first();
+        $team = $user->userTeam->first();
         if ( ! $team) {
             return null;
         }
@@ -87,6 +106,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
         $criteria->order = 'title';
+        $individualTeam = $this->getIndividualTeam();
+        if ($individualTeam) {
+            $criteria->id = 'not ' . $individualTeam->id;
+        }
         return $criteria->ids();
     }
 
@@ -271,7 +294,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     public function getManagerSubordinates(UserModel $user, $includeHierarchy = false) {
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, $includeHierarchy);
+        $subordinateIds = $this->getManagerSubordinateIds($user, $includeHierarchy);
         if ( ! count($subordinateIds)) {
             return null;
         }
@@ -280,6 +303,41 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
         return $criteria->find();
+    }
+
+    /**
+     * Return subordinate users (as criteria for report) for a manager (similar to above)
+     *
+     * @param null $userId
+     * @param int $limit
+     * @param string $search
+     * @return ElementCriteriaModel|null
+     * @throws mixed
+     */
+    public function getManagerUsers($userId = null, $limit = 10, $search = '') {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        // get the subordinate ids
+        $subordinateIds = $this->getManagerSubordinateIds($manager, true);
+        if ( ! count($subordinateIds)) {
+            return null;
+        }
+        // build the criteria model
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = $limit;
+        $criteria->id = $subordinateIds;
+        $criteria->order = 'lastName asc';
+        if ($search) {
+            $criteria->search = $search;
+        }
+        return $criteria;
     }
 
     /**
@@ -320,5 +378,119 @@ class Lantra_UsersService extends BaseApplicationComponent
             $availableTeams = $this->getAvailableTeams($user, $user->isInGroup('CompanyManager'));
             return (bool) $availableTeams ? count($availableTeams) : false;
         }
+    }
+
+    /**
+     * Add user to Lantra individual team
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function addUserToIndividualTeam(UserModel $user) {
+        // get the individualTeam
+        $team = $this->getIndividualTeam();
+        // @todo error reporting?
+        if($team) {
+            $user->setContentFromPost(['userTeam' => array($team->id)]);
+            craft()->users->saveUser($user);
+        }
+    }
+
+    /**
+     * Add user to Lantra default job role
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function addUserToIndividualJobRole(UserModel $user) {
+        // get the jobRole
+        $jobRole = $this->getIndividualJobRole();
+        // @todo error reporting?
+        if($jobRole) {
+            $user->setContentFromPost(['userRole' => array($jobRole->id)]);
+            craft()->users->saveUser($user);
+        }
+    }
+
+    /**
+     * Activate individual user (add to Users and Individuals groups)
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function activateIndividualUser(UserModel $user) {
+        craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
+    }
+
+    /**
+     * Deactivate individual user (removed from Users group)
+     *
+     * @param $user
+     * @throws \Exception
+     */
+    public function deactivateIndividualUser(UserModel $user) {
+        craft()->userGroups->assignUserToGroups($user->id, array(5));
+    }
+
+    /**
+     * Set user expiry days
+     *
+     * @param $user
+     * @param $days
+     * @throws \Exception
+     */
+    public function setUserExpiryDate(UserModel $user, $days) {
+        // set date in future
+        $user->setContentFromPost(['userExpiryDate' => strtotime('+' . $days . ' days')]);
+        craft()->users->saveUser($user);
+    }
+
+    /** Get individual team
+     *
+     * @return null
+     */
+    public function getIndividualTeam() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->individualTeam->first();
+    }
+
+    /** Get individual company
+     *
+     * @return null
+     */
+    public function getIndividualCompany() {
+        $team = $this->getIndividualTeam();
+        return $team->teamCompany->first();
+    }
+
+    /** Get individual job role
+     *
+     * @return null
+     */
+    public function getIndividualJobRole() {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->individualJobRole->first();
+    }
+
+    /** Get expired users
+     *
+     * @return object
+     * @throws Exception
+     */
+    public function getExpiredUsers() {
+        return $this->getExpiringUsers(time());
+    }
+
+    /** Get expiring users
+     *
+     * @param $expiryDate
+     * @return object
+     * @throws Exception
+     */
+    public function getExpiringUsers($expiryDate) {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->userExpiryDate = '< '. $expiryDate;
+        $criteria->limit = null;
+        return $criteria;
     }
 }

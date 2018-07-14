@@ -68,9 +68,18 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onBeforeSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // Check endorsed change
+            // Saving unit results
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
-                // update endorsed date
+                $unitEntry = $entry->resultUnit->first();
+                $unitEvidence = $entry->resultEvidence->first();
+                // Check evidence results
+                if ($event->params['isNewEntry'] && $unitEntry->unitType == 'evidence') {
+                    if (empty($unitEvidence)) {
+                        $entry->addError('fields[resultEvidence]', 'You must submit a file!');
+                        $event->performAction = false;
+                    }
+                }
+                // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 if ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
@@ -95,6 +104,18 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
+            //saving unit results
+            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                $unitEntry = $entry->resultUnit->first();
+                if ($unitEntry->unitType == 'evidence') {
+                    $expiryDate = craft()->request->getPost('userExpiryDate');
+                    // Set the expiry date
+                    if (count($expiryDate) == 3 && $expiryDate['day'] && $expiryDate['month'] && $expiryDate['year']) {
+                        $entry->expiryDate = new \DateTime($expiryDate['year'] . '-' . $expiryDate['month'] . '-' . $expiryDate['day'] . ' 12:00:00');
+                        craft()->entries->saveEntry($entry);
+                    }
+                }
+            }
             // Mark unit attempt and create result entry
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
                 craft()->lantra_attempts->markAttempt($entry);
@@ -105,8 +126,8 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->checkUnitResult($entry);
                 craft()->lantra_results->checkRemainingAttempts($entry);
             }
-            // Send notifications on new module result
-            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult') {
+            // Send notifications on completed module result
+            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
                 craft()->lantra_notify->sendModuleResult($entry);
             }
         });
@@ -114,8 +135,6 @@ class LantraPlugin extends BasePlugin
 
     public function registerSiteRoutes()
     {
-        return array(
-            'lantra/cron/(?P<frequency>[^/]+)' => array('action' => 'lantra/cron/runCron'),
-        );
+        return array();
     }
 }

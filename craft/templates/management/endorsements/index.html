@@ -33,9 +33,18 @@
                     {% for entry in resultEntries %}
                     <tr>
                         <td>{{ entry.author.getFullName }}</td>
-                        <td>Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}</td>
+                        <td>{% if entry.resultUnit|length %}
+                                Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}
+                            {% else %}
+                                ~
+                            {% endif %}
+                        </td>
                         <td>{{ entry.postDate|date(dateFormat) }}</td>
-                        <td><a target="_blank" href="/internal/{{ entry.resultEvidence.first.id }}">{{ entry.resultEvidence.first.filename }}</a></td>
+                        <td>
+                            {% for resultEvidenceAsset in entry.resultEvidence %}
+                                <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                            {% endfor %}
+                        </td>
                         <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
                     </tr>
                     {% endfor %}

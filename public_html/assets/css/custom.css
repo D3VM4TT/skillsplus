@@ -47,6 +47,15 @@ h4 {
     font-size: 22px !important;
 }
 
+.clear {
+  clear: both;
+}
+
+.scheme-logo img {
+  width: 100%;
+      padding: 0px 30px 30px 30px;
+}
+
 .text-bold {
   font-weight: 700;
 }
@@ -97,19 +106,42 @@ h4 {
   border-radius: 0 !important;
 }
 
-.nav-pills .nav-link:hover {
-background-color: rgba(0,0,0,.05);
-}
-
 .nav-pills .nav-link[aria-expanded="true"] {
     color: #FFFFFF !important;
-    background-color: #343a40 !important;
+    background-color: #1C2B39 !important;
 }
 
 .nav-pills .nav-item:last-child { margin-bottom: 40px;}
 
+.nav-pills > li > a {
+  color: #1C2B39;
+  border-radius: 0;
+  text-decoration: none;
+  position: relative;
+  display: block;
+  padding : 15px 20px;
+}
+
+.nav-pills > li > a:hover {
+background-color: #1C2B39;
+color: #fff;
+}
+
+.list-unstyled > li > a {
+  color: #1C2B39;
+  border-radius: 0;
+  text-decoration: none;
+  position: relative;
+  display: block;
+  padding : 15px 20px;
+}
+
+.list-unstyled > li > a:hover {
+background-color: rgba(0,0,0,.05);
+}
+
 .sidebar .nav-link {
-  color: #343a40 !important;
+  color: #1C2B39;
 }
 
 .sidebar li.sign-out .nav-link {
@@ -199,26 +231,8 @@ main {
 
 /* remove border radius for the tab */
 
-.nav-pills > li > a {
-  color: #000;
-  border-radius: 0;
-  text-decoration: none;
-  position: relative;
-  display: block;
-  padding : 10px 15px;
-}
-
-.nav-pills > li > a:hover {
-background-color: rgba(0,0,0,.05);
-  padding : 10px 15px;
-}
-
-.nav-pills > li.active > a, .nav-pills > li > a.active {
-background-color: rgba(0,0,0,.05);
-}
-
-.nav-pills .nav-link.active, .show > .nav-pills .nav-link {
-background-color: rgba(0,0,0,.05) !important;
+.accordion-toggle:hover {
+    cursor: pointer;
 }
 
 #collapseOne .accordion-content {
@@ -279,17 +293,43 @@ div.freetext-procedure {
   float: left;
 }
 
-.request-endorsement a, .freetext-procedure a {
-  text-decoration: none;
-padding: 15px 20px;
-background-color: rgba(0, 0, 0, 1.0);
-color: #fff;
+.form-group-lantra ul {
+padding: 0;
 }
 
-.request-endorsement a:hover, .freetext-procedure a:hover {
-background-color: rgba(0, 0, 0, 0.7);
+.form-group-lantra ul li {
+list-style: none;
+}
+
+.form-group-lantra select {
+    padding: 5px 8px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.form-group-lantra select option[value="value"]{
+   background-color: red;
+   padding: 3px;
+   font-weight:bold;
+}
+
+.request-endorsement a, .freetext-procedure a, .freetext-procedure button {
+text-decoration: none;
+padding: 15px 20px;
+background-color: #1C2B39;
+color: #fff;
+border: 0px;
+}
+
+.request-endorsement a:hover, .freetext-procedure a:hover, .freetext-procedure button:hover {
+background-color: rgba(28,43,57, 0.7);
 color: #fff;
 text-decoration: none;
+border: 0px;
 }
 
 /* PageLinks */
@@ -351,26 +391,27 @@ div.form-subheader {
 }
 
 /*Forms*/
-.float-label-control { position: relative; margin-bottom: 1.5em; }
+.float-label-control { position: relative; padding-bottom: 4.5em; }
+.float-label-control select {margin-top: 15px;}
     .float-label-control ::-webkit-input-placeholder { color: transparent; }
     .float-label-control :-moz-placeholder { color: transparent; }
     .float-label-control ::-moz-placeholder { color: transparent; }
     .float-label-control :-ms-input-placeholder { color: transparent; }
     .float-label-control input:-webkit-autofill,
     .float-label-control textarea:-webkit-autofill { background-color: transparent !important; -webkit-box-shadow: 0 0 0 1000px white inset !important; -moz-box-shadow: 0 0 0 1000px white inset !important; box-shadow: 0 0 0 1000px white inset !important; }
-    .float-label-control input, .float-label-control textarea, .float-label-control label { font-size: 1.3em; box-shadow: none; -webkit-box-shadow: none; }
+    .float-label-control input, .float-label-control textarea, .float-label-control label { font-size: 16px; box-shadow: none; -webkit-box-shadow: none; }
         .float-label-control input:focus,
-        .float-label-control textarea:focus { box-shadow: none; -webkit-box-shadow: none; border-bottom-width: 2px; padding-bottom: 0; }
+        .float-label-control textarea:focus { box-shadow: none; -webkit-box-shadow: none; }
         .float-label-control textarea:focus { padding-bottom: 4px; }
-    .float-label-control input, .float-label-control textarea { display: block; width: 100%; padding: 0.1em 0em 1px 0em; border: none; border-radius: 0px; border-bottom: 2px solid #e8e8e8; outline: none; margin: 0px; background: none; }
+    .float-label-control input, .float-label-control textarea { display: block; width: 100%; padding: 0.1em 0em 20px 0em; border: none; border-radius: 0px; border-bottom: 1px solid rgba(0,0,0,.1); outline: none; margin: 0px; background: none; }
     .float-label-control textarea { padding: 0.1em 0em 5px 0em; }
-    .float-label-control label { position: absolute; font-weight: normal; top: -1.5em; left: 0.08em; color: #999999; z-index: -1; font-size: 0.85em; -moz-animation: float-labels 300ms none ease-out; -webkit-animation: float-labels 300ms none ease-out; -o-animation: float-labels 300ms none ease-out; -ms-animation: float-labels 300ms none ease-out; -khtml-animation: float-labels 300ms none ease-out; animation: float-labels 300ms none ease-out; /* There is a bug sometimes pausing the animation. This avoids that.*/ animation-play-state: running !important; -webkit-animation-play-state: running !important; }
+    .float-label-control label { position: absolute; font-weight: normal; top: -1.5em; left: 0.08em; color: #1C2B39; z-index: -1; font-size: 16px; -moz-animation: float-labels 300ms none ease-out; -webkit-animation: float-labels 300ms none ease-out; -o-animation: float-labels 300ms none ease-out; -ms-animation: float-labels 300ms none ease-out; -khtml-animation: float-labels 300ms none ease-out; animation: float-labels 300ms none ease-out; /* There is a bug sometimes pausing the animation. This avoids that.*/ animation-play-state: running !important; -webkit-animation-play-state: running !important; }
     .float-label-control input.empty + label,
     .float-label-control textarea.empty + label { top: 0.1em; font-size: 16px; animation: none; -webkit-animation: none; }
     .float-label-control input:not(.empty) + label,
     .float-label-control textarea:not(.empty) + label { z-index: 1; }
     .float-label-control input:not(.empty):focus + label,
-    .float-label-control textarea:not(.empty):focus + label { color: #aaaaaa; }
+    .float-label-control textarea:not(.empty):focus + label { color: #1C2B39; }
     .float-label-control.label-bottom label { -moz-animation: float-labels-bottom 300ms none ease-out; -webkit-animation: float-labels-bottom 300ms none ease-out; -o-animation: float-labels-bottom 300ms none ease-out; -ms-animation: float-labels-bottom 300ms none ease-out; -khtml-animation: float-labels-bottom 300ms none ease-out; animation: float-labels-bottom 300ms none ease-out; }
     .float-label-control.label-bottom input:not(.empty) + label,
     .float-label-control.label-bottom textarea:not(.empty) + label { top: 3em; }
@@ -406,4 +447,8 @@ div.form-subheader {
     30% { top: 0.1em; }
     50% { opacity: 0; font-size: 0.85em; }
     100% { top: 3em; opacity: 1; }
+}
+
+#account-permissions input[type=checkbox] {
+  margin-right: 30px;
 }

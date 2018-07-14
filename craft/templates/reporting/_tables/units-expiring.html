@@ -1,0 +1,28 @@
+{% include '_includes/filter' with{filterDays:filterDays, reportType:'units-expiring'} %}
+<p><strong>Units Expiring Report</strong></p>
+{% if reportEntries|length %}
+<div class="table-responsive">
+    <table width="100%" class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Unit</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in reportEntries %}
+        {% set userTeam = entry.author.userTeam.first() %}
+        {% set resultUnit = entry.resultUnit.first() %}
+        <tr>
+            <td>{{ entry.author.getFullName() }}</td>
+            <td>{{ userTeam.title|default('') }}</td>
+            <td>{{ resultUnit.title|default('') }}</td>
+            <td>{{ entry.expiryDate|date(dateFormat) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

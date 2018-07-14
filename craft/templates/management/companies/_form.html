@@ -35,35 +35,36 @@
         <input id="title" name="title" class="5000" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
-        <label for="companyParent">Company parent:</label>
-        {% set companyEntries = craft.entries.section('companies') %}
+        {#<label for="companyParent">Select Company parent (if applicable):</label>#}
+        {% if currentUser.isInGroup('schemeManagers') %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
+        {% else %}
+            {% set companyEntries = craft.entries.section('companies') %}
+        {% endif %}
         <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default('') }}" id="companyParent" >
-            <option value="">~ none selected ~</option>
+            <option value="">Select Company parent (if applicable):</option>
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endif %}
             {% endfor %}
         </select>
+        <hr>
     </div>
     <div class="form-group-lantra float-label-control">
-        <label for="companyManager">Company manager:</label>
+        {#<label for="companyManager">Select Company manager:</label>#}
         {% set userEntries = craft.users.group('companyManagers') %}
         <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
-            <option value="">~ none selected ~</option>
+            <option value="">Select Company manager:</option>
             {% for userEntry in userEntries %}
                 <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
+        <hr>
     </div>
-    {% if globalsScheme.schemeRemainingLicences %}
-        <div class="form-group-lantra float-label-control">
-            <label for="companyRemainingLicences">Company Licences ({{ globalsScheme.schemeRemainingLicences }}):</label>
-            <input id="companyRemainingLicences" type="text" value="{{ entry.companyRemainingLicences|default('') }}" name="fields[companyRemainingLicences]" />
-        </div>
-    {% else %}
-        <h4>There are no more licences to assign.</h4>
-    {% endif %}
+    <div class="form-group-lantra float-label-control">
+        <input type="number" name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
+    </div>
     <br />
     <div class="freetext-procedure"><button type="submit">Save company</button></div>
 </form>

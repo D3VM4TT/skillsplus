@@ -52,9 +52,9 @@ class Lantra_UsersController extends Lantra_BaseController {
         // save user
         if (craft()->users->saveUser($user)) {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
-            $this->returnSuccess($user->id, $redirect);
+            $this->_returnMessage('User has been saved.', true, $redirect);
         } else {
-            $this->returnError($user->getAllErrors(), array('account' => $user));
+            craft()->urlManager->setRouteVariables(array('account' => $user));
         }
     }
 

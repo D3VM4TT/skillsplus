@@ -1,10 +1,11 @@
-<nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
 
+<nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+<div class="scheme-logo"><img src="/assets/img/Lantra_Awards.svg"></div>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
             <a class="nav-link" href="/">My Dashboard</a>
         <li class="nav-item">
-            <a class="nav-link" href="/public/user/{{ currentUser.id }}">My Webpage</a>
+            <a class="nav-link" href="/public/passport/{{ currentUser.id }}">My Passport</a>
         </li>
     </ul>
 
@@ -28,14 +29,14 @@
             </ul>
         </li>
         {% endif %}
-        {% if currentUser.can('editUsers') or currentUser.can('editCategories(1)') %}
+        {% if currentUser.can('editUsers') or currentUser.can('editCategories:1') %}
         <li class="nav-item">
             <a href="#UserManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">User Management</a>
             <ul class="collapse list-unstyled" id="UserManagementSubMenu">
                 {% if currentUser.can('editUsers') %}
                     <li class="nav-item"><a href="/management/users" class="nav-link">Create / Edit users</a></li>
                 {% endif %}
-                {% if currentUser.can('editCategories(1)') %}
+                {% if currentUser.can('editCategories:1') %}
                     <li class="nav-item"><a href="/management/roles" class="nav-link">Create / Edit roles</a></li>
                 {% endif %}
             </ul>
@@ -54,8 +55,13 @@
         <li class="nav-item">
             <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
             <ul class="collapse list-unstyled" id="navReporting">
-                <li class="nav-item"><a href="/reporting/results/expiring" class="nav-link">Expiring Results</a></li>
-                <li class="nav-item"><a href="/reporting/results/recent" class="nav-link">Recent Results</a></li>
+                <li class="nav-item"><a href="/reporting/users" class="nav-link">Users Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-expiring" class="nav-link">Modules Expiring Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-completed" class="nav-link">Modules Completed Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-active" class="nav-link">Modules Active Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-blocked" class="nav-link">Units Blocked Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-endorsed" class="nav-link">Units Endorsed Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-expiring" class="nav-link">Units Expiring Report</a></li>
             </ul>
         </li>
         {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}

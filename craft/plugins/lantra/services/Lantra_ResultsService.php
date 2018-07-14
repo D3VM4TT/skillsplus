@@ -27,6 +27,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Get a module result entry
+     *
+     * @param $userId
+     * @param $moduleId
+     * @return null
+     * @throws Mixed
+     */
+    function getModuleResult($userId, $moduleId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->limit = 1;
+        $criteria->authorId = $userId;
+        $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        return $criteria->first();
+    }
+
+    /**
      * Save a test attempt
      *
      * @param $attemptEntry
@@ -98,8 +116,50 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultUnitEntry = $resultEntry->resultUnit->first();
         $totalAttempts = $resultEntry->resultAttempts->total();
         if ($resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
-            craft()->lantra_notify->sendNoAttemptsRemaining($resultEntry);
+            $this->blockResult($resultEntry);
         }
+    }
+
+    /**
+     * Set a unitResult resultStatus
+     *
+     * @param $resultEntry
+     * @param $resultStatus
+     * @return null
+     * @throws null
+     */
+    function setResultStatus($resultEntry, $resultStatus) {
+        $resultEntry->setContentFromPost(['resultStatus' => $resultStatus]);
+        // @todo error reporting?
+        if ( ! craft()->entries->saveEntry($resultEntry)) {
+            return;
+        }
+        return;
+    }
+
+    /**
+     * Set a unitResult resultStatus to blocked
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function blockResult($resultEntry) {
+        $this->setResultStatus($resultEntry,'blocked');
+        craft()->lantra_notify->sendManagerBlockedResult($resultEntry);
+    }
+
+    /**
+     * Unlink unitResult attempts and set resultStatus to active
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function unblockResult($resultEntry) {
+        $resultEntry->setContentFromPost(['resultAttempts' => []]);
+        $this->setResultStatus($resultEntry,'active');
+        craft()->entries->saveEntry($resultEntry);
     }
 
     /**
@@ -150,52 +210,73 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! count($resultEntries)) {
             return;
         }
+        // create module result
+        if ( ! $this->getModuleResult($userId, $moduleEntry->id)) {
+            $this->createModuleResult($userId, $moduleEntry->id);
+        }
+        $moduleResultExpiryTime = null;
+        // set default module result expiry
+        if ($moduleEntry->moduleExpiryDays) {
+            $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+        }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
             $unitEntry = $resultEntry->resultUnit->first();
             if ($resultEntry->resultStatus == 'endorsed') {
                 $points += $unitEntry->unitValue;
+                // check if unit expiry is before default module expiry)
+                if ($resultEntry->expiryDate && $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime) {
+                    $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
+                }
             }
         }
         // @todo error reporting?
         if ($points >= $moduleEntry->moduleCompletedValue) {
-            $this->saveModuleResult($moduleEntry, $userId);
+            $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
         }
         return;
     }
 
     /**
-     * Save a module result
+     * Create a module result
      *
-     * @param $moduleEntry
+     * @param $moduleEntryId
      * @param $userId
      * @return null
-     * @throws Exception
+     * @throws \Exception
      */
-    function saveModuleResult($moduleEntry, $userId) {
-        // check a module result doesn't already exist
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'results';
-        $criteria->type = 'moduleResult';
-        $criteria->limit = 1;
-        $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $moduleEntry , 'field' => 'resultModule'];
-        // @todo error reporting?
-        if ($criteria->count()) {
-            return;
-        }
+    function createModuleResult($userId, $moduleEntryId) {
         $resultEntry = new EntryModel();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
-        $resultEntry->setContentFromPost([
-            'resultModule' => array($moduleEntry->id),
-        ]);
-        // add expiry date based on module setting
-        if ($moduleEntry->moduleExpiryDays) {
-            $resultEntry->expiryDate = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+        $resultEntry->setContentFromPost(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
+        // @todo error reporting?
+        if ( ! craft()->entries->saveEntry($resultEntry)) {
+            return;
         }
+        return;
+    }
+
+    /**
+     * Complete a module result
+     *
+     * @param $moduleEntry
+     * @param $userId
+     * @param $expiryDate
+     * @return null
+     * @throws /Exception
+     */
+    function completeModuleResult($moduleEntry, $userId, $expiryDate = null) {
+        $resultEntry = $this->getModuleResult($userId, $moduleEntry->id);
+        // @todo error reporting
+        if ( ! $resultEntry) {
+            return;
+        }
+        // either no expiry, default module expiry or set by unit
+        $resultEntry->expiryDate = $expiryDate;
+        $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
         // @todo error reporting?
         if ( ! craft()->entries->saveEntry($resultEntry)) {
             return;
@@ -247,25 +328,28 @@ class Lantra_ResultsService extends BaseApplicationComponent
     /**
      * Return all result entries requiring endorsement for a manager
      *
-     * @param UserModel $user
+     * @param UserModel $manager
      * @param int|null $limit
      * @param bool $count
      * @return mixed
-     * @throws Exception
+     * @throws mixed
      */
-    public function getManagerEndorsementResults(UserModel $user, $limit = null,  $count = false) {
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($user, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
+    public function getManagerEndorsementResults(UserModel $manager, $limit = null,  $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->resultEvidence = ':notempty:';
         $criteria->limit = $limit;
         $criteria->resultStatus = 'pending';
-        $criteria->authorId = $subordinateIds;
         $criteria->order = 'postDate desc';
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
         return ($count) ? $criteria->count() : $criteria;
     }
 
@@ -273,38 +357,57 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * Return all expiring module result entries
      *
      * @param null $userId
-     * @param int $days
+     * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerExpiringResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerResults($userId, true, $days, $limit);
+    public function getManagerModuleExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit, true,'complete', $search);
     }
 
     /**
-     * Return all recent module result entries
+     * Return all completed module result entries
      *
      * @param null $userId
-     * @param int $days
+     * @param string $days
      * @param int $limit
+     * @param string $search
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerRecentResults($userId = null, $days = 'all', $limit = 10) {
-        return $this->getManagerResults($userId, false, $days, $limit);
+    public function getManagerModuleCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit,false,'complete', $search);
+    }
+
+    /**
+     * Return all active module result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerModuleActiveResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerModuleResults($userId, $days, $limit, false,'active', $search);
     }
 
     /**
      * Return user module results for a manager
      *
      * @param null $userId
+     * @param string $days
+     * @param int $limit
      * @param bool $expiring
-     * @param int $days
+     * @param string $status
+     * @param string $search
      * @return ElementCriteriaModel|null
-     * @throws Exception
+     * @throws mixed
      */
-    private function getManagerResults($userId = null, $expiring = true, $days = 'all', $limit = 10) {
+    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '') {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -314,10 +417,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $manager) {
             return null;
         }
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
+        $criteria->resultStatus = $status;
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
@@ -325,8 +428,130 @@ class Lantra_ResultsService extends BaseApplicationComponent
         elseif ($days != 'all') {
             $criteria->postDate = '>' . (time() - ($days*86400));
         }
+        if ($search) {
+            $criteria->search = $search;
+        }
         $criteria->limit = $limit;
-        $criteria->authorId = $subordinateIds;
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
         return $criteria;
+    }
+
+    /**
+     * Return all blocked unit result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit, false, 'blocked', false, $search);
+    }
+
+    /**
+     * Return all expiring unit result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return ElementCriteriaModel
+     * @throws Exception
+     */
+    public function getManagerUnitExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit,true, false, false, $search);
+    }
+
+    /**
+     * Return all endorsed unit result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return ElementCriteriaModel
+     * @throws Exception
+     */
+    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        return $this->getManagerUnitResults($userId, $days, $limit,false, 'endorsed', false, $search);
+    }
+
+    /**
+     * Return all unit result entries
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param bool $expiring
+     * @param bool $status
+     * @param bool $id
+     * @param string $search
+     * @return ElementCriteriaModel|null
+     * @throws mixed
+     */
+    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '') {
+        if ( ! is_null($userId)) {
+            $manager = craft()->users->getUserById($userId);
+        }
+        else {
+            $manager = craft()->userSession->getUser();
+        }
+        if ( ! $manager) {
+            return null;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->limit = $limit;
+        if ($expiring) {
+            $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
+            $criteria->order = 'expiryDate asc';
+        }
+        elseif ($days != 'all') {
+            $criteria->postDate = '>' . (time() - ($days*86400));
+        }
+        if ($status) {
+            $criteria->resultStatus = $status;
+        }
+        // from specific ids (i.e. blocked results)
+        if ($id) {
+            $criteria->id = $id;
+        }
+        if ($search) {
+            $criteria->search = $search;
+        }
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->authorId = $subordinateIds;
+        }
+        return $criteria;
+    }
+
+    /**
+     * Get all modules for a job role
+     *
+     * @param $roleId
+     * @return array
+     * @throws Exception
+     */
+    private function getRoleModules($roleId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'modules';
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
+        return $criteria->total() ? $criteria->find() : [];
     }
 }
