@@ -17,7 +17,8 @@ class Lantra_UsersController extends Lantra_BaseController {
         craft()->userSession->requirePermission('editUsers');
         // get the posted userId
         $userId = craft()->request->getPost('editUserId');
-        $redirect = '/management/users';
+        $redirect = craft()->request->getPost('redirect') ? craft()->request->getPost('redirect') : '/management/users';
+        
         // existing user
         if ($userId) {
             if (false == $user = craft()->users->getUserById($userId)) {

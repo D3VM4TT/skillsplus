@@ -28,6 +28,16 @@
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/users/saveUser">
     <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
+
+    {% if craft.request.getParam('openat') %}
+        {% if craft.request.getParam('openat') == '-1' %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={id}">
+        {% else %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={{ craft.request.getParam('openat') }}">
+        {% endif %}
+    {% endif %}
+
+
     <div class="form-group-lantra float-label-control">
         {#<label for="teamManagers">Roles:</label>#}
             <ul>

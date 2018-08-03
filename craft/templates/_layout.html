@@ -21,6 +21,8 @@
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
+	{% block css %}{% endblock %}
+
 </head>
 <body>
 	<div class="container-fluid">
@@ -73,5 +75,6 @@
 		ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
 	</script>
 	<script src="//www.google-analytics.com/analytics.js" async defer></script>
+	{% block js %}{% endblock %}
 </body>
 </html>
