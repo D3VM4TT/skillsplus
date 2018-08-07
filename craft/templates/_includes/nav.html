@@ -11,7 +11,12 @@
 
     {% if craft.lantra.canManage() %}
     <ul class="nav nav-pills flex-column">
-        {% if currentUser.can('editEntries:3') %}
+        {% if currentUser.isInGroup('schemeManagers') %}
+        <li class="nav-item">
+            <a href="/management/schemes" aria-expanded="false" class="nav-link">Scheme Management</a>
+        </li>
+        {% endif %}
+      {% if currentUser.can('editEntries:3') %}
         <li class="nav-item">
             <a href="#CompanyManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Company Management</a>
             <ul class="collapse list-unstyled" id="CompanyManagementSubMenu">
