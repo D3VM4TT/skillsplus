@@ -8,7 +8,6 @@
 
 {% if craft.request.getParam('template_id') is not empty and formData is not defined %}
 	{% set log = craft.mailer.log_records(craft.request.getParam('template_id')) %}
-
 	{% if log.id is empty or log.id == 0 %}
 		{% redirect 'mailer' %}
 	{% endif %}
@@ -24,6 +23,85 @@
 	{% endif %}
 {% endif %}
 
+{% set form_value = '' %}
+{% set recipients = '' %}
+{# sent from scheme manager - company #}
+{% if form_value == '' %}
+	{% if craft.request.getParam('companyId') is defined and craft.request.getParam('companyId') != '' %}
+		{% set recipients = '' %}
+		{% set companyId = craft.request.getParam('companyId') %}
+		{% set companyToEmail = craft.entries.section('companies').id(companyId).search() %}
+		{% for company in companyToEmail %}
+		
+			{% set teamToEmail = craft.entries.section('teams').search(company.title) %}
+		
+			{% for user in company.companyManager %}
+				{% set recipients = recipients ~ user.email ~ ',' %}
+			{% endfor %}
+		
+			{% for team in teamToEmail %}
+				
+				{% set teamMembers = craft.users.group('users').search(team.title) %}
+				
+				{% for user in teamMembers %}
+					{% set recipients = recipients ~ user.email ~ ',' %}
+				{% endfor %}
+				
+				{% for user in team.teamPrimaryManager %}
+					{% set recipients = recipients ~ user.email ~ ',' %}
+                {% endfor %}
+                
+                {% for user in team.teamSecondaryManagers %}
+                	{% set recipients = recipients ~ user.email ~ ',' %}
+                {% endfor %}
+
+			{% endfor %}
+
+		{% endfor %}
+
+	{% endif %}
+{% endif %}
+
+
+
+{# sent from scheme manager - team #}
+{% if recipients == '' %}
+	{% if craft.request.getParam('teamId') is defined and craft.request.getParam('teamId') != '' %}
+
+		{% set teamId = craft.request.getParam('teamId') %}
+		{% set teamToEmail = craft.entries.section('teams').id(teamId).search() %}
+
+		{% for team in teamToEmail %}
+			
+			{% set teamMembers = craft.users.group('users').search(team.title) %}
+			
+			{% for user in teamMembers %}
+				{% set recipients = recipients ~ user.email ~ ',' %}
+			{% endfor %}
+			
+			{% for user in team.teamPrimaryManager %}
+				{% set recipients = recipients ~ user.email ~ ',' %}
+            {% endfor %}
+            
+            {% for user in team.teamSecondaryManagers %}
+            	{% set recipients = recipients ~ user.email ~ ',' %}
+            {% endfor %}
+
+		{% endfor %}
+
+	{% endif %}
+{% endif %}
+
+{% if recipients %}
+	{% set newRecipients = [] %}
+	{% set recipients = recipients | split(',') %}
+	{% for email in recipients %}
+	   {% if email not in newRecipients %}
+		   {% set newRecipients = newRecipients|merge([email]) %}
+	   {% endif %}
+	{% endfor %}
+	{% set recipients = newRecipients | join(',') %}
+{% endif %}
 
 {% macro errorList(errors, hr) %}
     {% if errors %}
@@ -150,8 +228,14 @@
 					{% if form_value == false %}
 						{% if postData is defined %}{% set form_value = postData.mailer_sendto_custom %}{% else %}{% set form_value = false %}{% endif %}
 					{% endif %}
+
+					{% if form_value == false %}
+							{% if craft.request.getParam('recipient') is defined and craft.request.getParam('recipient') != '' %}{% set form_value = true %}{% endif %}
+					{% endif %}
 					
-					
+					{% if form_value == false and recipients %}
+						{% set form_value = 1 %}
+					{% endif %}
 					
 					{{  forms.checkboxField({
 							label: "Custom Recipients"|t,
@@ -163,12 +247,27 @@
 						}) 
 					}}
 
-					<div id="mailer_sendto_custom_settings" class="{% if (formData is not defined or formData.sendto_custom == false) and (postData is not defined or postData.mailer_sendto_custom == false) %}hidden{% endif %}">
+					<div id="mailer_sendto_custom_settings" class="{% if (formData is not defined or formData.sendto_custom == false) and (postData is not defined or postData.mailer_sendto_custom == false) and (craft.request.getParam('recipient') is not defined or craft.request.getParam('recipient') == '') and (recipients == '') %}hidden{% endif %}">
+
 						<!-- Recipient -->
 						{% if formData is defined %}{% set form_value = formData.to %}{% else %}{% set form_value = '' %}{% endif %}
 						{% if form_value == false %}
 							{% if postData is defined %}{% set form_value = postData.mailer_to %}{% else %}{% set form_value = '' %}{% endif %}
 						{% endif %}
+
+						<!-- sent from scheme manager - single recipient -->
+						{% if form_value == '' %}
+							{% if craft.request.getParam('recipient') is defined %}{% set form_value = craft.request.getParam('recipient') %}{% endif %}
+						{% endif %}
+
+
+
+						{% if recipients %}
+							{% set form_value = recipients | split(',') %}
+							{% set form_value = form_value | slice(0,1) %}
+							{% set form_value = form_value | join(',') %}
+						{% endif %}
+
 						{{  forms.textField({
 								label: "Recipients"|t,
 								instructions: "Only one email allowed"|t,
@@ -186,6 +285,13 @@
 						{% if form_value == false %}
 							{% if postData is defined %}{% set form_value = postData.mailer_cc %}{% else %}{% set form_value = '' %}{% endif %}
 						{% endif %}
+
+						{% if recipients %}
+							{% set form_value = recipients | split(',') %}
+							{% set form_value = form_value[1:] %}
+							{% set form_value = form_value | join(',') %}
+						{% endif %}
+
 						{{  forms.textField({
 								label: "CC"|t,
 								instructions: "Separate multiple emails with a comma"|t,

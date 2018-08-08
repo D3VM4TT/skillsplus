@@ -11,7 +11,7 @@
 
     {% if craft.lantra.canManage() %}
     <ul class="nav nav-pills flex-column">
-        {% if currentUser.isInGroup('schemeManagers') %}
+        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
         <li class="nav-item">
             <a href="/management/schemes" aria-expanded="false" class="nav-link">Scheme Management</a>
         </li>

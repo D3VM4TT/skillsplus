@@ -32,7 +32,7 @@ class Mailer_SchedulerRecord extends BaseRecord
             'success'       => AttributeType::Number,
             'errors'        => AttributeType::Mixed,
 
-            'postData'       => AttributeType::String,
+            'postData'       => AttributeType::Mixed,
             'dateToSend'   => AttributeType::DateTime,
         );
     }
