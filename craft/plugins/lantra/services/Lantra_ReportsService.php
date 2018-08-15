@@ -70,7 +70,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         // send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
             $attachment = craft()->assets->getFileById($fileId);
-            craft()->lantra_notify->notify(explode(',', $reportEntry->reportRecipients), $reportEntry->title, '', [$attachment]);
+            craft()->lantra_notify->notify(explode(',', $reportEntry->reportRecipients), $reportEntry->title, '### report attached ###', [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
             craft()->entries->saveEntry($reportEntry);
         }
