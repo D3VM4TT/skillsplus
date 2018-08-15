@@ -91,11 +91,11 @@
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="reportDescription">Report description:</label>
-        <textarea id="reportDescription" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription }}</textarea>
+        <textarea id="reportDescription" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription|default('') }}</textarea>
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="reportDescription">Report recipients:</label>
-        <textarea id="reportRecipients" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients }}</textarea>
+        <textarea id="reportRecipients" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients|default('') }}</textarea>
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="reportSendFrequency">Report send frequency:</label>
