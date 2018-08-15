@@ -404,10 +404,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param bool $expiring
      * @param string $status
      * @param string $search
+     * @param array $authorId
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '') {
+    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -417,6 +418,28 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $manager) {
             return null;
         }
+        // limit by subordinates if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $authorId = $subordinateIds;
+        }
+        return $this->getModuleResults($days, $limit, $expiring, $status, $search, $authorId);
+    }
+
+    /**
+     * @param string $days
+     * @param int $limit
+     * @param bool $expiring
+     * @param string $status
+     * @param string $search
+     * @param array $authorId
+     * @return object
+     * @throws mixed
+     */
+    private function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
@@ -431,15 +454,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ($search) {
             $criteria->search = $search;
         }
-        $criteria->limit = $limit;
-        // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
-            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
-            if ( ! count($subordinateIds)) {
-                return null;
-            }
-            $criteria->authorId = $subordinateIds;
+        if ($authorId) {
+        $criteria->authorId = $authorId;
         }
+        $criteria->limit = $limit;
         return $criteria;
     }
 

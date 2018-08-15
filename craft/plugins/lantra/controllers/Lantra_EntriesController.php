@@ -7,7 +7,8 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public $allowAnonymous = array(
         'actionDeleteEntry',
         'actionEndorseEvidence',
-        'actionResetResult'
+        'actionResetResult',
+        'actionRunReport'
     );
 
     /**
@@ -70,6 +71,23 @@ class Lantra_EntriesController extends Lantra_BaseController {
             }
         }
         $this->_returnMessage($count . ' results endorsed.');
+    }
+
+    /**
+     * Run  specific report
+     *
+     * @throws mixed
+     */
+    public function actionRunReport() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted entryId
+        $entryId = craft()->request->getPost('entryId');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
+        }
+        craft()->lantra_reports->runReport($entry);
+        $this->_returnMessage( $entry->title . ' has been successfully run.', true);
     }
 
     /**

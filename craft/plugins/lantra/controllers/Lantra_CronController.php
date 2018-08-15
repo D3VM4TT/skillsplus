@@ -18,6 +18,7 @@ class Lantra_CronController extends Lantra_BaseController {
             Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
             $this->notifyUserExpiry();
             $this->expireIndividualUsers();
+            craft()->lantra_reports->sendDailyReports();
         }
         if ($frequency == 'weekly') {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');

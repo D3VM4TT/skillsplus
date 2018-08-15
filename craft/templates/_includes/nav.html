@@ -57,6 +57,15 @@
             </ul>
         </li>
         {% endif %}
+        {% if currentUser.can('editEntries:13') %}
+        <li class="nav-item">
+            <a href="#ReportManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Report Management</a>
+            <ul class="collapse list-unstyled" id="ReportManagementSubMenu">
+                <li class="nav-item"><a href="/management/reports" class="nav-link">Create / Edit reports</a></li>
+
+            </ul>
+        </li>
+        {% endif %}
         <li class="nav-item">
             <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
             <ul class="collapse list-unstyled" id="navReporting">

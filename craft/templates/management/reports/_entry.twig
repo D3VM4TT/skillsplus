@@ -1,0 +1,44 @@
+{% requirePermission 'editEntries:13' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Custom Reports > " ~ entry.title %}
+{% set dateFormat = 'd/m/y G:i:s' %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = entry.reportData.limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, reportData %}{% endif %}
+
+{% block content %}
+    <section class="list">
+        <div class="page-header">
+            <h2>{{ entry.title }}</h2>
+        </div>
+        {% if reportData is defined and reportData|length %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Created</th>
+                        <th>File</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for dataAsset in reportData %}
+                    <tr class="item">
+                        <td>{{ dataAsset.id }}</td>
+                        <td>{{ dataAsset.dateCreated|date(dateFormat) }}</td>
+                        <td>
+                            <a target="_blank" href="/internal/{{ dataAsset.id }}">{{ dataAsset.filename }}</a></td>
+                    </tr>
+                    {%  endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+        {% else %}
+            <h4>There is no data to display.</h4>
+        {% endif %}
+    </section>
+{% endblock %}

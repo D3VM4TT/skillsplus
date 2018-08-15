@@ -1,0 +1,122 @@
+{% requirePermission 'editEntries:13' %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Custom Reports" %}
+
+{% set entryId = craft.request.getSegment(4) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).first %}
+{% endif %}
+
+{% block content %}
+
+<div class="page-header">
+    {% if entry is defined and entry.id %}
+        <h2>Edit report</h2>
+    {% else %}
+        <h2>Create a new report</h2>
+    {% endif %}
+</div>
+
+{% if entry is defined %}
+    {{ ui.errorList(entry.getAllErrors()) }}
+{% endif %}
+
+<form method="post" role="form" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    <input type="hidden" name="redirect" value="management/reports">
+    <input type="hidden" name="sectionId" value="13">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
+    <div class="form-group-lantra float-label-control">
+        <label for="title">Report title:</label>
+        <input id="title" name="title" class="5000" placeholder="Enter the report title" value="{{ entry.title|default('') }}">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportType">Report type:</label>
+        <select name="fields[reportType]" id="reportType">
+            <option value="users" {% if entry is defined and entry.reportType == 'users' %} selected="selected{% endif %}">Users</option>
+            <option value="modulesExpiring" {% if entry is defined and entry.reportType == 'modulesExpiring' %} selected="selected{% endif %}">Modules Expiring</option>
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportCompanies">Report companies:</label>
+        {% set companyEntries = craft.entries.section('companies') %}
+        <input type="hidden" name="fields[reportCompanies]" value="" />
+        <input type="hidden" name="fields[reportAllCompanies]" value="0">
+        <select multiple name="fields[reportCompanies][]" id="reportCompanies">
+            {% for companyEntry in companyEntries %}
+            <option value="{{ companyEntry.id }}"
+                    {% if entry is defined and companyEntry.id in entry.reportCompanies.ids() %} selected="selected{% endif %}">{{ companyEntry.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportTeams">Report teams:</label>
+        {% set teamEntries = craft.entries.section('teams') %}
+        <input type="hidden" name="fields[reportTeams]" value="" />
+        <input type="hidden" name="fields[reportAllTeams]" value="0">
+        <select multiple name="fields[reportTeams][]" id="reportTeams">
+            {% for teamEntry in teamEntries %}
+            <option value="{{ teamEntry.id }}"
+                    {% if entry is defined and teamEntry.id in entry.reportTeams.ids() %} selected="selected{% endif %}">{{ teamEntry.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportRoles">Report roles:</label>
+        {% set roleCategories = craft.categories.group('roles') %}
+        <input type="hidden" name="fields[reportRoles]" value="" />
+        <input type="hidden" name="fields[reportAllRoles]" value="0">
+        <select multiple name="fields[reportRoles][]" id="reportRoles">
+            {% for roleCategory in roleCategories %}
+            <option value="{{ roleCategory.id }}"
+                    {% if entry is defined and roleCategory.id in entry.reportRoles.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportModules">Report modules:</label>
+        {% set moduleEntries = craft.entries.section('modules') %}
+        <input type="hidden" name="fields[reportModules]" value="" />
+        <input type="hidden" name="fields[reportAllModules]" value="0">
+        <select multiple name="fields[reportModules][]" id="reportModules">
+            {% for moduleEntry in moduleEntries %}
+            <option value="{{ moduleEntry.id }}"
+                    {% if entry is defined and moduleEntry.id in entry.reportModules.ids() %} selected="selected{% endif %}">{{ moduleEntry.title() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportDescription">Report description:</label>
+        <textarea id="reportDescription" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription }}</textarea>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportDescription">Report recipients:</label>
+        <textarea id="reportRecipients" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients }}</textarea>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportSendFrequency">Report send frequency:</label>
+        <select name="fields[reportSendFrequency]" id="reportSendFrequency">
+            <option value="never" {% if entry is defined and entry.reportSendFrequency == 'never' %} selected="selected{% endif %}">Never</option>
+            <option value="weekly" {% if entry is defined and entry.reportSendFrequency == 'weekly' %} selected="selected{% endif %}">Weekly</option>
+            <option value="monthly" {% if entry is defined and entry.reportSendFrequency == 'monthly' %} selected="selected{% endif %}">Monthly</option>
+        </select>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="reportSendValue">Report send day (1-7 for weekly):</label>
+        <select name="fields[reportSendValue]" id="reportSendValue">
+            {% for day in range(1, 31) %}
+                <option value="{{ day }}">{{ day }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <br />
+    <div class="freetext-procedure"><button type="submit">Save report</button></div>
+</form>
+
+{% endblock %}

@@ -67,6 +67,13 @@ $(document).ready(function(){
             deleteRow = true;
         }
 
+        if (action == 'lantra/entries/runReport') {
+            if ( ! confirm('Are you sure you want to run this report?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+        }
+
         data[window.csrfTokenName] = window.csrfTokenValue;
 
         $.post("/actions/" + action, data, function(response) {
@@ -78,6 +85,7 @@ $(document).ready(function(){
                 if (deleteRow) {
                    row.fadeOut().remove();
                 }
+                alert(response.message);
             }
             else {
                 if (response.message) {

@@ -296,6 +296,17 @@ class LantraVariable
     }
 
     /**
+     * Get report data
+     *
+     * @param $entryId
+     * @return mixed
+     */
+    public function getReportData($entryId) {
+        $reportEntry = craft()->entries->getEntryById($entryId);
+        return ($reportEntry) ? craft()->lantra_reports->getReportData($reportEntry) : null;
+    }
+
+    /**
      * Send the csv report to the browser
      *
      * @param $reportType
