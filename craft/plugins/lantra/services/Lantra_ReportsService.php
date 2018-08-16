@@ -61,19 +61,24 @@ class Lantra_ReportsService extends BaseApplicationComponent
             'sourceId' => $sourceId,
         ));
         $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
-        // delete the temp file
-        unlink($filePath . $fileName);
         $fileId = $response->getDataItem('fileId');
         // append asset to report entry
         $reportEntry->setContentFromPost(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
         craft()->entries->saveEntry($reportEntry);
         // send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
-            $attachment = craft()->assets->getFileById($fileId);
-            craft()->lantra_notify->notify(explode(',', $reportEntry->reportRecipients), $reportEntry->title, '### report attached ###', [$attachment]);
+            $asset = craft()->assets->getFileById($fileId);
+            $attachment = [
+                'path' => $filePath . $fileName,
+                'filename' => $fileName,
+                'mimeType' => $asset->getMimeType()
+            ];
+            craft()->lantra_notify->notify(explode(',', $reportEntry->reportRecipients), $reportEntry->title, '', [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
             craft()->entries->saveEntry($reportEntry);
         }
+        // delete the temp file
+        unlink($filePath . $fileName);
         return true;
     }
 

@@ -178,35 +178,53 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @return mixed
      * @throws Exception
      */
-    function notify($toEmail, $subject, $message, $attachments = []) {
-
+    function notify($toEmail, $subject, $message, $attachments = [])
+    {
         if ( ! is_array($toEmail)) {
             $toEmail = [$toEmail];
         }
-
         // in dev mode, all notifications sent to system email
         $message .= "\n\n\nNotification sent to: " . implode(', ', $toEmail);
         $toEmail = [craft()->systemSettings->getSetting('email', 'emailAddress')];
         // remove in live
-
         $email = new EmailModel();
         $email->subject = $subject;
         $email->body = $message;
 
+        $return = true;
         foreach($toEmail as $address) {
             $email->toEmail = $address;
-        }
-        if (count($attachments)) {
-            foreach($attachments as $attachment) {
-                $email->addAttachment($attachment->getPath(), $attachment->filename, 'base64', $attachment->mimeType);
+            try {
+                if (count($attachments)) {
+                    foreach($attachments as $attachment) {
+                        $this->addAttachment($email, $attachment);
+                    }
+                }
+                if (craft()->email->sendEmail($email)) {
+                    Craft::log('notify(' . $address . ')', LogLevel::Info, true, 'notify', 'lantra');
+                }
+                else {
+                    Craft::log('notify(' .  $address. ') ' . implode(', ', $email->getAllErrors()),LogLevel::Error, true, 'notify', 'lantra');
+                    $return = false;
+                }
+            } catch (\Exception $e) {
+                Craft::log('notify(' .  $address. ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
+                $return = false;
             }
         }
+        return $return;
+    }
+
+    /**
+     * @param $email
+     * @param $attachment
+     */
+    function addAttachment(EmailModel $email, $attachment) {
         try {
-            Craft::log('notify(' .  implode(', ', $toEmail) . ') ' . $message,LogLevel::Info, true, 'notify', 'lantra');
-            return craft()->email->sendEmail($email);
-        } catch (\Exception $e) {
-            Craft::log('notify(' .  implode(', ', $toEmail) . ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
-            return false;
+            $email->addAttachment($attachment['path'], $attachment['filename'], 'base64');
+        }
+        catch (\Exception $e) {
+            Craft::log('notify(' .  $email->toEmail. ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
         }
     }
 }
