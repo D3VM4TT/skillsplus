@@ -184,9 +184,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $toEmail = [$toEmail];
         }
         // in dev mode, all notifications sent to system email
-        $message .= "\n\n\nNotification sent to: " . implode(', ', $toEmail);
-        $toEmail = [craft()->systemSettings->getSetting('email', 'emailAddress')];
-        // remove in live
+        if ( craft()->config->get( 'devMode' ) ) {
+            $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
+            $toEmail = [craft()->systemSettings->getSetting('email', 'emailAddress')];
+        }
         $email = new EmailModel();
         $email->subject = $subject;
         $email->body = $message;
