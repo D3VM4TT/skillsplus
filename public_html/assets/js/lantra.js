@@ -103,4 +103,66 @@ $(document).ready(function(){
     $('form.filter select').on('change', function(){
         // $(this).closest('form').submit();
     });
+
+    // filter teams by selected companies
+    $('input.scopeCompany').on('change', function () {
+        var c = $('div#reportScopeCompanies').find('div.checkboxes'),
+            t = $('div#reportScopeTeams').find('div.checkboxes');
+        c.find('input.scopeCompany').each(function(){
+            var companyId = $(this).data('id'),
+                teamInputs = t.find('label.company-' + companyId);
+            if($(this).prop('checked')) {
+                teamInputs.show();
+            }
+            else {
+                teamInputs.each(function() {
+                    $(this).find('input').prop('checked', false);
+                    $(this).hide();
+                });
+                $('#roles-all').prop('checked', false);
+            }
+        });
+    });
+
+    $('input.scopeCompany').eq(0).change();
+
+    // select all
+    $('input.scopeAll').on('change', function () {
+       var c = $(this).closest('p').siblings('div.checkboxes'),
+           checked =  $(this).prop('checked') === true;
+        c.find('input').each(function() {
+            $(this).prop('checked', checked).change();
+        });
+    });
+
+    // show hide module specific report fields
+    $('select#reportType').change(function(){
+        if ($(this).val() == 'results') {
+            $('div#modulesResultsFields').show();
+        }
+        else {
+            $('div#modulesResultsFields').hide();
+        }
+    });
+
+    $('select#reportType').change();
+
+    // filter modules by job role
+    $('input.scopeRole').on('change', function () {
+        var r = $('div#reportScopeRoles').find('div.checkboxes'),
+            m = $('div#reportScopeModules').find('div.checkboxes');
+        r.find('input.scopeRole').each(function() {
+            var roleId = $(this).data('id'),
+                moduleInputs = m.find('label.role-' + roleId);
+            if ($(this).prop('checked')) {
+                moduleInputs.show();
+            }
+            else {
+                moduleInputs.each(function () {
+                    $(this).find('input').prop('checked', false);
+                    $(this).hide();
+                })
+            }
+        });
+    });
 });
