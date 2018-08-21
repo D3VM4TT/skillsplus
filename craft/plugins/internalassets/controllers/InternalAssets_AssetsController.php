@@ -140,6 +140,7 @@ class InternalAssets_AssetsController extends BaseController {
                 header('Accept-Ranges: bytes');
             }
             else {
+                header('Content-Disposition: attachment; filename="' . $filename . '"');
                 header('Content-type: '.$file->getMimeType());
             }
 
