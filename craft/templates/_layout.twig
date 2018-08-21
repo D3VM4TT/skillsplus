@@ -5,9 +5,9 @@
     <!-- Basic Page Needs
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta charset="utf-8">
-    <title>{{ siteName }} - </title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>{{ siteName }} - {{ globalsScheme.schemeDescription }}</title>
+    <meta name="description" content="{{ globalsScheme.schemeDescription }}">
+    <meta name="author" content="{{ siteName }}">
 
     <!-- Mobile Specific Metas
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -44,121 +44,114 @@
 </head>
 <body>
 
-<!-- Primary Page Layout
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <div class="container-fluid">
     <div class="container-log-in">
-        <div class="row scheme-logo">
-            <img src="images/LantraAwards_logo.jpg">
+
+        <div class="menu-tab">
+            <div id="one"></div>
+            <div id="two"></div>
+            <div id="three"></div>
         </div>
+
+        <div class="menu-hide">
+            <div class="menu-intro">
+                <h1>{{ globalsScheme.schemeName }}</h1>
+                <p>{{ globalsScheme.schemeDescription }}</p>
+            </div>
+            <nav>
+                <ul>
+                    {% for pageEntry in globalsTheme.themeNavigation %}
+                        <li><a href="{{ pageEntry.url }}">{{ pageEntry.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <div class="container-btn container-create-account-btn">
+                <div class="sml-link center"><p>Not registered?</p></div>
+                <div class="create-account-btn"><a href="create-account.html">Create account</a></div>
+            </div>
+            <div class="container-footer-menu">
+                <div class="container-footer-links-menu">
+                    <div class="row">
+                        <div class="col-6 col-copyright"><img src="/assets/img/lantra_footer_wht_logo.png"></div>
+                        <div class="col-6 col-terms"><p>&copy; 2018 Lantra. <a href="terms.html">Terms &amp; Privacy</a>
+                            </p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="log-in-form">
-            <div class=""><h1>User Log in</h1></div>
-            <div class="log-in-fields">
-                <div class="field--wrapper" style="">
-                    <label for="fname" style="" class="show">Email address</label>
-                    <input class="float-label" placeholder="Email address" style="">
-                </div>
-                <div class="field--wrapper last" style="">
-                    <label for="fname" style="" class="show">Password</label>
-                    <input type="password" name="password" id="password" class="float-label" placeholder="Password" style="">
-                    <span class="password-showhide">
-                  <span class="trigger-password">Show</span>
-                </span>
-                    <div class="sml-link right"><a href="#">Forgotten details?</a></div>
-                </div>
-                <div class="container-btn container-log-in-btn">
-                    <div class="log-in-btn"><a href="#">Log in</a></div>
-                </div>
-                <div class="container-btn container-create-account-btn">
-                    <div class="sml-link center"><p>Not registered?</p></div>
-                    <div class="create-account-btn"><a href="index.html">Create account</a></div>
-                </div>
+            <div class="row scheme-logo">
+                <a href="/"><img src="{{ globalsTheme.schemeLogo.first().url }}"></a>
+            </div>
+            <div class="container-form-toggle">
+                <h1>User Log in</h1>
+                <form action="">
+                    <div class="login-form">
+
+                        <!-- Login -->
+                        <div class="log-in-toggle" id="log-in-div">
+                            <div class="field--wrapper" style="">
+                                <label for="fname" style="" class="show">Email address</label>
+                                <input class="float-label" placeholder="Email address" style="">
+                            </div>
+                            <div class="field--wrapper last" style="">
+                                <label for="fname" style="" class="show">Password</label>
+                                <input type="password" name="password" id="password" class="float-label"
+                                       placeholder="Password" style="">
+                                <span class="password-showhide">
+                              <span class="trigger-password">Show</span>
+                              </span>
+                                <div class="sml-link right" id="remember-me">
+                                    <label>
+                                        <input type="checkbox" name="rememberMe" value="1">
+                                        <span class="remember-me-txt">Remember me</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Reset -->
+                        <div class="reset-form-toggle" id="reset-div">
+                            <p>Enter the email address you use to log in to your account and we'll email you with
+                                instructions on how you can reset your password.</p>
+                            <div class="field--wrapper" style="">
+                                <label for="fname" style="" class="show">Email address</label>
+                                <input class="float-label" placeholder="Email address" style="">
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="container-btn container-log-in-btn">
+                            <input type="submit" id="submit" class="log-in-btn" value="Log in">
+                        </div>
+
+                        <!-- Help -->
+                        <div class="sml-link reset">
+                            <a href="reset-password.htm" class="reset">Forgotten your password?</a>
+                        </div>
+                </form>
+            </div><!-- container-form-toggle -->
+
+            <div class="container-btn container-create-account-btn">
+                <div class="sml-link center"><p>Not registered?</p></div>
+                <div class="create-account-btn"><a href="create-account.html">Create account</a></div>
             </div>
         </div>
     </div>
 </div>
-
-<div class="container-log-in-images">
-
-    <!-- Carousel –––––––––––––––––––––––––––––––––––––––– -->
-
-    <div class="carousel slide carousel-fade carousel-container" data-ride="carousel" data-interval="4000">
-        <div class="carousel-inner" role="listbox">
-
-
-            <!-- Slide One - Set the background image for this slide in the line below -->
-            <div class="carousel-item active" style="background-image: url('images/bground-img-1.jpg');opacity: 1;">
-                <div class="container-carousel-caption">
-                    <div class="carousel-caption d-md-block">
-                        <h1>Welcome to the IOPF Training Scheme.</h1>
-                        <p>This text and the headline above is customised in Craft by an administrator.</p>
-                        <div class="container-btn container-carousel-btn1"><div class="carousel-btn"><a href="#">About us</a></div></div>
-                        <div class="container-btn container-carousel-btn2"><div class="carousel-btn"><a href="#">Contact us</a></div></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide Two - Set the background image for this slide in the line below -->
-            <div class="carousel-item" style="background-image: url('images/bground-img-2.jpg')">
-                <div class="container-carousel-caption">
-                    <div class="carousel-caption d-md-block">
-                        <h1>Used by over 40 Councils and Local Authorities.</h1>
-                        <p>This text and the headline above is customised in Craft by an administrator.</p>
-                        <div class="container-btn container-carousel-btn1"><div class="carousel-btn"><a href="#">About us</a></div></div>
-                        <div class="container-btn container-carousel-btn2"><div class="carousel-btn"><a href="#">Contact us</a></div></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide Three - Set the background image for this slide in the line below -->
-            <!--           <div class="carousel-item" style="background-image: url('images/bground-img-3.jpg')">
-                        <div class="container-carousel-caption">
-                          <div class="carousel-caption d-md-block">
-                            <h1>Custom settings to match to your brand.</h1>
-                            <p>Customise the platform templates to suit your brand guidelines.</p>
-                              <div class="container-btn container-carousel-btn1"><div class="carousel-btn"><a href="#">About us</a></div></div>
-                              <div class="container-btn container-carousel-btn2"><div class="carousel-btn"><a href="#">Contact us</a></div></div>
-                          </div>
-                        </div>
-                      </div> -->
-
-        </div>
-    </div>
-
-    <!-- End Carousel –––––––––––––––––––––––––––––––––– -->
-
-</div><!-- container-log-in-images -->
-</div><!-- container-fluid -->
-
-<script type="text/javascript">
-    // ENABLE TOUCH SWIPE FOR CAROUSEL
-    $('.carousel').on('touchstart', function (event) {
-        var xClick = event.originalEvent.touches[0].pageX;
-        $(this).one('touchmove', function (event) {
-            var xMove = event.originalEvent.touches[0].pageX;
-            if (Math.floor(xClick - xMove) > 5) {
-                $('.carousel').carousel('next');
-            } else if (Math.floor(xClick - xMove) < -5) {
-                $('.carousel').carousel('prev');
-            }
-        });
-        $('.carousel').on('touchend', function () {
-            $(this).off('touchmove');
-        });
-    });
-</script>
-
-<!-- Sticky Footer
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</div>
+{% block content %}{% endblock %}
 <footer class="footer">
     <div class="container-footer">
         <div class="container-footer-links">
             <div class="row">
-                <div class="col-6 col-copyright"><img src="images/lantra-footer-logo.jpg"></div>
+                <div class="col-6 col-copyright"><img src="/assets/img/lantra-footer-logo.jpg"></div>
                 <div class="col-6 col-terms"><p>&copy; 2018 Lantra. Terms &amp; Privacy</p></div>
             </div>
         </div>
     </div>
 </footer>
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
 </html>
