@@ -1,0 +1,470 @@
+/* Typography
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+body,
+button,
+input,
+select,
+optgroup,
+textarea,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #000000;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 42px !important;
+    font-weight: 300 !important;
+}
+
+h2 {
+    font-size: 32px !important;
+    font-weight: 300 !important;
+}
+
+h4 {
+    font-size: 22px !important;
+}
+
+/*
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/*Layout and Positioning
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.right {
+    float: right;
+}
+
+.log-in-fields {
+    padding-top: 60px;
+}
+
+/*Buttons and Forms
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.container-btn {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.container-log-in-btn, .container-create-account-btn {
+    padding-top: 20%;
+}
+
+.log-in-form {
+    padding: 15% 20%;
+}
+
+.log-in-btn {
+    width: 80%;
+    height: 60px;
+    display: inline-block;
+    background-color: #e41170;
+    transition: background-color 200ms ease-out;
+}
+
+.log-in-btn:hover {
+    background-color: #ca0f63;
+}
+
+.log-in-btn a {
+    color: #fff;
+    text-decoration: none;
+    padding: 16px 0px;
+    display: block;
+}
+
+.log-in-btn a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.create-account-btn {
+    width: 50%;
+    height: 60px;
+    display: inline-block;
+    border: 2px solid #e41170;
+    transition: background-color 200ms ease-out;
+}
+
+.create-account-btn:hover {
+    border: 2px solid #e41170;
+    background-color: #e41170;
+}
+
+.create-account-btn a {
+    color: #e41170;
+    text-decoration: none;
+    padding: 16px 0px;
+    display: block;
+}
+
+.create-account-btn a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.container-carousel-btn1 {
+    width: 44%;
+    float: left;
+    padding-right: 40px;
+    position: absolute;
+    bottom: 40px;
+}
+
+.container-carousel-btn2 {
+    width: 44%;
+    float: left;
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    padding-right: 40px;
+}
+
+.carousel-btn {
+    width: 100%;
+    height: 60px;
+    display: inline-block;
+    border: 2px solid #fff;
+    transition: background-color 200ms ease-out;
+}
+
+.carousel-btn:hover {
+    background-color: #e41170;
+    border: 2px solid #e41170;
+}
+
+.carousel-btn a {
+    color: #fff;
+    text-decoration: none;
+    padding: 16px;
+    display: block;
+}
+
+.carousel-btn a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+span.trigger-password {
+    padding-top: 30px;
+    color: #cbcbcb;
+    font-size: .8em !important;
+}
+
+span.trigger-password:hover {
+    cursor: pointer;
+}
+
+.field--wrapper {
+    position: relative;
+    margin-bottom: 45px;
+    text-align: left;
+}
+
+.field--wrapper.last {
+    margin-bottom: 10px !important;
+}
+
+.field--wrapper input, .field--wrapper textarea {
+    display: block;
+    font-size: 16px;
+    width: 100%;
+    padding: 0em 0em 10px 0em;
+    border: none;
+    border-bottom-width: medium;
+    border-bottom-style: none;
+    border-bottom-color: currentcolor;
+    border-radius: 0px;
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
+    outline: none;
+    margin: 0px;
+    background: none;
+}
+
+.field--wrapper label, ul.dropdowns label {
+    font-family: inherit;
+    position: absolute;
+    top: -25px;
+    left: 0;
+    font-size: 16px;
+    color: #a82135;;
+    transition: all 0.1s linear;
+    opacity: 0;
+}
+
+.field--wrapper label.on, ul.dropdowns label.on {
+    color: #a82135;
+}
+
+.field--wrapper label.show, ul.dropdowns label.show {
+    top: -27px;
+    opacity: 1;
+}
+
+ul.dropdowns label {
+    top: -12px !important;
+}
+
+ul.dropdowns label.show {
+    top: -14px !important;
+}
+
+ul.dropdowns .field--wrapper {
+    margin-bottom: 0px;
+}
+
+.field--wrapper input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-family: inherit;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.field--wrapper input::-moz-placeholder { /* Firefox 19+ */
+    font-family: inherit;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.field--wrapper input:-ms-input-placeholder { /* IE 10+ */
+    font-family: inherit;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.field--wrapper input:-moz-placeholder { /* Firefox 18- */
+    font-family: inherit;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.sml-link p, .sml-link a, .sml-link a:hover, .sml-link a:focus, .sml-link a:active {
+    text-decoration: none;
+    padding-bottom: 0 !important;
+    color: #cbcbcb;
+    font-size: .8em !important;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0px 0px 60px 0px; /* Margin bottom by footer height */
+    overflow-x: hidden;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px; /* Set the fixed height of the footer here */
+    line-height: 40px; /* Vertically center the text there */
+}
+
+.container-fluid, .row {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.container-log-in, .container-log-in-images {
+    float: left;
+    display: inline-block;
+    height: 100vh;
+}
+
+.container-log-in, .container-footer-links {
+    width: 33.3333%;
+}
+
+.container-log-in-images {
+    position: relative;
+    width: 66.6666%;
+}
+
+.container-footer-links .row {
+    padding: 0 20px !important;
+}
+
+.col-terms {
+    text-align: right;
+}
+
+.scheme-logo {
+    width: 250px;
+    display: inline-block !important;
+    padding: 60px 0px 0px 40px !important;
+}
+
+.scheme-logo img {
+    width: 100%;
+}
+
+.col-copyright p {
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    left: 120px;
+}
+
+.col-copyright img {
+    width: 90px;
+    float: left;
+    position: absolute;
+    bottom: 0px;
+}
+
+.col-terms p {
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+}
+
+/*Carousel Styles
+-------------------------------------------------- */
+.carousel-item {
+    height: 100vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.carousel-fade .carousel-item {
+    opacity: 0;
+    transition-duration: 0.8s !important;
+    transition-property: opacity !important;
+}
+
+.carousel-item {
+    transition: opacity .25s ease-in-out !important;
+    -moz-transition: opacity .25s ease-in-out !important;
+    -webkit-transition: opacity .25s ease-in-out !important;
+}
+
+.carousel-item .active {
+    opacity: 1 !important;
+}
+
+.carousel-inner {
+    overflow: visible !important;
+}
+
+.container-carousel-caption {
+    position: absolute !important;
+    margin-top: 20%;
+    right: 0;
+    width: 50%;
+    height: 450px;
+    background-color: rgba(52, 52, 52, 0.9);
+}
+
+.carousel-caption {
+    position: initial !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: initial !important;
+    color: #fff !important;
+    text-align: left !important;
+    padding: 40px 70px 40px 40px !important;
+}
+
+.carousel-caption p {
+    padding-top: 30px !important;
+    color: #fff !important;
+}
+
+/*Media Queries
+-------------------------------------------------- */
+@media screen and (max-width: 1400px) {
+    .container-log-in {
+        width: 35%;
+    }
+
+    .container-log-in-images {
+        width: 65%;
+    }
+
+    .container-carousel-caption {
+        width: 80%;
+    }
+
+    .log-in-form {
+        padding: 80px 40px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .container-log-in {
+        width: 100%;
+        max-width: 100% !important;
+        height: 1120px;
+        float: initial;
+        margin: 0;
+    }
+
+    .container-log-in-images, .container-carousel-caption {
+        width: 100%;
+        max-width: 100% !important;
+        height: 550px;
+        float: initial;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .footer {
+        position: relative;
+    }
+
+    .container-footer-links {
+        width: 100%;
+        height: 90px;
+    }
+
+    .container-footer-links .row {
+        padding: 40px 20px 0 20px !important;
+    }
+}
+
+@media screen and (max-width: 549px) {
+    .container-log-in {
+        height: 880px;
+    }
+
+    .container-log-in-images, .container-carousel-caption {
+        height: 750px;
+    }
+
+    .log-in-btn, .create-account-btn {
+        width: 100%;
+    }
+
+    .container-carousel-btn1 {
+        width: 90%;
+        bottom: 140px;
+    }
+
+    .container-carousel-btn2 {
+        width: 90%;
+        left: initial;
+    }
