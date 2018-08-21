@@ -86,8 +86,12 @@ class Lantra_EntriesController extends Lantra_BaseController {
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        craft()->lantra_reports->runReport($entry);
-        $this->_returnMessage( $entry->title . ' has been successfully run.', true);
+        $total = craft()->lantra_reports->runReport($entry);
+        if ($total) {
+            return $this->_returnMessage( $entry->title . ' has been successfully run (' . $total . ' rows).', true);
+
+        }
+        $this->_returnMessage( $entry->title . ' currently has no data.', false);
     }
 
     /**

@@ -439,12 +439,16 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return object
      * @throws mixed
      */
-    private function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
+    public function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->resultStatus = $status;
-        if ($expiring) {
+        if ($expiring == 'expired') {
+            $criteria->expiryDate = '<'. time();
+            $criteria->order = 'expiryDate asc';
+        }
+        elseif ($expiring == true) {
             $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
         }

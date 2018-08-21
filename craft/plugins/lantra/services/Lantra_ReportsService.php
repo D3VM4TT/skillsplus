@@ -42,14 +42,13 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function runReport(EntryModel $reportEntry)
     {
         $values = $this->getReportData($reportEntry);
-        if( ! count($values)) {
-            return;
+        $total = count($values);
+        if ( ! $total ) {
+            return 0;
         }
-        if ($reportEntry->reportType == 'users') {
-            $labels = ['Name', 'Email', 'Companies', 'Teams', 'Job Roles'];
-        }
-        elseif ($reportEntry->reportType == 'modulesExpiring') {
-            $labels = ['Name', 'Company'];
+        $labels = ['Name', 'Email', 'Company', 'Team', 'Job Roles'];
+        if ($reportEntry->reportType == 'results') {
+            $labels = array_merge($labels, ['Module', 'Expiry']);
         }
         // create csv file in temp folder
         $filePath = craft()->path->getTempUploadsPath();
@@ -79,7 +78,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         // delete the temp file
         unlink($filePath . $fileName);
-        return true;
+        return $total;
     }
 
     /**
@@ -95,12 +94,65 @@ class Lantra_ReportsService extends BaseApplicationComponent
         $data = [];
         $users = $this->getReportDataUsers($reportEntry);
         if ($reportEntry->reportType == 'users') {
-            $data = $users;
+            $data = $users->find();
         }
-        if ($reportEntry->reportType == 'modulesExpiring') {
-            $data = craft()->lantra_results->getModuleResults('all', null, true,'complete', null, $users->ids());
+        elseif ($reportEntry->reportType == 'results') {
+            $data = $this->getReportDataResults($users->ids(), $reportEntry);
         }
-        return $count ? $data->total() : $data;
+        return $count ? $data->total() : $this->formatReportValues($data, $reportEntry->type);
+    }
+
+    /**
+     * Format report values
+     *
+     * @param array
+     * @param string
+     * @return array
+     */
+    private function formatReportValues($data, $type)
+    {
+        $return = [];
+        foreach($data as $row) {
+            // user fields go in all reports
+            $user = ($type == 'result') ? $row->author : $row;
+            $company = craft()->lantra_users->userCompany($user);
+            $roles = [];
+            foreach($user->userRole as $role){
+                $roles[] = $role->title;
+            }
+            $record = [
+                $user->fullName,
+                $user->email,
+                $company->title,
+                $user->userTeam->first()->title,
+                implode(', ', $roles)
+            ];
+            // add the result fields
+            if ($type == 'result') {
+                $record = array_merge($record, [$row->resultModule->first()->title, $row->expiryDate->timestamp()]);
+            }
+            $return[] = $record;
+        }
+        return $return;
+    }
+
+    /**
+     * Get the result data related to a report entry
+     *
+     * @param $userIds
+     * @param $reportEntry
+     * @return array
+     * @throws mixed
+     */
+    private function getReportDataResults($userIds, $reportEntry) {
+        $days = $reportEntry->reportResultExpiry;
+        $expiring = true;
+        if ($days == '0'){
+            $expiring = 'expired';
+            $days = 'all';
+        }
+        $criteria = craft()->lantra_results->getModuleResults($days, null, $expiring, 'complete', null, $userIds);
+        return $criteria->find();
     }
 
     /**
@@ -143,7 +195,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $relatedTo = $relatedToRole;
         }
         $criteria->relatedTo = $relatedTo;
-        return $criteria->find();
+        return $criteria;
     }
     /**
      * Get all reports
@@ -170,13 +222,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
      */
     private function reportCsv(array &$values, array $labels = array(), $filePath = 'report.csv')
     {
-        $filePath = str_replace('.csv', '', $filePath) . '.csv';
-        if (empty($labels) && !empty($values)) {
-            $arrayValues = array_values($values);
-            $firstRowOfArray = array_shift($arrayValues);
-            $labels = array_keys($firstRowOfArray);
-        }
-        $data = array_merge($labels, $values);
+        $data = array_merge([$labels], $values);
         $csv = Writer::createFromPath($filePath, "w");
         $csv->insertAll($data);
     }
