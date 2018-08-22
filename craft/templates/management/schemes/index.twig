@@ -90,7 +90,9 @@ $(document).ready(function() {
                                     "nodeType" : "companies",
                                     "icon"  : '/assets/img/group.svg',
                                     "children" : [
-                                            {% include 'management/schemes/tree--leaves' %}
+                                            {% include 'management/schemes/tree--leaves' with {
+                                                'company' : childCompany
+                                            } %}
                                         ]
                                     },
                                     {% endfor %}
