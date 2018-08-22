@@ -484,13 +484,13 @@ body {
     margin: 0px !important;
 }
 
-.container-log-in, .container-content {
+.container-sidebar, .container-content {
     float: left;
     display: inline-block;
     height: 100vh;
 }
 
-.container-log-in, .container-footer-links {
+.container-sidebar, .container-footer-links {
     width: 33%;
 }
 
@@ -498,6 +498,21 @@ body {
     border-left: 1px solid #eeeeee;
     position: relative;
     width: 67%;
+}
+
+body.logged-in .container-sidebar,
+body.logged-in .container-footer-links {
+    width:25%;
+}
+
+body.logged-in .container-content  {
+    width:75%;
+    padding:20px;
+}
+
+nav.scheme {
+    position:fixed;
+    padding-top:100px;
 }
 
 .container-footer-menu {
@@ -774,3 +789,4 @@ body {
         width: 90%;
         left: initial;
     }
+}

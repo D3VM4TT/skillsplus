@@ -1,25 +1,23 @@
 {% extends "_layout" %}
 
 {% block content %}
-<div class="container-content">
-    <div class="content-top">
-        <div class="content-col content-top-txt">
-            <h1>{{ entry.title }}</h1>
-            <h2>{{ entry.pageHeading }}</h2>
-        </div>
-        {%  if entry.pageImage|length %}
-        <div class="content-col right img-responsive">
-            <img src="{{ entry.pageImage.first().url }}">
-        </div>
-        {% endif %}
+<div class="content-top">
+    <div class="content-col content-top-txt">
+        <h1>{{ entry.title }}</h1>
+        <h2>{{ entry.pageHeading }}</h2>
     </div>
-    <div class="content-main">
-        <div class="content-col">
-            <h2>Flexible</h2><p>Learning a new skill doesn’t have to interrupt your busy schedule. Our on-demand videos and interactive code challenges are there for you when you need them.</p>
-        </div>
-        <div class="content-col right">
-            <h2>Supportive</h2><p>Join hundreds of thousands of students in our supportive online community. They’re always available to lend support and nudge you to keep going.</p><h2>Valuable</h2><p>We have a wide range of plans to fit your goals and budget.Check out a free trial to see what works for you and then pay monthly—you’ll never have to shell out thousands up front like some bootcamps or traditional colleges.</p>
-        </div>
+    {%  if entry.pageImage|length %}
+    <div class="content-col right img-responsive">
+        <img src="{{ entry.pageImage.first().url }}">
+    </div>
+    {% endif %}
+</div>
+<div class="content-main">
+    <div class="content-col">
+        <h2>Flexible</h2><p>Learning a new skill doesn’t have to interrupt your busy schedule. Our on-demand videos and interactive code challenges are there for you when you need them.</p>
+    </div>
+    <div class="content-col right">
+        <h2>Supportive</h2><p>Join hundreds of thousands of students in our supportive online community. They’re always available to lend support and nudge you to keep going.</p><h2>Valuable</h2><p>We have a wide range of plans to fit your goals and budget.Check out a free trial to see what works for you and then pay monthly—you’ll never have to shell out thousands up front like some bootcamps or traditional colleges.</p>
     </div>
 </div>
 {% endblock %}

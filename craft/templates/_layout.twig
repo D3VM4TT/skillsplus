@@ -42,116 +42,90 @@
     <meta name="theme-color" content="#ffffff">
 
 </head>
-<body>
-
-<div class="container-fluid">
-    <div class="container-log-in">
-
-        <div class="menu-tab">
-            <div id="one"></div>
-            <div id="two"></div>
-            <div id="three"></div>
+<body class="{% if currentUser %}logged-in{% endif %}">
+    <div class="container-fluid">
+        <div class="container-sidebar">
+            <div class="menu-tab">
+                <div id="one"></div>
+                <div id="two"></div>
+                <div id="three"></div>
+            </div>
+            <div class="menu-hide">
+                <div class="menu-intro">
+                    <h1>{{ globalsScheme.schemeName }}</h1>
+                    <p>{{ globalsScheme.schemeDescription }}</p>
+                </div>
+                    {% include '_includes/nav_public' %}
+                    <div class="container-footer-menu">
+                        <div class="container-footer-links-menu">
+                            <div class="row">
+                                <div class="col-6 col-copyright">
+                                    <img src="/assets/img/lantra_footer_wht_logo.png">
+                                </div>
+                                <div class="col-6 col-terms">
+                                    <p>&copy; 2018 Lantra. <a href="/terms">Terms &amp; Privacy</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            {% if currentUser %}
+                {% include '_includes/nav_scheme' %}
+            {%  else %}
+                <div class="log-in-form">
+                    <div class="row scheme-logo">
+                        <a href="/">
+                            <img src="{{ globalsTheme.schemeLogo.first().url }}">
+                        </a>
+                    </div>
+                    <div class="container-form-toggle">
+                        <h1>User Log in</h1>
+                        {% include '_forms/login_combined' %}
+                    </div>
+                    <div class="container-btn container-create-account-btn">
+                        <div class="sml-link center">
+                            <p>Not registered?</p>
+                        </div>
+                        <div class="create-account-btn">
+                            <a href="/login/register">Create account</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-
-        <div class="menu-hide">
-            <div class="menu-intro">
-                <h1>{{ globalsScheme.schemeName }}</h1>
-                <p>{{ globalsScheme.schemeDescription }}</p>
-            </div>
-            <nav>
-                <ul>
-                    {% for pageEntry in globalsTheme.themeNavigation %}
-                        <li><a href="{{ pageEntry.url }}">{{ pageEntry.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            </nav>
-            <div class="container-btn container-create-account-btn">
-                <div class="sml-link center"><p>Not registered?</p></div>
-                <div class="create-account-btn"><a href="create-account.html">Create account</a></div>
-            </div>
-            <div class="container-footer-menu">
-                <div class="container-footer-links-menu">
-                    <div class="row">
-                        <div class="col-6 col-copyright"><img src="/assets/img/lantra_footer_wht_logo.png"></div>
-                        <div class="col-6 col-terms"><p>&copy; 2018 Lantra. <a href="terms.html">Terms &amp; Privacy</a>
-                            </p></div>
+    </div>
+    <div class="container-content">
+        {% set notice = craft.session.getFlash('notice') %}
+        {% set error = craft.session.getFlash('error') %}
+        <div id="notifications">
+            {% if notice %}
+                <div class="alert alert-success">
+                    <strong>Success!</strong>
+                    {% if notice is iterable %}{% for n in notice %}{{ n.notice }} {% endfor %}{% else %}{{ notice }}{% endif %}
+                </div>
+            {% endif %}
+            {% if error %}
+                <div class="alert alert-warning">
+                    <strong>Error!</strong>
+                    {% if error is iterable %}{% for e in error %}{{ e.error }}{% endfor %}{% else %}{{ error }}{% endif %}
+                </div>
+            {% endif %}
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="footer" style="position:fixed!important;">
+        <div class="container-footer">
+            <div class="container-footer-links">
+                <div class="row">
+                    <div class="col-6 col-copyright">
+                        <img src="/assets/img/lantra-footer-logo.jpg">
+                    </div>
+                    <div class="col-6 col-terms">
+                        <p>&copy; 2018 Lantra. <a href="/terms">Terms &amp; Privacy</a></p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="log-in-form">
-            <div class="row scheme-logo">
-                <a href="/"><img src="{{ globalsTheme.schemeLogo.first().url }}"></a>
-            </div>
-            <div class="container-form-toggle">
-                <h1>User Log in</h1>
-                <form action="">
-                    <div class="login-form">
-
-                        <!-- Login -->
-                        <div class="log-in-toggle" id="log-in-div">
-                            <div class="field--wrapper" style="">
-                                <label for="fname" style="" class="show">Email address</label>
-                                <input class="float-label" placeholder="Email address" style="">
-                            </div>
-                            <div class="field--wrapper last" style="">
-                                <label for="fname" style="" class="show">Password</label>
-                                <input type="password" name="password" id="password" class="float-label"
-                                       placeholder="Password" style="">
-                                <span class="password-showhide">
-                              <span class="trigger-password">Show</span>
-                              </span>
-                                <div class="sml-link right" id="remember-me">
-                                    <label>
-                                        <input type="checkbox" name="rememberMe" value="1">
-                                        <span class="remember-me-txt">Remember me</span>
-                                    </label>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Reset -->
-                        <div class="reset-form-toggle" id="reset-div">
-                            <p>Enter the email address you use to log in to your account and we'll email you with
-                                instructions on how you can reset your password.</p>
-                            <div class="field--wrapper" style="">
-                                <label for="fname" style="" class="show">Email address</label>
-                                <input class="float-label" placeholder="Email address" style="">
-                            </div>
-                        </div>
-
-                        <!-- Submit -->
-                        <div class="container-btn container-log-in-btn">
-                            <input type="submit" id="submit" class="log-in-btn" value="Log in">
-                        </div>
-
-                        <!-- Help -->
-                        <div class="sml-link reset">
-                            <a href="reset-password.htm" class="reset">Forgotten your password?</a>
-                        </div>
-                </form>
-            </div><!-- container-form-toggle -->
-
-            <div class="container-btn container-create-account-btn">
-                <div class="sml-link center"><p>Not registered?</p></div>
-                <div class="create-account-btn"><a href="create-account.html">Create account</a></div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-{% block content %}{% endblock %}
-<footer class="footer">
-    <div class="container-footer">
-        <div class="container-footer-links">
-            <div class="row">
-                <div class="col-6 col-copyright"><img src="/assets/img/lantra-footer-logo.jpg"></div>
-                <div class="col-6 col-terms"><p>&copy; 2018 Lantra. Terms &amp; Privacy</p></div>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 </body>
 </html>
