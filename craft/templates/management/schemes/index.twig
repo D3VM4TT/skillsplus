@@ -37,7 +37,7 @@
 </section>
 {% endblock %}
 
-{% set companies = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search() %}
+{% set companies = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('title') %}
 
 {% block js %}
 <script type="text/javascript" src="/assets/js/vendor/jqtree/jstree.min.js"></script>
@@ -52,7 +52,9 @@ $(document).ready(function() {
                     "text" : "Companies",
                     "state" : {"opened" : true },
                     "children" : [
-                    {% for company in companies %}
+
+
+                    {% for company in companies if company.companyParent | length == 0 %}
                             {% set companyTitle = company.title %}
                             {% set companyManager = company.companyManager %}
                         {
@@ -68,92 +70,40 @@ $(document).ready(function() {
                             },
                             {% endif %}
                             {% set teams = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).search(companyTitle) %}
-                            "children" : [
-                                {% for user in company.companyManager %}
-                                    {
-                                        "text" : "Company Manager: {{ user.firstName }} {{ user.lastName }}",
-                                        "nodeType" : "users",
-                                        "entryId"    : "{{ user.id }}",
-                                        "recipients"    : "recipient={{ user.email }}",
-                                        "icon"  : '/assets/img/person.svg',
-                                        {% if user.id == craft.request.getParam('openat') %}
-                                        "state"       : {
-                                            "opened"    : true,
-                                            "selected" : true
-                                        },
-                                        {% endif %}
-                                    },
-                                {% endfor %}                            
-                                {% for team in teams %}
-                                    {% set teamTitle = team.title %}
-                                    {% set teamID = team.id %}
+                            "children" : 
+                            [
+
+                                {% include 'management/schemes/tree--leaves' %}
+
+                                {% set childCompanies = craft.entries.section('companies').relatedTo(company) %}
+
+                                {% if childCompanies | length > 0 %}
+                                    
+                                    {% for childCompany in childCompanies %}
+                                        {% set companyTitle = childCompany.title %}
+                                        {% set companyManager = childCompany.companyManager %}
+                                        {% set teams = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).search(companyTitle) %}
                                 {
-                                    "text" : "Team: {{ team.title }}",
-                                    {% set teamMembers = craft.users.group('users').search(teamTitle) %}
-                                    // {% set teamManager = craft.users.group('teamManagers').search(teamTitle) %}
-                                    // {% set teamManager = craft.entries.section('teams').search(teamTitle) %}
-                                    "nodeType" : "teams",
-                                    "entryId"    : "{{ team.id }}",
-                                    "recipients"    : "teamId={{ team.id }}",
+                                    "text" : "{{ childCompany.title }}",
+                                    "entryId"    : "{{ childCompany.id }}",
+                                    "recipients"    : "companyId={{ childCompany.id }}",
+                                    "nodeType" : "companies",
                                     "icon"  : '/assets/img/group.svg',
-                                    {% if team.id == craft.request.getParam('openat') %}
-                                    "state"       : {
-                                        "opened"    : true,
-                                        "selected" : true
-                                    },
-                                    {% endif %}
                                     "children" : [
-                                    {% for user in teamMembers %}
-                                        {
-                                            "nodeType" : "users",
-                                            "text" : "Team Member: {{ user.firstName }} {{ user.lastName }}",
-                                            "entryId"    : "{{ user.id }}",
-                                            "recipients"    : "recipient={{ user.email }}",
-                                            "icon"  : '/assets/img/person.svg',
-                                            {% if user.id == craft.request.getParam('openat') %}
-                                            "state"       : {
-                                                "opened"    : true,
-                                                "selected" : true
-                                            },
-                                            {% endif %}
-                                        },
+                                            {% include 'management/schemes/tree--leaves' %}
+                                        ]
+                                    },
                                     {% endfor %}
-                                    {% for user in team.teamPrimaryManager %}
-                                        {
-                                            "nodeType" : "users",
-                                            "text" : "Team Manager: {{ user.firstName }} {{ user.lastName }}",
-                                            "entryId"    : "{{ user.id }}",
-                                            "recipients"    : "recipient={{ user.email }}",
-                                            "icon"  : '/assets/img/person.svg',
-                                            {% if user.id == craft.request.getParam('openat') %}
-                                            "state"       : {
-                                                "opened"    : true,
-                                                "selected" : true
-                                            },
-                                            {% endif %}
-                                        },
-                                    {% endfor %}
-                                    {% for user in team.teamSecondaryManagers %}
-                                        {
-                                            "nodeType" : "users",
-                                            "text" : "Secondary Manager: {{ user.firstName }} {{ user.lastName }}",
-                                            "entryId"    : "{{ user.id }}",
-                                            "recipients"    : "recipient={{ user.email }}",
-                                            "icon"  : '/assets/img/person.svg',
-                                            {% if user.id == craft.request.getParam('openat') %}
-                                            "state"       : {
-                                                "opened"    : true,
-                                                "selected" : true
-                                            },
-                                            {% endif %}
-                                        },
-                                    {% endfor %}
-                                    ]
-                                },
-                                {% endfor %}
-                            ]
+
+                                
+                                {% endif %}
+
+
+                                ]
+
                         },
                     {% endfor %}
+
                     ]
                 }
             ]
@@ -227,6 +177,7 @@ $(document).ready(function() {
     background-color: rgba(28,43,57, 0.7);
 }
 #j1_1 > i.button.pull-right {display:none;}
+.hide-actions > i.button {display:none;}
 .jstree-default .jstree-clicked {
     background: #c3e2ff;
     border-radius: 2px;
