@@ -1133,16 +1133,16 @@ a.test + .tooltip.top > .tooltip-arrow {
     padding-bottom: 1.5rem;
 }
 
-div.page-header,
+.page-header,
 form.filter {
     padding:20px 20px 30px 20px;
 }
 
-div.form-subheader {
+.form-subheader {
     padding-top: 40px;
 }
 
-form.page-form {
+.page-form {
     padding:20px;
 }
 

@@ -26,9 +26,12 @@
     {% include 'reporting/_tables/' ~ reportType with{reportType:reportType, reportEntries:reportEntries} %}
     {% if reportEntries|length %}
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        <div class="freetext-procedure"><a href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a></div>
+        <div class="table-actions freetext-procedure">
+            <a href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a></div>
     {% else %}
-        <p>There are no results to display.</p>
+        <div class="table-actions">
+            <p>There are no results to display.</p>
+        </div>
     {% endif %}
 </section>
 {% endblock %}
