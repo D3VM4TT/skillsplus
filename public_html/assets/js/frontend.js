@@ -27,13 +27,13 @@ $(document).ready(function(){
 
         // Toggle login/password reset form
         $('#login-combined .toggle').click(function(){
-            if($('#formLogin').hasClass("hide")) {
-                $('#formLogin').removeClass("hide");
+            if($('#form-login').hasClass("hide")) {
+                $('#form-login').removeClass("hide");
             }
             else {
-                $('#formLogin').addClass("hide");
+                $('#form-login').addClass("hide");
             }
-            $('#formPassword').slideToggle({
+            $('#form-password').slideToggle({
                 easing: 'eioe',
                 duration: 850
             });

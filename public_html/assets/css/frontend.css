@@ -18,6 +18,7 @@ h6 {
     font-family: 'Open Sans', sans-serif !important;
     font-size: 16px;
     line-height: 1.7;
+
 }
 
 h1 {
@@ -56,13 +57,16 @@ h4 {
 .menu-tab {
     width: 70px;
     height: 70px;
-    background-color: #fff;
     position: fixed;
     z-index: 100;
     top: 0px;
     left: 0px;
     cursor: pointer;
     transition: all .3s ease-in-out;
+}
+
+.primary-bg.menu-tab {
+    background-color: #FFFFFF;
 }
 
 .menu-tab div {
@@ -80,13 +84,12 @@ h4 {
 
 .menu-tab.active {
     left: 33.333%;
-    background-color: #a82135;
     transition: all 300ms ease-in-out;
 }
 
 .menu-tab.active #one {
     transform: translateY(9px) rotate(-135deg);
-    background-color: #fff;
+    background-color: #FFFFFF;
     transition: all .3s ease-in-out;
 }
 
@@ -97,7 +100,7 @@ h4 {
 
 .menu-tab.active #three {
     transform: translateY(-9px) rotate(-45deg);
-    background-color: #fff;
+    background-color: #FFFFFF;
     transition: all .3s ease-in-out;
 }
 
@@ -124,54 +127,29 @@ h4 {
     transition: all .3s ease-in-out;
 }
 
-.menu-hide nav ul {
+.menu-hide nav {
     padding: 60px;
 }
 
-.menu-hide nav ul li {
+.menu-hide a.button {
     height: 70px;
-    list-style-type: none;
-    text-align: center;
     line-height: 70px;
+    text-align: center;
     transition: all .3s ease;
-    border: #ffffff solid 2px;
+    border: #FFFFFF solid 2px;
+}
+
+.menu-hide nav a.button {
     margin-bottom: 30px;
-}
-
-.menu-hide nav ul li:hover {
-    background-color: #782d32;
-    transition: background-color 200ms ease-out;
-}
-
-.menu-hide nav ul li a {
-    padding: 20px 25px;
-    text-decoration: none;
-    color: #fff;
-    display: block;
+    width:100%;
 }
 
 .menu-hide.show {
     left: 0px;
-    background-color: #a82135;
-    transition: all .3s ease-in-out;
 }
 
 .menu-hide .sml-link p {
-    color: #fff;
-}
-
-.menu-hide .create-account-btn {
-    border: 2px solid #fff;
-}
-
-.menu-hide .create-account-btn a {
-    color: #fff;
-}
-
-.menu-hide .create-account-btn:hover, .menu-hide .create-account-btn:active, .menu-hide .create-account-btn:focus {
-    border: 2px solid #fff;
-    background-color: #782d32;
-    transition: background-color 200ms ease-out;
+    color: #FFFFFF;
 }
 
 .hide {
@@ -182,15 +160,15 @@ h4 {
     cursor: pointer;
 }
 
-#login-combined form {
-    padding-top: 40px;
+#login-combined form h1 {
+    margin:0 0 60px 0;
 }
 
-#login-combined form#formPassword {
+#login-combined form#form-password {
     display:none;
 }
 
-#login-combined form#formPassword p {
+#login-combined form#form-password p {
     padding-bottom:40px;
 }
 
@@ -212,6 +190,10 @@ h4 {
     width: 47%;
 }
 
+.container-page {
+    padding:20px;
+}
+
 /*Buttons and Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container-btn {
@@ -231,56 +213,61 @@ h4 {
     padding: 80px;
 }
 
-.log-in-btn {
+.button {
     width: 80%;
     height: 60px;
     display: inline-block;
-    background-color: #a82135;
     border: none;
-    color: #fff;
+    color: #CCCCCC;
     transition: background-color 200ms ease-out;
     cursor: pointer;
 }
 
-.log-in-btn:hover {
-    background-color: #782d32;
+button span {
+    opacity:1;
 }
 
-.log-in-btn a {
-    color: #fff;
+.button a {
+    color: #FFFFFF;
     text-decoration: none;
     padding: 16px 0px;
     display: block;
 }
 
-.log-in-btn a:hover {
-    color: #fff;
+.button a:hover {
+    color: #FFFFFF;
     text-decoration: none;
 }
 
-.create-account-btn {
+.button.hollow {
     width: 50%;
     height: 60px;
     display: inline-block;
-    border: 2px solid #a82135;
+    border: 2px solid #CCCCCC;
     transition: background-color 200ms ease-out;
+    background-color: #FFF;
 }
 
-.create-account-btn:hover {
-    border: 2px solid #a82135;
-    background-color: #a82135;
+.button.hollow:hover {
+    opacity:1;
 }
 
-.create-account-btn a {
-    color: #a82135;
+.button.hollow a {
     text-decoration: none;
     padding: 16px 0px;
     display: block;
 }
 
-.create-account-btn a:hover {
-    color: #fff;
+.primary-bg.button {
+    color:#FFFFFF;
+}
+
+.primary-bg .button.hollow,
+.button.hollow a:hover {
+    background:none;
+    color:#FFFFFF;
     text-decoration: none;
+    border-color:#FFFFFF;
 }
 
 .container-carousel-btn1 {
@@ -393,7 +380,8 @@ span.remember-me-txt {
     font-size: .8em !important;
 }
 
-.field--wrapper label, ul.dropdowns label {
+.field--wrapper label,
+ul.dropdowns label {
     font-family: inherit;
     position: absolute;
     top: -25px;
@@ -534,7 +522,6 @@ body {
 
 .scheme-logo {
     margin: 0 auto !important;
-    padding-bottom: 30px !important;
 }
 
 .scheme-logo a {
@@ -643,6 +630,14 @@ body {
 
 .content-main h2 {
     color: #a82135;
+}
+
+body.logged-in .alert {
+    height: 70px;
+    line-height: 50px;
+    margin: 0;
+    padding: 10px;
+    border-radius: 0;
 }
 
 /*Media Queries

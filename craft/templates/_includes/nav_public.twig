@@ -1,13 +1,15 @@
 <nav>
-    <ul>
-        {% for pageEntry in globalsTheme.themeNavigation %}
-            <li><a href="{{ pageEntry.url }}">{{ pageEntry.title }}</a></li>
-        {% endfor %}
-    </ul>
+    {% for pageEntry in globalsTheme.themeNavigation %}
+        <a class="button hollow primary-bg" href="{{ pageEntry.url }}">{{ pageEntry.title }}</a>
+    {% endfor %}
 </nav>
 {% if not currentUser %}
-<div class="container-btn container-create-account-btn">
-    <div class="sml-link center"><p>Not registered?</p></div>
-    <div class="create-account-btn"><a href="/login/register">Create account</a></div>
+<div class="container-btn">
+    <div class="sml-link center">
+        <p>Not registered?</p>
+    </div>
+    <div class="center">
+        <a class="button hollow primary-bg" href="/public/register">Create account</a>
+    </div>
 </div>
 {% endif %}

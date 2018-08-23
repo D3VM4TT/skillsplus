@@ -1,4 +1,5 @@
-<form id="formLogin" method="post" accept-charset="UTF-8">
+<form class="public" id="form-login" method="post" accept-charset="UTF-8">
+    <h1>User Login</h1>
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="users/login">
     <input type="hidden" name="redirect" value="/">
@@ -19,10 +20,10 @@
             </label>
         </div>
     </div>
-    <div class="container-btn container-log-in-btn">
-        <input type="submit" id="submit" class="log-in-btn" value="Log in">
+    <div class="container-btn">
+        <button class="button primary-bg"><span>Log in</span></button>
     </div>
     <div class="sml-link toggle">
-        <a href="/login/reset" class="reset">Forgotten your password?</a>
+        <a href="/public/password/reset" class="reset">Forgotten your password?</a>
     </div>
 </form>

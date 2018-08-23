@@ -1,24 +1,27 @@
-{% import "_macros" as ui %}
-<form method="post" accept-charset="UTF-8">
+<form class="public" id="form-register" method="post" accept-charset="UTF-8">
+    <h1>Register</h1>
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="users/saveUser">
     <input type="hidden" name="redirect" value="/">
     <input type="hidden" name="username" value="">
-
-    {% if account is defined %}
-        {{ ui.errorList(account.getAllErrors()) }}
-    {% endif %}
-
-    <h3><label for="firstName">First Name</label></h3>
-    <input id="firstName" type="text" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
-
-    <h3><label for="lastName">Last Name</label></h3>
-    <input id="lastName" type="text" name="lastName" {%- if account is defined %} value="{{ account.lastName }}"{% endif %}>
-
-    <h3><label for="email">Email</label></h3>
-    <input id="email" type="text" name="email" {%- if account is defined %} value="{{ account.email }}"{% endif %}>
-
-    <h3><label for="password">Password</label></h3>
-    <input id="password" type="password" name="password">
-    <input type="submit" value="Register">
+    <div class="field--wrapper" style="">
+        <label for="registerFirstName" class="show">First Name</label>
+        <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
+    </div>
+    <div class="field--wrapper" style="">
+        <label for="registerLastName" class="show">Last Name</label>
+        <input id="registerLastName" type="text" placeholder="Last Name"
+               name="lastName" {%- if account is defined %} value="{{ account.lastName }}"{% endif %}>
+    </div>
+    <div class="field--wrapper" style="">
+        <label for="registerEmail" class="show">Email</label>
+        <input id="registerEmail" type="text" placeholder="Email" name="email" {%- if account is defined %} value="{{ account.email }}"{% endif %}>
+    </div>
+    <div class="field--wrapper" style="">
+        <label for="registerPassword" class="show">Password</label>
+        <input id="registerPassword" type="password" name="password">
+    </div>
+    <div class="container-btn container-log-in-btn">
+        <input type="submit" class="log-in-btn" value="Register">
+    </div>
 </form>

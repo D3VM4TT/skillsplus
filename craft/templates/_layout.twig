@@ -1,5 +1,10 @@
-{% if craft.request.firstSegment != "licence" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
-{% if currentUser and craft.request.firstSegment != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}{% redirect "licence" %}{% endif %}
+{% if craft.request.firstSegment != "public" %}
+    {% if currentUser and craft.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
+        {% redirect "public/licence" %}
+    {% else %}
+        {% requireLogin %}
+    {% endif %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +12,9 @@
     <!-- Basic Page Needs
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta charset="utf-8">
-    <title>{{ siteName }} - {{ globalsScheme.schemeDescription }}</title>
-    <meta name="description" content="{{ globalsScheme.schemeDescription }}">
-    <meta name="author" content="{{ siteName }}">
+    <title>{{ globalsTheme.schemeName }}</title>
+    <meta name="description" content="{{ globalsTheme.schemeDescription }}">
+    <meta name="author" content="{{ globalsTheme.schemeName }}">
 
     <!-- Mobile Specific Metas
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -21,9 +26,43 @@
 
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <link rel="stylesheet" href="/assets/css/frontend.css">
     <link rel="stylesheet" href="/assets/css/cpd.css">
+    <link rel="stylesheet" href="/assets/css/frontend.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <style>
+        .primary-bg,
+        .primary-bg.active,
+        .primary-bg.show,
+        .button.hollow:hover{
+            background-color: {{ globalsTheme.themeColorPrimary }}
+        }
+
+        .secondary-bg,
+        .button.primary-bg:hover {
+            background-color: {{ globalsTheme.themeColorSecondary }}
+        }
+
+        .primary-color,
+        .button.hollow a,
+        form label {
+            color: {{ globalsTheme.themeColorPrimary }}
+        }
+
+        .button.hollow,
+        .primary-border {
+            border-color: {{ globalsTheme.themeColorPrimary }}
+        }
+        .secondary-color {
+            color: {{ globalsTheme.themeColorSecondary }}
+        }
+        .secondary-bg {
+            background-color: {{ globalsTheme.themeColorSecondary }}
+        }
+        .secondary-border {
+            border-color: {{ globalsTheme.themeColorSecondary }}
+        }
+    </style>
 
     {% block css %}{% endblock %}
 
@@ -41,15 +80,15 @@
 <body class="{% if currentUser %}logged-in{% endif %}">
     <div class="container-fluid">
         <div class="container-sidebar">
-            <div class="menu-tab">
+            <div class="primary-bg menu-tab">
                 <div id="one"></div>
                 <div id="two"></div>
                 <div id="three"></div>
             </div>
-            <div class="menu-hide">
+            <div class="primary-bg menu-hide">
                 <div class="menu-intro">
-                    <h1>{{ globalsScheme.schemeName }}</h1>
-                    <p>{{ globalsScheme.schemeDescription }}</p>
+                    <h1>{{ globalsTheme.schemeName }}</h1>
+                    <p>{{ globalsTheme.schemeDescription }}</p>
                 </div>
                     {% include '_includes/nav_public' %}
                     <div class="container-footer-menu">
@@ -71,19 +110,22 @@
                 <div class="log-in-form">
                     <div class="row scheme-logo">
                         <a href="/">
-                            <img src="{{ globalsTheme.schemeLogo.first().url }}">
+                            {%  if globalsTheme.schemeLogo|length %}
+                                <img src="{{ globalsTheme.schemeLogo.first().url }}">
+                            {% else %}
+                                {{  globalsTheme.schemeName }}
+                            {% endif %}
                         </a>
                     </div>
                     <div class="container-form-toggle">
-                        <h1>User Log in</h1>
                         {% include '_forms/login_combined' %}
                     </div>
-                    <div class="container-btn container-create-account-btn">
+                    <div class="container-btn">
                         <div class="sml-link center">
                             <p>Not registered?</p>
                         </div>
-                        <div class="create-account-btn">
-                            <a href="/login/register">Create account</a>
+                        <div class="button hollow">
+                            <a href="/public/register">Create account</a>
                         </div>
                     </div>
                 </div>
@@ -91,22 +133,9 @@
         </div>
     </div>
     <div class="container-content">
-        {% set notice = craft.session.getFlash('notice') %}
-        {% set error = craft.session.getFlash('error') %}
-        <div id="notifications">
-            {% if notice %}
-                <div class="alert alert-success">
-                    <strong>Success!</strong>
-                    {% if notice is iterable %}{% for n in notice %}{{ n.notice }} {% endfor %}{% else %}{{ notice }}{% endif %}
-                </div>
-            {% endif %}
-            {% if error %}
-                <div class="alert alert-warning">
-                    <strong>Error!</strong>
-                    {% if error is iterable %}{% for e in error %}{{ e.error }}{% endfor %}{% else %}{{ error }}{% endif %}
-                </div>
-            {% endif %}
-        </div>
+        {% if craft.request.firstSegment != '' %}
+            {% include '_includes/notifications' %}
+        {% endif %}
         {% block content %}{% endblock %}
     </div>
     <footer class="footer" style="position:fixed!important;">
