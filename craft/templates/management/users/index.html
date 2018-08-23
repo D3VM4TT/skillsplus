@@ -62,11 +62,15 @@
             </table>
         </div>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        {% if craft.lantra.canAddUser() %}
-            <div class="freetext-procedure"><a href="/management/users/new">Create user</a></div>
-        {% endif %}
     {% else %}
-        <h4>There are no users to display.</h4>
+        <div class="table-actions">
+            <h4>There are no users to display.</h4>
+        </div>
+    {% endif %}
+    {% if craft.lantra.canAddUser() %}
+    <div class="table-actions freetext-procedure">
+        <a href="/management/users/new">Create user</a>
+    </div>
     {% endif %}
 </section>
 {% endblock %}

@@ -17,13 +17,14 @@
     {% else %}
         <h2>Create a new job role</h2>
     {% endif %}
+    <p><a href="/management/roles">&laquo; back to roles</a></p>
 </div>
 
 {% if category is defined %}
     {{ ui.errorList(category.getAllErrors()) }}
 {% endif %}
 
-<form method="post" role="form" accept-charset="UTF-8">
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="categories/saveCategory">
     <input type="hidden" name="redirect" value="management/roles">

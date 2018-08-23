@@ -51,9 +51,13 @@
             </table>
         </div>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        <div class="freetext-procedure"><a href="/management/teams/new">Create team</a></div>
     {% else %}
-        <h4>There are no teams to display.</h4>
+        <div class="table-actions">
+            <h4>There are no teams to display.</h4>
+        </div>
     {% endif %}
+    <div class="table-actions freetext-procedure">
+        <a href="/management/teams/new">Create team</a>
+    </div>
 </section>
 {% endblock %}

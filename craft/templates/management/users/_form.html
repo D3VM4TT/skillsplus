@@ -13,18 +13,19 @@
 {% block content %}
 
 <div class="page-header">
-{% if account is defined and account.id %}
-    <h2>Edit user</h2>
-{% else %}
-    <h2>Create a new user</h2>
-{% endif %}
+    {% if account is defined and account.id %}
+        <h2>Edit user</h2>
+    {% else %}
+        <h2>Create a new user</h2>
+    {% endif %}
+    <p><a href="/management/users">&laquo; back to users</a></p>
 </div>
 
 {% if account is defined %}
     {{ ui.errorList(account.getAllErrors()) }}
 {% endif %}
 
-<form method="post" role="form" accept-charset="UTF-8">
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/users/saveUser">
     <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">

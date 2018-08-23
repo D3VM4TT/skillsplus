@@ -51,8 +51,12 @@
     </div>
     {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <h4>There are no reports to display.</h4>
+        <div class="table-actions">
+            <h4>There are no reports to display.</h4>
+        </div>
     {% endif %}
-    <div class="freetext-procedure"><a href="/management/reports/new">Create report</a></div>
+    <div class="table-actions freetext-procedure">
+        <a href="/management/reports/new">Create report</a>
+    </div>
 </section>
 {% endblock %}

@@ -17,13 +17,14 @@
     {% else %}
         <h2>Create a new company</h2>
     {% endif %}
+    <p><a href="/management/companies">&laquo; back to companies</a></p>
 </div>
 
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 
-<form method="post" role="form" accept-charset="UTF-8">
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
 
@@ -76,7 +77,9 @@
         <input type="number" name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
     </div>
     <br />
-    <div class="freetext-procedure"><button type="submit">Save company</button></div>
+    <div class="freetext-procedure">
+        <button class="" type="submit">Save company</button>
+    </div>
 </form>
 
 {% endblock %}

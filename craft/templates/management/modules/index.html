@@ -45,7 +45,9 @@
         </div>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <h4>There are no modules to display.</h4>
+        <div class="table-actions">
+            <h4>There are no modules to display.</h4>
+        </div>
     {% endif %}
 </section>
 {% endblock %}

@@ -17,13 +17,14 @@
     {% else %}
         <h2>Create a new report</h2>
     {% endif %}
+    <p><a href="/management/reports">&laquo; back to reports</a></p>
 </div>
 
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 
-<form method="post" role="form" accept-charset="UTF-8">
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
     <input type="hidden" name="redirect" value="management/reports">
