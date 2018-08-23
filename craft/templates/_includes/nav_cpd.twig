@@ -8,61 +8,27 @@
     </ul>
     {% if craft.lantra.canManage() %}
     <ul class="nav nav-pills flex-column">
-        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
         <li class="nav-item">
-            <a href="/management/schemes" aria-expanded="false" class="nav-link">Scheme Management</a>
-        </li>
-        {% endif %}
-      {% if currentUser.can('editEntries:3') %}
-        <li class="nav-item">
-            <a href="#CompanyManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Company Management</a>
-            <ul class="collapse list-unstyled" id="CompanyManagementSubMenu">
-                <li class="nav-item"><a href="/management/companies" class="nav-link">Create / Edit companies</a></li>
-
-            </ul>
-        </li>
-        {% endif %}
-        {% if currentUser.can('editEntries:5') %}
-        <li class="nav-item">
-            <a href="#TeamManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Team Management</a>
-            <ul class="collapse list-unstyled" id="TeamManagementSubMenu">
-                <li class="nav-item"><a href="/management/teams" class="nav-link">Create / Edit teams</a></li>
-
-            </ul>
-        </li>
-        {% endif %}
-        {% if currentUser.can('editUsers') or currentUser.can('editCategories:1') %}
-        <li class="nav-item">
-            <a href="#UserManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">User Management</a>
-            <ul class="collapse list-unstyled" id="UserManagementSubMenu">
-                {% if currentUser.can('editUsers') %}
-                    <li class="nav-item"><a href="/management/users" class="nav-link">Create / Edit users</a></li>
-                {% endif %}
+            <a href="#navManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Management</a>
+            <ul class="collapse list-unstyled" id="navManagement">
+                <li class="nav-item"><a href="/management/hierarchy" class="nav-link">Hierarchy</a></li>
+                {% if currentUser.can('editEntries:3') %}
+                    <li class="nav-item"><a href="/management/companies" class="nav-link">Companies</a></li>
+                {%  endif %}
+                {% if currentUser.can('editEntries:5') %}
+                    <li class="nav-item"><a href="/management/teams" class="nav-link">Teams</a></li>
+                {%  endif %}
                 {% if currentUser.can('editCategories:1') %}
-                    <li class="nav-item"><a href="/management/roles" class="nav-link">Create / Edit roles</a></li>
-                {% endif %}
+                    <li class="nav-item"><a href="/management/roles" class="nav-link">Roles</a></li>
+                {%  endif %}
+                {% if currentUser.can('editUsers') %}
+                    <li class="nav-item"><a href="/management/users" class="nav-link">Users</a></li>
+                {%  endif %}
+                {% if currentUser.can('editEntries:13') %}
+                    <li class="nav-item"><a href="/management/reports" class="nav-link">Custom Reports</a></li>
+                {%  endif %}
             </ul>
         </li>
-        {% endif %}
-        {% if currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
-        <li class="nav-item">
-            <a href="#ModuleManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Module Management</a>
-            <ul class="collapse list-unstyled" id="ModuleManagement">
-                {% if currentUser.can('editEntries:6') %}
-                    <li class="nav-item"><a href="/management/modules" class="nav-link">Assign module job joles</a></li>
-                {% endif %}
-            </ul>
-        </li>
-        {% endif %}
-        {% if currentUser.can('editEntries:13') %}
-        <li class="nav-item">
-            <a href="#ReportManagementSubMenu" data-toggle="collapse" aria-expanded="false" class="nav-link">Report Management</a>
-            <ul class="collapse list-unstyled" id="ReportManagementSubMenu">
-                <li class="nav-item"><a href="/management/reports" class="nav-link">Create / Edit reports</a></li>
-
-            </ul>
-        </li>
-        {% endif %}
         <li class="nav-item">
             <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
             <ul class="collapse list-unstyled" id="navReporting">
@@ -83,7 +49,6 @@
         {% endif %}
     </ul>
     {% endif %}
-
     <ul class="nav nav-pills flex-column">
         <li class="nav-item sign-out">
             <a class="nav-link" href="{{ logoutUrl }}">Sign out</a>

@@ -52,10 +52,14 @@
                 </table>
             </div>
             <br />
-            <div class="freetext-procedure"><button type="submit">Endorse Selected</button></div>
+            <div class="table-actions freetext-procedure">
+                <button type="submit">Endorse Selected</button>
+            </div>
         </form>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <h4>You have no more evidence to endorse.</h4>
+        <div class="table-actions">
+            <h4>You have no more evidence to endorse.</h4>
+        </div>
     {% endif %}
 {% endblock %}
