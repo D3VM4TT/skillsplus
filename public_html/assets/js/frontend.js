@@ -26,52 +26,17 @@ $(document).ready(function(){
         };
 
         // Toggle login/password reset form
-
-        $('.reset').click(function(){
-
-            // Toggle register form and enable inputs
-            $('.reset-form-toggle').slideToggle({
+        $('#login-combined .toggle').click(function(){
+            if($('#formLogin').hasClass("hide")) {
+                $('#formLogin').removeClass("hide");
+            }
+            else {
+                $('#formLogin').addClass("hide");
+            }
+            $('#formPassword').slideToggle({
                 easing: 'eioe',
                 duration: 850
             });
-
-            // Hide / Show Register/Reset Forms
-            if($('#log-in-div').hasClass("hide"))
-            {
-                var element = document.getElementById("log-in-div");
-                element.classList.remove("hide");
-            }
-            else
-            {
-                var element = document.getElementById("log-in-div");
-                element.classList.add("hide");
-            }
-
-            // Change header
-            // Login -> Forgotten details?
-            var $h1 = $('.container-form-toggle h1'),
-                headerText = $h1.text() === "User Log in"
-                    ? "Reset password"
-                    : "User Log in";
-            $h1.text(headerText);
-
-            // Change submit button value
-            // Login -> Reset Password
-            $('#submit').toggleAttr('value','Log in','Send reset password instructions');
-
-            // Change Reset Password link
-            // Signup -> Login link
-            var $su = $('.reset');
-            $su.toggleAttr('href','reset-password.htm','login.htm')
-            var resetLinkText = $su.text() === "Back to Log in"
-                ? "Forgotten your password?"
-                : "Back to Log in";
-            $su.text(resetLinkText);
-
-            // Change form action
-            // login.php -> reset.php
-            $('form').toggleAttr('action','#','#')
-
             return false;
         });
 

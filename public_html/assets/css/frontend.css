@@ -174,20 +174,24 @@ h4 {
     transition: background-color 200ms ease-out;
 }
 
-.login-form {
-    padding-top: 40px;
-}
-
-.reset-form-toggle {
-    display: none;
-}
-
 .hide {
     display: none;
 }
 
 .sml-link.reset:hover {
     cursor: pointer;
+}
+
+#login-combined form {
+    padding-top: 40px;
+}
+
+#login-combined form#formPassword {
+    display:none;
+}
+
+#login-combined form#formPassword p {
+    padding-bottom:40px;
 }
 
 .content-top {
