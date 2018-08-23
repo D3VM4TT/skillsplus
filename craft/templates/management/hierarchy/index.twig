@@ -13,17 +13,13 @@
 <section class="list">
     
     <div class="page-header">
-        <h2>Scheme</h2>
+        <h2>Hierarchy</h2>
     </div>
-
-    <div id="action--buttons">
-
+    <div class="table-actions">
         <a href="/management/companies/new?openat=-1" class="button button--lg">Create Company</a>
         <a href="/management/teams/new?openat=-1" class="button button--lg">Create Team</a>
         <a href="/management/users/new?openat=-1" class="button button--lg">Create User</a>
-
     </div>
-
     <div id="container">
         <ul>
             <li>Companies
@@ -33,7 +29,6 @@
             </li>
         </ul>
     </div>
-
 </section>
 {% endblock %}
 
@@ -73,7 +68,7 @@ $(document).ready(function() {
                             "children" : 
                             [
 
-                                {% include 'management/schemes/tree--leaves' %}
+                                {% include 'management/hierarchy/tree--leaves' %}
 
                                 {% set childCompanies = craft.entries.section('companies').relatedTo(company) %}
 
@@ -90,7 +85,7 @@ $(document).ready(function() {
                                     "nodeType" : "companies",
                                     "icon"  : '/assets/img/group.svg',
                                     "children" : [
-                                            {% include 'management/schemes/tree--leaves' with {
+                                            {% include 'management/hierarchy/tree--leaves' with {
                                                 'company' : childCompany
                                             } %}
                                         ]
