@@ -488,6 +488,7 @@ body {
     float: left;
     display: inline-block;
     height: 100vh;
+
 }
 
 .container-sidebar, .container-footer-links {
@@ -495,24 +496,24 @@ body {
 }
 
 .container-content {
-    border-left: 1px solid #eeeeee;
     position: relative;
     width: 67%;
+    border-left: 1px solid #eeeeee;
 }
 
 body.logged-in .container-sidebar,
+body.logged-in .container-sidebar, nav.sidebar,
 body.logged-in .container-footer-links {
-    width:25%;
+    width:20%
 }
 
 body.logged-in .container-content  {
-    width:75%;
-    padding:20px;
+    width:80%;
 }
 
 nav.scheme {
-    position:fixed;
     padding-top:100px;
+    padding-bottom:100px;
 }
 
 .container-footer-menu {

@@ -1,4 +1,4 @@
-{% if not currentUser %}{% redirect "/public" %}{% endif %}
+{% if currentUser %}{% redirect "/cpd" %}{% endif %}
 {% extends "_layout" %}
 
 {% block content %}

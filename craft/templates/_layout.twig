@@ -1,3 +1,5 @@
+{% if craft.request.firstSegment != "licence" and craft.request.firstSegment != "public" %}{% requireLogin %}{% endif %}
+{% if currentUser and craft.request.firstSegment != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}{% redirect "licence" %}{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,8 +22,10 @@
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link rel="stylesheet" href="/assets/css/frontend.css">
+    <link rel="stylesheet" href="/assets/css/cpd.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 
+    {% block css %}{% endblock %}
 
     <!-- Scripts
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -70,7 +74,7 @@
                     </div>
             </div>
             {% if currentUser %}
-                {% include '_includes/nav_scheme' %}
+                {% include '_includes/nav_cpd' %}
             {%  else %}
                 <div class="log-in-form">
                     <div class="row scheme-logo">
