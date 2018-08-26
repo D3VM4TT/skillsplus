@@ -73,6 +73,19 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $teamCompany ? $teamCompany->first() : null;
     }
 
+    /** Get all company users
+     *
+     * @param int $companyId
+     * @return object
+     * @throws Exception
+     */
+    public function getCompanyUsers($companyId) {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
+        $criteria->limit = null;
+        return $criteria;
+    }
+
     /**
      * Return all company ids (recursive)
      *

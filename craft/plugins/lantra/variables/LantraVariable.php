@@ -102,6 +102,17 @@ class LantraVariable
     }
 
     /**
+     * Return company users
+     *
+     * @param null $companyId
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    public function companyUsers($companyId = null) {
+        return craft()->lantra_users->getCompanyUsers($companyId);
+    }
+
+    /**
      * Display remaining attempts
      *
      * @param EntryModel $unitEntry

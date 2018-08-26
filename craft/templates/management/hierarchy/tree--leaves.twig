@@ -12,7 +12,38 @@
                                                         },
                                                         {% endif %}
                                                     },
-                                                {% endfor %}                            
+                                                {% endfor %}
+                                                {% set companyUsers = craft.lantra.companyUsers(company.id) %}
+                                                {% if companyUsers|length %}
+                                                    {
+                                                        "text" : "Company Users ({{ companyUsers|length  }})",
+                                                        "icon"  : '/assets/img/group.svg',
+                                                        "li_attr" : { "class" : "hide-actions" },
+                                                        {% if user.id == craft.request.getParam('openat') %}
+                                                            "state"       : {
+                                                            "opened"    : true,
+                                                            "selected" : true
+                                                            },
+                                                        {% endif %}
+                                                        "children" : [
+                                                        {% for user in companyUsers %}
+                                                            {
+                                                            "nodeType" : "users",
+                                                            "text" : "{{ user.firstName }} {{ user.lastName }}",
+                                                            "entryId"    : "{{ user.id }}",
+                                                            "recipients"    : "recipient={{ user.email }}",
+                                                            "icon"  : '/assets/img/person.svg',
+                                                            {% if user.id == craft.request.getParam('openat') %}
+                                                                "state"       : {
+                                                                "opened"    : true,
+                                                                "selected" : true
+                                                                },
+                                                            {% endif %}
+                                                            },
+                                                        {% endfor %}
+                                                        ]
+                                                    },
+                                                {% endif %}
                                                 {% for team in teams %}
                                                     {% set teamTitle = team.title %}
                                                     {% set teamID = team.id %}
