@@ -369,9 +369,13 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    function getTeamMangers(UserModel $user)
+    function getUserMangers(UserModel $user)
     {
         $return = [];
+        $company = $user->userCompany->first();
+        if ($company) {
+            return [$company->companyManager->first()];
+        }
         $team = $user->userTeam->first();
         if ( ! $team) {
             return $return;

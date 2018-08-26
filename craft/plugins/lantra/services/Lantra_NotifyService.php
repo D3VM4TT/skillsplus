@@ -160,7 +160,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @throws Exception
      */
     function notifyManagers($user, $subject, $message) {
-        $managers = craft()->lantra_users->getTeamMangers($user);
+        $managers = craft()->lantra_users->getUserMangers($user);
         if ($managers && count($managers)) {
             foreach ($managers as $manager) {
                 $this->notify($manager->email, $subject, $message);
