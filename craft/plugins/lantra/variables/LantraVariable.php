@@ -102,6 +102,24 @@ class LantraVariable
     }
 
     /**
+     * Return user managers
+     *
+     * @param null $userId
+     * @param int $level
+     * @return BaseElementModel|null
+     * @throws Mixed
+     */
+    public function userManagers($userId = null, $level = 0) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        if ($level > 0) {
+            return craft()->lantra_users->getUserManagerByLevel($user, $level);
+        }
+        return craft()->lantra_users->getUserMangers($user, true);
+    }
+
+    /**
      * Return company users
      *
      * @param null $companyId

@@ -362,26 +362,76 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
-     * Returns all managers for a user
+     * Return all the scheme managers
      *
-     * @param $user
      * @return array
      * @throws Exception
      */
-    function getUserMangers(UserModel $user)
+    function getSchemeManagers($first = false)
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = 1;
+        $criteria->limit = null;
+        return $first ? $criteria->first() : $criteria->find();
+    }
+
+    /**
+     * Get the user manager for specific level
+     *
+     * @return UserModel
+     * @throws Exception
+     */
+    function getUserManagerByLevel(UserModel $user, $level = 1)
+    {
+        $managers = $this->getUserMangers($user, true);
+        foreach($managers as $manager) {
+            if ($manager->managerLevel && intval($manager->managerLevel->value) >= $level) {
+                return $manager;
+            }
+        }
+        // default to first scheme manager
+        return $this->getSchemeManagers(true);
+    }
+
+    /**
+     * Returns all managers for a user
+     *
+     * @param $user
+     * @param $includeHierarchy
+     * @return array
+     * @throws Mixed
+     */
+    function getUserMangers(UserModel $user, $includeHierarchy = false)
     {
         $return = [];
         $company = $user->userCompany->first();
         if ($company) {
-            return [$company->companyManager->first()];
+            $manager = $company->companyManager->first();
+            $return[$manager->id] = $manager;
         }
-        $team = $user->userTeam->first();
-        if ( ! $team) {
-            return $return;
+        else {
+            $team = $user->userTeam->first();
+            if ( ! $team) {
+                // default to scheme managers
+                return $this->getSchemeManagers();
+            }
+            $company = $team->teamCompany->first();
+            $primaryManager = $team->teamPrimaryManager->first();
+            $return[$primaryManager->id] = $primaryManager;
+            foreach ($team->teamSecondaryManagers as $secondaryManager) {
+                $return[$secondaryManager->id] = $secondaryManager;
+            }
         }
-        $return[] = $team->teamPrimaryManager->first();
-        foreach ($team->teamSecondaryManagers as $manager) {
-            $return[] = $manager;
+        // loop up the company parents and add managers
+        $companyParent = $company->companyParent->first();
+        if ($includeHierarchy && $companyParent) {
+            while ($company != null) {
+                $companyManager = $company->companyManager->first();
+                if ($companyManager) {
+                    $return[$companyManager->id] = $companyManager;
+                }
+                $company = $company->companyParent->first();
+            }
         }
         return $return;
     }
