@@ -365,7 +365,6 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Returns all managers for a user
      *
      * @param $user
-     * @param $includeHierarchy
      * @return array
      * @throws Exception
      */
