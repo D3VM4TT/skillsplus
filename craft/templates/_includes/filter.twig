@@ -1,0 +1,14 @@
+<form class="filter" action="/{{ craft.request.path }}">
+    {% if filterDays %}
+    Results {% if reportType == 'modules-expiring' or reportType == 'units-expiring' %}expiring{% else %}completed{% endif %} in
+        <select name="days">
+            <option value="1"{% if filterDays == '1' %} selected="selected"{% endif %}>a day</option>
+            <option value="7"{% if filterDays == '7' %} selected="selected"{% endif %}>a week</option>
+            <option value="28"{% if filterDays == '28' %} selected="selected"{% endif %}>four weeks</option>
+            <option value="365"{% if filterDays == '365' %} selected="selected"{% endif %}>a year</option>
+            <option value="all"{% if filterDays == 'all' %} selected="selected"{% endif %}>all time</option>
+        </select>
+    {% endif %}
+    <input type="text" placeholder="search" name="search" value="{{ filterSearch }}" />
+    <button type="submit">Search</button>
+</form>

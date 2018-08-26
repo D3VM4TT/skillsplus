@@ -1,0 +1,42 @@
+{% if currentUser %}{% redirect "/cpd" %}{% endif %}
+{% extends "_layout" %}
+
+{% block content %}
+<div class="carousel slide carousel-fade carousel-container" data-ride="carousel" data-interval="4000">
+    <div class="carousel-inner" role="listbox">
+        {% for slide in globalsTheme.homeSlider %}
+            <div class="carousel-item{% if loop.index == 1 %} active{% endif %}"
+                 style="background-image: url('{{ slide.slideImage.first().url }}');opacity: 1;">
+                <div class="container-carousel-caption">
+                    <div class="carousel-caption d-md-block">
+                        <h1>{{ slide.slideTitle }}</h1>
+                        <p>{{ slide.slideHeading }}</p>
+                        <div class="container-btn container-carousel-btn1">
+                            <div class="carousel-btn"><a href="/about-us">About us</a></div>
+                        </div>
+                        <div class="container-btn container-carousel-btn2">
+                            <div class="carousel-btn"><a href="/contact-us">Contact us</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script type="text/javascript">
+    $('.carousel').on('touchstart', function (event) {
+        var xClick = event.originalEvent.touches[0].pageX;
+        $(this).one('touchmove', function (event) {
+            var xMove = event.originalEvent.touches[0].pageX;
+            if (Math.floor(xClick - xMove) > 5) {
+                $('.carousel').carousel('next');
+            } else if (Math.floor(xClick - xMove) < -5) {
+                $('.carousel').carousel('prev');
+            }
+        });
+        $('.carousel').on('touchend', function () {
+            $(this).off('touchmove');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% requirePermission 'editUsers' %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Users" %}
+
+{% set userId = craft.request.getSegment(4) %}
+{% if account is not defined and userId %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account %}{% exit 404 %}{% endif %}
+{% endif %}
+
+{% block content %}
+
+<div class="page-header">
+    {% if account is defined and account.id %}
+        <h2>Edit user</h2>
+    {% else %}
+        <h2>Create a new user</h2>
+    {% endif %}
+    <p><a href="/management/users">&laquo; back to users</a></p>
+</div>
+
+{% if account is defined %}
+    {{ ui.errorList(account.getAllErrors()) }}
+{% endif %}
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="lantra/users/saveUser">
+    <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
+
+    {% if craft.request.getParam('openat') %}
+        {% if craft.request.getParam('openat') == '-1' %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={id}">
+        {% else %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={{ craft.request.getParam('openat') }}">
+        {% endif %}
+    {% endif %}
+
+
+    <div class="form-group-lantra float-label-control">
+        {#<label for="teamManagers">Roles:</label>#}
+            <ul>
+                <li>Account permissions (if applicable):</li>
+                <li class="float-left">
+                    <div class="float-left" id="account-permissions">
+                        <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                    </div>
+                    <div class="float-left" id="account-permissions"><strong>Team manager:</strong></div>
+                </li>
+                <li class="float-left clear">
+                    <div class="float-left" id="account-permissions">
+                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                    </div>
+                    <div class="float-left" id="account-permissions"><strong>Company manager:</strong></div>
+                    
+                </li>
+            </ul>
+        </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="firstName">First name:</label>
+        <input required="required" id="firstName" name="firstName" class="5000" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="lastName">Last name:</label>
+        <input required="required" id="lastName" name="lastName" class="5000" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="email">Email:</label>
+        <input required="required" id="email" name="email" class="5000" placeholder="Enter the email" value="{{ account.email|default('') }}">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="telephone">Telephone:</label>
+        <input id="telephone" name="fields[userTelephone]" class="5000" placeholder="Enter the telephone" value="">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        {#<label for="userTeam">User team:</label>#}
+        {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
+        <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default('') }}" id="userTeam" >
+            <option value="">User team:</option>
+            {% for teamEntry in teamEntries %}
+                <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>
+            {% endfor %}
+        </select>
+        <HR>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="userRole">User roles:</label>
+        {% set roleCategories = craft.categories.group('roles') %}
+        <input type="hidden" name="fields[userRole]" value="" />
+        <select multiple name="fields[userRole][]" id="userRole">
+            {% for roleCategory in roleCategories %}
+            <option value="{{ roleCategory.id }}"
+                    {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br />
+    <div class="freetext-procedure"><button type="submit">Save user</button></div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% requirePermission 'editEntries:5' %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Teams" %}
+
+{% set entryId = craft.request.getSegment(4) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).first %}
+{% endif %}
+
+{% block content %}
+
+<div class="page-header">
+{% if entry is defined and entry.id %}
+    <h2>Edit team</h2>
+{% else %}
+    <h2>Create a new team</h2>
+{% endif %}
+    <p><a href="/management/teams">&laquo; back to teams</a></p>
+</div>
+
+{% if entry is defined %}
+{{ ui.errorList(entry.getAllErrors()) }}
+{% endif %}
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    
+    {% if craft.request.getParam('openat') %}
+        {% if craft.request.getParam('openat') == '-1' %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={id}">
+        {% else %}
+            <input type="hidden" name="redirect" value="/management/schemes?openat={{ craft.request.getParam('openat') }}">
+        {% endif %}
+    {% else %}
+        <input type="hidden" name="redirect" value="management/teams">
+    {% endif %}
+
+    <input type="hidden" name="sectionId" value="5">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
+    <div class="form-group-lantra float-label-control">
+        <label for="title">Team name:</label>
+        <input id="title" name="fields[teamName]" class="5000" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        {#<label for="teamCompany">Team company:</label>#}
+        {% if currentUser.isInGroup('schemeManagers') %}
+            {% set companyEntries = craft.entries.section('companies') %}
+        {% else %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
+        {% endif %}
+        <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default('') }}" id="teamCompany" >
+            <option value="">Team company:</option>
+            {% for companyEntry in companyEntries %}
+                <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+            {% endfor %}
+        </select>
+        <hr>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        {#<label for="teamPrimaryManager">Team primary manager:</label>#}
+        {% set usersCompanyManagers = craft.users.group('companyManagers') %}
+        <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
+            <option value="">Team primary manager:</option>
+            {% for userEntry in usersCompanyManagers %}
+                <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+        <hr>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="teamSecondaryManagers">Team secondary managers:</label>
+        {% set usersTeamManagers = craft.users.group('teamManagers') %}
+        <input type="hidden" name="fields[teamSecondaryManagers]" value="" />
+        <select multiple name="fields[teamSecondaryManagers][]" id="teamSecondaryManagers">
+            {% for userEntry in usersTeamManagers %}
+            <option value="{{ userEntry.id }}"
+                {% if entry is defined and userEntry.id in entry.teamSecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+        <hr>
+    </div>
+    <br />
+    <div class="freetext-procedure"><button type="submit">Save team</button></div>
+</form>
+
+{% endblock %}

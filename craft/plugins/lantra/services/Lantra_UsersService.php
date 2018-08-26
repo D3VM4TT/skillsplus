@@ -460,7 +460,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     public function getIndividualCompany() {
         $team = $this->getIndividualTeam();
-        return $team->teamCompany->first();
+        return $team ? $team->teamCompany->first() : null;
     }
 
     /** Get individual job role

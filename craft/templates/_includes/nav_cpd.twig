@@ -1,0 +1,57 @@
+<nav class="scheme sidebar">
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="/">My Dashboard</a>
+        <li class="nav-item">
+            <a class="nav-link" href="/public/passport/{{ currentUser.id }}">My Passport</a>
+        </li>
+    </ul>
+    {% if craft.lantra.canManage() %}
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a href="#navManagement" data-toggle="collapse" aria-expanded="false" class="nav-link">Management</a>
+            <ul class="collapse list-unstyled" id="navManagement">
+                <li class="nav-item"><a href="/management/hierarchy" class="nav-link">Hierarchy</a></li>
+                {% if currentUser.can('editEntries:3') %}
+                    <li class="nav-item"><a href="/management/companies" class="nav-link">Companies</a></li>
+                {%  endif %}
+                {% if currentUser.can('editEntries:5') %}
+                    <li class="nav-item"><a href="/management/teams" class="nav-link">Teams</a></li>
+                {%  endif %}
+                {% if currentUser.can('editCategories:1') %}
+                    <li class="nav-item"><a href="/management/roles" class="nav-link">Roles</a></li>
+                {%  endif %}
+                {% if currentUser.can('editUsers') %}
+                    <li class="nav-item"><a href="/management/users" class="nav-link">Users</a></li>
+                {%  endif %}
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
+            <ul class="collapse list-unstyled" id="navReporting">
+                {% if currentUser.can('editEntries:13') %}
+                    <li class="nav-item"><a href="/management/reports" class="nav-link">Custom Reports</a></li>
+                {%  endif %}
+                <li class="nav-item"><a href="/reporting/users" class="nav-link">Users Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-expiring" class="nav-link">Modules Expiring Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-completed" class="nav-link">Modules Completed Report</a></li>
+                <li class="nav-item"><a href="/reporting/modules-active" class="nav-link">Modules Active Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-blocked" class="nav-link">Units Blocked Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-endorsed" class="nav-link">Units Endorsed Report</a></li>
+                <li class="nav-item"><a href="/reporting/units-expiring" class="nav-link">Units Expiring Report</a></li>
+            </ul>
+        </li>
+        {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
+        {% if (pendingEntryCount) %}
+            <li class="nav-item">
+                <a class="nav-link" href="/management/endorsements">Endorsements ({{ pendingEntryCount }})</a>
+            </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item sign-out">
+            <a class="nav-link" href="{{ logoutUrl }}">Sign out</a>
+        </li>
+    </ul>
+</nav>

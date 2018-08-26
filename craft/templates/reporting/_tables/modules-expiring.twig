@@ -1,0 +1,30 @@
+{% include '_includes/filter' with{filterDays:filterDays, reportType:'modules-expiring'} %}
+<p class="page-header"><strong>Modules Expiring Report</strong></p>
+{% if reportEntries|length %}
+<div class="table-responsive">
+    <table width="100%" class="table table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Module</th>
+                <th>Completed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in reportEntries %}
+        {% set userTeam = entry.author.userTeam.first() %}
+        {% set resultModule = entry.resultModule.first() %}
+        <tr>
+            <td>{{ entry.author.getFullName() }}</td>
+            <td>{{ userTeam.title|default('') }}</td>
+            <td>{{ resultModule.title|default('') }}</td>
+            <td>{{ entry.postDate|date(dateFormat) }}</td>
+            <td>{{ entry.expiryDate|date(dateFormat) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

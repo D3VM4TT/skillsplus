@@ -1,0 +1,53 @@
+{% requirePermission 'editEntries:6' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Modules" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+
+{% set criteria = craft.entries.section('modules').order('title').search(filterSearch).limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, moduleEntries %}{% endif %}
+
+{% block content %}
+
+<section class="list">
+    <div class="page-header">
+        <h2>Modules</h2>
+    </div>
+    {% include '_includes/filter' with{filterDays:false} %}
+    {% if moduleEntries is defined and moduleEntries|length %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Job Joles</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for module in moduleEntries %}
+                    <tr class="item">
+                        <th>{{ module.id }}</th>
+                        <th>{{ module.title }}</th>
+                        <th>{{ module.moduleRoles.find()|join(", ") }}</th>
+                        <th>
+                            <a href="/management/modules/edit/{{ module.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="table-actions">
+            <h4>There are no modules to display.</h4>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
