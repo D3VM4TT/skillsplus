@@ -109,7 +109,7 @@ $(document).ready(function() {
     });
     $('#container').jstree(true).add_action("all", {
         "id": "action_edit",
-        "class": "button pull-right",
+        "class": "button-hierarchy pull-right",
         "title": "Edit",
         "text": "Edit",
         "after": true,
@@ -124,7 +124,7 @@ $(document).ready(function() {
     {% if currentUser.admin %}        
     $('#container').jstree(true).add_action("all", {
         "id": "action_email",
-        "class": "button button--green pull-right",
+        "class": "button-hierarchy button--green pull-right",
         "title": "Email",
         "text": "Email",
         "after": true,
@@ -149,7 +149,13 @@ $(document).ready(function() {
 #action--buttons {
     margin:1em 0;
 }
-.button {
+.table-actions .button {
+    width: 200px;
+    margin: 0 20px;
+    text-align: center;
+}
+
+.button-hierarchy {
     background: #1C2B39;
     padding:3px 5px 3px 3px;
     display: inline-block;
@@ -173,8 +179,8 @@ $(document).ready(function() {
     color:white;
     background-color: rgba(28,43,57, 0.7);
 }
-#j1_1 > i.button.pull-right {display:none;}
-.hide-actions > i.button {display:none;}
+#j1_1 > i.button-hierarchy.pull-right {display:none;}
+.hide-actions > i.button-hierarchy {display:none;}
 .jstree-default .jstree-clicked {
     background: #c3e2ff;
     border-radius: 2px;
