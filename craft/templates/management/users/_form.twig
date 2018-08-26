@@ -71,9 +71,29 @@
         <input required="required" id="email" name="email" class="5000" placeholder="Enter the email" value="{{ account.email|default('') }}">
     </div>
     <div class="form-group-lantra float-label-control">
-        <label for="telephone">Telephone:</label>
-        <input id="telephone" name="fields[userTelephone]" class="5000" placeholder="Enter the telephone" value="">
+        <label for="address">Start date:</label>
+        <input name="fields[userStartDate]" type="text" class="5000 datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account.userStartDate|format('y-m-d') }}" data-date-format="yyyy-mm-dd">
     </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="address">Date of birth:</label>
+        <input name="fields[userDateOfBirth]" type="text" class="5000 datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account.userDateOfBirth|format('y-m-d') }}" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="address">Address:</label>
+        <textarea id="address" name="fields[userAddress]" class="5000" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label for="telephone">Telephone:</label>
+        <input id="telephone" name="fields[userTelephone]" class="5000" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
+    </div>
+
+    
+
+
+    <hr>
+
+    <h2>User Company, Team & Role</h2>
+
     <div class="form-group-lantra float-label-control">
         {#<label for="userTeam">User team:</label>#}
         {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
@@ -83,7 +103,6 @@
                 <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>
             {% endfor %}
         </select>
-        <HR>
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="userRole">User roles:</label>
