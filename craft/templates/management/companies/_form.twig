@@ -48,9 +48,9 @@
     <div class="form-group-lantra float-label-control">
         {#<label for="companyParent">Select Company parent (if applicable):</label>#}
         {% if currentUser.isInGroup('schemeManagers') %}
-            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
-        {% else %}
             {% set companyEntries = craft.entries.section('companies') %}
+        {% else %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
         {% endif %}
         <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default('') }}" id="companyParent" >
             <option value="">Select Company parent (if applicable):</option>

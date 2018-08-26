@@ -16,9 +16,9 @@
         <h2>Hierarchy</h2>
     </div>
     <div class="table-actions">
-        <a href="/management/companies/new?openat=-1" class="button button--lg">Create Company</a>
-        <a href="/management/teams/new?openat=-1" class="button button--lg">Create Team</a>
-        <a href="/management/users/new?openat=-1" class="button button--lg">Create User</a>
+        <a href="/management/companies/new?openat=-1" class="button primary-bg button--lg">Create Company</a>
+        <a href="/management/teams/new?openat=-1" class="button primary-bg button--lg">Create Team</a>
+        <a href="/management/users/new?openat=-1" class="button primary-bg button--lg">Create User</a>
     </div>
     <div id="container">
         <ul>
@@ -32,7 +32,11 @@
 </section>
 {% endblock %}
 
-{% set companies = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('title') %}
+{% if currentUser.isInGroup('schemeManagers') %}
+    {% set companies = craft.entries.section('companies').order('title') %}
+{% else %}
+    {% set companies = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('title') %}
+{% endif %}
 
 {% block js %}
 <script type="text/javascript" src="/assets/js/vendor/jqtree/jstree.min.js"></script>
