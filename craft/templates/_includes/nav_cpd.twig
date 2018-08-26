@@ -24,14 +24,14 @@
                 {% if currentUser.can('editUsers') %}
                     <li class="nav-item"><a href="/management/users" class="nav-link">Users</a></li>
                 {%  endif %}
-                {% if currentUser.can('editEntries:13') %}
-                    <li class="nav-item"><a href="/management/reports" class="nav-link">Reports</a></li>
-                {%  endif %}
             </ul>
         </li>
         <li class="nav-item">
             <a href="#navReporting" data-toggle="collapse" aria-expanded="false" class="nav-link">Reporting</a>
             <ul class="collapse list-unstyled" id="navReporting">
+                {% if currentUser.can('editEntries:13') %}
+                    <li class="nav-item"><a href="/management/reports" class="nav-link">Custom Reports</a></li>
+                {%  endif %}
                 <li class="nav-item"><a href="/reporting/users" class="nav-link">Users Report</a></li>
                 <li class="nav-item"><a href="/reporting/modules-expiring" class="nav-link">Modules Expiring Report</a></li>
                 <li class="nav-item"><a href="/reporting/modules-completed" class="nav-link">Modules Completed Report</a></li>
