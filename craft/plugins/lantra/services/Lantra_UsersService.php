@@ -59,12 +59,18 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ( ! $user) {
             return null;
         }
+        // if user belongs to a company directly
+        $userCompany = $user->userCompany->first();
+        if ($userCompany) {
+            return $userCompany;
+        }
+        // check team company
         $team = $user->userTeam->first();
         if ( ! $team) {
             return null;
         }
-        $company = $team->teamCompany;
-        return $company ? $company->first() : null;
+        $teamCompany = $team->teamCompany;
+        return $teamCompany ? $teamCompany->first() : null;
     }
 
     /**
@@ -151,7 +157,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     /**
      * Get manager companies
      *
-     * @param null $userId
+     * @param UserModel $user
      * @param bool $includeChildren
      * @return BaseElementModel|null
      * @throws Exception
@@ -191,16 +197,16 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Return all team ids for a manager
      *
      * @param UserModel $user
-     * @param bool $includeCompanyTeams
+     * @param bool $includeHierarchy
      * @return array
      * @throws Exception
      */
-    function getManagerTeamIds(UserModel $user, $includeCompanyTeams = false) {
+    function getManagerTeamIds(UserModel $user, $includeHierarchy = false) {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
         // add the scheme manager teams (all of them)
-        if ($includeCompanyTeams && $user->isInGroup('schemeManagers')) {
+        if ($includeHierarchy && $user->isInGroup('schemeManagers')) {
             return $this->getSchemeTeamIds();
         }
         $return = [];
@@ -209,7 +215,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $return = array_merge($return, $teamManagerTeamIds);
         }
         // add the company teams
-        if ($includeCompanyTeams && $user->isInGroup('companyManagers')) {
+        if ($includeHierarchy && $user->isInGroup('companyManagers')) {
             $companyIds = $this->getCompanyManagerCompanyIds($user);
             foreach ($companyIds as $companyId) {
                 if (FALSE != $companyManagerTeamIds = $this->getCompanyTeamIds($companyId)) {
@@ -266,11 +272,11 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Returns all user ids that belong to teams (or companies) managed by a manager
      *
      * @param $user
-     * @param $includeCompanyTeams
+     * @param $includeHierarchy
      * @return array
      * @throws Exception
      */
-    function getManagerSubordinateIds(UserModel $user, $includeCompanyTeams = true) {
+    function getManagerSubordinateIds(UserModel $user, $includeHierarchy = true) {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
@@ -278,10 +284,12 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ( ! $this->canManage($user)) {
             return $return;
         }
-        $teamIds = $this->getManagerTeamIds($user, $includeCompanyTeams);
-        // get all users who belong to any of the manager's teams
+        // get companies that this user manages
+        $companyIds = $this->getCompanyManagerCompanyIds($user);
+        $teamIds = $this->getManagerTeamIds($user, $includeHierarchy);
+        // get all users who belong to any of the manager's companies or teams
         $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->relatedTo = ['targetElement' => $teamIds, 'field' => 'userTeam'];
+        $criteria->relatedTo = ['or', ['targetElement' => $companyIds, 'field' => 'userCompany'], ['targetElement' => $teamIds, 'field' => 'userTeam']];
         return $criteria->ids();
     }
 

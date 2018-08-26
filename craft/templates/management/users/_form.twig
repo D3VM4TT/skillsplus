@@ -87,13 +87,33 @@
         <input id="telephone" name="fields[userTelephone]" class="5000" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
     </div>
 
-    
-
+    {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
+    {%  for block in userCustomFields %}
+        <div class="form-group-lantra float-label-control">
+            <label for="custom-{{ block.name }}">{{ block.label }}:</label>
+            {% set userCustomBlock = account.userCustomFields.customName('='~block.name).first() %}
+            {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
+            <input id="custom-{{ block.name }}" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+        </div>
+    {%  endfor %}
 
     <hr>
 
     <h2>User Company, Team & Role</h2>
 
+    <div class="form-group-lantra float-label-control">
+        {#<label for="userCompany">User company:</label>#}
+        {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
+        <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default('') }}" id="userCompany" >
+            <option value="">User company:</option>
+            {% for companyEntry in companyEntries %}
+                <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
     <div class="form-group-lantra float-label-control">
         {#<label for="userTeam">User team:</label>#}
         {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
