@@ -129,9 +129,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws null
      */
     function setResultStatus($resultEntry, $resultStatus) {
+        // only continue if status has changed
+        if ($resultEntry->resultStatus == $resultStatus) {
+            return;
+        }
         $resultEntry->setContentFromPost(['resultStatus' => $resultStatus]);
-        // @todo error reporting?
-        if ( ! craft()->entries->saveEntry($resultEntry)) {
+        // bypass save entry to stop callback loop
+        if ( ! craft()->content->saveContent($resultEntry, false)) {
             return;
         }
         return;
