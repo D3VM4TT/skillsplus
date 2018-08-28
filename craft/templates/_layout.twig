@@ -1,4 +1,4 @@
-{% if craft.request.firstSegment != "public" %}
+{% if craft.request.firstSegment != "actions" and craft.request.firstSegment != "public" %}
     {% if currentUser and craft.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
         {% redirect "public/licence" %}
     {% else %}
