@@ -339,16 +339,16 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->resultEvidence = ':notempty:';
-        $criteria->limit = $limit;
         $criteria->resultStatus = 'pending';
         $criteria->order = 'postDate desc';
-        // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+        $criteria->limit = $limit;
+        // limit by subordinates and check unit level if team or company manager
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
             $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
             }
-            $criteria->authorId = $subordinateIds;
+            $criteria->unitEndorsementManagerLevel = '<=' . ($manager->managerLevel ? (int) $manager->managerLevel->value : 1);
         }
         return ($count) ? $criteria->count() : $criteria;
     }

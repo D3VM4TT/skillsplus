@@ -26,6 +26,7 @@
                             <th>User</th>
                             <th>Unit</th>
                             <th>Date</th>
+                            <th>Level</th>
                             <th>Evidence</th>
                             <th>&nbsp;</th>
                     </thead>
@@ -40,6 +41,7 @@
                             {% endif %}
                         </td>
                         <td>{{ entry.postDate|date(dateFormat) }}</td>
+                        <td>{{ entry.unitEndorsementManagerLevel|default('1') }}</td>
                         <td>
                             {% for resultEvidenceAsset in entry.resultEvidence %}
                                 <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />

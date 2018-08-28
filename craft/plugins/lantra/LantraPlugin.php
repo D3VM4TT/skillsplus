@@ -104,9 +104,12 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            //saving unit results
+            // saving unit results
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
                 $unitEntry = $entry->resultUnit->first();
+                // copy manager endorsement level from unit
+                $entry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
+                craft()->entries->saveEntry($entry);
                 if ($unitEntry->unitType == 'evidence') {
                     $expiryDate = craft()->request->getPost('userExpiryDate');
                     // Set the expiry date
