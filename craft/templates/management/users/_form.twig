@@ -102,8 +102,6 @@
 
     <hr>
 
-    <h2>User Company, Team & Role</h2>
-
     <div class="form-group-lantra float-label-control">
         {#<label for="userCompany">User company:</label>#}
         {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
@@ -114,6 +112,7 @@
             {% endfor %}
         </select>
     </div>
+    {% if globalsScheme.schemeTeams|default(false) %}
     <div class="form-group-lantra float-label-control">
         {#<label for="userTeam">User team:</label>#}
         {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
@@ -124,6 +123,7 @@
             {% endfor %}
         </select>
     </div>
+    {% endif %}
     <div class="form-group-lantra float-label-control">
         <label for="userRole">User roles:</label>
         {% set roleCategories = craft.categories.group('roles') %}

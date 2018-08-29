@@ -18,7 +18,7 @@
                 {% if currentUser.can('editEntries:3') %}
                     <li class="nav-item"><a href="/management/companies" class="nav-link">Companies</a></li>
                 {%  endif %}
-                {% if currentUser.can('editEntries:5') %}
+                {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
                     <li class="nav-item"><a href="/management/teams" class="nav-link">Teams</a></li>
                 {%  endif %}
                 {% if currentUser.can('editCategories:1') %}
