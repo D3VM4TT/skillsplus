@@ -113,19 +113,20 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws null
      */
     function saveNewResult($resultEntry) {
+        $saveContent = false;
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'qualificationResult') {
-            $saveContent = false;
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
             if (count($userExpiryDate) == 3 && $userExpiryDate['day'] && $userExpiryDate['month'] && $userExpiryDate['year']) {
                 $resultEntry->expiryDate = new \DateTime($userExpiryDate['year'] . '-' . $userExpiryDate['month'] . '-' . $userExpiryDate['day'] . ' 12:00:00');
                 $saveContent = true;
             }
-            // copy manager endorsement level from unit
-            if ($resultEntry->type == 'unitResult') {
+            // copy manager endorsement level from unit for submitted evidence
+            if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $unitEntry = $resultEntry->resultUnit->first();
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
                 $saveContent = true;
+                craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
             }
             // handle submitted qualification results
             if ($resultEntry->type == 'qualificationResult') {
