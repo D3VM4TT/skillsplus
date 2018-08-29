@@ -6,12 +6,11 @@ use League\Csv\Writer;
 class Lantra_ReportsService extends BaseApplicationComponent
 {
     /**
-     *
+     * Load in the vendor dependencies
      */
     public function init()
     {
         parent::init();
-
         require_once dirname(__FILE__) . '/../vendor/autoload.php';
     }
 
@@ -46,14 +45,10 @@ class Lantra_ReportsService extends BaseApplicationComponent
         if ( ! $total ) {
             return 0;
         }
-        $labels = ['Name', 'Email', 'Company', 'Team', 'Job Roles'];
-        if ($reportEntry->reportType == 'results') {
-            $labels = array_merge($labels, ['Module', 'Expiry']);
-        }
         // create csv file in temp folder
         $filePath = craft()->path->getTempUploadsPath();
         $fileName = $reportEntry->slug . '-' . time() . '.csv';
-        $this->reportCsv($values, $labels, $filePath.$fileName);
+        $this->reportCsv($values, $filePath.$fileName);
         $sourceId = 3;
         $source = craft()->assetSources->getSourceTypeById($sourceId);
         $folder = craft()->assets->findFolder(array(
@@ -117,7 +112,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $user = ($type == 'result') ? $row->author : $row;
             $company = craft()->lantra_users->userCompany($user);
             $roles = [];
-            foreach($user->userRole as $role){
+            foreach ($user->userRole as $role) {
                 $roles[] = $role->title;
             }
             $record = [
@@ -125,8 +120,15 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 $user->email,
                 $company->title,
                 $user->userTeam->first()->title,
-                implode(', ', $roles)
+                implode(', ', $roles),
+                $user->userStartDate ? $user->userStartDate->format('d/m/y') : '',
+                $user->userStartDate ? $user->userDateOfBirth->format('d/m/y') : '',
+                $user->userAddress,
+                $user->userTelephone,
             ];
+            foreach ($user->userCustomFields as $block) {
+                $record = array_merge($record, [$block->customValue]);
+            }
             // add the result fields
             if ($type == 'result') {
                 $record = array_merge($record, [$row->resultModule->first()->title, $row->expiryDate->timestamp()]);
@@ -217,12 +219,11 @@ class Lantra_ReportsService extends BaseApplicationComponent
      * Takes an array of values and options labels and creates a downloadable CSV file
      *
      * @param array $values
-     * @param array $labels
      * @param string $filePath
      */
-    private function reportCsv(array &$values, array $labels = array(), $filePath = 'report.csv')
+    private function reportCsv(array &$values, $filePath = 'report.csv')
     {
-        $data = array_merge([$labels], $values);
+        $data = $values;
         $csv = Writer::createFromPath($filePath, "w");
         $csv->insertAll($data);
     }
