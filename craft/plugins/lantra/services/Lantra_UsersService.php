@@ -389,7 +389,8 @@ class Lantra_UsersService extends BaseApplicationComponent
     {
         $managers = $this->getUserMangers($user, true);
         foreach($managers as $manager) {
-            if ($manager->managerLevel && intval($manager->managerLevel->value) >= $level) {
+            $managerLevel = $manager->managerLevel->value;
+            if ($managerLevel >= $level) {
                 return $manager;
             }
         }
