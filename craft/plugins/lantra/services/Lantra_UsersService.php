@@ -449,6 +449,9 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     function canAddUser(UserModel $user) {
+        if ($user->managerReadOnly) {
+            return false;
+        }
         // check there are scheme licences available
         if ($user->admin or $user->isInGroup('SchemeManager')) {
            return (bool) craft()->lantra_licence->getSchemeLicences();

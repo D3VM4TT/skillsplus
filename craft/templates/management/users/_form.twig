@@ -1,4 +1,5 @@
 {% requirePermission 'editUsers' %}
+{% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}

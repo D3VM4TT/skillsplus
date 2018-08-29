@@ -59,9 +59,11 @@
                             {% set team = user.userTeam.first() %}
                             <td>{{ team.title|default('') }}</td>
                         {%  endif %}
-                        <td>
-                            <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                        <td class="text-right">
+                            {% if not currentUser.managerReadOnly %}
+                                <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                                <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                            {% endif %}
                             <a href="/cpd/qualifications/{{ user.id }}">qualifications</a>
                         </td>
                     </tr>
@@ -76,9 +78,9 @@
         </div>
     {% endif %}
     {% if craft.lantra.canAddUser() %}
-    <div class="table-actions freetext-procedure">
-        <a href="/management/users/new">Create user</a>
-    </div>
+        <div class="table-actions freetext-procedure">
+            <a href="/management/users/new">Create user</a>
+        </div>
     {% endif %}
 </section>
 {% endblock %}

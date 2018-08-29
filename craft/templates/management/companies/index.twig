@@ -36,14 +36,16 @@
                 {% for company in companyEntries %}
                 {% set parent = company.companyParent.first %}
                     <tr class="item">
-                        <th>{{ company.id }}</th>
-                        <th>{{ company.title }}</th>
-                        <th>{{ parent.title|default('~ none ~') }}</th>
-                        <th>{{ company.companyRemainingLicences }}</th>
-                        <th>
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.title }}</td>
+                        <td>{{ parent.title|default('~ none ~') }}</td>
+                        <td>{{ company.companyRemainingLicences }}</td>
+                        <td class="text-right">
+                        {% if not currentUser.managerReadOnly %}
                             <a href="/management/companies/edit/{{ company.id }}">edit</a> |
                             <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
-                        </th>
+                        {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -55,8 +57,10 @@
             <h4>There are no companies to display.</h4>
         </div>
     {% endif %}
-    <div class="table-actions freetext-procedure">
-        <a href="/management/companies/new">Create company</a>
-    </div>
+    {% if not currentUser.managerReadOnly %}
+        <div class="table-actions freetext-procedure">
+            <a href="/management/companies/new">Create company</a>
+        </div>
+    {% endif %}
 </section>
 {% endblock %}

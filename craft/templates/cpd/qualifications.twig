@@ -16,6 +16,8 @@
             <h1>Qualification for {{ account.fullname }}</h1>
         </div>
         {%  include 'cpd/_qualifications/table' with {author:account} %}
-        {%  include 'cpd/_qualifications/form' with {author:(userId ? account : null)} %}
+        {% if not userId or not currentUser.managerReadOnly %}
+            {%  include 'cpd/_qualifications/form' with {author:(userId ? account : null)} %}
+        {% endif %}
     </section>
 {% endblock %}
