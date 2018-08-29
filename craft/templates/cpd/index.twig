@@ -1,0 +1,20 @@
+{% extends "_layout" %}
+
+{% set userId = craft.request.getSegment(2) %}
+{% if userId %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 404 %}{% endif %}
+{% else %}
+    {% set account = currentUser %}
+{% endif %}
+
+{% set metaTitle = 'CPD > ' ~ account.fullname %}
+
+{% block content %}
+<section class="list">
+    <div class="page-header">
+        <h1>CPD for {{ account.fullname }}</h1>
+    </div>
+    {% include '_includes/cpd' with{cpdUser:account} %}
+</section>
+{% endblock %}
