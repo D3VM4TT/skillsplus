@@ -192,7 +192,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
     public function getNotifyGlobal($key, $default = '') {
         $globalsNotify = craft()->globals->getSetByHandle('globalsNotify');
         $key = 'notify' . ucwords($key);
-        return $globalsNotify->$key ? $globalsNotify->$key : $default;
+        return isset($globalsNotify->$key) ? $globalsNotify->$key : $default;
     }
 
     /**
