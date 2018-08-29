@@ -35,16 +35,16 @@
                 <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
             {% endif %}
             {% if craft.request.getSegment(5) == 'test' %}
-                {% include 'module/_test' with{entry:unitEntry} %}
+                {% include 'cpd/_units/test' with{entry:unitEntry} %}
             {% elseif unitEntry.testQuestions|length %}
-                <p><a href="/module/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/test">Complete unit test</a></p>
+                <p><a href="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/test">Complete unit test</a></p>
             {% endif %}
         {% endif %}
     {% else %}
         {% if resultEntry|length %}
             <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
         {% else %}
-            {% include 'module/_evidence' with{entry:unitEntry} %}
+            {% include 'cpd/_units/evidence' with{entry:unitEntry} %}
         {% endif %}
     {% endif %}
     <p><a href="/">Back to dashboard</a></p>

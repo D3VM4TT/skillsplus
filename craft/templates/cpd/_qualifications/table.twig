@@ -1,0 +1,35 @@
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set userResults = craft.entries.section('results').type('qualificationResult').authorId(author.id) %}
+{% if userResults|length %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 30%">Result Title</th>
+            <th>Submitted Date</th>
+            <th>Status</th>
+            <th>Endorsed Date</th>
+            <th>Expiry Date</th>
+            <th>Evidence &amp; Comments</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for userResultEntry in userResults %}
+            <tr>
+                <td>{{ userResultEntry.title }}</td>
+                <td>{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                <td>{{ userResultEntry.resultStatus|ucwords }}</td>
+                <td>{% if userResultEntry.resultEndorsedDate %}{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                <td>
+                    {% if userResultEntry.resultEvidence|length %}
+                        {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
+                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                        {% endfor %}
+                    {% endif %}
+                    {{ userResultEntry.resultComments }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

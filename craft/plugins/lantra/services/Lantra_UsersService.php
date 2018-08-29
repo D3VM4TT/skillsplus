@@ -37,6 +37,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         if (is_null($manager)) {
             $manager = craft()->userSession->getUser();
         }
+        // admins and scheme managers can manage everyone
+        if ($manager->admin || $manager->isInGroup('schemeManagers')) {
+            return true;
+        }
         $subordinateIds = $this->getManagerSubordinateIds($manager);
         if ( ! count($subordinateIds)) {
             return false;

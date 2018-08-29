@@ -54,7 +54,8 @@
                     <th>{{ team.title|default('') }}</th>
                     <th>
                         <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                        <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
+                        <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                        <a href="/cpd/qualifications/{{ user.id }}">qualifications</a>
                     </th>
                 </tr>
                 {% endfor %}

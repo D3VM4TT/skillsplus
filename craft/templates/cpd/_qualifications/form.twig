@@ -1,0 +1,51 @@
+<form class="page-form" method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    <input type="hidden" name="typeId" value="17">
+    <input type="hidden" name="sectionId" value="10">
+    <input type="hidden" name="enabled" value="1">
+    {%  if author %}
+        <input type="hidden" name="authorId" value="{{ author.id }}">
+    {%  endif %}
+    <input type="hidden" name="fields[resultStatus]" value="pending">
+    <div class="form-group-lantra float-label-control">
+        <label>Qualification Title</label>
+        <input type="input" name="title" class="5000" placeholder="Enter the qualification title" />
+    </div>
+    <div class="form-group-lantra dateField" style="margin-bottom:20px;">
+        <label>Enter expiry date dd/mm/yyyy (if applicable)</label>
+        <div>
+            <select style="display:inline;width:40px;" name="userExpiryDate[day]">
+                <option value="">-</option>
+                {% for d in 1..31 %}
+                    <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
+            </select>
+            /
+            <select style="display:inline;width:40px;" name="userExpiryDate[month]">
+                <option value="">-</option>
+                {% for m in 1..12 %}
+                    <option value="{{ m }}">{{ m }}</option>
+                {% endfor %}
+            </select>
+            /
+            <select style="display:inline;width:70px;" name="userExpiryDate[year]">
+                <option value="">-</option>
+                {% set year = 'now'|date('Y') %}
+                {% for y in year..(year+20) %}
+                    <option value="{{ y }}">{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <input type="file" name="fields[resultEvidence][]" multiple class="5000">
+    </div>
+    <div class="form-group-lantra float-label-control">
+        <label>Qualification Notes</label>
+        <textarea name="fields[resultNotes]"></textarea>
+    </div>
+    <div class="freetext-procedure">
+        <button type="submit">Submit Result</button>
+    </div>
+</form>

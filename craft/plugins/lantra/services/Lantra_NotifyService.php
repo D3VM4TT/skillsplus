@@ -106,6 +106,20 @@ class Lantra_NotifyService extends BaseApplicationComponent
     }
 
     /**
+     * Notify manager of result requiring endorsement
+     *
+     * @throws Exception
+     */
+    function sendManagerEndorsementResult(EntryModel $resultEntry) {
+        $author = $resultEntry->getAuthor();
+        $authorFullName = $author->getFullName();
+        $subject = "Endorsement required ["  . $authorFullName  . "]";
+        $message = $authorFullName  . " has submitted a result " . $resultEntry->title . '.';
+        // send the emails to managers
+        $this->notifyManagers($author, $subject, $message);
+    }
+
+    /**
      * Notify managers summary
      *
      * @param $manager

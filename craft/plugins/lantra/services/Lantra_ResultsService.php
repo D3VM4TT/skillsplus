@@ -106,6 +106,47 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Handle new unit and qualification results
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function saveNewResult($resultEntry) {
+        if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'qualificationResult') {
+            $saveContent = false;
+            // set a user expiry date
+            $userExpiryDate = craft()->request->getPost('userExpiryDate');
+            if (count($userExpiryDate) == 3 && $userExpiryDate['day'] && $userExpiryDate['month'] && $userExpiryDate['year']) {
+                $resultEntry->expiryDate = new \DateTime($userExpiryDate['year'] . '-' . $userExpiryDate['month'] . '-' . $userExpiryDate['day'] . ' 12:00:00');
+                $saveContent = true;
+            }
+            // copy manager endorsement level from unit
+            if ($resultEntry->type == 'unitResult') {
+                $unitEntry = $resultEntry->resultUnit->first();
+                $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
+                $saveContent = true;
+            }
+            // handle submitted qualification results
+            if ($resultEntry->type == 'qualificationResult') {
+                // set author and auto endorse
+                $authorId = craft()->request->getPost('authorId');
+                if ($authorId) {
+                    $resultEntry->authorId = $authorId;
+                    $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
+                    $saveContent = true;
+                }
+                else {
+                    craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
+                }
+            }
+        }
+        if ($saveContent) {
+            craft()->content->saveContent($resultEntry, false);
+        }
+    }
+
+    /**
      * Check whether a user has any remaining attempts
      *
      * @param $resultEntry

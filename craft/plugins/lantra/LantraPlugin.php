@@ -68,21 +68,23 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onBeforeSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // Saving unit results
-            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
-                $unitEntry = $entry->resultUnit->first();
-                $unitEvidence = $entry->resultEvidence->first();
-                // Check evidence results
-                if ($event->params['isNewEntry'] && $unitEntry->unitType == 'evidence') {
-                    if (empty($unitEvidence)) {
-                        $entry->addError('fields[resultEvidence]', 'You must submit a file!');
-                        $event->performAction = false;
-                    }
-                }
+            // Saving qualification/unit results
+            if ($entry->sectionId == $this->sectionIdResults && ($entry->type == 'unitResult' || $entry->type == 'qualificationResult')) {
                 // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 if ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                }
+                if ($entry->type == 'unitResult') {
+                    $unitEntry = $entry->resultUnit->first();
+                    $unitEvidence = $entry->resultEvidence->first();
+                    // Check evidence results
+                    if ($event->params['isNewEntry'] && $unitEntry->unitType == 'evidence') {
+                        if (empty($unitEvidence)) {
+                            $entry->addError('fields[resultEvidence]', 'You must submit a file!');
+                            $event->performAction = false;
+                        }
+                    }
                 }
             }
             // check remaining attempts
@@ -104,20 +106,9 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // saving unit results
-            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
-                $unitEntry = $entry->resultUnit->first();
-                // copy manager endorsement level from unit
-                $entry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
-                craft()->entries->saveEntry($entry);
-                if ($unitEntry->unitType == 'evidence') {
-                    $expiryDate = craft()->request->getPost('userExpiryDate');
-                    // Set the expiry date
-                    if (count($expiryDate) == 3 && $expiryDate['day'] && $expiryDate['month'] && $expiryDate['year']) {
-                        $entry->expiryDate = new \DateTime($expiryDate['year'] . '-' . $expiryDate['month'] . '-' . $expiryDate['day'] . ' 12:00:00');
-                        craft()->entries->saveEntry($entry);
-                    }
-                }
+            // saving qualification/unit results
+            if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
+                craft()->lantra_results->saveNewResult($entry);
             }
             // Mark unit attempt and create result entry
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
