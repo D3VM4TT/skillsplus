@@ -24,7 +24,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * Notify users of user expiry
      *
      * @param $expiryDate
-     * @throws Exception
+     * @throws mixed
      */
     function sendUserExpiry($expiryDate) {
        $criteria = craft()->lantra_users->getExpiringUsers($expiryDate);
@@ -76,7 +76,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
     *
     * @param $entry
     * @return null
-    * @throws Exception
+    * @throws mixed
     */
     function sendModuleResult(EntryModel $entry) {
         $module = $entry->resultModule->first();
@@ -127,7 +127,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param $manager
      * @param int $days
      * @return null
-     * @throws Exception
+     * @throws mixed
      */
     function sendManagerSummary(UserModel $manager, $days = 7) {
         $subject = $this->getNotifyGlobal('subjectManagerSummary', 'Manager Summary');
@@ -172,8 +172,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param $user
      * @param $subject
      * @param $message
-     * @return bool
-     * @throws Exception
+     * @throws mixed
      */
     function notifyManagers($user, $subject, $message) {
         $managers = craft()->lantra_users->getUserMangers($user);
@@ -188,7 +187,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      *
      * @param string
      * @param string
-     * @return null
+     * @return string
      */
     public function getNotifyGlobal($key, $default = '') {
         $globalsNotify = craft()->globals->getSetByHandle('globalsNotify');
