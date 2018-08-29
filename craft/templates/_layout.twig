@@ -105,7 +105,10 @@
                     </div>
             </div>
             {% if currentUser %}
-                {% include '_includes/nav_cpd' %}
+                <nav class="scheme sidebar">
+                    {% include '_includes/nav_cpd' %}
+                    {% include '_includes/profile' %}
+                </nav>
             {%  else %}
                 <div class="log-in-form">
                     <div class="row scheme-logo">
