@@ -90,6 +90,19 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $criteria;
     }
 
+    /** Get all team users
+     *
+     * @param int $teamId
+     * @return object
+     * @throws Exception
+     */
+    public function getTeamUsers($teamId) {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
+        $criteria->limit = null;
+        return $criteria;
+    }
+
     /**
      * Return all company ids (recursive)
      *
@@ -543,6 +556,39 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getIndividualCompany() {
         $team = $this->getIndividualTeam();
         return $team ? $team->teamCompany->first() : null;
+    }
+
+    /** Get emails
+     *
+     * @param int $entryId
+     * @return array
+     * @throws mixed
+     */
+    public function getEmails($entryId) {
+        $return = [];
+        foreach ($this->getUsersByEntryId($entryId) as $user) {
+            $return[] = $user->email;
+        }
+        return $return;
+    }
+
+    /** Get users for a team or company
+     *
+     * @param int $entryId
+     * @return object
+     * @throws mixed
+     */
+    public function getUsersByEntryId($entryId) {
+        $entry = craft()->entries->getEntryById($entryId);
+        if ( ! $entry || ($entry->sectionId != 3 && $entry->sectionId != 5)) {
+            return (object) [];
+        }
+        // get company users
+        if ($entry->sectionId == 3) {
+            return $this->getCompanyUsers($entryId);
+        }
+        // get team users
+        return $this->getTeamUsers($entryId);
     }
 
     /** Get individual job role

@@ -4,6 +4,27 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * Return full list of users for a team or company
+     *
+     * @param int $entryId
+     * @return string
+     */
+    public function emailList($entryId = null) {
+        $emails = craft()->lantra_users->getEmails($entryId);
+        return implode(';', $emails);
+    }
+
+    /**
+     * Return count of users for a team or company
+     *
+     * @param int $entryId
+     * @return int
+     */
+    public function userCount($entryId = null) {
+        return count(craft()->lantra_users->getUsersByEntryId($entryId));
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId

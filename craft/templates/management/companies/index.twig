@@ -29,6 +29,8 @@
                         <th>Name</th>
                         <th>Parent</th>
                         <th>Remaining Licences</th>
+                        <th>User Count</th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -40,11 +42,18 @@
                         <td>{{ company.title }}</td>
                         <td>{{ parent.title|default('~ none ~') }}</td>
                         <td>{{ company.companyRemainingLicences }}</td>
+                        <td>{{ craft.lantra.userCount(company.id) }}</td>
+                        <td>
+                            {% set companyEmails = craft.lantra.emailList(company.id) %}
+                            {% if companyEmails %}
+                                <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">company email</a>
+                            {% endif %}
+                        </td>
                         <td class="text-right">
-                        {% if not currentUser.managerReadOnly %}
-                            <a href="/management/companies/edit/{{ company.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
-                        {% endif %}
+                            {% if not currentUser.managerReadOnly %}
+                                <a href="/management/companies/edit/{{ company.id }}">edit</a> |
+                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

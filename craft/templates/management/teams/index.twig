@@ -32,19 +32,28 @@
                         <th>#</th>
                         <th>Company</th>
                         <th>Name</th>
+                        <th>User Count</th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for team in teamEntries %}
                     <tr class="item">
-                        <th>{{ team.id }}</th>
-                        <th>{{ team.teamCompany.first.title }}</th>
-                        <th>{{ team.title }}</th>
-                        <th>
+                        <td>{{ team.id }}</td>
+                        <td>{{ team.teamCompany.first.title }}</td>
+                        <td>{{ team.title }}</td>
+                        <td>{{ craft.lantra.userCount(team.id) }}</td>
+                        <td>
+                            {% set teamEmails = craft.lantra.emailList(team.id) %}
+                            {% if teamEmails %}
+                                <a href="mailto:{{ currentUser.email }}?bcc={{ teamEmails }}">team email</a>
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
                             <a href="/management/teams/edit/{{ team.id }}">edit</a> |
                             <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
-                        </th>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
