@@ -71,7 +71,11 @@ class Lantra_DbController extends Lantra_BaseController
             $query->update('users', $cleansedUser, 'id=:id', array(':id'=> $id));
 
             $cleansedProfile = [
-                'field_userTelephone' => ''
+                'field_userTelephone' => '',
+                'field_userStartDate' => '',
+                'field_userDateOfBirth' => '',
+                'field_userAddress' => '',
+                'field_schemeUserCustomFields' => '',
             ];
 
             // cleanse profile data
