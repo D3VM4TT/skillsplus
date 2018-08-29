@@ -16,5 +16,6 @@
         <h1>CPD for {{ account.fullname }}</h1>
     </div>
     {% include '_includes/cpd' with{cpdUser:account} %}
+    {% include '_includes/results' with{cpdUser:currentUser} %}
 </section>
 {% endblock %}

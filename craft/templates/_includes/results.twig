@@ -1,0 +1,47 @@
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set moduleResults = craft.entries.section('results').type('moduleResult').resultStatus('complete').authorId(cpdUser.id).limit(null) %}
+{% set qualificationResults = craft.entries.section('results').type('qualificationResult').resultStatus('endorsed').authorId(cpdUser.id).limit(null) %}
+{% if moduleResults|length or qualificationResults|length %}
+<section id="my-results" class="section-dashboard">
+    <h2>My Results</h2>
+    <table style="width:100%">
+        {% if moduleResults|length %}
+            <thead>
+            <tr>
+                <th>Module</th>
+                <th>Endorsed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for moduleResultEntry in moduleResults %}
+                {%  set moduleEntry = moduleResultEntry.resultModule.first %}
+                <tr>
+                    <td>{{ moduleEntry.title }}</td>
+                    <td>{{ moduleResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                    <td>{% if moduleResultEntry.expiryDate %}{{ moduleResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
+        {% if qualificationResults|length %}
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Endorsed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for qualificationResultEntry in qualificationResults %}
+                <tr>
+                    <td>{{ qualificationResultEntry.title }}</td>
+                    <td>{{ qualificationResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                    <td>{% if qualificationResultEntry.expiryDate %}{{ qualificationResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+</section>
+{% endif %}
