@@ -44,10 +44,12 @@
             <ul>
                 <li>Account permissions (if applicable):</li>
                 <li class="float-left">
+                    {% if globalsScheme.schemeTeams|default(false) %}
                     <div class="float-left" id="account-permissions">
                         <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
                     </div>
                     <div class="float-left" id="account-permissions"><strong>Team manager:</strong></div>
+                    {% endif %}
                 </li>
                 <li class="float-left clear">
                     <div class="float-left" id="account-permissions">

@@ -69,6 +69,7 @@
                 location.href="/management/companies/new/?node=" + nodeId + "&parent=" + elementId;
             }
         });
+        {% if globalsScheme.schemeTeams|default(false) %}
         $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_team",
             "class"     : "button-hierarchy button-team pull-right",
@@ -83,6 +84,7 @@
                 location.href="/management/teams/new/?node=" + nodeId + "&company=" + elementId;
             }
         });
+        {%  endif %}
         $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_user",
             "class"     : "button-hierarchy button-user pull-right",
