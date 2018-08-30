@@ -3,6 +3,159 @@ namespace Craft;
 
 class Lantra_UsersService extends BaseApplicationComponent
 {
+    private $nodeId = 0;
+
+    /**
+     * Get manager hierarchy
+     *
+     * @param $user
+     * @return array
+     * @throws mixed
+     */
+    function getManagerHierarchy(UserModel $user = null) {
+        $this->nodeId = 0;
+        if (is_null($user)) {
+            $user = craft()->userSession->getUser();
+        }
+        $return = [];
+        $array = [];
+        $managerTeams = $this->getManagerTeams($user);
+        $managerCompanies = $this->getManagerCompanies($user);
+        $type = 'companies';
+        // admins and scheme managers start with all top level parents
+        if ($user->admin or $user->isInGroup('schemeManagers')) {
+            $array = $this->getCompaniesByParentId(false);
+        }
+        // does this user manage companies?
+        elseif (count($managerCompanies)) {
+            $array = $managerCompanies;
+        }
+        // does this user manage teams?
+        elseif (count($managerTeams)) {
+            $array = $managerTeams;
+            $type = 'teams';
+        }
+        foreach ($array as $element) {
+            $return[$element->id] = $this->addHierarchyNode($element, $type);
+        }
+        return $return;
+    }
+
+    /**
+     * Build a hierarchy array
+     *
+     * @param object $element
+     * @param string $type
+     * @param string $prefix
+     * @return array
+     * @throws mixed
+     */
+    function addHierarchyNode($element, $type = 'companies', $prefix = '')
+    {
+        $this->nodeId++;
+        $return = [
+            'nodeId'    => $this->nodeId,
+            'nodeType'  => $type,
+            'elementId' => $element->id,
+            'managers'  => [],
+            'children'  => [],
+            'icon'      => 'group'
+        ];
+        if ($type == 'label') {
+            $return['title'] =  $element->title;
+        }
+        if ($type == 'companies') {
+            $return['title'] =  $element->title;
+            // Add the manager
+            if (null != $companyManager = $element->companyManager->first()) {
+                $return['managers'] = [$this->addHierarchyNode($companyManager, 'users', 'Company Manager: ')];
+            }
+            // add the company users
+            $companyUsers = $this->getCompanyUsers($element->id);
+            if (false != $companyUsersCount = count($companyUsers)) {
+                $label = (object)['id' => 0, 'title' => 'Company Users (' . $companyUsersCount . ')'];
+                $companyUsersNode = $this->addHierarchyNode($label, 'label');
+                foreach ($companyUsers as $user) {
+                    $companyUsersNode['children'][$user->id] = $this->addHierarchyNode($user, 'users');
+                }
+                $return['children']['users'] = $companyUsersNode;
+            }
+            // add the company teams
+            $companyTeams = $this->getCompanyTeams($element->id);
+            foreach($companyTeams as $team) {
+                $return['children'][$team->id] = $this->addHierarchyNode($team, 'teams');
+            }
+            // add the child companies
+            $childCompanies = $this->getCompaniesByParentId($element->id);
+            foreach($childCompanies as $childCompany) {
+                $return['children'][$childCompany->id] = $this->addHierarchyNode($childCompany, 'companies');
+            }
+        }
+        elseif ($type == 'teams') {
+            $return['title'] =  'Team: ' . $element->title;
+            // Add the team managers
+            $teamManagers = $this->getTeamMangers($element);
+            if (false != $teamManagersCount = count($teamManagers)) {
+                $label = (object)['id' => 0, 'title' => 'Team Managers (' . $teamManagersCount . ')'];
+                $teamManagersNode = $this->addHierarchyNode($label, 'label');
+                foreach ($teamManagers as $user) {
+                    $teamManagersNode['children'][$user->id] = $this->addHierarchyNode($user, 'users');
+                }
+                $return['children']['managers'] = $teamManagersNode;
+            }
+            // add the team users
+            $teamUsers = $this->getTeamUsers($element->id);
+            if (false != $teamUsersCount = count($teamUsers)) {
+                $label = (object)['id' => 0, 'title' => 'Team Users (' . $teamUsersCount . ')'];
+                $teamUsersNode = $this->addHierarchyNode($label, 'label');
+                foreach ($teamUsers as $user) {
+                    $teamUsersNode['children'][$user->id] = $this->addHierarchyNode($user, 'users');
+                }
+                $return['children']['users'] = $teamUsersNode;
+            }
+        }
+        elseif ($type == 'users') {
+            $return['title'] =  $prefix . $element->getFullName();
+            $return['icon'] = 'person';
+        }
+        return $return;
+    }
+
+    /**
+     * Get companies by parent company id
+     *
+     * @param array $companyParentId
+     * @return object
+     * @throws mixed
+     */
+    function getCompaniesByParentId($companyParentId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->order = 'title';
+        if ($companyParentId === false) {
+            $criteria->companyParent = ':empty:';
+        }
+        else {
+            $criteria->relatedTo = ['targetElement' => $companyParentId, 'field' => 'companyParent'];
+        }
+        return $criteria->find();
+    }
+
+    /**
+     * Get companies by array of ids
+     *
+     * @param array $companyIds
+     * @return object
+     * @throws mixed
+     */
+    function getCompaniesByIds($companyIds) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->order = 'title';
+        $criteria->id = $companyIds;
+        return $criteria->find();
+    }
+
     /**
      * Check whether this user can manage teams or companies
      *
@@ -103,6 +256,22 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $criteria;
     }
 
+    /** Get all team managers
+     *
+     * @param EntryModel $team
+     * @return array
+     * @throws Exception
+     */
+    public function getTeamMangers(EntryModel $team) {
+        $return = [];
+        if ($team->teamPrimaryManager->first()) {
+            $return[] = $team->teamPrimaryManager->first();
+        }
+        foreach ($team->teamSecondaryManagers as $manager ){
+            $return[] = $manager;
+        }
+        return $return;
+    }
     /**
      * Return all company ids (recursive)
      *
@@ -147,6 +316,22 @@ class Lantra_UsersService extends BaseApplicationComponent
             $criteria->id = 'not ' . $individualTeam->id;
         }
         return $criteria->ids();
+    }
+
+    /**
+     * Returns all teams for a company
+     *
+     * @param $companyId
+     * @return array
+     * @throws Exception
+     */
+    function getCompanyTeams($companyId)
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'teams';
+        $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
+        $criteria->order = 'title';
+        return $criteria->find();
     }
 
     /**

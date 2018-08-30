@@ -6,6 +6,69 @@ class LantraVariable
     /**
      * Return full list of users for a team or company
      *
+     * @param int $userId
+     * @return string
+     */
+    public function managerHierarchy($userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return craft()->lantra_users->getManagerHierarchy($user);
+    }
+
+    /**
+     * Create data for JSTree
+     *
+     * @param int $userId
+     * @param int $currentNode
+     * @return string
+     */
+    public function jsTreeData($userId = null, $currentNode = 0)
+    {
+        $js = [
+            'icon'  => '/assets/img/tree-root.png',
+            'text'  => 'Hierarchy',
+            'state' => ['opened' => true],
+        ];
+
+        $data = $this->managerHierarchy($userId);
+        foreach ($data as $node) {
+            $js['children'][] = $this->jsTreeAddNode($node, $currentNode);
+        }
+
+        return json_encode($js);
+    }
+
+    /**
+     * Add a node for JSTree
+     *
+     * @param array $node
+     * @param int $currentNode
+     * @return array
+     */
+    private function jsTreeAddNode($node, $currentNode = 0) {
+        $array = [
+            'elementId' => $node['elementId'],
+            'nodeType'  => $node['nodeType'],
+            'nodeId'    => $node['nodeId'],
+            'text'      => $node['title'],
+            'icon'      => '/assets/img/' . $node['icon'] . '.svg',
+            "li_attr"   => ['class' => 'type-' . $node['nodeType'], 'id' => 'node-' . $node['nodeId']],
+        ];
+        if ($node['nodeType'] == 'companies' || $node['nodeType'] == 'teams') {
+            foreach($node['managers'] as $manager) {
+                $array['children'][] = $this->jsTreeAddNode($manager, $currentNode);
+            }
+        }
+        foreach($node['children'] as $child) {
+            $array['children'][] = $this->jsTreeAddNode($child, $currentNode);
+        }
+        return $array;
+    }
+
+    /**
+     * Return full list of users for a team or company
+     *
      * @param int $entryId
      * @return string
      */

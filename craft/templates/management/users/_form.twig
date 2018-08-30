@@ -11,6 +11,10 @@
     {% if not account %}{% exit 404 %}{% endif %}
 {% endif %}
 
+{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyCompany = craft.request.getParam('company') %}
+{% set hierarchyTeam = craft.request.getParam('team') %}
+
 {% block content %}
 
 <div class="page-header">
@@ -30,16 +34,11 @@
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/users/saveUser">
     <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
-
-    {% if craft.request.getParam('openat') %}
-        {% if craft.request.getParam('openat') == '-1' %}
-            <input type="hidden" name="redirect" value="/management/schemes?openat={id}">
-        {% else %}
-            <input type="hidden" name="redirect" value="/management/schemes?openat={{ craft.request.getParam('openat') }}">
-        {% endif %}
+    {% if hierarchyNode %}
+        <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
+    {% else %}
+        <input type="hidden" name="redirect" value="management/users">
     {% endif %}
-
-
     <div class="form-group-lantra float-label-control">
         {#<label for="teamManagers">Roles:</label>#}
             <ul>
@@ -73,11 +72,11 @@
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="address">Start date:</label>
-        <input name="fields[userStartDate]" type="text" class="5000 datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account.userStartDate|format('y-m-d') }}" data-date-format="yyyy-mm-dd">
+        <input name="fields[userStartDate]" type="text" class="5000 datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="address">Date of birth:</label>
-        <input name="fields[userDateOfBirth]" type="text" class="5000 datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account.userDateOfBirth|format('y-m-d') }}" data-date-format="yyyy-mm-dd">
+        <input name="fields[userDateOfBirth]" type="text" class="5000 datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account is defined ? account.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
     </div>
     <div class="form-group-lantra float-label-control">
         <label for="address">Address:</label>
@@ -92,7 +91,7 @@
     {%  for block in userCustomFields %}
         <div class="form-group-lantra float-label-control">
             <label for="custom-{{ block.name }}">{{ block.label }}:</label>
-            {% set userCustomBlock = account.userCustomFields.customName('='~block.name).first() %}
+            {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
             {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
@@ -106,7 +105,7 @@
     <div class="form-group-lantra float-label-control">
         {#<label for="userCompany">User company:</label>#}
         {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
-        <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default('') }}" id="userCompany" >
+        <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
             <option value="">User company:</option>
             {% for companyEntry in companyEntries %}
                 <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
@@ -117,7 +116,7 @@
     <div class="form-group-lantra float-label-control">
         {#<label for="userTeam">User team:</label>#}
         {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
-        <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default('') }}" id="userTeam" >
+        <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
             <option value="">User team:</option>
             {% for teamEntry in teamEntries %}
                 <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>

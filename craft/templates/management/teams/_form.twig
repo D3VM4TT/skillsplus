@@ -9,6 +9,9 @@
     {% set entry = craft.entries.id(entryId).first %}
 {% endif %}
 
+{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyCompany = craft.request.getParam('company') %}
+
 {% block content %}
 
 <div class="page-header">
@@ -27,13 +30,9 @@
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
-    
-    {% if craft.request.getParam('openat') %}
-        {% if craft.request.getParam('openat') == '-1' %}
-            <input type="hidden" name="redirect" value="/management/schemes?openat={id}">
-        {% else %}
-            <input type="hidden" name="redirect" value="/management/schemes?openat={{ craft.request.getParam('openat') }}">
-        {% endif %}
+
+    {% if hierarchyNode %}
+        <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
     {% else %}
         <input type="hidden" name="redirect" value="management/teams">
     {% endif %}
@@ -52,7 +51,7 @@
         {% else %}
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
         {% endif %}
-        <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default('') }}" id="teamCompany" >
+        <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default(hierarchyCompany) }}" id="teamCompany" >
             <option value="">Team company:</option>
             {% for companyEntry in companyEntries %}
                 <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
