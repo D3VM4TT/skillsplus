@@ -2,27 +2,25 @@
 {% extends "_layout" %}
 
 {% block content %}
-    <div class="dashboard">
-        <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-        <h2>{{ currentUser.fullName }}</h2>
-        <div class="text-muted">
+    <section class="page dashboard">
+        <div class="page-header">
+            <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="right rounded-circle" alt="Generic placeholder thumbnail">
+            <h2>{{ currentUser.fullName }}</h2>
             {{ currentUserCompany|default('') }}
+            <p class="welcome-back">
+                <strong>Hello {{ currentUser.firstName }}, welcome back to the Lantra dashboard.</strong>
+            </p>
         </div>
-
-        <div class="welcome-back">
-            <p class="text-bold">Hello {{ currentUser.firstName }}, welcome back to the Lantra dashboard.</p>
+        <div class="page-content">
+            {% include '_includes/profile' %}
+            {% include '_includes/cpd' with{cpdUser:currentUser} %}
+            {% include '_includes/results' with{cpdUser:currentUser} %}
+            {% if craft.lantra.canManage(null, true) %}
+                {% include '_includes/scheme' %}
+            {% endif %}
+            {% if craft.lantra.canManage() %}
+                {% include '_includes/admin' %}
+            {% endif %}
         </div>
-
-        {% include '_includes/cpd' with{cpdUser:currentUser} %}
-
-        {% include '_includes/results' with{cpdUser:currentUser} %}
-
-        {% if craft.lantra.canManage(null, true) %}
-            {% include '_includes/scheme' %}
-        {% endif %}
-
-        {% if craft.lantra.canManage() %}
-            {% include '_includes/admin' %}
-        {% endif %}
-    </div>
+    </section>
 {% endblock %}

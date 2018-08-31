@@ -1,15 +1,15 @@
-<nav>
+<nav class="menu-pages">
     {% for pageEntry in globalsTheme.themeNavigation %}
         <a class="button hollow primary-bg" href="{{ pageEntry.url }}">{{ pageEntry.title }}</a>
     {% endfor %}
 </nav>
 {% if not currentUser %}
-<div class="container-btn">
-    <div class="sml-link center">
-        <p>Not registered?</p>
+    <div class="container-btn">
+        <div class="sml-link center">
+            <p>Not registered?</p>
+        </div>
+        <div class="center">
+            <a class="button hollow primary-bg" href="/public/register">Create account</a>
+        </div>
     </div>
-    <div class="center">
-        <a class="button hollow primary-bg" href="/public/register">Create account</a>
-    </div>
-</div>
 {% endif %}

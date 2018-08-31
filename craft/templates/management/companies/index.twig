@@ -15,60 +15,60 @@
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
 {% block content %}
-<section class="list">
+<section class="page">
     <div class="page-header">
         <h2>Companies</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
     </div>
-    {% include '_includes/filter' with{filterDays:false} %}
     {% if companyEntries is defined and companyEntries|length %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Parent</th>
-                        <th>Remaining Licences</th>
-                        <th>User Count</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for company in companyEntries %}
-                {% set parent = company.companyParent.first %}
-                    <tr class="item">
-                        <td>{{ company.id }}</td>
-                        <td>{{ company.title }}</td>
-                        <td>{{ parent.title|default('~ none ~') }}</td>
-                        <td>{{ company.companyRemainingLicences }}</td>
-                        <td>{{ craft.lantra.userCount(company.id) }}</td>
-                        <td>
-                            {% set companyEmails = craft.lantra.emailList(company.id) %}
-                            {% if companyEmails %}
-                                <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">company email</a>
-                            {% endif %}
-                        </td>
-                        <td class="text-right">
-                            {% if not currentUser.managerReadOnly %}
-                                <a href="/management/companies/edit/{{ company.id }}">edit</a> |
-                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="data table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Parent</th>
+                    <th>Remaining Licences</th>
+                    <th>User Count</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for company in companyEntries %}
+            {% set parent = company.companyParent.first %}
+                <tr class="item">
+                    <td>{{ company.id }}</td>
+                    <td>{{ company.title }}</td>
+                    <td>{{ parent.title|default('~ none ~') }}</td>
+                    <td>{{ company.companyRemainingLicences }}</td>
+                    <td>{{ craft.lantra.userCount(company.id) }}</td>
+                    <td>
+                        {% set companyEmails = craft.lantra.emailList(company.id) %}
+                        {% if companyEmails %}
+                            <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">company email</a>
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        {% if not currentUser.managerReadOnly %}
+                            <a href="/management/companies/edit/{{ company.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <h4>There are no companies to display.</h4>
         </div>
     {% endif %}
     {% if not currentUser.managerReadOnly %}
-        <div class="table-actions freetext-procedure">
-            <a href="/management/companies/new">Create company</a>
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/companies/new">Create company</a>
+            </div>
         </div>
     {% endif %}
 </section>

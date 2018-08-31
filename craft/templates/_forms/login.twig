@@ -1,6 +1,5 @@
 <form class="public" id="form-login" method="post" accept-charset="UTF-8">
-    <h1>User Login</h1>
-    {{ getCsrfInput() }}
+    <h2>User Login</h2>
     <input type="hidden" name="action" value="users/login">
     <input type="hidden" name="redirect" value="/">
     <div class="field--wrapper" style="">
@@ -9,7 +8,7 @@
     </div>
     <div class="field--wrapper last" style="">
         <label for="password" style="" class="show">Password</label>
-        <input type="password" name="password" id="password" class="float-label" placeholder="Password" style="">
+        <input type="password" name="password" id="password" class="float-label" placeholder="Password">
         <span class="password-showhide">
             <span class="trigger-password">Show</span>
         </span>
@@ -20,7 +19,7 @@
             </label>
         </div>
     </div>
-    <div class="container-btn">
+    <div class="container-btn container-sidebar-btn">
         <button class="button primary-bg"><span>Log in</span></button>
     </div>
     <div class="sml-link toggle">

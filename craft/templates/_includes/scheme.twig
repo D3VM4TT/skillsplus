@@ -3,26 +3,13 @@
 {% set licencesCompany = craft.lantra.totalCompanyLicences() %}
 {% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-<section id="scheme-profile" class="row section-dashboard">
-    <div class="col-8">
-        <h2>Scheme Profile</h2>
-        <div class="col-6 profile-field">
-            <p>Scheme Name:</p>
-            <p>Scheme Renewal Date:</p>
-            <p>Active Users (inc. Managers):</p>
-            <p>Inactive users:</p>
-            <p>Scheme Licences:</p>
-            <p>Company Licences:</p>
-            <p>Total Remaining:</p>
-        </div>
-        <div class="col-6 profile-data">
-            <p>{{ globalsScheme.schemeName|default('unknown') }}</p>
-            <p>{{ globalsScheme.schemeExpiryDate|date(dateFormat) }}</p>
-            <p>{{ usersActive }}</p>
-            <p>{{ usersAll - usersActive }}</p>
-            <p>{{ licencesScheme }}</p>
-            <p>{{ licencesCompany }}</p>
-            <p>{{ licencesScheme + licencesCompany }}</p>
-        </div>
-    </div>
-</section>
+<h2>Scheme Profile</h2>
+<p class="profile">
+    <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
+    <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
+    <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
+    <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
+    <span class="label">Scheme Licences:</span>{{ licencesScheme }}<br />
+    <span class="label">Company Licences:</span> {{ licencesCompany }}<br />
+    <span class="label">Total Remaining:</span> {{ licencesScheme + licencesCompany }}
+</p>
