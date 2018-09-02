@@ -39,11 +39,11 @@
     <input type="hidden" name="sectionId" value="3">
     <input type="hidden" name="enabled" value="1">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
-    <div class="field--wrapper" style="">
+    <div class="field--wrapper">
         <label for="title" class="show">Company name:</label>
         <input id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
     </div>
-    <div class="form-group-lantra field--wrapper custom-select">
+    <div class="field--wrapper custom-select">
         <label for="companyParent" class="show">Company Parent (if applicable):</label>
         {% if currentUser.isInGroup('schemeManagers') %}
             {% set companyEntries = craft.entries.section('companies') %}
@@ -59,7 +59,7 @@
             {% endfor %}
         </select>
     </div>
-    <div class="form-group-lantra field--wrapper custom-select">
+    <div class="field--wrapper custom-select">
         <label for="companyManager" class="show">Select Company manager:</label>
         {% set userEntries = craft.users.group('companyManagers') %}
         <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
@@ -69,7 +69,7 @@
             {% endfor %}
         </select>
     </div>
-    <div class="field--wrapper form-group-lantra float-label-control">
+    <div class="field--wrapper">
         <label for="companyRemainingLicences" class="show">Remaining Company licences:</label>
         <input id="companyRemainingLicences" class="float-label" placeholder="Enter the remaining company licences"  type="number" name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
     </div>

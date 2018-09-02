@@ -11,34 +11,29 @@
 {% endif %}
 
 {% block content %}
-
-<div class="page-header">
-    {% if category is defined and category.id %}
-        <h2>Edit job role</h2>
-    {% else %}
-        <h2>Create a new job role</h2>
-    {% endif %}
-    <p><a href="/management/roles">&laquo; back to roles</a></p>
-</div>
-
-{% if category is defined %}
-    {{ ui.errorList(category.getAllErrors()) }}
-{% endif %}
-
-<form class="page-form" method="post" role="form" accept-charset="UTF-8">
-    {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="categories/saveCategory">
-    <input type="hidden" name="redirect" value="management/roles">
-    <input type="hidden" name="groupId" value="1">
-    <input type="hidden" name="categoryId" value="{{ category.id|default('') }}">
-
-    <div class="form-group-lantra float-label-control">
-        <label for="title">Job role name:</label>
-        <input required id="title" type="text" class="5000" placeholder="Enter the job role name" name="title" value="{{ category.title|default('') }}">
+    <div class="page-header">
+        {% if category is defined and category.id %}
+            <h2>Edit job role</h2>
+        {% else %}
+            <h2>Create a new job role</h2>
+        {% endif %}
+        <p><a href="/management/roles">&laquo; back to roles</a></p>
     </div>
-    <br />
-    <div class="freetext-procedure"><button type="submit">Save job role</button></div>
-
-</form>
-
+    {% if category is defined %}
+        {{ ui.errorList(category.getAllErrors()) }}
+    {% endif %}
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="categories/saveCategory">
+        <input type="hidden" name="redirect" value="management/roles">
+        <input type="hidden" name="groupId" value="1">
+        <input type="hidden" name="categoryId" value="{{ category.id|default('') }}">
+        <div class="field--wrapper">
+            <label for="title" class="show">Job role name:</label>
+            <input required id="title" type="text" class="float-label" placeholder="Enter the job role name" name="title" value="{{ category.title|default('') }}">
+        </div>
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Save role</button>
+        </div>
+    </form>
 {% endblock %}

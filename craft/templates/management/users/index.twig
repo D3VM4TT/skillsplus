@@ -29,58 +29,58 @@
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
 
 {% block content %}
-<section class="list">
+<section class="page">
     <div class="page-header">
         <h2>Users</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
     </div>
-    {% include '_includes/filter' with{filterDays:false} %}
     {% if userEntries is defined and userEntries|length %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Company</th>
+                {% if globalsScheme.schemeTeams|default(false) %}
+                    <th>Team</th>
+                {% endif %}
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in userEntries %}
+                {% set company = craft.lantra.userCompany(user.id) %}
                 <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Company</th>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td>{{ company.title|default('') }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}
-                        <th>Team</th>
-                    {% endif %}
-                    <th>&nbsp;</th>
+                        {% set team = user.userTeam.first() %}
+                        <td>{{ team.title|default('') }}</td>
+                    {%  endif %}
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                        {% endif %}
+                        <a href="/cpd/qualifications/{{ user.id }}">qualifications</a> |
+                        <a href="/cpd/{{ user.id }}">cpd</a>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for user in userEntries %}
-                    {% set company = craft.lantra.userCompany(user.id) %}
-                    <tr class="item">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.fullname }}</td>
-                        <td>{{ company.title|default('') }}</td>
-                        {% if globalsScheme.schemeTeams|default(false) %}
-                            {% set team = user.userTeam.first() %}
-                            <td>{{ team.title|default('') }}</td>
-                        {%  endif %}
-                        <td class="text-right">
-                            {% if not currentUser.managerReadOnly %}
-                                <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                                <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
-                            {% endif %}
-                            <a href="/cpd/qualifications/{{ user.id }}">qualifications</a> |
-                            <a href="/cpd/{{ user.id }}">cpd</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            {% endfor %}
+            </tbody>
+        </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <h4>There are no users to display.</h4>
         </div>
     {% endif %}
     {% if craft.lantra.canAddUser() %}
-        <div class="table-actions freetext-procedure">
-            <a href="/management/users/new">Create user</a>
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/users/new">Create user</a>
+            </div>
         </div>
     {% endif %}
 </section>

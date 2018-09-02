@@ -19,11 +19,9 @@
     {% endif %}
     <p><a href="/management/reports">&laquo; back to reports</a></p>
 </div>
-
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
-
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
@@ -31,21 +29,21 @@
     <input type="hidden" name="sectionId" value="13">
     <input type="hidden" name="enabled" value="1">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
-    <div class="form-group-lantra float-label-control">
+    <div class="field--wrapper">
         <label for="title">Report title:</label>
-        <input id="title" name="title" class="5000" placeholder="Enter the report title" value="{{ entry.title|default('') }}">
+        <input id="title" name="title" class="label-float" placeholder="Enter the report title" value="{{ entry.title|default('') }}">
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="reportType">Report type:</label>
+    <div class="field--wrapper custom-select">
         <select name="fields[reportType]" id="reportType">
+            <option value="">Report type:</option>
             <option value="users" {% if entry is defined and entry.reportType == 'users' %} selected="selected{% endif %}">Users</option>
             <option value="results" {% if entry is defined and entry.reportType == 'results' %} selected="selected{% endif %}">Results</option>
         </select>
     </div>
-    <div class="form-group-lantra float-label-control">
+    <div class="field--wrapper">
         <label>Report scope:</label>
     </div>
-    <div id="reportScope">
+    <div class="field--wrapper" id="reportScope">
         <div id="reportScopeCompanies">
             <strong>Report companies:</strong>
             <input type="hidden" name="fields[reportCompanies]" value="" />
@@ -120,7 +118,6 @@
             </p>
         </div>
     </div>
-
     <div id="modulesResultsFields">
         <div id="reportScopeModules">
             <strong>Report modules:</strong>
@@ -145,8 +142,8 @@
                 </label>
             </p>
         </div>
-        <div class="form-group-lantra float-label-control">
-            <label for="reportResultExpiry">Result expiry:</label>
+        <div class="field--wrapper custom-select">
+            <label for="reportResultExpiry" >Result expiry:</label>
             <select name="fields[reportResultExpiry]" id="reportResultExpiry">
                 <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">Expired</option>
                 <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">30 days</option>
@@ -157,34 +154,33 @@
             </select>
         </div>
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="reportDescription">Report description:</label>
-        <textarea id="reportDescription" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription|default('') }}</textarea>
+    <div class="field--wrapper">
+        <label for="reportDescription" class="show">Report description:</label>
+        <textarea id="reportDescription" class="label-float" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription|default('') }}</textarea>
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="reportDescription">Report recipients:</label>
-        <textarea id="reportRecipients" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients|default('') }}</textarea>
+    <div class="field--wrapper">
+        <label for="reportDescription" class="show">Report recipients:</label>
+        <textarea id="reportRecipients" class="label-float" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients|default('') }}</textarea>
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="reportSendFrequency">Report send frequency:</label>
+    <div class="field--wrapper custom-select">
         <select name="fields[reportSendFrequency]" id="reportSendFrequency">
+            <option value="">Report send frequency:</option>
             <option value="never" {% if entry is defined and entry.reportSendFrequency == 'never' %} selected="selected{% endif %}">Never</option>
             <option value="weekly" {% if entry is defined and entry.reportSendFrequency == 'weekly' %} selected="selected{% endif %}">Weekly</option>
             <option value="monthly" {% if entry is defined and entry.reportSendFrequency == 'monthly' %} selected="selected{% endif %}">Monthly</option>
         </select>
     </div>
-    <div class="form-group-lantra float-label-control">
-        <label for="reportSendValue">Report send day (1-7 for weekly):</label>
+    <div class="field--wrapper custom-select">
         <select name="fields[reportSendValue]" id="reportSendValue">
+            <option value="">Report send day (1-7 for weekly):</option>
             {% for day in range(1, 31) %}
                 <option value="{{ day }}">{{ day }}</option>
             {% endfor %}
         </select>
     </div>
-
-
-    <br />
-    <div class="freetext-procedure"><button type="submit">Save report</button></div>
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save report</button>
+    </div>
 </form>
 
 {% endblock %}

@@ -19,17 +19,15 @@
 {% endif %}
 
 {% block content %}
-<section class="list">
-    <div class="page-header">
-        <h1>Reporting</h1>
-    </div>
+<section class="page">
     {% include 'reporting/_tables/' ~ reportType with{reportType:reportType, reportEntries:reportEntries} %}
     {% if reportEntries|length %}
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        <div class="table-actions freetext-procedure">
-            <a href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a></div>
+        <div class="page-content">
+            <a class="button" href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a>
+        </div>
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <p>There are no results to display.</p>
         </div>
     {% endif %}

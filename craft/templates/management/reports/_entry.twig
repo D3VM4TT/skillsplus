@@ -10,13 +10,12 @@
 {% if criteria %}{% paginate criteria as pageInfo, reportData %}{% endif %}
 
 {% block content %}
-    <section class="list">
+    <section class="page">
         <div class="page-header">
             <h2>{{ entry.title }}</h2>
         </div>
         {% if reportData is defined and reportData|length %}
-            <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="data">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -35,10 +34,11 @@
                     {%  endfor %}
                     </tbody>
                 </table>
-            </div>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
         {% else %}
-            <h4>There is no data to display.</h4>
+            <div class="page-content">
+                <h4>There is no data to display.</h4>
+            </div>
         {% endif %}
     </section>
 {% endblock %}

@@ -11,46 +11,46 @@
 {% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
-<section class="list">
+<section class="page">
     <div class="page-header">
         <h2>Roles</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
     </div>
-    {% include '_includes/filter' with{filterDays:false} %}
     {% if roleCategories is defined and roleCategories|length %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for role in roleCategories %}
-                <tr class="item">
-                    <td>{{ role.id }}</td>
-                    <td>{{ role.title }}</td>
-                    <td class="text-right">
-                    {% if not currentUser.managerReadOnly %}
-                        <a href="/management/roles/edit/{{ role.id }}">edit</a> |
-                        <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
-                    {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for role in roleCategories %}
+            <tr>
+                <td>{{ role.id }}</td>
+                <td>{{ role.title }}</td>
+                <td>
+                {% if not currentUser.managerReadOnly %}
+                    <a href="/management/roles/edit/{{ role.id }}">edit</a> |
+                    <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
+                {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <h4>There are no roles to display.</h4>
         </div>
     {% endif %}
     {% if not currentUser.managerReadOnly %}
-        <div class="table-actions freetext-procedure">
-            <a href="/management/roles/new">Create role</a>
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/roles/new">Create role</a>
+            </div>
         </div>
     {% endif %}
 </section>

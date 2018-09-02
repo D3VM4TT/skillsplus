@@ -19,54 +19,54 @@
 {% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}
 
 {% block content %}
-<section class="list">
+<section class="page">
     <div class="page-header">
         <h2>Teams</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
     </div>
-    {% include '_includes/filter' with{filterDays:false} %}
     {% if teamEntries is defined and teamEntries|length %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Company</th>
-                        <th>Name</th>
-                        <th>User Count</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for team in teamEntries %}
-                    <tr class="item">
-                        <td>{{ team.id }}</td>
-                        <td>{{ team.teamCompany.first.title }}</td>
-                        <td>{{ team.title }}</td>
-                        <td>{{ craft.lantra.userCount(team.id) }}</td>
-                        <td>
-                            {% set teamEmails = craft.lantra.emailList(team.id) %}
-                            {% if teamEmails %}
-                                <a href="mailto:{{ currentUser.email }}?bcc={{ teamEmails }}">team email</a>
-                            {% endif %}
-                        </td>
-                        <td class="text-right">
-                            <a href="/management/teams/edit/{{ team.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company</th>
+                    <th>Name</th>
+                    <th>User Count</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for team in teamEntries %}
+                <tr>
+                    <td>{{ team.id }}</td>
+                    <td>{{ team.teamCompany.first.title }}</td>
+                    <td>{{ team.title }}</td>
+                    <td>{{ craft.lantra.userCount(team.id) }}</td>
+                    <td>
+                        {% set teamEmails = craft.lantra.emailList(team.id) %}
+                        {% if teamEmails %}
+                            <a href="mailto:{{ currentUser.email }}?bcc={{ teamEmails }}">team email</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/management/teams/edit/{{ team.id }}">edit</a> |
+                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <h4>There are no teams to display.</h4>
         </div>
     {% endif %}
-    <div class="table-actions freetext-procedure">
-        <a href="/management/teams/new">Create team</a>
+    <div class="page-content">
+        <div class="container-btn">
+            <a class="button primary-bg" href="/management/teams/new">Create team</a>
+        </div>
     </div>
 </section>
 {% endblock %}

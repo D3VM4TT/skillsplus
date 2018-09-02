@@ -21,7 +21,7 @@
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
     {% if companyEntries is defined and companyEntries|length %}
-        <table class="data table-striped">
+        <table class="data">
             <thead>
                 <tr>
                     <th>#</th>
@@ -36,7 +36,7 @@
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
-                <tr class="item">
+                <tr>
                     <td>{{ company.id }}</td>
                     <td>{{ company.title }}</td>
                     <td>{{ parent.title|default('~ none ~') }}</td>
@@ -48,7 +48,7 @@
                             <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">company email</a>
                         {% endif %}
                     </td>
-                    <td class="text-right">
+                    <td>
                         {% if not currentUser.managerReadOnly %}
                             <a href="/management/companies/edit/{{ company.id }}">edit</a> |
                             <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>

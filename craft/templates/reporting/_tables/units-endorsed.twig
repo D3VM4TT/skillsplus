@@ -1,8 +1,10 @@
-{% include '_includes/filter' with{filterDays:filterDays, reportType:'units-endorsed'} %}
-<p class="page-header"><strong>Units Endorsed Report</strong></p>
+<div class="page-header">
+    <h2>Reporting</h2>
+    <p><strong>Units Endorsed Report</strong></p>
+    {% include '_includes/filter' with{filterDays:filterDays, reportType:'units-endorsed'} %}
+</div>
 {% if reportEntries|length %}
-<div class="table-responsive">
-    <table width="100%" class="table table-striped">
+    <table width="100%" class="data table-striped">
         <thead>
             <tr>
                 <th>User</th>
@@ -26,5 +28,4 @@
         {% endfor %}
         </tbody>
     </table>
-</div>
 {% endif %}
