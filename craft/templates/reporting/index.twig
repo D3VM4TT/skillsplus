@@ -23,8 +23,8 @@
     {% include 'reporting/_tables/' ~ reportType with{reportType:reportType, reportEntries:reportEntries} %}
     {% if reportEntries|length %}
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        <div class="page-content">
-            <a class="button" href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a>
+        <div class="container-btn">
+            <a class="button primary-bg" href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a>
         </div>
     {% else %}
         <div class="page-content">
