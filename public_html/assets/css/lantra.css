@@ -29,6 +29,7 @@ h1 {
 h2 {
     font-size: 32px !important;
     font-weight: 300 !important;
+    margin:0 0 30px 0;
 }
 
 h4 {
@@ -105,7 +106,6 @@ h4 {
 
 /*Navigation
 -------------------------------------------------- */
-
 .menu-tab {
     width: 70px;
     height: 70px;
@@ -155,20 +155,16 @@ h4 {
     background-color: #FFFFFF;
     transition: all .3s ease-in-out;
 }
-
 .menu-intro {
     padding: 60px 60px 0 60px;
 }
-
 .menu-intro h1 {
     color: #fff;
     padding-bottom: 40px;
 }
-
 .menu-intro p {
     color: #fff;
 }
-
 .menu-hide {
     width: 33.333%;
     left: -33.333%;
@@ -178,7 +174,6 @@ h4 {
     top: 0px;
     transition: all .3s ease-in-out;
 }
-
 .menu-hide .container-menus {
     padding: 60px 50px;
     height: 400px;
@@ -186,7 +181,10 @@ h4 {
     overflow-y: auto;
     overflow-x: hidden;
 }
-
+.menu-hide div.container-btn {
+    width: 100%;
+    max-width:100%;
+}
 .menu-hide a.button {
     height: 70px;
     line-height: 70px;
@@ -274,6 +272,9 @@ form label {
 .primary-border {
     border-color: #a82135
 }
+.button.hollow.white {
+    border-color:#FFFFFF;
+}
 .secondary-color {
     color: #1d283c
 }
@@ -347,7 +348,7 @@ button span {
     display: inline-block;
     border: 2px solid #CCCCCC;
     transition: background-color 200ms ease-out;
-    background-color: #FFF;
+    background:none;
 }
 
 .button.hollow:hover {
@@ -372,46 +373,8 @@ button span {
     border-color:#FFFFFF;
 }
 
-.container-carousel-btn1 {
-    width: 44%;
-    float: left;
-    padding-right: 40px;
-    position: absolute;
-    bottom: 40px;
-}
-
-.container-carousel-btn2 {
-    width: 44%;
-    float: left;
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    padding-right: 40px;
-}
-
-.carousel-btn {
-    width: 100%;
-    height: 60px;
-    display: inline-block;
-    border: 2px solid #fff;
-    transition: background-color 200ms ease-out;
-}
-
-.carousel-btn:hover {
-    background-color: #a82135;
-    border: 2px solid #a82135;
-}
-
-.carousel-btn a {
-    color: #fff;
-    text-decoration: none;
-    padding: 16px;
-    display: block;
-}
-
-.carousel-btn a:hover {
-    color: #fff;
-    text-decoration: none;
+.button.white a {
+    color:#FFFFFF !important;
 }
 
 span.trigger-password {
@@ -667,39 +630,23 @@ body {
     margin: 0;
 }
 
-/*Carousel Styles
+/*Slides
 -------------------------------------------------- */
-.carousel-item {
+section.slides article {
     height: 100vh;
     min-height: 300px;
     background: no-repeat center center scroll;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
-}
-
-.carousel-fade .carousel-item {
     opacity: 0;
     transition-duration: 0.8s !important;
     transition-property: opacity !important;
 }
 
-.carousel-item {
-    transition: opacity .25s ease-in-out !important;
-    -moz-transition: opacity .25s ease-in-out !important;
-    -webkit-transition: opacity .25s ease-in-out !important;
-}
-
-.carousel-item .active {
+section.slides article.active {
     opacity: 1 !important;
 }
 
-.carousel-inner {
-    overflow: visible !important;
-}
-
-.container-carousel-caption {
+section.slides article div.container {
     position: absolute !important;
     margin-top: 20%;
     right: 0;
@@ -708,7 +655,7 @@ body {
     background-color: rgba(29, 45, 60, 0.9);
 }
 
-.carousel-caption {
+section.slides article div.container div.caption {
     position: initial !important;
     right: 0 !important;
     bottom: 0 !important;
@@ -718,10 +665,27 @@ body {
     text-align: left !important;
     padding: 40px 70px 40px 40px !important;
 }
+section.slides article div.container div.caption h2 {
+    color:#FFFFFF;
+}
 
-.carousel-caption p {
+section.slides article div.container div.caption p {
     padding-top: 30px !important;
     color: #fff !important;
+}
+
+section.slides article div.container div.buttons {
+    position: absolute;
+    bottom: 0;
+    padding:0 0 40px 0;
+    width:100%;
+}
+
+section.slides article div.container div.buttons div.button {
+    width: 34%;
+    margin-left: 40px;
+    display:inline-block;
+    float:left;
 }
 
 .img-responsive img {
