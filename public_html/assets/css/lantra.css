@@ -14,7 +14,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: #192a38;
+    color: #444444;
     font-family: 'Open Sans', sans-serif !important;
     font-size: 16px;
     line-height: 1.7;
@@ -22,18 +22,18 @@ h6 {
 }
 
 h1 {
-    font-size: 42px !important;
-    font-weight: 300 !important;
+    font-size: 42px;
+    font-weight: 300;
 }
 
 h2 {
-    font-size: 32px !important;
-    font-weight: 300 !important;
+    font-size: 32px;
+    font-weight: 300;
     margin:0 0 30px 0;
 }
 
 h4 {
-    font-size: 22px !important;
+    font-size: 22px;
 }
 
 /*
@@ -132,7 +132,6 @@ h4 {
 .menu-tab div {
     width: 30px;
     height: 3px;
-    background-color: #1b2b39;
     display: block;
     margin: 6px auto;
     transition: all .3s ease-in-out;
@@ -167,11 +166,11 @@ h4 {
     padding: 60px 60px 0 60px;
 }
 .menu-intro h1 {
-    color: #fff;
+    color: #FFFFFF;
     padding-bottom: 40px;
 }
 .menu-intro p {
-    color: #fff;
+    color: #FFFFFF;
 }
 .menu-hide {
     width: 33.333%;
@@ -258,44 +257,13 @@ h4 {
 
 /*Buttons and Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.primary-bg,
-.primary-bg.active,
-.primary-bg.show,
-.button.hollow:hover{
-    background-color: #a82135
-}
-
-.secondary-bg,
-.button.primary-bg:hover {
-    background-color: #1d283c
-}
-
-.primary-color,
-.button.hollow a,
-form label {
-    color: #a82135
-}
-
-.button.hollow,
-.primary-border {
-    border-color: #a82135
-}
 .button.hollow.white {
     border-color:#FFFFFF;
 }
-.secondary-color {
-    color: #1d283c
-}
-.secondary-bg {
-    background-color: #1d283c
-}
-.secondary-border {
-    border-color: #1d283c
-}
 button {
-    -webkit-box-shadow:  0px 13px 45px 0px #c7c7c7; /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow:     0px 13px 45px 0px #c7c7c7; /* Firefox 3.5 - 3.6 */
-    box-shadow:          0px 13px 45px 0px #c7c7c7; /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+    -webkit-box-shadow:  0px 13px 45px 0px #C7C7C7;
+    -moz-box-shadow:     0px 13px 45px 0px #C7C7C7;
+    box-shadow:          0px 13px 45px 0px #C7C7C7;
 }
 
 .container-btn {
@@ -484,7 +452,6 @@ form ul.options li strong {
     top: initial;
     left: initial;
     font-size: 16px;
-    color: #a82135;;
     transition: none;
     opacity: 1;
     width: 100%;
@@ -497,7 +464,7 @@ form ul.options li strong {
 }
 
 span.remember-me-txt {
-    color: #cbcbcb;
+    color: #C7C7C7;
     font-size: .8em !important;
 }
 
@@ -507,13 +474,8 @@ span.remember-me-txt {
     top: -25px;
     left: 0;
     font-size: 16px;
-    color: #a82135;;
     transition: all 0.1s linear;
     opacity: 0;
-}
-
-.field--wrapper label.float.on {
-    color: #a82135;
 }
 
 .field--wrapper label.float {
@@ -739,7 +701,7 @@ section.slides article div.container {
     right: 0;
     width: 50%;
     height: 450px;
-    background-color: rgba(29, 45, 60, 0.9);
+    opacity:0.9;
 }
 
 section.slides article div.container div.caption {
@@ -751,6 +713,7 @@ section.slides article div.container div.caption {
     color: #fff;
     text-align: left;
     padding: 40px 70px 40px 40px;
+    opacity:1;
 }
 section.slides article div.container div.caption h2 {
     color:#FFFFFF;
@@ -766,6 +729,7 @@ section.slides article div.container div.buttons {
     bottom: 0;
     padding:0 0 40px 0;
     width:100%;
+    opacity:1;
 }
 
 section.slides article div.container div.buttons div.button {
@@ -796,10 +760,6 @@ section.row.admin {
     font-size: 26px !important;
     line-height: 40px;
     padding: 60px 30px 0px 0px;
-}
-
-.content-main h2 {
-    color: #a82135;
 }
 
 /*Notifications
@@ -838,7 +798,7 @@ section.page div:last-child {
 
 .page-header {
     padding: 50px 60px;
-    background-color: #f7f7fa;
+    background-color: #F7F7F7;
 }
 
 .page-form {
@@ -858,12 +818,10 @@ section.page div:last-child {
 .sidebar {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    position:fixed;
-    overflow-y:auto;
+    position: fixed;
+    overflow-y: auto;
 }
 
-/*cpd navigation
--------------------------------------------------- */
 nav.cpd {
     padding: 0 0 60px 0;
 }
@@ -889,7 +847,6 @@ nav.cpd li {
 }
 
 nav.cpd li a {
-    color: #1C2B39;
     text-decoration: none;
     position: relative;
     display: block;
@@ -898,8 +855,7 @@ nav.cpd li a {
 
 nav.cpd li a:hover,
 nav.cpd li.nav-open > a {
-    background-color: #1C2B39;
-    color: #fff;
+    color: #FFFFFF;
 }
 
 nav.cpd ul > li:last-child {
@@ -908,7 +864,7 @@ nav.cpd ul > li:last-child {
 
 nav.cpd ul > li > ul li a:hover {
     background-color: rgba(0,0,0,.05);
-    color:#1C2B39;
+    color: #444444;
 }
 
 /*Touchscreen menu
@@ -919,10 +875,6 @@ nav.cpd ul > li > ul li a:hover {
 }
 .menu-hide.show nav.cpd a {
     color: #FFFFFF;
-}
-
-.menu-hide.show  nav.cpd > li > a:hover {
-    background-color: #1C2B39;
 }
 
 .menu-hide.show nav.cpd li.nav-closed ul {

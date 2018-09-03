@@ -43,31 +43,38 @@
         .primary-bg,
         .primary-bg.active,
         .primary-bg.show,
-        .button.hollow:hover {
+        .button.hollow:hover{
             background-color: {{ globalsTheme.themeColorPrimary }}
         }
 
-        .secondary-bg,
-        .button.primary-bg:hover {
-            background-color: {{ globalsTheme.themeColorSecondary }}
-        }
         .primary-color,
         .button.hollow a,
         form label {
             color: {{ globalsTheme.themeColorPrimary }}
         }
+
         .button.hollow,
-        .primary-border {
-            border-color: {{ globalsTheme.themeColorPrimary }}
+        .primary-border,
+        .button.hollow.white:hover {
+            border-color:{{ globalsTheme.themeColorPrimary }}
         }
+
         .secondary-color {
             color: {{ globalsTheme.themeColorSecondary }}
         }
-        .secondary-bg {
+        .secondary-bg,
+        .secondary-bg-hover:hover,
+        .nav-open > a {
             background-color: {{ globalsTheme.themeColorSecondary }}
         }
+
         .secondary-border {
             border-color: {{ globalsTheme.themeColorSecondary }}
+        }
+
+        .secondary-bg,
+        .button.primary-bg:hover {
+            background-color: {{ globalsTheme.themeColorSecondary }}
         }
     </style>
 

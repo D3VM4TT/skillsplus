@@ -5,7 +5,7 @@
 <section class="slides">
     {% for slide in globalsTheme.homeSlider %}
         <article class="slide{% if loop.index == 1 %} active{% endif %}" style="background-image: url('{{ slide.slideImage.first().url }}');opacity: 1;">
-            <div class="container">
+            <div class="container secondary-bg">
                 <div class="caption">
                     <h2>{{ slide.slideTitle }}</h2>
                     <p>{{ slide.slideHeading }}</p>
