@@ -117,8 +117,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'qualificationResult') {
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
-            if (count($userExpiryDate) == 3 && $userExpiryDate['day'] && $userExpiryDate['month'] && $userExpiryDate['year']) {
-                $resultEntry->expiryDate = new \DateTime($userExpiryDate['year'] . '-' . $userExpiryDate['month'] . '-' . $userExpiryDate['day'] . ' 12:00:00');
+            if ($userExpiryDate) {
+                $resultEntry->expiryDate = new \DateTime($userExpiryDate . ' 12:00:00');
                 $saveContent = true;
             }
             // copy manager endorsement level from unit for submitted evidence
@@ -143,7 +143,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         if ($saveContent) {
-            craft()->content->saveContent($resultEntry, false);
+            craft()->entries->saveEntry($resultEntry);
         }
     }
 

@@ -12,31 +12,9 @@
         <label for="title" class="show">Qualification Title</label>
         <input type="input" name="title" class="float-label" placeholder="Enter the qualification title" />
     </div>
-    <div class="field--wrapper date-field">
-        <label class="show">Enter expiry date dd/mm/yyyy (if applicable)</label>
-        <div>
-            <select class="date-day" name="userExpiryDate[day]">
-                <option value="">-</option>
-                {% for d in 1..31 %}
-                    <option value="{{ d }}">{{ d }}</option>
-                {% endfor %}
-            </select>
-            /
-            <select class="date-month" name="userExpiryDate[month]">
-                <option value="">-</option>
-                {% for m in 1..12 %}
-                    <option value="{{ m }}">{{ m }}</option>
-                {% endfor %}
-            </select>
-            /
-            <select class="date-year" name="userExpiryDate[year]">
-                <option value="">-</option>
-                {% set year = 'now'|date('Y') %}
-                {% for y in year..(year+20) %}
-                    <option value="{{ y }}">{{ y }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    <div class="field--wrapper">
+        <label for="address" class="show">Expiry date (if applicable):</label>
+        <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
         <input type="file" name="fields[resultEvidence][]" multiple class="5000">
