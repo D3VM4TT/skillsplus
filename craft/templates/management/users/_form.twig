@@ -38,16 +38,16 @@
         {% endif %}
         <div class="field--wrapper">
             <label for="teamManagers" for="title" class="show">Roles:</label>
-                <ul>
-                    <li>
-                        {% if globalsScheme.schemeTeams|default(false) %}
-                            <strong>Team manager:</strong>
+                <ul class="options">
+                    {% if globalsScheme.schemeTeams|default(false) %}
+                        <li>
                             <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
-                        {% endif %}
-                    </li>
+                            <strong>Team manager</strong>
+                        </li>
+                    {% endif %}
                     <li>
-                        <strong>Company manager:</strong>
                         <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                        <strong>Company manager</strong>
                     </li>
                 </ul>
         </div>

@@ -405,7 +405,15 @@ form.page-form .field--wrapper {
     margin-bottom: 10px !important;
 }
 
-.field--wrapper input, .field--wrapper textarea {
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+.field--wrapper input,
+.field--wrapper textarea {
     display: block;
     font-size: 16px;
     width: 100%;
@@ -419,6 +427,29 @@ form.page-form .field--wrapper {
     outline: none;
     margin: 0px;
     background: none;
+}
+.field--wrapper select {
+    width:100%;
+    padding:5px;
+    border: 2px solid rgba(0, 0, 0, .1);
+}
+
+form ul.options {
+    margin:0;
+    padding:0;
+    list-style: none;
+}
+
+form ul.options li input {
+    display:inline-block;
+    float:left;
+    width:auto;
+    margin:7px 14px 0 0;
+}
+
+form ul.options li strong {
+    width:50%;
+    display:inline-block;
 }
 
 #remember-me {
