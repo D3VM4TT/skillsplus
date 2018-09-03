@@ -11,42 +11,43 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 
 {% block content %}
-
-<section class="list">
+<section class="page">
     <div class="page-header">
-        <h1>{{ moduleEntry.title }}</h1>
+        <h2>{{ moduleEntry.title }}</h2>
+        <h3>{{ unitEntry.title }}</h3>
+        {{ unitEntry.unitDescription }}
+        <p><a href="/">&laquo back to dashboard</a></p>
     </div>
-    <h3>{{ unitEntry.title }}</h3>
-    {{ unitEntry.unitDescription }}
-    {% if unitEntry.unitImage|length %}
-        {% set unitImage = unitEntry.unitImage.first %}
-        <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
-    {% endif %}
-    {% if unitEntry.unitUrl %}
-        <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
-    {% endif %}
-    {% if unitEntry.unitType == 'elearning' %}
-        {% if resultEntry|length and resultEntry.resultStatus == 'endorsed' %}
-            <p>You have passed this test.</p>
-        {% elseif not remainingAttempts %}
-            <p>You have no remaining attempts, contact your team manager.</p>
+    <div class="page-content">
+        {% if unitEntry.unitImage|length %}
+            {% set unitImage = unitEntry.unitImage.first %}
+            <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+        {% endif %}
+        {% if unitEntry.unitUrl %}
+            <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+        {% endif %}
+        {% if unitEntry.unitType == 'elearning' %}
+            {% if resultEntry|length and resultEntry.resultStatus == 'endorsed' %}
+                <p>You have passed this test.</p>
+            {% elseif not remainingAttempts %}
+                <p>You have no remaining attempts, contact your team manager.</p>
+            {% else %}
+                {% if resultEntry|length %}
+                    <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+                {% endif %}
+                {% if craft.request.getSegment(5) == 'test' %}
+                    {% include 'cpd/_units/test' with{entry:unitEntry} %}
+                {% elseif unitEntry.testQuestions|length %}
+                    <p><a href="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/test">Complete unit test</a></p>
+                {% endif %}
+            {% endif %}
         {% else %}
             {% if resultEntry|length %}
-                <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
-            {% endif %}
-            {% if craft.request.getSegment(5) == 'test' %}
-                {% include 'cpd/_units/test' with{entry:unitEntry} %}
-            {% elseif unitEntry.testQuestions|length %}
-                <p><a href="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/test">Complete unit test</a></p>
+                <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
+            {% else %}
+                {% include 'cpd/_units/evidence' with{entry:unitEntry} %}
             {% endif %}
         {% endif %}
-    {% else %}
-        {% if resultEntry|length %}
-            <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
-        {% else %}
-            {% include 'cpd/_units/evidence' with{entry:unitEntry} %}
-        {% endif %}
-    {% endif %}
-    <p><a href="/">Back to dashboard</a></p>
+    </div>
 </section>
 {% endblock %}

@@ -11,11 +11,13 @@
 {% set metaTitle = 'CPD > ' ~ account.fullname %}
 
 {% block content %}
-<section class="list">
+<section class="pge">
     <div class="page-header">
-        <h1>CPD for {{ account.fullname }}</h1>
+        <h2>CPD for {{ account.fullname }}</h2>
     </div>
-    {% include '_includes/cpd' with{cpdUser:account} %}
-    {% include '_includes/results' with{cpdUser:currentUser} %}
+    <div class="page-content">
+        {% include '_includes/cpd' with{cpdUser:account} %}
+        {% include '_includes/results' with{cpdUser:currentUser} %}
+    </div>
 </section>
 {% endblock %}

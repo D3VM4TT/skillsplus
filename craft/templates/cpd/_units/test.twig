@@ -1,4 +1,3 @@
-<div class="clearfix" style="margin:20px 0 20px 0;">
     {% import "_macros" as ui %}
     {% if entry is defined %}
         {{ ui.errorList(entry.getAllErrors()) }}
@@ -14,8 +13,8 @@
             {% for question in entry.testQuestions %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
-                <div class="form-group-lantra float-label-control">
-                    <label for="question_{{ loop.index }}"><em>{{ questionNumber }} {{ question.question }}</em></label>
+                <div class="field--wrapper">
+                    <label for="question_{{ loop.index }}">{{ questionNumber }} {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
@@ -35,10 +34,10 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <br />
-            <div class="freetext-procedure"><button type="submit">Submit Answers</button></div>
+            <div class="container-btn">
+                <button class="button primary-bg" type="submit">Submit answers</button>
+            </div>
         </form>
     {% else %}
         <p>There are no questions in this test.</p>
     {% endif %}
-</div>
