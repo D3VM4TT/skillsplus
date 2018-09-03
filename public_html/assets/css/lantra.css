@@ -91,6 +91,14 @@ h4 {
     max-width: 100%;
 }
 
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
 .center {
     margin: 0 auto;
     text-align: center;
@@ -717,6 +725,14 @@ section.slides article div.container div.buttons div.button {
     margin-left: 40px;
     display:inline-block;
     float:left;
+}
+
+section.dashboard div.page-header {
+    margin-bottom:40px;
+}
+
+section.row.admin {
+    margin-bottom:20px;
 }
 
 .img-responsive img {
