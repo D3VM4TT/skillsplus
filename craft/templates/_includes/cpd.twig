@@ -1,11 +1,11 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% if cpdUser.userRole.total %}
-    <section id="my-skills-quals" class="section-dashboard">
+    <article class="cpd">
         {% for role in cpdUser.userRole %}
-            <h2>Job Role: {{ role.title }}</h2>
+            <h3>Job Role: {{ role.title }}</h3>
             {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
-                <p>No modules have been assigned yet for this role.</p>
+                <p>No modules have been assigned to this role.</p>
             {% else %}
                 <div class="module-wrapper">
                 {% for module in modules %}
@@ -20,97 +20,93 @@
                             </div>
                         </div>
                         <div id="m{{ module.id }}" class="clearfix collapse">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th colspan="12"></th>
+                            <table class="data">
+                                <thead>
+                                <tr>
+                                    <th colspan="12"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for unitGroup in module.moduleUnitGroups %}
+                                    {% set unitGroupEntries = unitGroup.unitEntries %}
+                                    <tr data-toggle="collapse" data-target="#u{{ unitGroup.id }}" class="accordion-toggle">
+                                        <td colspan="12" class="accordion-toggle">
+                                            <div class="accordion-title"><p>{{ unitGroup.groupName }}</p></div>
+                                            <div class="accordion-icon">
+                                                <div class="accordion-title">View status and Endorsements</div>
+                                                <img src="/assets/img/img-arrow-down-trans.png">
+                                            </div>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for unitGroup in module.moduleUnitGroups %}
-                                        {% set unitGroupEntries = unitGroup.unitEntries %}
-                                        <tr data-toggle="collapse" data-target="#u{{ unitGroup.id }}" class="accordion-toggle">
-                                            <td colspan="12" class="accordion-toggle">
-                                                <div class="accordion-title"><p>{{ unitGroup.groupName }}</p></div>
-                                                <div class="accordion-icon">
-                                                    <div class="accordion-title">View status and Endorsements</div>
-                                                    <img src="/assets/img/img-arrow-down-trans.png">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div id="u{{ unitGroup.id }}" class="collapse">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-striped">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th style="width: 30%">Unit title</th>
-                                                                    <th>Type</th>
-                                                                    <th>Value</th>
-                                                                    <th>Status</th>
-                                                                    <th>Endorsed Date</th>
-                                                                    <th>Expiry Date</th>
-                                                                    <th>Evidence &amp; Comments</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% for unitEntry in unitGroupEntries %}
-                                                            {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
-                                                                <tr>
-                                                                    <td>
-                                                                        {% if moduleResultEntry %}
-                                                                            {{ unitEntry.title }}
-                                                                        {% else %}
-                                                                            <a href="cpd/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
-                                                                        {% endif %}
-                                                                    </td>
-                                                                    <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
-                                                                    <td>{{ unitEntry.unitValue }}</td>
+                                    <tr>
+                                        <td>
+                                            <div id="u{{ unitGroup.id }}" class="collapse">
+                                                <table class="data">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 30%">Unit title</th>
+                                                            <th>Type</th>
+                                                            <th>Value</th>
+                                                            <th>Status</th>
+                                                            <th>Endorsed Date</th>
+                                                            <th>Expiry Date</th>
+                                                            <th>Evidence &amp; Comments</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for unitEntry in unitGroupEntries %}
+                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
+                                                        <tr>
+                                                            <td>
+                                                                {% if moduleResultEntry %}
+                                                                    {{ unitEntry.title }}
+                                                                {% else %}
+                                                                    <a href="cpd/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
+                                                            <td>{{ unitEntry.unitValue }}</td>
 
-                                                                    {% if unitResultEntry %}
-                                                                    {% if (unitResultEntry.resultStatus == 'endorsed') %}
-                                                                        {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                                            {% if unitResultEntry %}
+                                                            {% if (unitResultEntry.resultStatus == 'endorsed') %}
+                                                                {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                                            {% endif %}
+                                                                <td>
+                                                                    {{ unitResultEntry.resultStatus|ucwords }}
+                                                                </td>
+                                                                <td>{% if unitResultEntry.resultEndorsedDate %}{{ unitResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                                                                <td>{% if unitResultEntry.expiryDate %}{{ unitResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                                                                <td>
+                                                                    {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
+                                                                        {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
+                                                                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                                        {% endfor %}
                                                                     {% endif %}
-                                                                        <td>
-                                                                            {{ unitResultEntry.resultStatus|ucwords }}
-                                                                        </td>
-                                                                        <td>{% if unitResultEntry.resultEndorsedDate %}{{ unitResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
-                                                                        <td>{% if unitResultEntry.expiryDate %}{{ unitResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
-                                                                        <td>
-                                                                            {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
-                                                                                {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
-                                                                                    <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                                                                                {% endfor %}
-                                                                            {% endif %}
-                                                                            {{ unitResultEntry.resultComments }}
-                                                                        </td>
-                                                                    {% else %}
-                                                                        <td>Incomplete</td>
-                                                                        <td>-</td>
-                                                                        <td>-</td>
-                                                                        <td>-</td>
-                                                                    {% endif %}
-                                                                </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                                                                    {{ unitResultEntry.resultComments }}
+                                                                </td>
+                                                            {% else %}
+                                                                <td>Incomplete</td>
+                                                                <td>-</td>
+                                                                <td>-</td>
+                                                                <td>-</td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                             <div class="tab-pane-sub-title">
                                 <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h3>
                                 <h3>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h3>
                                 {% if moduleResultEntry %}
                                     <h3>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h3>
                                     {% if moduleResultEntry %}
-                                    <h3><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a>
+                                        <h3><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a></h3>
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -120,5 +116,5 @@
                 </div>
             {% endif %}
         {% endfor %}
-    </section>
+    </article>
 {% endif %}
