@@ -579,7 +579,7 @@ body {
    height:100%;
 }
 
-.container-sidebar {
+.container-sidebar, div.sidebar {
     height: 100vh;
     width: 33.3%;
 }
@@ -647,7 +647,7 @@ section.slides article.active {
 }
 
 section.slides article div.container {
-    position: absolute !important;
+    position: absolute;
     margin-top: 20%;
     right: 0;
     width: 50%;
@@ -656,14 +656,14 @@ section.slides article div.container {
 }
 
 section.slides article div.container div.caption {
-    position: initial !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    z-index: initial !important;
-    color: #fff !important;
-    text-align: left !important;
-    padding: 40px 70px 40px 40px !important;
+    position: initial;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: initial;
+    color: #fff;
+    text-align: left;
+    padding: 40px 70px 40px 40px;
 }
 section.slides article div.container div.caption h2 {
     color:#FFFFFF;
@@ -891,7 +891,7 @@ nav.cpd ul > li > ul li a:hover {
 /*logged-in classes
 -------------------------------------------------- */
 
-body.logged-in .container-sidebar, body.logged-in .container-sidebar, div.sidebar, body.logged-in .container-footer-links {
+body.logged-in .container-sidebar, body.logged-in .container-sidebar, body.logged-in div.sidebar, body.logged-in .container-footer-links {
     width: 25.3%;
 }
 
@@ -1008,15 +1008,12 @@ table.data tbody tr:nth-of-type(2n+1) {
     nav.scheme {
         display: none;
     }
-
     .menu-hide nav.scheme {
         display: initial;
     }
-
     .menu-hide nav.menu-pages {
         margin: 0px 50px;
     }
-
     body.logged-in .container-sidebar {
         width: 100%;
         height: 250px;
@@ -1024,7 +1021,6 @@ table.data tbody tr:nth-of-type(2n+1) {
         float: initial;
         margin: 0;
     }
-
     body.logged-in .container-content {
         width: 100%;
         max-width: 100% !important;
@@ -1032,19 +1028,21 @@ table.data tbody tr:nth-of-type(2n+1) {
         float: initial;
         margin: 0;
     }
-
-    .container-sidebar {
+    .container-sidebar, div.sidebar {
         width: 100%;
         max-width: 100% !important;
-        height: 1120px;
+        min-height: 100vh;
+        height:auto;
         float: initial;
         margin: 0;
+        padding-bottom:40px;
     }
-
+    div.sidebar {
+        position: static;
+    }
     body.logged-in .menu-tab.active {
         left: 100%;
     }
-
     .content-top {
         height: initial;
         min-height: initial;
@@ -1059,7 +1057,7 @@ table.data tbody tr:nth-of-type(2n+1) {
     }
 
     .menu-hide, body.logged-in .menu-hide {
-        min-height:1200px;
+        min-height:100vh;
         width: 100%;
         left: -100%;
     }
@@ -1069,9 +1067,9 @@ table.data tbody tr:nth-of-type(2n+1) {
         right: 0;
     }
 
-    .container-content, .container-carousel-caption {
+    .container-content, section.slides article div.container {
         width: 100%;
-        max-width: 100% !important;
+        max-width: 100%;
         height: 550px;
         float: initial;
         margin: 0;
