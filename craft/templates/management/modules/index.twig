@@ -12,40 +12,38 @@
 
 {% block content %}
 
-<section class="list">
+<section class="page">
     <div class="page-header">
         <h2>Modules</h2>
     </div>
     {% include '_includes/filter' with{filterDays:false} %}
     {% if moduleEntries is defined and moduleEntries|length %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Job Joles</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for module in moduleEntries %}
-                    <tr class="item">
-                        <th>{{ module.id }}</th>
-                        <th>{{ module.title }}</th>
-                        <th>{{ module.moduleRoles.find()|join(", ") }}</th>
-                        <th>
-                            <a href="/management/modules/edit/{{ module.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ module.id }}">delete</a>
-                        </th>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Job Joles</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in moduleEntries %}
+                <tr>
+                    <td>{{ module.id }}</td>
+                    <td>{{ module.title }}</td>
+                    <td>{{ module.moduleRoles.find()|join(", ") }}</td>
+                    <td>
+                        <a href="/management/modules/edit/{{ module.id }}">edit</a> |
+                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="table-actions">
+        <div class="page-content">
             <h4>There are no modules to display.</h4>
         </div>
     {% endif %}
