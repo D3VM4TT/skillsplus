@@ -420,7 +420,9 @@ button:focus {
     outline: none;
 }
 
-.field--wrapper input,
+.field--wrapper input[type=text],
+.field--wrapper input[type=number],
+.field--wrapper input[type=password],
 .field--wrapper textarea {
     display: block;
     font-size: 16px;
@@ -443,6 +445,14 @@ button:focus {
 }
 .field--wrapper select[multiple] {
     min-height:200px;
+}
+
+form ul {
+    padding: 0;
+}
+
+form ul li {
+    list-style: none;
 }
 
 form ul.options {
@@ -491,8 +501,7 @@ span.remember-me-txt {
     font-size: .8em !important;
 }
 
-.field--wrapper label,
-ul.dropdowns label {
+.field--wrapper label.float {
     font-family: inherit;
     position: absolute;
     top: -25px;
@@ -503,62 +512,37 @@ ul.dropdowns label {
     opacity: 0;
 }
 
-.field--wrapper label.on, ul.dropdowns label.on {
+.field--wrapper label.float.on {
     color: #a82135;
 }
 
-.field--wrapper label.show, ul.dropdowns label.show {
+.field--wrapper label.float {
     top: -27px;
     opacity: 1;
 }
 
-ul.dropdowns label {
-    top: -12px !important;
-}
-
-ul.dropdowns label.show {
-    top: -14px !important;
-}
-
-ul.dropdowns .field--wrapper {
-    margin-bottom: 0px;
-}
-
-.field--wrapper input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+.field--wrapper input::-webkit-input-placeholder {
     font-family: inherit;
     font-size: 16px;
     opacity: 1;
 }
 
-.field--wrapper input::-moz-placeholder { /* Firefox 19+ */
+.field--wrapper input::-moz-placeholder {
     font-family: inherit;
     font-size: 16px;
     opacity: 1;
 }
 
-.field--wrapper input:-ms-input-placeholder { /* IE 10+ */
+.field--wrapper input:-ms-input-placeholder {
     font-family: inherit;
     font-size: 16px;
     opacity: 1;
 }
 
-.field--wrapper input:-moz-placeholder { /* Firefox 18- */
+.field--wrapper input:-moz-placeholder {
     font-family: inherit;
     font-size: 16px;
     opacity: 1;
-}
-
-.date-field {
-    padding:10px 0;
-}
-
-.date-field select {
-    display:inline;
-    width:40px;
-}
-
-.date-field select.date-year {
-    width:70px;
 }
 
 .sml-link {
@@ -845,8 +829,11 @@ body.logged-in .alert {
 /*Page layout
 -------------------------------------------------- */
 section.page {
-    padding-bottom:60px;
     min-height:100vh;
+}
+
+section.page div:last-child {
+    margin-bottom:60px;
 }
 
 .page-header {
@@ -866,42 +853,19 @@ section.page {
     padding-top:80px;
 }
 
-.form-group-lantra ul {
-    padding: 0;
-}
-
-.form-group-lantra ul li {
-    list-style: none;
-}
-
-.form-group-lantra select {
-    /*    padding: 5px 8px;
-        width: 100%;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        background-image: none;
-        -webkit-appearance: none;*/
-}
-
-.form-group-lantra select option[value="value"]{
-    background-color: red;
-    padding: 3px;
-    font-weight:bold;
-}
-
 /*cpd navigation
 -------------------------------------------------- */
 .sidebar {
     padding-left: 0 !important;
     padding-right: 0 !important;
     position:fixed;
+    overflow-y:auto;
 }
 
 /*cpd navigation
 -------------------------------------------------- */
 nav.cpd {
-    padding: 0px !important;
+    padding: 0 0 60px 0;
 }
 
 nav.cpd ul {
