@@ -43,7 +43,7 @@
         <label for="title" class="show">Company name:</label>
         <input id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
     </div>
-    <div class="field--wrapper custom-select">
+    <div class="field--wrapper">
         <label for="companyParent" class="show">Company Parent (if applicable):</label>
         {% if currentUser.isInGroup('schemeManagers') %}
             {% set companyEntries = craft.entries.section('companies') %}
@@ -51,7 +51,6 @@
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
         {% endif %}
         <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent" >
-            <option value="">Select Company parent (if applicable):</option>
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
@@ -59,11 +58,10 @@
             {% endfor %}
         </select>
     </div>
-    <div class="field--wrapper custom-select">
+    <div class="field--wrapper">
         <label for="companyManager" class="show">Select Company manager:</label>
         {% set userEntries = craft.users.group('companyManagers') %}
         <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
-            <option value="">Select Company manager:</option>
             {% for userEntry in userEntries %}
                 <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
             {% endfor %}

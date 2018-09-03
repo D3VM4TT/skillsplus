@@ -39,25 +39,23 @@
             <label for="title" class="show">Team name:</label>
             <input id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
         </div>
-        <div class="field--wrapper custom-select">
-            <label for="teamCompany" class="show">Team company::</label>
+        <div class="field--wrapper">
+            <label for="teamCompany" class="show">Team company:</label>
             {% if currentUser.isInGroup('schemeManagers') %}
                 {% set companyEntries = craft.entries.section('companies') %}
             {% else %}
                 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
             {% endif %}
             <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default(hierarchyCompany) }}" id="teamCompany" >
-                <option value="">Team company:</option>
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class="field--wrapper custom-select">
+        <div class="field--wrapper">
             <label for="teamPrimaryManager" class="show">Team primary manager:</label>
             {% set usersCompanyManagers = craft.users.group('companyManagers') %}
             <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
-                <option value="">Team primary manager:</option>
                 {% for userEntry in usersCompanyManagers %}
                     <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
                 {% endfor %}

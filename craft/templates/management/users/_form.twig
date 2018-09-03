@@ -91,22 +91,20 @@
                 <input id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
             </div>
         {%  endfor %}
-        <div class="field--wrapper custom-select">
+        <div class="field--wrapper">
             <label for="userCompany" class="show">User company:</label>
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
-                <option value="">User company:</option>
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endfor %}
             </select>
         </div>
         {% if globalsScheme.schemeTeams|default(false) %}
-            <div class="field--wrapper custom-select">
+            <div class="field--wrapper">
                 <label for="userCompany" class="show">User team:</label>
                 {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
                 <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
-                    <option value="">User team:</option>
                     {% for teamEntry in teamEntries %}
                         <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>
                     {% endfor %}
