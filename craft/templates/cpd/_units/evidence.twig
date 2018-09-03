@@ -1,28 +1,26 @@
-<div class="clearfix" style="margin:20px 0 20px 0;">
-    {% import "_macros" as ui %}
-    {% if entry is defined %}
-        {{ ui.errorList(entry.getAllErrors()) }}
-    {% endif %}
-    <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
-        {{ getCsrfInput() }}
-        <input type="hidden" name="action" value="entries/saveEntry">
-        <input type="hidden" name="typeId" value="10">
-        <input type="hidden" name="sectionId" value="10">
-        <input type="hidden" name="enabled" value="1">
-        <input type="hidden" name="fields[resultStatus]" value="pending">
-        <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
-        <div class="field--wrapper">
-            <label for="address" class="show">Expiry date (if applicable):</label>
-            <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
-        </div>
-        <div class="form-group-lantra">
-            <input type="file" name="fields[resultEvidence][]" multiple>
-        </div>
-        <div class="form-group-lantra">
-            <textarea name="fields[resultNotes]"></textarea>
-        </div>
-        <div class="form-group-lantra">
-            <button type="submit">Submit Evidence</button>
-        </div>
-    </form>
-</div>
+{% import "_macros" as ui %}
+{% if entry is defined %}
+    {{ ui.errorList(entry.getAllErrors()) }}
+{% endif %}
+<form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    <input type="hidden" name="typeId" value="10">
+    <input type="hidden" name="sectionId" value="10">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="fields[resultStatus]" value="pending">
+    <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
+    <div class="field--wrapper">
+        <label for="address" class="show">Expiry date (if applicable):</label>
+        <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="form-group-lantra">
+        <input type="file" name="fields[resultEvidence][]" multiple>
+    </div>
+    <div class="form-group-lantra">
+        <textarea name="fields[resultNotes]"></textarea>
+    </div>
+    <div class="form-group-lantra">
+        <button type="submit">Submit Evidence</button>
+    </div>
+</form>
