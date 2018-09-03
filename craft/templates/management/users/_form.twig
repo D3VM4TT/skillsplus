@@ -37,7 +37,7 @@
             <input type="hidden" name="redirect" value="management/users">
         {% endif %}
         <div class="field--wrapper">
-            <label for="teamManagers" for="title" class="show">Roles:</label>
+            <label for="teamManagers" for="title" class="float">Roles:</label>
                 <ul class="options">
                     {% if globalsScheme.schemeTeams|default(false) %}
                         <li>
@@ -52,47 +52,47 @@
                 </ul>
         </div>
         <div class="field--wrapper">
-            <label for="firstName" class="show">First name:</label>
-            <input required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+            <label for="firstName" class="float">First name:</label>
+            <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
         </div>
         <div class="field--wrapper">
-            <label for="lastName" class="show">Last name:</label>
-            <input required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+            <label for="lastName" class="float">Last name:</label>
+            <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
         </div>
         <div class="field--wrapper">
-            <label for="email" class="show">Email:</label>
-            <input required="required" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
+            <label for="email" class="float">Email:</label>
+            <input type="text" required="required" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
         </div>
         <div class="field--wrapper">
-            <label for="address" class="show">Start date:</label>
+            <label for="address" class="float">Start date:</label>
             <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
         </div>
         <div class="field--wrapper">
-            <label for="address" class="show">Date of birth:</label>
+            <label for="address" class="float">Date of birth:</label>
             <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account is defined ? account.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
         </div>
         <div class="field--wrapper">
-            <label for="address" class="show">Address:</label>
+            <label for="address" class="float">Address:</label>
             <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
         </div>
         <div class="field--wrapper">
-            <label for="telephone" class="show">Telephone:</label>
-            <input id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
+            <label for="telephone" class="float">Telephone:</label>
+            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
         </div>
         {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
         {%  for block in userCustomFields %}
             <div class="field--wrapper">
-                <label for="custom-{{ block.name }}" class="show">{{ block.label }}:</label>
+                <label for="custom-{{ block.name }}" class="float">{{ block.label }}:</label>
                 {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
                 {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
-                <input id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+                <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
             </div>
         {%  endfor %}
         <div class="field--wrapper">
-            <label for="userCompany" class="show">User company:</label>
+            <label for="userCompany" class="float">User company:</label>
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 {% for companyEntry in companyEntries %}
@@ -102,7 +102,7 @@
         </div>
         {% if globalsScheme.schemeTeams|default(false) %}
             <div class="field--wrapper">
-                <label for="userCompany" class="show">User team:</label>
+                <label for="userCompany" class="float">User team:</label>
                 {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
                 <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
                     {% for teamEntry in teamEntries %}
@@ -112,7 +112,7 @@
             </div>
         {% endif %}
         <div class="field--wrapper">
-            <label for="userRole" class="show">User roles:</label>
+            <label for="userRole" class="float">User roles:</label>
             {% set roleCategories = craft.categories.group('roles') %}
             <input type="hidden" name="fields[userRole]" value="" />
             <select multiple name="fields[userRole][]" id="userRole">

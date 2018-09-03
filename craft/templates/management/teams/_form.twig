@@ -36,11 +36,11 @@
         <input type="hidden" name="enabled" value="1">
         <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
         <div class="field--wrapper">
-            <label for="title" class="show">Team name:</label>
-            <input id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
+            <label for="title" class="float">Team name:</label>
+            <input type="text" id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
         </div>
         <div class="field--wrapper">
-            <label for="teamCompany" class="show">Team company:</label>
+            <label for="teamCompany" class="float">Team company:</label>
             {% if currentUser.isInGroup('schemeManagers') %}
                 {% set companyEntries = craft.entries.section('companies') %}
             {% else %}
@@ -53,7 +53,7 @@
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="teamPrimaryManager" class="show">Team primary manager:</label>
+            <label for="teamPrimaryManager" class="float">Team primary manager:</label>
             {% set usersCompanyManagers = craft.users.group('companyManagers') %}
             <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
                 {% for userEntry in usersCompanyManagers %}
@@ -62,7 +62,7 @@
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="teamSecondaryManagers" class="show">Team secondary managers:</label>
+            <label for="teamSecondaryManagers" class="float">Team secondary managers:</label>
             {% set usersTeamManagers = craft.users.group('teamManagers') %}
             <input type="hidden" name="fields[teamSecondaryManagers]" value="" />
             <select multiple name="fields[teamSecondaryManagers][]" id="teamSecondaryManagers">

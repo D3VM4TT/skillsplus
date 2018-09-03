@@ -3,11 +3,11 @@
     <input type="hidden" name="action" value="users/login">
     <input type="hidden" name="redirect" value="/">
     <div class="field--wrapper" style="">
-        <label for="loginName" style="" class="show">Email address</label>
-        <input id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.session.rememberedUsername }}">
+        <label for="loginName" style="" class="float">Email address</label>
+        <input type="text" id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.session.rememberedUsername }}">
     </div>
     <div class="field--wrapper last" style="">
-        <label for="password" style="" class="show">Password</label>
+        <label for="password" style="" class="float">Password</label>
         <input type="password" name="password" id="password" class="float-label" placeholder="Password">
         <span class="password-showhide">
             <span class="trigger-password">Show</span>

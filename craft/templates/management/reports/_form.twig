@@ -31,7 +31,7 @@
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
     <div class="field--wrapper">
         <label for="title">Report title:</label>
-        <input id="title" name="title" class="label-float" placeholder="Enter the report title" value="{{ entry.title|default('') }}">
+        <input type="text" id="title" name="title" class="label-float" placeholder="Enter the report title" value="{{ entry.title|default('') }}">
     </div>
     <div class="field--wrapper">
         <label for="reportType">Report type:</label>
@@ -155,11 +155,11 @@
         </div>
     </div>
     <div class="field--wrapper">
-        <label for="reportDescription" class="show">Report description:</label>
+        <label for="reportDescription" class="float">Report description:</label>
         <textarea id="reportDescription" class="label-float" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription|default('') }}</textarea>
     </div>
     <div class="field--wrapper">
-        <label for="reportDescription" class="show">Report recipients:</label>
+        <label for="reportDescription" class="float">Report recipients:</label>
         <textarea id="reportRecipients" class="label-float" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients|default('') }}</textarea>
     </div>
     <div class="field--wrapper">

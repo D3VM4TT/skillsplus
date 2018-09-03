@@ -1,27 +1,26 @@
-<form class="public" id="form-register" method="post" accept-charset="UTF-8">
-    <h1>Register</h1>
+<form class="page-form" id="form-register" method="post" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="users/saveUser">
     <input type="hidden" name="redirect" value="/">
     <input type="hidden" name="username" value="">
     <div class="field--wrapper" style="">
-        <label for="registerFirstName" class="show">First Name</label>
+        <label for="registerFirstName" class="float">First Name</label>
         <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
     </div>
-    <div class="field--wrapper" style="">
-        <label for="registerLastName" class="show">Last Name</label>
+    <div class="field--wrapper">
+        <label for="registerLastName" class="float">Last Name</label>
         <input id="registerLastName" type="text" placeholder="Last Name"
                name="lastName" {%- if account is defined %} value="{{ account.lastName }}"{% endif %}>
     </div>
-    <div class="field--wrapper" style="">
-        <label for="registerEmail" class="show">Email</label>
+    <div class="field--wrapper">
+        <label for="registerEmail" class="float">Email</label>
         <input id="registerEmail" type="text" placeholder="Email" name="email" {%- if account is defined %} value="{{ account.email }}"{% endif %}>
     </div>
-    <div class="field--wrapper" style="">
-        <label for="registerPassword" class="show">Password</label>
+    <div class="field--wrapper">
+        <label for="registerPassword" class="float">Password</label>
         <input id="registerPassword" type="password" name="password">
     </div>
-    <div class="container-btn container-log-in-btn">
-        <input type="submit" class="log-in-btn" value="Register">
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Register</button>
     </div>
 </form>
