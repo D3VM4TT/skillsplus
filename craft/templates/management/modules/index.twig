@@ -15,8 +15,8 @@
 <section class="page">
     <div class="page-header">
         <h2>Modules</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
     </div>
-    {% include '_includes/filter' with{filterDays:false} %}
     {% if moduleEntries is defined and moduleEntries|length %}
         <table class="data">
             <thead>
