@@ -12,6 +12,16 @@ $(document).ready(function(){
         ul.slideUp(function(){li.attr('class', 'nav-closed')});
     });
 
+    // toggle accordion
+    $('[data-target]').click(function(){
+        var t = $($(this).data('target'));
+        if (t.hasClass('closed')) {
+            t.slideDown(function(){t.removeClass('closed')});
+            return;
+        }
+        t.slideUp(function(){t.addClass('closed')});
+    });
+
     // set datefield values
     $('div.dateField').each(function(){
         var dateField = $(this),

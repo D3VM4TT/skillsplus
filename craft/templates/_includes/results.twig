@@ -16,7 +16,7 @@
         {% for moduleResultEntry in moduleResults %}
             {%  set moduleEntry = moduleResultEntry.resultModule.first %}
             <tr>
-                <td>{{ moduleEntry.title }}</td>
+                <td>{{ moduleEntry.title|default('~') }}</td>
                 <td>{{ moduleResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
                 <td>{% if moduleResultEntry.expiryDate %}{{ moduleResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
             </tr>

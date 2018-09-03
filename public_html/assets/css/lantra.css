@@ -92,11 +92,11 @@ h4 {
 }
 
 .text-center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .text-right {
-    text-align: right;
+    text-align: right !important;
 }
 
 .center {
@@ -675,10 +675,62 @@ body {
 /*CPD
 -------------------------------------------------- */
 article.cpd {
+    margin-bottom:60px;
+}
+
+article.cpd div.module-wrapper {
+    border-top: 2px solid #e9ecef;
+}
+
+article.cpd div.module-wrapper div.module {
     border: 2px solid #e9ecef;
     border-top:none;
-    padding: 35px 20px;
+    padding: 20px 15px;
 }
+
+article.cpd div.header {
+    cursor:pointer;
+    padding: 10px 0 10px 0;
+}
+
+article.cpd div.header h4,
+article.cpd div.header h5 {
+    margin:0;
+    display:inline;
+}
+
+article.cpd div.header h4 {
+    font-weight:500;
+    font-size:20px !important;
+}
+
+article.cpd div.status {
+    display:inline;
+    float:right;
+}
+
+article.cpd div.status img {
+    display: inline-block;
+    float: right;
+    margin-left: 20px;
+}
+
+article.cpd div.module-wrapper div.module div.unit-groups div.unit-group {
+    margin-top:20px;
+}
+
+article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header {
+    height:auto;
+    border-top:1px solid #e9ecef;
+    border-bottom:1px solid #e9ecef;
+    background-color: rgb(250, 250, 250);
+    padding:7px 14px;
+}
+
+article.cpd div.closed {
+    display:none;
+}
+
 
 
 /*Slides
