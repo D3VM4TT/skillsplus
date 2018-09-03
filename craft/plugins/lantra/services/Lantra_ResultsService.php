@@ -106,6 +106,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Check date in yyyy-mm-dd
+     *
+     * @param string
+     * @return bool
+     * @throws null
+     */
+    private function checkDate($date) {
+        $parts = explode('-', $date);
+        return checkdate($parts[1], $parts[2], $parts[0]);
+    }
+
+    /**
      * Handle new unit and qualification results
      *
      * @param $resultEntry
@@ -117,7 +129,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'qualificationResult') {
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
-            if ($userExpiryDate) {
+            if ($userExpiryDate && $this->checkDate($userExpiryDate)) {
                 $resultEntry->expiryDate = new \DateTime($userExpiryDate . ' 12:00:00');
                 $saveContent = true;
             }
