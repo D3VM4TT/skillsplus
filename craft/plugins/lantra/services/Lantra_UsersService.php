@@ -547,18 +547,20 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ( ! $manager) {
             return null;
         }
-        // get the subordinate ids
-        $subordinateIds = $this->getManagerSubordinateIds($manager, true);
-        if ( ! count($subordinateIds)) {
-            return null;
-        }
         // build the criteria model
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->limit = $limit;
-        $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
         if ($search) {
             $criteria->search = $search;
+        }
+        // get the subordinate ids if not admin or scheme manager
+        if ( ! $manager->admin && ! $manager->isInGroup('SchemeManager')) {
+            $subordinateIds = $this->getManagerSubordinateIds($manager, true);
+            if ( ! count($subordinateIds)) {
+                return null;
+            }
+            $criteria->id = $subordinateIds;
         }
         return $criteria;
     }

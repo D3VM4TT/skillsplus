@@ -11,16 +11,19 @@
                 <th>Team</th>
                 <th>Company</th>
                 <th>Email</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         {% for subordinate in reportEntries %}
         {% set userTeam = subordinate.userTeam.first() %}
+        {% set userCompany = craft.lantra.userCompany(subordinate.id) %}
         <tr>
-            <td><a href="/reporting/user/{{ subordinate.id }}">{{ subordinate.getFullName() }}</a></td>
-            <td>{{ userTeam.title }}</td>
-            <td>{{ userTeam.teamCompany.first.title }}</td>
+            <td>{{ subordinate.getFullName() }}</td>
+            <td>{{ userTeam.title|default('~') }}</td>
+            <td>{{ userCompany.title|default('~') }}</td>
             <td><a href="mailto:{{ subordinate.email }}">{{ subordinate.email }}</a></td>
+            <td><a href="/reporting/user/{{ subordinate.id }}">view cpd</a></td>
         </tr>
         {% endfor %}
         </tbody>
