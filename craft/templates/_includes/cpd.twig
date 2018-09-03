@@ -13,7 +13,7 @@
                     <div class="module clearfix">
                         {% set totalPoints = 0 %}
                         <div data-toggle="collapse" data-target="#m{{ module.id }}" class="accordion-toggle clearfix">
-                            <div class="accordion-title"><h4>{{ module.title }}</h4></div>
+                            <div class="accordion-title"><h3>{{ module.title }}</h4></div>
                             <div class="accordion-icon">
                                 <div class="accordion-title">{% if moduleResultEntry %}Complete{% else %}In Progress{% endif %} : View module</div>
                                 <img src="/assets/img/img-arrow-down-trans.png">
@@ -105,12 +105,12 @@
                                 </table>
                             </div>
                             <div class="tab-pane-sub-title">
-                                <h4>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
-                                <h4>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
+                                <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h4>
+                                <h3>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h4>
                                 {% if moduleResultEntry %}
-                                    <h4>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h4>
+                                    <h3>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h4>
                                     {% if moduleResultEntry %}
-                                    <h4><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a>
+                                    <h3><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a>
                                     {% endif %}
                                 {% endif %}
                             </div>

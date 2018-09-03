@@ -13,10 +13,13 @@
 {% block content %}
     <section class="page">
         <div class="page-header">
-            <h2>Qualification for {{ account.fullname }}</h2>
+            <h2>Qualifications for {{ account.fullname }}</h2>
         </div>
         {%  include 'cpd/_qualifications/table' with {author:account} %}
         {% if not userId or not currentUser.managerReadOnly %}
+            <div class="page-content">
+                <h3>Add new qualification</h3>
+            </div>
             {%  include 'cpd/_qualifications/form' with {author:(userId ? account : null)} %}
         {% endif %}
     </section>
