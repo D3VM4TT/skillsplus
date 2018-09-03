@@ -71,7 +71,6 @@
                     {% if entry is defined and userEntry.id in entry.teamSecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>
                 {% endfor %}
             </select>
-            <hr>
         </div>
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save team</button>
