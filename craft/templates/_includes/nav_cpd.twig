@@ -24,6 +24,9 @@
                 {% if currentUser.can('editCategories:1') %}
                     <li><a href="/management/roles" class="nav-link">Roles</a></li>
                 {%  endif %}
+                {% if currentUser.can('editEntries:6') %}
+                    <li><a href="/management/modules" class="nav-link">Module Roles</a></li>
+                {%  endif %}
                 {% if currentUser.can('editUsers') %}
                     <li><a href="/management/users" class="nav-link">Users</a></li>
                 {%  endif %}

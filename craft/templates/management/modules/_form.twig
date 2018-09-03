@@ -14,6 +14,7 @@
 
 <div class="page-header">
     <h2>Assign job roles {{ entry.title }}</h2>
+    <p><a href="/management/modules">&laquo; back to modules</a></p>
 </div>
 
 {% if entry is defined %}
@@ -25,8 +26,8 @@
     <input type="hidden" name="action" value="entries/saveEntry">
     <input type="hidden" name="redirect" value="management/modules">
     <input type="hidden" name="entryId" value="{{ entry.id }}">
-    <div class="form-group-lantra float-label-control">
-        <label for="moduleRoles">Module roles:</label>
+    <div class="field--wrapper">
+        <label for="moduleRoles" class="show">Module roles:</label>
         {% set roleCategories = craft.categories.group('roles') %}
         <input type="hidden" name="fields[moduleRoles]" value="" />
         <select multiple name="fields[moduleRoles][]" id="moduleRoles">
@@ -36,8 +37,9 @@
             {% endfor %}
         </select>
     </div>
-    <br />
-    <div class="freetext-procedure"><button type="submit">Save module</button></div>
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save module</button>
+    </div>
 </form>
 
 {% endblock %}

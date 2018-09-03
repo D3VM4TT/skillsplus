@@ -14,7 +14,7 @@
 
 <section class="page">
     <div class="page-header">
-        <h2>Modules</h2>
+        <h2>Module Roles</h2>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
     {% if moduleEntries is defined and moduleEntries|length %}
@@ -22,8 +22,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Job Joles</th>
+                    <th class="title">Name</th>
+                    <th>Job Roles</th>
                     <th></th>
                 </tr>
             </thead>
@@ -34,8 +34,7 @@
                     <td>{{ module.title }}</td>
                     <td>{{ module.moduleRoles.find()|join(", ") }}</td>
                     <td>
-                        <a href="/management/modules/edit/{{ module.id }}">edit</a> |
-                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ module.id }}">delete</a>
+                        <a href="/management/modules/edit/{{ module.id }}">edit roles</a>
                     </td>
                 </tr>
             {% endfor %}
