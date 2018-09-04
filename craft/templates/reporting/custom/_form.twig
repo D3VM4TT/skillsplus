@@ -2,7 +2,7 @@
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
-{% set metaTitle = "Management > Custom Reports" %}
+{% set metaTitle = "Reporting > Custom Reports" %}
 
 {% set entryId = craft.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
@@ -17,7 +17,7 @@
     {% else %}
         <h2>Create a new report</h2>
     {% endif %}
-    <p><a href="/management/reports">&laquo; back to reports</a></p>
+    <p><a href="/reporting/custom">&laquo; back to reports</a></p>
 </div>
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
@@ -25,7 +25,7 @@
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
-    <input type="hidden" name="redirect" value="management/reports">
+    <input type="hidden" name="redirect" value="reporting/custom">
     <input type="hidden" name="sectionId" value="13">
     <input type="hidden" name="enabled" value="1">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">

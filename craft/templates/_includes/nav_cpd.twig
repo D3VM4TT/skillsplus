@@ -12,7 +12,7 @@
     </ul>
     {% if craft.lantra.canManage() %}
     <ul>
-        <li class="nav-closed">
+        <li class="{% if craft.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Management</a>
             <ul>
                 <li><a href="/management/hierarchy">Hierarchy</a></li>
@@ -33,11 +33,11 @@
                 {%  endif %}
             </ul>
         </li>
-        <li class="nav-closed">
+        <li class="{% if craft.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
                 {% if currentUser.can('editEntries:13') %}
-                    <li><a href="/management/reports">Custom Reports</a></li>
+                    <li><a href="/reporting/custom">Custom Reports</a></li>
                 {%  endif %}
                 <li><a href="/reporting/users">Users Report</a></li>
                 <li><a href="/reporting/modules-expiring">Modules Expiring Report</a></li>
