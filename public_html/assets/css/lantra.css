@@ -1050,7 +1050,9 @@ div.links span.current {
         float: initial;
         margin: 0;
     }
-    .container-sidebar, div.sidebar {
+    .container-sidebar,
+    div.sidebar,
+    body.logged-in div.sidebar {
         width: 100%;
         max-width: 100% !important;
         min-height: 100vh;
