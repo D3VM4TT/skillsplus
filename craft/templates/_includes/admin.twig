@@ -10,7 +10,7 @@
             </div>
         </div>
         {% endif %}
-        {% if currentUser.can('editEntries:5') %}
+        {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
         <div class="col-8">
             <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>
