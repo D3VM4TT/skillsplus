@@ -33,7 +33,12 @@ class Lantra_UsersController extends Lantra_BaseController {
         // set basic account fields
         $user->firstName = craft()->request->getPost('firstName');
         $user->lastName = craft()->request->getPost('lastName');
-        $user->email = craft()->request->getPost('email');
+        if (craft()->request->getPost('generateEmail')) {
+            $user->email = craft()->lantra_users->generateEmail($user->firstName, $user->lastName);
+        }
+        else {
+            $user->email = craft()->request->getPost('email');
+        }
         // set new password (if present)
         $user->newPassword = (craft()->request->getPost('newPassword') ?: null);
         // set custom fields

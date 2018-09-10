@@ -34,7 +34,7 @@
         {% if hierarchyNode %}
             <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
         {% else %}
-            <input type="hidden" name="redirect" value="management/users">
+            <input type="hidden" name="redirect" value="/management/users">
         {% endif %}
         <div class="field--wrapper">
             <label for="teamManagers" for="title" class="float">Roles:</label>
@@ -61,8 +61,14 @@
         </div>
         <div class="field--wrapper">
             <label for="email" class="float">Email:</label>
-            <input type="text" required="required" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
+            <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
         </div>
+        {% if not account.id|default(false) %}
+        <div class="field--wrapper">
+            <label for="generateEmail" class="float">Generate Random Email?</label>
+            <input type="checkbox" id="generateEmail" name="generateEmail" value="1" {% if account is defined and account.generateEmail %}checked="checked"{% endif %}>
+        </div>
+        {%  endif %}
         <div class="field--wrapper">
             <label for="address" class="float">Start date:</label>
             <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">

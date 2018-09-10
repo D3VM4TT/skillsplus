@@ -808,4 +808,23 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->limit = null;
         return $criteria;
     }
+
+    /** Generate a dummy email address for user
+     *
+     * @param $firstName
+     * @param $lastName
+     * @return string
+     * @throws Exception
+     */
+    public function generateEmail($firstName = null, $lastName = null) {
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        if ($firstName && $lastName) {
+            $handle = strtolower($firstName . '.' . $lastName);
+        }
+        else {
+            $handle = mt_rand(10000000, 99999999);
+        }
+        $domain = $globalsScheme->schemeEmailDomain ? $globalsScheme->schemeEmailDomain : 'lantra.co.uk';
+        return $handle . '@' . $domain;
+    }
 }
