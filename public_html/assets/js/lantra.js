@@ -239,4 +239,11 @@ $(document).ready(function(){
             }
         });
     });
+
+    // delete user photo
+    $("#deleteUserPhotoAction").on('click', function(e) {
+        e.preventDefault();
+        $("input[name='deleteUserPhoto']").val('zap');
+        $("#form-photo").submit();
+    });
 });

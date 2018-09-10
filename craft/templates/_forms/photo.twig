@@ -1,0 +1,12 @@
+<form class="public" id="form-photo" method="post" enctype="multipart/form-data">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="users/saveUser">
+    <input type="hidden" name="redirect" value="/">
+    <input type="hidden" name="userId" value="{{ currentUser.id }}">
+    <input type="file" name="userPhoto" value="{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload') }}">
+    <input type="hidden" name="deleteUserPhoto"value="">
+    <div class="container-btn container-sidebar-btn">
+        <button id="deleteUserPhotoAction" class="button primary-bg" type="button"><span>Delete</span></button>
+        <button class="button primary-bg"><span>Upload</span></button>
+    </div>
+</form>
