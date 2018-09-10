@@ -901,7 +901,8 @@ nav.cpd ul > li:last-child {
     margin-bottom: 40px;
 }
 
-nav.cpd ul > li > ul li a:hover {
+nav.cpd ul > li > ul li a:hover,
+nav.cpd ul > li > ul li a.active {
     background-color: rgba(0,0,0,.05);
     color: #444444;
 }

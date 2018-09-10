@@ -15,21 +15,33 @@
         <li class="{% if craft.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Management</a>
             <ul>
-                <li><a href="/management/hierarchy">Hierarchy</a></li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'hierarchy' %}active{% endif %}" href="/management/hierarchy">Hierarchy</a>
+                </li>
                 {% if currentUser.can('editEntries:3') %}
-                    <li><a href="/management/companies">Companies</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'companies' %}active{% endif %}" href="/management/companies">Companies</a>
+                    </li>
                 {%  endif %}
                 {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
-                    <li><a href="/management/teams">Teams</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
+                    </li>
                 {%  endif %}
                 {% if currentUser.can('editCategories:1') %}
-                    <li><a href="/management/roles">Roles</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'roles' %}active{% endif %}" href="/management/roles">Roles</a>
+                    </li>
                 {%  endif %}
                 {% if currentUser.can('editEntries:6') %}
-                    <li><a href="/management/modules">Module Roles</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Module Roles</a>
+                    </li>
                 {%  endif %}
                 {% if currentUser.can('editUsers') %}
-                    <li><a href="/management/users">Users</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                    </li>
                 {%  endif %}
             </ul>
         </li>
@@ -37,15 +49,31 @@
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
                 {% if currentUser.can('editEntries:13') %}
-                    <li><a href="/reporting/custom">Custom Reports</a></li>
+                    <li>
+                        <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
+                    </li>
                 {%  endif %}
-                <li><a href="/reporting/users">Users Report</a></li>
-                <li><a href="/reporting/modules-expiring">Modules Expiring Report</a></li>
-                <li><a href="/reporting/modules-completed">Modules Completed Report</a></li>
-                <li><a href="/reporting/modules-active">Modules Active Report</a></li>
-                <li><a href="/reporting/units-blocked">Units Blocked Report</a></li>
-                <li><a href="/reporting/units-endorsed">Units Endorsed Report</a></li>
-                <li><a href="/reporting/units-expiring">Units Expiring Report</a></li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'users' %}active{% endif %}" href="/reporting/users">Users Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'modules-expiring' %}active{% endif %}" href="/reporting/modules-expiring">Modules Expiring Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'modules-completed' %}active{% endif %}" href="/reporting/modules-completed">Modules Completed Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'modules-active' %}active{% endif %}" href="/reporting/modules-active">Modules Active Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'units-blocked' %}active{% endif %}" href="/reporting/units-blocked">Units Blocked Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'units-endorsed' %}active{% endif %}" href="/reporting/units-endorsed">Units Endorsed Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'units-expiring' %}active{% endif %}" href="/reporting/units-expiring">Units Expiring Report</a>
+                </li>
             </ul>
         </li>
         {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
