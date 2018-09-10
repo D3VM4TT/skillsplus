@@ -1,6 +1,9 @@
 {% extends "_layout" %}
 {% block content %}
-    <h2>Licence</h2>
-    <p>Pay for your licence to authorize your account.</p>
-    {{ include(template_from_string(globalsScheme.individualLicencePaypalButton)|raw) }}
+    <section class="page">
+    <div class="page-header">
+        <h2>Licence</h2>
+        <p>Pay for your licence to authorize your account.</p>
+        {{ include(template_from_string(globalsScheme.individualLicencePaypalButton)|raw) }}
+    </div>
 {% endblock %}
