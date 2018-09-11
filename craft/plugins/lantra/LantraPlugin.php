@@ -86,6 +86,11 @@ class LantraPlugin extends BasePlugin
                         }
                     }
                 }
+                // set custom author
+                $authorId = craft()->request->getPost('authorId');
+                if ($entry->type == 'qualificationResult' && $authorId) {
+                    $entry->authorId = $authorId;
+                }
             }
             // check remaining attempts
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts) {
