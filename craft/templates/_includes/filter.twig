@@ -9,6 +9,6 @@
             <option value="all"{% if filterDays == 'all' %} selected="selected"{% endif %}>all time</option>
         </select>
     {% endif %}
-    <input type="text" placeholder="search" name="search" value="{{ filterSearch }}" />
-    <button type="submit">Search</button>
+    <input type="text" class="text-search" placeholder="search" name="search" value="{{ filterSearch }}" />
+    <button type="submit" class="btn-search">Search</button>
 </form>
