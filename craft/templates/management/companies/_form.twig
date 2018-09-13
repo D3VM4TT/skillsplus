@@ -21,7 +21,11 @@
     {% else %}
         <h2>Create a new company</h2>
     {% endif %}
-    <p><a href="/management/companies">&laquo; back to companies</a></p>
+            {% if hierarchyNode %}
+        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
+        {% else %}
+        <p><a href="/management/companies">&laquo; back</a></p>
+        {% endif %}
 </div>
 
 {% if entry is defined %}
@@ -44,13 +48,13 @@
         <input type="text" id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
     </div>
     <div class="field--wrapper">
-        <label for="companyParent" class="float">Company Parent (if applicable):</label>
+        <label for="companyParent">Company Parent (if applicable):</label>
         {% if currentUser.isInGroup('schemeManagers') %}
             {% set companyEntries = craft.entries.section('companies') %}
         {% else %}
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
         {% endif %}
-        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent" >
+        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
@@ -59,7 +63,7 @@
         </select>
     </div>
     <div class="field--wrapper">
-        <label for="companyManager" class="float">Select Company manager:</label>
+        <label for="companyManager">Select Company manager:</label>
         {% set userEntries = craft.users.group('companyManagers') %}
         <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
             {% for userEntry in userEntries %}

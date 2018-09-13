@@ -1,8 +1,9 @@
+<article class="administrator-tools">
 <h2>Administrator tools</h2>
 {% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}
     <section class="row text-center admin">
         {% if currentUser.can('editEntries:3') %}
-        <div class="col-8">
+        <div class="col-2">
             <img src="/assets/img/img-company-management.jpg" width="150" height="150" class="" alt="">
             <h3>Company Management</h3>
             <div class="text-muted">
@@ -11,7 +12,7 @@
         </div>
         {% endif %}
         {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
-        <div class="col-8">
+        <div class="col-2">
             <img src="/assets/img/img-team-management.jpg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>
             <div class="text-muted">
@@ -20,7 +21,7 @@
         </div>
         {% endif %}
         {% if currentUser.can('editUsers') %}
-        <div class="col-8">
+        <div class="col-2">
             <img src="/assets/img/img-user-management.jpg" width="150" height="150" class="" alt="">
             <h3>User Management</h3>
             <div class="text-muted">
@@ -34,7 +35,7 @@
 {% if currentUser.can('editCategories:1') or currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
 <section class="row text-center admin">
     {% if currentUser.can('editCategories(1)') %}
-    <div class="col-8">
+    <div class="col-2">
         <img src="/assets/img/img-job-role-management.jpg" width="150" height="150" class="" alt="">
         <h3>Job Role Management</h3>
         <div class="text-muted">
@@ -43,7 +44,7 @@
     </div>
     {% endif %}
     {% if currentUser.can('editEntries:6') %}
-    <div class="col-8">
+    <div class="col-2">
         <img src="/assets/img/img-skills-management.jpg" width="150" height="150" class="" alt="">
         <h3>Modules Management</h3>
         <div class="text-muted">
@@ -51,7 +52,7 @@
         </div>
     </div>
     {% endif %}
-    <div class="col-8">
+    <div class="col-2">
         <img src="/assets/img/img-skills-management.jpg" width="150" height="150" class="" alt="">
         <h3>Reporting</h3>
         <div class="text-muted">
@@ -59,4 +60,5 @@
         </div>
     </div>
 </section>
+</article>
 {% endif %}

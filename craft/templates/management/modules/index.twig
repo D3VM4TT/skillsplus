@@ -14,28 +14,30 @@
 
 <section class="page">
     <div class="page-header">
-        <h2>Module Roles</h2>
+        <h2>Roles / Modules</h2>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
     {% if moduleEntries is defined and moduleEntries|length %}
         <table class="data">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th class="title">Name</th>
+                    {#<th>#</th>#}
                     <th>Job Roles</th>
-                    <th></th>
+                    <th class="title">Modules</th>
+                    {#<th></th>#}
                 </tr>
             </thead>
             <tbody>
             {% for module in moduleEntries %}
                 <tr>
-                    <td>{{ module.id }}</td>
-                    <td>{{ module.title }}</td>
+                    {#<td>{{ module.id }}</td>#}
                     <td>{{ module.moduleRoles.find()|join(", ") }}</td>
+                    <td>{{ module.title }}</td>
+                    {#
                     <td>
                         <a href="/management/modules/edit/{{ module.id }}">edit roles</a>
                     </td>
+                    #}
                 </tr>
             {% endfor %}
             </tbody>

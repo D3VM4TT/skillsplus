@@ -4,7 +4,7 @@
 {% block content %}
     <section class="page dashboard">
         <div class="page-header">
-            <img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}">
+            <a href="/profile"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             <h2>{{ currentUser.fullName }}</h2>
             {{ currentUserCompany|default('') }}
             <p class="welcome-back">
@@ -12,15 +12,10 @@
             </p>
         </div>
         <div class="page-content">
-            {% include '_includes/profile' %}
-            {% include '_forms/photo' %}
-            {% include '_includes/cpd' with{cpdUser:currentUser} %}
             {% include '_includes/results' with{cpdUser:currentUser} %}
+            {% include '_includes/cpd' with{cpdUser:currentUser} %}
             {% if craft.lantra.canManage(null, true) %}
                 {% include '_includes/scheme' %}
-            {% endif %}
-            {% if craft.lantra.canManage() %}
-                {% include '_includes/admin' %}
             {% endif %}
         </div>
     </section>

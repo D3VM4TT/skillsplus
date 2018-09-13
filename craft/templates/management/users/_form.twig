@@ -22,7 +22,11 @@
         {% else %}
             <h2>Create a new user</h2>
         {% endif %}
-        <p><a href="/management/users">&laquo; back to users</a></p>
+        {% if hierarchyNode %}
+        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
+        {% else %}
+        <p><a href="/management/users">&laquo; back</a></p>
+        {% endif %}
     </div>
     {% if account is defined %}
         {{ ui.errorList(account.getAllErrors()) }}
@@ -98,7 +102,7 @@
             </div>
         {%  endfor %}
         <div class="field--wrapper">
-            <label for="userCompany" class="float">User company:</label>
+            <label for="userCompany">User company:</label>
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 {% for companyEntry in companyEntries %}
@@ -108,7 +112,7 @@
         </div>
         {% if globalsScheme.schemeTeams|default(false) %}
             <div class="field--wrapper">
-                <label for="userCompany" class="float">User team:</label>
+                <label for="userCompany">User team:</label>
                 {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
                 <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
                     {% for teamEntry in teamEntries %}
@@ -118,7 +122,7 @@
             </div>
         {% endif %}
         <div class="field--wrapper">
-            <label for="userRole" class="float">User roles:</label>
+            <label for="userRole">User roles:</label>
             {% set roleCategories = craft.categories.group('roles') %}
             <input type="hidden" name="fields[userRole]" value="" />
             <select multiple name="fields[userRole][]" id="userRole">

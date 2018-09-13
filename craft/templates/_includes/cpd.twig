@@ -2,7 +2,7 @@
 {% if cpdUser.userRole.total %}
     <article class="cpd">
         {% for role in cpdUser.userRole %}
-            <h2>{{ role.title }}</h2>
+            <h2>Job Role: {{ role.title }}</h2>
             {% set modules = craft.entries.relatedTo(role).order('title') %}
             {% if not modules|length %}
                 <p>No modules have been assigned to this role.</p>
@@ -14,8 +14,8 @@
                         {% set totalPoints = 0 %}
                         <div class="header" data-target="#m{{ module.id }}">
                             <h4>{{ module.title }}</h4>
-                            <div class="status">
-                                {% if moduleResultEntry %}Complete{% else %}In Progress{% endif %} : View module
+                            <div class="status module-status">
+                                {% if moduleResultEntry %}<span class="module-status-complete">Complete</span>{% else %}<span class="module-status-inprogress">In Progress</span>{% endif %} : View module
                                 <img src="/assets/img/img-arrow-down-trans.png">
                             </div>
                         </div>

@@ -19,7 +19,11 @@
     {% else %}
         <h2>Create a new team</h2>
     {% endif %}
-        <p><a href="/management/teams">&laquo; back to teams</a></p>
+                {% if hierarchyNode %}
+        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
+        {% else %}
+        <p><a href="/management/teams">&laquo; back</a></p>
+        {% endif %}
     </div>
     {% if entry is defined %}
         {{ ui.errorList(entry.getAllErrors()) }}
@@ -40,7 +44,7 @@
             <input type="text" id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
         </div>
         <div class="field--wrapper">
-            <label for="teamCompany" class="float">Team company:</label>
+            <label for="teamCompany">Team company:</label>
             {% if currentUser.isInGroup('schemeManagers') %}
                 {% set companyEntries = craft.entries.section('companies') %}
             {% else %}
@@ -53,7 +57,7 @@
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="teamPrimaryManager" class="float">Team primary manager:</label>
+            <label for="teamPrimaryManager">Team primary manager:</label>
             {% set usersCompanyManagers = craft.users.group('companyManagers') %}
             <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
                 {% for userEntry in usersCompanyManagers %}
@@ -62,7 +66,7 @@
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="teamSecondaryManagers" class="float">Team secondary managers:</label>
+            <label for="teamSecondaryManagers">Team secondary managers:</label>
             {% set usersTeamManagers = craft.users.group('teamManagers') %}
             <input type="hidden" name="fields[teamSecondaryManagers]" value="" />
             <select multiple name="fields[teamSecondaryManagers][]" id="teamSecondaryManagers">

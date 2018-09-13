@@ -10,7 +10,7 @@
     <section class="page">
         <div class="page-header">
             <h2>{{ userProfile.getFullName() }}</h2>
-            <p>See below for a summary of all your Qualifications and complated CPD.</p>
+            <p>See below for a summary of all your Qualifications and completed CPD.</p>
         </div>
         {% set moduleResults = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete') %}
         {% if moduleResults|length %}

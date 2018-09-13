@@ -3,11 +3,15 @@
         <li>
             <a class="secondary-bg-hover" href="/">My Dashboard</a>
         </li>
-        <li>
-            <a class="secondary-bg-hover" href="/public/passport/{{ currentUser.id }}">My Passport</a>
+                <li>
+            <a class="secondary-bg-hover" href="/cpd/further-achievements">My Achievements</a>
         </li>
         <li>
-            <a class="secondary-bg-hover" href="/cpd/qualifications">My Qualifications</a>
+            {#<a class="secondary-bg-hover" href="/public/passport/{{ currentUser.id }}">My Passport</a>#}
+            <a class="secondary-bg-hover" href="#">My Passport - Coming Soon!</a>
+        </li>
+        <li>
+            <a class="secondary-bg-hover" href="/profile">My Profile</a>
         </li>
     </ul>
     {% if craft.lantra.canManage() %}
@@ -28,19 +32,21 @@
                         <a class="{% if craft.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
                     </li>
                 {%  endif %}
+                {% if currentUser.can('editUsers') %}
+                <li>
+                <a class="{% if craft.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                </li>
+                {%  endif %}
+                {#
                 {% if currentUser.can('editCategories:1') %}
                     <li>
                         <a class="{% if craft.request.getSegment(2) == 'roles' %}active{% endif %}" href="/management/roles">Roles</a>
                     </li>
                 {%  endif %}
+                #}
                 {% if currentUser.can('editEntries:6') %}
                     <li>
-                        <a class="{% if craft.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Module Roles</a>
-                    </li>
-                {%  endif %}
-                {% if currentUser.can('editUsers') %}
-                    <li>
-                        <a class="{% if craft.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                        <a class="{% if craft.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
                     </li>
                 {%  endif %}
             </ul>
