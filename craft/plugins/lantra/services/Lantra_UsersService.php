@@ -612,7 +612,9 @@ class Lantra_UsersService extends BaseApplicationComponent
         $company = $user->userCompany->first();
         if ($company) {
             $manager = $company->companyManager->first();
-            $return[$manager->id] = $manager;
+            if ($manager) {
+                $return[$manager->id] = $manager;
+            }
         }
         else {
             $team = $user->userTeam->first();
