@@ -13,11 +13,11 @@
 {% block content %}
 <section class="pge">
     <div class="page-header">
-        <h2>Dashboard for {{ account.fullname }}</h2>
+        <h2>{{ account.fullname }} ~ Dashboard</h2>
         <a href="/management/users">Back to Users</a>
     </div>
     <div class="page-content">
-    {% include '_includes/results' with{cpdUser:currentUser} %}
+        {% include '_includes/results' with{cpdUser:account} %}
         {% include '_includes/cpd' with{cpdUser:account} %}
     </div>
 </section>

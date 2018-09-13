@@ -140,18 +140,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $saveContent = true;
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
             }
-            // handle submitted qualification results
-            if ($resultEntry->type == 'qualificationResult') {
-                // set author and auto endorse
-                $authorId = craft()->request->getPost('authorId');
-                if ($authorId) {
-                    $resultEntry->authorId = $authorId;
+            // set author (manager submitting on behalf of user)
+            $authorId = craft()->request->getPost('authorId');
+            if ($authorId) {
+                $resultEntry->authorId = $authorId;
+                // auto endorse
+                if ($resultEntry->type == 'qualificationResult') {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
-                    $saveContent = true;
                 }
-                else {
-                    craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
-                }
+                $saveContent = true;
+            }
+            elseif ($resultEntry->type == 'qualificationResult') {
+                craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
             }
         }
         if ($saveContent) {

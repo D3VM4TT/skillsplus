@@ -51,7 +51,7 @@
                                                     {% if moduleResultEntry %}
                                                         {{ unitEntry.title }}
                                                     {% else %}
-                                                        <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
+                                                        <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                     {% endif %}
                                                 </td>
                                                 <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>

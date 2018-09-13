@@ -9,6 +9,9 @@
             <input type="hidden" name="redirect" value="unit/{{ entry.id }}">
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
+            {% if userId != currentUser.id %}
+                <input type="hidden" name="authorId" value="{{ userId }}">
+            {% endif %}
             <input type="hidden" name="fields[attemptUnit][]" value="{{ entry.id }}">
             {% for question in entry.testQuestions %}
                 {% set questionNumber = loop.index  %}
