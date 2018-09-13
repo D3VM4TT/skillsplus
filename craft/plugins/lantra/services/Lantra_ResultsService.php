@@ -283,7 +283,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             if ($resultEntry->resultStatus == 'endorsed') {
                 $points += $unitEntry->unitValue;
                 // check if unit expiry is before default module expiry)
-                if ($resultEntry->expiryDate && $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime) {
+                if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
                     $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
                 }
             }
