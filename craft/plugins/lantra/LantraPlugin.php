@@ -68,8 +68,8 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onBeforeSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // Saving qualification/unit results
-            if ($entry->sectionId == $this->sectionIdResults && ($entry->type == 'unitResult' || $entry->type == 'qualificationResult')) {
+            // Saving user/unit results
+            if ($entry->sectionId == $this->sectionIdResults && ($entry->type == 'unitResult' || $entry->type == 'userResult')) {
                 // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 if ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
@@ -88,7 +88,7 @@ class LantraPlugin extends BasePlugin
                 }
                 // set custom author
                 $authorId = craft()->request->getPost('authorId');
-                if ($entry->type == 'qualificationResult' && $authorId) {
+                if ($entry->type == 'userResult' && $authorId) {
                     $entry->authorId = $authorId;
                 }
             }
@@ -111,7 +111,7 @@ class LantraPlugin extends BasePlugin
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // saving qualification/unit results
+            // saving user/unit results
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
                 craft()->lantra_results->saveNewResult($entry);
             }

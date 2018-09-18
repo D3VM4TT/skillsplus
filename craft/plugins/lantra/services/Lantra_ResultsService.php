@@ -118,7 +118,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
-     * Handle new unit and qualification results
+     * Handle new unit and user results
      *
      * @param $resultEntry
      * @return null
@@ -126,7 +126,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     function saveNewResult($resultEntry) {
         $saveContent = false;
-        if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'qualificationResult') {
+        if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
             if ($userExpiryDate && $this->checkDate($userExpiryDate)) {
@@ -145,12 +145,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
             if ($authorId) {
                 $resultEntry->authorId = $authorId;
                 // auto endorse
-                if ($resultEntry->type == 'qualificationResult') {
+                if ($resultEntry->type == 'userResult') {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
                 }
                 $saveContent = true;
             }
-            elseif ($resultEntry->type == 'qualificationResult') {
+            elseif ($resultEntry->type == 'userResult') {
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
             }
         }
