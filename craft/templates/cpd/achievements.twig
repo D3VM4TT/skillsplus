@@ -8,7 +8,7 @@
     {% set account = currentUser %}
 {% endif %}
 
-{% set metaTitle = 'Qualifications > ' ~ account.fullname %}
+{% set metaTitle = 'Achievements > ' ~ account.fullname %}
 
 {% block content %}
     <section class="page">
@@ -16,11 +16,11 @@
             <h2>Achievements for {{ account.fullname }}</h2>
             <p>View or create achievements.</p>
         </div>
-        {%  include 'cpd/_qualifications/table' with {author:account} %}
+        {%  include 'cpd/_achievements/table' with {author:account} %}
         {% if not userId or not currentUser.managerReadOnly %}
             <div class="page-content">
-                <h3>Add new achievement</h3>
-            {%  include 'cpd/_qualifications/form' with {author:(userId ? account : null)} %}
+                <h3>Add new result</h3>
+            {%  include 'cpd/_achievements/form' with {author:(userId ? account : null)} %}
         {% endif %}
             </div>
     </section>

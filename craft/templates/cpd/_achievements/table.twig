@@ -1,13 +1,12 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-{% set userResults = craft.entries.section('results').type('qualificationResult').authorId(author.id) %}
+{% set userResults = craft.entries.section('results').type(['qualificationResult', 'unitResult']).authorId(author.id) %}
 {% if userResults|length %}
     <table class="data table-striped">
         <thead>
         <tr>
-            <th style="width: 30%">Result Title</th>
-            <th>Submitted Date</th>
+            <th style="width: 30%">Title</th>
+            <th>Type</th>
             <th>Status</th>
-            <th>Endorsed Date</th>
             <th>Expiry Date</th>
             <th>Evidence &amp; Comments</th>
         </tr>
@@ -15,10 +14,16 @@
         <tbody>
         {% for userResultEntry in userResults %}
             <tr>
-                <td>{{ userResultEntry.title }}</td>
-                <td>{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                <td>
+                    {% if userResultEntry.type == 'unitResult' %}
+                        {% set resultUnit = userResultEntry.resultUnit.first %}
+                        {{ resultUnit.title }}
+                    {% else %}
+                        {{ userResultEntry.title }}
+                    {% endif %}
+                </td>
+                <td>{{ userResultEntry.type.name }}</td>
                 <td>{{ userResultEntry.resultStatus|ucwords }}</td>
-                <td>{% if userResultEntry.resultEndorsedDate %}{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
                 <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
                 <td>
                     {% if userResultEntry.resultEvidence|length %}
