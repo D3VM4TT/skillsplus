@@ -118,7 +118,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $message = $authorFullName  . " has submitted a result " . $resultEntry->title . '.';
         // send the emails to managers
         $manager = craft()->lantra_users->getUserManagerByLevel($author, $level);
-        $this->notify($manager->email, $subject, $message);
+        if ($manager) {
+            $this->notify($manager->email, $subject, $message);
+        }
     }
 
     /**
