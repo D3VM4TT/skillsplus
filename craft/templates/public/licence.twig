@@ -2,8 +2,14 @@
 {% block content %}
     <section class="page">
     <div class="page-header">
-        <h2>Licence</h2>
-        <p>Pay for your licence to authorize your account.</p>
-        {{ include(template_from_string(globalsScheme.individualLicencePaypalButton)|raw) }}
+        {%  if craft.request.segment(3) == 'thanks' %}
+            <h2>Thank You</h2>
+            <p>You will be redirected to your dashboard...</p>
+            <script>setTimeout(function () {window.location.href = "/";}, 3000);</script>
+        {% else %}
+            <h2>Licence</h2>
+            <p>Pay for your licence to authorize your account.</p>
+            {{ include(template_from_string(globalsScheme.individualLicencePaypalButton)|raw) }}
+        {% endif %}
     </div>
 {% endblock %}
