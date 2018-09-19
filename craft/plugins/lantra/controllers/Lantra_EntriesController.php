@@ -60,12 +60,15 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get all the posted entryIds
-        $entryIds = craft()->request->getPost('entryIds');
+        $results = craft()->request->getPost('results');
         $count = 0;
         // loop entries and update status
-        foreach ($entryIds as $entryId) {
-            if (FALSE != $entry = craft()->entries->getEntryById($entryId)) {
-                $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+        foreach ($results as $result) {
+            if (isset($result['entryId']) && FALSE != $entry = craft()->entries->getEntryById($result['entryId'])) {
+                $entry->setContentFromPost([
+                    'resultComments' => $result['comments'],
+                    'resultStatus' => 'endorsed'
+                    ]);
                 craft()->entries->saveEntry($entry);
                 $count ++;
             }

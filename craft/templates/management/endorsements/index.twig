@@ -19,7 +19,6 @@
         <form method="post" role="form" accept-charset="UTF-8">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="lantra/entries/endorseEvidence">
-            <input type="hidden" value="" name="entryIds[]" />
             <table width="100%" class="data">
                 <thead>
                     <tr>
@@ -28,6 +27,7 @@
                         <th>Date</th>
                         <th>Level</th>
                         <th>Evidence</th>
+                        <th>Comments</th>
                         <th>&nbsp;</th>
                 </thead>
                 <tbody>
@@ -47,7 +47,8 @@
                             <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
                         {% endfor %}
                     </td>
-                    <td><input type="checkbox" value="{{ entry.id }}" name="entryIds[]" /></td>
+                    <td><input type="text" value="" name="results[{{ loop.index }}][comments]" /></td>
+                    <td><input type="checkbox" value="{{ entry.id }}" name="results[{{ loop.index }}][entryId]" /></td>
                 </tr>
                 {% endfor %}
                 </tbody>

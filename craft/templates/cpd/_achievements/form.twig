@@ -8,9 +8,22 @@
         <input type="hidden" name="authorId" value="{{ author.id }}">
     {%  endif %}
     <input type="hidden" name="fields[resultStatus]" value="pending">
+    <input type="hidden" name="fields[unitEndorsementManagerLevel]" value="1">
     <div class="field--wrapper">
         <label for="title" class="float">Title</label>
         <input type="text" name="title" class="float-label" placeholder="Enter the result title" />
+    </div>
+    <div class="field--wrapper">
+        <label for="resultStartDate" class="float">Start date (if applicable)</label>
+        <input name="fields[resultStartDate]" type="text" class="float-label datepicker-here" placeholder="Start date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="field--wrapper">
+        <label for="resultFinishDate" class="float">Finish date (if applicable)</label>
+        <input name="fields[resultFinishDate]" type="text" class="float-label datepicker-here" placeholder="Finish date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="field--wrapper">
+        <label for="resultLocation" class="float">Location (if applicable)</label>
+        <input name="fields[resultLocation]" type="text" class="float-label" placeholder="Location (if applicable)">
     </div>
     <div class="field--wrapper">
         <label for="userExpiryDate" class="float">Expiry date (if applicable)</label>

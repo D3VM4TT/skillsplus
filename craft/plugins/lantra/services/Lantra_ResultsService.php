@@ -395,8 +395,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerEndorsementResults(UserModel $manager, $limit = null,  $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
-        $criteria->type = 'unitResult';
-        $criteria->resultEvidence = ':notempty:';
+        $criteria->type = ['userResult', 'unitResult'];
         $criteria->resultStatus = 'pending';
         $criteria->order = 'postDate desc';
         $criteria->limit = $limit;
