@@ -24,7 +24,7 @@
                             {% set unitGroupEntries = unitGroup.unitEntries %}
                             <div class="unit-group">
                                 <div class="header" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
-                                    <h5>{{ unitGroup.groupName }}</h5>
+                                    <h5>{{ unitGroup.groupName|default(module.title ~ ' ' ~ loop.index) }}</h5>
                                     <div class="status">
                                         View status and Endorsements
                                         <img src="/assets/img/img-arrow-down-trans.png">
