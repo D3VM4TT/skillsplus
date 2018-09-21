@@ -1,3 +1,9 @@
+{% set userModules = [] %}
+{% for role in currentUser.userRole %}
+    {% for module in craft.entries.relatedTo(role).order('title') %}
+      {% set userModules = userModules|merge([module]) %}
+    {% endfor %}
+{% endfor %}
 <form class="page-form" method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
@@ -29,6 +35,20 @@
         <label for="userExpiryDate" class="float">Expiry date (if applicable)</label>
         <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
+    {%  if userModules|length %}
+    <div class="field--wrapper">
+        <label for="resultModule" class="float">Result module (if applicable)</label>
+        <select data-relation="fields[resultModule]"  id="resultModule">
+            {% for module in userModules %}
+                <option value="{{ module.id }}">{{ module.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="fields[resultValue]" class="float">Result value (if applicable)</label>
+        <input name="fields[resultValue]" type="number" placeholder="Result value (if applicable)" />
+    </div>
+    {%  endif %}
     <div class="field--wrapper">
         <label for="file" class="">Upload files</label>
         <input type="file" name="fields[resultEvidence][]" multiple class="5000">

@@ -86,6 +86,55 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        {# get user results related to module #}
+                        {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).limit(null) %}
+                        {% if moduleUserResults|length %}
+                            <div class="unit-group">
+                                <div class="header" data-target="#u{{ role.id ~ module.id }}-user">
+                                    <h5>My Achievements</h5>
+                                    <div class="status">
+                                        View status and Endorsements
+                                        <img src="/assets/img/img-arrow-down-trans.png">
+                                    </div>
+                                </div>
+                                <div id="u{{ role.id ~ module.id }}-user" class="units closed">
+                                    <table class="data">
+                                        <thead>
+                                        <tr>
+                                            <th>Result title</th>
+                                            <th>Value</th>
+                                            <th>Status</th>
+                                            <th>Endorsed Date</th>
+                                            <th>Expiry Date</th>
+                                            <th class="text-right">Evidence &amp; Comments</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for userResultEntry in moduleUserResults %}
+                                            <tr>
+                                                <td>{{ userResultEntry.title }}</td>
+                                                <td>{{ userResultEntry.resultValue }}</td>
+                                                <td>{{ userResultEntry.resultStatus|ucwords }}</td>
+                                                <td>{% if userResultEntry.resultEndorsedDate %}{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
+                                                <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+                                                <td>
+                                                    {% if userResultEntry.resultEvidence|length %}
+                                                        {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
+                                                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    {{ userResultEntry.resultComments }}
+                                                </td>
+                                            </tr>
+                                            {% if (userResultEntry.resultStatus == 'endorsed') %}
+                                                {% set totalPoints = totalPoints + userResultEntry.resultValue %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
                             <div class="summary">
                                 <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h3>
                                 <h3>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h3>

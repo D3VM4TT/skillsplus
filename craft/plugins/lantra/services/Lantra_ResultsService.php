@@ -221,6 +221,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether a user result has completed a module
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function checkUserResult($resultEntry) {
+        // the related module id
+        $resultModuleEntry = $resultEntry->resultModule->first();
+        if ( ! $resultModuleEntry || ! $resultEntry->resultValue) {
+            return;
+        }
+        // check the moduleResult
+        $user = $resultEntry->author;
+        $this->checkModuleResult($resultModuleEntry, $user->id);
+    }
+
+    /**
      * Check whether a unit result has completed a module
      *
      * @param $resultEntry
@@ -264,7 +282,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
-        $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+        $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+        $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
+        $resultEntries = array_merge($unitResultEntries, $userResultEntries);
         if ( ! count($resultEntries)) {
             return;
         }
@@ -279,10 +299,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
-            $unitEntry = $resultEntry->resultUnit->first();
             if ($resultEntry->resultStatus == 'endorsed') {
-                $points += $unitEntry->unitValue;
-                // check if unit expiry is before default module expiry)
+                // unit results value is unit value
+                if ($resultEntry->type == 'unitResult') {
+                    $unitEntry = $resultEntry->resultUnit->first();
+                    $points += $unitEntry->unitValue;
+                }
+                // user result value is custom
+                elseif ($resultEntry->type == 'userResult') {
+                    $points += $resultEntry->resultValue;
+                }
+                // check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
                     $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
                 }
@@ -332,7 +359,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $resultEntry) {
             return;
         }
-        // either no expiry, default module expiry or set by unit
+        // either no expiry, default module expiry or set by result
         $resultEntry->expiryDate = $expiryDate;
         $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
         // @todo error reporting?
@@ -356,6 +383,25 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         return $unitIds;
+    }
+
+    /**
+     *  Get module user results with positive result value
+     *
+     * @param $moduleEntry
+     * @param $userId
+     * @return array
+     * @throws Exception
+     */
+    function getModuleUserResults($moduleEntry, $userId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'userResult';
+        $criteria->authorId = $userId;
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
+        $criteria->resultValue = '> 0';
+        return $criteria->find();
     }
 
     /**

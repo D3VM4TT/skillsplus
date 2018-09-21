@@ -125,6 +125,10 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->checkUnitResult($entry);
                 craft()->lantra_results->checkRemainingAttempts($entry);
             }
+            // Check user result for new module result
+            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'userResult') {
+                craft()->lantra_results->checkUserResult($entry);
+            }
             // Send notifications on completed module result
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
                 craft()->lantra_notify->sendModuleResult($entry);
