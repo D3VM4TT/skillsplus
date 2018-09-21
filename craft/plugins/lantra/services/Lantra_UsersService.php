@@ -311,10 +311,6 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
         $criteria->order = 'title';
-        $individualTeam = $this->getIndividualTeam();
-        if ($individualTeam) {
-            $criteria->id = 'not ' . $individualTeam->id;
-        }
         return $criteria->ids();
     }
 
@@ -665,17 +661,16 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
-     * Add user to Lantra individual team
+     * Add user to Lantra individual company
      *
      * @param $user
      * @throws \Exception
      */
-    public function addUserToIndividualTeam(UserModel $user) {
-        // get the individualTeam
-        $team = $this->getIndividualTeam();
-        // @todo error reporting?
-        if($team) {
-            $user->setContentFromPost(['userTeam' => array($team->id)]);
+    public function addUserToIndividualCompany(UserModel $user) {
+        // get the individualCompany
+        $company = $this->getIndividualCompany();
+        if ($company) {
+            $user->setContentFromPost(['userCompany' => array($company->id)]);
             craft()->users->saveUser($user);
         }
     }
@@ -729,22 +724,13 @@ class Lantra_UsersService extends BaseApplicationComponent
         craft()->users->saveUser($user);
     }
 
-    /** Get individual team
-     *
-     * @return null
-     */
-    public function getIndividualTeam() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return $globalsScheme->individualTeam->first();
-    }
-
     /** Get individual company
      *
      * @return null
      */
     public function getIndividualCompany() {
-        $team = $this->getIndividualTeam();
-        return $team ? $team->teamCompany->first() : null;
+        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+        return $globalsScheme->individualCompany->first();
     }
 
     /** Get emails

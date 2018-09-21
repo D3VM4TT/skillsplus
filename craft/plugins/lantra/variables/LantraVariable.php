@@ -389,16 +389,6 @@ class LantraVariable
     }
 
     /**
-     * Get the individual team id
-     *
-     * @return int
-     */
-    public function individualTeamId() {
-        $team = craft()->lantra_users->getIndividualTeam();
-        return ($team) ? $team->id : null;
-    }
-
-    /**
      * Get the individual company id
      *
      * @return int

@@ -7,13 +7,11 @@
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% if currentUser.isInGroup('companyManagers') %}
-    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
-    {% set criteria = craft.entries.section('teams').relatedTo(companies).id('not ' ~ craft.lantra.individualTeamId()).search(filterSearch).limit(pageLimit) %}
-{% elseif currentUser.isInGroup('schemeManagers') %}
-    {% set criteria = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).search(filterSearch).limit(pageLimit) %}
-{% else %}
+{% if currentUser.isInGroup('schemeManagers') or currentUser.admin  %}
     {% set criteria = craft.entries.section('teams').search(filterSearch).limit(pageLimit) %}
+{% else %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser).id('not ' ~ craft.lantra.individualCompanyId()) %}
+    {% set criteria = craft.entries.section('teams').relatedTo(companies).search(filterSearch).limit(pageLimit) %}
 {% endif %}
 
 {% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}

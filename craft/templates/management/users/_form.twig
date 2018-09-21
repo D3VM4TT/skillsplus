@@ -103,7 +103,7 @@
         {%  endfor %}
         <div class="field--wrapper">
             <label for="userCompany">User company:</label>
-            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
@@ -113,7 +113,7 @@
         {% if globalsScheme.schemeTeams|default(false) %}
             <div class="field--wrapper">
                 <label for="userCompany">User team:</label>
-                {% set teamEntries = craft.entries.section('teams').id('not ' ~ craft.lantra.individualTeamId()).limit(null) %}
+                {% set teamEntries = craft.entries.section('teams').limit(null) %}
                 <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
                     {% for teamEntry in teamEntries %}
                         <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>
