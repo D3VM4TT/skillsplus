@@ -1,0 +1,31 @@
+<div class="page-header">
+    <h2>Reporting</h2>
+    <p><strong>Users Report</strong></p>
+    {% include '_includes/filter' with{reportType:'users', filterDays:false} %}
+</div>
+{% if reportEntries|length %}
+    <table width="100%" class="data">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Company</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for subordinate in reportEntries %}
+        {% set userTeam = subordinate.userTeam.first() %}
+        {% set userCompany = craft.lantra.userCompany(subordinate.id) %}
+        <tr>
+            <td>{{ subordinate.getFullName() }}</td>
+            <td>{{ userTeam.title|default('~') }}</td>
+            <td>{{ userCompany.title|default('~') }}</td>
+            <td><a href="mailto:{{ subordinate.email }}">{{ subordinate.email }}</a></td>
+            <td><a href="/reporting/user/{{ subordinate.id }}">view cpd</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

@@ -1,0 +1,17 @@
+{% set currentUserCompany = craft.lantra.userCompany() %}
+{% extends "_layout" %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-header">
+            <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            {{ currentUserCompany|default('') }}
+            <h2>My profile</h2>
+            <p>A snapshot of your personal information, Companies and Job roles.</p>
+        </div>
+        <div class="page-content">
+            {% include '_includes/profile' %}
+            {% include '_forms/photo' %}
+        </div>
+    </section>
+{% endblock %}

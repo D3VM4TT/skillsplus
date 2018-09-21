@@ -1,0 +1,82 @@
+{% requirePermission 'editEntries:3' %}
+{% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Companies" %}
+
+{% set entryId = craft.request.getSegment(4) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).first %}
+{% endif %}
+
+{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyParent = craft.request.getParam('parent') %}
+
+{% block content %}
+
+<div class="page-header">
+    {% if entry is defined and entry.id %}
+        <h2>Edit company</h2>
+    {% else %}
+        <h2>Create a new company</h2>
+    {% endif %}
+            {% if hierarchyNode %}
+        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
+        {% else %}
+        <p><a href="/management/companies">&laquo; back</a></p>
+        {% endif %}
+</div>
+
+{% if entry is defined %}
+    {{ ui.errorList(entry.getAllErrors()) }}
+{% endif %}
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    {% if hierarchyNode %}
+       <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
+    {% else %}
+        <input type="hidden" name="redirect" value="management/companies">
+    {% endif %}
+    <input type="hidden" name="sectionId" value="3">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
+    <div class="field--wrapper">
+        <label for="title" class="float">Company name:</label>
+        <input type="text" id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
+    </div>
+    <div class="field--wrapper">
+        <label for="companyParent">Company Parent (if applicable):</label>
+        {% if currentUser.isInGroup('schemeManagers') %}
+            {% set companyEntries = craft.entries.section('companies') %}
+        {% else %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
+        {% endif %}
+        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
+            {% for companyEntry in companyEntries %}
+                {% if not entryId or ( companyEntry.id != entry.id ) %}
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="companyManager">Select Company manager:</label>
+        {% set userEntries = craft.users.group('companyManagers') %}
+        <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
+            {% for userEntry in userEntries %}
+                <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="companyRemainingLicences" class="float">Remaining Company licences:</label>
+        <input type="number" id="companyRemainingLicences" class="float-label" placeholder="Enter the remaining company licences"  name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
+    </div>
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save company</button>
+    </div>
+</form>
+{% endblock %}

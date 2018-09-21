@@ -1,0 +1,47 @@
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set moduleResults = craft.entries.section('results').type('moduleResult').resultStatus('complete').authorId(cpdUser.id).limit(null) %}
+{% set userResults = craft.entries.section('results').type('userResult').resultStatus('endorsed').authorId(cpdUser.id).limit(null) %}
+{% if moduleResults|length or userResults|length %}
+<article class="results">
+<h2>Results Summary</h2>
+<table class="data">
+    {% if moduleResults|length %}
+        <thead>
+        <tr>
+            <th>Module</th>
+            <th>Endorsed Date</th>
+            <th>Expiry Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for moduleResultEntry in moduleResults %}
+            {%  set moduleEntry = moduleResultEntry.resultModule.first %}
+            <tr>
+                <td>{{ moduleEntry.title|default('~') }}</td>
+                <td>{{ moduleResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                <td>{% if moduleResultEntry.expiryDate %}{{ moduleResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endif %}
+    {% if userResults|length %}
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Endorsed Date</th>
+            <th>Expiry Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for userResultEntry in userResults %}
+            <tr>
+                <td>{{ userResultEntry.title }}</td>
+                <td>{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endif %}
+</table>
+</article>
+{% endif %}

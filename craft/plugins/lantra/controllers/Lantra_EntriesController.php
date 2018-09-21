@@ -6,8 +6,27 @@ class Lantra_EntriesController extends Lantra_BaseController {
 
     public $allowAnonymous = array(
         'actionDeleteEntry',
-        'actionEndorseEvidence'
+        'actionEndorseEvidence',
+        'actionResetResult',
+        'actionRunReport'
     );
+
+    /**
+     * Unlinks unit result attempts and unblocks result
+     *
+     * @throws mixed
+     */
+    public function actionResetResult() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted entryId
+        $entryId = craft()->request->getPost('entryId');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
+        }
+        craft()->lantra_results->unblockResult($entry);
+        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, craft()->request->getUrlReferrer());
+    }
 
     /**
      * Deletes entries from the front end
@@ -27,7 +46,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
-        // save disabled category
+        // save disabled entry
         $this->_disableEntry($entry);
         $this->_returnMessage('Entry has been removed.', TRUE, craft()->request->getUrlReferrer());
     }
@@ -41,12 +60,15 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get all the posted entryIds
-        $entryIds = craft()->request->getPost('entryIds');
+        $results = craft()->request->getPost('results');
         $count = 0;
         // loop entries and update status
-        foreach ($entryIds as $entryId) {
-            if (FALSE != $entry = craft()->entries->getEntryById($entryId)) {
-                $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+        foreach ($results as $result) {
+            if (isset($result['entryId']) && FALSE != $entry = craft()->entries->getEntryById($result['entryId'])) {
+                $entry->setContentFromPost([
+                    'resultComments' => $result['comments'],
+                    'resultStatus' => 'endorsed'
+                    ]);
                 craft()->entries->saveEntry($entry);
                 $count ++;
             }
@@ -55,10 +77,36 @@ class Lantra_EntriesController extends Lantra_BaseController {
     }
 
     /**
+     * Run  specific report
+     *
+     * @throws mixed
+     */
+    public function actionRunReport() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted entryId
+        $entryId = craft()->request->getPost('entryId');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
+        }
+        $total = craft()->lantra_reports->runReport($entry);
+        if ($total) {
+            return $this->_returnMessage( $entry->title . ' has been successfully run (' . $total . ' rows).', true);
+
+        }
+        $this->_returnMessage( $entry->title . ' currently has no data.', false);
+    }
+
+    /**
      * @param $entry
      * @throws mixed
      */
     private function _disableEntry ($entry) {
+        // return company licences back to scheme
+        if ($entry->section->id == 3) {
+            craft()->lantra_licence->addSchemeLicences($entry->companyRemainingLicences);
+            $entry->setContentFromPost(['companyRemainingLicences' => 0]);
+        }
         $entry->enabled = false;
         craft()->entries->saveEntry($entry);
     }

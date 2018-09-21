@@ -1,0 +1,85 @@
+{% requirePermission 'editUsers' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Users" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+
+{% set excludeIds = ['and'] %}
+{% set excludeIds = excludeIds|merge([currentUser.id]) %}
+{% set individualIds = craft.users.group('individuals').ids() %}
+{% if individualIds %}{% set excludeIds = excludeIds|merge(individualIds) %}{% endif %}
+{% set excludeIdsString = excludeIds|join(', not ') %}
+
+{% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+    {% set criteria = craft.users.admin('not 1').search(filterSearch).limit(pageLimit) %}
+{% elseif currentUser.isInGroup('companyManagers') %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
+    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+{% elseif currentUser.isInGroup('teamManagers') %}
+    {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
+    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+{% endif %}
+
+{% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
+
+{% block content %}
+<section class="page">
+    <div class="page-header">
+        <h2>Users</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
+    </div>
+    {% if userEntries is defined and userEntries|length %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th class="title">Name</th>
+                <th>Company</th>
+                {% if globalsScheme.schemeTeams|default(false) %}
+                    <th>Team</th>
+                {% endif %}
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in userEntries %}
+                {% set company = craft.lantra.userCompany(user.id) %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td>{{ company.title|default('') }}</td>
+                    {% if globalsScheme.schemeTeams|default(false) %}
+                        {% set team = user.userTeam.first() %}
+                        <td>{{ team.title|default('') }}</td>
+                    {%  endif %}
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                        {% endif %}
+                         <a href="/cpd/{{ user.id }}">dashboard</a> |
+                         <a href="/cpd/further-achievements/{{ user.id }}">achievements</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>There are no users to display.</h3>
+        </div>
+    {% endif %}
+    {% if craft.lantra.canAddUser() %}
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/users/new">Create user</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

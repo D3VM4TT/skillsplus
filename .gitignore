@@ -1,7 +1,7 @@
 # Site Specific #
 ###################
-public_html/assets/js/*
-public_html/store/*
+public_html/assets/theme/*
+public_html/assets/uploads/*
 public_html/dev
 
 assets/*

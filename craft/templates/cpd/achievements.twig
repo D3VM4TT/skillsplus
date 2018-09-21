@@ -1,0 +1,27 @@
+{% extends "_layout" %}
+
+{% set userId = craft.request.getSegment(3) %}
+{% if userId %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+{% else %}
+    {% set account = currentUser %}
+{% endif %}
+
+{% set metaTitle = 'Achievements > ' ~ account.fullname %}
+
+{% block content %}
+    <section class="page">
+        <div class="page-header">
+            <h2>Achievements for {{ account.fullname }}</h2>
+            <p>View or create achievements.</p>
+        </div>
+        {%  include 'cpd/_achievements/table' with {author:account} %}
+        {% if not userId or not currentUser.managerReadOnly %}
+            <div class="page-content">
+                <h3>Add new result</h3>
+            {%  include 'cpd/_achievements/form' with {author:(userId ? account : null)} %}
+        {% endif %}
+            </div>
+    </section>
+{% endblock %}

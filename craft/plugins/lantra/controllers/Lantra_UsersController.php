@@ -17,7 +17,8 @@ class Lantra_UsersController extends Lantra_BaseController {
         craft()->userSession->requirePermission('editUsers');
         // get the posted userId
         $userId = craft()->request->getPost('editUserId');
-        $redirect = '/management/users';
+        $redirect = craft()->request->getPost('redirect') ? craft()->request->getPost('redirect') : '/management/users';
+        
         // existing user
         if ($userId) {
             if (false == $user = craft()->users->getUserById($userId)) {
@@ -32,7 +33,12 @@ class Lantra_UsersController extends Lantra_BaseController {
         // set basic account fields
         $user->firstName = craft()->request->getPost('firstName');
         $user->lastName = craft()->request->getPost('lastName');
-        $user->email = craft()->request->getPost('email');
+        if (craft()->request->getPost('generateEmail')) {
+            $user->email = craft()->lantra_users->generateEmail($user->firstName, $user->lastName);
+        }
+        else {
+            $user->email = craft()->request->getPost('email');
+        }
         // set new password (if present)
         $user->newPassword = (craft()->request->getPost('newPassword') ?: null);
         // set custom fields
@@ -52,9 +58,9 @@ class Lantra_UsersController extends Lantra_BaseController {
         // save user
         if (craft()->users->saveUser($user)) {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
-            $this->returnSuccess($user->id, $redirect);
+            $this->_returnMessage('User has been saved.', true, $redirect);
         } else {
-            $this->returnError($user->getAllErrors(), array('account' => $user));
+            craft()->urlManager->setRouteVariables(array('account' => $user));
         }
     }
 

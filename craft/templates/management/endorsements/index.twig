@@ -1,0 +1,68 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set metaTitle = "Management > Endorsements" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set criteria = craft.lantra.managerEndorsementResults(null, pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}
+
+{% block content %}
+<section class="page">
+    <div class="page-header">
+        <h2>Endorsements</h2>
+    </div>
+    {% if resultEntries is defined and resultEntries|length %}
+        <form method="post" role="form" accept-charset="UTF-8">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="lantra/entries/endorseEvidence">
+            <table width="100%" class="data">
+                <thead>
+                    <tr>
+                        <th class="title">User</th>
+                        <th>Unit</th>
+                        <th>Date</th>
+                        <th>Level</th>
+                        <th>Evidence</th>
+                        <th>Comments</th>
+                        <th>&nbsp;</th>
+                </thead>
+                <tbody>
+                {% for entry in resultEntries %}
+                <tr>
+                    <td>{{ entry.author.getFullName }}</td>
+                    <td>{% if entry.resultUnit|length %}
+                            Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}
+                        {% else %}
+                            ~
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.postDate|date(dateFormat) }}</td>
+                    <td>{{ entry.unitEndorsementManagerLevel|default('1') }}</td>
+                    <td>
+                        {% for resultEvidenceAsset in entry.resultEvidence %}
+                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                        {% endfor %}
+                    </td>
+                    <td><input type="text" value="" name="results[{{ loop.index }}][comments]" /></td>
+                    <td><input type="checkbox" value="{{ entry.id }}" name="results[{{ loop.index }}][entryId]" /></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="page-content">
+                <div class="container-btn">
+                    <button class="button primary-bg" type="submit">Endorse Selected</button>
+                </div>
+            </div>
+        </form>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>You have no more evidence to endorse.</h3>
+        </div>
+    {% endif %}
+{% endblock %}

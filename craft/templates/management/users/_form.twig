@@ -1,0 +1,139 @@
+{% requirePermission 'editUsers' %}
+{% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Users" %}
+
+{% set userId = craft.request.getSegment(4) %}
+{% if account is not defined and userId %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account %}{% exit 404 %}{% endif %}
+{% endif %}
+
+{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyCompany = craft.request.getParam('company') %}
+{% set hierarchyTeam = craft.request.getParam('team') %}
+
+{% block content %}
+    <div class="page-header">
+        {% if account is defined and account.id %}
+            <h2>Edit user</h2>
+        {% else %}
+            <h2>Create a new user</h2>
+        {% endif %}
+        {% if hierarchyNode %}
+        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
+        {% else %}
+        <p><a href="/management/users">&laquo; back</a></p>
+        {% endif %}
+    </div>
+    {% if account is defined %}
+        {{ ui.errorList(account.getAllErrors()) }}
+    {% endif %}
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="lantra/users/saveUser">
+        <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
+        {% if hierarchyNode %}
+            <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
+        {% else %}
+            <input type="hidden" name="redirect" value="/management/users">
+        {% endif %}
+        <div class="field--wrapper">
+            <label for="teamManagers" for="title" class="float">Roles:</label>
+                <ul class="options">
+                    {% if globalsScheme.schemeTeams|default(false) %}
+                        <li>
+                            <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                            <strong>Team manager</strong>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                        <strong>Company manager</strong>
+                    </li>
+                </ul>
+        </div>
+        <div class="field--wrapper">
+            <label for="firstName" class="float">First name:</label>
+            <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+        </div>
+        <div class="field--wrapper">
+            <label for="lastName" class="float">Last name:</label>
+            <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+        </div>
+        <div class="field--wrapper">
+            <label for="email" class="float">Email:</label>
+            <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
+        </div>
+        {% if not account.id|default(false) %}
+        <div class="field--wrapper">
+            <label for="generateEmail" class="float">Generate Random Email?</label>
+            <input type="checkbox" id="generateEmail" name="generateEmail" value="1" {% if account is defined and account.generateEmail %}checked="checked"{% endif %}>
+        </div>
+        {%  endif %}
+        <div class="field--wrapper">
+            <label for="address" class="float">Start date:</label>
+            <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
+        </div>
+        <div class="field--wrapper">
+            <label for="address" class="float">Date of birth:</label>
+            <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account is defined ? account.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
+        </div>
+        <div class="field--wrapper">
+            <label for="address" class="float">Address:</label>
+            <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
+        </div>
+        <div class="field--wrapper">
+            <label for="telephone" class="float">Telephone:</label>
+            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
+        </div>
+        {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
+        {%  for block in userCustomFields %}
+            <div class="field--wrapper">
+                <label for="custom-{{ block.name }}" class="float">{{ block.label }}:</label>
+                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
+                {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
+                <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+            </div>
+        {%  endfor %}
+        <div class="field--wrapper">
+            <label for="userCompany">User company:</label>
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
+            <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
+                {% for companyEntry in companyEntries %}
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if globalsScheme.schemeTeams|default(false) %}
+            <div class="field--wrapper">
+                <label for="userCompany">User team:</label>
+                {% set teamEntries = craft.entries.section('teams').limit(null) %}
+                <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
+                    {% for teamEntry in teamEntries %}
+                        <option value="{{ teamEntry.id }}">{{ teamEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        <div class="field--wrapper">
+            <label for="userRole">User roles:</label>
+            {% set roleCategories = craft.categories.group('roles') %}
+            <input type="hidden" name="fields[userRole]" value="" />
+            <select multiple name="fields[userRole][]" id="userRole">
+                {% for roleCategory in roleCategories %}
+                <option value="{{ roleCategory.id }}"
+                        {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Save user</button>
+        </div>
+    </form>
+{% endblock %}

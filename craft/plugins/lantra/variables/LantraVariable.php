@@ -4,6 +4,90 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * Return full list of users for a team or company
+     *
+     * @param int $userId
+     * @return string
+     */
+    public function managerHierarchy($userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return craft()->lantra_users->getManagerHierarchy($user);
+    }
+
+    /**
+     * Create data for JSTree
+     *
+     * @param int $userId
+     * @param int $currentNode
+     * @return string
+     */
+    public function jsTreeData($userId = null, $currentNode = 0)
+    {
+        $js = [
+            'icon'  => '/assets/img/tree-root.png',
+            'text'  => 'Hierarchy',
+            'state' => ['opened' => true],
+        ];
+
+        $data = $this->managerHierarchy($userId);
+        foreach ($data as $node) {
+            $js['children'][] = $this->jsTreeAddNode($node, $currentNode);
+        }
+
+        return json_encode($js);
+    }
+
+    /**
+     * Add a node for JSTree
+     *
+     * @param array $node
+     * @param int $currentNode
+     * @return array
+     */
+    private function jsTreeAddNode($node, $currentNode = 0) {
+        $array = [
+            'elementId' => $node['elementId'],
+            'nodeType'  => $node['nodeType'],
+            'nodeId'    => $node['nodeId'],
+            'text'      => $node['title'],
+            'icon'      => '/assets/img/' . $node['icon'] . '.svg',
+            "li_attr"   => ['class' => 'type-' . $node['nodeType'], 'id' => 'node-' . $node['nodeId']],
+        ];
+        if ($node['nodeType'] == 'companies' || $node['nodeType'] == 'teams') {
+            foreach($node['managers'] as $manager) {
+                $array['children'][] = $this->jsTreeAddNode($manager, $currentNode);
+            }
+        }
+        foreach($node['children'] as $child) {
+            $array['children'][] = $this->jsTreeAddNode($child, $currentNode);
+        }
+        return $array;
+    }
+
+    /**
+     * Return full list of users for a team or company
+     *
+     * @param int $entryId
+     * @return string
+     */
+    public function emailList($entryId = null) {
+        $emails = craft()->lantra_users->getEmails($entryId);
+        return implode(';', $emails);
+    }
+
+    /**
+     * Return count of users for a team or company
+     *
+     * @param int $entryId
+     * @return int
+     */
+    public function userCount($entryId = null) {
+        return count(craft()->lantra_users->getUsersByEntryId($entryId));
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
@@ -15,6 +99,18 @@ class LantraVariable
             return false;
         }
         return craft()->lantra_users->canManage($user, $scheme);
+    }
+
+    /**
+     * Check whether this user manages the subordinate
+     *
+     * @param null $subordinateId
+     * @param bool $managerId
+     * @return bool
+     */
+    public function isManager($subordinateId = null, $managerId = null) {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return craft()->lantra_users->isManager($subordinateId, $manager);
     }
 
     /**
@@ -45,7 +141,7 @@ class LantraVariable
         }
         else {
             $type = '';
-            if ($user->isInGroup('user')) {
+            if ($user->isInGroup('users')) {
                 $type .= 'User';
             }
             if ($user->isInGroup('schemeManagers')) {
@@ -87,6 +183,35 @@ class LantraVariable
             return null;
         }
         return craft()->lantra_users->userCompany($user);
+    }
+
+    /**
+     * Return user managers
+     *
+     * @param null $userId
+     * @param int $level
+     * @return BaseElementModel|null
+     * @throws Mixed
+     */
+    public function userManagers($userId = null, $level = 0) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        if ($level > 0) {
+            return craft()->lantra_users->getUserManagerByLevel($user, $level);
+        }
+        return craft()->lantra_users->getUserMangers($user, true);
+    }
+
+    /**
+     * Return company users
+     *
+     * @param null $companyId
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    public function companyUsers($companyId = null) {
+        return craft()->lantra_users->getCompanyUsers($companyId);
     }
 
     /**
@@ -188,21 +313,38 @@ class LantraVariable
      * @param string $reportType
      * @param null $userId
      * @param mixed $days
+     * @param mixed $search
      * @param int $limit
      * @param bool $count
      * @return mixed
      * @throws Exception
      */
-    public function managerResultsReport($reportType = 'recent', $userId = null,  $days = 'all', $limit = 10, $count = false) {
+    public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
+        $criteria = null;
         switch ($reportType) {
-            case 'expiring':
-                $criteria = craft()->lantra_results->getManagerExpiringResults($user->id, $days, $limit);
+            case 'units-blocked':
+                $criteria = craft()->lantra_results->getManagerUnitBlockedResults($user->id, $days, $limit, $search);
             break;
-            default :
-                $criteria = craft()->lantra_results->getManagerRecentResults($user->id, $days, $limit);
+            case 'units-expiring':
+                $criteria = craft()->lantra_results->getManagerUnitExpiringResults($user->id, $days, $limit, $search);
+            break;
+            case 'units-endorsed':
+                $criteria = craft()->lantra_results->getManagerUnitEndorsedResults($user->id, $days, $limit, $search);
+                break;
+            case 'modules-active':
+                $criteria = craft()->lantra_results->getManagerModuleActiveResults($user->id, $days, $limit, $search);
+            break;
+            case 'modules-expiring':
+                $criteria = craft()->lantra_results->getManagerModuleExpiringResults($user->id, $days, $limit, $search);
+            break;
+            case 'modules-completed':
+                $criteria = craft()->lantra_results->getManagerModuleCompletedResults($user->id, $days, $limit, $search);
+            break;
+            case 'users':
+                $criteria = craft()->lantra_users->getManagerUsers($user->id, $limit, $search);
             break;
         }
         if ($criteria) {
@@ -216,25 +358,55 @@ class LantraVariable
      *
      * @param string $reportType
      * @param int $days
+     * @param string $search
      * @throws mixed
      * @return string
     */
-    public function exportResultsReport($reportType = 'recent', $days = 28) {
+    public function exportReport($reportType = 'users', $days = 28, $search = '') {
         $data = [];
-        if (false != $results = $this->managerResultsReport($reportType, null, $days)) {
-            foreach ($results as $result) {
-                $userTeam = $result->author->userTeam->first();
-                $resultModule = $result->resultModule->first();
-                $data[] = [
-                    $result->author->getFullName(),
-                    $userTeam ? $userTeam->title : '',
-                    $resultModule ? $resultModule->title : '',
-                    $result->postDate->format('d/m/y'),
-                    $result->expiryDate ? $result->expiryDate->format('d/m/y') : ''
-                ];
+        if (false != $results = $this->managerReport($reportType, null, $days, $search, false)) {
+            foreach ($results as $row) {
+                if ($reportType == 'users') {
+                    $data[] = [
+                        $row->getFullName(),
+                        $row->email,
+                        $row->userTeam->first(),
+                    ];
+                }
+                else {
+                    $userTeam = $row->author->userTeam->first();
+                    $data[] = [
+                        $row->author->getFullName(),
+                        $userTeam ? $userTeam->title : '',
+                        $row->resultModule->first()->title,
+                        $row->postDate->format('d/m/y'),
+                        $row->expiryDate ? $row->expiryDate->format('d/m/y') : '',
+                    ];
+                }
             }
         }
         $this->sendReport($reportType, $data);
+    }
+
+    /**
+     * Get the individual company id
+     *
+     * @return int
+     */
+    public function individualCompanyId() {
+        $company = craft()->lantra_users->getIndividualCompany();
+        return ($company) ? $company->id : null;
+    }
+
+    /**
+     * Get report data
+     *
+     * @param $entryId
+     * @return mixed
+     */
+    public function getReportData($entryId) {
+        $reportEntry = craft()->entries->getEntryById($entryId);
+        return ($reportEntry) ? craft()->lantra_reports->getReportData($reportEntry) : null;
     }
 
     /**

@@ -1,0 +1,56 @@
+<div class="container-sidebar">
+    <div class="primary-bg menu-tab">
+        <div class="secondary-bg one"></div>
+        <div class="secondary-bg two"></div>
+        <div class="secondary-bg three"></div>
+    </div>
+    <div class="primary-bg menu-hide">
+        <div class="menu-intro">
+            <h1>{{ globalsTheme.schemeName }}</h1>
+            <p>{{ globalsTheme.schemeDescription }}</p>
+        </div>
+        <div class="container-menus">
+            {% if currentUser %}
+                {% include '_includes/nav_cpd' %}
+            {% endif %}
+            {% include '_includes/nav_public' %}
+        </div>
+        <div class="footer">
+            <div class="col-copyright">
+                <img src="/assets/img/lantra_footer_wht_logo.png">
+            </div>
+            <div class="col-terms">
+                <p>&copy; 2018 Lantra. <a href="/terms">Terms &amp; Privacy</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="sidebar-form">
+            <div class="scheme-logo">
+                <a href="/">
+                    {%  if globalsTheme.schemeLogo|length %}
+                        <img src="{{ globalsTheme.schemeLogo.first().url }}">
+                    {% else %}
+                        {{  globalsTheme.schemeName }}
+                    {% endif %}
+                </a>
+            </div>
+            {% if not currentUser %}
+                <div class="container-form-toggle">
+                    {% include '_forms/login_combined' %}
+                    <div class="container-btn container-create-account-btn">
+                        <div class="sml-link center">
+                            <p>Not registered?</p>
+                        </div>
+                        <div class="button hollow">
+                            <a href="/public/register">Create account</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% if currentUser %}
+            {% include '_includes/nav_cpd' %}
+        {% endif %}
+    </div>
+    </div>

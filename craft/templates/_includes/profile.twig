@@ -1,0 +1,14 @@
+{% set currentUserCompany = craft.lantra.userCompany() %}
+<h2>My Profile</h2>
+<p class="profile">
+    <span class="label">Name:</span> {{ currentUser.fullName }}<br />
+    <span class="label">Email address:</span> {{ currentUser.email }}<br />
+    <span class="label">User type:</span> {{ craft.lantra.userType() }}<br />
+    <span class="label">Company:</span> {{ craft.lantra.userCompany()|default('~') }}<br />
+    <span class="label">Job Role:</span>
+    {% if currentUser.userRole.total %}
+        {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+    {% else %}
+        ~
+    {% endif %}
+</p>

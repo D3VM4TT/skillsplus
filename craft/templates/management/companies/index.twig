@@ -1,0 +1,78 @@
+{% requirePermission 'editEntries:3' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > companies" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+
+{% if currentUser.isInGroup('schemeManagers') %}
+    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit) %}
+{% else %}
+    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit) %}
+{% endif %}
+{% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
+
+{% block content %}
+<section class="page">
+    <div class="page-header">
+        <h2>Companies</h2>
+        <p>Add / Edit and Delete companies within in your scheme.</p>
+        {% include '_includes/filter' with{filterDays:false} %}
+    </div>
+    {% if companyEntries is defined and companyEntries|length %}
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="title">Name</th>
+                    <th class="title">Parent</th>
+                    <th>Licences</th>
+                    <th>Users</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for company in companyEntries %}
+            {% set parent = company.companyParent.first %}
+                <tr>
+                    <td>{{ company.id }}</td>
+                    <td>{{ company.title }}</td>
+                    <td>{{ parent.title|default('~ none ~') }}</td>
+                    <td>{{ company.companyRemainingLicences }}</td>
+                    <td>{{ craft.lantra.userCount(company.id) }}</td>
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            {% set companyEmails = craft.lantra.emailList(company.id) %}
+                            {% if companyEmails %}
+                                <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">email users</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            <a href="/management/companies/edit/{{ company.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>There are no companies to display.</h3>
+        </div>
+    {% endif %}
+    {% if not currentUser.managerReadOnly %}
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/companies/new">Create company</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
