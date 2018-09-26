@@ -48,7 +48,7 @@
                     <p>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
                 {% endif %}
                 {% if craft.request.getSegment(7) == 'test' %}
-                    {% include 'cpd/_units/test' with{entry:unitEntry, userId:userId} %}
+                    {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
                 {% elseif unitEntry.testQuestions|length %}
                     <p><a href="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/user/{{ userId }}/test">Complete unit test</a></p>
                 {% endif %}

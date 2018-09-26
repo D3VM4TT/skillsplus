@@ -1,19 +1,19 @@
     {% import "_macros" as ui %}
-    {% if entry is defined %}
-        {{ ui.errorList(entry.getAllErrors()) }}
+    {% if unitEntry is defined %}
+        {{ ui.errorList(unitEntry.getAllErrors()) }}
     {% endif %}
-    {% if entry.testQuestions|length %}
+    {% if unitEntry.testQuestions|length %}
         <form method="post" role="form" accept-charset="UTF-8">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="entries/saveEntry">
-            <input type="hidden" name="redirect" value="unit/{{ entry.id }}">
+            <input type="hidden" name="redirect" value="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/user/{{ userId }}/test">
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
             {% if userId != currentUser.id %}
                 <input type="hidden" name="authorId" value="{{ userId }}">
             {% endif %}
-            <input type="hidden" name="fields[attemptUnit][]" value="{{ entry.id }}">
-            {% for question in entry.testQuestions %}
+            <input type="hidden" name="fields[attemptUnit][]" value="{{ unitEntry.id }}">
+            {% for question in unitEntry.testQuestions %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
                 <div class="field--wrapper">

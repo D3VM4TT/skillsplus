@@ -54,7 +54,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
-        $user = craft()->userSession->getUser();
+        // author sent from form
+        $authorId = craft()->request->getPost('authorId');
+        if ($authorId && false != $user = craft()->users->getUserById($authorId)) {
+            $attemptEntry->authorId = $user->id;
+            $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
+            craft()->content->saveContent($attemptEntry, false);
+        }
         $total = count($attemptEntry->attemptAnswers);
         $correct = 0;
         // loop through answers and count correct
@@ -70,12 +76,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultStatus = $passed ? 'endorsed' : 'failed';
         $resultScore = $score;
         // does a result exist?
-        if (false == $resultEntry = $this->getUnitResult($user->id, $unitEntry->id)) {
+        if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {
             $resultEntry = new EntryModel();
             $resultEntry->sectionId = $this->sectionIdResults;
             $resultEntry->typeId = $this->typeIdUnitResult;
             $resultEntry->enabled = true;
-            $resultEntry->authorId = $user->id;
+            $resultEntry->authorId = $attemptEntry->authorId;
             $resultAttempts = array($attemptEntry->id);
         }
         else {
