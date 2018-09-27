@@ -2,9 +2,9 @@
 ###################
 public_html/assets/theme/*
 public_html/assets/uploads/*
-public_html/dev
-
+public_html
 assets/*
+src/dev/*
 
 # Craft CMS #
 ###################
