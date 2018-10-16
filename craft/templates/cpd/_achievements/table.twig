@@ -5,10 +5,16 @@
         <thead>
         <tr>
             <th style="width: 30%">Title</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Expiry Date</th>
-            <th style="text-align: right">Evidence &amp; Comments</th>
+            {% if globalsColumns.resultDisplayType %}<th>Type</th>{% endif %}
+            {% if globalsColumns.resultDisplayValue %}<th>Value</th>{% endif %}
+            {% if globalsColumns.resultDisplayStatus %}<th>Status</th>{% endif %}
+            {% if globalsColumns.resultDisplayEndorsedDate %}<th>Endorsed Date</th>{% endif %}
+            {% if globalsColumns.resultDisplayExpiryDate %}<th>Expiry Date</th>{% endif %}
+            {% if globalsColumns.resultDisplayStartDate %}<th>Start Date</th>{% endif %}
+            {% if globalsColumns.resultDisplayFinishDate %}<th>Finish Date</th>{% endif %}
+            {% if globalsColumns.resultDisplayLocation %}<th>Location</th>{% endif %}
+            {% if globalsColumns.resultDisplayHours %}<th>Hours</th>{% endif %}
+            {% if globalsColumns.resultDisplayEvidence %}<th>Evidence</th>{% endif %}
         </tr>
         </thead>
         <tbody>
@@ -22,17 +28,43 @@
                         {{ userResultEntry.title }}
                     {% endif %}
                 </td>
-                <td>{{ userResultEntry.type.name }}</td>
-                <td>{{ userResultEntry.resultStatus|ucwords }}</td>
-                <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
-                <td>
-                    {% if userResultEntry.resultEvidence|length %}
-                        {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
-                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                        {% endfor %}
-                    {% endif %}
-                    {{ userResultEntry.resultComments }}
-                </td>
+                {% if globalsColumns.resultDisplayType %}
+                    <td>{{ userResultEntry.type.name }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayValue %}
+                    <td>{{ unitEntry.unitValue }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayStatus %}
+                    <td>{{ userResultEntry.resultStatus|ucwords }}</td>
+                {%  endif %}
+                {% if globalsColumns.resultDisplayEndorsedDate %}
+                    <td>{{ userResultEntry.resultEndorsedDate ? userResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayExpiryDate %}
+                    <td>{{ userResultEntry.expiryDate ? userResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayStartDate %}
+                    <td>{{ userResultEntry.resultStartDate ? userResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayFinishDate %}
+                    <td>{{ userResultEntry.resultFinishDate ? userResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayLocation %}
+                    <td>{{ userResultEntry.resultLocation|default('-') }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayHours %}
+                    <td>{{ userResultEntry.resultHours|default('-') }}</td>
+                {% endif %}
+                {% if globalsColumns.resultDisplayEvidence %}
+                    <td>
+                        {% if userResultEntry and userResultEntry.resultEvidence|length %}
+                            {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
+                                <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                            {% endfor %}
+                        {% endif %}
+                        {{ userResultEntry.resultComments }}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

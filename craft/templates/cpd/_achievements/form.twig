@@ -21,15 +21,19 @@
     </div>
     <div class="field--wrapper">
         <label for="resultStartDate" class="float">Start date (if applicable)</label>
-        <input name="fields[resultStartDate]" type="text" class="float-label datepicker-here" placeholder="Start date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+        <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="Start date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
         <label for="resultFinishDate" class="float">Finish date (if applicable)</label>
-        <input name="fields[resultFinishDate]" type="text" class="float-label datepicker-here" placeholder="Finish date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+        <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="Finish date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
         <label for="resultLocation" class="float">Location (if applicable)</label>
         <input name="fields[resultLocation]" type="text" class="float-label" placeholder="Location (if applicable)">
+    </div>
+    <div class="field--wrapper">
+        <label for="resultLocation" class="float">Hours (if applicable)</label>
+        <input name="fields[resultHours]" type="text" class="float-label" placeholder="Hours (if applicable)">
     </div>
     <div class="field--wrapper">
         <label for="userExpiryDate" class="float">Expiry date (if applicable)</label>
@@ -39,6 +43,7 @@
     <div class="field--wrapper">
         <label for="resultModule" class="float">Result module (if applicable)</label>
         <select data-relation="fields[resultModule]"  id="resultModule">
+            <option value="">Not applicable</option>
             {% for module in userModules %}
                 <option value="{{ module.id }}">{{ module.title }}</option>
             {% endfor %}

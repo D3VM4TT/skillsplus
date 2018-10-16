@@ -14,6 +14,14 @@
     <input type="hidden" name="fields[resultStatus]" value="pending">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
     <div class="field--wrapper">
+        <label for="resultStartDate" class="float">Start date (if applicable)</label>
+        <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="Start date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="field--wrapper">
+        <label for="resultFinishDate" class="float">Finish date (if applicable)</label>
+        <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="Finish date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+    </div>
+    <div class="field--wrapper">
         <label for="address" class="float">Expiry date (if applicable):</label>
         <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>

@@ -139,6 +139,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $resultEntry->expiryDate = new \DateTime($userExpiryDate . ' 12:00:00');
                 $saveContent = true;
             }
+            // set a user start date
+            $userStartDate = craft()->request->getPost('userStartDate');
+            if ($userStartDate && $this->checkDate($userStartDate)) {
+                $resultEntry->setContentFromPost(['resultStartDate' => new \DateTime($userStartDate . ' 12:00:00')]);
+                $saveContent = true;
+            }
+            // set a user finish date
+            $userFinishDate = craft()->request->getPost('userFinishDate');
+            if ($userFinishDate && $this->checkDate($userFinishDate)) {
+                $resultEntry->setContentFromPost(['resultFinishDate' => new \DateTime($userFinishDate . ' 12:00:00')]);
+                $saveContent = true;
+            }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $unitEntry = $resultEntry->resultUnit->first();
