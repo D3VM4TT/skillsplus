@@ -62,7 +62,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         foreach ($criteria->find() as $company) {
             $remainingLicences = $company->companyRemainingLicences;
             if ($remainingLicences <= 10) {
-                $manager = $company->companyManager->first();
+                $manager = $company->companyPrimaryManager->first();
                 if ($manager) {
                     $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
                     $this->notify($manager->email, $subject, $message);

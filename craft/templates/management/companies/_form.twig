@@ -63,11 +63,21 @@
         </select>
     </div>
     <div class="field--wrapper">
-        <label for="companyManager">Select Company manager:</label>
-        {% set userEntries = craft.users.group('companyManagers') %}
-        <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
+        <label for="companyPrimaryManager">Company primary manager:</label>
+        {% set userCompanyManagers = craft.users.group('companyManagers') %}
+        <select data-relation="fields[companyPrimaryManager]" id="companyPrimaryManager" data-value="{{ entry.companyPrimaryManager.first().id|default('') }}">
             {% for userEntry in userEntries %}
                 <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="companySecondaryManagers">Company secondary managers:</label>
+        <input type="hidden" name="fields[companySecondaryManagers]" value="" />
+        <select multiple name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+            {% for userEntry in userCompanyManagers %}
+                <option value="{{ userEntry.id }}"
+                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>

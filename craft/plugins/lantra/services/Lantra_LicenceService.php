@@ -17,7 +17,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
             return false;
         }
         $companyEntry->setContentFromPost([
-            'companyManager' => array($companyEntry->companyManager->first()->id),
+            'companyPrimaryManager' => array($companyEntry->companyPrimaryManager->first()->id),
             'companyRemainingLicences' => $companyEntry->companyRemainingLicences - 1
         ]);
         if ( ! craft()->entries->saveEntry($companyEntry)) {

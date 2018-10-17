@@ -66,9 +66,15 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         if ($type == 'companies') {
             $return['title'] =  $element->title;
-            // Add the manager
-            if (null != $companyManager = $element->companyManager->first()) {
-                $return['managers'] = [$this->addHierarchyNode($companyManager, 'users', 'Company Manager: ')];
+            // add the company managers
+            $companyManagers = $this->getCompanyMangers($element);
+            if (false != $companyManagerCount = count($companyManagers)) {
+                $label = (object)['id' => 0, 'title' => 'Company Managers (' . $companyManagerCount . ')'];
+                $companyManagersNode = $this->addHierarchyNode($label, 'label');
+                foreach ($companyManagers as $user) {
+                    $companyManagersNode['children'][$user->id] = $this->addHierarchyNode($user, 'users');
+                }
+                $return['children']['managers'] = $companyManagersNode;
             }
             // add the company users
             $companyUsers = $this->getCompanyUsers($element->id);
@@ -256,6 +262,23 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $criteria;
     }
 
+    /** Get all company managers
+     *
+     * @param EntryModel $team
+     * @return array
+     * @throws Exception
+     */
+    public function getCompanyMangers(EntryModel $company) {
+        $return = [];
+        if ($company->companyPrimaryManager->first()) {
+            $return[] = $company->companyPrimaryManager->first();
+        }
+        foreach ($company->companySecondaryManagers as $manager ){
+            $return[] = $manager;
+        }
+        return $return;
+    }
+
     /** Get all team managers
      *
      * @param EntryModel $team
@@ -360,7 +383,11 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
-        $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyManager'];
+        $criteria->relatedTo = [
+            'or',
+            ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'],
+            ['targetElement' => $user->id, 'field' => 'companySecondaryManagers'],
+        ];
         $criteria->order = 'title';
         return $criteria->ids();
     }
@@ -607,9 +634,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         $return = [];
         $company = $user->userCompany->first();
         if ($company) {
-            $manager = $company->companyManager->first();
-            if ($manager) {
-                $return[$manager->id] = $manager;
+            $primaryManager = $company->companyPrimaryManager->first();
+            $return[$primaryManager->id] = $primaryManager;
+            foreach ($company->companySecondaryManagers as $secondaryManager) {
+                $return[$secondaryManager->id] = $secondaryManager;
             }
         }
         else {
@@ -625,13 +653,13 @@ class Lantra_UsersService extends BaseApplicationComponent
                 $return[$secondaryManager->id] = $secondaryManager;
             }
         }
-        // loop up the company parents and add managers
+        // loop up the company parents and add primary managers
         $companyParent = $company->companyParent->first();
         if ($includeHierarchy && $companyParent) {
             while ($company != null) {
-                $companyManager = $company->companyManager->first();
-                if ($companyManager) {
-                    $return[$companyManager->id] = $companyManager;
+                $companyPrimaryManager = $company->companyPrimaryManager->first();
+                if ($companyPrimaryManager) {
+                    $return[$companyPrimaryManager->id] = $companyPrimaryManager;
                 }
                 $company = $company->companyParent->first();
             }
