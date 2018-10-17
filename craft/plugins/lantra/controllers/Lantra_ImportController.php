@@ -31,6 +31,8 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     public function __construct($id, $module = null)
     {
+        craft()->userSession->requireAdmin();
+
         $this->start = microtime(true);
 
         // this might take some time...
