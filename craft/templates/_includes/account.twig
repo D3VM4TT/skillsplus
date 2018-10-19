@@ -1,0 +1,9 @@
+<h2>Account</h2>
+<div style="margin-bottom:20px;border:2px solid #e9ecef;padding:30px;">
+    {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+    <h3>Account ID: {{ cpdUser.id }}</h3>
+    <h3>Start Date: {{ cpdUser.userStartDate|date(dateFormat) }}</h3>
+    {% if cpdUser.userCompany %}
+        <h3>User Company: {{ craft.lantra.companyLabel(cpdUser.userCompany.first) }}</h3>
+    {% endif %}
+</div>

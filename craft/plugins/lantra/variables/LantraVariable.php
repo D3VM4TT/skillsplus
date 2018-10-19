@@ -4,6 +4,14 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * @param $company
+     * @return mixed
+     */
+    public function companyLabel($company) {
+        return craft()->lantra_structure->getCompanyLabel($company);
+    }
+
+    /**
      * Return full list of users for a team or company
      *
      * @param int $userId

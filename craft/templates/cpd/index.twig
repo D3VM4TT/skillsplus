@@ -17,6 +17,9 @@
         <a href="/management/users">Back to Users</a>
     </div>
     <div class="page-content">
+        {% if userId %}
+            {% include '_includes/account' with{cpdUser:account} %}
+        {% endif %}
         {% include '_includes/results' with{cpdUser:account} %}
         {% include '_includes/cpd' with{cpdUser:account} %}
     </div>
