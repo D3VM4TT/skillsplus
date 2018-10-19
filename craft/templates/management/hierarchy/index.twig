@@ -44,6 +44,19 @@
         });
 
         $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_dashboard",
+            "class"     : "button-hierarchy button-dashboard pull-right",
+            "title"     : "View",
+            "text"      : "View",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var elementId   = node.original.elementId;
+                location.href= "/cpd/" +  elementId;
+            }
+        });
+        $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_edit",
             "class"     : "button-hierarchy button-edit pull-right",
             "title"     : "Edit",
@@ -128,7 +141,12 @@
     .type-users > i.button-company,
     .type-users > i.button-user,
     .type-teams > i.button-team,
-    .type-teams > i.button-company {
+    .type-teams > i.button-company,
+    .type-label > i.button-dashboard,
+    .type-teams > i.button-dashboard,
+    .type-companies > i.button-dashboard {
+        display:none !important;
+    }{
         display:none !important;
     }
     .jstree-default .jstree-clicked {
