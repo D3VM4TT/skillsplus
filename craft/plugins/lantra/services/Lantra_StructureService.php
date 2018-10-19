@@ -8,6 +8,9 @@ class Lantra_StructureService extends BaseApplicationComponent
     */
     public function getCompanyLabel($company)
     {
+        if ( ! $company) {
+            return '';
+        }
         return $this->prependCompanyParent($company, $company->title);
     }
 
@@ -34,6 +37,9 @@ class Lantra_StructureService extends BaseApplicationComponent
      */
     public function getTeamLabel($team)
     {
+        if ( ! $team) {
+            return '';
+        }
         $teamCompany = $team->teamCompany->first();
         $label = $team->title;
         if ( ! $teamCompany){
