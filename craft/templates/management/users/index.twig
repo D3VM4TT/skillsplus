@@ -10,7 +10,7 @@
 {% set excludeIdsString = 'not ' ~ currentUser.id %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-    {% set criteria = craft.users.admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
 {% elseif currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
@@ -46,8 +46,8 @@
                 {% set company = craft.lantra.userCompany(user.id) %}
                 <tr>
                     <td>{{ user.id }}</td>
-                    <td>{{ user.fullname }}</td>
-                    <td>{{ company.title|default('') }}</td>
+                    <td>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                    <td>{{ craft.lantra.companyLabel(company) }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
@@ -55,10 +55,14 @@
                     <td>
                         {% if not currentUser.managerReadOnly %}
                             <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                            {% if user.status == 'active' %}
+                                <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
+                            {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+                                <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
+                            {% endif %}
+                            |
                         {% endif %}
-                         <a href="/cpd/{{ user.id }}">dashboard</a> |
-                         <a href="/cpd/achievements/{{ user.id }}">achievements</a>
+                         <a href="/cpd/{{ user.id }}">dashboard</a>
                     </td>
                 </tr>
             {% endfor %}

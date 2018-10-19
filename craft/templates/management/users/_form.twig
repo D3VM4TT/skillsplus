@@ -149,6 +149,22 @@
                 {% endfor %}
             </select>
         </div>
+        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+            <h2>Advanced</h2>
+            <div class="field--wrapper">
+                <label for="username" class="float">Username:</label>
+                <input type="text" id="username" name="username" class="float-label" placeholder="Enter the username" value="{{ account.username|default('') }}">
+            </div>
+            <div class="field--wrapper">
+                <label for="password" class="float">Password:</label>
+                <input type="password" id="password" name="newPassword" class="float-label" placeholder="Enter the password" value="">
+            </div>
+            <div class="field--wrapper">
+                <label for="readOnly" class="float">Read Only:</label>
+                <input type="hidden" name="fields[managerReadOnly]" value="0">
+                <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
+            </div>
+        {% endif %}
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save user</button>
         </div>

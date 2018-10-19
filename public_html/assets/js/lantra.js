@@ -151,6 +151,12 @@ $(document).ready(function(){
             var data = {userId: $(this).data('id')};
             deleteRow = true;
         }
+        if (action == 'lantra/users/restoreUser') {
+            if ( ! confirm('Are you sure you want to restore this user?')) {
+                return false;
+            }
+            var data = {userId: $(this).data('id')};
+        }
         if (action == 'lantra/entries/runReport') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;

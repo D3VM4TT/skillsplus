@@ -4,7 +4,7 @@ namespace Craft;
 
 class Lantra_UsersController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionSaveUser', 'actionDeleteUser');
+    public $allowAnonymous = array('actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
 
     /**
      * Saves user from the management form
@@ -44,7 +44,12 @@ class Lantra_UsersController extends Lantra_BaseController {
         // set custom fields
         $user->setContentFromPost('fields');
         // username is email
-        $user->username = $user->email;
+        if (false != $username = craft()->request->getPost('username')) {
+            $user->username = $username;
+        }
+        else {
+           $user->username = $user->email;
+        }
         // assign user to groups (always in 'user' group from front end)
         $groupIds = array(4);
         if (craft()->request->getPost('companyManagers')) {
@@ -82,5 +87,26 @@ class Lantra_UsersController extends Lantra_BaseController {
             $this->_returnError('Error removing user.');
         }
         $this->_returnMessage('User has been removed.');
+    }
+
+    /**
+     * Restores user
+     *
+     * @throws mixed
+     */
+    public function actionRestoreUser()
+    {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted userId
+        $userId = craft()->request->getPost('userId');
+        if (false == $user = craft()->users->getUserById($userId)) {
+            $this->_returnError('Invalid user ID ' . $userId . '.');
+        }
+        $user->suspended = false;
+        if ( ! craft()->users->saveUser($user)) {
+            $this->_returnError('Error restoring user.');
+        }
+        $this->_returnMessage('User has been restored.');
     }
 }
