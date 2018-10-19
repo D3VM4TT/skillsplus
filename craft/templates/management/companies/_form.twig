@@ -67,7 +67,7 @@
         {% set userCompanyManagers = craft.users.group('companyManagers') %}
         <select data-relation="fields[companyPrimaryManager]" id="companyPrimaryManager" data-value="{{ entry.companyPrimaryManager.first().id|default('') }}">
             {% for userEntry in userCompanyManagers %}
-                <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
+                <option value="{{ userEntry.id }}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>
@@ -77,7 +77,7 @@
         <select multiple name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
-                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>
+                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>

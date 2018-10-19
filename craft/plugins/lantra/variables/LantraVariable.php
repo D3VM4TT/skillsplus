@@ -12,6 +12,15 @@ class LantraVariable
     }
 
     /**
+     * @param $company
+     * @return mixed
+     */
+    public function teamLabel($company) {
+        return craft()->lantra_structure->getTeamLabel($company);
+    }
+
+
+    /**
      * Return full list of users for a team or company
      *
      * @param int $userId
