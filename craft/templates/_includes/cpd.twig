@@ -50,7 +50,7 @@
                                         <tbody>
                                         {% for unitEntry in unitGroupEntries %}
                                         {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
-                                            {% if unitResultEntry is defined and unitResultEntry.resultStatus == 'endorsed' %}
+                                            {% if unitResultEntry is defined and unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
                                                 {% set totalPoints = totalPoints + unitEntry.unitValue %}
                                             {% endif %}
                                             <tr>
@@ -68,25 +68,25 @@
                                                     <td>{{ unitEntry.unitValue }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayStatus %}
-                                                    <td>{{ unitResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayEndorsedDate %}
-                                                    <td>{{ unitResultEntry.resultEndorsedDate ? unitResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultEndorsedDate ? unitResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayExpiryDate %}
-                                                    <td>{{ unitResultEntry.expiryDate ? unitResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.expiryDate ? unitResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayStartDate %}
-                                                    <td>{{ unitResultEntry.resultStartDate ? unitResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultStartDate ? unitResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayFinishDate %}
-                                                    <td>{{ unitResultEntry.resultFinishDate ? unitResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultFinishDate ? unitResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayLocation %}
-                                                    <td>{{ unitResultEntry.resultLocation|default('-') }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultLocation|default('-') }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayHours %}
-                                                    <td>{{ unitResultEntry.resultHours|default('-') }}</td>
+                                                    <td>{{ unitResultEntry and unitResultEntry.resultHours|default('-') }}</td>
                                                 {% endif %}
                                                 {% if module.resultDisplayEvidence %}
                                                     <td>
