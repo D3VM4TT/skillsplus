@@ -10,16 +10,15 @@
                 <div class="module-wrapper">
                 {% for module in modules %}
                     {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
-                    <div class="module">
+                    <div class="module open">
                         {% set totalPoints = 0 %}
                         <div class="header" data-target="#m{{ role.id ~ module.id }}">
                             <h4>{{ module.title }}</h4>
                             <div class="status module-status">
-                                {% if moduleResultEntry %}<span class="module-status-complete">Complete</span>{% else %}<span class="module-status-inprogress">In Progress</span>{% endif %} : View module
-                                <img src="/assets/img/img-arrow-down-trans.png">
+                                {% if moduleResultEntry %}<span class="module-status-complete">Complete</span>{% else %}<span class="module-status-inprogress">In Progress</span>{% endif %}
                             </div>
                         </div>
-                        <div id="m{{ role.id ~ module.id }}" class="unit-groups closed">
+                        <div id="m{{ role.id ~ module.id }}" class="unit-groups">
                         {% for unitGroup in module.moduleUnitGroups %}
                             {% set unitGroupEntries = unitGroup.unitEntries %}
                             <div class="unit-group">
