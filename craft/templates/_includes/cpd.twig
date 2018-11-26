@@ -7,7 +7,45 @@
             {% if not modules|length %}
                 <p>No modules have been assigned to this role.</p>
             {% else %}
+
+
+                <div class="module-group-tabs">
+                <ul class="tabs clearfix" data-tabgroup="first-tab-group">
+                <li><a href="#tab1" class="active"><h4>CPD</h4></a></li>
+                <li><a href="#tab2"><h4>Qualifications</h4></a></li>
+                <li><a href="#tab3"><h4>Module group 3</h4></a></li>
+                <li><a href="#tab4"><h4>Module group 4</h4></a></li>
+                </ul>
+                </div>
+    
+                <section id="first-tab-group" class="tabgroup">
+                <div id="tab1">
+                <div class=""><img src="/assets/img/module_title.png" style="padding:40px 20px;width:100%;"></div>
                 <div class="module-wrapper">
+                <img src="/assets/img/module_expanded.png" style="width:100%;">
+                </div>
+                </div>
+                <div id="tab2">
+                <div class=""><img src="/assets/img/module_title2.png" style="padding:40px 20px;width:100%;"></div>
+                <div class="module-wrapper">
+                <img src="/assets/img/module2_expanded.png" style="width:100%;">
+                </div>
+                </div>
+                <div id="tab3">
+                <div class=""><img src="/assets/img/module_title3.png" style="padding:40px 20px;width:100%;"></div>
+                <div class="module-wrapper">
+                <img src="/assets/img/module3_expanded.png" style="width:100%;">
+                </div>
+                </div>
+                <div id="tab4">
+                <div class=""><img src="/assets/img/module_title4.png" style="padding:40px 20px;width:100%;"></div>
+                <div class="module-wrapper">
+                <img src="/assets/img/module4_expanded.png" style="width:100%;">
+                </div>
+                </div>
+                </section>
+
+                <div class="module-wrapper" style="display:none;">
                 {% for module in modules %}
                     {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
                     <div class="module open">
@@ -169,6 +207,7 @@
                     </div>
                 {% endfor %}
                 </div>
+
             {% endif %}
         {% endfor %}
     </article>

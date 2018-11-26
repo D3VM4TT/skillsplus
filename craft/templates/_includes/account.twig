@@ -1,9 +1,25 @@
-<h2>Account</h2>
-<div style="margin-bottom:20px;border:2px solid #e9ecef;padding:30px;">
-    {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-    <h3>Account ID: {{ cpdUser.id }}</h3>
-    <h3>Start Date: {{ cpdUser.userStartDate|date(dateFormat) }}</h3>
-    {% if cpdUser.userCompany %}
-        <h3>User Company: {{ craft.lantra.companyLabel(cpdUser.userCompany.first) }}</h3>
-    {% endif %}
+<div id="account-details-expand" class="acc-info">
+<div class="col-3">
+<h2 class="primary-color">Account ID:</h2>
+<p class="link-bold">{{ cpdUser.id }}</p>
+<h2 class="primary-color">Start Date:</h2>
+<p class="link-bold">{{ cpdUser.userStartDate|date(dateFormat) }}</p>
 </div>
+<div class="col-9">
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% if cpdUser.userCompany %}
+<h2 class="primary-color">User Company:</h2>
+<p class="link-bold">{{ craft.lantra.companyLabel(cpdUser.userCompany.first) }}</p>
+{% endif %}
+</div>
+</div>
+<div class="link-toggle">
+<a class="link-toggle-expand show" href="#"><img src="/assets/img/img-arrow-down-trans.png"></a>
+<a class="link-toggle-collapse hide" href="#"><img src="/assets/img/img-arrow-up-trans.png"></a>
+</div>
+<div class="account-details-toggle">
+<p class="link-bold link-expand show">Expand account information</p>
+<p class="link-bold link-collapse hide">Collapse account information</p>
+</div>
+
+

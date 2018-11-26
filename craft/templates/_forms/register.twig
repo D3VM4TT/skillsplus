@@ -4,20 +4,20 @@
     <input type="hidden" name="redirect" value="/">
     <input type="hidden" name="username" value="">
     <div class="field--wrapper" style="">
-        <label for="registerFirstName" class="float">First Name</label>
+        <label for="registerFirstName" class="no-float">First Name</label>
         <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
-        <label for="registerLastName" class="float">Last Name</label>
+        <label for="registerLastName" class="no-float">Last Name</label>
         <input id="registerLastName" type="text" placeholder="Last Name"
                name="lastName" {%- if account is defined %} value="{{ account.lastName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
-        <label for="registerEmail" class="float">Email</label>
+        <label for="registerEmail" class="no-float">Email</label>
         <input id="registerEmail" type="text" placeholder="Email" name="email" {%- if account is defined %} value="{{ account.email }}"{% endif %}>
     </div>
     <div class="field--wrapper">
-        <label for="registerPassword" class="float">Password</label>
+        <label for="registerPassword" class="no-float">Password</label>
         <input id="registerPassword" type="password" name="password" placeholder="Password">
     </div>
     <div class="container-btn">

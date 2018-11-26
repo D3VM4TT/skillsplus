@@ -15,8 +15,11 @@
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+        </div>
 <section class="page">
-    <div class="page-header">
+    <div class="page-header secondary-bg">
         <h2>Companies</h2>
         <p>Add / Edit and Delete companies within in your scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
@@ -62,6 +65,7 @@
             </tbody>
         </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+
     {% else %}
         <div class="page-content">
             <h3>There are no companies to display.</h3>

@@ -1,0 +1,16 @@
+{% if not currentUser %}
+<nav class="topNavigation">
+{% for pageEntry in globalsTheme.themeNavigation %}
+<a class="" href="{{ pageEntry.url }}">{{ pageEntry.title }}</a>
+{% endfor %}
+{% endif %}
+
+{% if currentUser %}
+<a class="link-bold" href="/">My Dashboard</a>
+<nav class="topNavigation">
+{% for pageEntry in globalsTheme.themeNavigation %}
+<a class="" href="{{ pageEntry.url }}">{{ pageEntry.title }}</a>
+{% endfor %}
+<a class="link-bold" href="{{ logoutUrl }}">Sign out</a>
+</nav>
+{% endif %}

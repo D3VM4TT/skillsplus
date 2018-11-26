@@ -82,7 +82,7 @@
 
 </head>
 <body class="{% if currentUser %}logged-in{% endif %}">
-    <div class="container-fluid">
+
         <!-- Sidebar
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         {% include '_includes/sidebar' %}
@@ -90,6 +90,7 @@
         <!-- Content
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <div class="container-content">
+
             {% if craft.request.firstSegment != '' %}
                 {% include '_includes/notifications' %}
             {% endif %}
@@ -126,6 +127,6 @@
          {%  endif %}
 
         {% block js %}{% endblock %}
-    </div>
+
 </body>
 </html>

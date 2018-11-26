@@ -13,24 +13,27 @@
 {% block content %}
 
 <section class="page">
-    <div class="page-header">
-        <h2>Modules / Roles</h2>
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
+    <div class="page-header secondary-bg">
+        <h2>Roles / Modules</h2>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
     {% if moduleEntries is defined and moduleEntries|length %}
         <table class="data">
             <thead>
                 <tr>
-                    <th class="title">Module</th>
-                    <th>Job Role</th>
+                    <th class="title">Job Role</th>
+                    <th>Module(s)</th>
                 </tr>
             </thead>
             <tbody>
             {% for module in moduleEntries %}
                 {% for role in module.moduleRoles %}
                 <tr>
-                    <td>{{ module.title }}</td>
                     <td style="text-align: left">{{ role.title }}</td>
+                    <td style="text-align: left">{{ module.title }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}

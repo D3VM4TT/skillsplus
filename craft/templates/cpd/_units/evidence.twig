@@ -14,21 +14,23 @@
     <input type="hidden" name="fields[resultStatus]" value="pending">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
     <div class="field--wrapper">
-        <label for="resultStartDate" class="float">Start date (if applicable)</label>
-        <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="Start date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+        <label for="resultStartDate" class="">Start date (if applicable)</label>
+        <input name="userStartDate" type="text" class="-label datepicker-here" placeholder="Select start date" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
-        <label for="resultFinishDate" class="float">Finish date (if applicable)</label>
-        <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="Finish date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+        <label for="resultFinishDate" class="">Finish date (if applicable)</label>
+        <input name="userFinishDate" type="text" class="-label datepicker-here" placeholder="Select finish date" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
-        <label for="address" class="float">Expiry date (if applicable):</label>
-        <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="Expiry date (if applicable)" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+        <label for="address" class="">Expiry date (if applicable):</label>
+        <input name="userExpiryDate" type="text" class="-label datepicker-here" placeholder="Select expiry date" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
     </div>
     <div class="field--wrapper">
+        <label>Add files (.doc .pdf .csv):</label>
         <input type="file" name="fields[resultEvidence][]" multiple>
     </div>
     <div class="field--wrapper">
+        <label>Result notes:</label>
         <textarea name="fields[resultNotes]"></textarea>
     </div>
     <div class="container-btn">

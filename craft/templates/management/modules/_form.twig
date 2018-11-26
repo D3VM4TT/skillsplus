@@ -27,7 +27,7 @@
     <input type="hidden" name="redirect" value="management/modules">
     <input type="hidden" name="entryId" value="{{ entry.id }}">
     <div class="field--wrapper">
-        <label for="moduleRoles" class="float">Module roles:</label>
+        <label for="moduleRoles" class="no-float">Module roles:</label>
         {% set roleCategories = craft.categories.group('roles') %}
         <input type="hidden" name="fields[moduleRoles]" value="" />
         <select multiple name="fields[moduleRoles][]" id="moduleRoles">

@@ -40,7 +40,7 @@
         <input type="hidden" name="enabled" value="1">
         <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
         <div class="field--wrapper">
-            <label for="title" class="float">Team name:</label>
+            <label for="title" class="no-float">Team name:</label>
             <input type="text" id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
         </div>
         <div class="field--wrapper">

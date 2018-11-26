@@ -3,9 +3,11 @@
         <li>
             <a class="secondary-bg-hover" href="/">My Dashboard</a>
         </li>
-                <li>
+        {#
+        <li>
             <a class="secondary-bg-hover" href="/cpd/achievements">My Achievements</a>
         </li>
+        #}
         <li>
             {#<a class="secondary-bg-hover" href="/public/passport/{{ currentUser.id }}">My Passport</a>#}
             <a class="secondary-bg-hover" href="#">My Passport - Coming Soon!</a>
@@ -90,9 +92,5 @@
         {% endif %}
     </ul>
     {% endif %}
-    <ul>
-        <li>
-            <strong><a class="secondary-bg-hover" href="{{ logoutUrl }}">Sign out</a></strong>
-        </li>
-    </ul>
+
 </nav>
