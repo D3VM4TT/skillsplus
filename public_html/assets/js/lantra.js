@@ -252,4 +252,44 @@ $(document).ready(function(){
         $("input[name='deleteUserPhoto']").val('zap');
         $("#form-photo").submit();
     });
+
+    // expand / collapse account details
+    $(".link-toggle-expand").click(function()
+    {
+    $('.link-toggle-expand').removeClass("show");
+    $('.link-toggle-expand').addClass("hide");
+    $('.link-toggle-collapse').removeClass("hide");
+    $('.link-toggle-collapse').addClass("show");
+    $('.link-expand').removeClass("show");
+    $('.link-expand').addClass("hide");
+    $('.link-collapse').removeClass("hide");
+    $('.link-collapse').addClass("show");
+    $("#account-details-expand").slideToggle(400);
+    });
+    $(".link-toggle-collapse").click(function()
+    {
+    $('.link-toggle-collapse').removeClass("show");
+    $('.link-toggle-collapse').addClass("hide");
+    $('.link-toggle-expand').removeClass("hide");
+    $('.link-toggle-expand').addClass("show");
+    $('.link-expand').removeClass("hide");
+    $('.link-expand').addClass("show");
+    $('.link-collapse').removeClass("show");
+    $('.link-collapse').addClass("hide");
+    $("#account-details-expand").slideToggle(400);
+    });
+
+    $('.tabgroup > div').hide();
+    $('.tabgroup > div:first-of-type').show();
+    $('.tabs a').click(function(e){
+    e.preventDefault();
+    var $this = $(this),
+    tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
+    others = $this.closest('li').siblings().children('a'),
+    target = $this.attr('href');
+    others.removeClass('active');
+    $this.addClass('active');
+    $(tabgroup).children('div').hide();
+    $(target).show();
+    })
 });
