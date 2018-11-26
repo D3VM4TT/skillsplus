@@ -15,6 +15,9 @@
 {% set hierarchyCompany = craft.request.getParam('company') %}
 {% set hierarchyTeam = craft.request.getParam('team') %}
 
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
+{% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
      {% if hierarchyNode %}
@@ -53,10 +56,37 @@
                         </li>
                     {% endif %}
                     <li>
-                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}checked="checked"{% endif %}>
+                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %}>
                         <strong>Company manager</strong>
                     </li>
                 </ul>
+        </div>
+        <div id="manager-fields" class="{% if not isCompanyManager %}hide{% endif %}">
+            <div class="field--wrapper ">
+                <label for="userCompany">Primary manager companies:</label>
+                <select multiple name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
+                    {% for companyEntry in companyEntries %}
+                        <option {% if companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %} selected="selected{% endif %}"
+                            value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field--wrapper ">
+                <label for="userCompany">Secondary manager companies:</label>
+                <select multiple name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
+                    {% for companyEntry in companyEntries %}
+                        <option {% if account.id in companyEntry.companySecondaryManagers.ids() %} selected="selected{% endif %}"
+                            value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+                <div class="field--wrapper">
+                    <label for="readOnly" class="no-float">Manager Read Only:</label>
+                    <input type="hidden" name="fields[managerReadOnly]" value="0">
+                    <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
+                </div>
+            {% endif %}
         </div>
         {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: account, field: 'companyPrimaryManager'}).limit(null) %}
         {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: account, field: 'companySecondaryManagers'}).limit(null) %}
@@ -121,7 +151,6 @@
         {%  endfor %}
         <div class="field--wrapper">
             <label for="userCompany">User company:</label>
-            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 <option value="">No User Company</option>
                 {% for companyEntry in companyEntries %}
@@ -161,11 +190,6 @@
             <div class="field--wrapper">
                 <label for="password" class="no-float">Password:</label>
                 <input type="password" id="password" name="newPassword" class="float-label" placeholder="Enter the password" value="">
-            </div>
-            <div class="field--wrapper">
-                <label for="readOnly" class="no-float">Read Only:</label>
-                <input type="hidden" name="fields[managerReadOnly]" value="0">
-                <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
             </div>
         {% endif %}
         <div class="container-btn">

@@ -292,4 +292,11 @@ $(document).ready(function(){
     $(tabgroup).children('div').hide();
     $(target).show();
     })
+
+    $('input#companyManagers').click(function(){
+        if ($(this).is(':checked')){
+            return $('div#manager-fields').removeClass('hide');
+        }
+        $('div#manager-fields').addClass('hide');
+    });
 });

@@ -373,21 +373,34 @@ class Lantra_UsersService extends BaseApplicationComponent
      * Return company ids where user is a company manager
      *
      * @param $user
+     * @param $type
      * @return array
      * @throws Exception
      */
-    function getCompanyManagerCompanyIds(UserModel $user)
+    function getCompanyManagerCompanyIds(UserModel $user, $type = 'both')
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
-        $criteria->relatedTo = [
-            'or',
-            ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'],
-            ['targetElement' => $user->id, 'field' => 'companySecondaryManagers'],
-        ];
+        if ($type == 'primary')
+        {
+            $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'];
+
+        }
+        elseif ($type == 'secondary')
+        {
+            $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companySecondaryManagers'];
+        }
+        else
+        {
+            $criteria->relatedTo = [
+                'or',
+                ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'],
+                ['targetElement' => $user->id, 'field' => 'companySecondaryManagers'],
+            ];
+        }
         $criteria->order = 'title';
         return $criteria->ids();
     }
@@ -842,5 +855,54 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         $domain = $globalsScheme->schemeEmailDomain ? $globalsScheme->schemeEmailDomain : 'lantra.co.uk';
         return $handle . '@' . $domain;
+    }
+
+    /**
+     * @param $companyIds
+     * @param $user
+     * @param $type
+     * @throws Exception
+     */
+    public function setManager($companyIds, $user, $type = 'primary')
+    {
+        // remove from existing
+        foreach($this->getCompanyManagerCompanyIds($user, $type) as $companyId)
+        {
+            if ( ! in_array($companyId, $companyIds))
+            {
+                $company = craft()->entries->getEntryById($companyId);
+                if ($type == 'primary')
+                {
+                    $company->setContentFromPost(['companyPrimaryManager' => []]);
+                    craft()->elements->saveElement($company);
+                }
+                else
+                {
+                    $secondaryManagerIds = $company->companySecondaryManagers->ids();
+                    // remove userId from array
+                    if (($key = array_search($user->id, $secondaryManagerIds)) !== false) {
+                        unset($secondaryManagerIds[$key]);
+                    }
+                    $company->setContentFromPost(['companySecondaryManagers' => $secondaryManagerIds]);
+                    craft()->elements->saveElement($company);
+                }
+            }
+        }
+        // add to new
+        foreach($companyIds as $companyId) {
+            $company = craft()->entries->getEntryById($companyId);
+            $primaryManagerId = $company->companyPrimaryManager->total() ? $company->companyPrimaryManager->first()->id : null;
+            $secondaryManagerIds = $company->companySecondaryManagers->total() ? $company->companySecondaryManagers->ids() : [];
+            if ($type == 'primary' && $user->id != $primaryManagerId) {
+                $company->setContentFromPost(['companyPrimaryManager' => [$user->id]]);
+                craft()->elements->saveElement($company);
+            }
+            if ($type == 'secondary' && ! in_array($user->id, $secondaryManagerIds))
+            {
+                $secondaryManagerIds[] = $user->id;
+                $company->setContentFromPost(['companySecondaryManagers' => $secondaryManagerIds]);
+                craft()->elements->saveElement($company);
+            }
+        }
     }
 }
