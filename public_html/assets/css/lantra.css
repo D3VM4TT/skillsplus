@@ -1113,14 +1113,14 @@ nav.topNavigation {
     height: 68px;
 }
 
-.tabs li {
+.module-group-tabs .tabs li {
     float:left;
     width:20%;
   }
-.tabs li:first-child a {
+.module-group-tabs .tabs li:first-child a {
     border-left: 2px #e8ecef solid;
 }
-.tabs a {
+.module-group-tabs .tabs a {
     display:block;
     text-align:center;
     text-decoration:none;
@@ -1128,19 +1128,19 @@ nav.topNavigation {
     border-top: 2px #e8ecef solid;
     border-right: 2px #e8ecef solid;
     transition: background-color 100ms ease-out;
-}   
-.tabs a:hover {
+}
+.module-group-tabs .tabs a:hover {
     color: #fff;
     background:#c70056;
     border-top: 2px #c70056 solid;
     border-right: 2px #c70056 solid;
     }
 
-.tabs li:first-child a:hover {
+.module-group-tabs .tabs li:first-child a:hover {
     border-left: 2px #c70056 solid;
 }
 
-.tabs a.active {
+.module-group-tabs .tabs a.active {
     padding:20px 0;
     background:#c70056;
     border-top: 2px #c70056 solid;
@@ -1149,11 +1149,12 @@ nav.topNavigation {
     margin-top: -10px;
 }
 
-.tabs li:first-child a.active {
+.module-group-tabs .tabs li:first-child a.active {
     border-left: 2px #c70056 solid;
 }
 
-.tabs a.active h4, .tabs a:hover h4 {
+.module-group-tabs .tabs a.active h4,
+.module-group-tabs .tabs a:hover h4 {
     color: inherit;
 }
 
@@ -1162,6 +1163,49 @@ nav.topNavigation {
   display:table;
   clear:both;
 }
+
+.module-tabs {
+    display:flex;
+}
+
+.module-tabs ul {
+    flex: 50%;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+
+.module-tabs ul li {
+    padding:5px 20px;
+    line-height:20px;
+}
+
+.module-tabs ul li a.module-status {
+    text-decoration: none;
+    font-weight:700;
+    font-size:20px;
+}
+
+.module-tabs ul li a.module-status.active {
+    color:#c70056;
+}
+
+span.status-inprogress,
+span.status-complete {
+    border-radius:50%;
+    width:16px;
+    height:16px;
+    display:inline-block;
+    margin-right:20px;
+}
+
+span.status-inprogress {
+    background-color:#ffb848;
+}
+
+span.status-complete {
+    background-color:#59c269;
+}
+
 
 /*Touchscreen menu
 -------------------------------------------------- */
