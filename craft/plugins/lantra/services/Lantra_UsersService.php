@@ -648,7 +648,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         $company = $user->userCompany->first();
         if ($company) {
             $primaryManager = $company->companyPrimaryManager->first();
-            $return[$primaryManager->id] = $primaryManager;
+            if($primaryManager)
+            {
+                $return[$primaryManager->id] = $primaryManager;
+            }
             foreach ($company->companySecondaryManagers as $secondaryManager) {
                 $return[$secondaryManager->id] = $secondaryManager;
             }
