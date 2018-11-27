@@ -12,7 +12,7 @@
                     {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo(allModules) %}
                     {% for moduleGroup in moduleGroups %}
                         <li>
-                            <a href="#tab{{ moduleGroup.id }}" class="{{ loop.index == 1 ? 'active' }}">
+                            <a href="#tab{{ moduleGroup.id }}" class="{{ loop.index == 1 ? 'active' }} secondary-bg-hover">
                                 <h4>{{ moduleGroup.title }}</h4>
                             </a>
                         </li>
@@ -190,6 +190,7 @@
                                             </div>
                                         </div>
                                     {% endif %}
+                                    <button class="button no-shadow primary-bg"><span>Add an achievement</span></button>
                                     <div class="summary">
                                         {% if module.resultDisplayValue %}
                                             <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h3>

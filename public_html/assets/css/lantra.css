@@ -442,6 +442,7 @@ input.text-search {
 
 .button {
     width: 80%;
+    max-width: 280px;
     height: 60px;
     display: inline-block;
     border: none;
@@ -467,6 +468,13 @@ input.text-search {
 
 .button.white a {
     color:#FFFFFF !important;
+}
+
+.button.no-shadow {
+    margin: 15px 25px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+     box-shadow: none; 
 }
 
 span.trigger-password {
@@ -643,6 +651,11 @@ span.remember-me-txt {
     font-size: 13px !important;
 }
 
+input[type="file"] {
+font-size: 12px;
+padding-bottom: 40px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 
@@ -816,7 +829,7 @@ article.cpd div.closed {
 /*Results
 -------------------------------------------------- */
 article.results {
-    margin-bottom:100px;
+    margin:100px 0px;
 }
 
 /*Scheme Profile
@@ -1131,9 +1144,9 @@ nav.topNavigation {
 }
 .module-group-tabs .tabs a:hover {
     color: #fff;
-    background:#c70056;
+/*    background:#c70056;
     border-top: 2px #c70056 solid;
-    border-right: 2px #c70056 solid;
+    border-right: 2px #c70056 solid;*/
     }
 
 .module-group-tabs .tabs li:first-child a:hover {
@@ -1182,7 +1195,7 @@ nav.topNavigation {
 .module-tabs ul li a.module-status {
     text-decoration: none;
     font-weight:700;
-    font-size:20px;
+    font-size:16px;
 }
 
 .module-tabs ul li a.module-status.active {
@@ -1192,8 +1205,8 @@ nav.topNavigation {
 span.status-inprogress,
 span.status-complete {
     border-radius:50%;
-    width:16px;
-    height:16px;
+    width:12px;
+    height:12px;
     display:inline-block;
     margin-right:20px;
 }

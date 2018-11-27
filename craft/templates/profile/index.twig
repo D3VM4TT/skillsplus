@@ -15,6 +15,7 @@
         <div class="page-content">
             {% include '_includes/profile' %}
             {% include '_forms/photo' %}
+            {% include '_includes/results' with{cpdUser:account} %}
         </div>
     </section>
 {% endblock %}
