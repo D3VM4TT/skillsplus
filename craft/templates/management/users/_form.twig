@@ -61,13 +61,12 @@
                     </li>
                 </ul>
         </div>
-        <div id="manager-fields" class="{% if not isCompanyManager %}hide{% endif %}">
+        <div id="manager-fields" class="{% if not isCompanyManager %}{% endif %}">
             <div class="field--wrapper ">
                 <label for="userCompany">Primary manager companies:</label>
                 <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
                     {% for companyEntry in companyEntries %}
-                        <option {% if companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %} selected="selected{% endif %}"
-                            value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                        <option {% if companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %} selected="selected"{% endif %} value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -75,8 +74,7 @@
                 <label for="userCompany">Secondary manager companies:</label>
                 <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
                     {% for companyEntry in companyEntries %}
-                        <option {% if account.id in companyEntry.companySecondaryManagers.ids() %} selected="selected{% endif %}"
-                            value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                        <option {% if account.id in companyEntry.companySecondaryManagers.ids() %} selected="selected"{% endif %} value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
                     {% endfor %}
                 </select>
             </div>

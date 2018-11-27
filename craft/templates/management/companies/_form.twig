@@ -77,7 +77,7 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company secondary managers:</label>
         <input type="hidden" name="fields[companySecondaryManagers]" value="" />
-        <select multiple name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+        <select multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
                   {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
