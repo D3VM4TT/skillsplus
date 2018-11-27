@@ -143,29 +143,45 @@
                                                     <thead>
                                                     <tr>
                                                         <th>Result title</th>
-                                                        <th>Value</th>
-                                                        <th>Status</th>
-                                                        <th>Endorsed Date</th>
-                                                        <th>Expiry Date</th>
-                                                        <th class="text-right">Evidence &amp; Comments</th>
+                                                        {% for row in moduleGroup.columnLayout %}
+                                                            <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+                                                        {% endfor %}
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     {% for userResultEntry in moduleUserResults %}
                                                         <tr>
                                                             <td>{{ userResultEntry.title }}</td>
-                                                            <td>{{ userResultEntry.resultValue }}</td>
-                                                            <td>{{ userResultEntry.resultStatus|ucwords }}</td>
-                                                            <td>{% if userResultEntry.resultEndorsedDate %}{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}{% endif %}</td>
-                                                            <td>{% if userResultEntry.expiryDate %}{{ userResultEntry.expiryDate|date(dateFormat) }}{% endif %}</td>
-                                                            <td>
-                                                                {% if userResultEntry.resultEvidence|length %}
-                                                                    {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
-                                                                        <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                                                                    {% endfor %}
+                                                            {% for row in moduleGroup.columnLayout %}
+                                                                {% if row.fieldType == 'unitType' %}
+                                                                    <td>Evidence</td>
+                                                                {% elseif row.fieldType == 'unitValue'  %}
+                                                                    <td>{{ userResultEntry.unitValue }}</td>
+                                                                {% elseif row.fieldType == 'resultStatus'  %}
+                                                                    <td>{{ userResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
+                                                                {% elseif row.fieldType == 'resultEndorsedDate' %}
+                                                                    <td>{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                                                                {% elseif row.fieldType == 'expiryDate'  %}
+                                                                    <td>{{ userResultEntry.expiryDate|date(dateFormat)|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultStartDate'  %}
+                                                                    <td>{{ userResultEntry.resultStartDate|date(dateFormat)|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultFinishDate'  %}
+                                                                    <td>{{ userResultEntry.resultFinishDate|date(dateFormat)|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultLocation'  %}
+                                                                    <td>{{ userResultEntry.resultLocation|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultHours'  %}
+                                                                    <td>{{ userResultEntry.resultHours|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultEvidence'  %}
+                                                                    <td>
+                                                                        {% if userResultEntry and userResultEntry.resultEvidence|length %}
+                                                                            {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
+                                                                                <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                        {{ userResultEntry ? userResultEntry.resultComments }}
+                                                                    </td>
                                                                 {% endif %}
-                                                                {{ userResultEntry.resultComments }}
-                                                            </td>
+                                                            {% endfor %}
                                                         </tr>
                                                         {% if (userResultEntry.resultStatus == 'endorsed') %}
                                                             {% set totalPoints = totalPoints + userResultEntry.resultValue %}
@@ -176,7 +192,9 @@
                                             </div>
                                         </div>
                                     {% endif %}
-                                    <button class="button no-shadow primary-bg"><span>Add an achievement</span></button>
+                                    <a class="button no-shadow primary-bg" href="/cpd/achievement/module/{{ module.id }}/user/{{ cpdUser.id }}">
+                                        <span>Add an achievement</span>
+                                    </a>
                                     <div class="summary">
                                         {% if module.resultDisplayValue %}
                                             <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h3>
