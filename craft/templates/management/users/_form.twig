@@ -64,7 +64,7 @@
         <div id="manager-fields" class="{% if not isCompanyManager %}hide{% endif %}">
             <div class="field--wrapper ">
                 <label for="userCompany">Primary manager companies:</label>
-                <select multiple name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
+                <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
                     {% for companyEntry in companyEntries %}
                         <option {% if companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %} selected="selected{% endif %}"
                             value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
@@ -73,7 +73,7 @@
             </div>
             <div class="field--wrapper ">
                 <label for="userCompany">Secondary manager companies:</label>
-                <select multiple name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
+                <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
                     {% for companyEntry in companyEntries %}
                         <option {% if account.id in companyEntry.companySecondaryManagers.ids() %} selected="selected{% endif %}"
                             value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
@@ -174,7 +174,7 @@
             <label for="userRole">User roles:</label>
             {% set roleCategories = craft.categories.group('roles') %}
             <input type="hidden" name="fields[userRole]" value="" />
-            <select multiple name="fields[userRole][]" id="userRole">
+            <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                 <option value="{{ roleCategory.id }}"
                         {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
