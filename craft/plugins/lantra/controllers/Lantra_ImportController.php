@@ -4,13 +4,14 @@ namespace Craft;
 
 class Lantra_ImportController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionIndex', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers');
+    public $allowAnonymous = array('actionIndex', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers');
     private $dataPath = '../craft-assets/import/';
 
     private $companies = [];
     private $roles = [];
     private $users = [];
     private $managers = [];
+    private $companyUsers = [];
 
     private $success = 0;
     private $failed = 0;
@@ -54,6 +55,7 @@ class Lantra_ImportController extends Lantra_BaseController {
         $this->getData('roles');
         $this->getData('users');
         $this->getData('managers');
+        $this->getData('companyUsers');
         $this->loadTemplate();
     }
 
@@ -115,6 +117,19 @@ class Lantra_ImportController extends Lantra_BaseController {
         $this->loadTemplate(true);
     }
 
+
+    /**
+     * Import Lantra Data
+     *
+     * @throws mixed
+     */
+    public function actionCompanyUsers()
+    {
+        $this->getData('companyUsers');
+        $this->assignCompanyUsers();
+        $this->loadTemplate(true);
+    }
+
     /**
      * private methods
      */
@@ -129,6 +144,7 @@ class Lantra_ImportController extends Lantra_BaseController {
             'jobRoles' => count($this->roles),
             'users' => count($this->users),
             'managers' => count($this->managers),
+            'companyUsers' => count($this->companyUsers),
             'complete' => $complete,
             'success' => $this->success,
             'failed' => $this->failed,
@@ -355,12 +371,43 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             if ($companyEntry && $companyManager) {
                 $companyEntry->setContentFromPost([
-                    'companyManager' => array_merge($companyEntry->companyManager->ids(), [$companyManager->id])
+                    'companySecondaryManagers' => array_merge($companyEntry->companySecondaryManagers->ids(), [$companyManager->id])
                 ]);
                 craft()->entries->saveEntry($companyEntry);
                 // make sure user is in company manager group
                 craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
                 $this->success++;
+            }
+        }
+    }
+
+    private function assignCompanyUsers()
+    {
+        foreach($this->companyUsers as $row) {
+
+            $legacyUserId = trim($row[0]);
+            $legacyCompanyId = trim($row[1]);
+
+            // legacyId, legacyCompanyId
+            $companyUser = $this->getUserByLegacyId($legacyUserId);
+            $companyEntry = $this->getCompanyByLegacyId($legacyCompanyId);
+
+            if ($companyEntry && $companyUser) {
+                // skip if manager
+                $managerIds = (array) $companyEntry->companySecondaryManagers->ids();
+                if ( ! in_array($companyUser->id, $managerIds)) {
+                    $companyUser->setContentFromPost([
+                        'userCompany' => [$companyEntry->id]
+                    ]);
+
+                    echo 'SAVING ' .  $companyUser->fullName . '<br />';
+                    craft()->elements->saveElement($companyUser, false);
+
+                    $this->success++;
+                }
+                else {
+                    $this->failed++;
+                }
             }
         }
     }

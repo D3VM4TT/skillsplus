@@ -9,8 +9,9 @@
 
 <p>Companies: {{ companies }}</p>
 <p>Job Roles: {{ jobRoles }}</p>
-<p>Users: {{ users }}</p>
-<p>Managers: {{ managers }}</p>
+<p>User Accounts: {{ users }}</p>
+<p>Company Managers: {{ managers }}</p>
+<p>Company Users: {{ companyUsers }}</p>
 
 {% if complete %}
     <p>Import complete in {{ time }} seconds!</p>
@@ -28,6 +29,7 @@
     <a href="/actions/lantra/import/roles">Import Roles</a>
     <a href="/actions/lantra/import/users">Import Users</a>
     <a href="/actions/lantra/import/managers">Assign Company Managers</a>
+    <a href="/actions/lantra/import/companyUsers">Assign Company Users</a>
 </p>
 
 
