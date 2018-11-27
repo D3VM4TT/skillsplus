@@ -71,16 +71,9 @@
                                                     <thead>
                                                     <tr>
                                                         <th>Unit title</th>
-                                                        {% if module.resultDisplayType %}<th>Type</th>{% endif %}
-                                                        {% if module.resultDisplayValue %}<th>Value</th>{% endif %}
-                                                        {% if module.resultDisplayStatus %}<th>Status</th>{% endif %}
-                                                        {% if module.resultDisplayEndorsedDate %}<th>Endorsed Date</th>{% endif %}
-                                                        {% if module.resultDisplayExpiryDate %}<th>Expiry Date</th>{% endif %}
-                                                        {% if module.resultDisplayStartDate %}<th>Start Date</th>{% endif %}
-                                                        {% if module.resultDisplayFinishDate %}<th>Finish Date</th>{% endif %}
-                                                        {% if module.resultDisplayLocation %}<th>Location</th>{% endif %}
-                                                        {% if module.resultDisplayHours %}<th>Hours</th>{% endif %}
-                                                        {% if module.resultDisplayEvidence %}<th>Evidence</th>{% endif %}
+                                                        {% for row in moduleGroup.columnLayout %}
+                                                            <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+                                                        {% endfor %}
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -97,43 +90,36 @@
                                                                     <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                                 {% endif %}
                                                             </td>
-                                                            {% if module.resultDisplayType %}
-                                                                <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayValue %}
-                                                                <td>{{ unitEntry.unitValue }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayStatus %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayEndorsedDate %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultEndorsedDate ? unitResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayExpiryDate %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.expiryDate ? unitResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayStartDate %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultStartDate ? unitResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayFinishDate %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultFinishDate ? unitResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayLocation %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultLocation|default('-') }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayHours %}
-                                                                <td>{{ unitResultEntry and unitResultEntry.resultHours|default('-') }}</td>
-                                                            {% endif %}
-                                                            {% if module.resultDisplayEvidence %}
-                                                                <td>
-                                                                    {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
-                                                                        {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
-                                                                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                                                                        {% endfor %}
-                                                                    {% endif %}
-                                                                    {{ unitResultEntry.resultComments }}
-                                                                </td>
-                                                            {% endif %}
+                                                            {% for row in moduleGroup.columnLayout %}
+                                                                {% if row.fieldType == 'unitType' %}
+                                                                    <td>{{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
+                                                                {% elseif row.fieldType == 'unitValue'  %}
+                                                                    <td>{{ unitEntry.unitValue }}</td>
+                                                                {% elseif row.fieldType == 'resultStatus'  %}
+                                                                    <td>{{ unitResultEntry ? unitResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
+                                                                {% elseif row.fieldType == 'resultEndorsedDate'  %}
+                                                                    <td>{{ unitResultEntry and unitResultEntry.resultEndorsedDate ? unitResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
+                                                                {% elseif row.fieldType == 'expiryDate'  %}
+                                                                    <td>{{ unitResultEntry and unitResultEntry.expiryDate ? unitResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
+                                                                {% elseif row.fieldType == 'resultStartDate'  %}
+                                                                    <td>{{ unitResultEntry and unitResultEntry.resultStartDate ? unitResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
+                                                                {% elseif row.fieldType == 'resultFinishDate'  %}
+                                                                    <td>{{ unitResultEntry and unitResultEntry.resultFinishDate ? unitResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
+                                                                {% elseif row.fieldType == 'resultLocation'  %}
+                                                                    <td>{{ unitResultEntry ? unitResultEntry.resultLocation|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultHours'  %}
+                                                                    <td>{{ unitResultEntry ? unitResultEntry.resultHours|default('-') }}</td>
+                                                                {% elseif row.fieldType == 'resultEvidence'  %}
+                                                                    <td>
+                                                                        {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
+                                                                            {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
+                                                                                <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                        {{ unitResultEntry ? unitResultEntry.resultComments }}
+                                                                    </td>
+                                                                {% endif %}
+                                                            {% endfor %}
                                                         </tr>
                                                     {% endfor %}
                                                     </tbody>
