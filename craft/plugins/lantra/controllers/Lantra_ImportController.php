@@ -4,7 +4,7 @@ namespace Craft;
 
 class Lantra_ImportController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionIndex', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers');
+    public $allowAnonymous = array('actionIndex', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles');
     private $dataPath = '../craft-assets/import/';
 
     private $companies = [];
@@ -127,6 +127,17 @@ class Lantra_ImportController extends Lantra_BaseController {
     {
         $this->getData('companyUsers');
         $this->assignCompanyUsers();
+        $this->loadTemplate(true);
+    }
+
+    /**
+     * Import Lantra Data
+     *
+     * @throws mixed
+     */
+    public function actionAssignJobRoles()
+    {
+        $this->assignJobRoles();
         $this->loadTemplate(true);
     }
 
@@ -328,7 +339,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             $roleId = $this->getRoleId($user[5]);
             if ($roleId) {
-                $userModel->getContent()->setAttributes(['userJobRole' => [$roleId]]);
+                $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
             }
 
             $groups = [4];
@@ -341,6 +352,39 @@ class Lantra_ImportController extends Lantra_BaseController {
                 $this->failed++;
             }
             $x++;
+        }
+    }
+
+    private function assignJobRoles()
+    {
+        // build array of legacyJobRoleId => id
+        $criteria = craft()->elements->getCriteria(ElementType::Category);
+        $criteria->group = 'roles';
+        $criteria->limit = null;
+
+        foreach ($criteria as $jobRole) {
+            $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
+        }
+
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = null;
+
+        $x = 1;
+        foreach($criteria->find() as $userModel) {
+            if ($userModel->legacyJobRoleId)
+            {
+                $roleId = $this->getRoleId($userModel->legacyJobRoleId);
+                if ($roleId) {
+                    $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
+                    if (craft()->users->saveUser($userModel)) {
+                        $this->success++;
+                    } else {
+                        $this->log [] = implode(',', $userModel->getAllErrors());
+                        $this->failed++;
+                    }
+                    $x++;
+                }
+            }
         }
     }
 
