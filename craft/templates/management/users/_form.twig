@@ -113,12 +113,10 @@
             <label for="email" class="no-float">Email:</label>
             <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
         </div>
-        {% if not account.id|default(false) %}
         <div class="field--wrapper">
-            <label for="generateEmail" class="no-float">Generate Random Email?</label>
-            <input type="checkbox" id="generateEmail" name="generateEmail" value="1" {% if account is defined and account.generateEmail %}checked="checked"{% endif %}>
+            <label for="dummyEmail" class="no-float">Generate Dummy Email?</label>
+            <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
         </div>
-        {%  endif %}
         <div class="field--wrapper">
             <label for="address" class="no-float">Start date:</label>
             <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">

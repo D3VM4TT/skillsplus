@@ -851,10 +851,10 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function generateEmail($firstName = null, $lastName = null) {
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         if ($firstName && $lastName) {
-            $handle = strtolower($firstName . '.' . $lastName);
+            $handle = strtolower($firstName . '.' . $lastName) . '.' . mt_rand(1000, 9999);
         }
         else {
-            $handle = mt_rand(10000000, 99999999);
+            $handle = mt_rand(100000, 999999);
         }
         $domain = $globalsScheme->schemeEmailDomain ? $globalsScheme->schemeEmailDomain : 'lantra.co.uk';
         return $handle . '@' . $domain;

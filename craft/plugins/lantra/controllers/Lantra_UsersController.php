@@ -18,7 +18,8 @@ class Lantra_UsersController extends Lantra_BaseController {
         // get the posted userId
         $userId = craft()->request->getPost('editUserId');
         $redirect = craft()->request->getPost('redirect') ? craft()->request->getPost('redirect') : '/management/users';
-        
+        $fields = craft()->request->getPost('fields');
+
         // existing user
         if ($userId) {
             if (false == $user = craft()->users->getUserById($userId)) {
@@ -33,7 +34,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         // set basic account fields
         $user->firstName = craft()->request->getPost('firstName');
         $user->lastName = craft()->request->getPost('lastName');
-        if (craft()->request->getPost('generateEmail')) {
+        if ($fields['userDummyEmail']) {
             $user->email = craft()->lantra_users->generateEmail($user->firstName, $user->lastName);
         }
         else {

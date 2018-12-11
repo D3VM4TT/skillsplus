@@ -31,6 +31,7 @@
         <h2>Users</h2>
         <p>Add, Edit and view the Dashboard of Users within your Scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
+        <a class="" href="/management/users/new" class="">Add New</a>
     </div>
     {% if userEntries is defined and userEntries|length %}
         <table class="data">

@@ -309,8 +309,16 @@ class Lantra_ImportController extends Lantra_BaseController {
             $userDateOfBirth = trim((string)$user[4]);
             $userStartDate = trim((string)$user[5]);
             $userAddress = $user[6];
+            $userDummyEmail = 0;
 
-            $emailAddress = $this->getEmail($legacyEmail);
+            // generate an email address
+            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || ! $this->validEmail($legacyEmail))
+            {
+                $emailAddress = craft()->lantra_users->generateEmail($names[0], $names[1]);
+                $userDummyEmail = 1;
+            }
+            // make sure same email not given twice
+            $this->emails[] = $legacyEmail;
 
             $userModel = new UserModel();
             $userModel->email = $emailAddress;
@@ -322,7 +330,8 @@ class Lantra_ImportController extends Lantra_BaseController {
                 'legacyId' => $legacyId,
                 'legacyEmail' => $legacyEmail,
                 'legacyJobRoleId' => $legacyJobRoleId,
-                'userAddress' => $userAddress
+                'userAddress' => $userAddress,
+                'userDummyEmail' => $userDummyEmail
             ]);
 
             if (strlen($userDateOfBirth) == 10) {
@@ -434,18 +443,6 @@ class Lantra_ImportController extends Lantra_BaseController {
                 }
             }
         }
-    }
-
-    private function getEmail($email)
-    {
-        // generate an email address
-        if (is_null($email) || trim($email) == '' || @in_array($email, $this->emails) || ! $this->validEmail($email)) {
-
-            return rand(100000000, 999999999) . '@' . $this->emailDomain;
-        }
-        // make sure same email not given twice
-        $this->emails[] = $email;
-        return $email;
     }
 
     private function getNames($fullName)
