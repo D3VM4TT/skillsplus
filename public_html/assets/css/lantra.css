@@ -381,6 +381,14 @@ h4, h4 a {
     width: 250px !important;
 }
 
+/*Public header
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+header {
+    position: absolute;
+    width:100%;
+    z-index: 10;
+}
+
 /*Buttons and Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .button.hollow.white {
