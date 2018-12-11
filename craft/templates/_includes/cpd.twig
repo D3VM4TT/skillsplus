@@ -60,13 +60,13 @@
                                         {% set unitGroupEntries = unitGroup.unitEntries %}
                                         <div class="unit-group">
                                             <div class="header" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
-                                                <h5>{{ unitGroup.groupName|default(module.title ~ ' ' ~ loop.index) }}</h5>
+                                                <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
                                                 <div class="status">
                                                     View status and Endorsements
                                                     <img src="/assets/img/img-arrow-down-trans.png">
                                                 </div>
                                             </div>
-                                            <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units closed">
+                                            <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units open">
                                                 <table class="data">
                                                     <thead>
                                                     <tr>
