@@ -160,13 +160,13 @@
                                                                 {% elseif row.fieldType == 'resultStatus'  %}
                                                                     <td class="resultStatus">{{ userResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
                                                                 {% elseif row.fieldType == 'resultEndorsedDate' %}
-                                                                    <td class="resultEndorsedDate">{{ userResultEntry.resultEndorsedDate|date(dateFormat) }}</td>
+                                                                    <td class="resultEndorsedDate">{{ userResultEntry.resultEndorsedDate ? userResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
                                                                 {% elseif row.fieldType == 'resultExpiryDate'  %}
-                                                                    <td class="expiryDate">{{ userResultEntry.expiryDate|date(dateFormat)|default('-') }}</td>
+                                                                    <td class="expiryDate">{{ userResultEntry.expiryDate ? userResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
                                                                 {% elseif row.fieldType == 'resultStartDate'  %}
-                                                                    <td class="resultStartDate">{{ userResultEntry.resultStartDate|date(dateFormat)|default('-') }}</td>
+                                                                    <td class="resultStartDate">{{ userResultEntry.resultStartDate ? userResultEntry.resultStartDate|date(dateFormat) : '-'  }}</td>
                                                                 {% elseif row.fieldType == 'resultFinishDate'  %}
-                                                                    <td class="resultFinishDate">{{ userResultEntry.resultFinishDate|date(dateFormat)|default('-') }}</td>
+                                                                    <td class="resultFinishDate">{{ userResultEntry.resultFinishDate ? userResultEntry.resultFinishDate|date(dateFormat) : '-'  }}</td>
                                                                 {% elseif row.fieldType == 'resultLocation'  %}
                                                                     <td class="resultLocation">{{ userResultEntry.resultLocation|default('-') }}</td>
                                                                 {% elseif row.fieldType == 'resultHours'  %}
