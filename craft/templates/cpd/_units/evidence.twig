@@ -8,8 +8,9 @@
     <input type="hidden" name="typeId" value="10">
     <input type="hidden" name="sectionId" value="10">
     <input type="hidden" name="enabled" value="1">
-    {% if userId != currentUser.id %}
+    {% if account.id != currentUser.id %}
         <input type="hidden" name="authorId" value="{{ userId }}">
+        <input type="hidden" name="title" value="[unit {{ entry.id }}] {{ account.firstName }} {{ account.lastName }}">
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="pending">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">

@@ -132,6 +132,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     function saveNewResult($resultEntry) {
         $saveContent = false;
+        $unitEntry = $resultEntry->resultUnit->first();
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
@@ -153,7 +154,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
-                $unitEntry = $resultEntry->resultUnit->first();
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
                 $saveContent = true;
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
@@ -161,10 +161,16 @@ class Lantra_ResultsService extends BaseApplicationComponent
             // set author (manager submitting on behalf of user)
             $authorId = craft()->request->getPost('authorId');
             if ($authorId) {
+                $author = craft()->users->getUserById($authorId);
                 $resultEntry->authorId = $authorId;
                 // auto endorse
-                if ($resultEntry->type == 'userResult') {
+                if ($resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult')) {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
+                }
+                // make sure title is correct
+                if ($author && $resultEntry->type == 'unitResult' && $resultEntry->resultEvidence)
+                {
+                    $resultEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $authorId . ' ' . $author->firstName . ' ' . $author->lastName;
                 }
                 $saveContent = true;
             }
