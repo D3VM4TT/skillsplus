@@ -79,49 +79,7 @@
                         </select>
                     </div>
                 {% endif %}
-                {% for row in moduleGroup.columnLayout %}
-                    {% set label = row.fieldLabel|default(row.fieldType.label) %}
-                    {% if row.fieldType == 'unitValue'  %}
-                        <div class="field--wrapper">
-                            <label for="fields[resultValue]" class="float">{{ label }} (if applicable)</label>
-                            <input name="fields[resultValue]" type="number" placeholder="{{ label }}" />
-                        </div>
-                    {% elseif row.fieldType == 'expiryDate'  %}
-                        <div class="field--wrapper">
-                            <label for="userExpiryDate" class="float">{{ label }} (if applicable)</label>
-                            <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
-                        </div>
-                    {% elseif row.fieldType == 'resultStartDate'  %}
-                        <div class="field--wrapper">
-                            <label for="resultStartDate" class="float">{{ label }} (if applicable)</label>
-                            <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
-                        </div>
-                    {% elseif row.fieldType == 'resultFinishDate'  %}
-                        <div class="field--wrapper">
-                            <label for="resultFinishDate" class="float">{{ label }}  (if applicable)</label>
-                            <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }} " data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
-                        </div>
-                    {% elseif row.fieldType == 'resultLocation'  %}
-                        <div class="field--wrapper">
-                            <label for="resultLocation" class="float">{{ label }} (if applicable)</label>
-                            <input name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}">
-                        </div>
-                    {% elseif row.fieldType == 'resultHours'  %}
-                        <div class="field--wrapper">
-                            <label for="resultLocation" class="float">{{ label }} (if applicable)</label>
-                            <input name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}">
-                        </div>
-                    {% elseif row.fieldType == 'resultEvidence'  %}
-                        <div class="field--wrapper">
-                            <label for="file" class="">Upload files</label>
-                            <input type="file" name="fields[resultEvidence][]" multiple class="5000">
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                <div class="field--wrapper">
-                    <label for="resultNotes" style="" class="">Notes</label>
-                    <textarea id="resultNotes" name="fields[resultNotes]"></textarea>
-                </div>
+                {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup} %}
                 <div class="container-btn">
                     <button class="button primary-bg" type="submit">Submit result</button>
                 </div>
