@@ -23,6 +23,9 @@
         <h2>Companies</h2>
         <p>Add / Edit and Delete companies within in your scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
+        {% if not currentUser.managerReadOnly %}
+            <a class="" href="/management/companies/new" class="">Add New</a>
+        {% endif %}
     </div>
     {% if companyEntries is defined and companyEntries|length %}
         <table class="data">
@@ -65,17 +68,9 @@
             </tbody>
         </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-
     {% else %}
         <div class="page-content">
             <h3>There are no companies to display.</h3>
-        </div>
-    {% endif %}
-    {% if not currentUser.managerReadOnly %}
-        <div class="page-content">
-            <div class="container-btn">
-                <a class="button primary-bg" href="/management/companies/new">Create company</a>
-            </div>
         </div>
     {% endif %}
 </section>
