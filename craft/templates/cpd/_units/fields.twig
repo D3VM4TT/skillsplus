@@ -2,32 +2,32 @@
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue'  %}
         <div class="field--wrapper">
-            <label for="fields[resultValue]" class="float">{{ label }} (if applicable)</label>
+            <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
             <input name="fields[resultValue]" type="number" placeholder="{{ label }}" />
         </div>
-    {% elseif row.fieldType == 'expiryDate'  %}
+    {% elseif row.fieldType == 'resultExpiryDate'  %}
         <div class="field--wrapper">
-            <label for="userExpiryDate" class="float">{{ label }} (if applicable)</label>
+            <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
             <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultStartDate'  %}
         <div class="field--wrapper">
-            <label for="resultStartDate" class="float">{{ label }} (if applicable)</label>
+            <label for="resultStartDate" class="">{{ label }} (if applicable)</label>
             <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultFinishDate'  %}
         <div class="field--wrapper">
-            <label for="resultFinishDate" class="float">{{ label }}  (if applicable)</label>
+            <label for="resultFinishDate" class="">{{ label }}  (if applicable)</label>
             <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }} " data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultLocation'  %}
         <div class="field--wrapper">
-            <label for="resultLocation" class="float">{{ label }} (if applicable)</label>
+            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}">
         </div>
     {% elseif row.fieldType == 'resultHours'  %}
         <div class="field--wrapper">
-            <label for="resultLocation" class="float">{{ label }} (if applicable)</label>
+            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence'  %}
