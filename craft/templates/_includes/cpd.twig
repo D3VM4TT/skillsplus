@@ -24,7 +24,7 @@
                     <div id="tab{{ moduleGroup.id }}">
                         <div class="module-tabs">
                             <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
-                            {% set modules = craft.entries.relatedTo(role).relatedTo(moduleGroup).order('title') %}
+                            {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}).order('title') %}
                             {% for module in modules %}
                                 {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
                                 <li>
