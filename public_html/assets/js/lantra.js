@@ -282,16 +282,32 @@ $(document).ready(function(){
     $('.tabgroup > div').hide();
     $('.tabgroup > div:first-of-type').show();
     $('.tabs a').click(function(e){
-    e.preventDefault();
-    var $this = $(this),
-    tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
-    others = $this.closest('li').siblings().children('a'),
-    target = $this.attr('href');
-    others.removeClass('active');
-    $this.addClass('active');
-    $(tabgroup).children('div').hide();
-    $(target).show();
-    })
+        e.preventDefault();
+        var $this = $(this),
+        tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
+        others = $this.closest('li').siblings().children('a'),
+        target = $this.attr('href');
+        others.removeClass('active');
+        $this.addClass('active');
+        $(tabgroup).children('div').hide();
+        $(target).show();
+        // make sure tab is selected too
+        if (target.match("^#module")) {
+            var t = $(this).closest('div.groups-tab-group');
+
+            console.log("#" + t.attr('id'));
+            $('a[href="#' + t.attr('id') + '"]').click();
+        }
+    });
+
+    // add on load module click
+    var m = window.location.hash.replace('m', 'module');
+    if (m) {
+        $('.tabs a[href="' + m + '"]').click();
+    }
+    else {
+        $('.tabs a[href^="#module"]').eq(0).click();
+    }
 
     $('input#companyManagers').click(function(){
         if ($(this).is(':checked')){

@@ -1211,6 +1211,10 @@ nav.topNavigation {
     color:#c70056;
 }
 
+.groups-tab-group {
+    display:none;
+}
+
 span.status-inprogress,
 span.status-complete {
     border-radius:50%;

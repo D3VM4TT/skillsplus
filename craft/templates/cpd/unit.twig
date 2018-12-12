@@ -15,6 +15,7 @@
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
 {% set unitEntry = craft.entries.id(craft.request.getSegment(4)).first() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
+{% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.first %}
 {% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).first() %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}

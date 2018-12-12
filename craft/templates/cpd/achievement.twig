@@ -25,6 +25,8 @@
     {% set account = currentUser %}
 {% endif %}
 
+{% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleId %}
+
 {% set userModules = [] %}
 {% for role in account.userRole %}
     {% for module in craft.entries.relatedTo(role).order('title') %}
@@ -37,7 +39,7 @@
 {% block content %}
     <section class="page">
         <div class="page-subHeader primary-bg">
-            <a class="back-link" href="/cpd/{{ account.id }}">&laquo; back</a>
+            <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
