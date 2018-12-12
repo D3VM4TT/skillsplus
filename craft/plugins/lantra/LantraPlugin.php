@@ -35,20 +35,29 @@ class LantraPlugin extends BasePlugin
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
+            $licenceSource = '';
             if ($event->params['isNewUser'] && ! $user->admin) {
                 // assign company licence if joining a team
-                if ($user->userCompany->total() OR $user->userTeam->total()) {
-                    if (false == craft()->lantra_licence->assignCompanyLicence($user)) {
+                if ($user->userCompany->count() OR $user->userTeam->count()) {
+                    $companyEntry = craft()->lantra_users->userCompany($user);
+                    if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
                         $event->performAction = false;
-                        $user->addError('userTeam', 'There are insufficient company licences.');
+                        $user->addError('userCompany', 'There are insufficient company licences.');
+                    }
+                    else {
+                        $licenceSource = 'Company #' . $companyEntry->id;
                     }
                 }
                 // assign scheme licence
                 elseif (false == craft()->lantra_licence->assignSchemeLicence()) {
                     $event->performAction = false;
-                    $user->addError('userTeam', 'There are insufficient scheme licences.');
+                    $user->addError('userCompany', 'There are insufficient scheme licences.');
+                }
+                else {
+                    $licenceSource = 'Scheme';
                 }
             }
+            $user->setContentFromPost(['userLicenceSource' => $licenceSource]);
         });
 
         // Stop deletes
