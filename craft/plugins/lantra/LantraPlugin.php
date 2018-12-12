@@ -119,6 +119,7 @@ class LantraPlugin extends BasePlugin
         });
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
+            $this->resetUploads();
             $entry = $event->params['entry'];
             // saving user/unit results
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
@@ -148,5 +149,11 @@ class LantraPlugin extends BasePlugin
     public function registerSiteRoutes()
     {
         return array();
+    }
+
+    private function resetUploads()
+    {
+        unset($_FILES);
+        UploadedFile::reset();
     }
 }
