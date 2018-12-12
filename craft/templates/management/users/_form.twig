@@ -40,6 +40,7 @@
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
         {{ getCsrfInput() }}
         <input type="hidden" name="action" value="lantra/users/saveUser">
+        <input type="hidden" name="fields[userDummyEmail]" value="{{ account.userDummyEmail|default(0) }}">
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
         {% if hierarchyNode %}
             <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
