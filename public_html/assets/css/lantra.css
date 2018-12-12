@@ -1424,7 +1424,7 @@ li.jstree-node .jstree-ocl {
     background-position: top center !important;
 }
 
-a#j1_1_anchor, li.jstree-node .jstree-last .jstree-open:first-child i {
+li.jstree-node .jstree-last .jstree-open:first-child i {
     display: none;
 }
 
