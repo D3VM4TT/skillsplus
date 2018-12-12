@@ -159,10 +159,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
             }
             // set author (manager submitting on behalf of user)
-            $authorId = craft()->request->getPost('authorId');
-            if ($authorId) {
-                $author = craft()->users->getUserById($authorId);
-                $resultEntry->authorId = $authorId;
+            $authorId = craft()->request->getPost('author');
+            if (count($authorId)) {
+                $author = craft()->users->getUserById($authorId[0]);
                 // auto endorse
                 if ($resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult')) {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
@@ -170,7 +169,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 // make sure title is correct
                 if ($author && $resultEntry->type == 'unitResult' && $resultEntry->resultEvidence)
                 {
-                    $resultEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $authorId . ' ' . $author->firstName . ' ' . $author->lastName;
+                    $resultEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 }
                 $saveContent = true;
             }
@@ -179,7 +178,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         if ($saveContent) {
-            craft()->entries->saveEntry($resultEntry);
+            craft()->entries->saveEntry($resultEntry, false);
         }
     }
 

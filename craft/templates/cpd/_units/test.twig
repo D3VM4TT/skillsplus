@@ -10,7 +10,7 @@
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
             {% if userId != currentUser.id %}
-                <input type="hidden" name="authorId" value="{{ userId }}">
+                <input type="hidden" name="author[]" value="{{ userId }}">
             {% endif %}
             <input type="hidden" name="fields[attemptUnit][]" value="{{ unitEntry.id }}">
             {% for question in unitEntry.testQuestions %}

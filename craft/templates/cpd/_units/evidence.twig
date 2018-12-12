@@ -9,7 +9,7 @@
     <input type="hidden" name="sectionId" value="10">
     <input type="hidden" name="enabled" value="1">
     {% if account.id != currentUser.id %}
-        <input type="hidden" name="authorId" value="{{ userId }}">
+        <input type="hidden" name="author[]" value="{{ userId }}">
         <input type="hidden" name="title" value="[unit {{ entry.id }}] {{ account.firstName }} {{ account.lastName }}">
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="pending">
