@@ -43,6 +43,8 @@ craft/config/general.php
 *.sqlite
 error_log
 
+!src/sql/lantra.default.sql
+
 # OS generated files #
 ######################
 .DS_Store
