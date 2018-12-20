@@ -185,8 +185,12 @@
                 <input type="text" id="username" name="username" class="float-label" placeholder="Enter the username" value="{{ account.username|default('') }}">
             </div>
             <div class="field--wrapper">
-                <label for="password" class="no-float">Password:</label>
+                <label for="password" class="no-float">New Password:</label>
                 <input type="password" id="password" name="newPassword" class="float-label" placeholder="Enter the password" value="">
+            </div>
+            <div class="field--wrapper">
+                <label for="password" class="no-float">Confirm Password:</label>
+                <input type="password" id="password" name="confirmPassword" class="float-label" placeholder="Enter the password" value="">
             </div>
         {% endif %}
         <div class="container-btn">

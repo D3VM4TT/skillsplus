@@ -40,8 +40,6 @@ class Lantra_UsersController extends Lantra_BaseController {
         else {
             $user->email = craft()->request->getPost('email');
         }
-        // set new password (if present)
-        $user->newPassword = (craft()->request->getPost('newPassword') ?: null);
         // set custom fields
         $user->setContentFromPost('fields');
         // username is email
@@ -63,8 +61,16 @@ class Lantra_UsersController extends Lantra_BaseController {
         }
         // mimic cp form for onSaveUser event
         $_POST['groups'] = $groupIds;
+        // set new password (if present)
+        $user->newPassword = (craft()->request->getPost('newPassword') ?: null);
+        $confirmPassword = (craft()->request->getPost('confirmPassword') ?: null);
+        if ($user->newPassword && ($user->newPassword != $confirmPassword))
+        {
+            $user->addErrors(array('confirmPassword' => Craft::t('Passwords do not match')));
+            craft()->urlManager->setRouteVariables(array('account' => $user));
+        }
         // save user
-        if (craft()->users->saveUser($user)) {
+        elseif (craft()->users->saveUser($user)) {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
             // set user manager relations
             if ($companyManager )
