@@ -84,6 +84,9 @@
                                                         {% endif %}
                                                         <tr>
                                                             <td>
+                                                                {% if craft.lantra.isManager(cpdUser.id) and unitResultEntry %}
+                                                                    [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}">x</a>]
+                                                                {% endif %}
                                                                 <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                             </td>
                                                             {% for row in moduleGroup.columnLayout %}
@@ -147,7 +150,12 @@
                                                     <tbody>
                                                     {% for userResultEntry in moduleUserResults %}
                                                         <tr>
-                                                            <td>{{ userResultEntry.title }}</td>
+                                                            <td>
+                                                                {% if craft.lantra.isManager(cpdUser.id) %}
+                                                                    [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}">x</a>]
+                                                                {% endif %}
+                                                                {{ userResultEntry.title }}
+                                                            </td>
                                                             {% for row in moduleGroup.columnLayout %}
                                                                 {% if row.fieldType == 'unitType' %}
                                                                     <td class="unitType">Evidence</td>
