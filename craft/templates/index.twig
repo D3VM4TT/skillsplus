@@ -15,7 +15,6 @@
             </p>
         </div>
         <div class="page-content">
-            {% include '_includes/results' with{cpdUser:currentUser} %}
             {% include '_includes/cpd' with{cpdUser:currentUser} %}
             {% if craft.lantra.canManage(null, true) %}
                 {% include '_includes/scheme' %}
