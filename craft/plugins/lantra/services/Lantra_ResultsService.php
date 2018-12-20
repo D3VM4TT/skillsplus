@@ -474,7 +474,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
             if ( ! count($subordinateIds)) {
                 return null;
             }
-            $criteria->unitEndorsementManagerLevel = '<=' . ($manager->managerLevel ? (int) $manager->managerLevel->value : 1);
+            $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
+            $criteria->unitEndorsementManagerLevel = '<=' . $level;
         }
         return ($count) ? $criteria->count() : $criteria;
     }
