@@ -34,6 +34,7 @@
                     <th>#</th>
                     <th class="title">Name</th>
                     <th class="title">Parent</th>
+                    <th class="title">Primary Manager</th>
                     <th>Licences</th>
                     <th>Users</th>
                     <th>&nbsp;</th>
@@ -43,10 +44,16 @@
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
+            {% set primaryManager = company.companyPrimaryManager.first %}
                 <tr>
                     <td>{{ company.id }}</td>
                     <td>{{ company.title }}</td>
                     <td>{{ parent.title|default('~ none ~') }}</td>
+                    <td>
+                        {% if primaryManager %}
+                            <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
+                        {% endif %}
+                    </td>
                     <td>{{ company.companyRemainingLicences }}</td>
                     <td>{{ craft.lantra.userCount(company.id) }}</td>
                     <td>
