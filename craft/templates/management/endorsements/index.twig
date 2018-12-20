@@ -36,8 +36,11 @@
                 <tbody>
                 {% for entry in resultEntries %}
                 <tr>
-                    <td>{{ entry.author.getFullName }}</td>
-                    <td>{% if entry.resultUnit|length %}
+                    <td>
+                        <a href="/cpd/{{ entry.author.id }}">{{ entry.author.getFullName }}</a>
+                    </td>
+                    <td>
+                        {% if entry.resultUnit|length %}
                             Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}
                         {% else %}
                             ~
