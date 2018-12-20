@@ -67,11 +67,7 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if resultEntry|length %}
-                <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
-            {% else %}
-                {% include 'cpd/_units/evidence' with{entry:unitEntry, account:account, moduleGroup:moduleGroup} %}
-            {% endif %}
+            {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup} %}
         {% endif %}
     </div>
 </section>

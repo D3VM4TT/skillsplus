@@ -1,43 +1,49 @@
+{% set resultEndorsed = resultEntry is defined and resultEntry.resultStatus == 'endorsed' %}
 {% for row in moduleGroup.columnLayout %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue'  %}
         <div class="field--wrapper">
             <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultValue]" type="number" placeholder="{{ label }}" />
+            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultValue]" type="number" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultValue|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultExpiryDate'  %}
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
-            <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input{{ resultEndorsed ? ' disabled' }} name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultExpiryDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultStartDate'  %}
         <div class="field--wrapper">
             <label for="resultStartDate" class="">{{ label }} (if applicable)</label>
-            <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input{{ resultEndorsed ? ' disabled' }} name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultStartDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultFinishDate'  %}
         <div class="field--wrapper">
             <label for="resultFinishDate" class="">{{ label }}  (if applicable)</label>
-            <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }} " data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input{{ resultEndorsed ? ' disabled' }} name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultFinishDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultLocation'  %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}">
+            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultHours'  %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}">
+            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultEntry ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence'  %}
         <div class="field--wrapper">
-            <label for="file" class="">Upload files</label>
-            <input type="file" name="fields[resultEvidence][]" multiple class="5000">
-        </div>
+            {% if resultEntry is defined and resultEntry.resultEvidence|length %}
+                {% set resultEvidence = resultEntry.resultEvidence.first %}
+                <p><a target="_blank" href="/internal/{{ resultEvidence.id }}">{{ resultEvidence.filename }}</a></p>
+            {% else %}
+                <label for="file" class="">Upload files</label>
+                <input type="file" name="fields[resultEvidence][]" multiple class="5000">
+            {% endif %}
+            </div>
     {% endif %}
 {% endfor %}
 <div class="field--wrapper">
     <label for="resultNotes" style="" class="">Notes</label>
-    <textarea id="resultNotes" name="fields[resultNotes]"></textarea>
+    <textarea {{ resultEndorsed ? ' disabled' }} id="resultNotes" name="fields[resultNotes]">{{ resultEntry ? resultEntry.resultNotes }}</textarea>
 </div>
