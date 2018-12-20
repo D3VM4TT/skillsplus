@@ -664,6 +664,21 @@ font-size: 12px;
 padding-bottom: 40px;
 }
 
+form.filter {
+    display:inline-block;
+}
+
+.btn-small {
+    padding: 10px 20px;
+    height:auto;
+    line-height: 1.7;
+    width: auto;
+}
+
+.btn-small:hover {
+
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 

@@ -25,7 +25,7 @@
         <h2>Teams</h2>
         {% include '_includes/filter' with{filterDays:false} %}
         {% if not currentUser.managerReadOnly %}
-            <a class="" href="/management/teams/new" class="">Add New</a>
+            <a class="button btn-small primary-bg" href="/management/teams/new" class="">Add New</a>
         {% endif %}
     </div>
     {% if teamEntries is defined and teamEntries|length %}

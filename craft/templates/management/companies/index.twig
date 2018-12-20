@@ -24,7 +24,7 @@
         <p>Add / Edit and Delete companies within in your scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
         {% if not currentUser.managerReadOnly %}
-            <a class="" href="/management/companies/new" class="">Add New</a>
+            <a class="button btn-small primary-bg" href="/management/companies/new" class="">Add New</a>
         {% endif %}
     </div>
     {% if companyEntries is defined and companyEntries|length %}
