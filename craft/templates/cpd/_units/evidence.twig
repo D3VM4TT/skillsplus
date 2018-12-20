@@ -1,5 +1,6 @@
 {% if resultEntry %}
     <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
+    <p>&nbsp;</p>
 {% endif %}
 {% import "_macros" as ui %}
 {% if entry is defined %}
@@ -11,7 +12,7 @@
     <input type="hidden" name="typeId" value="10">
     <input type="hidden" name="sectionId" value="10">
     <input type="hidden" name="enabled" value="1">
-    {% if resultEntry is defined and resultEntry.id %}
+    {% if resultEntry is defined and resultEntry and resultEntry.id %}
         <input type="hidden" name="entryId" value="{{ resultEntry.id }}">
     {% endif %}
     {% if account.id != currentUser.id %}

@@ -87,13 +87,6 @@ class LantraPlugin extends BasePlugin
                 if ($entry->type == 'unitResult') {
                     $unitEntry = $entry->resultUnit->first();
                     $unitEvidence = $entry->resultEvidence->first();
-                    // Check evidence results
-                    if ($event->params['isNewEntry'] && $unitEntry->unitType == 'evidence') {
-                        if (empty($unitEvidence)) {
-                            $entry->addError('fields[resultEvidence]', 'You must submit a file!');
-                            $event->performAction = false;
-                        }
-                    }
                 }
                 // set custom author
                 $authorId = craft()->request->getPost('authorId');
