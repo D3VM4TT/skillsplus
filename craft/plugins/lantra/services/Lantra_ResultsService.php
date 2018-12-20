@@ -178,7 +178,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         if ($saveContent) {
-            craft()->elements->saveElement($resultEntry, false);
+            craft()->entries->saveEntry($resultEntry, false);
         }
     }
 
