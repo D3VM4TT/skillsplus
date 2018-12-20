@@ -9,7 +9,7 @@
             {% else %}
                 <div class="module-group-tabs">
                     <ul class="tabs clearfix" data-tabgroup="groups-tab-group">
-                    {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo(allModules) %}
+                    {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
                     {% for moduleGroup in moduleGroups %}
                         <li>
                             <a href="#tab{{ moduleGroup.id }}" class="secondary-bg-hover">
