@@ -121,7 +121,8 @@ class Lantra_UsersService extends BaseApplicationComponent
             }
         }
         elseif ($type == 'users') {
-            $return['title'] =  $prefix . $element->getFullName();
+            $jobRole = $element->userRole->first();
+            $return['title'] =  $prefix . $element->getFullName() . ($jobRole ? ' (' . $jobRole->title . ')' : '');
             $return['icon'] = 'person';
         }
         return $return;
