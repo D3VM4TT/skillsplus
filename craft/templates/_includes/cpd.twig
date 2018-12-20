@@ -1,4 +1,5 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set existingResultIds = [] %}
 {% if cpdUser.userRole.total %}
     <article class="cpd">
         {% for role in cpdUser.userRole %}
@@ -79,7 +80,10 @@
                                                     <tbody>
                                                     {% for unitEntry in unitGroupEntries %}
                                                         {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
-                                                        {% if unitResultEntry is defined and unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
+                                                        {% if unitResultEntry %}
+                                                            {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
+                                                        {% endif %}
+                                                        {% if unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
                                                             {% set totalPoints = totalPoints + unitEntry.unitValue %}
                                                         {% endif %}
                                                         <tr>
@@ -129,6 +133,7 @@
                                     {# get user results related to module #}
                                     {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).limit(null) %}
                                     {% if moduleUserResults|length %}
+                                        {% set existingResultIds = existingResultIds|merge(moduleUserResults.ids()) %}
                                         <div class="unit-group">
                                             <div class="header" data-target="#u{{ role.id ~ module.id }}-user">
                                                 <h5>My Achievements</h5>
@@ -222,5 +227,17 @@
                 </section>
             {% endif %}
         {% endfor %}
+        {% set existingResultIdsString = existingResultIds | join(', not ') %}
+        {% set enrelatedResults = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
+        {% if enrelatedResults|length %}
+            <section id="archive">
+                <h2>Result Archive</h2>
+                {% for resultEntry in enrelatedResults %}
+                    <article>
+                        <p>{{ resultEntry.title }}</p>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
     </article>
 {% endif %}
