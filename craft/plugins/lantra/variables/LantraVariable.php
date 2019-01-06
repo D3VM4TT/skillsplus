@@ -42,9 +42,11 @@ class LantraVariable
      */
     public function jsTreeData($userId = null, $currentNode = 0)
     {
+        $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
+
         $js = [
             'icon'  => '/assets/img/tree-root.png',
-            'text'  => 'Hierarchy',
+            'text'  => $globalsTheme->schemeName,
             'state' => ['opened' => true],
         ];
 

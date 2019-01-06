@@ -210,7 +210,7 @@ class Printmaker_PdfModel extends BaseModel
 			$orientation = !empty($settings['orientation']) ? $settings['orientation'] : $settings['defaultOrientation'];
 			$dompdf->setPaper($size, $orientation);
 
-			$dompdf->render();
+			@$dompdf->render();
 
 			if($settings['encrypt']) {
 

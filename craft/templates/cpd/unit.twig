@@ -1,3 +1,4 @@
+{% set hierarchyNode = craft.request.getParam('node') %}
 {% extends "_layout" %}
 
 {% set userId = craft.request.segment(6) %}
@@ -14,6 +15,8 @@
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
 {% set unitEntry = craft.entries.id(craft.request.getSegment(4)).first() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
+{% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
+{% set moduleGroup = moduleEntry.moduleGroup.first %}
 {% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).first() %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
@@ -64,11 +67,7 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if resultEntry|length %}
-                <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
-            {% else %}
-                {% include 'cpd/_units/evidence' with{entry:unitEntry, userId:userId} %}
-            {% endif %}
+            {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup} %}
         {% endif %}
     </div>
 </section>

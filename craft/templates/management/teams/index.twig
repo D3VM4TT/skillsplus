@@ -24,6 +24,9 @@
     <div class="page-header secondary-bg">
         <h2>Teams</h2>
         {% include '_includes/filter' with{filterDays:false} %}
+        {% if not currentUser.managerReadOnly %}
+            <a class="button btn-small primary-bg" href="/management/teams/new" class="">Add New</a>
+        {% endif %}
     </div>
     {% if teamEntries is defined and teamEntries|length %}
         <table class="data">
@@ -68,10 +71,5 @@
             <h3>There are no teams to display.</h3>
         </div>
     {% endif %}
-    <div class="page-content">
-        <div class="container-btn">
-            <a class="button primary-bg" href="/management/teams/new">Create team</a>
-        </div>
-    </div>
 </section>
 {% endblock %}

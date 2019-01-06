@@ -23,6 +23,9 @@
         <h2>Companies</h2>
         <p>Add / Edit and Delete companies within in your scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
+        {% if not currentUser.managerReadOnly %}
+            <a class="button btn-small primary-bg" href="/management/companies/new" class="">Add New</a>
+        {% endif %}
     </div>
     {% if companyEntries is defined and companyEntries|length %}
         <table class="data">
@@ -31,6 +34,7 @@
                     <th>#</th>
                     <th class="title">Name</th>
                     <th class="title">Parent</th>
+                    <th class="title">Primary Manager</th>
                     <th>Licences</th>
                     <th>Users</th>
                     <th>&nbsp;</th>
@@ -40,10 +44,16 @@
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
+            {% set primaryManager = company.companyPrimaryManager.first %}
                 <tr>
                     <td>{{ company.id }}</td>
                     <td>{{ company.title }}</td>
                     <td>{{ parent.title|default('~ none ~') }}</td>
+                    <td>
+                        {% if primaryManager %}
+                            <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
+                        {% endif %}
+                    </td>
                     <td>{{ company.companyRemainingLicences }}</td>
                     <td>{{ craft.lantra.userCount(company.id) }}</td>
                     <td>
@@ -65,17 +75,9 @@
             </tbody>
         </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-
     {% else %}
         <div class="page-content">
             <h3>There are no companies to display.</h3>
-        </div>
-    {% endif %}
-    {% if not currentUser.managerReadOnly %}
-        <div class="page-content">
-            <div class="container-btn">
-                <a class="button primary-bg" href="/management/companies/new">Create company</a>
-            </div>
         </div>
     {% endif %}
 </section>

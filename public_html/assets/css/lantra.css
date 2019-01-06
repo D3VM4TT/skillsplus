@@ -382,6 +382,14 @@ h4, h4 a {
     width: 250px !important;
 }
 
+/*Public header
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+header {
+    position: absolute;
+    width:100%;
+    z-index:10;
+}
+
 /*Buttons and Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .button.hollow.white {
@@ -655,6 +663,21 @@ span.remember-me-txt {
 input[type="file"] {
 font-size: 12px;
 padding-bottom: 40px;
+}
+
+form.filter {
+    display:inline-block;
+}
+
+.btn-small {
+    padding: 10px 20px;
+    height:auto;
+    line-height: 1.7;
+    width: auto;
+}
+
+.btn-small:hover {
+
 }
 
 /* Sticky footer styles
@@ -1032,6 +1055,7 @@ section.page {
     z-index: 9999;
 position: fixed;
 width: 100%;
+    bottom:0;
 }
 
 
@@ -1201,6 +1225,10 @@ nav.topNavigation {
 
 .module-tabs ul li a.module-status.active {
     color:#c70056;
+}
+
+.groups-tab-group {
+    display:none;
 }
 
 span.status-inprogress,
@@ -1416,7 +1444,7 @@ li.jstree-node .jstree-ocl {
     background-position: top center !important;
 }
 
-a#j1_1_anchor, li.jstree-node .jstree-last .jstree-open:first-child i {
+li.jstree-node .jstree-last .jstree-open:first-child i {
     display: none;
 }
 
