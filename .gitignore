@@ -1,8 +1,6 @@
 # Site Specific #
 ###################
-public_html/assets/theme/*
 public_html/assets/uploads/*
-public_html
 assets/*
 src/dev/*
 
