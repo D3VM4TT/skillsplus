@@ -2,7 +2,7 @@
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="users/saveUser">
     <input type="hidden" name="redirect" value="/">
-    <input type="hidden" name="username" value="">
+    {# <input type="hidden" name="username" value=""> #}
     <div class="field--wrapper" style="">
         <label for="registerFirstName" class="no-float">First Name</label>
         <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
