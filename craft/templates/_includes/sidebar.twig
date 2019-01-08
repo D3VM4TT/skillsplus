@@ -1,5 +1,5 @@
+{# Commented out by JC - 8Jan19
 <div class="container-sidebar">
-{# Commented out by JC - 15Nov2018
     <div class="primary-bg menu-tab">
         <div class="secondary-bg one"></div>
         <div class="secondary-bg two"></div>
@@ -16,7 +16,7 @@
             {% endif %}
             {% include '_includes/nav_public' %}
         </div>
-#}
+
         <div class="footer">
             <div class="col-copyright">
                 <img src="/assets/img/lantra_footer_wht_logo.png">
@@ -26,8 +26,8 @@
             </div>
         </div>
     </div>
-    <div class="sidebar">
-    
+#}
+    <div class="container-sidebar">
     {% if not currentUser %}
         <div class="sidebar-form">
         <div class="scheme-logo">
@@ -39,9 +39,9 @@
             {% endif %}
         </a>
         </div>
-        <div class="container-form-toggle">
+        <div class="container-form-toggle center">
             {% include '_forms/login_combined' %}
-            <div class="container-btn container-create-account-btn">
+            <div class="container-create-account-btn center">
                 <div class="sml-link center">
                     <p>Not registered?</p>
                 </div>
@@ -56,7 +56,6 @@
         </div>
     {% endif %}
     {% if currentUser %}
-    
     <div class="sidebar-form">
         <div class="scheme-logo">
             <a href="/">
@@ -70,5 +69,4 @@
     </div>
     {% include '_includes/nav_cpd' %}
     {% endif %}
-
     </div>

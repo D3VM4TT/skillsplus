@@ -942,7 +942,7 @@ section.row.admin {
 -------------------------------------------------- */
 .alert {
     padding: 7px 20px;
-    margin: 0 0 10px 0;
+    margin: 0;
     height: 40px;
     line-height: 40px;
 }
@@ -1444,74 +1444,46 @@ li.jstree-node .jstree-ocl {
     background-position: top center !important;
 }
 
-li.jstree-node .jstree-last .jstree-open:first-child i {
+/*li.jstree-node .jstree-last .jstree-open:first-child i {
     display: none;
-}
+}*/
 
 /*Media Queries
 -------------------------------------------------- */
-/*@media screen and (max-width: 1500px) {
-    body.logged-in .container-sidebar, body.logged-in .menu-hide {
-        width: 33.3%;
-    }
-    body.logged-in .menu-hide {
-        left: -33.3%;
-    }
-    body.logged-in .menu-tab.active {
-        left: 33.3%;
-    }
-    body.logged-in .container-content {
-        width: 66.333%;
-    }
-}*/
-
 @media screen and (max-width: 1400px) {
     .container-sidebar {
         width: 33.3%;
     }
-
     .menu-hide{
         width: 33.3%;
     }
-
     .menu-hide {
         left: -33.3%;
     }
-
     .menu-tab.active {
         left: 33.3%;
     }
-
     .container-content{
         width: 66.6%;
     }
-
     .container-carousel-caption {
         width: 80%;
-    }
-
-    .sidebar-form, body.logged-in .sidebar-form {
-        padding: 80px 40px 0px 40px;
     }
 }
 
 @media screen and (min-width: 949px) {
-
     .menu-hide nav.scheme {
         display: none;
     }
 }
 
 @media screen and (max-width: 950px) {
-
-    nav.scheme {
+    header {
         display: none;
     }
-    .menu-hide nav.scheme {
-        display: initial;
-    }
-    .menu-hide nav.menu-pages {
-        margin: 0px 50px;
+    .footer {
+        position: initial;
+        padding: 20px;
     }
     body.logged-in .container-sidebar {
         width: 100%;
@@ -1532,7 +1504,6 @@ li.jstree-node .jstree-last .jstree-open:first-child i {
     body.logged-in div.sidebar {
         width: 100%;
         max-width: 100% !important;
-        min-height: 100vh;
         height:auto;
         float: initial;
         margin: 0;
@@ -1541,6 +1512,20 @@ li.jstree-node .jstree-last .jstree-open:first-child i {
     div.sidebar {
         position: static;
     }
+    .sidebar-form,
+    body.logged-in .sidebar-form {
+        padding: 0px;
+    }
+    .scheme-logo {
+        padding-top: 40px;
+    }
+    .container-form-toggle {
+        margin-top: 0px;
+        margin-bottom: 60px;
+    }
+    #form-login {
+        padding: 0 40px;
+    }
     body.logged-in .menu-tab.active {
         left: 100%;
     }
@@ -1548,88 +1533,68 @@ li.jstree-node .jstree-last .jstree-open:first-child i {
         height: initial;
         min-height: initial;
     }
-
     .container-content {
         box-shadow: none !important;
+        width: 100%;
+        max-width: 100%;
+        float: initial;
+        margin: 0;
+        overflow: hidden;
     }
-
     .container-content .content-col {
         display: initial;
     }
-
     .menu-tab, .menu-hide {
         position: absolute;
     }
-
     .menu-hide, body.logged-in .menu-hide {
         min-height:100vh;
         width: 100%;
         left: -100%;
     }
-
     .menu-tab.active, body.logged-in .menu-tab.active {
         left: initial;
         right: 0;
     }
-
-    .container-content, section.slides article, section.slides article div.container {
+    section.slides article {
+        margin-top: 250px;
         width: 100%;
         max-width: 100%;
-        height: 550px;
+        max-height: 600px;
         float: initial;
+        overflow: initial;
+    }
+    section.slides article div.container {
+        top: -250px;
+        min-height: 250px;
         margin: 0;
-        overflow: hidden;
+        width: 100%;
+        opacity: 1;
     }
-
-    .container-sidebar .footer {
-        position: absolute;
-    }
-
-
 }
 
 @media screen and (max-width: 549px) {
     .menu-tab, .menu-hide {
         position: absolute;
     }
-
     .menu-hide {
         height: 100%;
         width: 100%;
         left: -100%;
     }
-
     .menu-hide .container-menus {
         padding: 60px 0px;
     }
-
     .container-sidebar {
         height: 880px;
     }
-
     .menu-hide .container-create-account-btn {
         padding: 60px;
     }
-
     .scheme-logo img {
         height: 150px;
     }
-
-    .container-content, .container-carousel-caption {
-        height: 750px;
-    }
-
     .log-in-btn, .create-account-btn {
         width: 100%;
-    }
-
-    .container-carousel-btn1 {
-        width: 90%;
-        bottom: 140px;
-    }
-
-    .container-carousel-btn2 {
-        width: 90%;
-        left: initial;
     }
 }
