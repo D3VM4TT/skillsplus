@@ -821,6 +821,7 @@ article.cpd div.header h5 {
 article.cpd div.status {
     display:inline;
     float:right;
+    padding-top: 5px;
 }
 
 span.module-status-complete {
@@ -1162,15 +1163,14 @@ nav.topNavigation {
 .module-group-tabs ul {
     border-bottom: 2px #e8ecef solid;
     height: 68px;
-}
-
+    }
 .module-group-tabs .tabs li {
     float:left;
-    width:20%;
-  }
+    /*width:20%;*/
+    }
 .module-group-tabs .tabs li:first-child a {
     border-left: 2px #e8ecef solid;
-}
+    }
 .module-group-tabs .tabs a {
     display:block;
     text-align:center;
@@ -1179,20 +1179,15 @@ nav.topNavigation {
     border-top: 2px #e8ecef solid;
     border-right: 2px #e8ecef solid;
     transition: background-color 100ms ease-out;
-}
+    }
 .module-group-tabs .tabs a:hover {
     color: #fff;
-/*    background:#c70056;
-    border-top: 2px #c70056 solid;
-    border-right: 2px #c70056 solid;*/
     }
-
 .module-group-tabs .tabs li:first-child a:hover {
     border-left: 2px #c70056 solid;
 }
-
 .module-group-tabs .tabs a.active {
-    padding:20px 0;
+    padding:20px;
     background:#c70056;
     border-top: 2px #c70056 solid;
     border-right: 2px #c70056 solid;
@@ -1259,21 +1254,6 @@ span.status-inprogress {
 
 span.status-complete {
     background-color:#59c269;
-}
-
-
-/*Touchscreen menu
--------------------------------------------------- */
-.menu-hide nav.cpd {
-    width: 100%;
-    position: relative;
-}
-.menu-hide.show nav.cpd a {
-    color: #FFFFFF;
-}
-
-.menu-hide.show nav.cpd li.nav-closed ul {
-    display:block;
 }
 
 /*logged-in classes
@@ -1371,14 +1351,14 @@ div.module table.data tbody tr td:last-child {
 }
 
 table.data tbody tr td:first-child {
-    padding-left: 60px;
-/*    min-width:240px;*/
     text-align: left;
+    width: 350px;
+    padding-right: 40px;
 }
 
 table.data tbody tr td:last-child {
     padding-right: 60px;
-    text-align: right;
+/*    text-align: right;*/
 }
 
 table.data tbody td:nth-child(2) {
@@ -1488,6 +1468,11 @@ li.jstree-node .jstree-ocl {
     }
 }
 
+@media screen and (max-width:1024px) {
+
+    
+}
+
 @media screen and (min-width: 949px) {
     .menu-hide nav.scheme {
         display: none;
@@ -1495,7 +1480,8 @@ li.jstree-node .jstree-ocl {
 }
 
 @media screen and (max-width: 950px) {
-    header {
+    /*Hide desktop navigation elements on smaller screens*/
+    header, nav.cpd, .page-subHeader {
         display: none;
     }
     .footer {
@@ -1504,7 +1490,7 @@ li.jstree-node .jstree-ocl {
     }
     body.logged-in .container-sidebar {
         width: 100%;
-        height: 250px;
+        height: 150px;
         max-width: 100% !important;
         float: initial;
         margin: 0;
@@ -1540,7 +1526,7 @@ li.jstree-node .jstree-ocl {
         margin-top: 0px;
         margin-bottom: 60px;
     }
-    #form-login {
+    #form-login, #form-password {
         padding: 0 40px;
     }
     body.logged-in .menu-tab.active {
@@ -1587,6 +1573,54 @@ li.jstree-node .jstree-ocl {
         margin: 0;
         width: 100%;
         opacity: 1;
+    }
+    .page-header {
+        min-height: initial;
+        padding: 15px 20px;
+    }
+    .page-header img {
+        width: 80px;
+        margin-left: 30px;
+    }
+    h2, .page-header h2 {
+    font-size: 28px;
+    }
+    p, .page-header p {
+    font-size: 14px;
+    }
+    .page-content {
+    padding: 15px 20px;
+    }
+    .module-group-tabs ul {
+     border-bottom: none; 
+     height: initial; 
+    }
+    .module-group-tabs .tabs li {
+     float: initial; 
+     width: initial; 
+    }
+    .module-group-tabs .tabs li:first-child a.active {
+     border-left: none; 
+    }
+    .module-group-tabs .tabs li:first-child a {
+     border-left: none; 
+    }
+    .module-group-tabs .tabs a.active {
+     padding: 0px; 
+     background: none; 
+     border-top: none; 
+     border-right: none; 
+     color: initial; 
+     margin-top: 0px; 
+    }
+    .module-group-tabs .tabs a {
+     display: initial; 
+     text-align: initial; 
+     text-decoration: none; 
+     padding: 0px; 
+     border-top: none; 
+     border-right: none; 
+     transition: none; 
     }
 }
 
