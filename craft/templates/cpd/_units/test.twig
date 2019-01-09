@@ -16,7 +16,7 @@
             {% for question in unitEntry.testQuestions %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
-                <div class="field--wrapper">
+                <div class="field--wrapper test">
                     <label for="question_{{ loop.index }}">{{ questionNumber }} {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
