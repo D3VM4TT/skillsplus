@@ -91,7 +91,7 @@
                                                                 {% if craft.lantra.isManager(cpdUser.id) and unitResultEntry %}
                                                                     [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}">x</a>]
                                                                 {% endif %}
-                                                                <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-toggle="tooltip" title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
+                                                                <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                             </td>
                                                             {% for row in moduleGroup.columnLayout %}
                                                                 {% if row.fieldType == 'unitType' %}
