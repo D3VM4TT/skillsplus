@@ -22,12 +22,15 @@
     <div class="page-header secondary-bg">
         <h2>Companies</h2>
         <p>Add / Edit and Delete companies within in your scheme.</p>
-        {% include '_includes/filter' with{filterDays:false} %}
-        {% if not currentUser.managerReadOnly %}
-            <a class="button btn-small primary-bg" href="/management/companies/new" class="">Add New</a>
-        {% endif %}
+        <div>{% include '_includes/filter' with{filterDays:false} %}</div>
     </div>
     {% if companyEntries is defined and companyEntries|length %}
+    <div class="page-content">
+            {% if not currentUser.managerReadOnly %}
+            <div class="container-btn">
+            <a class="button primary-bg" href="/management/companies/new" class="">Add a new company</a>
+            </div>
+        {% endif %}
         <table class="data">
             <thead>
                 <tr>
@@ -80,5 +83,6 @@
             <h3>There are no companies to display.</h3>
         </div>
     {% endif %}
+    </div>
 </section>
 {% endblock %}

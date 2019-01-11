@@ -31,13 +31,16 @@
         <h2>Users</h2>
         <p>Add, Edit and view the Dashboard of Users within your Scheme.</p>
         {% include '_includes/filter' with{filterDays:false} %}
-        <a class="button btn-small primary-bg" href="/management/users/new" class="">Add New</a>
     </div>
     {% if userEntries is defined and userEntries|length %}
+    <div class="page-content">
+        <div class="container-btn">
+        <a class="button primary-bg" href="/management/users/new" class="">Add a new User</a>
+        </div>
         <table class="data">
             <thead>
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th class="title">Name</th>
                 <th>Company</th>
                 {% if globalsScheme.schemeTeams|default(false) %}
@@ -50,9 +53,9 @@
             {% for user in userEntries %}
                 {% set company = craft.lantra.userCompany(user.id) %}
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
-                    <td>{{ craft.lantra.companyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
+                    <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                    <td><p class="td-title-responsive">Company: </p>{{ craft.lantra.companyLabel(company) }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
@@ -79,5 +82,6 @@
             <h3>There are no users to display.</h3>
         </div>
     {% endif %}
+    </div>
 </section>
 {% endblock %}

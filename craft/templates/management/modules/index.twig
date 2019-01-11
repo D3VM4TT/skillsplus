@@ -18,9 +18,11 @@
 </div>
     <div class="page-header secondary-bg">
         <h2>Roles / Modules</h2>
+        <p>Job roles and Modules within your scheme</p>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
     {% if moduleEntries is defined and moduleEntries|length %}
+    <div class="page-content">
         <table class="data">
             <thead>
                 <tr>
@@ -32,8 +34,8 @@
             {% for module in moduleEntries %}
                 {% for role in module.moduleRoles %}
                 <tr>
-                    <td style="text-align: left">{{ role.title }}</td>
-                    <td style="text-align: left">{{ module.title }}</td>
+                    <td style="text-align: left"><p class="td-title-responsive">Job role: </p>{{ role.title }}</td>
+                    <td style="text-align: left"><p class="td-title-responsive">Module(s): </p>{{ module.title }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}
@@ -45,5 +47,6 @@
             <h3>There are no modules to display.</h3>
         </div>
     {% endif %}
+    </div>
 </section>
 {% endblock %}

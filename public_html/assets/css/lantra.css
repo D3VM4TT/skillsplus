@@ -818,6 +818,10 @@ article.cpd div.header h5 {
     display:inline;
 }
 
+article.cpd div.unit-group div.status {
+    padding-top: 0px;
+}
+
 article.cpd div.status {
     display:inline;
     float:right;
@@ -1379,6 +1383,10 @@ div.links span {
     text-align:center;
 }
 
+table.data tbody tr td p.td-title-responsive {
+    display: none;
+}
+
 /*div.links span.current {
     color:#FFFFFF;
 }*/
@@ -1481,9 +1489,40 @@ li.jstree-node .jstree-ocl {
 
 @media screen and (max-width: 950px) {
     /*Hide desktop navigation elements on smaller screens*/
-    header, nav.cpd, .page-subHeader {
+    header,
+    nav.cpd,
+    .page-subHeader,
+    .account-details-expand,
+    .link-toggle,
+    .account-details-toggle {
         display: none;
     }
+    /*Fomat table data*/
+    div.module table.data thead {
+        display: none;
+    }
+    div.module table.data tbody tr td {
+        display: block;
+        padding-left: 15px; 
+    }
+    table.data tbody tr td:first-child {
+        width: initial; 
+        padding-right: 0px; 
+    }
+    table.data tbody tr td p.td-title-responsive {
+        display: initial;
+        font-weight: 600;
+    }
+    /*Format Scheme Profile and Admin Tools */
+    .row {
+        display: initial;
+    }
+    .col-4, .col-8 {
+        width: 100%;
+        max-width: initial;
+        padding-bottom: 60px;
+    }
+
     .footer {
         position: initial;
         padding: 20px;
@@ -1579,25 +1618,23 @@ li.jstree-node .jstree-ocl {
         padding: 15px 20px;
     }
     .page-header img {
-        width: 80px;
-        margin-left: 30px;
+        width: 60px;
+        float: initial;
     }
     h2, .page-header h2 {
-    font-size: 28px;
-    }
-    p, .page-header p {
-    font-size: 14px;
+        font-size: 22px;
+        font-weight: initial;
     }
     .page-content {
-    padding: 15px 20px;
+        padding: 15px 20px;
     }
     .module-group-tabs ul {
-     border-bottom: none; 
-     height: initial; 
+        border-bottom: none; 
+        height: initial; 
     }
     .module-group-tabs .tabs li {
-     float: initial; 
-     width: initial; 
+        float: initial; 
+        width: initial; 
     }
     .module-group-tabs .tabs li:first-child a.active {
      border-left: none; 
@@ -1621,6 +1658,9 @@ li.jstree-node .jstree-ocl {
      border-top: none; 
      border-right: none; 
      transition: none; 
+    }
+    article.cpd div.status {
+    display: none;
     }
 }
 
