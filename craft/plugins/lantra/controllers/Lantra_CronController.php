@@ -26,6 +26,7 @@ class Lantra_CronController extends Lantra_BaseController {
             $this->notifyLicencesRemaining();
             $this->notifySchemeExpiry();
         }
+        $this->returnJson(['cron'=> $frequency]);
     }
 
     /**
@@ -61,7 +62,7 @@ class Lantra_CronController extends Lantra_BaseController {
     function notifySchemeExpiry() {
         $expiryDate = craft()->lantra_licence->getSchemeExpiryDate();
         $warningDate = strtotime("+4 weeks");
-        if ($expiryDate->getTimestamp() < $warningDate) {
+        if ($expiryDate && $expiryDate->getTimestamp() < $warningDate) {
             craft()->lantra_notify->sendSchemeExpiry($expiryDate);
         }
     }
