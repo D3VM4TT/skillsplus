@@ -155,7 +155,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
             foreach ($criteria->find() as $result) {
                 $moduleEntry = $result->resultModule->first();
                 $message .= "User: " . $result->author->getFullName() . "\n\n";
-                $message .= "Team: " . $result->author->userTeam->first()->title . "\n\n";
+                $message .= "Team: " . ($result->author->userTeam->count() ? $result->author->userTeam->first()->title : '~') . "\n\n";
                 $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~') . "\n\n";
                 $message .= "Expires: " . $result->expiryDate . "\n\n";
                 $message .= "\n##########################\n\n";
@@ -213,9 +213,11 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $toEmail = [$toEmail];
         }
         // in dev mode, all notifications sent to system email
-        if ( craft()->config->get( 'devMode' ) ) {
+        if (craft()->config->get('devMode')) {
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
-            $toEmail = [craft()->systemSettings->getSetting('email', 'emailAddress')];
+            $schemeGlobals = craft()->globals->getSetByHandle('globalsScheme');
+            $schemeTestEmail = explode(',', $schemeGlobals->schemeTestEmailAddress);
+            $toEmail = count($schemeTestEmail) ? $schemeTestEmail : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer
         $message .= $this->getNotifyGlobal('footer');
