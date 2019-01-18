@@ -22,19 +22,25 @@
     <div class="page-header secondary-bg">
         <h2>Companies</h2>
         <p>Add / Edit and Delete companies within in your scheme.</p>
-        <div>{% include '_includes/filter' with{filterDays:false} %}</div>
+
+            <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                {% if not currentUser.managerReadOnly %}
+                    <div class="container-btn">
+                    <button class="btn-add-new primary-bg">
+                    <a href="/management/companies/new">Add a new Company</a>
+                    </button>
+                    </div>
+                {% endif %}
+            </div>
+
     </div>
     {% if companyEntries is defined and companyEntries|length %}
     <div class="page-content">
-            {% if not currentUser.managerReadOnly %}
-            <div class="container-btn">
-            <a class="button primary-bg" href="/management/companies/new" class="">Add a new company</a>
-            </div>
-        {% endif %}
         <table class="data">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th class="title">Name</th>
                     <th class="title">Parent</th>
                     <th class="title">Primary Manager</th>
@@ -49,16 +55,19 @@
             {% set parent = company.companyParent.first %}
             {% set primaryManager = company.companyPrimaryManager.first %}
                 <tr>
-                    <td>{{ company.id }}</td>
-                    <td>{{ company.title }}</td>
-                    <td>{{ parent.title|default('~ none ~') }}</td>
+                    <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
+                    <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
+                    <td><p class="td-title-responsive">Parent: </p>{{ parent.title|default('~ none ~') }}</td>
                     <td>
                         {% if primaryManager %}
+                        <p class="td-title-responsive">Primary Manager: </p>
                             <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
                         {% endif %}
                     </td>
-                    <td>{{ company.companyRemainingLicences }}</td>
-                    <td>{{ craft.lantra.userCount(company.id) }}</td>
+                    <td><p class="td-title-responsive">Licences: </p>
+                    {{ company.companyRemainingLicences }}</td>
+                    <td><p class="td-title-responsive">Users: </p>
+                    {{ craft.lantra.userCount(company.id) }}</td>
                     <td>
                         {% if not currentUser.managerReadOnly %}
                             {% set companyEmails = craft.lantra.emailList(company.id) %}
