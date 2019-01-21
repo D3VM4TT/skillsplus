@@ -153,7 +153,7 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if moduleGroup.addAchievement %}
+                                {% if moduleGroup.addAchievement and not module.addAchievementHide %}
                                     <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}">
                                         <span>Add an achievement</span>
                                     </a>
