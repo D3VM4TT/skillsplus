@@ -41,6 +41,7 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>Legacy ID</th>
                 <th class="title">Name</th>
                 <th>Company</th>
                 {% if globalsScheme.schemeTeams|default(false) %}
@@ -54,6 +55,7 @@
                 {% set company = craft.lantra.userCompany(user.id) %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
+                    <td><p class="td-title-responsive">Legacy ID: </p>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
                     <td><p class="td-title-responsive">Company: </p>{{ craft.lantra.companyLabel(company) }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}

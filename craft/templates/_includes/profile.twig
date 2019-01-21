@@ -4,6 +4,7 @@
     <span class="label">Email address:</span> {{ currentUser.email }}<br />
     <span class="label">User type:</span> {{ craft.lantra.userType() }}<br />
     <span class="label">Company:</span> {{ craft.lantra.userCompany()|default('~') }}<br />
+    <span class="label">Legacy User ID:</span>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}<br />
     <span class="label">Job Role:</span>
     {% if currentUser.userRole.total %}
         {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
