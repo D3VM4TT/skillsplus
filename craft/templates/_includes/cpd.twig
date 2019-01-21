@@ -74,9 +74,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Unit title</th>
-                                                    {% for row in moduleGroup.columnLayout %}
-                                                        <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
-                                                    {% endfor %}
+                                                    {% include '_includes/columnLayout' with {header:true,  columnLayout:moduleGroup.columnLayout} %}
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -95,54 +93,13 @@
                                                             {% endif %}
                                                             <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                         </td>
-                                                        {% for row in moduleGroup.columnLayout %}
-                                                            {% if row.fieldType == 'unitType' %}
-                                                                <td class="unitType">
-                                                                <p class="td-title-responsive">Unit type: </p>
-                                                                {{ unitEntry.unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}</td>
-                                                            {% elseif row.fieldType == 'unitValue'  %}
-                                                                <td class="unitValue">
-                                                                <p class="td-title-responsive">Unit value: </p>
-                                                                {{ unitEntry.unitValue }}</td>
-                                                            {% elseif row.fieldType == 'resultStatus'  %}
-                                                                <td class="resultStatus">
-                                                                <p class="td-title-responsive">Status: </p>
-                                                                {{ unitResultEntry ? unitResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
-                                                            {% elseif row.fieldType == 'resultEndorsedDate'  %}
-                                                                <td class="resultEndorsedDate">
-                                                                <p class="td-title-responsive">Endorsed Date: </p>
-                                                                {{ unitResultEntry and unitResultEntry.resultEndorsedDate ? unitResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultExpiryDate'  %}
-                                                                <td class="expiryDate">
-                                                                <p class="td-title-responsive">Expiry Date: </p>
-                                                                {{ unitResultEntry and unitResultEntry.expiryDate ? unitResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultStartDate'  %}
-                                                                <td class="resultStartDate">
-                                                                <p class="td-title-responsive">Start Date: </p>
-                                                                {{ unitResultEntry and unitResultEntry.resultStartDate ? unitResultEntry.resultStartDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultFinishDate'  %}
-                                                                <td class="resultFinishDate">
-                                                                <p class="td-title-responsive">Finish Date: </p>
-                                                                {{ unitResultEntry and unitResultEntry.resultFinishDate ? unitResultEntry.resultFinishDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultLocation'  %}
-                                                                <td class="resultLocation">
-                                                                <p class="td-title-responsive">Location: </p>
-                                                                {{ unitResultEntry ? unitResultEntry.resultLocation|default('-') }}</td>
-                                                            {% elseif row.fieldType == 'resultHours'  %}
-                                                                <td class="resultHours">
-                                                                <p class="td-title-responsive">Hours: </p>
-                                                                {{ unitResultEntry ? unitResultEntry.resultHours|default('-') }}</td>
-                                                            {% elseif row.fieldType == 'resultEvidence'  %}
-                                                                <td class="resultEvidence">
-                                                                <p class="td-title-responsive">Evidence: </p>
-                                                                    {% if unitResultEntry and unitResultEntry.resultEvidence|length %}
-                                                                        {% for resultEvidenceAsset in unitResultEntry.resultEvidence %}
-                                                                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                                                                        {% endfor %}
-                                                                    {% endif %}
-                                                                </td>
-                                                            {% endif %}
-                                                        {% endfor %}
+                                                        {% include '_includes/columnLayout' with {
+                                                            header:false,
+                                                            unitType: unitEntry.unitType,
+                                                            unitValue: unitEntry.unitValue,
+                                                            result:unitResultEntry,
+                                                            columnLayout:moduleGroup.columnLayout}
+                                                        %}
                                                     </tr>
                                                 {% endfor %}
                                                 </tbody>
@@ -167,9 +124,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Result title</th>
-                                                    {% for row in moduleGroup.columnLayout %}
-                                                        <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
-                                                    {% endfor %}
+                                                    {% include '_includes/columnLayout' with {header:true, columnLayout:moduleGroup.columnLayout} %}
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -181,35 +136,13 @@
                                                             {% endif %}
                                                             <a href="/cpd/{{ cpdUser.id }}/result/{{ userResultEntry.id }}">{{ userResultEntry.title }}</a>
                                                         </td>
-                                                        {% for row in moduleGroup.columnLayout %}
-                                                            {% if row.fieldType == 'unitType' %}
-                                                                <td class="unitType">Evidence</td>
-                                                            {% elseif row.fieldType == 'unitValue'  %}
-                                                                <td class="unitValue">{{ userResultEntry.unitValue }}</td>
-                                                            {% elseif row.fieldType == 'resultStatus'  %}
-                                                                <td class="resultStatus">{{ userResultEntry.resultStatus|ucwords|default('Incomplete') }}</td>
-                                                            {% elseif row.fieldType == 'resultEndorsedDate' %}
-                                                                <td class="resultEndorsedDate">{{ userResultEntry.resultEndorsedDate ? userResultEntry.resultEndorsedDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultExpiryDate'  %}
-                                                                <td class="expiryDate">{{ userResultEntry.expiryDate ? userResultEntry.expiryDate|date(dateFormat) : '-' }}</td>
-                                                            {% elseif row.fieldType == 'resultStartDate'  %}
-                                                                <td class="resultStartDate">{{ userResultEntry.resultStartDate ? userResultEntry.resultStartDate|date(dateFormat) : '-'  }}</td>
-                                                            {% elseif row.fieldType == 'resultFinishDate'  %}
-                                                                <td class="resultFinishDate">{{ userResultEntry.resultFinishDate ? userResultEntry.resultFinishDate|date(dateFormat) : '-'  }}</td>
-                                                            {% elseif row.fieldType == 'resultLocation'  %}
-                                                                <td class="resultLocation">{{ userResultEntry.resultLocation|default('-') }}</td>
-                                                            {% elseif row.fieldType == 'resultHours'  %}
-                                                                <td class="resultHours">{{ userResultEntry.resultHours|default('-') }}</td>
-                                                            {% elseif row.fieldType == 'resultEvidence'  %}
-                                                                <td class="resultEvidence">
-                                                                    {% if userResultEntry and userResultEntry.resultEvidence|length %}
-                                                                        {% for resultEvidenceAsset in userResultEntry.resultEvidence %}
-                                                                            <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
-                                                                        {% endfor %}
-                                                                    {% endif %}
-                                                                </td>
-                                                            {% endif %}
-                                                        {% endfor %}
+                                                        {% include '_includes/columnLayout' with {
+                                                            header:false,
+                                                            unitType: 'evidence',
+                                                            unitValue: userResultEntry.unitValue,
+                                                            result:userResultEntry,
+                                                            columnLayout:moduleGroup.columnLayout}
+                                                        %}
                                                     </tr>
                                                     {% if (userResultEntry.resultStatus == 'endorsed') %}
                                                         {% set totalPoints = totalPoints + userResultEntry.resultValue %}
@@ -251,11 +184,27 @@
     {% if enrelatedResults|length %}
         <section id="archive">
             <h2>Result Archive</h2>
-            {% for resultEntry in enrelatedResults %}
-                <article>
-                    <p>{{ resultEntry.title }}</p>
-                </article>
-            {% endfor %}
+            <table class="data">
+                <thead>
+                <tr>
+                    <th>Result Title</th>
+                    {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for resultEntry in enrelatedResults %}
+                    <tr>
+                        <td>{{ resultEntry.title }}</td>
+                        {% include '_includes/columnLayout' with {
+                            unitType:resultEntry.unitType,
+                            unitValue:resultEntry.unitValue,
+                            result:resultEntry,
+                            columnLayout:globalsTheme.columnLayout}
+                        %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </section>
     {% endif %}
 {% endif %}

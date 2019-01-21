@@ -1,0 +1,63 @@
+{% if header is defined %}
+    {% for row in columnLayout %}
+        <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+    {% endfor %}
+{% else %}
+    {% for row in columnLayout %}
+        {% if row.fieldType == 'unitType' %}
+            <td class="unitType">
+                <p class="td-title-responsive">Unit type: </p>
+                {{ unitType == 'evidence' ? 'Evidence' : 'E-Learning' }}
+            </td>
+        {% elseif row.fieldType == 'unitValue'  %}
+            <td class="unitValue">
+                <p class="td-title-responsive">Unit value: </p>
+                {{ unitValue }}
+            </td>
+        {% elseif row.fieldType == 'resultStatus'  %}
+            <td class="resultStatus">
+                <p class="td-title-responsive">Status: </p>
+                {{ resultEntry ? resultEntry.resultStatus|ucwords|default('Incomplete') }}
+            </td>
+        {% elseif row.fieldType == 'resultEndorsedDate' %}
+            <td class="resultEndorsedDate">
+                <p class="td-title-responsive">Endorsed Date: </p>
+                {{ resultEntry and resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate|date(dateFormat) : '-' }}
+            </td>
+        {% elseif row.fieldType == 'resultExpiryDate'  %}
+            <td class="expiryDate">
+                <p class="td-title-responsive">Expiry Date: </p>
+                {{ resultEntry and resultEntry.expiryDate ? resultEntry.expiryDate|date(dateFormat) : '-' }}
+            </td>
+        {% elseif row.fieldType == 'resultStartDate'  %}
+            <td class="resultStartDate">
+                <p class="td-title-responsive">Start Date: </p>
+                {{ resultEntry and resultEntry.resultStartDate ? resultEntry.resultStartDate|date(dateFormat) : '-' }}
+            </td>
+        {% elseif row.fieldType == 'resultFinishDate'  %}
+            <td class="resultFinishDate">
+                <p class="td-title-responsive">Finish Date: </p>
+                {{ resultEntry and resultEntry.resultFinishDate ? resultEntry.resultFinishDate|date(dateFormat) : '-' }}
+            </td>
+        {% elseif row.fieldType == 'resultLocation'  %}
+            <td class="resultLocation">
+                <p class="td-title-responsive">Location: </p>
+                {{ resultEntry ? resultEntry.resultLocation|default('-') }}
+            </td>
+        {% elseif row.fieldType == 'resultHours'  %}
+            <td class="resultHours">
+                <p class="td-title-responsive">Hours: </p>
+                {{ resultEntry ? resultEntry.resultHours|default('-') }}
+            </td>
+        {% elseif row.fieldType == 'resultEvidence'  %}
+            <td class="resultEvidence">
+                <p class="td-title-responsive">Evidence: </p>
+                {% if resultEntry and resultEntry.resultEvidence|length %}
+                    {% for resultEvidenceAsset in resultEntry.resultEvidence %}
+                        <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                    {% endfor %}
+                {% endif %}
+            </td>
+        {% endif %}
+    {% endfor %}
+{% endif %}
