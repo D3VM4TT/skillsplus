@@ -3,20 +3,6 @@
 {% set licencesCompany = craft.lantra.totalCompanyLicences() %}
 {% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-<article class="row scheme-profile">
-<div class="col-4">
-<h2>Scheme Profile</h2>
-<p class="profile">
-    <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
-    <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
-    <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
-    <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
-    <span class="label">Scheme Licences:</span>{{ licencesScheme }}<br />
-    <span class="label">Company Licences:</span> {{ licencesCompany }}<br />
-    <span class="label">Total Remaining:</span> {{ licencesScheme + licencesCompany }}
-</p>
-</div>
-<div class="col-8">
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
 {% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}
@@ -81,5 +67,4 @@
 </section>
 </article>
 {% endif %}
-</div>
 </article>
