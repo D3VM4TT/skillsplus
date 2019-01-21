@@ -15,6 +15,12 @@
             </p>
         </div>
         <div class="page-content">
+            {% if craft.lantra.canManage(null, true) %}
+                {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
+                {% if (pendingEntryCount) %}
+                    <p>You have <a href="/management/endorsements">{{ pendingEntryCount }} results</a> to endorse.</p>
+                {% endif %}
+            {% endif %}
             {% include '_includes/cpd' with{cpdUser:currentUser} %}
             {% if craft.lantra.canManage(null, true) %}
                 {% include '_includes/scheme' %}
