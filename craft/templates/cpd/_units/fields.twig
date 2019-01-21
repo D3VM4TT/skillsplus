@@ -5,32 +5,32 @@
     {% if row.fieldType == 'unitValue'  %}
         <div class="field--wrapper">
             <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultValue]" type="number" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultValue|default(1) }}" />
+            <input name="fields[resultValue]" type="number" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultValue|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultExpiryDate'  %}
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.expiryDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.expiryDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultStartDate'  %}
         <div class="field--wrapper">
             <label for="userStartDate" class="">{{ label }} (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultStartDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultStartDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultFinishDate'  %}
         <div class="field--wrapper">
             <label for="userFinishDate" class="">{{ label }}  (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultFinishDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
+            <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultFinishDate|format('yyyy-mm-dd') }}" data-language="en" data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultLocation'  %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
+            <input name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultHours'  %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input{{ resultEndorsed ? ' disabled' }} name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultHours|default('') }}">
+            <input name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}" value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence'  %}
         <div class="field--wrapper">
@@ -46,5 +46,5 @@
 {% endfor %}
 <div class="field--wrapper">
     <label for="resultNotes" style="" class="">Notes</label>
-    <textarea {{ resultEndorsed ? ' disabled' }} id="resultNotes" name="fields[resultNotes]">{{ resultExists ? resultEntry.resultNotes }}</textarea>
+    <textarea id="resultNotes" name="fields[resultNotes]">{{ resultExists ? resultEntry.resultNotes }}</textarea>
 </div>
