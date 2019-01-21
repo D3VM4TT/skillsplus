@@ -16,13 +16,13 @@
             <p class="profile">
                 <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
                 <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
+                <span class="label">Total licences issued:</span> {{ licencesScheme + licencesCompany + usersAll }}<br />
                 <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
                 <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
-                <span class="label">Scheme Licences:</span>{{ licencesScheme }}<br />
-                <span class="label">Company Licences:</span> {{ licencesCompany }}<br />
-                <span class="label">Total Remaining:</span> {{ licencesScheme + licencesCompany }}
+                <span class="label">Licences available to Scheme Manager:</span>{{ licencesScheme }}<br />
+                <span class="label">Licences available to Company Managers :</span> {{ licencesCompany }}<br />
+                <span class="label">Total currently available:</span> {{ licencesScheme + licencesCompany }}<br />
             </p>
-
         </div>
     </section>
 {% endblock %}

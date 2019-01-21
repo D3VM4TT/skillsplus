@@ -1,7 +1,3 @@
-{% set usersAll = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).total() %}
-{% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').total() %}
-{% set licencesCompany = craft.lantra.totalCompanyLicences() %}
-{% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
