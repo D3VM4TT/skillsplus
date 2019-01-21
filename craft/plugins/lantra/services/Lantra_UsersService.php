@@ -4,6 +4,7 @@ namespace Craft;
 class Lantra_UsersService extends BaseApplicationComponent
 {
     private $nodeId = 0;
+    private $hierarchyFilter = [];
 
     /**
      * Get manager hierarchy
@@ -22,6 +23,11 @@ class Lantra_UsersService extends BaseApplicationComponent
         $managerTeams = $this->getManagerTeams($user);
         $managerCompanies = $this->getManagerCompanies($user);
         $type = 'companies';
+        // filter individuals company id
+        $individualCompany = $this->getIndividualCompany();
+        if ($individualCompany) {
+            $this->hierarchyFilter[] = $individualCompany->id;
+        }
         // admins and scheme managers start with all top level parents
         if ($user->admin or $user->isInGroup('schemeManagers')) {
             $array = $this->getCompaniesByParentId(false);
@@ -36,7 +42,9 @@ class Lantra_UsersService extends BaseApplicationComponent
             $type = 'teams';
         }
         foreach ($array as $element) {
-            $return[$element->id] = $this->addHierarchyNode($element, $type);
+            if (!in_array($element->id, $this->hierarchyFilter)) {
+                $return[$element->id] = $this->addHierarchyNode($element, $type);
+            }
         }
         return $return;
     }
@@ -52,6 +60,9 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     function addHierarchyNode($element, $type = 'companies', $prefix = '')
     {
+        if (in_array($element->id, $this->hierarchyFilter)) {
+            return;
+        }
         $this->nodeId++;
         $return = [
             'nodeId'    => $this->nodeId,
@@ -415,7 +426,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     function getManagerCompanies(UserModel $user, $includeChildren = false) {
-        $companyIds = craft()->lantra_users->getCompanyManagerCompanyIds($user, $includeChildren);
+        $companyIds = $this->getCompanyManagerCompanyIds($user, $includeChildren);
         if ( ! count($companyIds)) {
             return null;
         }
