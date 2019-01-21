@@ -3,6 +3,7 @@
 
 {% set userId = craft.request.getSegment(2) %}
 {% if userId %}
+    {% if userId == currentUser.id %}{% redirect '/' %}{% endif %}
     {% set account = craft.users.id(userId).first %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% else %}

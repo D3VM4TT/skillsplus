@@ -6,7 +6,7 @@
         <form method="post" role="form" accept-charset="UTF-8">
             {{ getCsrfInput() }}
             <input type="hidden" name="action" value="entries/saveEntry">
-            <input type="hidden" name="redirect" value="/cpd/{{ moduleEntry.id }}/unit/{{ unitEntry.id }}/user/{{ userId }}/test">
+            <input type="hidden" name="redirect" value="/cpd/{{ userId }}/{{ moduleEntry.id }}/{{ unitEntry.id }}/test">
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
             {% if userId != currentUser.id %}

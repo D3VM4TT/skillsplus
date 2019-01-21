@@ -1,35 +1,39 @@
 {% extends "_layout" %}
 
-{# new existing achievement #}
-{% if craft.request.getSegment(3) == 'module' %}
-    {# module id in URL #}
-    {% set moduleId = craft.request.getSegment(4) %}
-    {% if moduleId %}
-        {% set module = craft.entries.id(moduleId).first %}
-        {% if not module %}{% exit 404 %}{% endif %}
-        {% set moduleGroup = module.moduleGroup.first %}
-    {% endif %}
-{% else %}
-    {% set entryId = craft.request.getSegment(3) %}
-    {% set entry = craft.entries.id(entryId).first %}
-    {% if not entry %}{% exit 404 %}{% endif %}
-{% endif %}
-{% if craft.request.getSegment(5) == 'user' %}
-    {# user id in URL #}
-    {% set userId = craft.request.getSegment(6) %}
-    {% if userId %}
-        {% set account = craft.users.id(userId).first %}
-    {% endif %}
+{% set userId = craft.request.segment(2) %}
+{% set entryId = craft.request.segment(4) %}
+
+{% if userId != currentUser.id %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% else %}
     {% set account = currentUser %}
 {% endif %}
 
-{% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleId %}
+{% set dashboardUri = '/cpd/' ~ account.id %}
+
+{% set moduleEntry = false %}
+{% set resultEntry = false %}
+
+{# module id in URL #}
+{% if craft.request.segment(3) == 'achievement' and entryId %}
+    {% set moduleEntry = craft.entries.id(entryId).first %}
+    {% if not moduleEntry %}{% exit 404 %}{% endif %}
+    {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
+{% elseif craft.request.segment(3) == 'result' and entryId %}
+    {% set resultEntry = craft.entries.id(entryId).first %}
+    {% if not resultEntry %}{% exit 404 %}{% endif %}
+    {% set moduleEntry = resultEntry.resultModule.first %}
+{% endif %}
+
+{% if moduleEntry %}
+    {% set moduleGroup = moduleEntry.moduleGroup.first %}
+{% endif %}
 
 {% set userModules = [] %}
 {% for role in account.userRole %}
-    {% for module in craft.entries.relatedTo(role).order('title') %}
-        {% set userModules = userModules|merge([module]) %}
+    {% for roleModule in craft.entries.relatedTo(role).order('title') %}
+        {% set userModules = userModules|merge([roleModule]) %}
     {% endfor %}
 {% endfor %}
 
@@ -43,10 +47,10 @@
         </div>
         <div class="page-header secondary-bg">
             <h2>Achievement for {{ account.fullname }}</h2>
-            <p>{% if moduleId %}{{ module.title }}{% endif %}</p>
+            <p>{% if moduleEntry %}{{ moduleEntry.title }}{% endif %}</p>
         </div>
         <div class="page-content">
-            {% if entry is defined and entry.id %}
+            {% if resultEntry and resultEntry.id %}
                 <h3>Edit Achievement</h3>
             {% else %}
                 <h3>Create a new achievement</h3>
@@ -54,35 +58,38 @@
             <form class="page-form" method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
                 {{ getCsrfInput() }}
                 <input type="hidden" name="action" value="entries/saveEntry">
-                <input type="hidden" name="redirect" value="cpd{{ userId is defined ? '/' ~ account.id }}">
+                <input type="hidden" name="redirect" value="{{ userId != currentUser.id ? 'cpd/' ~ account.id : '/' }}">
                 <input type="hidden" name="typeId" value="17">
                 <input type="hidden" name="sectionId" value="10">
                 <input type="hidden" name="enabled" value="1">
-                {%  if userId %}
+                <input type="hidden" name="entryId" value="{{ resultEntry ? resultEntry.id : '' }}">
+                {% if userId %}
                     <input type="hidden" name="author[]" value="{{ account.id }}">
                 {%  endif %}
-                <input type="hidden" name="fields[resultStatus]" value="pending">
+                <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry ? resultEntry.resultStatus : 'pending' }}">
                 <input type="hidden" name="fields[unitEndorsementManagerLevel]" value="1">
                 <div class="field--wrapper">
                     <label for="title" class="float">Title</label>
-                    <input type="text" name="title" class="float-label" placeholder="Enter the result title" />
+                    <input value="{{ resultEntry ? resultEntry.title }}" type="text" name="title" class="float-label" placeholder="Enter the result title" />
                 </div>
-                {% if moduleId and module %}
-                    <input type="hidden" name="fields[resultModule][]" value="{{ moduleId }}">
-                {% elseif userModules|length %}
+                {% if moduleEntry %}
+                    <input type="hidden" name="fields[resultModule][]" value="{{ moduleEntry.id }}">
+                {% elseif not resultEntry and userModules|length %}
                     <div class="field--wrapper">
                         <label for="resultModule" class="float">Result module</label>
                         <select data-relation="fields[resultModule]"  id="resultModule">
                             <option value="">Not applicable</option>
-                            {% for module in userModules %}
-                                <option value="{{ module.id }}">{{ module.title }}</option>
+                            {% for userModule in userModules %}
+                                <option value="{{ userModule.id }}">{{ userModule.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 {% endif %}
-                {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup} %}
+                {% if moduleEntry %}
+                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry } %}
+                {% endif %}
                 <div class="container-btn">
-                    <button class="button primary-bg" type="submit">Submit result</button>
+                    <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} result</button>
                 </div>
             </form>
         </div>

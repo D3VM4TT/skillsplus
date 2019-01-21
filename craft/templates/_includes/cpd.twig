@@ -91,7 +91,7 @@
                                                                 {% if craft.lantra.isManager(cpdUser.id) and unitResultEntry %}
                                                                     [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}">x</a>]
                                                                 {% endif %}
-                                                                <a href="/cpd/{{ module.id }}/unit/{{ unitEntry.id }}/user/{{ cpdUser.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
+                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
                                                             </td>
                                                             {% for row in moduleGroup.columnLayout %}
                                                                 {% if row.fieldType == 'unitType' %}
@@ -138,7 +138,6 @@
                                                                                 <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
                                                                             {% endfor %}
                                                                         {% endif %}
-                                                                        {{ unitResultEntry ? unitResultEntry.resultComments }}
                                                                     </td>
                                                                 {% endif %}
                                                             {% endfor %}
@@ -178,7 +177,7 @@
                                                                 {% if craft.lantra.isManager(cpdUser.id) %}
                                                                     [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}">x</a>]
                                                                 {% endif %}
-                                                                {{ userResultEntry.title }}
+                                                                <a href="/cpd/{{ cpdUser.id }}/result/{{ userResultEntry.id }}">{{ userResultEntry.title }}</a>
                                                             </td>
                                                             {% for row in moduleGroup.columnLayout %}
                                                                 {% if row.fieldType == 'unitType' %}
@@ -206,7 +205,6 @@
                                                                                 <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
                                                                             {% endfor %}
                                                                         {% endif %}
-                                                                        {{ userResultEntry ? userResultEntry.resultComments }}
                                                                     </td>
                                                                 {% endif %}
                                                             {% endfor %}
@@ -221,7 +219,7 @@
                                         </div>
                                     {% endif %}
                                     {% if moduleGroup.addAchievement %}
-                                        <a class="button no-shadow primary-bg" href="/cpd/achievement/module/{{ module.id }}/user/{{ cpdUser.id }}">
+                                        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}">
                                             <span>Add an achievement</span>
                                         </a>
                                     {% endif %}
