@@ -66,10 +66,12 @@ class Lantra_EntriesController extends Lantra_BaseController {
         foreach ($results as $result) {
             if (isset($result['entryId']) && FALSE != $entry = craft()->entries->getEntryById($result['entryId'])) {
                 $entry->setContentFromPost([
-                    'resultComments' => $result['comments'],
                     'resultStatus' => 'endorsed'
                     ]);
                 craft()->entries->saveEntry($entry);
+                if($result['comments']) {
+                    craft()->lantra_results->addComment($entry, $result['comments']);
+                }
                 $count ++;
             }
         }

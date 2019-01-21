@@ -9,6 +9,35 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private $typeIdModuleResult = 14;
 
     /**
+     * @param $entry
+     * @param $comment
+     * @param $userId
+     * @throws \Exception
+     */
+    function addComment($entry, $comment, $userId = null) {
+
+        if (is_null($userId)) {
+            $userId = craft()->userSession->getUser()->id;
+        }
+        $field = craft()->fields->getFieldByHandle('resultComments');
+        $blockTypes = craft()->superTable->getBlockTypesByFieldId($field->id);
+        $blockType = $blockTypes[0];
+
+        $superTableData = array();
+        $superTableData['new1'] = [
+            'type' => $blockType->id,
+            'enabled' => true,
+            'fields' => [
+                'user' => [$userId],
+                'date' => time(),
+                'comment' => $comment
+            ]
+        ];
+
+        $entry->setContentFromPost(array('resultComments' => $superTableData));
+        craft()->entries->saveEntry($entry);
+    }
+    /**
      * Get a unit result entry
      *
      * @param $userId
