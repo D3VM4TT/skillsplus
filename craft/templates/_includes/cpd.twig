@@ -1,5 +1,6 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set existingResultIds = [] %}
+{% set readOnly = globalsScheme.schemeUserReadOnly and not craft.lantra.isManager(cpdUser.id) %}
 <article class="cpd">
 {% if not cpdUser.userRole.total %}
     <p>This user has no job role allocated, please add a job role to have access to modules.</p>
@@ -91,15 +92,20 @@
                                                             {% if craft.lantra.isManager(cpdUser.id) and unitResultEntry %}
                                                                 [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}">x</a>]
                                                             {% endif %}
-                                                            <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">{{ unitEntry.title }}</a>
+                                                            {% if readOnly %}
+                                                                {{ unitEntry.title }}
+                                                            {% else %}
+                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
+                                                                    {{ unitEntry.title }}
+                                                                </a>
+                                                            {% endif %}
                                                         </td>
                                                         {% include '_includes/columnLayout' with {
-                                                            header:false,
                                                             unitType: unitEntry.unitType,
                                                             unitValue: unitEntry.unitValue,
-                                                            result:unitResultEntry,
-                                                            columnLayout:moduleGroup.columnLayout}
-                                                        %}
+                                                            resultEntry: unitResultEntry,
+                                                            columnLayout: moduleGroup.columnLayout
+                                                        } %}
                                                     </tr>
                                                 {% endfor %}
                                                 </tbody>
@@ -134,15 +140,20 @@
                                                             {% if craft.lantra.isManager(cpdUser.id) %}
                                                                 [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}">x</a>]
                                                             {% endif %}
-                                                            <a href="/cpd/{{ cpdUser.id }}/result/{{ userResultEntry.id }}">{{ userResultEntry.title }}</a>
+                                                            {% if readOnly %}
+                                                                {{ userResultEntry.title }}
+                                                            {% else %}
+                                                                <a href="/cpd/{{ cpdUser.id }}/result/{{ userResultEntry.id }}">
+                                                                    {{ userResultEntry.title }}
+                                                                </a>
+                                                            {% endif %}
                                                         </td>
                                                         {% include '_includes/columnLayout' with {
-                                                            header:false,
                                                             unitType: 'evidence',
                                                             unitValue: userResultEntry.unitValue,
-                                                            result:userResultEntry,
-                                                            columnLayout:moduleGroup.columnLayout}
-                                                        %}
+                                                            resultEntry :userResultEntry,
+                                                            columnLayout:moduleGroup.columnLayout
+                                                        } %}
                                                     </tr>
                                                     {% if (userResultEntry.resultStatus == 'endorsed') %}
                                                         {% set totalPoints = totalPoints + userResultEntry.resultValue %}
@@ -153,7 +164,7 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                {% if moduleGroup.addAchievement and not module.addAchievementHide %}
+                                {% if moduleGroup.addAchievement and not module.addAchievementHide and not readOnly %}
                                     <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}">
                                         <span>Add an achievement</span>
                                     </a>
