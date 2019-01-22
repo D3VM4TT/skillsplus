@@ -22,9 +22,20 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $field = craft()->fields->getFieldByHandle('resultComments');
         $blockTypes = craft()->superTable->getBlockTypesByFieldId($field->id);
         $blockType = $blockTypes[0];
-
-        $superTableData = array();
-        $superTableData['new1'] = [
+        // not sure why we have to run this loop...
+        $tableData = [];
+        foreach($entry->resultComments as $key => $row) {
+            $tableData[$key] =  [
+                'type' => $blockType->id,
+                'enabled' => true,
+                'fields' => [
+                    'user' => [$row->user->first()->id],
+                    'date' => $row->date->getTimestamp(),
+                    'comment' => $row->comment
+                ]
+            ];
+        }
+        $tableData['new1'] = [
             'type' => $blockType->id,
             'enabled' => true,
             'fields' => [
@@ -33,9 +44,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 'comment' => $comment
             ]
         ];
-
-        $entry->setContentFromPost(array('resultComments' => $superTableData));
-        craft()->entries->saveEntry($entry);
+        craft()->lantra_notify->sendCommentUpdate($entry, $comment, $userId);
+        return $tableData;
     }
     /**
      * Get a unit result entry

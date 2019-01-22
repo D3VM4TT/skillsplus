@@ -102,6 +102,13 @@ class LantraPlugin extends BasePlugin
                     craft()->request->redirect('/unit/' . $unitEntry->id);
                 }
             }
+            // add comments
+            $comment = craft()->request->getPost('comment');
+            if ($entry->sectionId == $this->sectionIdResults && $comment) {
+                unset($_POST['comment']);
+                $resultComments = craft()->lantra_results->addComment($entry, $comment);
+                $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
+            }
             // handle company licence changes
             if ($entry->sectionId == $this->sectionIdCompanies){
                if ( ! craft()->lantra_licence->updateCompanyLicences($entry)){

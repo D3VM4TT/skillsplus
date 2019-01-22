@@ -71,6 +71,24 @@ class Lantra_NotifyService extends BaseApplicationComponent
         }
     }
 
+    /**
+     * @param EntryModel $entry
+     */
+    function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
+        $subject = $this->getNotifyGlobal('subjectNewComment', 'New Comment');
+        $user = craft()->users->getUserById($userId);
+        $message = $entry->title . "\n\n";
+        $message .= $user->getFullName() . ": " . $comment . "\n\n";
+        // manager commenting - notify user
+        if ($userId != $entry->authorId) {
+            $this->notify($entry->getAuthor()->email, $subject, $message);
+        }
+        // user commenting - notify managers
+        else {
+            $this->notifyManagers($entry->getAuthor(), $subject, $message);
+        }
+    }
+
      /**
     * Notify users and managers of module result
     *
