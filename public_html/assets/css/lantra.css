@@ -421,6 +421,16 @@ button {
     box-shadow:          0px 13px 45px 0px #C7C7C7;
 }
 
+button.btn-add-new {
+    -webkit-box-shadow:  none !important;
+    -moz-box-shadow:     none !important;
+    box-shadow:          none !important;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 250px;
+}
+
 button.btn-search {
     -webkit-box-shadow:  none !important;
     -moz-box-shadow:     none !important;
@@ -472,7 +482,7 @@ input.text-search {
 .button {
     width: 80%;
     max-width: 280px;
-    height: 60px;
+    height: 57px;
     display: inline-block;
     border: none;
     color: #FFFFFF;
@@ -989,6 +999,30 @@ section.slides article div.container div.buttons div.button {
 section.row.admin {
     margin-bottom:20px;
 }
+
+.header-controls {
+    position: absolute;
+}
+
+.header-controls .header-search,
+.header-controls .container-btn {
+    float: left;
+}
+
+.header-controls .container-btn {
+    padding-left: 40px;
+}
+
+.header-controls .container-btn .button {
+    width: 250px !important;
+}
+
+.header-controls button.btn-add-new a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+}
+
 
 /*Notifications
 -------------------------------------------------- */
@@ -1532,6 +1566,21 @@ li.jstree-node .jstree-ocl {
     .account-details-toggle {
         display: none;
     }
+    .header-controls {
+        position: initial;
+        float: initial;
+    }
+    .header-controls .header-search,
+    .header-controls .container-btn {
+        position: initial;
+        float: initial;
+        padding: 20px;
+    }
+
+    .header-controls .container-btn .btn-add-new {
+        width: 100%;
+    }
+
     /*Fomat table data*/
     div.module table.data thead {
         display: none;
