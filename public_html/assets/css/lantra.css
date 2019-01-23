@@ -124,6 +124,7 @@ h4, h4 a {
 .col-2 {
     max-width: 16.666666%;
     display: inline-block;
+    padding: 0 10px;
 }
 .col-3 {
     width: 24.4444%;
@@ -163,6 +164,10 @@ h4, h4 a {
 }
 .col-12 {
     max-width: 100%;
+}
+
+.col-pd-top {
+    padding-top: 40px;
 }
 
 .col-pd-btm {
@@ -828,6 +833,14 @@ article.cpd div.status {
     padding-top: 5px;
 }
 
+article.cpd h2, article.endorsements-pending h2 {
+    margin-bottom: 10px;
+}
+
+article.cpd p, article.endorsements-pending p {
+    font-weight: 600;
+}
+
 span.module-status-complete {
 	font-weight: 600;
 	color: #59c269;
@@ -1312,7 +1325,7 @@ label {
 table.data {
     width: 100%;
     border-collapse: collapse;
-    margin: 60px 0px;
+    margin-bottom: 60px;
 }
 
 table.data th, table.data td {
@@ -1524,7 +1537,7 @@ li.jstree-node .jstree-ocl {
     .row {
         display: initial;
     }
-    .col-4, .col-8 {
+    .col-2, .col-8 {
         width: 100%;
         max-width: initial;
         padding-bottom: 60px;
