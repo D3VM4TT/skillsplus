@@ -70,13 +70,14 @@ class Lantra_UsersService extends BaseApplicationComponent
             'elementId' => $element->id,
             'managers'  => [],
             'children'  => [],
-            'icon'      => 'group'
+            'icon'      => 'company'
         ];
         if ($type == 'label') {
             $return['title'] =  $element->title;
         }
         if ($type == 'companies') {
             $return['title'] =  $element->title;
+            $return['icon'] = 'group';
             // add the company managers
             $companyManagers = $this->getCompanyMangers($element);
             if (false != $companyManagerCount = count($companyManagers)) {
@@ -110,6 +111,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         elseif ($type == 'teams') {
             $return['title'] =  'Team: ' . $element->title;
+            $return['icon'] = 'group';
             // Add the team managers
             $teamManagers = $this->getTeamMangers($element);
             if (false != $teamManagersCount = count($teamManagers)) {
