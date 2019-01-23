@@ -315,4 +315,11 @@ $(document).ready(function(){
         }
         $('div#manager-fields').addClass('hide');
     });
+
+    $('input#teamManagers').click(function(){
+        if ($(this).is(':checked')){
+            return $('div#team-fields').removeClass('hide');
+        }
+        $('div#team-fields').addClass('hide');
+    });
 });

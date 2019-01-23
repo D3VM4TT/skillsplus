@@ -521,7 +521,7 @@ span.trigger-password:hover {
 }
 
 form.page-form .field--wrapper {
-    margin-bottom: 85px;
+    margin-bottom: 50px;
 }
 
 .field--wrapper {
@@ -575,6 +575,10 @@ button:focus {
     min-height:200px;
 }
 
+.field--wrapper select#userTeam {
+    margin-top: 30px;
+}
+
 form ul {
     padding: 0;
 }
@@ -599,6 +603,23 @@ form ul.options li input {
 form ul.options li strong {
     width:50%;
     display:inline-block;
+}
+
+#manager-fields .select2-container,
+#name-fields .field--wrapper label,
+#name-fields .field--wrapper input,
+#date-fields .field--wrapper label,
+#date-fields .field--wrapper input,
+#address-fields .field--wrapper label {
+    width: 95% !important;
+}
+
+#address-fields .field--wrapper textarea {
+    width: 88% !important;
+}
+
+#name-fields .field--wrapper input#dummyEmail {
+    width: initial !important;
 }
 
 #remember-me {
@@ -1533,11 +1554,23 @@ li.jstree-node .jstree-ocl {
     table.data thead {
         display: none;
     }
+    #manager-fields .select2-container,
+    #name-fields .field--wrapper label,
+    #name-fields .field--wrapper input,
+    #date-fields .field--wrapper label,
+    #date-fields .field--wrapper input,
+    #address-fields .field--wrapper label {
+    width: 100% !important;
+    }
+
+    #address-fields .field--wrapper textarea {
+    width: 100% !important;
+}
     /*Format Scheme Profile and Admin Tools */
     .row {
         display: initial;
     }
-    .col-2, .col-8 {
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
         width: 100%;
         max-width: initial;
         padding-bottom: 60px;
@@ -1684,6 +1717,9 @@ li.jstree-node .jstree-ocl {
     }
     article.cpd div.status {
     display: none;
+    }
+    .page-form {
+    padding: 60px 30px;
     }
 }
 

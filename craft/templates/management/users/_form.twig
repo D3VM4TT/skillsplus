@@ -47,22 +47,91 @@
         {% else %}
             <input type="hidden" name="redirect" value="/management/users">
         {% endif %}
+        
+        <div id="name-fields">
+        <div class="col-6 field--wrapper">
+            <label for="firstName" class="no-float">First name:</label>
+            <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+        </div>
+        <div class="col-6 field--wrapper">
+            <label for="lastName" class="no-float">Last name:</label>
+            <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+        </div>
+        </div>
+        <div id="name-fields">
+        <div class="col-6 field--wrapper">
+            <label for="email" class="no-float">Email:</label>
+            <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
+        </div>
+        <div class="col-6 field--wrapper">
+            <label for="dummyEmail" class="no-float">Generate Dummy Email?</label>
+            <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
+        </div>
+        </div>
+        <div id="date-fields">
+        <div class="col-6 field--wrapper">
+            <label for="address" class="no-float">Start date:</label>
+            <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
+        </div>
+        <div class="col-6 field--wrapper">
+            <label for="address" class="no-float">Date of birth:</label>
+            <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account is defined ? account.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
+        </div>
+        </div>
+        <div id="address-fields">
+        <div class="col-6 field--wrapper">
+            <label for="address" class="no-float">Address:</label>
+            <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
+        </div>
+        <div class="col-6 field--wrapper">
+            <label for="telephone" class="no-float">Telephone:</label>
+            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
+        </div>
+        </div>
+        {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
+        {%  for block in userCustomFields %}
+            <div class="field--wrapper">
+                <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
+                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
+                {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
+                <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+            </div>
+        {%  endfor %}
         <div class="field--wrapper">
-            <label for="teamManagers" for="title" class="no-float">Roles:</label>
+            <h2 for="teamManagers" for="title" class="no-float">Manager settings</h2>
                 <ul class="options">
                     {% if globalsScheme.schemeTeams|default(false) %}
                         <li>
                             <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
-                            <strong>Team manager</strong>
+                            <span>Make Team manager</span>
                         </li>
                     {% endif %}
+                            {% if globalsScheme.schemeTeams|default(false) %}
+                <div id="team-fields" class="hide">
+                <div class="field--wrapper">
+                {#<label for="userCompany">User team:</label>#}
+                {% set teamEntries = craft.entries.section('teams').limit(null) %}
+                <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
+                    <option value="">Select User Team</option>
+                    {% for teamEntry in teamEntries %}
+                        <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+        {% endif %}
                     <li>
                         <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %}>
-                        <strong>Company manager</strong>
+                        <span>Make Company Manager</span>
                     </li>
                 </ul>
         </div>
-        <div id="manager-fields" class="{% if not isCompanyManager %}{% endif %}">
+
+        <div id="manager-fields" class="hide {% if not isCompanyManager %}{% endif %}">
+        <div class="col-6">
             <div class="field--wrapper ">
                 <label for="userCompany">Primary manager companies:</label>
                 <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
@@ -71,6 +140,8 @@
                     {% endfor %}
                 </select>
             </div>
+        </div>
+        <div class="col-6">
             <div class="field--wrapper ">
                 <label for="userCompany">Secondary manager companies:</label>
                 <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
@@ -79,6 +150,7 @@
                     {% endfor %}
                 </select>
             </div>
+        </div>
             {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                 <div class="field--wrapper">
                     <label for="readOnly" class="no-float">Manager Read Only:</label>
@@ -105,50 +177,6 @@
             {% endif %}
         {% endif %}
         <div class="field--wrapper">
-            <label for="firstName" class="no-float">First name:</label>
-            <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
-        </div>
-        <div class="field--wrapper">
-            <label for="lastName" class="no-float">Last name:</label>
-            <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
-        </div>
-        <div class="field--wrapper">
-            <label for="email" class="no-float">Email:</label>
-            <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
-        </div>
-        <div class="field--wrapper">
-            <label for="dummyEmail" class="no-float">Generate Dummy Email?</label>
-            <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
-        </div>
-        <div class="field--wrapper">
-            <label for="address" class="no-float">Start date:</label>
-            <input name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ account is defined ? account.userStartDate|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
-        </div>
-        <div class="field--wrapper">
-            <label for="address" class="no-float">Date of birth:</label>
-            <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ account is defined ? account.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
-        </div>
-        <div class="field--wrapper">
-            <label for="address" class="no-float">Address:</label>
-            <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
-        </div>
-        <div class="field--wrapper">
-            <label for="telephone" class="no-float">Telephone:</label>
-            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
-        </div>
-        {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
-        {%  for block in userCustomFields %}
-            <div class="field--wrapper">
-                <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
-                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
-                {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
-                <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
-            </div>
-        {%  endfor %}
-        <div class="field--wrapper">
             <label for="userCompany">User company:</label>
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 <option value="">No User Company</option>
@@ -157,18 +185,6 @@
                 {% endfor %}
             </select>
         </div>
-        {% if globalsScheme.schemeTeams|default(false) %}
-            <div class="field--wrapper">
-                <label for="userCompany">User team:</label>
-                {% set teamEntries = craft.entries.section('teams').limit(null) %}
-                <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
-                    <option value="">No User Team</option>
-                    {% for teamEntry in teamEntries %}
-                        <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
         <div class="field--wrapper">
             <label for="userRole">User roles:</label>
             {% set roleCategories = craft.categories.group('roles') %}
