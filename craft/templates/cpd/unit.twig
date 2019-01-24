@@ -52,7 +52,7 @@
                 {% if unitEntry.unitImage|length %}
                 {% set unitImage = unitEntry.unitImage.first %}
                 <div class="col-pd-btm">
-                    <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                    <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                 </div>
                 {% endif %}
                 {% if unitEntry.unitUrl %}
