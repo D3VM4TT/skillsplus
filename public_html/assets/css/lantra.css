@@ -1232,9 +1232,12 @@ nav.topNavigation {
 
 /* Module Group Tabs
 -------------------------------------------------- */
+.module-group-tabs {
+    padding-top: 30px;
+}
 .module-group-tabs ul {
     border-bottom: 2px #e8ecef solid;
-    height: 68px;
+    height: 58px;
     }
 .module-group-tabs .tabs li {
     float:left;
@@ -1247,7 +1250,7 @@ nav.topNavigation {
     display:block;
     text-align:center;
     text-decoration:none;
-    padding:15px 0;
+    padding:15px;
     border-top: 2px #e8ecef solid;
     border-right: 2px #e8ecef solid;
     transition: background-color 100ms ease-out;
@@ -1255,16 +1258,23 @@ nav.topNavigation {
 .module-group-tabs .tabs a:hover {
     color: #fff;
     }
+.module-group-tabs .tabs a h4 {
+    font-size: 16px !important;
+    font-weight: 600;
+}
 .module-group-tabs .tabs li:first-child a:hover {
     border-left: 2px #c70056 solid;
 }
 .module-group-tabs .tabs a.active {
-    padding:20px;
+    padding:15px 15px 30px 15px;
     background:#c70056;
     border-top: 2px #c70056 solid;
     border-right: 2px #c70056 solid;
-    color: #fff;
-    margin-top: -10px;
+    margin-top: -15px;
+}
+
+.module-group-tabs .tabs a.active > p {
+    color: #fff !important;
 }
 
 .module-group-tabs .tabs li:first-child a.active {
@@ -1273,7 +1283,7 @@ nav.topNavigation {
 
 .module-group-tabs .tabs a.active h4,
 .module-group-tabs .tabs a:hover h4 {
-    color: inherit;
+    color: #fff;
 }
 
 .tabgroup .clearfix:after {
@@ -1745,28 +1755,17 @@ li.jstree-node .jstree-ocl {
         float: initial; 
         width: initial; 
     }
-    .module-group-tabs .tabs li:first-child a.active {
-     border-left: none; 
-    }
-    .module-group-tabs .tabs li:first-child a {
-     border-left: none; 
-    }
     .module-group-tabs .tabs a.active {
-     padding: 0px; 
-     background: none; 
-     border-top: none; 
-     border-right: none; 
-     color: initial; 
-     margin-top: 0px; 
+        padding: 15px;
+        margin: 0px;
+        border: none;
     }
     .module-group-tabs .tabs a {
-     display: initial; 
-     text-align: initial; 
-     text-decoration: none; 
-     padding: 0px; 
-     border-top: none; 
-     border-right: none; 
-     transition: none; 
+        border-left: 2px #e8ecef solid;
+        padding: 15px;
+    }
+    .module-group-tabs .tabs li:last-child a {
+        border-bottom: 2px #e8ecef solid;
     }
     article.cpd div.status {
     display: none;
