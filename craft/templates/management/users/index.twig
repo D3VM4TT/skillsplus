@@ -34,7 +34,7 @@
                 <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
                 {% if not currentUser.managerReadOnly %}
                     <div class="container-btn">
-                    <button class="btn-add-new primary-bg">
+                    <button class="btn-add-new primary-bg" onclick="location.href='/management/users/new'" type="button">
                     <a href="/management/users/new">Add a new User</a>
                     </button>
                     </div>
