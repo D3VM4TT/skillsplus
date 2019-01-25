@@ -1269,15 +1269,16 @@ nav.topNavigation {
 .module-group-tabs .tabs a h4 {
     font-size: 16px !important;
     font-weight: 600;
+    color: #fff;
 }
 .module-group-tabs .tabs li:first-child a:hover {
-    border-left: 2px #c70056 solid;
+/*    border-left: 2px #c70056 solid;*/
 }
 .module-group-tabs .tabs a.active {
     padding:15px 15px 30px 15px;
-    background:#c70056;
-    border-top: 2px #c70056 solid;
-    border-right: 2px #c70056 solid;
+/*    background:#c70056;*/
+/*    border-top: 2px #c70056 solid;
+    border-right: 2px #c70056 solid;*/
     margin-top: -15px;
 }
 
@@ -1286,7 +1287,7 @@ nav.topNavigation {
 }
 
 .module-group-tabs .tabs li:first-child a.active {
-    border-left: 2px #c70056 solid;
+/*    border-left: 2px #c70056 solid;*/
 }
 
 .module-group-tabs .tabs a.active h4,
@@ -1322,7 +1323,7 @@ nav.topNavigation {
 }
 
 .module-tabs ul li a.module-status.active {
-    color:#c70056;
+/*    color:#c70056;*/
 }
 
 .groups-tab-group {

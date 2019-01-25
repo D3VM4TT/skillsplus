@@ -18,7 +18,7 @@
                 {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
                 {% for moduleGroup in moduleGroups %}
                     <li>
-                        <a href="#tab{{ moduleGroup.id }}" class="secondary-bg-hover">
+                        <a href="#tab{{ moduleGroup.id }}" class="primary-bg">
                             <h4>{{ moduleGroup.title }}</h4>
                         </a>
                     </li>
