@@ -1109,7 +1109,7 @@ overflow: auto;
 }
 
 .acc-info {
-    padding: 60px;
+    padding: 30px 60px;
     background-color: #F7F7Fa;
     border-bottom: 2px #e8ecef solid;
     display: none;
@@ -1119,9 +1119,9 @@ overflow: auto;
     margin: 0 0 10px 0;
 }
 
-.acc-info .col-3 p {
+/*.acc-info .col-3 p {
     padding-bottom: 20px;
-}
+}*/
 
 .account-details-toggle {   
     float: right;
