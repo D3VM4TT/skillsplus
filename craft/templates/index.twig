@@ -8,12 +8,11 @@
         </div>
         <div class="page-header secondary-bg">
             <a href="/profile"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
-            <h2>Hello {{ currentUser.firstName }},</h2>
             {{ currentUserCompany|default('') }}
-            <p class="welcome-back">
-                welcome back to your {{ globalsTheme.schemeName }} dashboard.
-            </p>
+            <h2>Hello {{ currentUser.firstName }},</h2>
+            <p class="welcome-back">welcome back to your {{ globalsTheme.schemeName }} dashboard.</p>
         </div>
+
         <div class="page-content">
             {% if craft.lantra.canManage(null, true) %}
                 {% include '_includes/scheme' %}

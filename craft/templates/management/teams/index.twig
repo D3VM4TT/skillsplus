@@ -23,12 +23,20 @@
 <section class="page">
     <div class="page-header secondary-bg">
         <h2>Teams</h2>
-        {% include '_includes/filter' with{filterDays:false} %}
-        {% if not currentUser.managerReadOnly %}
-            <a class="button btn-small primary-bg" href="/management/teams/new" class="">Add New</a>
-        {% endif %}
+        <p>Add, Edit and delete teams within your Scheme.</p>
+                <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                {% if not currentUser.managerReadOnly %}
+                    <div class="container-btn">
+                    <button class="btn-add-new primary-bg">
+                    <a href="/management/teams/new">Add a new Team</a>
+                    </button>
+                    </div>
+                {% endif %}
+            </div>
     </div>
     {% if teamEntries is defined and teamEntries|length %}
+        <div class="page-content">
         <table class="data">
             <thead>
                 <tr>
@@ -65,6 +73,7 @@
             {% endfor %}
             </tbody>
         </table>
+        </div>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
         <div class="page-content">

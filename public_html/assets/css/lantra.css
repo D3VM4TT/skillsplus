@@ -1005,9 +1005,9 @@ section.row.admin {
     margin-bottom:20px;
 }
 
-.header-controls {
+/*.header-controls {
     position: absolute;
-}
+}*/
 
 .header-controls .header-search,
 .header-controls .container-btn {
@@ -1064,13 +1064,16 @@ section.page {
 }*/
 
 .page-header {
-    min-height: 170px;
-    padding: 60px 60px 50px 60px;
+/*    min-height: 170px;*/
+    padding: 30px 60px 30px 60px;
+    display: block;
+overflow: auto;
 }
 
 .page-header img {
     border: 2px #626264 solid;
-    height: auto;
+    max-height: 135px;
+    width: auto;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
@@ -1742,7 +1745,7 @@ li.jstree-node .jstree-ocl {
         padding: 15px 20px;
     }
     .page-header img {
-        width: 60px;
+        max-height: 100px;
         float: initial;
     }
     h2, .page-header h2 {

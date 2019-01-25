@@ -13,7 +13,16 @@
 {% set hierarchyCompany = craft.request.getParam('company') %}
 
     {% block content %}
-    <div class="page-header">
+<div class="page-subHeader primary-bg">
+     {% if hierarchyNode %}
+        <a class="back-link" href="/management/teams?node={{ hierarchyNode }}">&laquo; back</a>
+    {% else %}
+        <a class="back-link" href="/management/teams">&laquo; back</a>
+    {% endif %}
+    {% include '_includes/topNavigation' %}
+    </div>
+
+    <div class="page-header secondary-bg">
     {% if entry is defined and entry.id %}
         <h2>Edit team</h2>
     {% else %}

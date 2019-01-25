@@ -17,8 +17,10 @@
     <section class="page">
         <div class="page-header secondary-bg">
             <h2>Custom Reports</h2>
+            <p>Create custom reports from data within your scheme.</p>
         </div>
         {% if reportEntries is defined and reportEntries|length %}
+        <div class="page-content">
             <table class="data">
                 <thead>
                 <tr>
@@ -50,6 +52,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+        </div>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
         {% else %}
             <div class="page-content">
