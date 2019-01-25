@@ -1,7 +1,7 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set existingResultIds = [] %}
 {% set readOnly = globalsScheme.schemeUserReadOnly and not craft.lantra.isManager(cpdUser.id) %}
-<div class="page-content">
+
 <article class="cpd">
 {% if not cpdUser.userRole.total %}
     <h2>Job Role:</h2>
@@ -222,4 +222,3 @@
     {% endif %}
 {% endif %}
 </article>
-</div>
