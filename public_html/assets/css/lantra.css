@@ -622,6 +622,16 @@ form ul.options li strong {
     display:inline-block;
 }
 
+.page-content form#form-photo {
+    padding-top: 30px;
+}
+
+.required label:after {
+    color: #e32;
+    content: ' *';
+    display:inline;
+}
+
 #manager-fields .select2-container,
 #name-fields .field--wrapper label,
 #name-fields .field--wrapper input,
@@ -1384,9 +1394,13 @@ body.logged-in .sidebar-form {
 
 p.profile span.label {
     display: inline-block;
-    width: 450px;
+    width: 150px;
     padding: 15px 0px;
     font-weight: 600;
+}
+
+p.profile span.label:nth-of-type(1) {
+    padding: 0px 0px 15px 0px;
 }
 
 label {

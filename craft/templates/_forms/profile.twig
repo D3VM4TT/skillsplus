@@ -3,9 +3,6 @@
     <input type="hidden" name="action" value="users/saveUser">
     <input type="hidden" name="redirect" value="/profile">
     <input type="hidden" name="userId" value="{{ currentUser.id }}">
-    <p class="profile">
-        <span class="label">Profile:</span>
-    </p>
     <div class="field--wrapper">
         <label for="address" class="no-float">Date of birth:</label>
         <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
@@ -30,7 +27,7 @@
             <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
         </div>
     {%  endfor %}
-    <p class="profile"><span class="label">Change profile picture:</span></p>
+    <p class="profile">Change profile picture:</p>
     <input type="file" name="userPhoto" value="{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload') }}">
     <input type="hidden" name="deleteUserPhoto" value="">
     <div class="container-btn">
