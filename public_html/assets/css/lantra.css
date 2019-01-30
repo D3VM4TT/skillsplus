@@ -608,11 +608,13 @@ form ul.options {
     list-style: none;
 }
 
-form ul.options li input {
+form ul.options li input,
+form ul.options input#readOnly,
+form ul.options input#userSettings {
     display:inline-block;
     float:left;
     width:auto;
-    margin:7px 14px 0 0;
+    margin:6px 14px 0 0;
 }
 
 form ul.options li strong {
@@ -625,7 +627,9 @@ form ul.options li strong {
 #name-fields .field--wrapper input,
 #date-fields .field--wrapper label,
 #date-fields .field--wrapper input,
-#address-fields .field--wrapper label {
+#address-fields .field--wrapper label,
+.field--wrapper select#userCompany
+ {
     width: 95% !important;
 }
 
@@ -1446,11 +1450,6 @@ div.unit-groups table.data tbody tr td:first-child {
 table.data tbody tr td:first-child {
     text-align: left;
     padding-right: 40px;
-}
-
-table.data tbody tr td:last-child {
-    padding-right: 60px;
-/*    text-align: right;*/
 }
 
 table.data tbody td:nth-child(2) {
