@@ -88,7 +88,7 @@
             <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
         </div>
         </div>
-        {%  set userCustomFields = globalsScheme.schemeUserCustomFields %}
+        {%  set userCustomFields = userProfile.userEditCustomFields %}
         {%  for block in userCustomFields %}
             <div class="field--wrapper">
                 <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
