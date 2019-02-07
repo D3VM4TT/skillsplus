@@ -508,11 +508,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->order = 'postDate desc';
         $criteria->limit = $limit;
         // limit by subordinates and check unit level if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
+        if (!$manager->isInGroup('schemeManager') && !$manager->admin) {
             $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
-            if ( ! count($subordinateIds)) {
+            if (!count($subordinateIds)) {
                 return null;
             }
+            $criteria->authorId = $subordinateIds;
             $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
             $criteria->unitEndorsementManagerLevel = '<=' . $level;
         }
