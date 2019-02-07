@@ -18,8 +18,12 @@
         <div class="page-content">
             {% set currentUserCompany = craft.lantra.userCompany() %}
             <p class="profile">
-                <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
-                <span class="label">Email address:</span> {{ currentUser.email }}<br/>
+                {% if not userProfile.userEditName %}
+                    <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
+                {% endif %}
+                {% if not userProfile.userEditEmail %}
+                    <span class="label">Email address:</span> {{ currentUser.email }}<br/>
+                {% endif %}
                 <span class="label">User type:</span> {{ craft.lantra.userType() }}<br/>
                 {% if currentUserCompany %}
                     <span class="label">User Company:</span> {{ currentUserCompany }}<br />
@@ -31,11 +35,13 @@
                     {% endfor %}
                 {% endif %}
                 <span class="label">Legacy User ID:</span>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}<br/>
-                <span class="label">Job Role:</span>
-                {% if currentUser.userRole.total %}
-                    {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
-                {% else %}
-                    ~
+                {% if not userProfile.userEditRole %}
+                    <span class="label">Job Role:</span>
+                    {% if currentUser.userRole.total %}
+                        {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                    {% else %}
+                        ~
+                    {% endif %}
                 {% endif %}
             </p>
             {% if not globalsScheme.schemeUserReadOnly %}
