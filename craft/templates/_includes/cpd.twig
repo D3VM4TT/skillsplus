@@ -93,6 +93,9 @@
                                                         <td>
                                                             {% if craft.lantra.isManager(cpdUser.id) and unitResultEntry %}
                                                                 [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}">x</a>]
+                                                                {% if unitResultEntry.resultStatus == 'pending' %}
+                                                                    [<a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}">endorse</a>]
+                                                                {% endif %}
                                                             {% endif %}
                                                             {% if readOnly %}
                                                                 {{ unitEntry.title }}
@@ -141,6 +144,9 @@
                                                         <td>
                                                             {% if craft.lantra.isManager(cpdUser.id) %}
                                                                 [<a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}">x</a>]
+                                                                {% if userResultEntry.resultStatus == 'pending' %}
+                                                                    [<a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ userResultEntry.id }}">endorse</a>]
+                                                                {% endif %}
                                                             {% endif %}
                                                             {% if readOnly %}
                                                                 {{ userResultEntry.title }}
