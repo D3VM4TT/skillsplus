@@ -426,16 +426,6 @@ button {
     box-shadow:          0px 13px 45px 0px #C7C7C7;
 }
 
-button.btn-add-new {
-    -webkit-box-shadow:  none !important;
-    -moz-box-shadow:     none !important;
-    box-shadow:          none !important;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    width: 250px;
-}
-
 button.btn-search {
     -webkit-box-shadow:  none !important;
     -moz-box-shadow:     none !important;
@@ -1029,17 +1019,17 @@ section.row.admin {
 }
 
 .header-controls .container-btn {
-    padding-left: 40px;
+    margin-left: 40px;
+    width: 260px;
+    height: 57px;
 }
 
-.header-controls .container-btn .button {
-    width: 250px !important;
-}
 
-.header-controls button.btn-add-new a {
+.header-controls a.btn-add-new {
     display: block;
     padding: 15px 20px;
     text-decoration: none;
+    text-align: center;
 }
 
 
@@ -1606,15 +1596,20 @@ li.jstree-node .jstree-ocl {
         position: initial;
         float: initial;
     }
-    .header-controls .header-search,
-    .header-controls .container-btn {
+    .header-controls .header-search {
         position: initial;
         float: initial;
         padding: 20px;
     }
 
-    .header-controls .container-btn .btn-add-new {
-        width: 100%;
+    .header-controls .container-btn {
+    margin: 30px auto 0px auto;
+    width: 100%;
+    height: 57px;
+    }
+
+    .header-controls a.btn-add-new {
+    padding: 15px 0px 0px 0px;
     }
 
     /*Fomat table data*/

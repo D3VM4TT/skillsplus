@@ -25,10 +25,10 @@
             <div class="header-controls">
                 <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
                 {% if not currentUser.managerReadOnly %}
-                    <div class="container-btn">
-                    <button class="btn-add-new primary-bg" type="button">
-                    <a href="/management/companies/new">Add a new Company</a>
-                    </button>
+                    <div class="container-btn primary-bg">
+                    {#<button class="btn-add-new primary-bg">#}
+                    <a class="btn-add-new" href="/management/companies/new">Add a new Company</a>
+                    {#</button>#}
                     </div>
                {% endif %}
            </div>
