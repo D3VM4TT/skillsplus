@@ -90,9 +90,9 @@
                 {% endif %}
                 <div class="container-btn">
                     {% if resultEntry and resultEntry.resultStatus == 'draft' %}
-                        <button class="button primary-bg status" data-status="pending" type="button">Submit result</button>
+                        <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
                     {% else %}
-                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} result</button>
+                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
                     {% endif %}
                 </div>
                 <div class="container-btn">
