@@ -11,8 +11,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
     /**
      * @param $entry
      * @param $comment
-     * @param $userId
-     * @throws \Exception
+     * @param null $userId
+     * @return array
      */
     function addComment($entry, $comment, $userId = null) {
 
@@ -47,6 +47,34 @@ class Lantra_ResultsService extends BaseApplicationComponent
         craft()->lantra_notify->sendCommentUpdate($entry, $comment, $userId);
         return $tableData;
     }
+
+    /**
+     * @param $comment
+     * @param $userId
+     * @throws \Exception
+     */
+    function readComment($comment, $userId) {
+        // userId of result
+        $resultAuthorId = $comment->getOwner()->author->id;
+        $commentAuthorId = $comment->user->first()->id;
+        if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
+            $comment->setContent(['read' => true]);
+            craft()->content->saveContent($comment, false);
+        }
+    }
+
+    /**
+     * @param $result
+     * @return int
+     */
+    function unreadComments($result) {
+        $unread = 0;
+        foreach($result->resultComments as $comment) {
+            if (!$comment->read) $unread++;
+        }
+        return $unread;
+    }
+
     /**
      * Get a unit result entry
      *

@@ -4,6 +4,26 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * @param $comment
+     * @param $userId
+     * @return mixed
+     */
+    public function readComment($comment, $userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return craft()->lantra_results->readComment($comment, $user->id);
+    }
+
+    /**
+     * @param $result
+     * @return int
+     */
+    public function unreadComments($result) {
+        return craft()->lantra_results->unreadComments($result);
+    }
+
+    /**
      * @param $company
      * @return mixed
      */
