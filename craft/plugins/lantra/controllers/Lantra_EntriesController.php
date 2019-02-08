@@ -48,7 +48,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         }
         // save disabled entry
         $this->_disableEntry($entry);
-        $this->_returnMessage('Entry has been removed.', TRUE, craft()->request->getUrlReferrer());
+        $this->_returnMessage('Entry has been removed.', true, craft()->request->getUrlReferrer());
     }
 
     /**
@@ -59,8 +59,13 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public function actionEndorseEvidence() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-        // get all the posted entryIds
-        $results = craft()->request->getPost('results');
+        // get all the posted entryId(s)
+        if (false !== $entryId = craft()->request->getPost('entryId')) {
+            $results = [['entryId' => $entryId]];
+        }
+        else {
+            $results = craft()->request->getPost('results');
+        }
         $count = 0;
         // loop entries and update status
         foreach ($results as $result) {
@@ -69,13 +74,10 @@ class Lantra_EntriesController extends Lantra_BaseController {
                     'resultStatus' => 'endorsed'
                     ]);
                 craft()->entries->saveEntry($entry);
-                if($result['comments']) {
-                    craft()->lantra_results->addComment($entry, $result['comments']);
-                }
                 $count ++;
             }
         }
-        $this->_returnMessage($count . ' results endorsed.');
+        $this->_returnMessage($count . ' results endorsed.', true);
     }
 
     /**

@@ -137,6 +137,12 @@ $(document).ready(function(){
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
+        if (action == 'lantra/entries/endorseEvidence') {
+            if ( ! confirm('Are you sure you want to endorse this result?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+        }
         if (action == 'lantra/categories/deleteCategory') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
                 return false;
