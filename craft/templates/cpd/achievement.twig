@@ -89,7 +89,14 @@
                     {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
                 {% endif %}
                 <div class="container-btn">
-                    <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} result</button>
+                    {% if resultEntry and resultEntry.resultStatus == 'draft' %}
+                        <button class="button primary-bg status" data-status="pending" type="button">Submit result</button>
+                    {% else %}
+                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} result</button>
+                    {% endif %}
+                </div>
+                <div class="container-btn">
+                    <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
                 </div>
             </form>
         </div>

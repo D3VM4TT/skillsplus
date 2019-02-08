@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+    $('button.status').click(function(){
+        var f =$(this).closest('form');
+        f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
+        f.submit();
+    });
+
     // menu
     $('.menu-tab').click(function(){
         $('.menu-hide').toggleClass('show');
