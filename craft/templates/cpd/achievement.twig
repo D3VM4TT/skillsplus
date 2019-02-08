@@ -86,7 +86,7 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry } %}
+                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
                 {% endif %}
                 <div class="container-btn">
                     <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} result</button>

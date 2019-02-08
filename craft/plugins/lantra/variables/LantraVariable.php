@@ -4,6 +4,27 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * @param $accountId
+     * @return mixed
+     * @throws Exception
+     * @throws \CException
+     */
+    public function evidenceFolderId($accountId) {
+        $folder = craft()->assets->findFolder(array(
+            'sourceId' => 1,
+            'name' => (string) $accountId
+        ));
+        if ($folder) {
+            return $folder->id;
+        }
+        // create folder if it doesn't exist
+        $source = craft()->assetSources->getSourceTypeById(1);
+        $parent = craft()->assets->getRootFolderBySourceId(1);
+        $folder = $source->createFolder($parent, $accountId);
+        return $folder->folderId;
+    }
+
+    /**
      * @param $comment
      * @param $userId
      * @return mixed

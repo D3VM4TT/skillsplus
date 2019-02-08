@@ -21,7 +21,7 @@
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
-    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry} %}
+    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
     <div class="container-btn">
         <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} evidence</button>
     </div>

@@ -29,6 +29,11 @@
     <link rel="stylesheet" href="/assets/css/lantra.css">
     <link rel="stylesheet" href="/assets/js/vendor/datepicker/css/datepicker.min.css">
 
+    <!-- File Upload
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/js/vendor/fileupload/css/jquery.fileupload.css">
+
     <!-- Favicon
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png">
@@ -134,6 +139,58 @@
         <script>
             $(document).ready(function() {
                 $('.js-select2').select2();
+            });
+        </script>
+
+        <script src="/assets/js/vendor/fileupload/js/vendor/jquery.ui.widget.js"></script>
+        <script src="/assets/js/vendor/fileupload/js/jquery.fileupload.js"></script>
+        <script src="/assets/js/vendor/fileupload/js/jquery.fileupload-process.js"></script>
+        <script src="/assets/js/vendor/fileupload/js/jquery.fileupload-validate.js"></script>
+        <script>
+
+            $(document).ready(function () {
+
+                $('#files').on('click', 'a.delete-file', function(e){
+                    e.preventDefault();
+                    var a = $(this),
+                        url = '{{ url('actions/lantra/assets/deleteEvidence') }}',
+                        p = a.closest('p');
+                    $.post(url, {fileId: a.data('id')}, function(data) {
+                        p.fadeOut(function(){p.remove();})
+                    });
+                });
+
+                var url = '{{ url('actions/lantra/assets/uploadEvidence') }}';
+                $('#fileupload').fileupload({
+                    url: url,
+                    dataType: 'json',
+                    autoUpload: true,
+                    formData: [{name: 'folderId', value: $('#fileupload').data('folderid')}],
+                    done: function (e, data) {
+                        if(data.result.success) {
+                            var fileId = data.result.file.id,
+                                fileName = data.result.file.filename,
+                                node = $('<p/>')
+                                    .append('<input type="hidden" name="fields[resultEvidence][]" value="' + fileId + '" />')
+                                    .append('[<a href="#" class="delete-file" data-id="' + fileId + '" style="color:#FF0000">delete</a>] ')
+                                    .append('<a target="_blank" href="/internal/' + fileId + '">' + fileName + '</a>');
+
+                            node.appendTo($('#files'));
+                        }
+                        else {
+                            alert(data.result.message);
+                        }
+                    },
+                    error: function (e, data) {
+                        alert('Could not upload this file.');
+                    }
+                }).on('fileuploadprogressall', function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css('width',  progress + '%');
+                }).on('fileuploadsend', function (e, data) {
+                    $('#progress .progress-bar').css('width', 0);
+
+                });
             });
         </script>
 
