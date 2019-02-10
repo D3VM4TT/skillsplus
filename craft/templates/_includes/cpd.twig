@@ -210,7 +210,6 @@
     {% set enrelatedResults = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
     {% if enrelatedResults|length %}
         <section id="archive">
-        <h2>Result Archive</h2>
         <div class="module-wrapper">
         <div class="module">
         <div class="header" data-target="#results-archive">
