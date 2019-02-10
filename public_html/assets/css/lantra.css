@@ -920,6 +920,11 @@ article.cpd div.closed {
     display:none;
 }
 
+article.endorsements-pending {
+    border: 2px solid #e9ecef;
+    padding: 10px 30px;
+}
+
 
 /*Results
 -------------------------------------------------- */
