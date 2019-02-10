@@ -103,13 +103,14 @@
         <h2>User settings</h2>
         <div class="col-6">
         <div class="field--wrapper">
-            <label for="userCompany">Company (optional):</label>
+            <label for="userCompany">Company:</label>
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
-                <option value="">No User Company</option>
+                <option value="">Not required if User is a Manager (see note below)</option>
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
                 {% endfor %}
             </select>
+            <p class="col-pd-top">Note:<br />If the User is a Manager click 'Make Company Manager' and assign to Companies in the Manager settings below.</p>
         </div>
         </div>
         <div class="col-6">
