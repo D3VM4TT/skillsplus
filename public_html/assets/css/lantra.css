@@ -1281,7 +1281,7 @@ nav.topNavigation {
     text-align:center;
     text-decoration:none;
     padding:15px;
-    margin: 2px 1px;
+    margin: 2px 1px 0px 1px;
     transition: background-color 100ms ease-out;
     }
 .module-group-tabs .tabs a:hover {
@@ -1332,10 +1332,11 @@ nav.topNavigation {
     text-decoration: none;
     font-weight:700;
     font-size:16px;
+    padding: 10px 15px;
 }
 
 .module-tabs ul li a.module-status.active {
-/*    color:#c70056;*/
+ background-color:#f4f4fa; 
 }
 
 .groups-tab-group {
