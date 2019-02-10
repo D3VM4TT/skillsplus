@@ -1275,18 +1275,13 @@ nav.topNavigation {
     }
 .module-group-tabs .tabs li {
     float:left;
-    /*width:20%;*/
-    }
-.module-group-tabs .tabs li:first-child a {
-    border-left: 2px #e8ecef solid;
     }
 .module-group-tabs .tabs a {
     display:block;
     text-align:center;
     text-decoration:none;
     padding:15px;
-    border-top: 2px #e8ecef solid;
-    border-right: 2px #e8ecef solid;
+    margin: 2px 1px;
     transition: background-color 100ms ease-out;
     }
 .module-group-tabs .tabs a:hover {
@@ -1297,23 +1292,14 @@ nav.topNavigation {
     font-weight: 600;
     color: #fff;
 }
-.module-group-tabs .tabs li:first-child a:hover {
-/*    border-left: 2px #c70056 solid;*/
-}
+
 .module-group-tabs .tabs a.active {
     padding:15px 15px 30px 15px;
-/*    background:#c70056;*/
-/*    border-top: 2px #c70056 solid;
-    border-right: 2px #c70056 solid;*/
-    margin-top: -15px;
+    margin-top: -13px;
 }
 
 .module-group-tabs .tabs a.active > p {
     color: #fff !important;
-}
-
-.module-group-tabs .tabs li:first-child a.active {
-/*    border-left: 2px #c70056 solid;*/
 }
 
 .module-group-tabs .tabs a.active h4,
@@ -1807,15 +1793,9 @@ li.jstree-node .jstree-ocl {
     }
     .module-group-tabs .tabs a.active {
         padding: 15px;
-        margin: 0px;
-        border: none;
     }
     .module-group-tabs .tabs a {
-        border-left: 2px #e8ecef solid;
         padding: 15px;
-    }
-    .module-group-tabs .tabs li:last-child a {
-        border-bottom: 2px #e8ecef solid;
     }
     article.cpd div.status {
     display: none;
