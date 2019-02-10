@@ -57,6 +57,10 @@ table {
     visibility: initial;;
 }
 
+.right {
+    float: right;
+}
+
 /* Typography
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 body,
@@ -873,12 +877,13 @@ article.cpd div.status {
     padding-top: 5px;
 }
 
-article.cpd h2, article.endorsements-pending h2 {
+article.cpd h2 {
     margin-bottom: 10px;
 }
 
-article.cpd p, article.endorsements-pending p {
+article.cpd p {
     font-weight: 600;
+    padding-top: 10px;
 }
 
 span.module-status-complete {
@@ -921,8 +926,20 @@ article.cpd div.closed {
 }
 
 article.endorsements-pending {
-    border: 2px solid #e9ecef;
     padding: 10px 30px;
+}
+
+article.endorsements-pending h4 {
+    margin-bottom: 10px;
+    display: inline;
+    color: #ffffff;
+}
+
+article.cpd p, article.endorsements-pending p,
+article.cpd p, article.endorsements-pending a {
+    font-weight: 600;
+    padding-top: 5px;
+    color: #ffffff;
 }
 
 
