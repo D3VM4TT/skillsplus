@@ -421,6 +421,11 @@ header {
 
 /*Buttons and Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.fileinput-button {
+    padding: 15px 35px;
+    color: #ffffff;
+}
+
 .button.hollow.white {
     border-color:#FFFFFF;
 }
@@ -450,6 +455,7 @@ input.text-search {
     max-width: 350px;
     margin: initial;
     text-align: initial;
+    margin-bottom: 40px;
 }
 
 .container-sidebar-btn {
@@ -1123,7 +1129,7 @@ overflow: auto;
 }
 
 .page-form {
-    padding: 60px;
+  padding: 60px 0px;
 }
 
 .page-content {
