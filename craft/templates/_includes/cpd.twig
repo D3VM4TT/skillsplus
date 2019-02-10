@@ -209,8 +209,17 @@
     {% set existingResultIdsString = existingResultIds | join(', not ') %}
     {% set enrelatedResults = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
     {% if enrelatedResults|length %}
+
         <section id="archive">
-            <h2>Result Archive</h2>
+        <div class="module-wrapper">
+        <div class="module">
+        <div class="header" data-target="#results-archive">
+        <h4>Result Archive</h4>
+        <div class="status">View results<img src="/assets/img/img-arrow-down-trans.png"></div>
+        </div>
+        <div id="results-archive" class="unit-groups open">
+        <div class="unit-group">
+        <div class="units">
             <table class="data">
                 <thead>
                 <tr>
@@ -232,6 +241,37 @@
                 {% endfor %}
                 </tbody>
             </table>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+            {#
+            <h4>Result Archive</h4>
+            <table class="data">
+                <thead>
+                <tr>
+                    <th>Result Title</th>
+                    {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for resultEntry in enrelatedResults %}
+                    <tr>
+                        <td>{{ resultEntry.title }}</td>
+                        {% include '_includes/columnLayout' with {
+                            unitType:resultEntry.unitType,
+                            unitValue:resultEntry.unitValue,
+                            result:resultEntry,
+                            columnLayout:globalsTheme.columnLayout}
+                        %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            #}
+
         </section>
     {% endif %}
 {% endif %}

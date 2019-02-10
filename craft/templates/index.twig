@@ -21,8 +21,8 @@
              {% if craft.lantra.canManage(null, true) %}
                 {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
                 {% if (pendingEntryCount) %}
-                    <article class="endorsements-pending col-pd-btm">
-                    <h2>Endorsements</h2>
+                    <article class="endorsements-pending module col-pd-btm">
+                    <h4>Endorsements</h4>
                     <p>You have <a href="/management/endorsements">{{ pendingEntryCount }} result(s)</a> to endorse.</p>
                     </article>
                 {% endif %}
