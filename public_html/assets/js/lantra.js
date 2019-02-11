@@ -321,12 +321,12 @@ $(document).ready(function(){
         $('.tabs a[href^="#module"]').eq(0).click();
     }
 
-    $('input#companyManagers').click(function(){
+    $('input#companyManagers').change(function(){
         if ($(this).is(':checked')){
             return $('div#manager-fields').removeClass('hide');
         }
         $('div#manager-fields').addClass('hide');
-    });
+    }).change();
 
     $('input#teamManagers').click(function(){
         if ($(this).is(':checked')){
