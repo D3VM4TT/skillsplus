@@ -6,18 +6,21 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
-
+{% set sortParam = craft.request.getParam('sort') %}
+{% set validSorts = ['lastName', 'id', 'legacyId'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'lastName' %}
+{% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 {% set excludeIdsString = 'not ' ~ currentUser.id %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-    {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
 {% elseif currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
@@ -46,9 +49,9 @@
         <table class="data">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Legacy ID</th>
-                <th class="title">Name</th>
+                <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
+                <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
+                <th class="title"><a href="?sort=name&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
                 <th>Company</th>
                 {% if globalsScheme.schemeTeams|default(false) %}
                     <th>Team</th>
