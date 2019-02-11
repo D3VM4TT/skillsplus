@@ -232,7 +232,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $author = craft()->users->getUserById($authorId[0]);
             }
             //  (manager submitting on behalf of user)
-            if ($author->id != craft()->userSession->getId()) {
+            if ($author && $author->id != craft()->userSession->getId()) {
                 // auto endorse
                 if ($resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult')) {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
