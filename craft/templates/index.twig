@@ -12,7 +12,6 @@
             <h2>Hello {{ currentUser.firstName }},</h2>
             <p class="welcome-back">welcome back to your {{ globalsTheme.schemeName }} dashboard.</p>
         </div>
-
         <div class="page-content">
             {% if craft.lantra.canManage(null, true) %}
                 {% include '_includes/scheme' %}
@@ -30,7 +29,6 @@
                     </article>
                 {% endif %}
             {% endif %}
-            
         </div>
     </section>
 {% endblock %}
