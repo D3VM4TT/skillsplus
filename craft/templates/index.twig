@@ -13,7 +13,7 @@
             <p class="welcome-back">welcome back to your {{ globalsTheme.schemeName }} dashboard.</p>
         </div>
         <div class="page-content">
-            {% if craft.lantra.canManage(null, true) %}
+            {% if craft.lantra.canManage() %}
                 {% include '_includes/scheme' %}
             {% endif %}
             {% include '_includes/cpd' with{cpdUser:currentUser} %}
