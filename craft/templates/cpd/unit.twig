@@ -61,20 +61,25 @@
                     <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 </div>
                 {% endif %}
-                {% if resultEntry|length and resultEntry.resultStatus == 'endorsed' %}
+                {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
+                <p>You have made {{ totalAttempts }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+                {% if resultEntry|length %}
                 <div class="col-pd-btm">
-                    <h5>You have passed this test.</h5>
+                    {% if resultEntry.resultStatus == 'endorsed' %}
+                        <h5>You have passed this test.</h5>
+                    {% endif %}
+                    <p>Your best result is {{ resultEntry.resultScore }}%</p>
+                    {% set attempts = resultEntry.resultAttempts  %}
+                    {% for attempt in attempts %}
+                        {% set meta = craft.lantra.getAttemptMeta(attempt) %}
+                        <p>On {{ attempt.postDate|date('d/m/y') }} you scored {{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</p>
+                    {% endfor %}
                 </div>
                 {% elseif not remainingAttempts %}
                 <div class="col-pd-btm">
                     <h5>You have no remaining attempts, contact your team manager.</h5>
                 </div>
                 {% else %}
-                    {% if resultEntry|length %}
-                <div class="col-pd-btm">
-                        <h5>You have made {{ resultEntry.resultAttempts|length }} attempts and you have {{ remainingAttempts }} attempts remaining.</h5>
-                </div>
-                    {% endif %}
                     {% if craft.request.getSegment(5) == 'test' %}
                         {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
                     {% elseif unitEntry.testQuestions|length %}

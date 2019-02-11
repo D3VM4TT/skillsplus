@@ -4,6 +4,28 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * @param $attemptEntry
+     * @return array
+     */
+    function getAttemptMeta($attemptEntry) {
+        $return = [
+          'total' => 0,
+          'correct' => 0,
+          'percent' => 0
+        ];
+
+        $return['total'] = count($attemptEntry->attemptAnswers);
+        // loop through answers and count correct
+        foreach ($attemptEntry->attemptAnswers as $answerBlock) {
+            if ($answerBlock->correct) {
+                $return['correct']++;
+            }
+        }
+        $return['percent'] = $return['total'] ? round($return['correct'] / $return['total'] * 100) : 0;
+        return $return;
+    }
+
+    /**
      * @param $accountId
      * @return mixed
      * @throws Exception
