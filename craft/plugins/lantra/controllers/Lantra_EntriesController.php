@@ -77,7 +77,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
                 $count ++;
             }
         }
-        $this->_returnMessage($count . ' results endorsed.', true);
+        $this->_returnMessage($count . ' results endorsed.', true, craft()->request->getUrlReferrer());
     }
 
     /**
