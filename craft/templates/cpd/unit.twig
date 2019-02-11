@@ -47,7 +47,8 @@
             </div>
             <div class="page-content">
                 <div class="col-pd-btm">
-                <h5>This is an e-leaning unit, click the button below to view the unit content (opens in a new browser tab).</h5>
+                    <h5>This is an e-leaning unit, click the button below to view the unit content (opens in a new browser tab).</h5>
+                    {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
                 </div>
                 {% if unitEntry.unitImage|length %}
                 {% set unitImage = unitEntry.unitImage.first %}
@@ -112,6 +113,7 @@
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 {% endif %}
+                {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
                 {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup} %}
             </div>
         </section>
