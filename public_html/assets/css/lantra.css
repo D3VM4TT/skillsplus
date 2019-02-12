@@ -941,8 +941,8 @@ article.endorsements-pending h4 {
     color: #ffffff;
 }
 
-article.cpd p, article.endorsements-pending p,
-article.cpd p, article.endorsements-pending a {
+article.endorsements-pending p,
+article.endorsements-pending a {
     font-weight: 600;
     padding-top: 5px;
     color: #ffffff;
@@ -1366,6 +1366,48 @@ span.status-complete {
     background-color:#59c269;
 }
 
+div.cpd-icons, div.cpd-comment, div.cpd-comment-number, div.cpd-comment-txt {
+    display: flex;
+}
+
+div.cpd-icons {
+    padding-top: 5px;
+    cursor: pointer;
+}
+
+div.cpd-icons a {
+    padding-right: 10px;
+}
+
+div.cpd-comment {
+    background-image: url("/assets/img/comment.svg");
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-position: 0px 3px;
+}
+
+div.cpd-comment-number {
+    margin: 0 auto;
+    text-align: center;
+}
+
+div.cpd-comment-number p {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 11px;
+    width: 17px;
+    padding: 2px 0px 0px 0px;
+}
+
+div.cpd-comment-txt {
+    margin-left: 4px;
+    font-size: 13px;  
+}
+
+
+
+
+
 /*logged-in classes
 -------------------------------------------------- */
 
@@ -1636,6 +1678,10 @@ li.jstree-node .jstree-ocl {
 
     .header-controls a.btn-add-new {
     padding: 15px 0px 0px 0px;
+    }
+
+    .right {
+    float: initial;
     }
 
     /*Fomat table data*/
