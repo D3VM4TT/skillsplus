@@ -46,50 +46,60 @@
                     <p>{{ unitEntry.title }}</p>
             </div>
             <div class="page-content">
-                <div class="col-pd-btm">
-                    <h5>This is an e-leaning unit, click the button below to view the unit content (opens in a new browser tab).</h5>
-                    {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
-                </div>
-                {% if unitEntry.unitImage|length %}
-                {% set unitImage = unitEntry.unitImage.first %}
-                <div class="col-pd-btm">
+            <div class="col-pd-btm"><h2>This is an e-leaning unit</h2></div>
+            <div class="col-12">
+                <div class="col-6">
+                    {% if unitEntry.unitImage|length %}
+                    {% set unitImage = unitEntry.unitImage.first %}
+                    <div class="col-pd-btm">
                     <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-                {% if unitEntry.unitUrl %}
-                <div class="col-pd-btm">
+            
+                <div class="col-6">
+                    <h5>Click the button below to view the unit content (opens in a new browser tab).</h5>
+                    {% if unitEntry.unitUrl %}
+                    <div class="col-pd-top col-pd-btm">
                     <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
-                </div>
-                {% endif %}
-                {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
-                <p>You have made {{ totalAttempts }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
-                {% if resultEntry|length %}
-                <div class="col-pd-btm">
-                    {% if resultEntry.resultStatus == 'endorsed' %}
-                        <h5>You have passed this test.</h5>
                     {% endif %}
-                    <p>Your best result is {{ resultEntry.resultScore }}%</p>
-                    {% set attempts = resultEntry.resultAttempts  %}
-                    {% for attempt in attempts %}
-                        {% set meta = craft.lantra.getAttemptMeta(attempt) %}
-                        <p>On {{ attempt.postDate|date('d/m/y') }} you scored {{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</p>
-                    {% endfor %}
+                    </div>
+                    <div class="col-pd-top">
+                        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
+                        <p>You have made {{ totalAttempts }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+                        {% if resultEntry|length %}
+                            {% if resultEntry.resultStatus == 'endorsed' %}
+                                <h5>You have passed this test.</h5>
+                            {% endif %}
+                            <p>Your best result is {{ resultEntry.resultScore }}%</p>
+                            {% set attempts = resultEntry.resultAttempts  %}
+                            {% for attempt in attempts %}
+                                {% set meta = craft.lantra.getAttemptMeta(attempt) %}
+                                <p>On {{ attempt.postDate|date('d/m/y') }} you scored {{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</p>
+                            {% endfor %}
+                        {% elseif not remainingAttempts %}
+                            <h5>You have no remaining attempts, contact your team manager.</h5>
+                        {% else %}
+                            {% if craft.request.getSegment(5) == 'test' %}
+                                {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
+                            {% elseif unitEntry.testQuestions|length %}
+                                Click 'Complete unit test' to take the test and complete the Unit.</p>
+                                <div class="col-pd-top">
+                                <p><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-                {% elseif not remainingAttempts %}
-                <div class="col-pd-btm">
-                    <h5>You have no remaining attempts, contact your team manager.</h5>
-                </div>
-                {% else %}
-                    {% if craft.request.getSegment(5) == 'test' %}
-                        {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
-                    {% elseif unitEntry.testQuestions|length %}
-                        <div class="col-pd-btm">
-                        Click 'Complete unit test' to take the test and complete the Unit.</p>
-                        </div>
-                        <p><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
-                    {% endif %}
-                {% endif %}
             </div>
+            <div class="col-pd-top">
+            <h2>Supporting files &amp; images</h2>
+            {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+            </div>
+            </div>
+
+
+
         </section>
 
     {% else %}
