@@ -17,7 +17,7 @@
                 {% include '_includes/scheme' %}
             {% endif %}
             {% include '_includes/cpd' with{cpdUser:currentUser} %}
-             {% if craft.lantra.canManage(null, true) %}
+             {% if craft.lantra.canManage() %}
                 {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
                 {% if (pendingEntryCount) %}
                     <article class="endorsements-pending col-pd-btm secondary-bg">
@@ -25,7 +25,6 @@
                     <div class="status right">
                     <p>You have <a href="/management/endorsements">{{ pendingEntryCount }} result(s)</a> to endorse.</p>
                     </div>
-                    
                     </article>
                 {% endif %}
             {% endif %}
