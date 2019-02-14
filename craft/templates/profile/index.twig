@@ -18,13 +18,18 @@
         <div class="page-content">
             {% set currentUserCompany = craft.lantra.userCompany() %}
             <p class="profile">
-                {% if not userProfile.userEditName %}
-                    <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
-                {% endif %}
-                {% if not userProfile.userEditEmail %}
-                    <span class="label">Email address:</span> {{ currentUser.email }}<br/>
-                {% endif %}
+                <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
+                <span class="label">Email address:</span> {{ currentUser.email }}<br/>
                 <span class="label">User type:</span> {{ craft.lantra.userType() }}<br/>
+                {% if currentUser.userDateOfBirth %}
+                    <span class="label">Date of Birth:</span> {{ currentUser.userDateOfBirth|format('y-m-d') }}<br/>
+                {% endif %}
+                {% if currentUser.userAddress %}
+                    <span class="label">Address:</span> {{ currentUser.userAddress }}<br/>
+                {% endif %}
+                {% if currentUser.userTelephone %}
+                    <span class="label">Telephone:</span> {{ currentUser.userTelephone }}<br/>
+                {% endif %}
                 {% if currentUserCompany %}
                     <span class="label">User Company:</span> {{ currentUserCompany }}<br />
                 {% endif %}
@@ -43,9 +48,16 @@
                         ~
                     {% endif %}
                 {% endif %}
+                {% set userCustomFields = userProfile.userEditCustomFields %}
+                {% for block in userCustomFields %}
+                    {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+                    <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
+                {%  endfor %}
             </p>
             {% if not globalsScheme.schemeUserReadOnly %}
-                {% include '_forms/profile' %}
+                <div class="container-btn">
+                    <a class="button primary-bg" href="/profile/edit">Edit profile</a>
+                </div>
             {% endif %}
         </div>
     </section>
