@@ -46,51 +46,66 @@
                     <p>{{ unitEntry.title }}</p>
             </div>
             <div class="page-content">
-            <div class="col-pd-btm"><h2>This is an e-leaning unit</h2></div>
+            <h2>This is an e-leaning unit</h2>
             <div class="col-12">
-                <div class="col-6">
-                    {% if unitEntry.unitImage|length %}
-                    {% set unitImage = unitEntry.unitImage.first %}
-                    <div class="col-pd-btm">
-                    <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
-                    </div>
-                    {% endif %}
-                </div>
+
+            {% if unitEntry.unitImage|length %}
+            {% set unitImage = unitEntry.unitImage.first %}
+            <div class="col-pd-btm">
+            <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+            </div>
+            {% endif %}
             
                 <div class="col-6">
-                    <h5>Click the button below to view the unit content (opens in a new browser tab).</h5>
+                        
+                        <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
+                        <div class="cpd-comment-txt">(Questions will appear below)</div>
+                        <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
+
+                        {% if resultEntry|length %}
+                        {% if resultEntry.resultStatus == 'endorsed' %}
+                        <div class="col-pd-top col-pd-btm col-flex"><img src="/assets/img/endorse.svg" class="test-icon" alt=""><h2>Well done! You have passed this test.</h2></div>
+                        {% elseif not resultEntry.resultStatus == 'endorsed' %}
+                        <div class="col-pd-top col-pd-btm col-flex"><img src="/assets/img/delete.svg" class="test-icon" alt=""><h2>Sorry, you have not passed this test.</h2></div>
+                        {% endif %}
+
+
+                        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
+                        <p>You have made <span class="link-bold">{{ totalAttempts }}</span> attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+
+                        <p>Your best result is <span class="link-bold">{{ resultEntry.resultScore }}%</span></p>
+                        {% set attempts = resultEntry.resultAttempts  %}
+                        {% for attempt in attempts %}
+                        {% set meta = craft.lantra.getAttemptMeta(attempt) %}
+
+                        <p>On <span class="link-bold">{{ attempt.postDate|date('d/m/y') }}</span> you scored <span class="link-bold">{{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</span></p>
+                        {% endfor %}
+                        {% elseif not remainingAttempts %}
+
+                        <h5>You have no remaining attempts, contact your team manager.</h5>
+                        {% else %}
+
+                        {% if craft.request.getSegment(5) == 'test' %}
+                        {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
+                        {% elseif unitEntry.testQuestions|length %}
+
+                        {% endif %}
+                        {% endif %}
+
+                </div>
+
+                <div class="col-6">
+                    
+                    <h5>Click the button below to view the unit content.</h5>
+                    <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
                     {% if unitEntry.unitUrl %}
-                    <div class="col-pd-top col-pd-btm">
+                    <div class="col-pd-top">
                     <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                     {% endif %}
                     </div>
-                    <div class="col-pd-top">
-                        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
-                        <p>You have made {{ totalAttempts }} attempts and you have {{ remainingAttempts }} attempts remaining.</p>
-                        {% if resultEntry|length %}
-                            {% if resultEntry.resultStatus == 'endorsed' %}
-                                <h5>You have passed this test.</h5>
-                            {% endif %}
-                            <p>Your best result is {{ resultEntry.resultScore }}%</p>
-                            {% set attempts = resultEntry.resultAttempts  %}
-                            {% for attempt in attempts %}
-                                {% set meta = craft.lantra.getAttemptMeta(attempt) %}
-                                <p>On {{ attempt.postDate|date('d/m/y') }} you scored {{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</p>
-                            {% endfor %}
-                        {% elseif not remainingAttempts %}
-                            <h5>You have no remaining attempts, contact your team manager.</h5>
-                        {% else %}
-                            {% if craft.request.getSegment(5) == 'test' %}
-                                {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
-                            {% elseif unitEntry.testQuestions|length %}
-                                Click 'Complete unit test' to take the test and complete the Unit.</p>
-                                <div class="col-pd-top">
-                                <p><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
+
                 </div>
+
             </div>
             <div class="col-pd-top">
             <h2>Supporting files &amp; images</h2>

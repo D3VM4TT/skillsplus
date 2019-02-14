@@ -17,19 +17,19 @@
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
                 <div class="field--wrapper test">
-                    <label for="question_{{ loop.index }}">{{ questionNumber }} {{ question.question }}</label>
+                    <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
                     {% if question.type == "trueFalse" %}
                     <ul class="choices">
-                        <li>TRUE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"></li>
-                        <li>FALSE<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"></li>
+                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"> True</li>
+                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"> False</li>
                     </ul>
                     {% elseif question.type == "choices" %}
                     <ul>
                         {% for choice in question.answers %}
-                        <li>{{ choice.answer }}<input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"></li>
+                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"> {{ choice.answer }}</li>
                         {% endfor %}
                     </ul>
                     {% else %}
