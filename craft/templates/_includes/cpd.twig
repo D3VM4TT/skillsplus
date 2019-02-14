@@ -6,6 +6,8 @@
 {% if not cpdUser.userRole.total %}
     <h2>Job Role:</h2>
     <p style="color: #000;">This user has no job role allocated, please add a job role to have access to modules.</p>
+    <p></p>
+    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id) %}
 {% else %}
     {% for role in cpdUser.userRole %}
         <h2>Job Role: {{ role.title }}</h2>
@@ -226,72 +228,11 @@
             </section>
         {% endif %}
     {% endfor %}
+    {# get all the results no longer related to existing job role #}
     {% set existingResultIdsString = existingResultIds | join(', not ') %}
-    {% set enrelatedResults = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
-    {% if enrelatedResults|length %}
-        <section id="archive">
-        <div class="module-wrapper">
-        <div class="module">
-        <div class="header" data-target="#results-archive">
-        <h4>Result Archive</h4>
-        <div class="status">View results<img src="/assets/img/img-arrow-down-trans.png"></div>
-        </div>
-        <div id="results-archive" class="unit-groups open">
-        <div class="unit-group">
-        <div class="units">
-            <table class="data">
-                <thead>
-                <tr>
-                    <th>Result Title</th>
-                    {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for resultEntry in enrelatedResults %}
-                    <tr>
-                        <td>{{ resultEntry.title }}</td>
-                        {% include '_includes/columnLayout' with {
-                            unitType:resultEntry.unitType,
-                            unitValue:resultEntry.unitValue,
-                            result:resultEntry,
-                            columnLayout:globalsTheme.columnLayout}
-                        %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-
-            {# ---
-            <h2>Result Archive</h2>
-            <table class="data">
-                <thead>
-                <tr>
-                    <th>Result Title</th>
-                    {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for resultEntry in enrelatedResults %}
-                    <tr>
-                        <td>{{ resultEntry.title }}</td>
-                        {% include '_includes/columnLayout' with {
-                            unitType:resultEntry.unitType,
-                            unitValue:resultEntry.unitValue,
-                            result:resultEntry,
-                            columnLayout:globalsTheme.columnLayout}
-                        %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            --- #}
-            
-        </section>
-    {% endif %}
+    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
+{% endif %}
+{% if resultArchive|length %}
+    {% include '_includes/resultArchive' with {resultEntries:resultArchive} %}
 {% endif %}
 </article>
