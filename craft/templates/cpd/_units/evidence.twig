@@ -22,7 +22,16 @@
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
     {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
+    <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
     <div class="container-btn">
-        <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update' : 'Submit' }} evidence</button>
+        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
+    </div>
+    <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this Unit for endorsement.</p></div>
+    <div class="container-btn">
+        {% if resultEntry and resultEntry.resultStatus == 'draft' %}
+            <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
+        {% else %}
+            <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
+        {% endif %}
     </div>
 </form>
