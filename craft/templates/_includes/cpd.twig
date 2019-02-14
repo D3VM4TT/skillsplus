@@ -103,6 +103,11 @@
                                                                 </a>
                                                             {% endif %}
                                                             <div class="cpd-icons">
+                                                            {% if unitEntry.unitFiles|length %}
+                                                                <a href="#" data-tooltip title="Unit has files">
+                                                                    <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
+                                                                </a>
+                                                             {% endif %}
                                                             {% if unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
                                                                 data-tooltip title="Delete this result">
