@@ -55,6 +55,11 @@
             <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
             </div>
             {% endif %}
+
+            <div class="col-pd-btm">
+            <h2>Supporting files &amp; images</h2>
+            {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+            </div>
             
                 <div class="col-6">
                         
@@ -105,16 +110,8 @@
                     </div>
 
                 </div>
-
-            </div>
-            <div class="col-pd-top">
-            <h2>Supporting files &amp; images</h2>
-            {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
             </div>
             </div>
-
-
-
         </section>
 
     {% else %}
@@ -130,20 +127,31 @@
                 <p>{{ unitEntry.title }}</p>
             </div>
             <div class="page-content">
-            <div class="col-pd-btm">
-                <p>This is an evidence based unit.</p>
-                {% if not resultEntry %}
-                    <p>Complete the form below and attach files to submit evidence for endorsement.</p>
-                {% endif %}
-                </div>
+                
+                <h2>This is an evidence based unit</h2>
+
+                <div class="col-pd-btm">
                 {% if unitEntry.unitImage|length %}
                     {% set unitImage = unitEntry.unitImage.first %}
                     <p><img alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                 {% endif %}
+                </div>
+
+                <div class="col-pd-btm">
+                <h2>Supporting files & images</h2>
+                {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                </div>
+
+                <div class="col-pd-btm">
+                {% if not resultEntry %}
+                <h5>Complete the form below and attach files to submit evidence for endorsement.</h5>
+                {% endif %}
+                </div>
+
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 {% endif %}
-                {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+
                 {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup} %}
             </div>
         </section>
