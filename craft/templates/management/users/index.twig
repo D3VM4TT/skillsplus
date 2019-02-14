@@ -7,8 +7,8 @@
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 {% set sortParam = craft.request.getParam('sort') %}
-{% set validSorts = ['lastName', 'id', 'legacyId'] %}
-{% set sort = sortParam in validSorts ? sortParam : 'lastName' %}
+{% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'lastName, userCompanyName' %}
 {% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 {% set excludeIdsString = 'not ' ~ currentUser.id %}
 
@@ -51,8 +51,8 @@
             <tr>
                 <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                 <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
-                <th class="title"><a href="?sort=name&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
-                <th>Company</th>
+                <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
+                <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
                 {% if globalsScheme.schemeTeams|default(false) %}
                     <th>Team</th>
                 {% endif %}
@@ -66,7 +66,7 @@
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
-                    <td><p class="td-title-responsive">Company: </p>{{ craft.lantra.companyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">Company: </p> {{ craft.lantra.companyLabel(company) }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
