@@ -1,7 +1,10 @@
 {% if unitEntry.unitFiles|length %}
+    <div class="col-pd-btm">
+    <h2>Supporting files &amp; images</h2>
     {% for file in unitEntry.unitFiles %}
     	<div class="unit-files col-bd-btm">
         <p><a href="{{ file.url }}">{{ file.filename }}</a></p>
         </div>
     {% endfor %}
+    </div>
 {% endif %}
