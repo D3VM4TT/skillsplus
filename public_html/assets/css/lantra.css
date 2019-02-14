@@ -358,8 +358,7 @@ h4, h4 a {
 }
 
 img.unit-img {
-    max-width: 900px;
-    width: 90%;
+    max-width: 600px;
 }
 
 .content-top-txt {
