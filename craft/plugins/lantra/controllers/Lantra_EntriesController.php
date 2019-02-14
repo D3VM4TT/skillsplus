@@ -60,7 +60,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get all the posted entryId(s)
-        if (false !== $entryId = craft()->request->getPost('entryId')) {
+        if (false != $entryId = craft()->request->getPost('entryId')) {
             $results = [['entryId' => $entryId]];
         }
         else {
