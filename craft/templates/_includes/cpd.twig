@@ -85,7 +85,7 @@
                                                 <tbody>
                                                 {% for unitEntry in unitGroupEntries %}
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
-                                                    {% set unreadComments = false %}
+                                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
                                                     {% if unitResultEntry %}
                                                         {% set unreadComments = craft.lantra.unreadComments(unitResultEntry) %}
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
@@ -98,17 +98,15 @@
                                                             {% if readOnly %}
                                                                 {{ unitEntry.title }}
                                                             {% else %}
-                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
+                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" >
                                                                     {{ unitEntry.title }}
                                                                 </a>
                                                             {% endif %}
                                                             <div class="cpd-icons">
-                                                            {% if unitEntry.unitFiles|length %}
-                                                                <a href="#" data-tooltip title="Unit has files">
+                                                                <a href="#" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
                                                                     <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
                                                                 </a>
-                                                             {% endif %}
-                                                            {% if unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
+                                                                {% if unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
                                                                 data-tooltip title="Delete this result">
                                                                 <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
@@ -118,14 +116,14 @@
                                                                     <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                 {% endif %}
                                                             {% endif %}
-                                                            {% if unreadComments is defined and unreadComments %}
+                                                            {% if totalComments %}
                                                                 <div class="cpd-comment" data-tooltip title="Click the Unit title above to view comments">
-                                                                <div class="cpd-comment-number">
-                                                                <p>{{ unreadComments }}</p>
-                                                                </div>
-                                                                <div class="cpd-comment-txt">
-                                                                unread comment{{ unreadComments != 1 ? 's' }}
-                                                                </div>
+                                                                    <div class="cpd-comment-number">
+                                                                        <p>{{ totalComments }}</p>
+                                                                    </div>
+                                                                    <div class="cpd-comment-txt">
+                                                                        comment{{ unreadComments != 1 ? 's' }}
+                                                                    </div>
                                                                 </div>
                                                             {% endif %}
                                                             </div>
@@ -165,7 +163,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for userResultEntry in moduleUserResults %}
-                                                    {% set unreadComments = craft.lantra.unreadComments(userResultEntry) %}
+                                                    {% set totalComments = userResultEntry.resultComments.total %}
                                                     <tr>
                                                         <td>
                                                             {% if readOnly %}
@@ -186,8 +184,15 @@
                                                                     <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                 {% endif %}
                                                             {% endif %}
-                                                            {% if unreadComments is defined and unreadComments %}
-                                                                <span style="color:#008800;">{{ unreadComments }} unread comment{{ unreadComments > 1 ? 's' }}</span>
+                                                            {% if totalComments %}
+                                                                <div class="cpd-comment" data-tooltip title="Click the Unit title above to view comments">
+                                                                    <div class="cpd-comment-number">
+                                                                        <p>{{ totalComments }}</p>
+                                                                    </div>
+                                                                    <div class="cpd-comment-txt">
+                                                                        comment{{ unreadComments != 1 ? 's' }}
+                                                                    </div>
+                                                                </div>
                                                             {% endif %}
                                                         </div>
                                                         </td>
