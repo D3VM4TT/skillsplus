@@ -42,7 +42,7 @@ class Lantra_AssetsController extends Lantra_BaseController
         if ($response->isConflict()) {
             $data = [
                 'success' => false,
-                'message' => $response->getDataItem('fileName')  . ' already exists in your folder.'
+                'message' => $response->getDataItem('fileName')  . ' already exists in your folder, please rename your file and try again.'
             ];
         }
         if ($response->isSuccess()) {
