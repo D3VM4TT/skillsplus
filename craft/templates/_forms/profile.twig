@@ -64,7 +64,7 @@
         </div>
         {% endif %}
     {%  endfor %}
-    {% if globalsScheme.userEditPhoto %}
+    {% if userProfile.userEditPhoto %}
     <p class="profile">Change profile picture:</p>
     <input type="file" name="userPhoto" value="{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload') }}">
     <input type="hidden" name="deleteUserPhoto" value="">
