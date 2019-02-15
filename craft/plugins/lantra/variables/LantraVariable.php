@@ -60,10 +60,14 @@ class LantraVariable
 
     /**
      * @param $result
+     * @param $userId
      * @return int
      */
-    public function unreadComments($result) {
-        return craft()->lantra_results->unreadComments($result);
+    public function unreadComments($result, $userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return craft()->lantra_results->unreadComments($result, $user->id);
     }
 
     /**

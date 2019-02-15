@@ -31,7 +31,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 'fields' => [
                     'user' => [$row->user->first()->id],
                     'date' => $row->date->getTimestamp(),
-                    'comment' => $row->comment
+                    'comment' => $row->comment,
+                    'read' => $row->read
                 ]
             ];
         }
@@ -41,7 +42,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'fields' => [
                 'user' => [$userId],
                 'date' => time(),
-                'comment' => $comment
+                'comment' => $comment,
+                'read' => false
             ]
         ];
         craft()->lantra_notify->sendCommentUpdate($entry, $comment, $userId);
@@ -67,10 +69,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $result
      * @return int
      */
-    function unreadComments($result) {
+    function unreadComments($result, $userId) {
         $unread = 0;
         foreach($result->resultComments as $comment) {
-            if (!$comment->read) $unread++;
+            $commentAuthorId = $comment->user->first()->id;
+            if ($commentAuthorId != $userId && ! $comment->read) {
+                $unread++;
+            }
         }
         return $unread;
     }
