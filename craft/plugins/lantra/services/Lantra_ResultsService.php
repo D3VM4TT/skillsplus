@@ -317,7 +317,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws null
      */
     function unblockResult($resultEntry) {
-        $resultEntry->setContentFromPost(['resultAttempts' => []]);
+        $resultEntry->setContentFromPost([
+            'resultAttempts' => [],
+            'resultScore' => 0
+        ]);
         $this->setResultStatus($resultEntry,'active');
         craft()->entries->saveEntry($resultEntry);
     }
