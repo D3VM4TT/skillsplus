@@ -12,6 +12,11 @@
 {% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 {% set excludeIdsString = 'not ' ~ currentUser.id %}
 
+{% if filterSearch and craft.users.id(filterSearch).total() %}
+    {% set excludeIdsString = filterSearch %}
+    {% set filterSearch = '' %}
+{% endif %}
+
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
     {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
 {% elseif currentUser.isInGroup('companyManagers') %}
