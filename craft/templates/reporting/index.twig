@@ -19,15 +19,18 @@
 {% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
 <section class="page">
     {% include 'reporting/_tables/' ~ reportType with{reportType:reportType, reportEntries:reportEntries} %}
     {% if reportEntries|length %}
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        <div class="page-content">
+
             <div class="container-btn">
                 <a class="button primary-bg" href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a>
             </div>
-        </div>
+
     {% else %}
         <div class="page-content">
             <p>There are no results to display.</p>

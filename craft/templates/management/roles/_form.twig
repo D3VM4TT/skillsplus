@@ -29,7 +29,7 @@
         <input type="hidden" name="groupId" value="1">
         <input type="hidden" name="categoryId" value="{{ category.id|default('') }}">
         <div class="field--wrapper">
-            <label for="title" class="float">Job role name:</label>
+            <label for="title" class="no-float">Job role name:</label>
             <input required id="title" type="text" class="float-label" placeholder="Enter the job role name" name="title" value="{{ category.title|default('') }}">
         </div>
         <div class="container-btn">

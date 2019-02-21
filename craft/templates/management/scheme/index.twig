@@ -1,0 +1,29 @@
+{% set usersAll = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).total() %}
+{% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').total() %}
+{% set licencesCompany = craft.lantra.totalCompanyLicences() %}
+{% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% extends "_layout" %}
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Scheme Profile</h2>
+            <p>An overview of your Scheme and licence allocations.</p>
+        </div>
+        <div class="page-content">
+            <p class="scheme-profile">
+                <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
+                <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
+                <span class="label">Total licences issued:</span> {{ licencesScheme + licencesCompany + usersAll }}<br />
+                <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
+                <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
+                <span class="label">Licences available to Scheme Manager:</span>{{ licencesScheme }}<br />
+                <span class="label">Licences available to Company Managers :</span> {{ licencesCompany }}<br />
+                <span class="label">Total currently available:</span> {{ licencesScheme + licencesCompany }}<br />
+            </p>
+        </div>
+    </section>
+{% endblock %}

@@ -11,8 +11,11 @@
 {% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
 <section class="page">
-    <div class="page-header">
+    <div class="page-header secondary-bg">
         <h2>Roles</h2>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>

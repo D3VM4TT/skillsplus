@@ -3,12 +3,9 @@
         <li>
             <a class="secondary-bg-hover" href="/">My Dashboard</a>
         </li>
-                <li>
-            <a class="secondary-bg-hover" href="/cpd/achievements">My Achievements</a>
-        </li>
+        {#<li><a class="secondary-bg-hover" href="/cpd/achievements">My Achievements</a></li>#}
         <li>
             {#<a class="secondary-bg-hover" href="/public/passport/{{ currentUser.id }}">My Passport</a>#}
-            <a class="secondary-bg-hover" href="#">My Passport - Coming Soon!</a>
         </li>
         <li>
             <a class="secondary-bg-hover" href="/profile">My Profile</a>
@@ -19,6 +16,11 @@
         <li class="{% if craft.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Management</a>
             <ul>
+                {% if craft.lantra.canManage(null, true) %}
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'scheme' %}active{% endif %}" href="/management/scheme">Scheme</a>
+                </li>
+                {% endif %}
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'hierarchy' %}active{% endif %}" href="/management/hierarchy">Hierarchy</a>
                 </li>
@@ -90,9 +92,5 @@
         {% endif %}
     </ul>
     {% endif %}
-    <ul>
-        <li>
-            <strong><a class="secondary-bg-hover" href="{{ logoutUrl }}">Sign out</a></strong>
-        </li>
-    </ul>
+
 </nav>

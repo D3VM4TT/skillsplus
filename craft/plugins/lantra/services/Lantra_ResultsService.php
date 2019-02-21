@@ -9,6 +9,78 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private $typeIdModuleResult = 14;
 
     /**
+     * @param $entry
+     * @param $comment
+     * @param null $userId
+     * @return array
+     */
+    function addComment($entry, $comment, $userId = null) {
+
+        if (is_null($userId)) {
+            $userId = craft()->userSession->getUser()->id;
+        }
+        $field = craft()->fields->getFieldByHandle('resultComments');
+        $blockTypes = craft()->superTable->getBlockTypesByFieldId($field->id);
+        $blockType = $blockTypes[0];
+        // not sure why we have to run this loop...
+        $tableData = [];
+        foreach($entry->resultComments as $key => $row) {
+            $tableData[$key] =  [
+                'type' => $blockType->id,
+                'enabled' => true,
+                'fields' => [
+                    'user' => [$row->user->first()->id],
+                    'date' => $row->date->getTimestamp(),
+                    'comment' => $row->comment,
+                    'read' => $row->read
+                ]
+            ];
+        }
+        $tableData['new1'] = [
+            'type' => $blockType->id,
+            'enabled' => true,
+            'fields' => [
+                'user' => [$userId],
+                'date' => time(),
+                'comment' => $comment,
+                'read' => false
+            ]
+        ];
+        craft()->lantra_notify->sendCommentUpdate($entry, $comment, $userId);
+        return $tableData;
+    }
+
+    /**
+     * @param $comment
+     * @param $userId
+     * @throws \Exception
+     */
+    function readComment($comment, $userId) {
+        // userId of result
+        $resultAuthorId = $comment->getOwner()->author->id;
+        $commentAuthorId = $comment->user->first()->id;
+        if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
+            $comment->setContent(['read' => true]);
+            craft()->content->saveContent($comment, false);
+        }
+    }
+
+    /**
+     * @param $result
+     * @return int
+     */
+    function unreadComments($result, $userId) {
+        $unread = 0;
+        foreach($result->resultComments as $comment) {
+            $commentAuthorId = $comment->user->first()->id;
+            if ($commentAuthorId != $userId && ! $comment->read) {
+                $unread++;
+            }
+        }
+        return $unread;
+    }
+
+    /**
      * Get a unit result entry
      *
      * @param $userId
@@ -54,7 +126,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
-        $user = craft()->userSession->getUser();
+        // author sent from form
+        $authorId = craft()->request->getPost('authorId');
+        if ($authorId && false != $user = craft()->users->getUserById($authorId)) {
+            $attemptEntry->authorId = $user->id;
+            $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
+            craft()->content->saveContent($attemptEntry, false);
+        }
         $total = count($attemptEntry->attemptAnswers);
         $correct = 0;
         // loop through answers and count correct
@@ -70,12 +148,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultStatus = $passed ? 'endorsed' : 'failed';
         $resultScore = $score;
         // does a result exist?
-        if (false == $resultEntry = $this->getUnitResult($user->id, $unitEntry->id)) {
+        if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {
             $resultEntry = new EntryModel();
             $resultEntry->sectionId = $this->sectionIdResults;
             $resultEntry->typeId = $this->typeIdUnitResult;
             $resultEntry->enabled = true;
-            $resultEntry->authorId = $user->id;
+            $resultEntry->authorId = $attemptEntry->authorId;
             $resultAttempts = array($attemptEntry->id);
         }
         else {
@@ -126,6 +204,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     function saveNewResult($resultEntry) {
         $saveContent = false;
+        $unitEntry = $resultEntry->resultUnit->first();
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
             // set a user expiry date
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
@@ -133,21 +212,42 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $resultEntry->expiryDate = new \DateTime($userExpiryDate . ' 12:00:00');
                 $saveContent = true;
             }
+            // set a user start date
+            $userStartDate = craft()->request->getPost('userStartDate');
+            if ($userStartDate && $this->checkDate($userStartDate)) {
+                $resultEntry->setContentFromPost(['resultStartDate' => new \DateTime($userStartDate . ' 12:00:00')]);
+                $saveContent = true;
+            }
+            // set a user finish date
+            $userFinishDate = craft()->request->getPost('userFinishDate');
+            if ($userFinishDate && $this->checkDate($userFinishDate)) {
+                $resultEntry->setContentFromPost(['resultFinishDate' => new \DateTime($userFinishDate . ' 12:00:00')]);
+                $saveContent = true;
+            }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
-                $unitEntry = $resultEntry->resultUnit->first();
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
                 $saveContent = true;
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
             }
-            // set author (manager submitting on behalf of user)
-            $authorId = craft()->request->getPost('authorId');
-            if ($authorId) {
-                $resultEntry->authorId = $authorId;
+            // set author
+            $author = null;
+            $authorId = craft()->request->getPost('author');
+            if (count($authorId)) {
+                $author = craft()->users->getUserById($authorId[0]);
+            }
+            //  (manager submitting on behalf of user)
+            if ($author && $author->id != craft()->userSession->getId()) {
                 // auto endorse
-                if ($resultEntry->type == 'userResult') {
+                if ($resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult')) {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => time(), 'resultStatus' => 'endorsed']);
+                    $saveContent = true;
                 }
+            }
+            // make sure title is correct
+            if ($author && $resultEntry->type == 'unitResult' && $resultEntry->resultEvidence)
+            {
+                $resultEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 $saveContent = true;
             }
             elseif ($resultEntry->type == 'userResult') {
@@ -155,7 +255,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         if ($saveContent) {
-            craft()->entries->saveEntry($resultEntry);
+            craft()->entries->saveEntry($resultEntry, false);
         }
     }
 
@@ -221,6 +321,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Check whether a user result has completed a module
+     *
+     * @param $resultEntry
+     * @return null
+     * @throws null
+     */
+    function checkUserResult($resultEntry) {
+        // the related module id
+        $resultModuleEntry = $resultEntry->resultModule->first();
+        if ( ! $resultModuleEntry || ! $resultEntry->resultValue) {
+            return;
+        }
+        // check the moduleResult
+        $user = $resultEntry->author;
+        $this->checkModuleResult($resultModuleEntry, $user->id);
+    }
+
+    /**
      * Check whether a unit result has completed a module
      *
      * @param $resultEntry
@@ -264,7 +382,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
-        $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+        $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+        $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
+        $resultEntries = array_merge($unitResultEntries, $userResultEntries);
         if ( ! count($resultEntries)) {
             return;
         }
@@ -279,10 +399,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
-            $unitEntry = $resultEntry->resultUnit->first();
             if ($resultEntry->resultStatus == 'endorsed') {
-                $points += $unitEntry->unitValue;
-                // check if unit expiry is before default module expiry)
+                // unit results value is unit value
+                if ($resultEntry->type == 'unitResult') {
+                    $unitEntry = $resultEntry->resultUnit->first();
+                    $points += $unitEntry->unitValue;
+                }
+                // user result value is custom
+                elseif ($resultEntry->type == 'userResult') {
+                    $points += $resultEntry->resultValue;
+                }
+                // check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
                     $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
                 }
@@ -332,7 +459,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ( ! $resultEntry) {
             return;
         }
-        // either no expiry, default module expiry or set by unit
+        // either no expiry, default module expiry or set by result
         $resultEntry->expiryDate = $expiryDate;
         $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
         // @todo error reporting?
@@ -356,6 +483,25 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         return $unitIds;
+    }
+
+    /**
+     *  Get module user results with positive result value
+     *
+     * @param $moduleEntry
+     * @param $userId
+     * @return array
+     * @throws Exception
+     */
+    function getModuleUserResults($moduleEntry, $userId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'userResult';
+        $criteria->authorId = $userId;
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
+        $criteria->resultValue = '> 0';
+        return $criteria->find();
     }
 
     /**
@@ -400,12 +546,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->order = 'postDate desc';
         $criteria->limit = $limit;
         // limit by subordinates and check unit level if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
+        if (!$manager->isInGroup('schemeManager') && !$manager->admin) {
             $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
-            if ( ! count($subordinateIds)) {
+            if (!count($subordinateIds)) {
                 return null;
             }
-            $criteria->unitEndorsementManagerLevel = '<=' . ($manager->managerLevel ? (int) $manager->managerLevel->value : 1);
+            $criteria->authorId = $subordinateIds;
+            $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
+            $criteria->unitEndorsementManagerLevel = '<=' . $level;
         }
         return ($count) ? $criteria->count() : $criteria;
     }

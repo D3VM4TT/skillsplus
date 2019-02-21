@@ -17,12 +17,27 @@
 {% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
 <section class="page">
-    <div class="page-header">
+    <div class="page-header secondary-bg">
         <h2>Teams</h2>
-        {% include '_includes/filter' with{filterDays:false} %}
+        <p>Add, Edit and delete teams within your Scheme.</p>
+                <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                {% if not currentUser.managerReadOnly %}
+
+                <div class="container-btn primary-bg">
+                    {#<button class="btn-add-new primary-bg">#}
+                    <a class="btn-add-new" href="/management/teams/new">Add a new Team</a>
+                    {#</button>#}
+                    </div>
+                {% endif %}
+            </div>
     </div>
     {% if teamEntries is defined and teamEntries|length %}
+        <div class="page-content">
         <table class="data">
             <thead>
                 <tr>
@@ -59,16 +74,12 @@
             {% endfor %}
             </tbody>
         </table>
+        </div>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
         <div class="page-content">
             <h3>There are no teams to display.</h3>
         </div>
     {% endif %}
-    <div class="page-content">
-        <div class="container-btn">
-            <a class="button primary-bg" href="/management/teams/new">Create team</a>
-        </div>
-    </div>
 </section>
 {% endblock %}

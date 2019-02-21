@@ -1,17 +1,65 @@
 {% set currentUserCompany = craft.lantra.userCompany() %}
+{% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companyPrimaryManager'}).limit(null) %}
+{% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
+{% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 {% extends "_layout" %}
 
 {% block content %}
     <section class="page dashboard">
-        <div class="page-header">
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
             <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {{ currentUserCompany|default('') }}
             <h2>My profile</h2>
             <p>A snapshot of your personal information, Companies and Job roles.</p>
         </div>
         <div class="page-content">
-            {% include '_includes/profile' %}
-            {% include '_forms/photo' %}
+            {% set currentUserCompany = craft.lantra.userCompany() %}
+            <p class="profile">
+                <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
+                <span class="label">Email address:</span> {{ currentUser.email }}<br/>
+                <span class="label">User type:</span> {{ craft.lantra.userType() }}<br/>
+                {% if currentUser.userDateOfBirth %}
+                    <span class="label">Date of Birth:</span> {{ currentUser.userDateOfBirth|format('y-m-d') }}<br/>
+                {% endif %}
+                {% if currentUser.userAddress %}
+                    <span class="label">Address:</span> {{ currentUser.userAddress }}<br/>
+                {% endif %}
+                {% if currentUser.userTelephone %}
+                    <span class="label">Telephone:</span> {{ currentUser.userTelephone }}<br/>
+                {% endif %}
+                {% if currentUserCompany %}
+                    <span class="label">User Company:</span> {{ currentUserCompany }}<br />
+                {% endif %}
+                {% if managerCompanies|length %}
+                    <span class="label">Manager {{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</span>
+                    {% for company in managerCompanies %}
+                        {{ company.title }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                {% endif %}
+                <span class="label">Legacy User ID:</span>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}<br/>
+                {% if not userProfile.userEditRole %}
+                    <span class="label">Job Role:</span>
+                    {% if currentUser.userRole.total %}
+                        {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                    {% else %}
+                        ~
+                    {% endif %}
+                    <br/>
+                {% endif %}
+                {% set userCustomFields = userProfile.userEditCustomFields %}
+                {% for block in userCustomFields %}
+                    {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+                    <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
+                {%  endfor %}
+            </p>
+            {% if not globalsScheme.schemeUserReadOnly %}
+                <div class="container-btn">
+                    <a class="button primary-bg" href="/profile/edit">Edit profile</a>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

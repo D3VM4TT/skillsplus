@@ -4,6 +4,90 @@ namespace Craft;
 class LantraVariable
 {
     /**
+     * @param $attemptEntry
+     * @return array
+     */
+    function getAttemptMeta($attemptEntry) {
+        $return = [
+          'total' => 0,
+          'correct' => 0,
+          'percent' => 0
+        ];
+
+        $return['total'] = count($attemptEntry->attemptAnswers);
+        // loop through answers and count correct
+        foreach ($attemptEntry->attemptAnswers as $answerBlock) {
+            if ($answerBlock->correct) {
+                $return['correct']++;
+            }
+        }
+        $return['percent'] = $return['total'] ? round($return['correct'] / $return['total'] * 100) : 0;
+        return $return;
+    }
+
+    /**
+     * @param $accountId
+     * @return mixed
+     * @throws Exception
+     * @throws \CException
+     */
+    public function evidenceFolderId($accountId) {
+        $folder = craft()->assets->findFolder(array(
+            'sourceId' => 1,
+            'name' => (string) $accountId
+        ));
+        if ($folder) {
+            return $folder->id;
+        }
+        // create folder if it doesn't exist
+        $source = craft()->assetSources->getSourceTypeById(1);
+        $parent = craft()->assets->getRootFolderBySourceId(1);
+        $folder = $source->createFolder($parent, $accountId);
+        return $folder->folderId;
+    }
+
+    /**
+     * @param $comment
+     * @param $userId
+     * @return mixed
+     */
+    public function readComment($comment, $userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return craft()->lantra_results->readComment($comment, $user->id);
+    }
+
+    /**
+     * @param $result
+     * @param $userId
+     * @return int
+     */
+    public function unreadComments($result, $userId = null) {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return craft()->lantra_results->unreadComments($result, $user->id);
+    }
+
+    /**
+     * @param $company
+     * @return mixed
+     */
+    public function companyLabel($company) {
+        return craft()->lantra_structure->getCompanyLabel($company);
+    }
+
+    /**
+     * @param $company
+     * @return mixed
+     */
+    public function teamLabel($company) {
+        return craft()->lantra_structure->getTeamLabel($company);
+    }
+
+
+    /**
      * Return full list of users for a team or company
      *
      * @param int $userId
@@ -25,9 +109,11 @@ class LantraVariable
      */
     public function jsTreeData($userId = null, $currentNode = 0)
     {
+        $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
+
         $js = [
             'icon'  => '/assets/img/tree-root.png',
-            'text'  => 'Hierarchy',
+            'text'  => $globalsTheme->schemeName,
             'state' => ['opened' => true],
         ];
 

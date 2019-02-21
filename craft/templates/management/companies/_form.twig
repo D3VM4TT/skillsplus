@@ -14,18 +14,21 @@
 {% set hierarchyParent = craft.request.getParam('parent') %}
 
 {% block content %}
-
-<div class="page-header">
+<div class="page-subHeader primary-bg">
+    {% if hierarchyNode %}
+        <a class="back-link" href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a>
+    {% else %}
+        <a class="back-link" href="/management/companies"><strong>&laquo; back</a>
+    {% endif %}  
+    {% include '_includes/topNavigation' %}
+</div>
+<div class="page-header secondary-bg">
     {% if entry is defined and entry.id %}
         <h2>Edit company</h2>
     {% else %}
         <h2>Create a new company</h2>
+        <p>Create a new company, assign a parent company and add Primarty and Secondary managers.</p>
     {% endif %}
-            {% if hierarchyNode %}
-        <p><a href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a></p>
-        {% else %}
-        <p><a href="/management/companies">&laquo; back</a></p>
-        {% endif %}
 </div>
 
 {% if entry is defined %}
@@ -44,7 +47,7 @@
     <input type="hidden" name="enabled" value="1">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
     <div class="field--wrapper">
-        <label for="title" class="float">Company name:</label>
+        <label for="title" class="">Company name:</label>
         <input type="text" id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
     </div>
     <div class="field--wrapper">
@@ -57,22 +60,32 @@
         <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}
-                    <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                    <option value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
                 {% endif %}
             {% endfor %}
         </select>
     </div>
     <div class="field--wrapper">
-        <label for="companyManager">Select Company manager:</label>
-        {% set userEntries = craft.users.group('companyManagers') %}
-        <select data-relation="fields[companyManager]" id="companyManager" data-value="{{ entry.companyManager.first().id|default('') }}">
-            {% for userEntry in userEntries %}
-                <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
+        <label for="companyPrimaryManager">Company primary manager:</label>
+        {% set userCompanyManagers = craft.users.group('companyManagers') %}
+        <select data-relation="fields[companyPrimaryManager]" id="companyPrimaryManager" data-value="{{ entry.companyPrimaryManager.first().id|default('') }}">
+            {% for userEntry in userCompanyManagers %}
+                <option value="{{ userEntry.id }}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>
     <div class="field--wrapper">
-        <label for="companyRemainingLicences" class="float">Remaining Company licences:</label>
+        <label for="companySecondaryManagers">Company secondary managers:</label>
+        <input type="hidden" name="fields[companySecondaryManagers]" value="" />
+        <select multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+            {% for userEntry in userCompanyManagers %}
+                <option value="{{ userEntry.id }}"
+                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="companyRemainingLicences" class="no-float">Remaining Company licences:</label>
         <input type="number" id="companyRemainingLicences" class="float-label" placeholder="Enter the remaining company licences"  name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
     </div>
     <div class="container-btn">

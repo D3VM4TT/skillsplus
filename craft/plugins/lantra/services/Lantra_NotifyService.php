@@ -62,12 +62,30 @@ class Lantra_NotifyService extends BaseApplicationComponent
         foreach ($criteria->find() as $company) {
             $remainingLicences = $company->companyRemainingLicences;
             if ($remainingLicences <= 10) {
-                $manager = $company->companyManager->first();
+                $manager = $company->companyPrimaryManager->first();
                 if ($manager) {
                     $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
                     $this->notify($manager->email, $subject, $message);
                 }
             }
+        }
+    }
+
+    /**
+     * @param EntryModel $entry
+     */
+    function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
+        $subject = $this->getNotifyGlobal('subjectNewComment', 'New Comment');
+        $user = craft()->users->getUserById($userId);
+        $message = $entry->title . "\n\n";
+        $message .= $user->getFullName() . ": " . $comment . "\n\n";
+        // manager commenting - notify user
+        if ($userId != $entry->authorId) {
+            $this->notify($entry->getAuthor()->email, $subject, $message);
+        }
+        // user commenting - notify managers
+        else {
+            $this->notifyManagers($entry->getAuthor(), $subject, $message);
         }
     }
 
@@ -155,7 +173,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
             foreach ($criteria->find() as $result) {
                 $moduleEntry = $result->resultModule->first();
                 $message .= "User: " . $result->author->getFullName() . "\n\n";
-                $message .= "Team: " . $result->author->userTeam->first()->title . "\n\n";
+                $message .= "Team: " . ($result->author->userTeam->count() ? $result->author->userTeam->first()->title : '~') . "\n\n";
                 $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~') . "\n\n";
                 $message .= "Expires: " . $result->expiryDate . "\n\n";
                 $message .= "\n##########################\n\n";
@@ -213,9 +231,11 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $toEmail = [$toEmail];
         }
         // in dev mode, all notifications sent to system email
-        if ( craft()->config->get( 'devMode' ) ) {
+        if (craft()->config->get('devMode')) {
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
-            $toEmail = [craft()->systemSettings->getSetting('email', 'emailAddress')];
+            $schemeGlobals = craft()->globals->getSetByHandle('globalsScheme');
+            $schemeTestEmail = explode(',', $schemeGlobals->schemeTestEmailAddress);
+            $toEmail = count($schemeTestEmail) ? $schemeTestEmail : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer
         $message .= $this->getNotifyGlobal('footer');

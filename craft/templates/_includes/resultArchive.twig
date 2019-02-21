@@ -1,0 +1,38 @@
+<section id="archive">
+    <div class="module-wrapper">
+        <div class="module">
+            <div class="header" data-target="#results-archive">
+                <h4>Result Archive</h4>
+                <div class="status">View results<img src="/assets/img/img-arrow-down-trans.png"></div>
+            </div>
+            <div id="results-archive" class="unit-groups open">
+                <div class="unit-group">
+                    <div class="units">
+                        <table class="data">
+                            <thead>
+                            <tr>
+                                <th>Result Title</th>
+                                {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for resultEntry in resultEntries %}
+                                {% set resultUnit = resultEntry.resultUnit.first %}
+                                <tr>
+                                    <td>{{ resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title }}</td>
+                                    {% include '_includes/columnLayout' with {
+                                        unitType:resultEntry.unitType,
+                                        unitValue:resultEntry.unitValue,
+                                        result:resultEntry,
+                                        columnLayout:globalsTheme.columnLayout}
+                                    %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

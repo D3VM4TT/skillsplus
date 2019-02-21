@@ -1,10 +1,8 @@
 # Site Specific #
 ###################
-public_html/assets/theme/*
 public_html/assets/uploads/*
-public_html/dev
-
 assets/*
+src/dev/*
 
 # Craft CMS #
 ###################
@@ -42,6 +40,8 @@ craft/config/general.php
 *.sql
 *.sqlite
 error_log
+
+!src/sql/lantra.default.sql
 
 # OS generated files #
 ######################

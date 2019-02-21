@@ -13,7 +13,16 @@
 {% set hierarchyCompany = craft.request.getParam('company') %}
 
     {% block content %}
-    <div class="page-header">
+<div class="page-subHeader primary-bg">
+     {% if hierarchyNode %}
+        <a class="back-link" href="/management/teams?node={{ hierarchyNode }}">&laquo; back</a>
+    {% else %}
+        <a class="back-link" href="/management/teams">&laquo; back</a>
+    {% endif %}
+    {% include '_includes/topNavigation' %}
+    </div>
+
+    <div class="page-header secondary-bg">
     {% if entry is defined and entry.id %}
         <h2>Edit team</h2>
     {% else %}
@@ -40,7 +49,7 @@
         <input type="hidden" name="enabled" value="1">
         <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
         <div class="field--wrapper">
-            <label for="title" class="float">Team name:</label>
+            <label for="title" class="no-float">Team name:</label>
             <input type="text" id="title" name="fields[teamName]" class="float-label" placeholder="Enter the team name" value="{{ entry.teamName|default('') }}">
         </div>
         <div class="field--wrapper">
@@ -58,7 +67,7 @@
         </div>
         <div class="field--wrapper">
             <label for="teamPrimaryManager">Team primary manager:</label>
-            {% set usersCompanyManagers = craft.users.group('companyManagers') %}
+            {% set usersTeamManagers = craft.users.group('teamManagers') %}
             <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
                 {% for userEntry in usersCompanyManagers %}
                     <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
@@ -67,9 +76,8 @@
         </div>
         <div class="field--wrapper">
             <label for="teamSecondaryManagers">Team secondary managers:</label>
-            {% set usersTeamManagers = craft.users.group('teamManagers') %}
             <input type="hidden" name="fields[teamSecondaryManagers]" value="" />
-            <select multiple name="fields[teamSecondaryManagers][]" id="teamSecondaryManagers">
+            <select multiple class="js-select2" name="fields[teamSecondaryManagers][]" id="teamSecondaryManagers">
                 {% for userEntry in usersTeamManagers %}
                 <option value="{{ userEntry.id }}"
                     {% if entry is defined and userEntry.id in entry.teamSecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.getFullName() }}</option>

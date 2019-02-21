@@ -35,20 +35,29 @@ class LantraPlugin extends BasePlugin
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
+            $licenceSource = '';
             if ($event->params['isNewUser'] && ! $user->admin) {
                 // assign company licence if joining a team
-                if ($user->userTeam->total()) {
-                    if (false == craft()->lantra_licence->assignCompanyLicence($user)) {
+                if ($user->userCompany->count() OR $user->userTeam->count()) {
+                    $companyEntry = craft()->lantra_users->userCompany($user);
+                    if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
                         $event->performAction = false;
-                        $user->addError('userTeam', 'There are insufficient company licences to join this team.');
+                        $user->addError('userCompany', 'There are insufficient company licences.');
+                    }
+                    else {
+                        $licenceSource = 'Company #' . $companyEntry->id;
                     }
                 }
                 // assign scheme licence
                 elseif (false == craft()->lantra_licence->assignSchemeLicence()) {
                     $event->performAction = false;
-                    $user->addError('userTeam', 'There are insufficient scheme licences.');
+                    $user->addError('userCompany', 'There are insufficient scheme licences.');
+                }
+                else {
+                    $licenceSource = 'Scheme';
                 }
             }
+            $user->setContentFromPost(['userLicenceSource' => $licenceSource]);
         });
 
         // Stop deletes
@@ -78,13 +87,6 @@ class LantraPlugin extends BasePlugin
                 if ($entry->type == 'unitResult') {
                     $unitEntry = $entry->resultUnit->first();
                     $unitEvidence = $entry->resultEvidence->first();
-                    // Check evidence results
-                    if ($event->params['isNewEntry'] && $unitEntry->unitType == 'evidence') {
-                        if (empty($unitEvidence)) {
-                            $entry->addError('fields[resultEvidence]', 'You must submit a file!');
-                            $event->performAction = false;
-                        }
-                    }
                 }
                 // set custom author
                 $authorId = craft()->request->getPost('authorId');
@@ -100,6 +102,13 @@ class LantraPlugin extends BasePlugin
                     craft()->request->redirect('/unit/' . $unitEntry->id);
                 }
             }
+            // add comments
+            $comment = craft()->request->getPost('comment');
+            if ($entry->sectionId == $this->sectionIdResults && $comment) {
+                unset($_POST['comment']);
+                $resultComments = craft()->lantra_results->addComment($entry, $comment);
+                $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
+            }
             // handle company licence changes
             if ($entry->sectionId == $this->sectionIdCompanies){
                if ( ! craft()->lantra_licence->updateCompanyLicences($entry)){
@@ -110,6 +119,7 @@ class LantraPlugin extends BasePlugin
         });
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
+            $this->resetUploads();
             $entry = $event->params['entry'];
             // saving user/unit results
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
@@ -125,6 +135,10 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->checkUnitResult($entry);
                 craft()->lantra_results->checkRemainingAttempts($entry);
             }
+            // Check user result for new module result
+            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'userResult') {
+                craft()->lantra_results->checkUserResult($entry);
+            }
             // Send notifications on completed module result
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
                 craft()->lantra_notify->sendModuleResult($entry);
@@ -135,5 +149,11 @@ class LantraPlugin extends BasePlugin
     public function registerSiteRoutes()
     {
         return array();
+    }
+
+    private function resetUploads()
+    {
+        unset($_FILES);
+        UploadedFile::reset();
     }
 }

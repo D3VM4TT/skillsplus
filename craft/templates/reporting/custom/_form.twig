@@ -10,14 +10,17 @@
 {% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+<a class="back-link" href="/reporting/custom">&laquo; back</a>
+{% include '_includes/topNavigation' %}
+</div>
 
-<div class="page-header">
+<div class="page-header secondary-bg">
     {% if entry is defined and entry.id %}
         <h2>Edit report</h2>
     {% else %}
         <h2>Create a new report</h2>
     {% endif %}
-    <p><a href="/reporting/custom">&laquo; back to reports</a></p>
 </div>
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
@@ -40,12 +43,10 @@
             <option value="results" {% if entry is defined and entry.reportType == 'results' %} selected="selected{% endif %}">Results</option>
         </select>
     </div>
-    <div class="field--wrapper">
-        <label>Report scope:</label>
-    </div>
+    <h2>Report scope:</h2>
     <div class="field--wrapper" id="reportScope">
         <div id="reportScopeCompanies">
-            <strong>Report companies:</strong>
+            <label>Report companies:</label>
             <input type="hidden" name="fields[reportCompanies]" value="" />
             <div class="checkboxes" style="border:1px solid #CCC;height:200px;padding:10px;overflow-y:scroll;">
                 {% set companyEntries = craft.entries.section('companies') %}
@@ -70,7 +71,7 @@
             </p>
         </div>
         <div id="reportScopeTeams">
-            <strong>Report teams:</strong>
+            <label>Report teams:</label>
             <input type="hidden" name="fields[reportTeams]" value="" />
             <div class="checkboxes" style="border:1px solid #CCC;height:200px;padding:10px;overflow-y:scroll;">
                 {% set teamEntries = craft.entries.section('teams') %}
@@ -93,7 +94,7 @@
             </p>
         </div>
         <div id="reportScopeRoles">
-            <strong>Report roles:</strong><br />
+            <label>Report roles:</label>
             <input type="hidden" name="fields[reportRoles]" value="" />
             <div class="checkboxes" style="border:1px solid #CCC;height:200px;padding:10px;overflow-y:scroll;">
                 {% set roleCategories = craft.categories('roles') %}
@@ -155,11 +156,11 @@
         </div>
     </div>
     <div class="field--wrapper">
-        <label for="reportDescription" class="float">Report description:</label>
+        <label for="reportDescription" class="">Report description:</label>
         <textarea id="reportDescription" class="label-float" name="fields[reportDescription]" placeholder="Enter the description">{{ entry.reportDescription|default('') }}</textarea>
     </div>
     <div class="field--wrapper">
-        <label for="reportDescription" class="float">Report recipients:</label>
+        <label for="reportDescription" class="">Report recipients:</label>
         <textarea id="reportRecipients" class="label-float" name="fields[reportRecipients]" placeholder="Enter the recipients (emails separated by a comma)">{{ entry.reportRecipients|default('') }}</textarea>
     </div>
     <div class="field--wrapper">

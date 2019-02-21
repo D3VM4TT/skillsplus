@@ -1,28 +1,10 @@
-{% set usersAll = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).total() %}
-{% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').total() %}
-{% set licencesCompany = craft.lantra.totalCompanyLicences() %}
-{% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-<article class="row scheme-profile">
-<div class="col-4">
-<h2>Scheme Profile</h2>
-<p class="profile">
-    <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
-    <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
-    <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
-    <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
-    <span class="label">Scheme Licences:</span>{{ licencesScheme }}<br />
-    <span class="label">Company Licences:</span> {{ licencesCompany }}<br />
-    <span class="label">Total Remaining:</span> {{ licencesScheme + licencesCompany }}
-</p>
-</div>
-<div class="col-8">
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
 {% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}
     <section class="row text-center admin">
         {% if currentUser.can('editEntries:3') %}
-        <div class="col-4">
+        <div class="col-2">
             <img src="/assets/img/tool-company-management.svg" width="150" height="150" class="" alt="">
             <h3>Company Management</h3>
             <div class="text-muted">
@@ -31,7 +13,7 @@
         </div>
         {% endif %}
         {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
-        <div class="col-4">
+        <div class="col-2">
             <img src="/assets/img/tool-team-management.svg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>
             <div class="text-muted">
@@ -40,7 +22,7 @@
         </div>
         {% endif %}
         {% if currentUser.can('editUsers') %}
-        <div class="col-4">
+        <div class="col-2">
             <img src="/assets/img/tool-user-management.svg" width="150" height="150" class="" alt="">
             <h3>User Management</h3>
             <div class="text-muted">
@@ -48,13 +30,10 @@
             </div>
         </div>
         {% endif %}
-    </section>
-{% endif %}
+        {% if currentUser.can('editCategories:1') or currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
 
-{% if currentUser.can('editCategories:1') or currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
-<section class="row text-center admin">
     {% if currentUser.can('editCategories(1)') %}
-    <div class="col-4">
+    <div class="col-2">
         <img src="/assets/img/tool-job-role-management.svg" width="150" height="150" class="" alt="">
         <h3>Job Role Management</h3>
         <div class="text-muted">
@@ -63,7 +42,7 @@
     </div>
     {% endif %}
     {% if currentUser.can('editEntries:6') %}
-    <div class="col-4">
+    <div class="col-2">
         <img src="/assets/img/tool-modules-management.svg" width="150" height="150" class="" alt="">
         <h3>Modules Management</h3>
         <div class="text-muted">
@@ -71,15 +50,18 @@
         </div>
     </div>
     {% endif %}
-    <div class="col-4">
+    <div class="col-2">
         <img src="/assets/img/tool-reporting-management.svg" width="150" height="150" class="" alt="">
         <h3>Reporting</h3>
         <div class="text-muted">
             <a href="/reporting">View reports</a>
         </div>
     </div>
-</section>
+    </section>
+{% endif %}
+
+
+
 </article>
 {% endif %}
-</div>
 </article>

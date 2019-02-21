@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+    $('button.status').click(function(){
+        var f =$(this).closest('form');
+        f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
+        f.submit();
+    });
+
     // menu
     $('.menu-tab').click(function(){
         $('.menu-hide').toggleClass('show');
@@ -137,6 +143,12 @@ $(document).ready(function(){
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
+        if (action == 'lantra/entries/endorseEvidence') {
+            if ( ! confirm('Are you sure you want to endorse this result?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+        }
         if (action == 'lantra/categories/deleteCategory') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
                 return false;
@@ -150,6 +162,12 @@ $(document).ready(function(){
             }
             var data = {userId: $(this).data('id')};
             deleteRow = true;
+        }
+        if (action == 'lantra/users/restoreUser') {
+            if ( ! confirm('Are you sure you want to restore this user?')) {
+                return false;
+            }
+            var data = {userId: $(this).data('id')};
         }
         if (action == 'lantra/entries/runReport') {
             if ( ! confirm('Are you sure you want to run this report?')) {
@@ -245,5 +263,75 @@ $(document).ready(function(){
         e.preventDefault();
         $("input[name='deleteUserPhoto']").val('zap');
         $("#form-photo").submit();
+    });
+
+    // expand / collapse account details
+    $(".link-toggle-expand").click(function()
+    {
+    $('.link-toggle-expand').removeClass("show");
+    $('.link-toggle-expand').addClass("hide");
+    $('.link-toggle-collapse').removeClass("hide");
+    $('.link-toggle-collapse').addClass("show");
+    $('.link-expand').removeClass("show");
+    $('.link-expand').addClass("hide");
+    $('.link-collapse').removeClass("hide");
+    $('.link-collapse').addClass("show");
+    $("#account-details-expand").slideToggle(400);
+    });
+    $(".link-toggle-collapse").click(function()
+    {
+    $('.link-toggle-collapse').removeClass("show");
+    $('.link-toggle-collapse').addClass("hide");
+    $('.link-toggle-expand').removeClass("hide");
+    $('.link-toggle-expand').addClass("show");
+    $('.link-expand').removeClass("hide");
+    $('.link-expand').addClass("show");
+    $('.link-collapse').removeClass("show");
+    $('.link-collapse').addClass("hide");
+    $("#account-details-expand").slideToggle(400);
+    });
+
+    $('.tabgroup > div').hide();
+    $('.tabgroup > div:first-of-type').show();
+    $('.tabs a').click(function(e){
+        e.preventDefault();
+        var $this = $(this),
+        tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
+        others = $this.closest('li').siblings().children('a'),
+        target = $this.attr('href');
+        others.removeClass('active');
+        $this.addClass('active');
+        $(tabgroup).children('div').hide();
+        $(target).show();
+        // make sure tab is selected too
+        if (target.match("^#module")) {
+            var t = $(this).closest('div.groups-tab-group');
+
+            console.log("#" + t.attr('id'));
+            $('a[href="#' + t.attr('id') + '"]').click();
+        }
+    });
+
+    // add on load module click
+    var m = window.location.hash.replace('m', 'module');
+    if (m) {
+        $('.tabs a[href="' + m + '"]').click();
+    }
+    else {
+        $('.tabs a[href^="#module"]').eq(0).click();
+    }
+
+    $('input#companyManagers').change(function(){
+        if ($(this).is(':checked')){
+            return $('div#manager-fields').removeClass('hide');
+        }
+        $('div#manager-fields').addClass('hide');
+    }).change();
+
+    $('input#teamManagers').click(function(){
+        if ($(this).is(':checked')){
+            return $('div#team-fields').removeClass('hide');
+        }
+        $('div#team-fields').addClass('hide');
     });
 });

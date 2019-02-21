@@ -6,39 +6,53 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set pageLimit = globalsSystem.defaultLimit|default(10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
-
-{% set excludeIds = ['and'] %}
-{% set excludeIds = excludeIds|merge([currentUser.id]) %}
-{% set individualIds = craft.users.group('individuals').ids() %}
-{% if individualIds %}{% set excludeIds = excludeIds|merge(individualIds) %}{% endif %}
-{% set excludeIdsString = excludeIds|join(', not ') %}
+{% set sortParam = craft.request.getParam('sort') %}
+{% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'lastName, userCompanyName' %}
+{% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
+{% set excludeIdsString = 'not ' ~ currentUser.id %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-    {% set criteria = craft.users.admin('not 1').search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
 {% elseif currentUser.isInGroup('companyManagers') %}
     {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.users.admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
 
 {% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
 <section class="page">
-    <div class="page-header">
+    <div class="page-header secondary-bg">
         <h2>Users</h2>
-        {% include '_includes/filter' with{filterDays:false} %}
+        <p>Add, Edit and view the Dashboard of Users within your Scheme.</p>
+                    <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                {% if not currentUser.managerReadOnly %}
+                    <div class="container-btn primary-bg">
+                    {#<button class="btn-add-new primary-bg">#}
+                    <a class="btn-add-new" href="/management/users/new">Add a new User</a>
+                    {#</button>#}
+                    </div>
+                {% endif %}
+            </div>
     </div>
     {% if userEntries is defined and userEntries|length %}
+    <div class="page-content">
         <table class="data">
             <thead>
             <tr>
-                <th>#</th>
-                <th class="title">Name</th>
-                <th>Company</th>
+                <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
+                <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
+                <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
+                <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
                 {% if globalsScheme.schemeTeams|default(false) %}
                     <th>Team</th>
                 {% endif %}
@@ -49,20 +63,26 @@
             {% for user in userEntries %}
                 {% set company = craft.lantra.userCompany(user.id) %}
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.fullname }}</td>
-                    <td>{{ company.title|default('') }}</td>
+                    <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
+                    <td><p class="td-title-responsive">Legacy ID: </p>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</td>
+                    <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                    <td><p class="td-title-responsive">Company: </p> {{ craft.lantra.companyLabel(company) }}</td>
                     {% if globalsScheme.schemeTeams|default(false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
                     <td>
+                        <a href="/cpd/{{ user.id }}">dashboard</a> |
                         {% if not currentUser.managerReadOnly %}
                             <a href="/management/users/edit/{{ user.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a> |
+                            {% if user.status == 'active' %}
+                                <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">suspend</a>
+                            {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+                                <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
+                            {% endif %}
+                            
                         {% endif %}
-                         <a href="/cpd/{{ user.id }}">dashboard</a> |
-                         <a href="/cpd/further-achievements/{{ user.id }}">achievements</a>
+                         
                     </td>
                 </tr>
             {% endfor %}
@@ -74,12 +94,6 @@
             <h3>There are no users to display.</h3>
         </div>
     {% endif %}
-    {% if craft.lantra.canAddUser() %}
-        <div class="page-content">
-            <div class="container-btn">
-                <a class="button primary-bg" href="/management/users/new">Create user</a>
-            </div>
-        </div>
-    {% endif %}
+    </div>
 </section>
 {% endblock %}
