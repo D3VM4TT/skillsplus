@@ -57,7 +57,7 @@
                     <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
                     {% if resultEntry|length %}
                         <div class="col-pd-top col-pd-btm col-flex">
-                        {% if resultEntry.resultStatus == 'endorsed' %}
+                        {% if resultEntry.resultScore >= unitEntry.testPassPercent %}
                             <img src="/assets/img/endorse.svg" class="test-icon" alt="">
                             <h2>Well done! You have passed this test.</h2>
                         {% else %}

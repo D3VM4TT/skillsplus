@@ -145,7 +145,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $score = round($correct / $total * 100);
         // passed if greater than unit setting
         $passed = $score >= $unitEntry->getContent()->testPassPercent;
-        $resultStatus = $passed ? 'endorsed' : 'failed';
         $resultScore = $score;
         // does a result exist?
         if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {
@@ -155,13 +154,16 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $resultEntry->enabled = true;
             $resultEntry->authorId = $attemptEntry->authorId;
             $resultAttempts = array($attemptEntry->id);
+            $resultStatus = $passed ? 'endorsed' : 'active';
         }
         else {
             // append new result attempt
             $resultAttempts = array_merge($resultEntry->resultAttempts->ids(), array($attemptEntry->id));
             // only change if better than previous
-            if ($resultEntry->resultStatus == 'failed' && $passed) {
-                $resultStatus = $passed ? 'endorsed' : 'failed';
+            $resultStatus = $resultEntry->resultStatus;
+            $resultScore = $resultEntry->resultScore;
+            if ($score > $resultEntry->resultScore) {
+                $resultStatus = $passed ? 'endorsed' : 'active';
                 $resultScore = $score;
             }
         }
