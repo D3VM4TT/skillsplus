@@ -21,7 +21,7 @@
     {% if not moduleEntry %}{% exit 404 %}{% endif %}
     {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
 {% elseif craft.request.segment(3) == 'result' and entryId %}
-    {% set resultEntry = craft.entries.id(entryId).first %}
+    {% set resultEntry = craft.entries.id(entryId).status('live, expired').first %}
     {% if not resultEntry %}{% exit 404 %}{% endif %}
     {% set moduleEntry = resultEntry.resultModule.first %}
 {% endif %}

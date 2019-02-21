@@ -7,7 +7,7 @@
     <h2>Job Role:</h2>
     <p style="color: #000;">This user has no job role allocated, please add a job role to have access to modules.</p>
     <p></p>
-    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id) %}
+    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
 {% else %}
     {% for role in cpdUser.userRole %}
         <h2>Job Role: {{ role.title }}</h2>
@@ -84,7 +84,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for unitEntry in unitGroupEntries %}
-                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).first() %}
+                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
                                                     {% if unitResultEntry %}
                                                         {% set unreadComments = craft.lantra.unreadComments(unitResultEntry) %}
@@ -142,7 +142,7 @@
                                     </div>
                                 {% endfor %}
                                 {# get user results related to module #}
-                                {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).limit(null) %}
+                                {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
                                 {% if moduleUserResults|length %}
                                     {% set existingResultIds = existingResultIds|merge(moduleUserResults.ids()) %}
                                     <div class="unit-group">

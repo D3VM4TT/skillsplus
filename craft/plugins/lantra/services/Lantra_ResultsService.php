@@ -186,18 +186,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
-     * Check date in yyyy-mm-dd
-     *
-     * @param string
-     * @return bool
-     * @throws null
-     */
-    private function checkDate($date) {
-        $parts = explode('-', $date);
-        return checkdate($parts[1], $parts[2], $parts[0]);
-    }
-
-    /**
      * Handle new unit and user results
      *
      * @param $resultEntry
@@ -208,24 +196,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $saveContent = false;
         $unitEntry = $resultEntry->resultUnit->first();
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
-            // set a user expiry date
-            $userExpiryDate = craft()->request->getPost('userExpiryDate');
-            if ($userExpiryDate && $this->checkDate($userExpiryDate)) {
-                $resultEntry->expiryDate = new \DateTime($userExpiryDate . ' 12:00:00');
-                $saveContent = true;
-            }
-            // set a user start date
-            $userStartDate = craft()->request->getPost('userStartDate');
-            if ($userStartDate && $this->checkDate($userStartDate)) {
-                $resultEntry->setContentFromPost(['resultStartDate' => new \DateTime($userStartDate . ' 12:00:00')]);
-                $saveContent = true;
-            }
-            // set a user finish date
-            $userFinishDate = craft()->request->getPost('userFinishDate');
-            if ($userFinishDate && $this->checkDate($userFinishDate)) {
-                $resultEntry->setContentFromPost(['resultFinishDate' => new \DateTime($userFinishDate . ' 12:00:00')]);
-                $saveContent = true;
-            }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);

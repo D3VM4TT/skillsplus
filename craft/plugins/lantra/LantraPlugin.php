@@ -93,6 +93,23 @@ class LantraPlugin extends BasePlugin
                 if ($entry->type == 'userResult' && $authorId) {
                     $entry->authorId = $authorId;
                 }
+                // set date defaults
+                $entry->setContentFromPost([
+                    'resultStartDate' => '',
+                    'resultFinishDate' => ''
+                ]);
+                // set a user start date
+                $userStartDate = craft()->request->getPost('userStartDate');
+                if ($userStartDate && $this->checkDate($userStartDate)) {
+                    $date = new \DateTime($userStartDate . ' 12:00:00');
+                    $entry->setContentFromPost(['resultStartDate' => $date->getTimestamp()]);
+                }
+                // set a user finish date
+                $userFinishDate = craft()->request->getPost('userFinishDate');
+                if ($userFinishDate && $this->checkDate($userFinishDate)) {
+                    $date = new \DateTime($userFinishDate . ' 12:00:00');
+                    $entry->setContentFromPost(['resultFinishDate' => $date->getTimestamp()]);
+                }
             }
             // check remaining attempts
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts) {
@@ -125,6 +142,14 @@ class LantraPlugin extends BasePlugin
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
                 craft()->lantra_results->saveNewResult($entry);
             }
+            // set expiry date on entry record
+            $userExpiryDate = craft()->request->getPost('userExpiryDate');
+            if ($entry->sectionId == $this->sectionIdResults && $userExpiryDate && $this->checkDate($userExpiryDate)) {
+                $date = new \DateTime($userExpiryDate . ' 12:00:00');
+                $entryRecord = EntryRecord::model()->findById($entry->id);
+                $entryRecord->expiryDate = $date->getTimestamp();
+                $entryRecord->save(false);
+            }
             // Mark unit attempt and create result entry
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
                 craft()->lantra_attempts->markAttempt($entry);
@@ -155,5 +180,10 @@ class LantraPlugin extends BasePlugin
     {
         unset($_FILES);
         UploadedFile::reset();
+    }
+
+    private function checkDate($date) {
+        $parts = explode('-', $date);
+        return checkdate($parts[1], $parts[2], $parts[0]);
     }
 }
