@@ -52,7 +52,7 @@ if [ -n "$REMOTE_IP" ]; then
     rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/poultrypassport
     rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/ptr
 
-    echo "lantra cpd deploy "$BRANCH" > "$REMOTE_IP
+    echo "lantra cpd deploy "$BRANCH" > "$REMOTE_FOLDER
 fi
 
 # remove temp files
