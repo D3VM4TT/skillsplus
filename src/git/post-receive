@@ -29,13 +29,13 @@ git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
 
 # set remote server ip
 if [ "$DEV_BRANCH" == "$BRANCH" ]; then
-  REMOTE_IP="$DEV_IP
+  REMOTE_IP="$DEV_IP"
 elif [ "$STG_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP="$STG_IP
+  # REMOTE_IP="$STG_IP"
 elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP=$UAT_IP
+  # REMOTE_IP="$UAT_IP"
 elif [ "PRODUCTION_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP=$PRODUCTION_IP
+  # REMOTE_IP="$PRODUCTION_IP"
 else
 fi
 
@@ -43,7 +43,7 @@ fi
 REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites"
 
 # make sure we have an ip then sync the individual domains
-if [ -z "REMOTE_IP" ]; then
+if [ -z "$REMOTE_IP" ]; then
 
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/bics
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/cha
@@ -52,7 +52,7 @@ if [ -z "REMOTE_IP" ]; then
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/poultrypassport
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/ptr
 
-    echo "lantra cpd deploy > "$BRANCH"
+    echo "lantra cpd deploy $BRANCH > $REMOTE_IP"
 fi
 
 # remove temp files
