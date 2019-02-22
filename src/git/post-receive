@@ -31,11 +31,11 @@ git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
 if [ "$DEV_BRANCH" == "$BRANCH" ]; then
   REMOTE_IP="$DEV_IP"
 elif [ "$STG_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP="$STG_IP"
+  REMOTE_IP="$STG_IP"
 elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP="$UAT_IP"
-elif [ "PRODUCTION_BRANCH" == "$BRANCH" ]; then
-  # REMOTE_IP="$PRODUCTION_IP"
+  REMOTE_IP="$UAT_IP"
+elif [ "$PRODUCTION_BRANCH" == "$BRANCH" ]; then
+  REMOTE_IP="$PRODUCTION_IP"
 else
 fi
 
