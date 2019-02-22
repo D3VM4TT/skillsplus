@@ -56,3 +56,5 @@ fi
 
 # remove temp files
 rm -rf "$TMP_DIR"
+
+# test one
