@@ -36,7 +36,6 @@ elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
   REMOTE_IP="$UAT_IP"
 elif [ "$PRODUCTION_BRANCH" == "$BRANCH" ]; then
   REMOTE_IP="$PRODUCTION_IP"
-else
 fi
 
 # set the remote folder
