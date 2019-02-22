@@ -54,7 +54,8 @@ if [ -n "$REMOTE_IP" ]; then
     echo "lantra cpd deploy "
     echo $BRANCH
     echo " > "
-    echo $REMOTE_IP"
+    echo $REMOTE_IP
+    
 fi
 
 # remove temp files
