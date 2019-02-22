@@ -41,18 +41,16 @@ fi
 # make sure we have an ip then sync the individual domains
 if [ -n "$REMOTE_IP" ]; then
 
-    # set the remote folder
-    REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites"
-    echo $REMOTE_FOLDER
+    # loop through domains and copy to server
+    for DOMAIN in bics cha iopf ltp poultrypassport ptr ;
+    do
+        REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites/$DOMAIN"
 
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/bics
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/cha
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/iopf
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/ltp
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/poultrypassport
-    rsync -vzre ssh --delete $TMP_DIR/ $REMOTE_FOLDER/ptr
+        rsync -rt -v --exclude '.gitignore' --exclude 'src' --exclude 'craft/storage/runtime' $TMP_DIR/ $REMOTE_FOLDER
 
-    echo "lantra cpd deploy "$BRANCH" > "$REMOTE_FOLDER
+        echo "lantra cpd deploy "$BRANCH" > "$DOMAIN
+   done
+
 fi
 
 # remove temp files
