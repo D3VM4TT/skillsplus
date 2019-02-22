@@ -42,7 +42,7 @@ fi
 REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites"
 
 # make sure we have an ip then sync the individual domains
-if [ -z "$REMOTE_IP" ]; then
+if [ -n "$REMOTE_IP" ]; then
 
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/bics
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/cha
@@ -51,10 +51,11 @@ if [ -z "$REMOTE_IP" ]; then
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/poultrypassport
     rsync -vzre ssh --delete "$TMP_DIR/" $REMOTE_FOLDER/ptr
 
-    echo "lantra cpd deploy $BRANCH > $REMOTE_IP"
+    echo "lantra cpd deploy "
+    echo $BRANCH
+    echo " > "
+    echo $REMOTE_IP"
 fi
 
 # remove temp files
 rm -rf "$TMP_DIR"
-
-# test one
