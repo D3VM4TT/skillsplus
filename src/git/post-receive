@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # remote server ips
-DEV_IP="51.140.230.33"
-STG_IP=""
-UAT_IP=""
+DEV_IP="10.1.4.4"
+UAT_IP="10.1.4.5"
+STG_IP="10.1.4.7"
 PRODUCTION_IP=""
 
 # repo branches to sync
-DEV_BRANCH="dev"
-STG_BRANCH="stg"
+DEV_BRANCH="develop"
+STG_BRANCH="staging"
 UAT_BRANCH="uat"
-PRODUCTION_BRANCH="production"
+PRODUCTION_BRANCH="master"
 
 # get branch name from ref head
 if ! [ -t 0 ]; then
@@ -36,6 +36,7 @@ elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
   # REMOTE_IP=$UAT_IP
 elif [ "PRODUCTION_BRANCH" == "$BRANCH" ]; then
   # REMOTE_IP=$PRODUCTION_IP
+else
 fi
 
 # set the remote folder
@@ -56,4 +57,3 @@ fi
 
 # remove temp files
 rm -rf "$TMP_DIR"
-
