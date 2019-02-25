@@ -1393,7 +1393,7 @@ div.cpd-icons, div.cpd-comment, div.cpd-comment-number, div.cpd-comment-txt {
 
 div.cpd-icons {
     padding-top: 5px;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 div.cpd-icons a {
