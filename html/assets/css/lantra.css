@@ -1638,6 +1638,47 @@ li.jstree-node .jstree-ocl {
     background-position: top center !important;
 }
 
+div.loading {
+    width:100%;
+    height:100vh;
+    position: fixed;
+    top:0;
+    z-index:10000;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    text-align: center;
+}
+
+div.loading .spinner {
+    margin-top:48vh;
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+}
+div.loading .spinner:after {
+    content: " ";
+    display: block;
+    width: 46px;
+    height: 46px;
+    margin: 1px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: loading-spinner 1.2s linear infinite;
+}
+@keyframes loading-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+body.loading div.loading {
+    display:block;
+}
+
 /*li.jstree-node .jstree-last .jstree-open:first-child i {
     display: none;
 }*/

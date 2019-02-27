@@ -176,17 +176,20 @@ $(document).ready(function(){
             var data = {entryId: $(this).data('id')};
         }
         data[window.csrfTokenName] = window.csrfTokenValue;
+        $('body').addClass('loading');
         $.post("/actions/" + action, data, function(response) {
             if (response.redirect) {
                 window.location.replace(response.redirect);
             }
             else if (response.success) {
+                $('body').removeClass('loading');
                 if (deleteRow) {
                    row.fadeOut().remove();
                 }
                 alert(response.message);
             }
             else {
+                $('body').removeClass('loading');
                 if (response.message) {
                     alert(response.message);
                 }
@@ -197,6 +200,11 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('form').submit(function(){
+        $('body').addClass('loading');
+    });
+
     // submit select filter
     $('form.filter select').on('change', function(){
         // $(this).closest('form').submit();

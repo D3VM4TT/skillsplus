@@ -85,9 +85,7 @@
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
                             {% endif %}
-                            
                         {% endif %}
-                         
                     </td>
                 </tr>
             {% endfor %}
