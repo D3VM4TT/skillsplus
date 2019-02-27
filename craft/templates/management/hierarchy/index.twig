@@ -60,6 +60,9 @@
                 location.href="/cpd/" + elementId + "?node=" + nodeId;
             }
         });
+
+        {% if not currentUser.managerReadOnly %}
+
         $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_edit",
             "class"     : "button-hierarchy button-edit pull-right",
@@ -120,6 +123,8 @@
                 location.href="/management/users/new/?node=" + nodeId + "&" + (nodeType == 'companies' ? 'company' : 'team') + "=" + elementId;
             }
         });
+
+        {%  endif %}
     });
     </script>
 {% endblock %}

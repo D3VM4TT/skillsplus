@@ -77,9 +77,9 @@
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
                     <td>
-                        <a href="/cpd/{{ user.id }}">dashboard</a> |
+                        <a href="/cpd/{{ user.id }}">dashboard</a>
                         {% if not currentUser.managerReadOnly %}
-                            <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                            | <a href="/management/users/edit/{{ user.id }}">edit</a> |
                             {% if user.status == 'active' %}
                                 <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">suspend</a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
