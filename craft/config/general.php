@@ -18,7 +18,7 @@ return array(
         'useEmailAsUsername' => false,
         'autoLoginAfterAccountActivation' => true,
         'environmentVariables' => array(
-            'basePath' => '/datadisk/sites/' . $site,
+            'basePath' => '/datadisk/sites/' . $site . '/html/',
         ),
     ),
     /* local server */
