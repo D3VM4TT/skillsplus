@@ -46,7 +46,7 @@ if [ -n "$REMOTE_IP" ]; then
     do
         REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites/$DOMAIN"
 
-        rsync -av --progress --no-perms --no-owner --no-group --exclude '.gitignore' --exclude 'src' --exclude 'craft/storage/runtime' $TMP_DIR/ $REMOTE_FOLDER
+        rsync -av --progress --no-perms --no-owner --no-group --exclude '.gitignore' --exclude 'src' --exclude 'craft/storage' $TMP_DIR/ $REMOTE_FOLDER
 
         echo "lantra cpd deploy "$BRANCH" > "$DOMAIN
    done
