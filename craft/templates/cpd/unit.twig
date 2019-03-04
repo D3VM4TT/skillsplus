@@ -44,25 +44,27 @@
             </div>
             <div class="page-content">
                 <h2>This is an e-learning unit</h2>
-            <div class="col-12">
-                {% if unitEntry.unitImage|length %}
-                    {% set unitImage = unitEntry.unitImage.first %}
-                    <div class="col-pd-btm">
-                        <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
-                    </div>
-                {% endif %}
-
-                <div class="col-6">
-                    <h5>Click the button below to view the unit content.</h5>
-                    <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
-                    {% if unitEntry.unitUrl %}
-                        <div class="col-pd-top">
-                        <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
-                        {% endif %}
+                <div class="col-12">
+                    {% if unitEntry.unitImage|length %}
+                        {% set unitImage = unitEntry.unitImage.first %}
+                        <div class="col-6 col-pd-btm">
+                            <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                        </div>
+                    {% endif %}
+                    <div class="col-6 col-pd-btm">
+                        <h5>Click the button below to view the unit content.</h5>
+                        <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
+                        {% if unitEntry.unitUrl %}
+                            <div class="col-pd-top">
+                            <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-
-                <div class="col-6 col-pd-btm">
+                <div class="col-12">
+                    {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                </div>
+                <div class="col-12 col-pd-btm">
                     <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
                     <div class="cpd-comment-txt">(Questions will appear below)</div>
                     <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
@@ -93,9 +95,6 @@
                         {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
                     {% endif %}
                 </div>
-                
-            </div>
-            {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
             </div>
         </section>
     {% else %}
