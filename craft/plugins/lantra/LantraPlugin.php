@@ -97,11 +97,6 @@ class LantraPlugin extends BasePlugin
                 if ($entry->type == 'userResult' && $authorId) {
                     $entry->authorId = $authorId;
                 }
-                // set date defaults
-                $entry->setContentFromPost([
-                    'resultStartDate' => '',
-                    'resultFinishDate' => ''
-                ]);
                 // set a user start date
                 $userStartDate = craft()->request->getPost('userStartDate');
                 if ($userStartDate && $this->checkDate($userStartDate)) {
