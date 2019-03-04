@@ -137,9 +137,9 @@
                         {% endif %}
 
                         <div class="col-pd-top field--wrapper">
+                        <input type="hidden" name="fields[managerReadOnly]" value="0">
                         <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
                         <span>Make Read Only Manager</span>
-                        <input type="hidden" name="fields[managerReadOnly]" value="0">
                         </div>
                         <div class="field--wrapper ">
                         <label for="userCompany">Primary manager companies:</label>
