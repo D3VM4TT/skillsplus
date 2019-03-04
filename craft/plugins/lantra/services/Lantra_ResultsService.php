@@ -205,7 +205,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             // set author
             $author = null;
             $authorId = craft()->request->getPost('author');
-            if (count($authorId)) {
+            if (is_array($authorId)) {
                 $author = craft()->users->getUserById($authorId[0]);
             }
             //  (manager submitting on behalf of user)
