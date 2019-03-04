@@ -6,6 +6,8 @@
 {% if entry is defined %}
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
+{# result is locked when a result entry is pending or endorsed #}
+{% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
@@ -21,7 +23,8 @@
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
-    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
+    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked} %}
+    {% if not resultLocked %}
     <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
     <div class="container-btn">
         <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
@@ -34,4 +37,5 @@
             <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
         {% endif %}
     </div>
+    {% endif %}
 </form>

@@ -36,7 +36,8 @@
         {% set userModules = userModules|merge([roleModule]) %}
     {% endfor %}
 {% endfor %}
-
+{# result is locked when a result entry is pending or endorsed #}
+{% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {% set metaTitle = 'Achievements > ' ~ account.fullname %}
 
 {% block content %}
@@ -90,8 +91,9 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id} %}
+                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked} %}
                 {% endif %}
+                {% if not resultLocked %}
                 <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
                 <div class="container-btn">
                     <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
@@ -104,6 +106,7 @@
                         <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
                     {% endif %}
                 </div>
+                {% endif %}
             </form>
         </div>
     </section>

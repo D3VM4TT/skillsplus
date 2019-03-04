@@ -5,45 +5,46 @@
     {% if row.fieldType == 'unitValue' %}
         <div class="field--wrapper">
             <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultValue]" type="number" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %} name="fields[resultValue]" type="number" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultValue|default(1) }}"/>
         </div>
     {% elseif row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
-            <input name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %}  name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.expiryDate|format('yyyy-mm-dd') }}" data-language="en"
                    data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper">
             <label for="userStartDate" class="">{{ label }} (if applicable)</label>
-            <input name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %}  name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultStartDate|format('yyyy-mm-dd') }}" data-language="en"
                    data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper">
             <label for="userFinishDate" class="">{{ label }} (if applicable)</label>
-            <input name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %}  name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultFinishDate|format('yyyy-mm-dd') }}" data-language="en"
                    data-position='top left' value="" data-date-format="yyyy-mm-dd">
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence' %}
         {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
         <div class="field--wrapper">
+            {% if not resultLocked %}
             <span class="btn btn-success fileinput-button primary-bg">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
@@ -54,6 +55,7 @@
             <div id="progress" class="progress">
                 <div class="progress-bar progress-bar-success"></div>
             </div>
+            {% endif %}
             <div id="files" class="files">
                 {% if resultEvidence %}
                     {% for resultAsset in resultEntry.resultEvidence %}
@@ -82,5 +84,7 @@
             </p>
         {% endfor %}
     {% endif %}
-    <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
+    {% if not resultLocked %}
+        <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
+    {% endif %}
 </div>
