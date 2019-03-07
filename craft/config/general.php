@@ -29,6 +29,10 @@ return array(
             'basePath' => '/websites/cpd.lantra.co.uk/'
         ),
     ),
+    /* demo server */
+    'splusdev.ukwest.cloudapp.azure.com' => array(
+        'devMode' => true,
+    ),
     /* dev server */
     'newdev.skills-plus.net' => array(
         'devMode' => true,
