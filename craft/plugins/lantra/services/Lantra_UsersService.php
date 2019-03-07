@@ -859,19 +859,30 @@ class Lantra_UsersService extends BaseApplicationComponent
      *
      * @param $firstName
      * @param $lastName
+     * @param $handle
      * @return string
      * @throws Exception
      */
-    public function generateEmail($firstName = null, $lastName = null) {
+    public function generateEmail($firstName = null, $lastName = null, $handle = null) {
         $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        if ($firstName && $lastName) {
-            $handle = strtolower($firstName . '.' . $lastName) . '.' . mt_rand(1000, 9999);
-        }
-        else {
-            $handle = mt_rand(100000, 999999);
+        if (is_null($handle)) {
+            $handle = $this->generateUsername($firstName, $lastName);
         }
         $domain = $globalsScheme->schemeEmailDomain ? $globalsScheme->schemeEmailDomain : 'lantra.co.uk';
         return $handle . '@' . $domain;
+    }
+
+    /**
+     * @param null $firstName
+     * @param null $lastName
+     * @return string
+     */
+    public function generateUsername($firstName = null, $lastName = null) {
+        if ($firstName && $lastName) {
+            $handle =  preg_replace('/\s+/', '', strtolower(trim($firstName) . '.' . trim($lastName)));
+            return $handle . '.' . mt_rand(1000, 9999);
+        }
+        return 'user.'. mt_rand(1000, 9999);
     }
 
     /**
