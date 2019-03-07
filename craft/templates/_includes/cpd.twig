@@ -3,6 +3,7 @@
 {% set readOnly = globalsScheme.schemeUserReadOnly and not craft.lantra.isManager(cpdUser.id) %}
 
 <article class="cpd">
+{% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
 {% if not cpdUser.userRole.total %}
 
     <h2>Job Role</h2>
@@ -10,8 +11,6 @@
     <img src="/assets/img/delete.svg" class="test-icon" alt="">
     <p>This user has no job role allocated, please add a job role to have access to modules.</p>
     </div>
-
-    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
 {% else %}
     {% for role in cpdUser.userRole %}
         <h2>Job Role: {{ role.title }}</h2>
@@ -242,9 +241,11 @@
             </section>
         {% endif %}
     {% endfor %}
-    {# get all the results no longer related to existing job role #}
-    {% set existingResultIdsString = existingResultIds | join(', not ') %}
-    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
+    {% if existingResultIds|length %}
+        {# get all the results no longer related to existing job role #}
+        {% set existingResultIdsString = existingResultIds | join(', not ') %}
+        {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
+    {% endif %}
 {% endif %}
 {% if resultArchive|length %}
     {% include '_includes/resultArchive' with {resultEntries:resultArchive} %}
