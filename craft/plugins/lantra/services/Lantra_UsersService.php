@@ -253,27 +253,29 @@ class Lantra_UsersService extends BaseApplicationComponent
     /** Get all company users
      *
      * @param int $companyId
+     * @param bool $count
      * @return object
      * @throws Exception
      */
-    public function getCompanyUsers($companyId) {
+    public function getCompanyUsers($companyId, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->limit = null;
-        return $criteria;
+        return $count ? $criteria->count() : $criteria;
     }
 
     /** Get all team users
      *
      * @param int $teamId
+     * @param bool $count
      * @return object
      * @throws Exception
      */
-    public function getTeamUsers($teamId) {
+    public function getTeamUsers($teamId, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
-        return $criteria;
+        return $count ? $criteria->count() : $criteria;
     }
 
     /** Get all company managers
