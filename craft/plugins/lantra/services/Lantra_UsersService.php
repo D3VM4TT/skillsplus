@@ -284,7 +284,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    public function getCompanyMangers(EntryModel $company) {
+    public function getCompanyMangers(EntryModel $company, $count = false) {
         $return = [];
         if ($company->companyPrimaryManager->first()) {
             $return[] = $company->companyPrimaryManager->first();
@@ -292,7 +292,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         foreach ($company->companySecondaryManagers as $manager ){
             $return[] = $manager;
         }
-        return $return;
+        return $count ? count($return) : $return;
     }
 
     /** Get all team managers
@@ -301,7 +301,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    public function getTeamMangers(EntryModel $team) {
+    public function getTeamMangers(EntryModel $team, $count = false) {
         $return = [];
         if ($team->teamPrimaryManager->first()) {
             $return[] = $team->teamPrimaryManager->first();
@@ -309,7 +309,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         foreach ($team->teamSecondaryManagers as $manager ){
             $return[] = $manager;
         }
-        return $return;
+        return $count ? count($return) : $return;
     }
     /**
      * Return all company ids (recursive)
@@ -360,13 +360,13 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    function getCompanyTeams($companyId)
+    function getCompanyTeams($companyId, $count = false)
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
         $criteria->order = 'title';
-        return $criteria->find();
+        return $count ? $criteria->count() : $criteria->find();
     }
 
     /**

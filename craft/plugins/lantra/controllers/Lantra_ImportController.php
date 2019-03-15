@@ -4,7 +4,7 @@ namespace Craft;
 
 class Lantra_ImportController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionIndex', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults');
+    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults');
     private $dataPath = '../craft-assets/import/';
 
     private $companies = [];
@@ -518,7 +518,9 @@ class Lantra_ImportController extends Lantra_BaseController {
                 'resultHours' =>  (int) $result[9] ? (int) $result[9] : null,
                 'resultValue' => (int) $result[10] ? (int) $result[10] : null,
                 'resultNotes' => $result[12],
-                'resultEndorsedDate' =>  $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : $entryModel->postDate
+                'resultEndorsedDate' =>  $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : DateTime::createFromFormat('d/m/Y', $result[4]),
+                'legacyResultFiles' => $result[13]
+                
             ]);
 
             $resultEvidenceId = $this->getAssetId($result[13]);

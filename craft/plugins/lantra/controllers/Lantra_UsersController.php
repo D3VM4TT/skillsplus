@@ -4,7 +4,22 @@ namespace Craft;
 
 class Lantra_UsersController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
+    public $allowAnonymous = array('actionHierarchy', 'actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
+
+    /**
+     * Get company users for hierarchy
+     *
+     * @throws mixed
+     */
+    public function actionHierarchy() {
+        craft()->userSession->requireLogin();
+        // get the posted nodeId
+        $companyId = craft()->request->getParam('companyId');
+        $type = craft()->request->getParam('type');
+        $user = craft()->userSession->getUser();
+        $node = craft()->lantra_structure->getHierarchy($companyId, $type, $user->id);
+        return craft()->controller->returnJson($node);
+    }
 
     /**
      * Saves user from the management form
