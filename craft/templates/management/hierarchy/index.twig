@@ -22,7 +22,6 @@
 <script>
     $(function () {
 
-        // AJAX
         $('#jstree').jstree({
             'plugins' : ['actions', 'json_data'],
             'core': {
@@ -31,47 +30,13 @@
                         if (node.id == '#') {
                             return "/actions/lantra/users/hierarchy";
                         }
-                        console.log('ELEMENT ' + node.original.elementId);
                         return "/actions/lantra/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
-                    }
-                }
-            }
-        });
-
-        /*
-        $('#jstree').jstree({
-            "plugins" : ["actions"],
-            "data" : {
-                'data' : {
-                    'url' : function (node) {
-                        return node.id === '#' ?
-                            'ajax_roots.json' :
-                            'ajax_children.json';
-                    },
-                    'data' : function (node) {
-                        return { 'id' : node.id };
-                    }
-                }
-
-                "ajax" : {
-                    "type": 'POST',
-                    "url": function (node) {
-                        if (node == -1) {
-                            console.log('root');
-                            return "/actions/lantra/users/hierarchy";
-
-
-                        }
-                        console.log(node)
-                        return "/actions/lantra/users/hierarchy?companyId=" + node.data('companyId') + "&type=" + node.data('type');
-                    },
-                    "success": function (data) {
-                        return data;
                     }
                 }
             }
         }).bind('ready.jstree', function (event, data) {
             {% if hierarchyNode %}
+            {# opening node only works if we know the id #}
             $("#jstree").jstree('select_node', 'node-{{ hierarchyNode }}');
             $("#jstree").jstree('open_node', 'node-{{ hierarchyNode }}', function(e,d) {
                 for (var i = 0; i < e.parents.length; i++) {
@@ -80,7 +45,6 @@
             });
             {%  endif %}
         });
-        */
 
         {% if not currentUser.managerReadOnly %}
 
