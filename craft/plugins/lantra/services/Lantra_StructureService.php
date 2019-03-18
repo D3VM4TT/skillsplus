@@ -56,7 +56,7 @@ class Lantra_StructureService extends BaseApplicationComponent
             $managerCompanies = craft()->lantra_users->getManagerCompanies($user);
 
             $children = [];
-            if (count($managerCompanies)) {
+            if ($managerCompanies && count($managerCompanies)) {
                 foreach ($managerCompanies as $company) {
                     // skip companies where they are the manager of the parent too
                     if (craft()->lantra_users->isParentCompanyManager($company, $user)){
@@ -66,7 +66,7 @@ class Lantra_StructureService extends BaseApplicationComponent
                 }
             }
             // does this user manage teams?
-            if (count($managerTeams)) {
+            if ($managerTeams && count($managerTeams)) {
                 foreach ($managerTeams as $team) {
                     $company = $team->teamCompany->first();
                     $nodeId = $company->id.'t'.$team->id;
