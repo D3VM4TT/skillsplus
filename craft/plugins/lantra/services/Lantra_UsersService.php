@@ -7,7 +7,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     private $hierarchyFilter = [];
 
     /**
-     * Get manager hierarchy
+     * Get manager hierarchy [replaced by Lantra_StructureService.php getHierarchy()]
      *
      * @param $user
      * @return array
@@ -50,7 +50,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
-     * Build a hierarchy array
+     * Build a hierarchy array [replaced by Lantra_StructureService.php getHierarchy()]
      *
      * @param object $element
      * @param string $type
@@ -113,7 +113,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $return['title'] =  'Team: ' . $element->title;
             $return['icon'] = 'group';
             // Add the team managers
-            $teamManagers = $this->getTeamMangers($element);
+            $teamManagers = $this->getTeamManagers($element);
             if (false != $teamManagersCount = count($teamManagers)) {
                 $label = (object)['id' => 0, 'title' => 'Team Managers (' . $teamManagersCount . ')'];
                 $teamManagersNode = $this->addHierarchyNode($label, 'label');
@@ -222,6 +222,45 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * @param $company
+     * @param null $manager
+     * @return bool
+     * @throws Exception
+     */
+    public function isCompanyManager($company, $manager = null) {
+        if (is_null($manager)) {
+            $manager = craft()->userSession->getUser();
+        }
+        // admins and scheme managers can manage everyone
+        if ($manager->admin || $manager->isInGroup('schemeManagers')) {
+            return true;
+        }
+        $companyManagers = $this->getCompanyMangers($company);
+        foreach($companyManagers as $companyManager) {
+            if ($manager->id == $companyManager->id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $company
+     * @param null $manager
+     * @return bool
+     * @throws Exception
+     */
+    public function isParentCompanyManager($company, $manager = null) {
+        if ( ! $company->companyParent->count()) {
+            return false;
+        }
+        if (is_null($manager)) {
+            $manager = craft()->userSession->getUser();
+        }
+        return $this->isCompanyManager($company->companyParent->first(), $manager);
+    }
+
+    /**
      * Return user company (team company)
      *
      * @param null $user
@@ -301,7 +340,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    public function getTeamMangers(EntryModel $team, $count = false) {
+    public function getTeamManagers(EntryModel $team, $count = false) {
         $return = [];
         if ($team->teamPrimaryManager->first()) {
             $return[] = $team->teamPrimaryManager->first();

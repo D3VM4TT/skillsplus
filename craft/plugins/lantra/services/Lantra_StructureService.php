@@ -3,24 +3,24 @@ namespace Craft;
 
 class Lantra_StructureService extends BaseApplicationComponent
 {
-    public function getHierarchy($companyId = null, $type = 'companies') {
-        if (! $companyId) {
+    public function getHierarchy($entryId = null, $type = 'companies') {
+        if (! $entryId) {
             $return = $this->getJsTreeRoot();
         }
         elseif ($type == 'companies') {
-            $return = $this->getJsTreeCompanies($companyId);
+            $return = $this->getJsTreeCompany($entryId);
         }
         elseif ($type == 'users') {
-            $return = $this->getJsTreeUsers($companyId);
+            $return = $this->getJsTreeUsers($entryId);
         }
         elseif ($type == 'teams') {
-            $return = $this->getJsTreeTeams($companyId);
+            $return = $this->getJsTreeTeam($entryId);
         }
         elseif ($type == 'managers') {
-            $return = $this->getJsTreeManagers($companyId);
+            $return = $this->getJsTreeManagers($entryId);
         }
         elseif ($type == 'children') {
-            $return = $this->getJsTreeChildren($companyId);
+            $return = $this->getJsTreeChildren($entryId);
         }
         return $return;
     }
@@ -46,19 +46,48 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     private function getJsTreeRoot() {
         $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
+        $user = craft()->userSession->getUser();
+        if ($user->admin or $user->isInGroup('schemeManagers')) {
+            $children = $this->getJsTreeChildren();
+        }
+        else {
+            // does this user manage teams or companies?
+            $managerTeams = craft()->lantra_users->getManagerTeams($user);
+            $managerCompanies = craft()->lantra_users->getManagerCompanies($user);
+
+            $children = [];
+            if (count($managerCompanies)) {
+                foreach ($managerCompanies as $company) {
+                    // skip companies where they are the manager of the parent too
+                    if (craft()->lantra_users->isParentCompanyManager($company, $user)){
+                        continue;
+                    }
+                    $children[] = $this->getHierarchy($company->id, 'companies');
+                }
+            }
+            // does this user manage teams?
+            if (count($managerTeams)) {
+                foreach ($managerTeams as $team) {
+                    $company = $team->teamCompany->first();
+                    $nodeId = $company->id.'t'.$team->id;
+                    $children[] = $this->createNode($team->id, 'teams', $nodeId, $team->title, 'group', true);
+                }
+            }
+        }
+
         return [
             'icon'  => '/assets/img/tree-root.png',
             'text'  => $globalsTheme->schemeName,
             'state' => ['opened' => true],
-            'children' => $this->getJsTreeChildren()
+            'children' => $children
         ];
     }
 
-    private function getJsTreeCompanies($companyId) {
+    private function getJsTreeCompany($companyId) {
         $company = $this->getCompanyById($companyId);
         $managerCount = $companyId ? craft()->lantra_users->getCompanyMangers($company, true) : 0;
         $userCount = $companyId ? craft()->lantra_users->getCompanyUsers($companyId, true) : 0;
-        $teamCount = $companyId ? craft()->lantra_users->getCompanyTeams($companyId, true) : 0;
+        $teams = $companyId ? craft()->lantra_users->getCompanyTeams($companyId) : [];
         $childrenCount = $this->getCompanyChildren($companyId, true);
 
         $return = $this->createNode($companyId ? $companyId : 0, 'company', $companyId, $company->title, 'company');
@@ -66,10 +95,6 @@ class Lantra_StructureService extends BaseApplicationComponent
         if ($managerCount) {
             $title = 'Managers (' . $managerCount . ')';
             $return['children'][]  = $this->createNode($companyId, 'managers', $companyId . 'm', $title, 'group', true);
-        }
-        if ($teamCount) {
-            $title = 'Teams (' . $teamCount . ')';
-            $return['children'][]  = $this->createNode($companyId, 'teams', $companyId . 't', $title, 'company', true);
         }
         if ($userCount) {
             $title = 'Users (' . $userCount . ')';
@@ -79,36 +104,53 @@ class Lantra_StructureService extends BaseApplicationComponent
             $title = 'Companies (' . $childrenCount . ')';
             $return['children'][] = $this->createNode($companyId, 'children', $companyId . 'c', $title, 'company',true);
         }
-
+        foreach($teams as $team) {
+            $nodeId = $companyId.'t'.$team->id;
+            $return['children'][] = $this->createNode($team->id, 'teams', $nodeId, $team->title, 'group', true);
+        }
         return $return;
     }
 
-    private function getJsTreeManagers($companyId) {
-        $company = $this->getCompanyById($companyId);
-        $managers = craft()->lantra_users->getCompanyMangers($company);
+    private function getJsTreeManagers($entryId) {
+        $entry =  craft()->entries->getEntryById($entryId);
+        // company managers
+        if ($entry->getSection()->id == 3) {
+            $managers = craft()->lantra_users->getCompanyMangers($entry);
+        }
+        // team managers
+        else {
+            $managers = craft()->lantra_users->getTeamManagers($entry);
+        }
         $return = [];
         foreach($managers as $manager) {
-            $nodeId = $companyId.'m'.$manager->id;
+            $nodeId = $entry->id.'m'.$manager->id;
             $return[] = $this->createNode($manager->id, 'user', $nodeId, $manager->fullname, 'person');
         }
         return $return;
     }
 
-    private function getJsTreeTeams($companyId) {
-        $teams = craft()->lantra_users->getCompanyTeams($companyId);
-        $return = [];
-        foreach($teams as $team) {
-            $nodeId = $companyId.'t'.$team->id;
-            $return[] = $this->createNode($team->id, 'team', $nodeId, $team->title, 'group');
-        }
+    private function getJsTreeTeam($teamId) {
+        $team =  craft()->entries->getEntryById($teamId);
+        $managerCount = craft()->lantra_users->getTeamManagers($team, true);
+        $return[]  = $this->createNode($teamId, 'managers', $team->id . 'm', 'Managers (' . $managerCount . ')', 'group', true);
+        $users = $this->getJsTreeUsers($teamId);
+        $return = array_merge($return, $users);
         return $return;
     }
 
-    private function getJsTreeUsers($companyId) {
-        $users = craft()->lantra_users->getCompanyUsers($companyId);
+    private function getJsTreeUsers($entryId) {
+        $entry =  craft()->entries->getEntryById($entryId);
+        // company managers
+        if ($entry->getSection()->id == 3) {
+            $users = craft()->lantra_users->getCompanyUsers($entry);
+        }
+        // team managers
+        else {
+            $users = craft()->lantra_users->getTeamUsers($entry);
+        }
         $return = [];
         foreach($users as $user) {
-            $nodeId = $companyId.'u'.$user->id;
+            $nodeId = $entryId.'u'.$user->id;
             $return[] = $this->createNode($user->id, 'user', $nodeId, $user->fullname, 'person');
         }
         return $return;
@@ -146,7 +188,7 @@ class Lantra_StructureService extends BaseApplicationComponent
     }
 
     private function getTopCompanyIds() {
-
+        // just return all companies without a parent
         $query = craft()->db->createCommand()
             ->select('e.id' )
             ->from('entries e')
