@@ -37,7 +37,7 @@
                         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
                         {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
                         {% for module in modules %}
-                            {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
+                            {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
                             <li>
                                 <a href="#module{{ module.id }}" class="module-status">
                                     {% if moduleResultEntry %}
@@ -57,7 +57,7 @@
                     </div>
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
                     {% for module in modules %}
-                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').first() %}
+                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
                         <div id="module{{ module.id }}" class="module open">
                             {% set totalPoints = 0 %}
                             <div class="header" data-target="#m{{ role.id ~ module.id }}">
@@ -244,7 +244,7 @@
     {% if existingResultIds|length %}
         {# get all the results no longer related to existing job role #}
         {% set existingResultIdsString = existingResultIds | join(', not ') %}
-        {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).id('and, not ' ~ existingResultIdsString) %}
+        {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired').id('and, not ' ~ existingResultIdsString) %}
     {% endif %}
 {% endif %}
 {% if resultArchive|length %}
