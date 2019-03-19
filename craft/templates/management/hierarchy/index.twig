@@ -46,6 +46,21 @@
             {%  endif %}
         });
 
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_dashboard",
+            "class"     : "button-hierarchy button-dashboard pull-right",
+            "title"     : "Dashboard",
+            "text"      : "Dashboard",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeId      = node.original.nodeId,
+                    elementId   = node.original.elementId;
+                location.href="/cpd/" + elementId;
+            }
+        });
+
         {% if not currentUser.managerReadOnly %}
 
         $('#jstree').jstree(true).add_action("all", {
