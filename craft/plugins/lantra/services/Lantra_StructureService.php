@@ -48,7 +48,8 @@ class Lantra_StructureService extends BaseApplicationComponent
         $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
         $user = craft()->userSession->getUser();
         if ($user->admin or $user->isInGroup('schemeManagers')) {
-            $children = $this->getJsTreeChildren();
+            $children[] = $this->createNode('scheme', 'managers', 's', 'Scheme Managers', 'group', true);
+            $children = array_merge($children, $this->getJsTreeChildren());
         }
         else {
             // does this user manage teams or companies?
@@ -112,18 +113,22 @@ class Lantra_StructureService extends BaseApplicationComponent
     }
 
     private function getJsTreeManagers($entryId) {
-        $entry =  craft()->entries->getEntryById($entryId);
-        // company managers
-        if ($entry->getSection()->id == 3) {
-            $managers = craft()->lantra_users->getCompanyMangers($entry);
+        if ($entryId == 'scheme') {
+            $managers = craft()->lantra_users->getSchemeManagers();
         }
-        // team managers
         else {
-            $managers = craft()->lantra_users->getTeamManagers($entry);
+            $entry = craft()->entries->getEntryById($entryId);
+            // company managers
+            if ($entry->getSection()->id == 3) {
+                $managers = craft()->lantra_users->getCompanyMangers($entry);
+            } // team managers
+            else {
+                $managers = craft()->lantra_users->getTeamManagers($entry);
+            }
         }
         $return = [];
         foreach($managers as $manager) {
-            $nodeId = $entry->id.'m'.$manager->id;
+            $nodeId = (isset($entry) ? $entry->id : '') . 'm' . $manager->id;
             $return[] = $this->createNode($manager->id, 'user', $nodeId, $manager->fullname, 'person');
         }
         return $return;
