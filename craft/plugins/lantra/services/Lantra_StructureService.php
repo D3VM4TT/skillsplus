@@ -182,6 +182,7 @@ class Lantra_StructureService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = null;
+        $criteria->order = 'title';
         if ($companyId) {
             $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'companyParent'];
         }

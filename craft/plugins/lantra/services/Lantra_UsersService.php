@@ -299,6 +299,7 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getCompanyUsers($companyId, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
+        $criteria->order = 'lastName';
         $criteria->limit = null;
         return $count ? $criteria->count() : $criteria;
     }
@@ -314,6 +315,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
+        $criteria->order = 'lastName';
         return $count ? $criteria->count() : $criteria;
     }
 
