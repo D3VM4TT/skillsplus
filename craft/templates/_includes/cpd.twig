@@ -100,9 +100,11 @@
                                                         <td>
                                                             {% if readOnly %}
                                                                 {{ unitEntry.title }}
+                                                                {{ unitEntry['unitHeading'] is defined and unitEntry.unitHeading ? unitEntry.unitHeading : '' }}
                                                             {% else %}
                                                                 <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" >
                                                                     {{ unitEntry.title }}
+                                                                    {{ unitEntry['unitHeading'] is defined and unitEntry.unitHeading ? unitEntry.unitHeading : '' }}
                                                                 </a>
                                                             {% endif %}
                                                             <div class="cpd-icons">
