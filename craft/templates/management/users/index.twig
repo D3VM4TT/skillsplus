@@ -20,7 +20,7 @@
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
     {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
 {% elseif currentUser.isInGroup('companyManagers') %}
-    {% set companies = craft.entries.section('companies').relatedTo(currentUser) %}
+    {% set companies = craft.lantra.managerCompanies(currentUser.id, true) %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
     {% set criteria = craft.users.admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% elseif currentUser.isInGroup('teamManagers') %}

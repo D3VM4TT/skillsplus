@@ -469,7 +469,13 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     function getManagerCompanies(UserModel $user, $includeChildren = false) {
-        $companyIds = $this->getCompanyManagerCompanyIds($user, $includeChildren);
+        $companyIds = $this->getCompanyManagerCompanyIds($user);
+        if ($includeChildren) {
+            $parentIds = $companyIds;
+            foreach ($parentIds as $companyId) {
+                $companyIds = array_merge($companyIds, $this->getCompanyChildrenIds($companyId));
+            }
+        }
         if ( ! count($companyIds)) {
             return null;
         }
