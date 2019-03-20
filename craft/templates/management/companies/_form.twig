@@ -61,7 +61,7 @@
             <option value="">~ none ~</option>
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}
-                    <option value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endif %}
             {% endfor %}
         </select>
