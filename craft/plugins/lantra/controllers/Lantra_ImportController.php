@@ -4,7 +4,7 @@ namespace Craft;
 
 class Lantra_ImportController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults');
+    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults', 'actionClean');
     private $dataPath = '../craft-assets/import/';
 
     private $companies = [];
@@ -153,6 +153,58 @@ class Lantra_ImportController extends Lantra_BaseController {
         $this->getData('results');
         $this->createResults();
         $this->loadTemplate(true);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function actionClean() {
+
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->companyUpdated = false;
+        $criteria->order = 'title';
+        $criteria->limit = 50;
+        $count = 0;
+
+        foreach ($criteria->find() as $company) {
+            $managerIds = [];
+            foreach ($company->companySecondaryManagers as $m) {
+                if ( ! $this->isParentCompanyManager($company, $m)) {
+                    $managerIds[] = $m->id;
+                }
+            }
+            $company->setContentFromPost([
+                'companyUpdated' => true,
+                'companySecondaryManagers' => $managerIds
+            ]);
+            if (craft()->entries->saveEntry($company)) {
+                $count++;
+            }
+        }
+
+        echo $count . ' companies updated ';
+
+        die();
+    }
+
+    private function isParentCompanyManager($company, $manager) {
+        $parents = $this->getParents($company);
+        $managerIds = [];
+        foreach($parents as $parent) {
+            foreach ($parent->companySecondaryManagers as $m) {
+                $managerIds[] = $m->id;
+            }
+        }
+        return in_array($manager->id, $managerIds);
+    }
+
+    private function getParents($company, $parents = []) {
+        if ( ! $company->companyParent->count()) {
+            return $parents;
+        }
+        $parents[] = $company->companyParent->first();
+        return $this->getParents($company->companyParent->first(), $parents);
     }
 
     /**
