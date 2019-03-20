@@ -1728,6 +1728,10 @@ body.loading div.loading {
         display: none;
     }*/
 
+    header {
+    position: initial;
+    }
+
     .page-subHeader {
     min-height: 25px;
     padding: 25px 20px;
@@ -1955,7 +1959,11 @@ body.loading div.loading {
         padding: 15px;
     }
     article.cpd div.status {
-    display: none;
+    display: block;
+    float: initial;
+    }
+    article.cpd div.status img {
+     margin-left: 0px; 
     }
     .page-form {
     padding: 60px 30px;
