@@ -93,7 +93,7 @@ class SproutReports_ReportsController extends BaseController
 		$reportId = isset($variables['reportId']) ? $variables['reportId'] : null;
 		$report   = sproutReports()->reports->getReport($reportId);
 
-		$options = craft()->request->getPost('options');
+		$options = craft()->request->getPost('options', []);
 		$options = count($options) ? $options : array();
 
 		if ($report)
