@@ -1718,7 +1718,7 @@ body.loading div.loading {
 }
 
 @media screen and (max-width: 950px) {
-    /*Hide desktop navigation elements on smaller screens*/
+    /*Hide desktop navigation elements on smaller screens
     header,
     nav.cpd,
     .page-subHeader,
@@ -1726,7 +1726,44 @@ body.loading div.loading {
     .link-toggle,
     .account-details-toggle {
         display: none;
+    }*/
+
+    .page-subHeader {
+    min-height: 25px;
+    padding: 25px 20px;
     }
+
+    .page-subHeader a {
+    padding: 10px 0px;
+    }
+
+    nav.cpd {
+    padding: 0px;
+    top: 0;
+    }
+
+    nav.topNavigation {
+    float: initial;
+    }
+
+    body .topNavigation a,
+    body.logged-in .topNavigation a {
+    display: block;
+    padding: 10px 0px 0px 0px;
+    }
+
+    section.row.admin {
+    display: block;
+    }
+
+    nav.cpd li a {
+    padding: 10px 20px;
+    }
+
+    nav.cpd ul > li:last-child {
+    margin-bottom: 20px;
+}
+
     .header-controls {
         position: initial;
         float: initial;
@@ -1792,7 +1829,7 @@ body.loading div.loading {
     .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
         width: 100%;
         max-width: initial;
-        padding-bottom: 60px;
+        padding: 20px 0px;
     }
 
     .footer {
@@ -1801,8 +1838,9 @@ body.loading div.loading {
     }
     body.logged-in .container-sidebar {
         width: 100%;
-        height: 150px;
+        width: 100%;
         max-width: 100% !important;
+        height: auto;
         float: initial;
         margin: 0;
     }
@@ -1821,7 +1859,6 @@ body.loading div.loading {
         height:auto;
         float: initial;
         margin: 0;
-        padding-bottom:40px;
     }
     div.sidebar {
         position: static;
