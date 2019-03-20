@@ -38,7 +38,7 @@ class LantraPlugin extends BasePlugin
             $licenceSource = '';
             if ($event->params['isNewUser'] && ! $user->admin) {
                 // assign company licence if joining a team
-                if ($user->userCompany->count() OR $user->userTeam->count()) {
+                if (! $this->getSettings()->lantraDisableLicences && $user->userCompany->count() OR $user->userTeam->count()) {
                     $companyEntry = craft()->lantra_users->userCompany($user);
                     if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
                         $event->performAction = false;
@@ -127,7 +127,7 @@ class LantraPlugin extends BasePlugin
             }
             // handle company licence changes
             if ($entry->sectionId == $this->sectionIdCompanies){
-               if ( ! craft()->lantra_licence->updateCompanyLicences($entry)){
+                if (! $this->getSettings()->lantraDisableLicences && ! craft()->lantra_licence->updateCompanyLicences($entry)){
                    $entry->addError('companyRemainingLicences', 'There are insufficient scheme licences.');
                    $event->performAction = false;
                }
@@ -168,6 +168,42 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_notify->sendModuleResult($entry);
             }
         });
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCpSection()
+    {
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    protected function defineSettings()
+    {
+        return array(
+            'lantraDisableLicences' => AttributeType::Bool,
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getSettingsUrl()
+    {
+        return 'lantra/settings';
+    }
+
+    public function registerCpRoutes()
+    {
+        return array(
+            'lantra' =>
+                array('action' => 'lantra/settings/index'),
+            'lantra/settings' =>
+                array('action' => 'lantra/settings/index'),
+        );
     }
 
     public function registerSiteRoutes()
