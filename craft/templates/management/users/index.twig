@@ -67,11 +67,25 @@
             <tbody>
             {% for user in userEntries %}
                 {% set company = craft.lantra.userCompany(user.id) %}
+                {% set managerCompanies = [] %}
+                {% if user.isInGroup('companyManagers') %}
+                    {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companyPrimaryManager'}).limit(null) %}
+                    {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companySecondaryManagers'}).limit(null) %}
+                    {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
+                {% endif %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
-                    <td><p class="td-title-responsive">Company: </p> {{ craft.lantra.companyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">Company: </p>
+                        {% if company %}
+                            {{ craft.lantra.companyLabel(company) }}
+                        {% elseif managerCompanies|length %}
+                            {% for company in managerCompanies %}
+                                {{ company.title }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
                     {% if globalsScheme.schemeTeams|default(false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
