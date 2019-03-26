@@ -30,6 +30,8 @@ class LantraPlugin extends BasePlugin
 
     public function init()
     {
+        craft()->config->maxPowerCaptain();
+        
         parent::init();
 
         // check user licence
