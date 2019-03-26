@@ -449,6 +449,7 @@ class LantraVariable
      * @return string
     */
     public function exportReport($reportType = 'users', $days = 28, $search = '') {
+        craft()->config->maxPowerCaptain();
         $data = [];
         if (false != $results = $this->managerReport($reportType, null, $days, $search, false)) {
             foreach ($results as $row) {
@@ -461,10 +462,11 @@ class LantraVariable
                 }
                 else {
                     $userTeam = $row->author->userTeam->first();
+                    $module = $row->resultModule->first();
                     $data[] = [
                         $row->author->getFullName(),
                         $userTeam ? $userTeam->title : '',
-                        $row->resultModule->first()->title,
+                        $module ? $module->title : '',
                         $row->postDate->format('d/m/y'),
                         $row->expiryDate ? $row->expiryDate->format('d/m/y') : '',
                     ];

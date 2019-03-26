@@ -115,11 +115,12 @@ class Lantra_ReportsService extends BaseApplicationComponent
             foreach ($user->userRole as $role) {
                 $roles[] = $role->title;
             }
+            $team = $user->userTeam->count() ? $user->userTeam->first()->title : '~';
             $record = [
                 $user->fullName,
                 $user->email,
                 $company->title,
-                $user->userTeam->first()->title,
+                $team,
                 implode(', ', $roles),
                 $user->userStartDate ? $user->userStartDate->format('d/m/y') : '',
                 $user->userStartDate ? $user->userDateOfBirth->format('d/m/y') : '',

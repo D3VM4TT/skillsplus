@@ -17,6 +17,7 @@ return array(
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
         'autoLoginAfterAccountActivation' => true,
+        'phpMaxMemoryLimit' => '4096M',
         'environmentVariables' => array(
             'basePath' => '/datadisk/sites/' . $site . '/',
         ),
