@@ -1,6 +1,11 @@
 {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
 {% set existingResultIds = [] %}
+{% set isManager = false %}
 {% set readOnly = globalsScheme.schemeUserReadOnly and not craft.lantra.isManager(cpdUser.id) %}
+{% if cpdUser.id != currentUser.id %}
+    {% set isManager = true %}
+    {% set readOnly = currentUser.managerReadOnly %}
+{% endif %}
 
 <article class="cpd">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
