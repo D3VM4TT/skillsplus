@@ -461,12 +461,18 @@ class LantraVariable
                     ];
                 }
                 else {
-                    $userTeam = $row->author->userTeam->first();
-                    $module = $row->resultModule->first();
+                    $company = $row->author->userCompany->first();
+                    $title = $row->title;
+                    if ($row->type == 'unitResult') {
+                        $title = $row->resultUnit->first()->title;
+                    }
+                    elseif ($row->type == 'moduleResult' && $row->resultModule->count()) {
+                        $title = $row->resultModule->first()->title;
+                    }
                     $data[] = [
                         $row->author->getFullName(),
-                        $userTeam ? $userTeam->title : '',
-                        $module ? $module->title : '',
+                        $company ? $company->title : '~',
+                        $title,
                         $row->postDate->format('d/m/y'),
                         $row->expiryDate ? $row->expiryDate->format('d/m/y') : '',
                     ];
