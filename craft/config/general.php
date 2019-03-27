@@ -18,7 +18,7 @@ return array(
         'useEmailAsUsername' => false,
         'autoLoginAfterAccountActivation' => true,
         'phpMaxMemoryLimit' => '4096M',
-        'maxUploadFileSize' => '248MB',
+        'maxUploadFileSize' => '2147483648',
         'environmentVariables' => array(
             'basePath' => '/datadisk/sites/' . $site . '/',
         ),
