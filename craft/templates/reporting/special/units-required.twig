@@ -1,0 +1,65 @@
+{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+
+{% set reportType = 'units-required' %}
+{% set filterDays = craft.request.getParam('days')|default(28) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% if craft.request.segment(3) == 'csv' %}{% do craft.lantra.exportReport(reportType, filterDays, filterSearch) %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set metaTitle = "Reporting > " ~ reportType|ucwords ~ " Report" %}
+{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+
+{% set reportRows = craft.lantra.managerReport(reportType, currentUser.id) %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Units Required Report</h2>
+        </div>
+        {% if reportRows|length %}
+            <div class="page-content">
+                <table width="100%" class="data">
+                    <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Nme</th>
+                        <th>Company</th>
+                        <th>Job Role</th>
+                        <th>Unit</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in reportRows %}
+                        {% set userCompany = craft.lantra.userCompany(row.user) %}
+                        {% set userJobRole = row.user.userRole.count ? row.user.userRole.first.title : '~' %}
+                        <tr>
+                            <td>{{ row.user.id }}</td>
+                            <td>{{ row.user.getFullName() }}</td>
+                            <td>{{ userCompany.title|default('~') }}
+                            <td>{{ userJobRole }}</td>
+                            <td>{{ row.unitEntry.title|default('') }}</td>
+                            <td>{{ row.expiryDate ? row.expiryDate|format('d/m/y') : '' }}</td>
+                            <td>{{ row.requiredStatus }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-btn">
+                <!-- <a class="button primary-bg" href="/reporting/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a> -->
+            </div>
+        {% else %}
+            <div class="page-content">
+                <p>There are no results to display.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
