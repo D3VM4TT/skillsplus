@@ -32,6 +32,72 @@ class Lantra_ReportsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $reportType
+     * @param $data
+     * @throws HttpException
+     */
+    public function sendReport($reportType, $data) {
+        ob_start();
+        $export = fopen('php://output', 'w');
+        if ( ! count($data)) {
+            return;
+        }
+        foreach ($data as $row) {
+            if (is_array($row)) {
+                fputcsv($export, $row);
+            }
+        }
+        fclose($export);
+        $content = ob_get_clean();
+        $content = str_replace("\n", "\r\n", $content);
+        craft()->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+    }
+
+    /**
+     * @param $manager
+     * @param $type
+     * @throws HttpException
+     */
+    public function getSpecialReport($manager, $type) {
+        if ($type == 'users') {
+            $values = craft()->lantra_results->getManagerUserSummary($manager->id);
+        }
+        elseif ($type == 'results') {
+            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id);
+        }
+        elseif ($type == 'required') {
+            $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id);
+        }
+
+        return $this->sendReport($type, $values);
+
+        /* @todo save report as asset for download later?
+
+        // create csv file in temp folder
+        $filePath = craft()->path->getTempUploadsPath();
+        $fileName = $manager->id . '-' . $type . '.csv';
+
+        $this->reportCsv($values, $filePath.$fileName);
+
+        $sourceId = 3;
+        $source = craft()->assetSources->getSourceTypeById($sourceId);
+        $folder = craft()->assets->findFolder(array(
+            'sourceId' => $sourceId,
+        ));
+
+        // copy to assets
+        $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
+
+        // delete temp file
+        unlink($filePath . $fileName);
+
+        $fileId = $response->getDataItem('fileId');
+        return craft()->assets->getFileById($fileId);
+
+         */
+    }
+
+    /**
      * Get all reports
      *
      * @param object

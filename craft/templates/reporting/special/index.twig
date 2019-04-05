@@ -1,0 +1,26 @@
+{% extends "_layout" %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>Special Reports</h2>
+    </div>
+    <div class="page-content">
+
+        <p>
+            <a href="/actions/lantra/assets/specialReport?type=users">Users (Hierarchy Report)</a>
+        </p>
+
+        <p>
+            <a href="/actions/lantra/assets/specialReport?type=results">Results (Qual User)</a>
+        </p>
+
+        <p>
+            <a href="/actions/lantra/assets/specialReport?type=required">Required (Expired Training)</a>
+        </p>
+    </div>
+</section>
+{% endblock %}
