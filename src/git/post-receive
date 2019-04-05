@@ -4,13 +4,18 @@
 DEV_IP="10.1.4.4"
 UAT_IP="10.1.4.5"
 STG_IP="10.1.4.7"
-PRODUCTION_IP=""
+PRODUCTION_IP="10.1.4.9"
 
 # repo branches to sync
 DEV_BRANCH="develop"
 STG_BRANCH="staging"
 UAT_BRANCH="uat"
 PRODUCTION_BRANCH="master"
+
+# domains i.e. folders (separated by space)
+DOMAINS="bics cha iopf ltp poultrypassport ptr bcsa poultec"
+
+## END OF CONFIG ##
 
 # get branch name from ref head
 if ! [ -t 0 ]; then
@@ -42,11 +47,20 @@ fi
 if [ -n "$REMOTE_IP" ]; then
 
     # loop through domains and copy to server
-    for DOMAIN in bics cha iopf ltp poultrypassport ptr ;
+    for DOMAIN in $DOMAINS;
     do
-        REMOTE_FOLDER="git@$REMOTE_IP:/datadisk/sites/$DOMAIN"
+        REMOTE_FOLDER="/datadisk/sites/$DOMAIN"
 
-        rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude 'src' --exclude 'craft/storage' $TMP_DIR/ $REMOTE_FOLDER
+        # sync files
+        rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude '/src' --exclude 'craft/storage' $TMP_DIR/ git@$REMOTE_IP:$REMOTE_FOLDER
+
+        # set folder permissions
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
 
         echo "lantra cpd deploy "$BRANCH" > "$DOMAIN
    done

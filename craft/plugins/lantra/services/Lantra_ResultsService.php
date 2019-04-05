@@ -689,6 +689,122 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Return all required (including expired)
+     *
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerUnitRequiredResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+        $rows = [];
+        foreach($subordinates as $user) {
+            $rows = array_merge($rows, $this->userRequiredRows($user));
+        }
+        return $rows;
+    }
+
+    /**
+     * @param null $user
+     * @return array
+     * @throws Exception
+     */
+    private function userRequiredRows($user)  {
+        $units = $this->userUnits($user);
+        $rows = [];
+        foreach ($units as $unit) {
+            $result = $this->unitResult($user, $unit->id);
+            if ( ! $result || $result->status == 'expired') {
+                $row = [
+                    'user' => $user,
+                    'unitEntry' => $unit,
+                    'expiryDate' => $result ? $result->expiryDate : null,
+                    'requiredStatus' => $result ? 'expired' : 'required'
+                ];
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
+    /* cache of role modules */
+    private $roleModules = [];
+    private $moduleUnits = [];
+
+    /**
+     * @param $user
+     * @return array
+     * @throws Exception
+     */
+    private function userUnits($user)  {
+        $units = [];
+        foreach($user->userRole as $role) {
+            $modules = $this->roleModules($role);
+            foreach ($modules as $module) {
+                $moduleUnits = $this->moduleUnits($module);
+                foreach ($moduleUnits as $unit) {
+                    if (! isset($units[$unit->id])) {
+                        $units[$unit->id] = $unit;
+                    }
+                }
+           }
+        }
+        return $units;
+    }
+
+    /**
+     * @param $user
+     * @param $unitId
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    private function unitResult($user, $unitId)  {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        $criteria->status = ['live', 'expired'];
+        $criteria->authorId = $user->id;
+        return $criteria->first();
+    }
+
+    /**
+     * @param $role
+     * @return ElementCriteriaModel|int
+     * @throws Exception
+     */
+    private function roleModules($role)  {
+        if (isset($this->roleModules[$role->id])) {
+            $criteria = $this->roleModules[$role->id];
+        }
+        else {
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria->relatedTo = ['targetElement' => $role->id, 'field' => 'moduleRoles'];
+            $criteria->limit = null;
+            $this->roleModules[$role->id] = $criteria;
+        }
+        return $criteria->find();
+    }
+
+    /**
+     * @param $module
+     * @return ElementCriteriaModel|mixed
+     * @throws Exception
+     */
+    private function moduleUnits($module)  {
+        if (isset($this->moduleUnits[$module->id])) {
+            return $this->moduleUnits[$module->id];
+        }
+        $units = [];
+        foreach($module->moduleUnitGroups as $group) {
+            $units = array_merge($units, $group->unitEntries->find());
+        }
+        $this->moduleUnits[$module->id] = $units;
+        return $units;
+    }
+
+    /**
      * Return all unit result entries
      *
      * @param null $userId

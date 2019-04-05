@@ -411,6 +411,9 @@ class LantraVariable
         }
         $criteria = null;
         switch ($reportType) {
+            case 'units-required':
+                $criteria = craft()->lantra_results->getManagerUnitRequiredResults($user->id);
+                break;
             case 'units-blocked':
                 $criteria = craft()->lantra_results->getManagerUnitBlockedResults($user->id, $days, $limit, $search);
             break;
