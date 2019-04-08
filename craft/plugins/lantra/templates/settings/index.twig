@@ -19,12 +19,18 @@
 
         {% namespace 'settings' %}
 
+            <h2>System Settings</h2>
+
             {{ forms.checkbox ({
                 label:			"Disable Lantra Licences?",
                 id:				"lantraDisableLicences",
                 name:			"lantraDisableLicences",
                 checked:		settings.lantraDisableLicences == 1,
             }) }}
+
+            <hr />
+
+            <h2>Theme Settings</h2>
 
             {{ forms.textareaField ({
                 label:			"Theme Login Message",
@@ -33,6 +39,13 @@
                 value:		    settings.themeLoginMessage,
                 rows:           4,
                 cols:           50
+            }) }}
+
+            {{ forms.checkbox ({
+                label:			"Disable Certificates?",
+                id:				"themeDisableCertificates",
+                name:			"themeDisableCertificates",
+                checked:		settings.themeDisableCertificates == 1,
             }) }}
 
         {% endnamespace %}
