@@ -8,9 +8,9 @@
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
 {% if currentUser.isInGroup('schemeManagers') %}
-    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit).order('title') %}
 {% else %}
-    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit) %}
+    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit).order('title') %}
 {% endif %}
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 
@@ -44,6 +44,11 @@
                      <th class="title">Name</th>
                      <th class="title">Parent</th>
                      <th class="title">Primary Manager</th>
+                     <th class=""></th>
+                     <th class=""></th>
+                     <th class=""></th>
+                     <th class=""></th>
+                 </tr>
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
