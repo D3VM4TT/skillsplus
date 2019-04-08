@@ -26,6 +26,15 @@
                 checked:		settings.lantraDisableLicences == 1,
             }) }}
 
+            {{ forms.textareaField ({
+                label:			"Theme Login Message",
+                id:				"themeLoginMessage",
+                name:			"themeLoginMessage",
+                value:		    settings.themeLoginMessage,
+                rows:           4,
+                cols:           50
+            }) }}
+
         {% endnamespace %}
 
     </div>
