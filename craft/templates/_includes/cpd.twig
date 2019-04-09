@@ -94,8 +94,8 @@
                                                 {% for unitEntry in unitGroupEntries %}
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
+                                                    {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                                     {% if unitResultEntry %}
-                                                        {% set unreadComments = craft.lantra.unreadComments(unitResultEntry) %}
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                                     {% endif %}
                                                     {% if unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
