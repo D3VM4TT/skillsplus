@@ -6,8 +6,10 @@
 {% if userId != currentUser.id %}
     {% set account = craft.users.id(userId).first %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+    {% set isManager = true %}
 {% else %}
     {% set account = currentUser %}
+    {% set isManager = false %}
 {% endif %}
 
 {% set dashboardUri = '/cpd/' ~ account.id %}
@@ -94,18 +96,24 @@
                     {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked} %}
                 {% endif %}
                 {% if not resultLocked %}
-                <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
-                <div class="container-btn">
-                    <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
-                </div>
-                <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this Unit for endorsement.</p></div>
-                <div class="container-btn">
-                    {% if resultEntry and resultEntry.resultStatus == 'draft' %}
-                        <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
-                    {% else %}
-                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
-                    {% endif %}
-                </div>
+                    <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
+                    <div class="container-btn">
+                        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
+                    </div>
+                {% endif %}
+                {% if isManager %}
+                    <div class="container-btn">
+                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Save and endorse' }}</button>
+                    </div>
+                {% else %}
+                    <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
+                    <div class="container-btn">
+                        {% if resultEntry and resultEntry.resultStatus == 'draft' %}
+                            <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
+                        {% else %}
+                            <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </form>
         </div>

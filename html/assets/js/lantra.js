@@ -128,7 +128,8 @@ $(document).ready(function(){
         e.preventDefault();
         var action = $(this).data('action'),
             row = $(this).closest('.item'),
-            deleteRow = false;
+            deleteRow = false,
+            reload = false;
         if (action == 'lantra/entries/resetResult') {
             if ( ! confirm('Are you sure you want to unlink all attempts?')) {
                 return false;
@@ -168,6 +169,7 @@ $(document).ready(function(){
                 return false;
             }
             var data = {userId: $(this).data('id')};
+            reload = true;
         }
         if (action == 'lantra/entries/runReport') {
             if ( ! confirm('Are you sure you want to run this report?')) {
@@ -185,6 +187,9 @@ $(document).ready(function(){
                 $('body').removeClass('loading');
                 if (deleteRow) {
                    row.fadeOut().remove();
+                }
+                if (reload) {
+                    location.reload();
                 }
                 alert(response.message);
             }

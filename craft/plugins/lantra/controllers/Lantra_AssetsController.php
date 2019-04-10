@@ -11,6 +11,17 @@ class Lantra_AssetsController extends Lantra_BaseController
     );
 
     /**
+     * @throws Exception
+     */
+    public function actionSpecialReport() {
+        craft()->userSession->requireLogin();
+        $type = craft()->request->getParam('type', 'users');
+        $manager = craft()->userSession->getUser();
+        craft()->lantra_reports->getSpecialReport($manager, $type);
+        return;
+    }
+
+    /**
      * Uploads evidence from front end
      *
      * @throws mixed

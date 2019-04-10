@@ -3,6 +3,23 @@ namespace Craft;
 
 class LantraVariable
 {
+    public $plugin;
+
+    public function __construct() {
+        $this->plugin = craft()->plugins->getPlugin('lantra');
+        $this->settings = $this->plugin->getSettings();
+    }
+
+    /**
+     * Get setting
+     *
+     * @param $key
+     * @return mixed
+     */
+    public function setting($key) {
+        return $this->settings->getAttribute($key);
+    }
+
     /**
      * @param $attemptEntry
      * @return array

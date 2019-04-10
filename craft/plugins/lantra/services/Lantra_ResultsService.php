@@ -689,6 +689,159 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerUserSummary($userId = null, $days = 'all', $limit = 10, $search = '') {
+        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+        $subordinateIds = $this->getIds($subordinates);
+
+        $header = [
+            'Company ID',
+            'User ID',
+            'Name',
+            'Email',
+            'Job Title',
+            'Birthday',
+            'Start Date',
+            'Company Title',
+            'Address'
+        ];
+
+        $data = $this->getSubordinateUnitResults($subordinateIds);
+        $units = [];
+        foreach ($data as $results) {
+            foreach ($results as $result) {
+                $unit = $result->resultUnit->first();
+                if (! isset($units[$unit->id])){
+                    $units[$unit->id] = $unit;
+
+                    $header[] = 'Qual Title';
+                    $header[] = 'Date Started';
+                    $header[] = 'Date Finished';
+                    $header[] = 'Date Expired';
+                }
+            }
+        }
+
+        $format = 'd/m/y';
+
+        $rows = [$header];
+        foreach($subordinates as $user) {
+            $company = craft()->lantra_users->userCompany($user);
+            $role = $user->userRole->first();
+            $row = [
+                $company ? $company->id : 'unknown',
+                $user->id,
+                $user->fullName,
+                $user->email,
+                $role ? $role->title : 'unknown',
+                $user->userDateOfBirth ? $user->userDateOfBirth->format($format) : '',
+                $user->userStartDate,
+                $company ? $company->title : 'unknown',
+                '~'
+            ];
+            foreach ($units as $unit) {
+                if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
+                    $row[] = $unit->title;
+
+                    $startDate = $data[$user->id][$unit->id]->resultStartDate;
+                    $finishDate = $data[$user->id][$unit->id]->resultFinishDate;
+                    $expiryDate = $data[$user->id][$unit->id]->expiryDate;
+
+                    $row[] = $startDate ? $startDate->format($format) : '';
+                    $row[] = $finishDate ? $finishDate->format($format) : '';
+                    $row[] = $expiryDate ? $expiryDate->format($format) : '';
+                }
+            }
+            $rows[] = $row;
+        }
+        return $rows;
+    }
+
+    /**
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerUserCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+        $subordinateIds = $this->getIds($subordinates);
+
+        $header = [
+            'id',
+            'name',
+            'company'
+        ];
+
+        $units = $this->managerUnits($subordinates);
+        $unitIds = $this->getIds($units);
+
+        foreach ($units as $unit) {
+            $header[] = $unit->title;
+        }
+
+        $data = $this->getSubordinateUnitResults($subordinateIds);
+
+        $rows = [$header];
+        foreach($subordinates as $user) {
+            $company = craft()->lantra_users->userCompany($user);
+            $row = [
+                $user->id,
+                $user->fullName,
+                $company ? $company->title : 'unknown'
+            ];
+            foreach ($units as $unit) {
+                $value = 'N/A';
+                if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
+                    $value = $data[$user->id][$unit->id]->expiryDate;
+                }
+                $row[] = $value;
+            }
+            $rows[] = $row;
+        }
+        return $rows;
+    }
+
+    private function getSubordinateUnitResults($subordinateIds) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $subordinateIds;
+        $criteria->status = ['live', 'expired'];
+        $results = $criteria->find();
+
+        // arrange as useful array [userId][unitId] = [result]
+        $data = [];
+        foreach ($results as $result) {
+            if ( ! isset ($data[$result->authorId])){
+                $data[$result->authorId] = [];
+            }
+            $unitEntry = $result->resultUnit->first();
+            if ($unitEntry) {
+                $data[$result->authorId][$result->resultUnit->first()->id] = $result;
+            }
+        }
+
+        return $data;
+    }
+
+    private function getIds($array ){
+        $ids = [];
+        foreach ($array as $item) {
+            $ids [] = $item->id;
+        }
+        return $ids;
+    }
+
+    /**
      * Return all required (including expired)
      *
      * @param null $userId
@@ -735,6 +888,27 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private $moduleUnits = [];
 
     /**
+     * Get all the units for all the subordinates of a manager
+     *
+     * @param $subordinates
+     * @return array
+     * @throws Exception
+     */
+    private function managerUnits($subordinates) {
+        $units = [];
+        foreach($subordinates as $user) {
+            foreach($this->userUnits($user) as $unit) {
+                if (! isset($units[$unit->id])) {
+                    $units[$unit->id] = $unit;
+                }
+            }
+        }
+        return $units;
+    }
+
+    /**
+     * Get all the units for a user
+     *
      * @param $user
      * @return array
      * @throws Exception

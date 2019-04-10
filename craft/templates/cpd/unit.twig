@@ -9,9 +9,11 @@
     {% set account = craft.users.id(userId).first %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
     {%  set dashboardUri = '/cpd/' ~ userId %}
+    {% set isManager = true %}
 {% else %}
     {% set account = currentUser %}
-    {%  set dashboardUri = '/' %}
+    {% set dashboardUri = '/' %}
+    {% set isManager = false %}
 {% endif %}
 
 {% set moduleEntry = craft.entries.id(moduleId).first() %}

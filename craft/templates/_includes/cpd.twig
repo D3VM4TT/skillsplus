@@ -94,8 +94,8 @@
                                                 {% for unitEntry in unitGroupEntries %}
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
+                                                    {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                                     {% if unitResultEntry %}
-                                                        {% set unreadComments = craft.lantra.unreadComments(unitResultEntry) %}
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                                     {% endif %}
                                                     {% if unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
@@ -234,7 +234,7 @@
                                     <h3>Module Status: {% if moduleResultEntry %}Complete{% else %}In progress{% endif %}</h3>
                                     {% if moduleResultEntry %}
                                         <h3>Result Expires: {{ moduleResultEntry.expiryDate is empty ? "Never" : moduleResultEntry.expiryDate|date(dateFormat) }}</h3>
-                                        {% if moduleResultEntry %}
+                                        {% if moduleResultEntry and not craft.lantra.setting('themeDisableCertificates') %}
                                             <h3><a href="/public/certificate/{{ cpdUser.id }}/{{ moduleResultEntry.id }}">Download Certificate</a></h3>
                                         {% endif %}
                                     {% endif %}
