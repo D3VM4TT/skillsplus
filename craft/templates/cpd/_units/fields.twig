@@ -12,22 +12,22 @@
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.expiryDate|format('yyyy-mm-dd') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="yyyy-mm-dd">
+                   value="{{ resultExists ? resultEntry.expiryDate|format('dd-mm-yyyy') }}" data-language="en"
+                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper">
             <label for="userStartDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultStartDate|format('yyyy-mm-dd') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="yyyy-mm-dd">
+                   value="{{ resultExists ? resultEntry.resultStartDate|format('dd-mm-yyyy') }}" data-language="en"
+                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper">
             <label for="userFinishDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultFinishDate|format('yyyy-mm-dd') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="yyyy-mm-dd">
+                   value="{{ resultExists ? resultEntry.resultFinishDate|format('dd-mm-yyyy') }}" data-language="en"
+                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper">

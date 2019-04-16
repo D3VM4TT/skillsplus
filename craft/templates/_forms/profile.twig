@@ -22,7 +22,7 @@
     {% if userProfile.userEditDob %}
     <div class="field--wrapper">
         <label for="address" class="no-float">Date of birth:</label>
-        <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|format('y-m-d') : '' }}" data-date-format="yyyy-mm-dd">
+        <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|format('d-m-y') : '' }}" data-date-format="dd-mm-yyyy">
     </div>
     {% endif %}
     {% if userProfile.userEditAddress %}
