@@ -14,11 +14,8 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
- {% if hierarchyNode %}
-    <a class="back-link" href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a>
-{% else %}
-    <a class="back-link" href="/management/users">&laquo; back</a>
-{% endif %}
+    <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
+    <a class="back-link" href="/management/users">&laquo; back to Users</a>
 {% include '_includes/topNavigation' %}
 </div>
 <section class="page">
