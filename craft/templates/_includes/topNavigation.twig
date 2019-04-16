@@ -1,16 +1,40 @@
 {% if not currentUser %}
 <nav class="topNavigation">
+<div id="toggle">
+  <div class="one"></div>
+  <div class="two"></div>
+  <div class="three"></div>
+</div>
+<div id="menu">
+<ul>
 {% for pageEntry in globalsTheme.themeNavigationPublic %}
+<li>
 <a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
+</li>
 {% endfor %}
+</ul>
+</div>
 {% endif %}
 
 {% if currentUser %}
 <a class="link-bold" href="/">My Dashboard</a>
-<nav class="topNavigation">
-{% for pageEntry in globalsTheme.themeNavigationPrivate %}
-<a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
-{% endfor %}
 <a class="link-bold" href="{{ logoutUrl }}">Sign out</a>
+<nav class="topNavigation">
+<div id="toggle">
+  <div class="one"></div>
+  <div class="two"></div>
+  <div class="three"></div>
+</div>
+<div id="menu">
+<ul>
+{% for pageEntry in globalsTheme.themeNavigationPrivate %}
+<li>
+<a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
+</li>
+{% endfor %}
+</ul>
+</div>
+
+
 </nav>
 {% endif %}

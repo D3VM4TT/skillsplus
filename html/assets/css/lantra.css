@@ -222,7 +222,7 @@ h4, h4 a {
 
 .page-subHeader {
     min-height: 25px;
-    padding: 13px 60px;
+    padding: 13px 30px;
 }
 
 .page-subHeader p, .page-subHeader a {
@@ -1205,6 +1205,44 @@ width: 100%;
     bottom:0;
 }
 
+body.logged-in #toggle {
+        margin-top: 40px;
+}
+
+#toggle {
+
+  width: 25px;
+}
+
+#toggle div {
+  width: 100%;
+  height: 2px;
+  background: white;
+  margin: 4px auto;
+  transition: all 0.3s;
+  backface-visibility: hidden;
+}
+
+#toggle.on .one {
+  transform: rotate(45deg) translate(8px, 2px);
+}
+
+#toggle.on .two {
+  opacity: 0;
+}
+
+#toggle.on .three {
+  transform: rotate(-45deg) translate(7px, 0px);
+}
+
+#menu {
+  display: none;
+  padding-top: 20px;
+}
+
+#menu > ul > li {
+    padding: 20px 0px !important;
+}
 
 .sidebar {
     padding-left: 0 !important;
@@ -1278,17 +1316,14 @@ nav.cpd#sign-out li a {
     color: #FFFFFF;
 }
 
-nav.topNavigation {
+/*nav.topNavigation {
     float: right;
-}
+}*/
 
-.page-subHeader a.back-link {
+.page-subHeader a.back-link,
+.page-subHeader .link-bold {
     font-weight: 700;
     padding-right: 40px;
-}
-
-.link-bold {
-    font-weight: 700;
 }
 
 /* Module Group Tabs
@@ -1748,6 +1783,10 @@ body.loading div.loading {
 
     nav.topNavigation {
     float: initial;
+    }
+
+    body.logged-in nav.topNavigation {
+        margin-top: 40px !important;
     }
 
     body .topNavigation a,

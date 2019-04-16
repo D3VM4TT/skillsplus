@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+    $("#toggle").click(function() {
+    $(this).toggleClass("on");
+    $("#menu").slideToggle();
+    });
+
     $('button.status').click(function(){
         var f =$(this).closest('form');
         f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
