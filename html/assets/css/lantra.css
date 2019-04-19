@@ -207,6 +207,22 @@ h4, h4 a {
     padding-top: 60px;
 }
 
+.underline {
+    border-bottom: 2px #e8ecef solid;
+    padding: 5px 0px;
+    margin-bottom: 10px;
+}
+
+.align-horizontal {
+  display: inline-block;
+  padding-right: 20px;
+}
+
+.align-vertical {
+    display: flex;
+    align-items: center;
+}
+
 /*Navigation
 -------------------------------------------------- */
 .menu-tab {
@@ -1459,10 +1475,6 @@ div.cpd-comment-txt {
     margin-left: 4px;
     font-size: 13px;  
 }
-
-
-
-
 
 /*logged-in classes
 -------------------------------------------------- */
