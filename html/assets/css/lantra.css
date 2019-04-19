@@ -251,7 +251,6 @@ h4, h4 a {
 
 .page-subHeader {
     min-height: 25px;
-    padding: 13px 30px;
 }
 
 .page-subHeader p, .page-subHeader a {
@@ -597,7 +596,8 @@ button:focus {
 .field--wrapper input[type=password],
 .field--wrapper textarea {
     display: block;
-    font-size: 16px;
+    height: 60px;
+    font-size: 22px;
     width: 100%;
     padding: 0em 0em 10px 0em;
     border: none;
@@ -1239,10 +1239,6 @@ width: 100%;
     bottom:0;
 }
 
-body.logged-in #toggle {
-        margin-top: 40px;
-}
-
 #toggle {
 
   width: 25px;
@@ -1350,14 +1346,23 @@ nav.cpd#sign-out li a {
     color: #FFFFFF;
 }
 
-/*nav.topNavigation {
-    float: right;
-}*/
+body > div.container-content > header > div > nav {
+    padding:10px 30px;
+}
+
+body > div.container-content > section > div.page-subHeader.primary-bg {
+    padding: 12.5px 0px 0px 0px;
+}
+
+body > div.container-content > section > div.page-subHeader.primary-bg > nav {
+    padding:15px 30px;
+    margin-top: 12.5px;
+}
 
 .page-subHeader a.back-link,
 .page-subHeader .link-bold {
     font-weight: 700;
-    padding-right: 40px;
+    padding: 0px 30px;
 }
 
 /* Module Group Tabs
@@ -1799,7 +1804,6 @@ body.loading div.loading {
 
     .page-subHeader {
     min-height: 25px;
-    padding: 25px 20px;
     }
 
     .page-subHeader a {
@@ -1816,7 +1820,7 @@ body.loading div.loading {
     }
 
     body.logged-in nav.topNavigation {
-        margin-top: 40px !important;
+    margin-top: 40px !important;
     }
 
     body .topNavigation a,
