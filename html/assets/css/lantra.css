@@ -899,14 +899,19 @@ article.cpd div.header {
     transition: background-color 200ms ease-out;
 }
 
-article.cpd div.header:hover {
+/*article.cpd div.header:hover {
 	background-color: #F7F7Fa;
-}
+}*/
 
-article.cpd div.header h4,
-article.cpd div.header h5 {
+article.cpd div.header h4 {
     margin:0;
     display:inline;
+}
+
+article.cpd div.header h5 {
+        margin:0;
+    display:inline;
+    color: #fff;
 }
 
 article.cpd div.unit-group div.status {
@@ -917,6 +922,7 @@ article.cpd div.status {
     display:inline;
     float:right;
     padding-top: 5px;
+    color: #fff;
 }
 
 article.cpd h2 {
@@ -955,8 +961,7 @@ article.cpd div.module-wrapper div.module div.unit-groups div.summary {
     margin: 25px;
 }
 
-article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header,
-article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header:hover {
+article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header {
     height:auto;
     border-top:1px solid #e9ecef;
     border-bottom:1px solid #e9ecef;

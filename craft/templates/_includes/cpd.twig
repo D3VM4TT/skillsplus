@@ -81,11 +81,11 @@
                                 {% for unitGroup in module.moduleUnitGroups %}
                                     {% set unitGroupEntries = unitGroup.unitEntries %}
                                     <div class="unit-group">
-                                        <div class="header" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
+                                        <div class="header primary-bg" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
                                             <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
                                             <div class="status">
                                                 View status and Endorsements
-                                                <img src="/assets/img/img-arrow-down-trans.png">
+                                                <img src="/assets/img/img-arrow-down-white-trans.png">
                                             </div>
                                         </div>
                                         <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units open">
