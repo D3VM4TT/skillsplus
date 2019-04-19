@@ -223,6 +223,19 @@ h4, h4 a {
     align-items: center;
 }
 
+.datepickers-container {
+    position: absolute;
+    left: 200px !important;
+    top: 150px !important;
+}
+
+.-top-center- .datepicker--pointer, .-top-left- .datepicker--pointer, .-top-right- .datepicker--pointer {
+    top: calc(50%) !important;
+    left: -6px !important;
+    -webkit-transform: rotate(225deg) !important;
+    transform: rotate(225deg) !important;
+}
+
 /*Navigation
 -------------------------------------------------- */
 .menu-tab {
