@@ -20,6 +20,7 @@
             <p class="profile">
                 <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
                 <span class="label">Email address:</span> {{ currentUser.email }}<br/>
+                <span class="label">Start date:</span> {{ currentUser.userStartDate }}<br/>
                 <span class="label">User type:</span> {{ craft.lantra.userType() }}<br/>
                 {% if currentUser.userDateOfBirth %}
                     <span class="label">Date of Birth:</span> {{ currentUser.userDateOfBirth|format('y-m-d') }}<br/>

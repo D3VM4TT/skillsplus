@@ -13,30 +13,42 @@
             <input name="lastName" type="text" class="float-label" placeholder="Enter your last name" value="{{ currentUser.lastName }}">
         </div>
     {% endif %}
+    
     {% if userProfile.userEditEmail %}
         <div class="field--wrapper">
             <label for="email" class="no-float">Email:</label>
             <input name="email" type="text" class="float-label" placeholder="Enter your email" value="{{ currentUser.email }}">
         </div>
     {% endif %}
-    {% if userProfile.userEditDob %}
+
+    {% if userProfile.userEditStartDate %}
     <div class="field--wrapper">
-        <label for="address" class="no-float">Date of birth:</label>
-        <input name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|format('d-m-y') : '' }}" data-date-format="dd-mm-yyyy">
+        <label for="StartDate" class="no-float">Start date:</label>
+        <input id="StartDate" name="fields[userStartDate]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left' value="{{ currentUser.userStartDate ? currentUser.userStartDate|format('d-m-y') : '' }}" data-date-format="dd-mm-yyyy">
     </div>
     {% endif %}
+
+    {% if userProfile.userEditDob %}
+    <div class="field--wrapper">
+        <label for="DateOfBirth" class="no-float">Date of birth:</label>
+        <input id="DateOfBirth" name="fields[userDateOfBirth]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left' value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|format('d-m-y') : '' }}" data-date-format="dd-mm-yyyy">
+    </div>
+    {% endif %}
+
     {% if userProfile.userEditAddress %}
     <div class="field--wrapper">
         <label for="address" class="no-float">Address:</label>
         <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ currentUser.userAddress|default('') }}</textarea>
     </div>
     {% endif %}
+
     {% if userProfile.userEditTelephone %}
         <div class="field--wrapper">
             <label for="telephone" class="no-float">Telephone:</label>
             <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ currentUser.userTelephone|default('') }}">
         </div>
     {% endif %}
+
     {% if userProfile.userEditRole %}
         <div class="field--wrapper">
             <label for="telephone" class="no-float">Role:</label>

@@ -955,11 +955,11 @@ article.cpd div.module-wrapper div.module div.unit-groups div.summary {
     margin: 25px;
 }
 
-article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header {
+article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header,
+article.cpd div.module-wrapper div.module div.unit-groups div.unit-group div.header:hover {
     height:auto;
     border-top:1px solid #e9ecef;
     border-bottom:1px solid #e9ecef;
-    background-color: #f7f7fa;
     padding:7px 14px;
 }
 
