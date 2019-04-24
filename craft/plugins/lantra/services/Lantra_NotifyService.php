@@ -230,8 +230,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
         if ( ! is_array($toEmail)) {
             $toEmail = [$toEmail];
         }
-        // in dev mode, all notifications sent to system email
-        if (craft()->config->get('devMode')) {
+        // all notifications sent to test email address
+        $server = craft()->lantra_settings->getConfig('server', 'dev');
+        if ($server != 'prod') {
+            $subject = '[' . $server . '] ' . $server;
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
             $schemeGlobals = craft()->globals->getSetByHandle('globalsScheme');
             $schemeTestEmail = explode(',', $schemeGlobals->schemeTestEmailAddress);
