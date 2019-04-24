@@ -14,10 +14,12 @@ class LantraVariable
      * Get setting
      *
      * @param $key
+     * @param $default
      * @return mixed
      */
-    public function setting($key) {
-        return $this->settings->getAttribute($key);
+    public function setting($key, $default = '') {
+        $setting = $this->settings->getAttribute($key);
+        return $setting ? $setting : $default;
     }
 
     /**

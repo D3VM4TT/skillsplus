@@ -192,6 +192,7 @@ class LantraPlugin extends BasePlugin
             ## theme settings
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
+            'themeResultHistoryTitle'           => AttributeType::String,
 
             ## change to schemeDisableLicences?
             'lantraDisableLicences'             => AttributeType::Bool,

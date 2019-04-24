@@ -16,6 +16,7 @@ class Lantra_SettingsModel extends BaseModel
             ## theme settings
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
+            'themeResultHistoryTitle'           => AttributeType::String,
 
             ## change to schemeDisableLicences?
             'lantraDisableLicences'             => AttributeType::Bool,
