@@ -163,7 +163,7 @@ $(document).ready(function(){
             deleteRow = true;
         }
         if (action == 'lantra/users/deleteUser') {
-            if ( ! confirm('Are you sure you want to delete this user?')) {
+            if ( ! confirm('Are you sure you want to suspend this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
