@@ -129,7 +129,11 @@ class Lantra_StructureService extends BaseApplicationComponent
         $return = [];
         foreach($managers as $manager) {
             $nodeId = (isset($entry) ? $entry->id : '') . 'm' . $manager->id;
-            $return[] = $this->createNode($manager->id, 'user', $nodeId, $manager->fullname, 'person');
+            $title = $manager->fullname;
+            if ($manager->userRole->total()) {
+                $title .= ' (' . $manager->userRole->first()->title . ')';
+            }
+            $return[] = $this->createNode($manager->id, 'user', $nodeId, $title, 'person');
         }
         return $return;
     }
