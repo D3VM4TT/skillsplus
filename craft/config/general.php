@@ -11,7 +11,7 @@ return array(
         'enableCsrfProtection' => false,
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
-        'devMode' => false,
+        'devMode' => true,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
@@ -21,30 +21,49 @@ return array(
         'maxUploadFileSize' => '2147483648',
         'environmentVariables' => array(
             'basePath' => '/datadisk/sites/' . $site . '/',
+            'server' => 'dev',
         ),
     ),
     /* local server */
     'cpd.lantra.local' => array(
-        'devMode' => true,
         'siteUrl' => 'http://cpd.lantra.local',
         'environmentVariables' => array(
-            'basePath' => '/websites/cpd.lantra.co.uk/'
+            'basePath' => '/websites/cpd.lantra.co.uk/',
+            'server' => 'local',
         ),
     ),
     /* demo server */
     'splusdev.ukwest.cloudapp.azure.com' => array(
-        'devMode' => true,
+        'environmentVariables' => array(
+            'server' => 'demo',
+        ),
     ),
     /* dev server */
     'newdev.skills-plus.net' => array(
-        'devMode' => true,
+        'environmentVariables' => array(
+            'basePath' => '/websites/cpd.lantra.co.uk/',
+            'server' => 'dev',
+        ),
     ),
     /* uat server */
     'newuat.skills-plus.net' => array(
         'devMode' => false,
+        'environmentVariables' => array(
+            'server' => 'uat',
+        ),
     ),
     /* stg server */
     'newstg.skills-plus.net' => array(
         'devMode' => false,
-    )
+        'environmentVariables' => array(
+            'server' => 'stg',
+        ),
+    ),
+    /* prod server */
+    'newprod.skills-plus.net' => array(
+        'devMode' => false,
+        'environmentVariables' => array(
+            'server' => 'prod',
+        ),
+    ),
 );

@@ -1725,6 +1725,7 @@ div.loading .spinner {
     width: 64px;
     height: 64px;
 }
+
 div.loading .spinner:after {
     content: " ";
     display: block;
@@ -1736,6 +1737,7 @@ div.loading .spinner:after {
     border-color: #fff transparent #fff transparent;
     animation: loading-spinner 1.2s linear infinite;
 }
+
 @keyframes loading-spinner {
     0% {
         transform: rotate(0deg);
@@ -1747,6 +1749,18 @@ div.loading .spinner:after {
 
 body.loading div.loading {
     display:block;
+}
+
+#server {
+    position: fixed;
+    bottom:0;
+    right:0;
+    z-index: 100;
+    background:rgba(0,0,0,0.6);
+    color:#FFF;
+    padding:10px;
+    font-size:11px;
+    font-family:'Courier New', Courier, monospace;
 }
 
 /*li.jstree-node .jstree-last .jstree-open:first-child i {
