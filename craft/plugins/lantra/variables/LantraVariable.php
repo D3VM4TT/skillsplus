@@ -11,9 +11,10 @@ class LantraVariable
     }
 
     public function resultCustom($resultEntryId, $customKey, $id = false) {
+        $field = craft()->fields->getFieldByHandle('resultCustom');
         $criteria = craft()->elements->getCriteria('SuperTable_Block');
         $criteria->ownerId = $resultEntryId;
-        $criteria->fieldId = '199'; ## field id for resultCustom
+        $criteria->fieldId = $field->id;
         $blocks = $criteria->find();
         foreach ($blocks as $block) {
             if ($block->customKey == $customKey) {
