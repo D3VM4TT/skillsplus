@@ -14,7 +14,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->groupId = 1;
         $criteria->limit = null;
-        $subject = $this->getNotifyGlobal('subjectSchemeExpiry', 'Scheme Expiry Date');
+        $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
         $message = "Your scheme expires on " . date('d/m/y', $expiryDate->getTimestamp()) . ".";
         foreach ($criteria->find() as $manager) {
             $this->notify($manager->email, $subject, $message);
@@ -29,7 +29,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
     function sendUserExpiry($expiryDate) {
        $criteria = craft()->lantra_users->getExpiringUsers($expiryDate);
        if ($criteria->total()) {
-           $subject = $this->getNotifyGlobal('subjectUserExpiry', 'User Expiry Date');
+           $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
            foreach ($criteria->find() as $user) {
                $message = "Your individual licence expires on " . date('d/m/y', $user->userExpiryDate->getTimestamp()) . ".";
                $this->notify($user->email, $subject, $message);
@@ -47,7 +47,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->groupId = 1;
         $criteria->limit = null;
-        $subject = $this->getNotifyGlobal('subjectLicencesRemaining', 'Licences Remaining');
+        $subject = $this->getNotifySetting('subjectLicencesRemaining', 'Licences Remaining');
         foreach ($criteria->find() as $manager) {
             $remainingLicences = craft()->lantra_licence->getSchemeLicences();
             if ($remainingLicences <= 10) {
@@ -75,7 +75,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param EntryModel $entry
      */
     function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
-        $subject = $this->getNotifyGlobal('subjectNewComment', 'New Comment');
+        $subject = $this->getNotifySetting('subjectNewComment', 'New Comment');
         $user = craft()->users->getUserById($userId);
         $message = $entry->title . "\n\n";
         $message .= $user->getFullName() . ": " . $comment . "\n\n";
@@ -100,7 +100,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $module = $entry->resultModule->first();
         $author = $entry->getAuthor();
         $authorFullName = $author->getFullName();
-        $subject = $this->getNotifyGlobal('subjectModuleResult', 'Module Completed');
+        $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
         $message = $authorFullName  . " has completed " . $module->title;
         // send the emails to managers
         $this->notify($entry->getAuthor()->email, $subject, $message);
@@ -116,7 +116,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $unitEntry = $resultEntry->resultUnit->first();
         $author = $resultEntry->getAuthor();
         $authorFullName = $author->getFullName();
-        $subject = $this->getNotifyGlobal('subjectBlockedResult', 'Result Blocked');
+        $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
         $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . ' and the result is blocked.';
         // send the emails to managers
         $this->notifyManagers($author, $subject, $message);
@@ -132,7 +132,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
     function sendManagerEndorsementResult(EntryModel $resultEntry, $level = 1) {
         $author = $resultEntry->getAuthor();
         $authorFullName = $author->getFullName();
-        $subject = $this->getNotifyGlobal('subjectEndorsementResult', 'Endorsement Required');
+        $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
         $message = $authorFullName  . " has submitted a result " . $resultEntry->title . '.';
         // send the emails to managers
         $manager = craft()->lantra_users->getUserManagerByLevel($author, $level);
@@ -150,7 +150,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @throws mixed
      */
     function sendManagerSummary(UserModel $manager, $days = 7) {
-        $subject = $this->getNotifyGlobal('subjectManagerSummary', 'Manager Summary');
+        $subject = $this->getNotifySetting('subjectManagerSummary', 'Manager Summary');
         $criteria = craft()->lantra_results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
@@ -209,10 +209,8 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param string
      * @return string
      */
-    public function getNotifyGlobal($key, $default = '') {
-        $globalsNotify = craft()->globals->getSetByHandle('globalsNotify');
-        $key = 'notify' . ucwords($key);
-        return isset($globalsNotify->$key) ? $globalsNotify->$key : $default;
+    public function getNotifySetting($key, $default = '') {
+        return craft()->lantra_settings->getSetting('notify'.ucwords($key), $default);
     }
 
     /**
@@ -240,7 +238,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
             $toEmail = count($schemeTestEmail) ? $schemeTestEmail : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer
-        $message .= $this->getNotifyGlobal('footer');
+        $message .= $this->getNotifySetting('footer');
         // build the email
         $email = new EmailModel();
         $email->subject = $subject;

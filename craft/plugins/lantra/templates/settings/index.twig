@@ -55,6 +55,66 @@
                 checked:		settings.themeDisableCertificates == 1,
             }) }}
 
+            <hr />
+
+            <h2>Notify Settings</h2>
+
+            {{ forms.textField ({
+                label:			"Subject Blocked Result",
+                id:				"notifySubjectBlockedResult",
+                name:			"notifySubjectBlockedResult",
+                value:		    settings.notifySubjectBlockedResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Endorsement Result",
+                id:				"notifySubjectEndorsementResult",
+                name:			"notifySubjectEndorsementResult",
+                value:		    settings.notifySubjectEndorsementResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Licences Remaining",
+                id:				"notifySubjectLicencesRemaining",
+                name:			"notifySubjectLicencesRemaining",
+                value:		    settings.notifySubjectLicencesRemaining
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Manager Summary",
+                id:				"notifySubjectManagerSummary",
+                name:			"notifySubjectManagerSummary",
+                value:		    settings.notifySubjectManagerSummary
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Module Result",
+                id:				"notifySubjectModuleResult",
+                name:			"notifySubjectModuleResult",
+                value:		    settings.notifySubjectModuleResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Scheme Expiry",
+                id:				"notifySubjectSchemeExpiry",
+                name:			"notifySubjectSchemeExpiry",
+                value:		    settings.notifySubjectSchemeExpiry
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject User Expiry",
+                id:				"notifySubjectUserExpiry",
+                name:			"notifySubjectUserExpiry",
+                value:		    settings.notifySubjectUserExpiry
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Notify Footer",
+                id:				"notifyFooter",
+                name:			"notifyFooter",
+                value:		    settings.notifyFooter
+            }) }}
+
         {% endnamespace %}
 
     </div>
