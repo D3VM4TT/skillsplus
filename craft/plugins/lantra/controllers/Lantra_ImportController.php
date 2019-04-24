@@ -2,9 +2,10 @@
 
 namespace Craft;
 
-class Lantra_ImportController extends Lantra_BaseController {
+class Lantra_ImportController extends Lantra_BaseController
+{
 
-    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults', 'actionClean');
+    public $allowAnonymous = array('actionIndex', 'actionUpdate', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults', 'actionClean');
     private $dataPath = '../craft-assets/import/';
 
     private $companies = [];
@@ -13,6 +14,8 @@ class Lantra_ImportController extends Lantra_BaseController {
     private $companyUsers = [];
     private $companyManagers = [];
     private $results = [];
+
+    private $update = [];
 
     private $success = 0;
     private $failed = 0;
@@ -40,7 +43,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
         // this might take some time...
         ini_set('memory_limit', '-1');
-        ini_set('max_execution_time' ,0);
+        ini_set('max_execution_time', 0);
         set_time_limit(0);
 
         parent::__construct($id, $module);
@@ -59,6 +62,30 @@ class Lantra_ImportController extends Lantra_BaseController {
         $this->getData('companyManagers');
         $this->getData('companyUsers');
         $this->loadTemplate();
+    }
+
+    public function actionUpdate()
+    {
+        $this->getData('update');
+
+        $count = 0;
+
+        foreach ($this->update as $row) {
+            $legacyId = $row[0];
+            $firstName = $row[1];
+            $lastName = $row[2];
+            $username = str_replace(' ', '', strtolower($firstName) . '.' . strtolower($lastName));
+            if ($legacyId && null != $user = $this->getUserByLegacyId($legacyId)) {
+                $user->firstName = $firstName;
+                $user->lastName = $lastName;
+                $user->username = $username;
+                if (craft()->users->saveUser($user)) {
+                    $count++;
+                }
+            }
+
+            echo $count . ' users updated ';
+        }
     }
 
     /**
@@ -158,7 +185,8 @@ class Lantra_ImportController extends Lantra_BaseController {
     /**
      * @throws Exception
      */
-    public function actionClean() {
+    public function actionClean()
+    {
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
@@ -170,7 +198,7 @@ class Lantra_ImportController extends Lantra_BaseController {
         foreach ($criteria->find() as $company) {
             $managerIds = [];
             foreach ($company->companySecondaryManagers as $m) {
-                if ( ! $this->isParentCompanyManager($company, $m)) {
+                if (!$this->isParentCompanyManager($company, $m)) {
                     $managerIds[] = $m->id;
                 }
             }
@@ -188,10 +216,11 @@ class Lantra_ImportController extends Lantra_BaseController {
         die();
     }
 
-    private function isParentCompanyManager($company, $manager) {
+    private function isParentCompanyManager($company, $manager)
+    {
         $parents = $this->getParents($company);
         $managerIds = [];
-        foreach($parents as $parent) {
+        foreach ($parents as $parent) {
             foreach ($parent->companySecondaryManagers as $m) {
                 $managerIds[] = $m->id;
             }
@@ -199,8 +228,9 @@ class Lantra_ImportController extends Lantra_BaseController {
         return in_array($manager->id, $managerIds);
     }
 
-    private function getParents($company, $parents = []) {
-        if ( ! $company->companyParent->count()) {
+    private function getParents($company, $parents = [])
+    {
+        if (!$company->companyParent->count()) {
             return $parents;
         }
         $parents[] = $company->companyParent->first();
@@ -210,7 +240,8 @@ class Lantra_ImportController extends Lantra_BaseController {
     /**
      * private methods
      */
-    private function getData($file) {
+    private function getData($file)
+    {
         $this->$file = $this->importCsv($file . '.csv');
     }
 
@@ -225,7 +256,7 @@ class Lantra_ImportController extends Lantra_BaseController {
             'complete' => $complete,
             'success' => $this->success,
             'failed' => $this->failed,
-            'time' => (int) microtime(true) - $this->start,
+            'time' => (int)microtime(true) - $this->start,
             'log' => $this->log
         ];
 
@@ -235,7 +266,7 @@ class Lantra_ImportController extends Lantra_BaseController {
     private function importCsv($file)
     {
         $path = $this->dataPath . $file;
-        if ( ! is_file($path)) {
+        if (!is_file($path)) {
             return [];
         }
         return array_map('str_getcsv', file($path));
@@ -258,7 +289,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function createCompanies()
     {
-        foreach($this->companies as $company) {
+        foreach ($this->companies as $company) {
             // skip headers and empty
             if (trim($company[0]) == 'title' || trim($company[0]) == '') {
                 continue;
@@ -266,8 +297,8 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             // title, legacyId, legacyParentId
             $title = trim($company[0]);
-            $legacyId = (int) trim($company[1]);
-            $legacyParentId = (int) trim($company[2]);
+            $legacyId = (int)trim($company[1]);
+            $legacyParentId = (int)trim($company[2]);
 
             $entryModel = new EntryModel();
             $entryModel->sectionId = $this->sectionIdCompanies;
@@ -280,8 +311,7 @@ class Lantra_ImportController extends Lantra_BaseController {
             ]);
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
-            }
-            else {
+            } else {
                 $this->log [] = implode(',', $company);
                 $this->failed++;
             }
@@ -317,7 +347,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function createJobRoles()
     {
-        foreach($this->roles as $jobRole) {
+        foreach ($this->roles as $jobRole) {
             // skip headers and empty
             if (trim($jobRole[0]) == 'title' || trim($jobRole[0]) == '') {
                 continue;
@@ -325,7 +355,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             // title, legacyId
             $title = trim($jobRole[0]);
-            $legacyId = (int) trim($jobRole[1]);
+            $legacyId = (int)trim($jobRole[1]);
 
             $categoryModel = new CategoryModel();
             $categoryModel->groupId = $this->categoryGroupIdJobRoles;
@@ -364,8 +394,8 @@ class Lantra_ImportController extends Lantra_BaseController {
             // name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress
             $names = $this->getNames($user[0]);
             $legacyEmail = $user[1];
-            $legacyId = (int) trim($user[2]);
-            $legacyJobRoleId = (int) trim($user[3]);
+            $legacyId = (int)trim($user[2]);
+            $legacyJobRoleId = (int)trim($user[3]);
             $userDateOfBirth = trim((string)$user[4]);
             $userStartDate = trim((string)$user[5]);
             $userAddress = $user[6];
@@ -374,12 +404,10 @@ class Lantra_ImportController extends Lantra_BaseController {
             $username = craft()->lantra_users->generateUsername($names[0], $names[1]);
 
             // generate an email address
-            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || ! $this->validEmail($legacyEmail))
-            {
+            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail)) {
                 $emailAddress = craft()->lantra_users->generateEmail($names[0], $names[1], $username);
                 $userDummyEmail = 1;
-            }
-            else {
+            } else {
                 $emailAddress = $legacyEmail;
             }
             // make sure same email not given twice
@@ -444,9 +472,8 @@ class Lantra_ImportController extends Lantra_BaseController {
         $criteria->limit = null;
 
         $x = 1;
-        foreach($criteria->find() as $userModel) {
-            if ($userModel->legacyJobRoleId)
-            {
+        foreach ($criteria->find() as $userModel) {
+            if ($userModel->legacyJobRoleId) {
                 $roleId = $this->getRoleId($userModel->legacyJobRoleId);
                 if ($roleId) {
                     $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
@@ -464,16 +491,16 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function assignCompanyManagers()
     {
-        foreach($this->companyManagers as $manager) {
+        foreach ($this->companyManagers as $manager) {
 
             // skip headers and empty
-            if($manager[0] == 'legacyId' || trim($manager[0]) == '') {
+            if ($manager[0] == 'legacyId' || trim($manager[0]) == '') {
                 continue;
             }
 
             // legacyId, legacyCompanyId
-            $companyManager = $this->getUserByLegacyId((int) $manager[0]);
-            $companyEntry = $this->getCompanyByLegacyId((int) $manager[1]);
+            $companyManager = $this->getUserByLegacyId((int)$manager[0]);
+            $companyEntry = $this->getCompanyByLegacyId((int)$manager[1]);
 
             if ($companyEntry && $companyManager) {
                 $companyEntry->setContentFromPost([
@@ -489,13 +516,13 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function assignCompanyUsers()
     {
-        foreach($this->companyUsers as $row) {
+        foreach ($this->companyUsers as $row) {
 
             $legacyUserId = trim($row[0]);
             $legacyCompanyId = trim($row[1]);
 
             // skip headers and empty
-            if($legacyUserId == 'legacyId' || empty($legacyUserId)) {
+            if ($legacyUserId == 'legacyId' || empty($legacyUserId)) {
                 continue;
             }
 
@@ -505,15 +532,14 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             if ($companyEntry && $companyUser) {
                 // skip if manager
-                $managerIds = (array) $companyEntry->companySecondaryManagers->ids();
-                if ( ! in_array($companyUser->id, $managerIds)) {
+                $managerIds = (array)$companyEntry->companySecondaryManagers->ids();
+                if (!in_array($companyUser->id, $managerIds)) {
                     $companyUser->setContentFromPost([
                         'userCompany' => [$companyEntry->id]
                     ]);
                     craft()->elements->saveElement($companyUser, false);
                     $this->success++;
-                }
-                else {
+                } else {
                     $this->failed++;
                 }
             }
@@ -522,20 +548,20 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function createResults()
     {
-        foreach($this->results as $result) {
+        foreach ($this->results as $result) {
             // skip headers and empty
             if (trim($result[0]) == 'type' || trim($result[0]) == '') {
                 continue;
             }
 
             // type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultValue, resultEndorsedDate, resultNotes, resultEvidence
-            $legacyUserId = (int) $result[1];
-            $legacyUnitId = (int) $result[2];
+            $legacyUserId = (int)$result[1];
+            $legacyUnitId = (int)$result[2];
 
             $resultType = $legacyUnitId ? 'unitResult' : 'userResult';
             $author = $this->getUserByLegacyId($legacyUserId);
 
-            if ( ! $author) {
+            if (!$author) {
                 $this->log [] = 'Author ID not found ' . $legacyUserId;
                 $this->failed++;
                 continue;
@@ -545,12 +571,12 @@ class Lantra_ImportController extends Lantra_BaseController {
 
             $entryModel = new EntryModel();
             $entryModel->sectionId = $this->sectionIdResults;
-            $entryModel->typeId = $resultType == 'unitResult' ? 10: 17;
+            $entryModel->typeId = $resultType == 'unitResult' ? 10 : 17;
             $entryModel->enabled = true;
             $entryModel->authorId = $author->id;
             $entryModel->postDate = DateTime::createFromFormat('d/m/Y', $result[4]);
 
-            if ( ! empty(trim($result[7]))) {
+            if (!empty(trim($result[7]))) {
                 $entryModel->expiryDate = DateTime::createFromFormat('d/m/Y', $result[7]);
             }
 
@@ -558,8 +584,7 @@ class Lantra_ImportController extends Lantra_BaseController {
                 $entryModel->setContentFromPost([
                     'resultUnit' => [$unitEntry->id]
                 ]);
-            }
-            else {
+            } else {
                 $entryModel->getContent()->title = $result[3];
             }
             $entryModel->setContentFromPost([
@@ -567,31 +592,31 @@ class Lantra_ImportController extends Lantra_BaseController {
                 'resultStartDate' => DateTime::createFromFormat('d/m/Y', $result[5]),
                 'resultFinishDate' => DateTime::createFromFormat('d/m/Y', $result[6]),
                 'resultLocation' => $result[8],
-                'resultHours' =>  (int) $result[9] ? (int) $result[9] : null,
-                'resultValue' => (int) $result[10] ? (int) $result[10] : null,
+                'resultHours' => (int)$result[9] ? (int)$result[9] : null,
+                'resultValue' => (int)$result[10] ? (int)$result[10] : null,
                 'resultNotes' => $result[12],
-                'resultEndorsedDate' =>  $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : DateTime::createFromFormat('d/m/Y', $result[4]),
+                'resultEndorsedDate' => $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : DateTime::createFromFormat('d/m/Y', $result[4]),
                 'legacyResultFiles' => $result[13]
-                
+
             ]);
 
             $resultEvidenceId = $this->getAssetId($result[13]);
-            if($resultEvidenceId) {
+            if ($resultEvidenceId) {
                 $entryModel->setContentFromPost([
                     'resultEvidence' => [$resultEvidenceId],
                 ]);
             }
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
-            }
-            else {
+            } else {
                 $this->log [] = implode(',', $entryModel->getAllErrors());
                 $this->failed++;
             }
         }
     }
 
-    private function getAssetId($filename) {
+    private function getAssetId($filename)
+    {
         return null;
     }
 
@@ -614,7 +639,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function getUserByLegacyId($legacyId)
     {
-        if ( ! $legacyId) {
+        if (!$legacyId) {
             return null;
         }
         $criteria = craft()->elements->getCriteria(ElementType::User);
@@ -624,7 +649,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function getEntryByLegacyId($legacyId)
     {
-        if ( ! $legacyId) {
+        if (!$legacyId) {
             return null;
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
@@ -634,7 +659,7 @@ class Lantra_ImportController extends Lantra_BaseController {
 
     private function getCompanyByLegacyId($legacyId)
     {
-        if ( ! $legacyId) {
+        if (!$legacyId) {
             return null;
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
@@ -653,9 +678,10 @@ class Lantra_ImportController extends Lantra_BaseController {
         return $legacyId && isset($this->jobRoleTemp[$legacyId]) ? $this->jobRoleTemp[$legacyId] : null;
     }
 
-    private function validEmail($email) {
+    private function validEmail($email)
+    {
 
-        return (boolean) preg_match(
+        return (boolean)preg_match(
             '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}' .
             '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/sD',
             $email);
