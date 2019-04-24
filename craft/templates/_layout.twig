@@ -92,7 +92,7 @@
 
         {% set server = craft.config.environmentVariables.server|default('dev') %}
         {% if server != 'prod' %}
-            <div id="server">server: {{ server }} dev mode: {{ craft.config.devMode ? 'on' : 'off' }}</div>
+            <div id="server">server: {{ server }}</div>
         {% endif %}
 
         <div class="loading"><div class="spinner"></div></div>
