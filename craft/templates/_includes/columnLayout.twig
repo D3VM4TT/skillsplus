@@ -1,9 +1,12 @@
 {% if header is defined %}
     {% for row in columnLayout %}
-        <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+        {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
+            <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+        {% endif %}
     {% endfor %}
 {% else %}
     {% for row in columnLayout %}
+        {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
                 <p class="td-title-responsive">Unit type: </p>
@@ -58,6 +61,17 @@
                     {% endfor %}
                 {% endif %}
             </td>
+        {% elseif row.fieldType == 'resultCustom' %}
+            <td class="resultCustom">
+                {% if resultEntry and resultEntry.resultCustom|length  %}
+                    {% for customRow in resultEntry.resultCustom %}
+                        {% if customRow.customKey == row.fieldCustomKey %}
+                           {{ customRow.customValue }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </td>
+        {% endif %}
         {% endif %}
     {% endfor %}
 {% endif %}

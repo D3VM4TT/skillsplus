@@ -1,6 +1,8 @@
 {% set resultEndorsed = resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {% set resultExists = resultEntry is defined and resultEntry %}
+{% set customNew = 1 %}
 {% for row in moduleGroup.columnLayout %}
+    {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue' %}
         <div class="field--wrapper">
@@ -68,6 +70,37 @@
                 {% endif %}
             </div>
         </div>
+    {% endif %}
+    {% if row.fieldType == 'resultCustom' %}
+        <div class="field--wrapper">
+            {% set customBlockId = false %}
+            {% set customValue = '' %}
+            {% if resultExists %}
+                {% set customBlockId = craft.lantra.resultCustom(resultEntry.id, row.fieldCustomKey, true) %}
+                {% set customValue = craft.lantra.resultCustom(resultEntry.id, row.fieldCustomKey) %}
+            {% endif %}
+            {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
+
+            <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label }}</label>
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
+
+            {% if row.fieldCustomType == 'text' %}
+                <input{% if resultLocked %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
+            {% elseif row.fieldCustomType == 'dropdown' %}
+                {% set customOptions =  row.fieldCustomOptions|split(',') %}
+                <select {% if resultLocked %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]">
+                    {% for opt in customOptions %}
+                        {% set optValue = opt|trim %}
+                        <option{% if optValue == customValue %} selected{% endif %}>{{ optValue }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            {# increment new1, new2 #}
+            {% set customNew = customNew + 1 %}
+        </div>
+    {% endif %}
     {% endif %}
 {% endfor %}
 <div class="field--wrapper">

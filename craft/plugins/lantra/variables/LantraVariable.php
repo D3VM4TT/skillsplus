@@ -10,6 +10,19 @@ class LantraVariable
         $this->settings = $this->plugin->getSettings();
     }
 
+    public function resultCustom($resultEntryId, $customKey, $id = false) {
+        $criteria = craft()->elements->getCriteria('SuperTable_Block');
+        $criteria->ownerId = $resultEntryId;
+        $criteria->fieldId = '199'; ## field id for resultCustom
+        $blocks = $criteria->find();
+        foreach ($blocks as $block) {
+            if ($block->customKey == $customKey) {
+                return $id ? $block->id : $block->customValue;
+            }
+        }
+        return '';
+    }
+
     /**
      * Get setting
      *

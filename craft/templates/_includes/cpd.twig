@@ -93,7 +93,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Unit title</th>
-                                                    {% include '_includes/columnLayout' with {header:true,  columnLayout:moduleGroup.columnLayout} %}
+                                                    {% include '_includes/columnLayout' with {header:true,  columnLayout:moduleGroup.columnLayout, isManager:isManager} %}
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -148,7 +148,8 @@
                                                             unitType: unitEntry.unitType,
                                                             unitValue: unitEntry.unitValue,
                                                             resultEntry: unitResultEntry,
-                                                            columnLayout: moduleGroup.columnLayout
+                                                            columnLayout: moduleGroup.columnLayout,
+                                                            isManager: isManager
                                                         } %}
                                                     </tr>
                                                 {% endfor %}
@@ -174,7 +175,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Result title</th>
-                                                    {% include '_includes/columnLayout' with {header:true, columnLayout:moduleGroup.columnLayout} %}
+                                                    {% include '_includes/columnLayout' with {header:true, columnLayout:moduleGroup.columnLayout, isManager: isManager} %}
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -216,7 +217,8 @@
                                                             unitType: 'evidence',
                                                             unitValue: userResultEntry.unitValue,
                                                             resultEntry :userResultEntry,
-                                                            columnLayout:moduleGroup.columnLayout
+                                                            columnLayout:moduleGroup.columnLayout,
+                                                            isManager: isManager
                                                         } %}
                                                     </tr>
                                                     {% if (userResultEntry.resultStatus == 'endorsed') %}

@@ -127,7 +127,7 @@
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 {% endif %}
-                {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup} %}
+                {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager} %}
             </div>
         </section>
     {% endif %}
