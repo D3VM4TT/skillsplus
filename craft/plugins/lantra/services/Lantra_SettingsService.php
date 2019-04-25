@@ -11,6 +11,9 @@ class Lantra_SettingsService extends BaseApplicationComponent
 	}
 
     public function getSetting($key, $default = null) {
+	    if ($key == 'jsDateFormat') {
+	        return $this->getJsDateFormat();
+        }
         $plugin = craft()->plugins->getPlugin('lantra');
         $settings = $plugin->getSettings();
         $setting = $settings->getAttribute($key);
@@ -20,5 +23,12 @@ class Lantra_SettingsService extends BaseApplicationComponent
     public function getConfig($key, $default = null) {
 	    $config = craft()->config->get('environmentVariables');
         return isset($config[$key]) ? $config[$key] : $default;
+    }
+
+    public function getJsDateFormat() {
+        $dateFormat = $this->getSetting('dateFormat', 'd-m-Y');
+        $p = ['d','m','Y'];
+        $j = ['dd', 'mm', 'yyyy'];
+        return str_replace($p, $j, $dateFormat);
     }
 }

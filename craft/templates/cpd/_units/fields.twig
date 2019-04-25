@@ -1,6 +1,8 @@
 {% set resultEndorsed = resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {% set resultExists = resultEntry is defined and resultEntry %}
 {% set customNew = 1 %}
+{% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
+{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
 {% for row in moduleGroup.columnLayout %}
     {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
@@ -14,22 +16,22 @@
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.expiryDate|format('dd-mm-yyyy') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
+                   value="{{ resultExists and resultEntry.expiryDate ? resultEntry.expiryDate|date('d-m-Y') }}" data-language="en"
+                   data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper">
             <label for="userStartDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultStartDate|format('dd-mm-yyyy') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
+                   value="{{ resultExists and resultEntry.resultStartDate ? resultEntry.resultStartDate|date('d-m-Y') }}" data-language="en"
+                   data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper">
             <label for="userFinishDate" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked %} disabled{% endif %}  name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultFinishDate|format('dd-mm-yyyy') }}" data-language="en"
-                   data-position='top left' value="" data-date-format="dd-mm-yyyy">
+                   value="{{ resultExists and resultEntry.resultFinishDate ? resultEntry.resultFinishDate|date(dateFormat) }}" data-language="en"
+                   data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper">
