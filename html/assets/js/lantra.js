@@ -167,7 +167,7 @@ $(document).ready(function(){
                 return false;
             }
             var data = {userId: $(this).data('id')};
-            deleteRow = true;
+            reload = true;
         }
         if (action == 'lantra/users/restoreUser') {
             if ( ! confirm('Are you sure you want to restore this user?')) {
