@@ -6,7 +6,6 @@ $site = array_shift($parts);
 return array(
     /* all environments */
     '*' => array(
-        'environmentVariables' => array(),
         'defaultWeekStartDay' => 0,
         'enableCsrfProtection' => false,
         'omitScriptNameInUrls' => true,
@@ -21,6 +20,7 @@ return array(
         'maxUploadFileSize' => '2147483648',
         'environmentVariables' => array(
             'basePath' => '/datadisk/sites/' . $site . '/',
+            'assetsPath' => '/datadisk/azureshare/' . $site . '/',
             'server' => 'dev',
         ),
     ),
@@ -41,7 +41,6 @@ return array(
     /* dev server */
     'newdev.skills-plus.net' => array(
         'environmentVariables' => array(
-            'basePath' => '/websites/cpd.lantra.co.uk/',
             'server' => 'dev',
         ),
     ),
