@@ -1,6 +1,8 @@
 <?php
 namespace Craft;
 
+use FontLib\Table\Type\post;
+
 class Lantra_ResultsService extends BaseApplicationComponent
 {
     // @todo move ids to config?
@@ -689,15 +691,41 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $filter
+     * @return array
+     */
+    private function formatUserFilter($filter) {
+        $defaults = [
+            'limit'      => 0,
+            'search'     => '',
+            'relatedTo'  => []
+        ];
+        return array_merge($defaults, $filter);
+    }
+
+    /**
+     * @param $filter
+     * @return array
+     */
+    private function formatResultsFilter($filter) {
+        $defaults = [
+            'limit'      => 0,
+            'search'     => '',
+            'relatedTo'  => []
+        ];
+        return array_merge($defaults, $filter);
+    }
+
+    /**
      * @param null $userId
-     * @param string $days
-     * @param int $limit
-     * @param string $search
+     * @param array $userFilter
+     * @param array $resultFilter
      * @return array
      * @throws Exception
      */
-    public function getManagerUserSummary($userId = null, $days = 'all', $limit = 10, $search = '') {
-        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+    public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = []) {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $this->getIds($subordinates);
 
         $header = [
@@ -712,7 +740,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'Address'
         ];
 
-        $data = $this->getSubordinateUnitResults($subordinateIds);
+        $resultFilter = $this->formatResultsFilter($resultFilter);
+        $data = $this->getSubordinateUnitResults($subordinateIds, $resultFilter);
+
         $units = [];
         foreach ($data as $results) {
             foreach ($results as $result) {
@@ -765,14 +795,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
     /**
      * @param null $userId
-     * @param string $days
-     * @param int $limit
-     * @param string $search
+     * @param array $userFilter
+     * @param array $resultFilter
      * @return array
      * @throws Exception
      */
-    public function getManagerUserCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+    public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = []) {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $this->getIds($subordinates);
 
         $header = [
@@ -788,7 +818,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $header[] = $unit->title;
         }
 
-        $data = $this->getSubordinateUnitResults($subordinateIds);
+        $resultFilter = $this->formatResultsFilter($resultFilter);
+        $data = $this->getSubordinateUnitResults($subordinateIds, $resultFilter);
 
         $rows = [$header];
         foreach($subordinates as $user) {
@@ -810,12 +841,21 @@ class Lantra_ResultsService extends BaseApplicationComponent
         return $rows;
     }
 
-    private function getSubordinateUnitResults($subordinateIds) {
+    /**
+     * @param $subordinateIds
+     * @param array $resultFilter
+     * @return array
+     * @throws Exception
+     */
+    private function getSubordinateUnitResults($subordinateIds, $resultFilter = []) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $subordinateIds;
         $criteria->status = ['live', 'expired'];
+        if ($resultFilter['relatedTo']) {
+            $criteria->relatedTo = $resultFilter['relatedTo'];
+        }
         $results = $criteria->find();
 
         // arrange as useful array [userId][unitId] = [result]
@@ -845,14 +885,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * Return all required (including expired)
      *
      * @param null $userId
-     * @param string $days
-     * @param int $limit
-     * @param string $search
+     * @param array $userFilter
+     * @param array $resultFilter
      * @return array
      * @throws Exception
      */
-    public function getManagerUnitRequiredResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        $subordinates = craft()->lantra_users->getManagerUsers($userId);
+    public function getManagerUnitRequiredResults($userId = null, $userFilter = [], $resultFilter) {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $rows = [];
         foreach($subordinates as $user) {
             $rows = array_merge($rows, $this->userRequiredRows($user));

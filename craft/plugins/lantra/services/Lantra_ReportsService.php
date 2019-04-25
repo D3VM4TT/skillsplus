@@ -56,17 +56,32 @@ class Lantra_ReportsService extends BaseApplicationComponent
     /**
      * @param $manager
      * @param $type
+     * @param $filter
      * @throws HttpException
      */
-    public function getSpecialReport($manager, $type) {
+    public function getSpecialReport($manager, $type, $filter = []) {
+        $userFilter = [];
+        $resultFilter = [];
+        if (isset($filter['companyIds'])) {
+            $userFilter['relatedTo'] = [
+                'targetElement' => $filter['companyIds'],
+                'field' => 'userCompany'
+            ];
+        }
+        if (isset($filter['unitIds'])) {
+            $resultFilter['relatedTo'] = [
+                'targetElement' => $filter['unitIds'],
+                'field' => 'resultUnit'
+            ];
+        }
         if ($type == 'users') {
-            $values = craft()->lantra_results->getManagerUserSummary($manager->id);
+            $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'results') {
-            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id);
+            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'required') {
-            $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id);
+            $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
 
         return $this->sendReport($type, $values);

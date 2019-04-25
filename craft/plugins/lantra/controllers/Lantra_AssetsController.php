@@ -17,7 +17,8 @@ class Lantra_AssetsController extends Lantra_BaseController
         craft()->userSession->requireLogin();
         $type = craft()->request->getParam('type', 'users');
         $manager = craft()->userSession->getUser();
-        craft()->lantra_reports->getSpecialReport($manager, $type);
+        $filter = craft()->request->getParam('filter');
+        craft()->lantra_reports->getSpecialReport($manager, $type, $filter);
         return;
     }
 

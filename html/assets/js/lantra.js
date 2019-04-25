@@ -211,7 +211,7 @@ $(document).ready(function(){
         });
     });
 
-    $('form').submit(function(){
+    $('form:not(.no-loading)').submit(function(){
         $('body').addClass('loading');
     });
 

@@ -1,5 +1,8 @@
 {% extends "_layout" %}
 
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
+{% set unitEntries = craft.entries.section('units').limit(null) %}
+
 {% block content %}
 <div class="page-subHeader primary-bg">
     {% include '_includes/topNavigation' %}
@@ -9,18 +12,43 @@
         <h2>Special Reports</h2>
     </div>
     <div class="page-content">
-
-        <p>
-            <a href="/actions/lantra/assets/specialReport?type=users">Users (Hierarchy Report)</a>
-        </p>
-
-        <p>
-            <a href="/actions/lantra/assets/specialReport?type=results">Results (Qual User)</a>
-        </p>
-
-        <p>
-            <a href="/actions/lantra/assets/specialReport?type=required">Required (Expired Training)</a>
-        </p>
+        <form method="get" role="form" accept-charset="UTF-8" class="no-loading">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="lantra/assets/specialReport">
+            <div class="field--wrapper">
+                <label for="reportType">Report Type</label>
+                <select id="reportType" name="type">
+                    <option value="users">
+                        Users (Hierarchy Report)
+                    </option>
+                    <option value="results">
+                        Results (Qual User)
+                    </option>
+                    <option value="required">
+                        Required (Expired Training)
+                    </option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="companyIds" class="no-float">Filter Companies (leave blank for all)</label>
+                <select multiple class="js-select2" name="filter[companyIds][]" id="companyIds">
+                    {% for companyEntry in companyEntries %}
+                        <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="unitIds" class="no-float">Filter Units (leave blank for all)</label>
+                <select multiple class="js-select2" name="filter[unitIds][]" id="unitIds">
+                    {% for unitEntry in unitEntries %}
+                        <option value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="container-btn">
+                <button type="submit" class="button primary-bg">Download</button>
+            </div>
+        </form>
     </div>
 </section>
 {% endblock %}

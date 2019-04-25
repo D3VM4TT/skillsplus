@@ -633,10 +633,11 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @param null $userId
      * @param int $limit
      * @param string $search
+     * @param string $relatedTo
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    public function getManagerUsers($userId = null, $limit = 10, $search = '') {
+    public function getManagerUsers($userId = null, $limit = 10, $search = '', $relatedTo = null) {
         if ( ! is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         }
@@ -652,6 +653,9 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->order = 'lastName asc';
         if ($search) {
             $criteria->search = $search;
+        }
+        if ($relatedTo) {
+            $criteria->relatedTo = $relatedTo;
         }
         // get the subordinate ids if not admin or scheme manager
         if ( ! $manager->admin && ! $manager->isInGroup('SchemeManager')) {
