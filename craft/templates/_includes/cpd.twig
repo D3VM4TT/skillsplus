@@ -181,6 +181,7 @@
                                                 <tbody>
                                                 {% for userResultEntry in moduleUserResults %}
                                                     {% set totalComments = userResultEntry.resultComments.total %}
+                                                    {% set unreadComments = craft.lantra.unreadComments(unitResultEntry) %}
                                                     <tr>
                                                         <td>
                                                             {% if readOnly %}
