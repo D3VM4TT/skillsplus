@@ -103,7 +103,11 @@
                 {% endif %}
                 {% if isManager %}
                     <div class="container-btn">
-                        <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Save and endorse' }}</button>
+                        {% if resultEntry and resultEntry.resultStatus == 'draft' %}
+                            <button class="button primary-bg status" data-status="pending" type="button">Save and endorse</button>
+                        {% else %}
+                            <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update result' : 'Save and endorse' }}</button>
+                        {% endif %}
                     </div>
                 {% else %}
                     <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
@@ -111,7 +115,7 @@
                         {% if resultEntry and resultEntry.resultStatus == 'draft' %}
                             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
                         {% else %}
-                            <button class="button primary-bg" class="draft" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
+                            <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
                         {% endif %}
                     </div>
                 {% endif %}

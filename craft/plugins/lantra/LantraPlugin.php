@@ -81,24 +81,32 @@ class LantraPlugin extends BasePlugin
             $entry = $event->params['entry'];
             // Saving user/unit results
             if ($entry->sectionId == $this->sectionIdResults && ($entry->type == 'unitResult' || $entry->type == 'userResult')) {
+                // set custom author
+                $authorId = craft()->request->getPost('authorId');
+                if ($entry->type == 'userResult' && $authorId) {
+                    $entry->authorId = $authorId;
+                }
                 // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
+                // Auto endorse
+                $currentUser = craft()->userSession->getUser();
+                if ($authorId != $currentUser->id && $entry->resultStatus != 'draft') {
+                    $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+                    if (! $oldEntry) {
+                        $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                    }
+                }
                 // force clear endorsed date if pending
                 if ($entry->resultStatus == 'pending') {
                     $entry->setContentFromPost(['resultEndorsedDate' => null]);
-                }
-                elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
+                } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                 }
                 if ($entry->type == 'unitResult') {
                     $unitEntry = $entry->resultUnit->first();
                     $unitEvidence = $entry->resultEvidence->first();
                 }
-                // set custom author
-                $authorId = craft()->request->getPost('authorId');
-                if ($entry->type == 'userResult' && $authorId) {
-                    $entry->authorId = $authorId;
-                }
+
                 $dateFormat = craft()->lantra_settings->getSetting('dateFormat', 'd-m-Y');
                 // set a user start date
                 $userStartDate = craft()->request->getPost('userStartDate');
