@@ -56,6 +56,9 @@
         <li class="{% if craft.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'special' %}active{% endif %}" href="/reporting/special/index">Special Reports</a>
+                </li>
                 {% if currentUser.can('editEntries:13') %}
                     <li>
                         <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>

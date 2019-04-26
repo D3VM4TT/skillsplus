@@ -711,7 +711,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $defaults = [
             'limit'      => 0,
             'search'     => '',
-            'relatedTo'  => []
+            'relatedTo'  => [],
+            'resultType' => null
         ];
         return array_merge($defaults, $filter);
     }
@@ -731,17 +732,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $header = [
             'Company ID',
             'User ID',
-            'Name',
-            'Email',
-            'Job Title',
-            'Birthday',
-            'Start Date',
+            'User Name',
+            'User Email',
+            'User Job Title',
+            'User Birthday',
+            'User Start Date',
             'Company Title',
-            'Address'
+            'User Address'
         ];
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
-        $data = $this->getSubordinateUnitResults($subordinateIds, $resultFilter);
+        $resultFilter['resultType'] = 'unitResult';
+        $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
         $units = [];
         foreach ($data as $results) {
@@ -806,9 +808,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $subordinateIds = $this->getIds($subordinates);
 
         $header = [
-            'id',
-            'name',
-            'company'
+            'User ID',
+            'User Name',
+            'Company Title'
         ];
 
         $units = $this->managerUnits($subordinates);
@@ -819,7 +821,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
-        $data = $this->getSubordinateUnitResults($subordinateIds, $resultFilter);
+        $resultFilter['resultType'] = 'unitResult';
+        $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
         $rows = [$header];
         foreach($subordinates as $user) {
@@ -847,10 +850,15 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    private function getSubordinateUnitResults($subordinateIds, $resultFilter = []) {
+    private function getSubordinateResults($subordinateIds, $resultFilter = []) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
-        $criteria->type = 'unitResult';
+        if ($resultFilter['resultType']) {
+            $criteria->type = $resultFilter['resultType'];
+        }
+        else {
+            $criteria->type = ['unitResult', 'userResult'];
+        }
         $criteria->authorId = $subordinateIds;
         $criteria->status = ['live', 'expired'];
         if ($resultFilter['relatedTo']) {
@@ -893,7 +901,19 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerUnitRequiredResults($userId = null, $userFilter = [], $resultFilter) {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        $rows = [];
+
+        $header = [
+            'User ID',
+            'User Name',
+            'Company ID',
+            'Company Title',
+            'User Job Title',
+            'Unit Title',
+            'Result Expiry Date',
+            'Result Required Status'
+        ];
+
+        $rows = [$header];
         foreach($subordinates as $user) {
             $rows = array_merge($rows, $this->userRequiredRows($user));
         }
@@ -911,11 +931,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
         foreach ($units as $unit) {
             $result = $this->unitResult($user, $unit->id);
             if ( ! $result || $result->status == 'expired') {
+                $company = craft()->lantra_users->userCompany($user);
+                $role = $user->userRole->first();
                 $row = [
-                    'user' => $user,
-                    'unitEntry' => $unit,
-                    'expiryDate' => $result ? $result->expiryDate : null,
-                    'requiredStatus' => $result ? 'expired' : 'required'
+                    $user->id,
+                    $user->fullName,
+                    $company ? $company->id : '~',
+                    $company ? $company->title : 'unknown',
+                    $role ? $role->title : 'unknown',
+                    $unit->title,
+                    $result ? $result->expiryDate : null,
+                    $result ? 'expired' : 'required'
                 ];
                 $rows[] = $row;
             }
