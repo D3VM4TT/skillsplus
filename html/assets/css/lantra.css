@@ -1346,7 +1346,7 @@ nav.cpd#sign-out li a {
     color: #FFFFFF;
 }
 
-.page-subHeader {
+body.logged-in .page-subHeader {
     padding: 12.5px 0px 0px 0px;
 }
 
