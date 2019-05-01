@@ -236,6 +236,11 @@ h4, h4 a {
     transform: rotate(225deg) !important;
 }
 
+.content-col img {
+    width: 100vw;
+    max-width: 760px;
+}
+
 /*Navigation
 -------------------------------------------------- */
 .menu-tab {
@@ -1985,10 +1990,6 @@ body.loading div.loading {
     }
     .container-content .content-col {
         display: initial;
-    }
-    .content-col img {
-        width: 100vw;
-        max-width: 760px;
     }
     .menu-tab, .menu-hide {
         position: absolute;
