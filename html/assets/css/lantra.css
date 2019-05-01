@@ -1346,7 +1346,8 @@ nav.cpd#sign-out li a {
     color: #FFFFFF;
 }
 
-body > div.container-content > header > div > nav {
+body > div.container-content > header > div > nav,
+.topNavigation {
     padding:10px 30px;
 }
 
