@@ -1351,7 +1351,8 @@ body > div.container-content > header > div > nav,
     padding:10px 30px;
 }
 
-body > div.container-content > section > div.page-subHeader.primary-bg {
+body > div.container-content > section > div.page-subHeader.primary-bg,
+.page-subHeader {
     padding: 12.5px 0px 0px 0px;
 }
 
