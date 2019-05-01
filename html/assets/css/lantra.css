@@ -1986,6 +1986,10 @@ body.loading div.loading {
     .container-content .content-col {
         display: initial;
     }
+    .content-col img {
+        width: 100vw;
+        max-width: 760px;
+    }
     .menu-tab, .menu-hide {
         position: absolute;
     }
@@ -2027,6 +2031,9 @@ body.loading div.loading {
     h2, .page-header h2 {
         font-size: 22px;
         font-weight: initial;
+    }
+    .content-main {
+        padding: 0;
     }
     .page-content {
         padding: 15px 20px;
