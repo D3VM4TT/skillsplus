@@ -1346,17 +1346,15 @@ nav.cpd#sign-out li a {
     color: #FFFFFF;
 }
 
-body > div.container-content > header > div > nav,
-.topNavigation {
-    padding:10px 30px;
-}
-
-body > div.container-content > section > div.page-subHeader.primary-bg,
 .page-subHeader {
     padding: 12.5px 0px 0px 0px;
 }
 
-body > div.container-content > section > div.page-subHeader.primary-bg > nav {
+.topNavigation {
+    padding:10px 30px;
+}
+
+body.logged-in .topNavigation {
     padding:15px 30px;
     margin-top: 12.5px;
 }
