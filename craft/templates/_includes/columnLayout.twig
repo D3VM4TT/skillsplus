@@ -6,7 +6,6 @@
     {% endfor %}
 {% else %}
     {% for row in columnLayout %}
-        {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
                 <p class="td-title-responsive">Unit type: </p>
@@ -71,7 +70,6 @@
                     {% endfor %}
                 {% endif %}
             </td>
-        {% endif %}
         {% endif %}
     {% endfor %}
 {% endif %}

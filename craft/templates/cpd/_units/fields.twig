@@ -4,51 +4,51 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
 {% for row in moduleGroup.columnLayout %}
-    {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
+    {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue' %}
         <div class="field--wrapper">
             <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %} name="fields[resultValue]" type="number" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultValue|default(1) }}"/>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultValue]" type="number" placeholder="{{ label }}"
+                   value="{{ resultExists ? resultEntry.resultValue|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper">
             <label for="userExpiryDate" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %}  name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="userExpiryDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists and resultEntry.expiryDate ? resultEntry.expiryDate|date('d-m-Y') }}" data-language="en"
                    data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper">
             <label for="userStartDate" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %}  name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="userStartDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists and resultEntry.resultStartDate ? resultEntry.resultStartDate|date('d-m-Y') }}" data-language="en"
                    data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper">
             <label for="userFinishDate" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %}  name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="userFinishDate" type="text" class="float-label datepicker-here" placeholder="{{ label }}"
                    value="{{ resultExists and resultEntry.resultFinishDate ? resultEntry.resultFinishDate|date(dateFormat) }}" data-language="en"
                    data-position='top left' value="" data-date-format="{{ jsDateFormat }}">
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence' %}
         {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
         <div class="field--wrapper">
-            {% if not resultLocked %}
+            {% if not resultLocked and not fieldDisabled %}
             <span class="btn btn-success fileinput-button primary-bg">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
@@ -89,10 +89,10 @@
             <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
 
             {% if row.fieldCustomType == 'text' %}
-                <input{% if resultLocked %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
+                <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
             {% elseif row.fieldCustomType == 'dropdown' %}
                 {% set customOptions =  row.fieldCustomOptions|split(',') %}
-                <select {% if resultLocked %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]">
+                <select {% if resultLocked  or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]">
                     {% for opt in customOptions %}
                         {% set optValue = opt|trim %}
                         <option{% if optValue == customValue %} selected{% endif %}>{{ optValue }}</option>
