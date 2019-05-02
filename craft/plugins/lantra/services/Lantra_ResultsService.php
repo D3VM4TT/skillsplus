@@ -814,16 +814,25 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'Company Title'
         ];
 
-        $units = $this->managerUnits($subordinates);
-        $unitIds = $this->getIds($units);
-
-        foreach ($units as $unit) {
-            $header[] = $unit->title;
-        }
-
         $resultFilter = $this->formatResultsFilter($resultFilter);
-        $resultFilter['resultType'] = 'unitResult';
-        $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
+        $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
+
+
+        $headerIds = [];
+        ## add the result title columns (might be unit id or result id)
+        foreach($allResults as $userId => $results) {
+            foreach($results as $id => $result) {
+                if (in_array($id, $headerIds)) {
+                    continue;
+                }
+                $headerIds[] = $id;
+                $title = $result->title;
+                if ($result->type == 'unitResult' && $unitEntry = $result->resultUnit->count()) {
+                    $title = $result->resultUnit->first()->title;
+                }
+                $header[] = $title;
+            }
+        }
 
         $rows = [$header];
         foreach($subordinates as $user) {
@@ -833,10 +842,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $user->fullName,
                 $company ? $company->title : 'unknown'
             ];
-            foreach ($units as $unit) {
+            foreach ($headerIds as $id) {
                 $value = 'N/A';
-                if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
-                    $value = $data[$user->id][$unit->id]->$displayField;
+                if (isset($allResults[$user->id]) && isset($allResults[$user->id][$id])) {
+                    $value = $allResults[$user->id][$id]->$displayField;
                 }
                 $row[] = $value;
             }
@@ -867,18 +876,15 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         $results = $criteria->find();
 
-        // arrange as useful array [userId][unitId] = [result]
+        // arrange as useful array [userId][id] = [result]
         $data = [];
         foreach ($results as $result) {
             if ( ! isset ($data[$result->authorId])){
                 $data[$result->authorId] = [];
             }
-            $unitEntry = $result->resultUnit->first();
-            if ($unitEntry) {
-                $data[$result->authorId][$result->resultUnit->first()->id] = $result;
-            }
+            $id = $result->type == 'unitResult' && $result->resultUnit->count() ? $result->resultUnit->first()->id : $result->id;
+            $data[$result->authorId][$id] = $result;
         }
-
         return $data;
     }
 

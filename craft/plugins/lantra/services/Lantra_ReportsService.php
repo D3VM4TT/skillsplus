@@ -74,6 +74,9 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 'field' => 'resultUnit'
             ];
         }
+        if (isset($filter['resultType'])) {
+            $resultFilter['resultType'] = $filter['resultType'];
+        }
         if ($type == 'users') {
             $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }

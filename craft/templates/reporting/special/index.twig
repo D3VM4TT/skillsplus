@@ -46,7 +46,15 @@
                 </select>
             </div>
             <div class="field--wrapper">
-                <label for="displayField" class="no-float">Display Field (only for results report)</label>
+                <label for="resultType" class="no-float">Result Type</label>
+                <select name="filter[resultType]" id="resultType">
+                    <option value="">Both Mandatory & Non Mandatory</option>
+                    <option value="unitResult">Mandatory</option>
+                    <option value="userResult">Non Mandatory</option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="displayField" class="no-float">Results (Qual User) Field</label>
                 <select name="filter[displayField]" id="displayField">
                     <option value="expiryDate">Expiry Date</option>
                     <option value="resultStartDate">Start Date</option>
