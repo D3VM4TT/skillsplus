@@ -915,14 +915,50 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'Company ID',
             'Company Title',
             'User Job Title',
-            'Unit Title',
-            'Result Expiry Date',
-            'Result Required Status'
+            'Unit/Result Title',
+            'Expiry Date',
+            'Status'
         ];
 
         $rows = [$header];
         foreach($subordinates as $user) {
-            $rows = array_merge($rows, $this->userRequiredRows($user));
+            if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
+                $rows = array_merge($rows, $this->userRequiredRows($user));
+            }
+            if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
+                $rows = array_merge($rows, $this->userExpiredRows($user));
+            }
+        }
+        return $rows;
+    }
+
+    /**
+     * @param $user
+     * @return array
+     * @throws Exception
+     */
+    private function userExpiredRows($user)  {
+        $rows = [];
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->type = 'userResult';
+        $criteria->section = 'results';
+        $criteria->status = 'expired';
+        $criteria->authorId = $user->id;
+        $results = $criteria->find();
+        foreach ($results as $result) {
+            $company = craft()->lantra_users->userCompany($user);
+            $role = $user->userRole->first();
+            $row = [
+                $user->id,
+                $user->fullName,
+                $company ? $company->id : '~',
+                $company ? $company->title : 'unknown',
+                $role ? $role->title : 'unknown',
+                $result->title,
+                $result->expiryDate,
+                'expired'
+            ];
+            $rows[] = $row;
         }
         return $rows;
     }

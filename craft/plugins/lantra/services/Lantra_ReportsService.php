@@ -84,6 +84,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $displayField = isset($filter['displayField']) ? $filter['displayField'] : 'expiryDate';
             $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
+        ## @todo change to 'expired'
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
