@@ -73,9 +73,11 @@
                             {% set totalPoints = 0 %}
                             <div class="header" data-target="#m{{ role.id ~ module.id }}">
                                 <h4>{{ module.title }}</h4>
+                                <!--
                                 <div class="status module-status">
                                     {% if moduleResultEntry %}<span class="module-status-complete">Complete</span>{% else %}<span class="module-status-inprogress">In Progress</span>{% endif %}
                                 </div>
+                                -->
                             </div>
                             <div id="m{{ role.id ~ module.id }}" class="unit-groups">
                                 {% for unitGroup in module.moduleUnitGroups %}
@@ -236,6 +238,7 @@
                                         <span>Add an achievement</span>
                                     </a>
                                 {% endif %}
+                                <!--
                                 <div class="summary">
                                     {% if module.resultDisplayValue %}
                                         <h3>Module Points: {{ totalPoints }}/{{ module.moduleCompletedValue }}</h3>
@@ -248,6 +251,7 @@
                                         {% endif %}
                                     {% endif %}
                                 </div>
+                                -->
                             </div>
                         </div>
                     {% endfor %}
