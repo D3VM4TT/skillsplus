@@ -799,10 +799,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param array $userFilter
      * @param array $resultFilter
+     * @param string $displayField
      * @return array
      * @throws Exception
      */
-    public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = []) {
+    public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = [], $displayField = 'expiryDate') {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $this->getIds($subordinates);
@@ -835,7 +836,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             foreach ($units as $unit) {
                 $value = 'N/A';
                 if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
-                    $value = $data[$user->id][$unit->id]->expiryDate;
+                    $value = $data[$user->id][$unit->id]->$displayField;
                 }
                 $row[] = $value;
             }

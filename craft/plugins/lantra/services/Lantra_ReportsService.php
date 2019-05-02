@@ -78,7 +78,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'results') {
-            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter);
+            $displayField = isset($filter['displayField']) ? $filter['displayField'] : 'expiryDate';
+            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);

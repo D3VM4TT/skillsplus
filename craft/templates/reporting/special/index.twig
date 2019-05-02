@@ -45,6 +45,14 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="field--wrapper">
+                <label for="displayField" class="no-float">Display Field (only for results report)</label>
+                <select name="filter[displayField]" id="displayField">
+                    <option value="expiryDate">Expiry Date</option>
+                    <option value="resultStartDate">Start Date</option>
+                    <option value="resultFinishDate">Finish Date</option>
+                </select>
+            </div>
             <div class="container-btn">
                 <button type="submit" class="button primary-bg">Download</button>
             </div>
