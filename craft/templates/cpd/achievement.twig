@@ -16,6 +16,7 @@
 
 {% set moduleEntry = false %}
 {% set resultEntry = false %}
+{% set allUnits = craft.entries.section('units').order('title') %}
 
 {# module id in URL #}
 {% if craft.request.segment(3) == 'achievement' and entryId %}
@@ -78,6 +79,15 @@
                 <div class="field--wrapper">
                     <label for="title" class="float">Result Title</label>
                     <input value="{{ resultEntry ? resultEntry.title }}" type="text" name="title" class="float-label" placeholder="Enter the result title" />
+                </div>
+                <div class="field--wrapper">
+                    <label for="resultUnit" class="">Result unit</label>
+                    <select data-relation="fields[resultUnit]" data-value="{{ resultEntry and resultEntry.resultUnit.total ? resultEntry.resultUnit.first.id }}" id="resultUnit">
+                        <option value="">Not applicable</option>
+                        {% for unit in allUnits %}
+                            <option value="{{ unit.id }}">{{ unit.title }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 {% if moduleEntry %}
                     <input type="hidden" name="fields[resultModule][]" value="{{ moduleEntry.id }}">
