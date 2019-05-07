@@ -48,11 +48,13 @@
                      <th class=""></th>
                      <th class=""></th>
                      <th class=""></th>
+                     <th class=""></th>
                  </tr>
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
             {% set primaryManager = company.companyPrimaryManager.first %}
+            {% set userCount = craft.lantra.userCount(company.id) %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
@@ -65,8 +67,15 @@
                     </td>
                     <td><p class="td-title-responsive">Licences: </p>
                     {{ company.companyRemainingLicences }}</td>
-                    <td><p class="td-title-responsive">Users: </p>
-                    {{ craft.lantra.userCount(company.id) }}</td>
+                    <td>
+                        <p class="td-title-responsive">Users: </p>
+                        {{ userCount }}
+                    </td>
+                    <td>
+                        {% if not currentUser.managerReadOnly and userCount %}
+                            <a href="/management/users/company/{{ company.id }}">view users</a>
+                        {% endif %}
+                    </td>
                     <td>
                         {% if not currentUser.managerReadOnly %}
                             {% set companyEmails = craft.lantra.emailList(company.id) %}
