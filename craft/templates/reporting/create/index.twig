@@ -1,0 +1,112 @@
+{% extends "_layout" %}
+
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
+{% set unitEntries = craft.entries.section('units').limit(null) %}
+{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers') %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>Create Report</h2>
+    </div>
+    <div class="page-content">
+        <form method="get" role="form" accept-charset="UTF-8" class="no-loading">
+            {{ getCsrfInput() }}
+            <input type="hidden" name="action" value="lantra/reports/create">
+            <div class="field--wrapper">
+                <label for="reportType">Report Type</label>
+                <select id="reportType" name="fields[reportType]">
+                    <option value="users">
+                        Users (Hierarchy Report)
+                    </option>
+                    <option value="results">
+                        Results (Qual User)
+                    </option>
+                    <option value="required">
+                        Required (Expired Training)
+                    </option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportCompanies" class="no-float">Filter Companies</label>
+                <select multiple class="js-select2" name="fields[reportCompanies][]" id="reportCompanies">
+                    {% for companyEntry in companyEntries %}
+                        <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportAllCompanies" class="no-float"><input name="fields[reportAllCompanies]" id="reportAllCompanies" type="checkbox" value="1">Include all companies</label>
+            </div>
+            <div class="field--wrapper">
+                <label for="unitIds" class="no-float">Filter Units</label>
+                <select multiple class="js-select2" name="fields[reportUnits][]" id="unitIds">
+                    {% for unitEntry in unitEntries %}
+                        <option value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportAllUnits" class="no-float"><input name="fields[reportAllUnits]" id="reportAllUnits" type="checkbox" value="1">Include all units</label>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportResultType" class="no-float">Result Type</label>
+                <select name="fields[reportResultType]" id="reportResultType">
+                    <option value="all">Both Mandatory & Non Mandatory</option>
+                    <option value="unitResult">Mandatory</option>
+                    <option value="userResult">Non Mandatory</option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportDisplayField" class="no-float">Results (Qual User) Field</label>
+                <select name="fields[reportDisplayField]" id="reportDisplayField">
+                    <option value="expiryDate">Expiry Date</option>
+                    <option value="resultStartDate">Start Date</option>
+                    <option value="resultFinishDate">Finish Date</option>
+                </select>
+            </div>
+
+            <div id="reportAutomated">
+                <input type="hidden" name="automated" value="0">
+                <h2>Automated Report Settings</h2>
+                <div class="field--wrapper">
+                    <label for="reportRecipients" class="">Report recipients (managers):</label>
+                    <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
+                        {% for manager in allManagers %}
+                            <option value="{{ manager.id }}">{{ manager.fullName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field--wrapper">
+                    <label for="reportSendFrequency">Report send frequency:</label>
+                    <select name="fields[reportSendFrequency]" id="reportSendFrequency">
+                        <option value="never" {% if entry is defined and entry.reportSendFrequency == 'never' %} selected="selected{% endif %}">Never</option>
+                        <option value="weekly" {% if entry is defined and entry.reportSendFrequency == 'weekly' %} selected="selected{% endif %}">Weekly</option>
+                        <option value="monthly" {% if entry is defined and entry.reportSendFrequency == 'monthly' %} selected="selected{% endif %}">Monthly</option>
+                    </select>
+                </div>
+                <div class="field--wrapper">
+                    <label for="reportSendValue">Report send day (1-7 for weekly):</label>
+                    <select name="fields[reportSendValue]" id="reportSendValue">
+                        {% for day in range(1, 31) %}
+                            <option value="{{ day }}">{{ day }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="container-btn">
+                <button id="buttonSubmit" type="submit" class="button primary-bg">Download Data</button>
+            </div>
+            <div class="container-btn">
+                <button id="buttonAutomated" type="button" class="button primary-bg">Create Automated</button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}

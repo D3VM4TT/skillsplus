@@ -176,7 +176,7 @@ $(document).ready(function(){
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'lantra/entries/runReport') {
+        if (action == 'lantra/reports/run') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;
             }
@@ -275,6 +275,17 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('#reportAutomated').hide();
+
+    // show automated report inputs
+    $('#buttonAutomated').click(function (e) {
+        e.preventDefault();
+        $('#buttonAutomated').hide();
+        $('#reportAutomated').show();
+        $('input[name="automated"]').val(1);
+        $('#buttonSubmit').text('Save Automated');
+    })
 
     // delete user photo
     $("#deleteUserPhotoAction").on('click', function(e) {

@@ -1339,6 +1339,16 @@ nav.cpd ul > li > ul li a.active {
     color: #444444;
 }
 
+nav.cpd ul.secondary li {
+    padding:0;
+    margin:0;
+}
+
+nav.cpd ul.secondary li a {
+    font-size: 12px;
+    padding:10px 0 10px 70px;
+}
+
 nav.cpd#sign-out {
     padding: 0px;
 }

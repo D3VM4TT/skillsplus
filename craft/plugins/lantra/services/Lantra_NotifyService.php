@@ -231,9 +231,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
         // all notifications sent to test email address
         $server = craft()->lantra_settings->getConfig('server', 'dev');
         if ($server != 'prod') {
-            $subject = '[' . $server . '] ' . $server;
+            $subject = '[' . $server . '] ' . $subject;
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
-            $schemeTestEmails = explode(',', craft()->lantra_settings->getConfig('schemeTestEmailAddress'));
+            $schemeTestEmails = explode(',', craft()->lantra_settings->getSetting('schemeTestEmailAddress'));
             $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer

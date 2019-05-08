@@ -5,7 +5,11 @@ use League\Csv\Writer;
 
 class Lantra_ReportsService extends BaseApplicationComponent
 {
+    private $sectionIdReports = 13;
+    private $typeIdReport = 15;
+
     /**
+     *
      * Load in the vendor dependencies
      */
     public function init()
@@ -26,7 +30,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         $reportEntries = $this->getReports();
         foreach ($reportEntries as $reportEntry) {
             if (($reportEntry->reportSendFrequency == 'weekly' && $reportEntry->reportSendValue == $weekDay) || ($reportEntry->reportSendFrequency == 'monthly' && $reportEntry->reportSendValue == $monthDay)) {
-                $this->runReport($reportEntry);
+                $this->runCustomReport($reportEntry);
             }
         }
     }
@@ -36,7 +40,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
      * @param $data
      * @throws HttpException
      */
-    public function sendReport($reportType, $data) {
+    public function downloadReport($reportType, $data) {
         ob_start();
         $export = fopen('php://output', 'w');
         if ( ! count($data)) {
@@ -54,34 +58,56 @@ class Lantra_ReportsService extends BaseApplicationComponent
     }
 
     /**
+     * Save report
+     *
+     * @param object
+     * @param array
+     * @return null
+     * @throws Mixed
+     */
+    public function saveCustomReport($author, $fields) {
+        $reportEntry = new EntryModel();
+        $reportEntry->sectionId = $this->sectionIdReports;
+        $reportEntry->typeId = $this->typeIdReport;
+        $reportEntry->enabled = true;
+        $reportEntry->authorId = $author->id;
+        $reportEntry->getContent()->title = $author->fullName . ' ' . ucwords($fields['reportType']);
+        $reportEntry->setContentFromPost($fields);
+        if (false == craft()->entries->saveEntry($reportEntry)) {
+            return $reportEntry->getErrors();
+        }
+        return true;
+    }
+
+    /**
      * @param $manager
      * @param $type
      * @param $filter
      * @throws HttpException
      */
-    public function getSpecialReport($manager, $type, $filter = []) {
+    public function getCustomReportData($manager, $type, $filter = []) {
         $userFilter = [];
         $resultFilter = [];
-        if (isset($filter['companyIds'])) {
+        if (isset($filter['reportCompanies'])) {
             $userFilter['relatedTo'] = [
-                'targetElement' => $filter['companyIds'],
+                'targetElement' => $filter['reportCompanies'],
                 'field' => 'userCompany'
             ];
         }
-        if (isset($filter['unitIds'])) {
+        if (isset($filter['reportUnits'])) {
             $resultFilter['relatedTo'] = [
-                'targetElement' => $filter['unitIds'],
+                'targetElement' => $filter['reportUnits'],
                 'field' => 'resultUnit'
             ];
         }
-        if (isset($filter['resultType'])) {
-            $resultFilter['resultType'] = $filter['resultType'];
+        if (isset($filter['reportResultType'])) {
+            $resultFilter['resultType'] = $filter['reportResultType'];
         }
         if ($type == 'users') {
             $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'results') {
-            $displayField = isset($filter['displayField']) ? $filter['displayField'] : 'expiryDate';
+            $displayField = isset($filter['reportDisplayField']) ? $filter['reportDisplayField'] : 'expiryDate';
             $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
         ## @todo change to 'expired'
@@ -89,7 +115,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
 
-        return $this->sendReport($type, $values);
+        return $values;
 
         /* @todo save report as asset for download later?
 
@@ -124,9 +150,10 @@ class Lantra_ReportsService extends BaseApplicationComponent
      * @return null
      * @throws Mixed
      */
-    public function runReport(EntryModel $reportEntry)
+    public function runCustomReport(EntryModel $reportEntry)
     {
-        $values = $this->getReportData($reportEntry);
+        $filter = (array) $reportEntry;
+        $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
         $total = count($values);
         if ( ! $total ) {
             return 0;
@@ -153,7 +180,11 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 'filename' => $fileName,
                 'mimeType' => $asset->getMimeType()
             ];
-            craft()->lantra_notify->notify(explode(',', $reportEntry->reportRecipients), $reportEntry->title, '', [$attachment]);
+            $emails = [];
+            foreach($reportEntry->reportRecipients as $user) {
+                $emails[] = $user->email;
+            }
+            craft()->lantra_notify->notify($emails, $reportEntry->title, '', [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
             craft()->entries->saveEntry($reportEntry);
         }
