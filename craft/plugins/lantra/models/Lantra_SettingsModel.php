@@ -10,6 +10,7 @@ class Lantra_SettingsModel extends BaseModel
 	{
 		return array(
             ## config settings
+            'settingsVersion'                   => AttributeType::Number,
             'dateFormat'                        => AttributeType::String,
             'defaultLimit'                      => AttributeType::Number,
 
@@ -18,16 +19,17 @@ class Lantra_SettingsModel extends BaseModel
             'themeDisableCertificates'          => AttributeType::Bool,
             'themeResultHistoryTitle'           => AttributeType::String,
 
-            ## change to schemeDisableLicences?
-            'lantraDisableLicences'             => AttributeType::Bool,
-
             ## scheme settings
-            'schemeRemainingLicences'           => AttributeType::Number,
-            'schemeExpiryDate'                  => AttributeType::DateTime,
             'schemeTeams'                       => AttributeType::Bool,
             'schemeUserReadOnly'                => AttributeType::Bool,
             'schemeEmailDomain'                 => AttributeType::String,
             'schemeTestEmailAddress'            => AttributeType::String,
+
+            ## licence settings
+            'lantraDisableLicences'             => AttributeType::Bool,
+            'schemeRemainingLicences'           => AttributeType::Number,
+            'schemeExpiryDate'                  => AttributeType::DateTime,
+
             ## individual company relationship?
             'individualCompany'                 => AttributeType::Number,
             'individualLicenceDays'             => AttributeType::Number,

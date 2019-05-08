@@ -12,7 +12,7 @@
             </div>
         </div>
         {% endif %}
-        {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
+        {% if craft.lantra.setting('schemeTeams', false) and currentUser.can('editEntries:5') %}
         <div class="col-2">
             <img src="/assets/img/tool-team-management.svg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>

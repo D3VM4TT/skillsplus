@@ -56,7 +56,7 @@
                     <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
                 {%  endfor %}
             </p>
-            {% if not globalsScheme.schemeUserReadOnly %}
+            {% if not craft.lantra.setting('schemeUserReadOnly') %}
                 <div class="container-btn">
                     <a class="button primary-bg" href="/profile/edit">Edit profile</a>
                 </div>

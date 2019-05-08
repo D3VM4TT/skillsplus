@@ -101,7 +101,7 @@
                 location.href="/management/companies/new/?node=" + nodeId + "&parent=" + elementId;
             }
         });
-        {% if globalsScheme.schemeTeams|default(false) %}
+        {% if craft.lantra.setting('schemeTeams', false) %}
         $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_team",
             "class"     : "button-hierarchy button-team pull-right",

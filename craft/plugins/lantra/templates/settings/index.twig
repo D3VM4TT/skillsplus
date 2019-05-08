@@ -1,6 +1,6 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
-{% set title = 'Lantra Settings' %}
+{% set title = 'Lantra Settings (v.' ~ settings.settingsVersion|default(0) ~ ')' %}
 
 {% set fullPageForm = true %}
 {% set saveShortcutRedirect = 'lantra/settings' %}
@@ -21,11 +21,36 @@
 
             <h2>System Settings</h2>
 
-            {{ forms.checkbox ({
-                label:			"Disable Lantra Licences?",
-                id:				"lantraDisableLicences",
-                name:			"lantraDisableLicences",
-                checked:		settings.lantraDisableLicences == 1,
+            {{ forms.lightswitchField ({
+                label:			"Scheme Teams",
+                instructions:   "Enable teams for this scheme?",
+                id:				"schemeTeams",
+                name:			"schemeTeams",
+                on:		        settings.schemeTeams == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Scheme User Read Only",
+                instructions:   "Make all users read only on this scheme?",
+                id:				"schemeUserReadOnly",
+                name:			"schemeUserReadOnly",
+                on:		        settings.schemeUserReadOnly == 1
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Email Domain",
+                instructions:   "Used when importing users without a real email address i.e. lantra.co.uk",
+                id:				"schemeEmailDomain",
+                name:			"schemeEmailDomain",
+                value:		    settings.schemeEmailDomain
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Test Email Address",
+                instructions:   "For all servers other than <b>PRODUCTION</b>. Separate emails with commas.",
+                id:				"schemeTestEmailAddress",
+                name:			"schemeTestEmailAddress",
+                value:		    settings.schemeTestEmailAddress
             }) }}
 
             <hr />
@@ -48,11 +73,22 @@
                 value:		    settings.themeResultHistoryTitle
             }) }}
 
-            {{ forms.checkbox ({
+            {{ forms.lightswitchField ({
                 label:			"Disable Certificates?",
                 id:				"themeDisableCertificates",
                 name:			"themeDisableCertificates",
-                checked:		settings.themeDisableCertificates == 1,
+                on:		        settings.themeDisableCertificates == 1,
+            }) }}
+
+            <hr />
+
+            <h2>Licence Settings</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Lantra Licences?",
+                id:				"lantraDisableLicences",
+                name:			"lantraDisableLicences",
+                on:     		settings.lantraDisableLicences == 1,
             }) }}
 
             <hr />

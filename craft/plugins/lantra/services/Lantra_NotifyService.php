@@ -233,9 +233,8 @@ class Lantra_NotifyService extends BaseApplicationComponent
         if ($server != 'prod') {
             $subject = '[' . $server . '] ' . $server;
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
-            $schemeGlobals = craft()->globals->getSetByHandle('globalsScheme');
-            $schemeTestEmail = explode(',', $schemeGlobals->schemeTestEmailAddress);
-            $toEmail = count($schemeTestEmail) ? $schemeTestEmail : [craft()->systemSettings->getSetting('email', 'emailAddress')];
+            $schemeTestEmails = explode(',', craft()->lantra_settings->getConfig('schemeTestEmailAddress'));
+            $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer
         $message .= $this->getNotifySetting('footer');

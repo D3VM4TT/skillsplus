@@ -16,7 +16,7 @@
         </div>
         <div class="page-content">
             {% set currentUserCompany = craft.lantra.userCompany() %}
-            {% if not globalsScheme.schemeUserReadOnly %}
+            {% if not craft.lantra.setting('schemeUserReadOnly') %}
                 {% include '_forms/profile' %}
             {% endif %}
         </div>

@@ -173,7 +173,7 @@
                         </div>
                         {% endif %}
                         {% endif %}
-                        {% if globalsScheme.schemeTeams|default(false) %}
+                        {% if craft.lantra.setting('schemeTeams', false) %}
                         </div>
                         </div>
                         </div>
@@ -183,7 +183,7 @@
                         <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
                         <span>Make Team manager</span>
                         {% endif %}
-                        {% if globalsScheme.schemeTeams|default(false) %}
+                        {% if craft.lantra.setting('schemeTeams', false) %}
                         <div id="team-fields" class="hide">
                         <div class="field--wrapper">
                         {#<label for="userCompany">User team:</label>#}

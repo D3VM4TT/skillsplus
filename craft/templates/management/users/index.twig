@@ -77,7 +77,7 @@
                 <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
                 <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
                 <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
-                {% if globalsScheme.schemeTeams|default(false) %}
+                {% if craft.lantra.setting('schemeTeams', false) %}
                     <th>Team</th>
                 {% endif %}
                 <th>&nbsp;</th>
@@ -105,7 +105,7 @@
                             {% endfor %}
                         {% endif %}
                     </td>
-                    {% if globalsScheme.schemeTeams|default(false) %}
+                    {% if craft.lantra.setting('schemeTeams', false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}

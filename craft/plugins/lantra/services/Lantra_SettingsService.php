@@ -3,32 +3,88 @@ namespace Craft;
 
 class Lantra_SettingsService extends BaseApplicationComponent
 {
-	public function saveSettings($settings)
-	{
-		$settings = JsonHelper::encode($settings);
-		$affectedRows = craft()->db->createCommand()->update('plugins', array('settings' => $settings), array('class' => 'Lantra'));
-		return (bool) $affectedRows;
-	}
+    public function saveSettings($settings)
+    {
+        $settings = JsonHelper::encode($settings);
+        $affectedRows = craft()->db->createCommand()->update('plugins', array('settings' => $settings), array('class' => 'Lantra'));
+        return (bool)$affectedRows;
+    }
 
-    public function getSetting($key, $default = null) {
-	    if ($key == 'jsDateFormat') {
-	        return $this->getJsDateFormat();
-        }
+    public function getSettings()
+    {
         $plugin = craft()->plugins->getPlugin('lantra');
-        $settings = $plugin->getSettings();
-        $setting = $settings->getAttribute($key);
+        return $plugin->getSettings();
+    }
+
+    public function saveSetting($key, $value = null)
+    {
+        $settings = $this->getSettings();
+        $settings[$key] = $value;
+        return $this->saveSettings($settings);
+    }
+
+    public function getSetting($key, $default = null)
+    {
+        if ($key == 'jsDateFormat') {
+            return $this->getJsDateFormat();
+        }
+        $setting = $this->getSettings()->getAttribute($key);
         return $setting ? $setting : $default;
     }
 
-    public function getConfig($key, $default = null) {
-	    $config = craft()->config->get('environmentVariables');
+    public function getConfig($key, $default = null)
+    {
+        $config = craft()->config->get('environmentVariables');
         return isset($config[$key]) ? $config[$key] : $default;
     }
 
-    public function getJsDateFormat() {
+    public function getJsDateFormat()
+    {
         $dateFormat = $this->getSetting('dateFormat', 'd-m-Y');
-        $p = ['d','m','Y'];
+        $p = ['d', 'm', 'Y'];
         $j = ['dd', 'mm', 'yyyy'];
         return str_replace($p, $j, $dateFormat);
+    }
+
+    /**
+     * Custom script to keep settings synced up outside of migration manager or plugin updates.
+     *
+     * @param $currentVersion
+     */
+    public function updateSettings($currentVersion)
+    {
+        $dbVersion = $this->getSetting('settingsVersion' , 0);
+
+        if ($dbVersion >= $currentVersion) {
+            return;
+        }
+
+        ## VERSION 1 - if globals scheme exists, migrate to settings 08/05/19
+        if ($dbVersion < 1) {
+            $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+            if ($globalsScheme) {
+                $globals = [
+                    'schemeTeams',
+                    'schemeUserReadOnly',
+                    'schemeEmailDomain',
+                    'schemeTestEmailAddress',
+                ];
+                foreach ($globals as $name) {
+                    if (isset($globalsScheme->$name)) {
+                        ## copy value from globals to settings
+                        $global = $globalsScheme->$name;
+                        craft()->lantra_settings->saveSetting($name, $global);
+                        ## delete field
+                        $field = craft()->fields->getFieldByHandle($name);
+                        if ($field) {
+                            craft()->fields->deleteFieldById($field->id);
+                        }
+                    }
+                }
+            }
+            $dbVersion = 1;
+        }
+
+        $this->saveSetting('settingsVersion' , $dbVersion);
     }
 }

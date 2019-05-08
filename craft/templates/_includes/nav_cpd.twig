@@ -29,7 +29,7 @@
                         <a class="{% if craft.request.getSegment(2) == 'companies' %}active{% endif %}" href="/management/companies">Companies</a>
                     </li>
                 {%  endif %}
-                {% if globalsScheme.schemeTeams|default(false) and currentUser.can('editEntries:5') %}
+                {% if craft.lantra.setting('schemeTeams', false) and currentUser.can('editEntries:5') %}
                     <li>
                         <a class="{% if craft.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
                     </li>

@@ -8,6 +8,11 @@ class LantraPlugin extends BasePlugin
     private $sectionIdResults = 10;
     private $sectionIdCompanies = 3;
 
+    /*
+     * Settings version (auto migrate settings)
+     */
+    private $settingsVersion = 1;
+
     function getName()
     {
         return Craft::t('Lantra');
@@ -33,6 +38,8 @@ class LantraPlugin extends BasePlugin
         craft()->config->maxPowerCaptain();
         
         parent::init();
+
+        craft()->lantra_settings->updateSettings($this->settingsVersion);
 
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
@@ -197,6 +204,7 @@ class LantraPlugin extends BasePlugin
     protected function defineSettings()
     {
         return array(
+            'settingsVersion'                   => AttributeType::Number,
             'dateFormat'                        => AttributeType::String,
             'defaultLimit'                      => AttributeType::Number,
 

@@ -917,11 +917,10 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     public function generateEmail($firstName = null, $lastName = null, $handle = null) {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
         if (is_null($handle)) {
             $handle = $this->generateUsername($firstName, $lastName);
         }
-        $domain = $globalsScheme->schemeEmailDomain ? $globalsScheme->schemeEmailDomain : 'lantra.co.uk';
+        $domain = craft()->lantra_settings->getConfig('schemeEmailDomain', 'lantra.co.uk');
         return $handle . '@' . $domain;
     }
 
