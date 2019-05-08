@@ -4,8 +4,8 @@
 {% import "_macros" as ui %}
 
 {% set metaTitle = "Management > Endorsements" %}
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
-{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 
 {% set criteria = craft.lantra.managerEndorsementResults(null, pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}

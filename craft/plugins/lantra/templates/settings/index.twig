@@ -57,6 +57,20 @@
 
             <h2>Theme Settings</h2>
 
+            {{ forms.textField ({
+                label:			"Theme Date Format (default d-m-Y)",
+                id:				"themeDateFormat",
+                name:			"themeDateFormat",
+                value:		    settings.themeDateFormat
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Theme Row Limit (default 10)",
+                id:				"themeDefaultLimit",
+                name:			"themeDefaultLimit",
+                value:		    settings.themeDefaultLimit
+            }) }}
+
             {{ forms.textareaField ({
                 label:			"Theme Login Message",
                 id:				"themeLoginMessage",

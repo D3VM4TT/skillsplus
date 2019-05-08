@@ -4,7 +4,7 @@
 {% extends "_layout" %}
 
 {% set metaTitle = userProfile.getFullName() ~ " Passport" %}
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% block content %}
     <section class="page">

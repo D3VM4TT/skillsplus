@@ -760,7 +760,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
 
-        $format = 'd/m/y';
+        $format = 'd-m-Y';
 
         $rows = [$header];
         foreach($subordinates as $user) {

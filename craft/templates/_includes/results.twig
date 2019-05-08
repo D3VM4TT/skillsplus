@@ -1,4 +1,4 @@
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set moduleResults = craft.entries.section('results').type('moduleResult').resultStatus('complete').authorId(cpdUser.id).limit(null) %}
 {% set userResults = craft.entries.section('results').type('userResult').resultStatus('endorsed').authorId(cpdUser.id).limit(null) %}
 {% if moduleResults|length or userResults|length %}

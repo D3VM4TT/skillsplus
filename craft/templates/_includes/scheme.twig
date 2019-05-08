@@ -1,4 +1,4 @@
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
 {% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}

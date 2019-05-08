@@ -11,7 +11,7 @@ class LantraPlugin extends BasePlugin
     /*
      * Settings version (auto migrate settings)
      */
-    private $settingsVersion = 1;
+    private $settingsVersion = 2;
 
     function getName()
     {
@@ -114,7 +114,7 @@ class LantraPlugin extends BasePlugin
                     $unitEvidence = $entry->resultEvidence->first();
                 }
 
-                $dateFormat = craft()->lantra_settings->getSetting('dateFormat', 'd-m-Y');
+                $dateFormat = craft()->lantra_settings->getSetting('themeDateFormat', 'd-m-Y');
                 // set a user start date
                 $userStartDate = craft()->request->getPost('userStartDate');
                 if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
@@ -160,7 +160,7 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->saveNewResult($entry);
             }
             // set expiry date on entry record
-            $dateFormat = craft()->lantra_settings->getSetting('dateFormat', 'd-m-Y');
+            $dateFormat = craft()->lantra_settings->getSetting('themeDateFormat', 'd-m-Y');
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
             if ($entry->sectionId == $this->sectionIdResults && $userExpiryDate) {
                 if (false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
@@ -205,8 +205,8 @@ class LantraPlugin extends BasePlugin
     {
         return array(
             'settingsVersion'                   => AttributeType::Number,
-            'dateFormat'                        => AttributeType::String,
-            'defaultLimit'                      => AttributeType::Number,
+            'themeDateFormat'                   => AttributeType::String,
+            'themeDefaultLimit'                 => AttributeType::Number,
 
             ## theme settings
             'themeLoginMessage'                 => AttributeType::String,

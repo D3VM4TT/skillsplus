@@ -26,7 +26,7 @@
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">

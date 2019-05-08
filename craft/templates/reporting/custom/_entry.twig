@@ -4,7 +4,7 @@
 
 {% set metaTitle = "Reporting > Custom Reports > " ~ entry.title %}
 {% set dateFormat = 'd/m/y G:i:s' %}
-{% set pageLimit = globalsSystem.defaultLimit|default(10) %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 
 {% set criteria = entry.reportData.limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, reportData %}{% endif %}

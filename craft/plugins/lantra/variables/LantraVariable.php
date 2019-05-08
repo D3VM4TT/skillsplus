@@ -509,8 +509,8 @@ class LantraVariable
                         $row->author->getFullName(),
                         $company ? $company->title : '~',
                         $title,
-                        $row->postDate->format('d/m/y'),
-                        $row->expiryDate ? $row->expiryDate->format('d/m/y') : '',
+                        $row->postDate->format('d-m-Y'),
+                        $row->expiryDate ? $row->expiryDate->format('d-m-Y') : '',
                     ];
                 }
             }

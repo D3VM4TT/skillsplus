@@ -208,8 +208,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 $company->title,
                 $team,
                 implode(', ', $roles),
-                $user->userStartDate ? $user->userStartDate->format('d/m/y') : '',
-                $user->userStartDate ? $user->userDateOfBirth->format('d/m/y') : '',
+                $user->userStartDate ? $user->userStartDate->format('d-m-Y') : '',
+                $user->userStartDate ? $user->userDateOfBirth->format('d-m-Y') : '',
                 $user->userAddress,
                 $user->userTelephone,
             ];

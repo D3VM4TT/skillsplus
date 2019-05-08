@@ -40,7 +40,7 @@ class Lantra_SettingsService extends BaseApplicationComponent
 
     public function getJsDateFormat()
     {
-        $dateFormat = $this->getSetting('dateFormat', 'd-m-Y');
+        $dateFormat = $this->getSetting('themeDateFormat', 'd-m-Y');
         $p = ['d', 'm', 'Y'];
         $j = ['dd', 'mm', 'yyyy'];
         return str_replace($p, $j, $dateFormat);
@@ -83,6 +83,31 @@ class Lantra_SettingsService extends BaseApplicationComponent
                 }
             }
             $dbVersion = 1;
+        }
+
+        ## VERSION 2 - migrate system globals 08/05/19
+        if ($dbVersion < 2) {
+
+            ## set defaults
+            craft()->lantra_settings->saveSetting('themeDateFormat', 'd-m-Y');
+            craft()->lantra_settings->saveSetting('themeDefaultLimit', 10);
+
+            $fields = [
+                'dateFormat',
+                'defaultLimit'
+            ];
+            foreach ($fields as $name) {
+                ## delete fields
+                $field = craft()->fields->getFieldByHandle($name);
+                if ($field) {
+                    craft()->fields->deleteFieldById($field->id);
+                }
+            }
+
+            ## delete global set
+            craft()->globals->deleteSetById(489);
+
+            $dbVersion = 2;
         }
 
         $this->saveSetting('settingsVersion' , $dbVersion);

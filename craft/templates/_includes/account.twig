@@ -1,4 +1,4 @@
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companyPrimaryManager'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
@@ -12,7 +12,7 @@
         <p class="link-bold">{{ cpdUser.userStartDate|date(dateFormat) }}</p>
     </div>
     <div class="col-9">
-        {% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+        {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
         {% if cpdUser.userCompany|length %}
             <h5 class="primary-color">User Company:</h5>
             <p class="link-bold">{{ craft.lantra.companyLabel(cpdUser.userCompany.first) }}</p>

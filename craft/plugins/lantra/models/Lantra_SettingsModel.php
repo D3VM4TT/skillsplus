@@ -11,10 +11,10 @@ class Lantra_SettingsModel extends BaseModel
 		return array(
             ## config settings
             'settingsVersion'                   => AttributeType::Number,
-            'dateFormat'                        => AttributeType::String,
-            'defaultLimit'                      => AttributeType::Number,
 
             ## theme settings
+            'themeDateFormat'                   => AttributeType::String,
+            'themeDefaultLimit'                 => AttributeType::Number,
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
             'themeResultHistoryTitle'           => AttributeType::String,
@@ -30,7 +30,7 @@ class Lantra_SettingsModel extends BaseModel
             'schemeRemainingLicences'           => AttributeType::Number,
             'schemeExpiryDate'                  => AttributeType::DateTime,
 
-            ## individual company relationship?
+            ## individual company settings
             'individualCompany'                 => AttributeType::Number,
             'individualLicenceDays'             => AttributeType::Number,
             'individualLicencePaypalButton'     => AttributeType::String,

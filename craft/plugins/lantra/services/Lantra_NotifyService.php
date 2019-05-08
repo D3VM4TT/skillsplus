@@ -15,7 +15,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
-        $message = "Your scheme expires on " . date('d/m/y', $expiryDate->getTimestamp()) . ".";
+        $message = "Your scheme expires on " . date('d-m-Y', $expiryDate->getTimestamp()) . ".";
         foreach ($criteria->find() as $manager) {
             $this->notify($manager->email, $subject, $message);
         }
@@ -31,7 +31,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
        if ($criteria->total()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
            foreach ($criteria->find() as $user) {
-               $message = "Your individual licence expires on " . date('d/m/y', $user->userExpiryDate->getTimestamp()) . ".";
+               $message = "Your individual licence expires on " . date('d-m-Y', $user->userExpiryDate->getTimestamp()) . ".";
                $this->notify($user->email, $subject, $message);
            }
        }

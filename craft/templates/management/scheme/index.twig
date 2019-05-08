@@ -2,7 +2,7 @@
 {% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').total() %}
 {% set licencesCompany = craft.lantra.totalCompanyLicences() %}
 {% set licencesScheme = globalsScheme.schemeRemainingLicences|default(0) %}
-{% set dateFormat = globalsSystem.dateFormat|default('d/m/y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% extends "_layout" %}
 {% block content %}
     <div class="page-subHeader primary-bg">
