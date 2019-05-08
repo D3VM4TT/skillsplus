@@ -9,25 +9,25 @@ class Lantra_ReportsController extends Lantra_BaseController
      *
      * @throws Exception
      */
-    public function actionCreate()
+    public function actionSave()
     {
         craft()->userSession->requireLogin();
         $manager = craft()->userSession->getUser();
         $fields = craft()->request->getParam('fields');
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
-        if ( ! $automated) {
-            $data = craft()->lantra_reports->getCustomReportData($manager, $type, $fields);
-            return craft()->lantra_reports->downloadReport($type, $data);
+        $entryId = craft()->request->getParam('entryId');
+        if ($entryId || $automated) {
+            $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $fields, $entryId);
+            if ($reportEntry->hasErrors()) {
+                craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
+                return $this->redirectToPostedUrl();
+            }
+            $redirect = '/reporting/custom';
+            return $this->_returnMessage('Custom report has been saved.', true, $redirect);
         }
-
-        $result = craft()->lantra_reports->saveCustomReport($manager, $fields);
-        if ($result !== true) {
-             return $this->_returnError('Could not save report.');
-        }
-
-        $redirect = '/reporting/automated';
-        $this->_returnMessage('Automated report has been saved.', true, $redirect);
+        $data = craft()->lantra_reports->getCustomReportData($manager, $type, $fields);
+        return craft()->lantra_reports->downloadReport($type, $data);
     }
 
     /**

@@ -65,25 +65,48 @@ class Lantra_ReportsService extends BaseApplicationComponent
      * @return null
      * @throws Mixed
      */
-    public function saveCustomReport($author, $fields) {
-        $reportEntry = new EntryModel();
-        $reportEntry->sectionId = $this->sectionIdReports;
-        $reportEntry->typeId = $this->typeIdReport;
-        $reportEntry->enabled = true;
-        $reportEntry->authorId = $author->id;
-        $reportEntry->getContent()->title = $author->fullName . ' ' . ucwords($fields['reportType']);
-        $reportEntry->setContentFromPost($fields);
-        if (false == craft()->entries->saveEntry($reportEntry)) {
-            return $reportEntry->getErrors();
+    public function saveCustomReport($author, $fields, $entryId) {
+        if ($entryId) {
+            $reportEntry = craft()->entries->getEntryById($entryId);
         }
-        return true;
+        else {
+            $reportEntry = new EntryModel();
+            $reportEntry->sectionId = $this->sectionIdReports;
+            $reportEntry->typeId = $this->typeIdReport;
+            $reportEntry->enabled = true;
+            $reportEntry->authorId = $author->id;
+            $reportEntry->getContent()->title = $author->fullName . ' ' . ucwords($fields['reportType']);
+        }
+        $reportEntry->setContentFromPost($fields);
+        craft()->entries->saveEntry($reportEntry);
+        return $reportEntry;
+    }
+
+    /**
+     * @param $reportEntry
+     * @return array
+     */
+    public function getCustomReportFilter($reportEntry) {
+
+        $filter = [
+            'reportResultType'      => $reportEntry->reportResultType,
+            'reportDisplayField'    => $reportEntry->reportDisplayField
+        ];
+
+        if ($reportEntry->reportCompanies->total()) {
+            $filter['reportCompanies'] = $reportEntry->reportCompanies->ids();
+        }
+        if ($reportEntry->reportUnits->total()) {
+            $filter['reportUnits'] = $reportEntry->reportUnits->ids();
+        }
+        return $filter;
     }
 
     /**
      * @param $manager
      * @param $type
-     * @param $filter
-     * @throws HttpException
+     * @param array $filter
+     * @return mixed
      */
     public function getCustomReportData($manager, $type, $filter = []) {
         $userFilter = [];
@@ -100,7 +123,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 'field' => 'resultUnit'
             ];
         }
-        if (isset($filter['reportResultType'])) {
+        if (isset($filter['reportResultType']) && $filter['reportResultType'] != 'all') {
             $resultFilter['resultType'] = $filter['reportResultType'];
         }
         if ($type == 'users') {
@@ -152,10 +175,10 @@ class Lantra_ReportsService extends BaseApplicationComponent
      */
     public function runCustomReport(EntryModel $reportEntry)
     {
-        $filter = (array) $reportEntry;
+        $filter = $this->getCustomReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
-        $total = count($values);
-        if ( ! $total ) {
+        $total = count($values) - 1;
+        if (! $total) {
             return 0;
         }
         // create csv file in temp folder

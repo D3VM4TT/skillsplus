@@ -284,7 +284,7 @@ $(document).ready(function(){
         $('#buttonAutomated').hide();
         $('#reportAutomated').show();
         $('input[name="automated"]').val(1);
-        $('#buttonSubmit').text('Save Automated');
+        $('#buttonSubmit').text('Save Report');
     })
 
     // delete user photo
