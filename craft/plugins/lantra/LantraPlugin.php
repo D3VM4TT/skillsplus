@@ -204,26 +204,35 @@ class LantraPlugin extends BasePlugin
     protected function defineSettings()
     {
         return array(
+            ## config settings
             'settingsVersion'                   => AttributeType::Number,
-            'themeDateFormat'                   => AttributeType::String,
-            'themeDefaultLimit'                 => AttributeType::Number,
 
             ## theme settings
+            'themeDateFormat'                   => AttributeType::String,
+            'themeDefaultLimit'                 => AttributeType::Number,
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
             'themeResultHistoryTitle'           => AttributeType::String,
-
-            ## change to schemeDisableLicences?
-            'lantraDisableLicences'             => AttributeType::Bool,
+            'themeColorPrimary'                 => AttributeType::String,
+            'themeColorSecondary'               => AttributeType::String,
+            'themeNavigationPublic'             => AttributeType::Mixed,
+            'themeNavigationPrivate'            => AttributeType::Mixed,
 
             ## scheme settings
-            'schemeRemainingLicences'           => AttributeType::Number,
-            'schemeExpiryDate'                  => AttributeType::DateTime,
+            'schemeName'                        => AttributeType::String,
+            'schemeDescription'                 => AttributeType::String,
+            'schemeLogo'                        => AttributeType::Number,
             'schemeTeams'                       => AttributeType::Bool,
             'schemeUserReadOnly'                => AttributeType::Bool,
             'schemeEmailDomain'                 => AttributeType::String,
             'schemeTestEmailAddress'            => AttributeType::String,
-            ## individual company relationship?
+
+            ## licence settings
+            'lantraDisableLicences'             => AttributeType::Bool,
+            'schemeRemainingLicences'           => AttributeType::Number,
+            'schemeExpiryDate'                  => AttributeType::DateTime,
+
+            ## individual company settings
             'individualCompany'                 => AttributeType::Number,
             'individualLicenceDays'             => AttributeType::Number,
             'individualLicencePaypalButton'     => AttributeType::String,
@@ -236,7 +245,17 @@ class LantraPlugin extends BasePlugin
             'notifySubjectManagerSummary'       => AttributeType::String,
             'notifySubjectModuleResult'         => AttributeType::String,
             'notifySubjectSchemeExpiry'         => AttributeType::String,
-            'notifySubjectUserExpiry'           => AttributeType::String
+            'notifySubjectUserExpiry'           => AttributeType::String,
+
+            ## user profile
+            'userEditName'                      => AttributeType::Bool,
+            'userEditEmail'                     => AttributeType::Bool,
+            'userEditAddress'                   => AttributeType::Bool,
+            'userEditTelephone'                 => AttributeType::Bool,
+            'userEditDob'                       => AttributeType::Bool,
+            'userEditRole'                      => AttributeType::Bool,
+            'userEditPhoto'                     => AttributeType::Bool,
+            'userEditCustomFields'              => AttributeType::Mixed,
         );
     }
 

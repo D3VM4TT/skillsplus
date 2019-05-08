@@ -3,6 +3,15 @@ namespace Craft;
 
 class Lantra_SettingsModel extends BaseModel
 {
+    private $assetFields = [
+        'schemeLogo'
+    ];
+
+    private $entryFields = [
+        'themeNavigationPublic',
+        'themeNavigationPrivate'
+    ];
+
     /*
      * @note same MUST be copied to LantraPlugin::defineSettings() - dumb, I know.
      */
@@ -18,8 +27,15 @@ class Lantra_SettingsModel extends BaseModel
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
             'themeResultHistoryTitle'           => AttributeType::String,
+            'themeColorPrimary'                 => AttributeType::String,
+            'themeColorSecondary'               => AttributeType::String,
+            'themeNavigationPublic'             => AttributeType::Mixed,
+            'themeNavigationPrivate'            => AttributeType::Mixed,
 
             ## scheme settings
+            'schemeName'                        => AttributeType::String,
+            'schemeDescription'                 => AttributeType::String,
+            'schemeLogo'                        => AttributeType::Number,
             'schemeTeams'                       => AttributeType::Bool,
             'schemeUserReadOnly'                => AttributeType::Bool,
             'schemeEmailDomain'                 => AttributeType::String,
@@ -43,7 +59,44 @@ class Lantra_SettingsModel extends BaseModel
             'notifySubjectManagerSummary'       => AttributeType::String,
             'notifySubjectModuleResult'         => AttributeType::String,
             'notifySubjectSchemeExpiry'         => AttributeType::String,
-            'notifySubjectUserExpiry'           => AttributeType::String
+            'notifySubjectUserExpiry'           => AttributeType::String,
+
+            ## user profile
+            'userEditName'                      => AttributeType::Bool,
+            'userEditEmail'                     => AttributeType::Bool,
+            'userEditAddress'                   => AttributeType::Bool,
+            'userEditTelephone'                 => AttributeType::Bool,
+            'userEditDob'                       => AttributeType::Bool,
+            'userEditRole'                      => AttributeType::Bool,
+            'userEditPhoto'                     => AttributeType::Bool,
+            'userEditCustomFields'              => AttributeType::Mixed,
 		);
+	}
+
+    /**
+     * @return null|void
+     */
+    public function setAttributes($values) {
+	    parent::setAttributes($values);
+
+	    foreach ($this->assetFields as $key) {
+            if ($this->$key && is_array($this->$key)) {
+                $files = [];
+                foreach($this->$key as $fileId) {
+                    $files[] = craft()->assets->getFileById($fileId);
+                }
+                $this->$key = $files;
+            }
+        }
+
+        foreach ($this->entryFields as $key) {
+            if ($this->$key && is_array($this->$key)) {
+                $entries = [];
+                foreach($this->$key as $entryId) {
+                    $entries[] = craft()->entries->getEntryById($entryId);
+                }
+                $this->$key = $entries;
+            }
+        }
 	}
 }

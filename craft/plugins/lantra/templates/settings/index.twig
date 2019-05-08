@@ -57,6 +57,77 @@
 
             <h2>Theme Settings</h2>
 
+            {# fields to be added
+
+            {{ forms.textField ({
+                label:			"Scheme Name",
+                id:				"schemeName",
+                name:			"schemeName",
+                value:		    settings.schemeName
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Description",
+                id:				"schemeDescription",
+                name:			"schemeDescription",
+                value:		    settings.schemeDescription
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Scheme Logo",
+                id:				    "schemeLogo",
+                name:			    "schemeLogo",
+                elementType:        craft.elements.getElementType("Asset"),
+                elements:           settings.schemeLogo ? settings.schemeLogo,
+                sources:            themeFolder,
+                limit:              1,
+                criteria:           {"kind":[],"localeEnabled":'null'},
+            }) }}
+
+            {{ forms.colorField ({
+                label:			"Theme Colour Primary",
+                id:				"themeColorPrimary",
+                name:			"themeColorPrimary",
+                on:		        settings.themeColorPrimary,
+            }) }}
+
+            {{ forms.colorField ({
+                label:			"Theme Colour Secondary",
+                id:				"themeColorSecondary",
+                name:			"themeColorSecondary",
+                on:		        settings.themeColorSecondary,
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Theme Navigation Public",
+                id:				    "themeNavigationPublic",
+                name:			    "themeNavigationPublic",
+                elementType:        craft.elements.getElementType("Entry"),
+                source:             '',
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.themeNavigationPublic ? settings.themeNavigationPublic,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              ''
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Theme Navigation Private",
+                id:				    "themeNavigationPrivate",
+                name:			    "themeNavigationPrivate",
+                elementType:        craft.elements.getElementType("Entry"),
+                source:             pagesSection,
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.themeNavigationPrivate ? settings.themeNavigationPrivate,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              ''
+            }) }}
+
+            #}
+
             {{ forms.textField ({
                 label:			"Theme Date Format (default d-m-Y)",
                 id:				"themeDateFormat",
@@ -164,6 +235,78 @@
                 name:			"notifyFooter",
                 value:		    settings.notifyFooter
             }) }}
+
+            {# fields to be added
+
+            <hr />
+
+            <h2>User Profile Settings</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Name?",
+                id:				"userEditName",
+                name:			"userEditName",
+                on:		        settings.userEditName == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Email?",
+                id:				"userEditEmail",
+                name:			"userEditEmail",
+                on:		        settings.userEditEmail == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Address?",
+                id:				"userEditAddress",
+                name:			"userEditAddress",
+                on:		        settings.userEditAddress == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Telephone?",
+                id:				"userEditTelephone",
+                name:			"userEditTelephone",
+                on:		        settings.userEditTelephone == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Date of Birth?",
+                id:				"userEditDob",
+                name:			"userEditDob",
+                on:		        settings.userEditDob == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Role?",
+                id:				"userEditRole",
+                name:			"userEditRole",
+                on:		        settings.userEditRole == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Photo?",
+                id:				"userEditPhoto",
+                name:			"userEditPhoto",
+                on:		        settings.userEditPhoto == 1,
+            }) }}
+
+            {{ forms.editableTableField ({
+                label:			"User Custom Fields",
+                instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom user field.",
+                id:				"userEditCustomFields",
+                name:			"userEditCustomFields",
+                addRowLabel:    "Add a custom field",
+                cols:
+                {
+                    name:       {heading: "Name", type: "singleline"},
+                    label:      {heading: "Label", type: "singleline"},
+                    userEdit:   {heading: "User Edit", type: "checkbox"}
+                },
+                rows:           settings.userEditCustomFields
+            }) }}
+
+            #}
 
         {% endnamespace %}
 

@@ -21,6 +21,13 @@ class Lantra_SettingsController extends BaseController
         $settingsModel->setAttributes($settings);
         $variables['settings'] = $settingsModel;
 
+        ## config for logo asset
+        $themeFolder = craft()->assets->getRootFolderBySourceId(4)->id;
+        $variables['themeFolder'] = ['folder:'.$themeFolder.':single'];
+
+        ## config for navigation entries
+        $variables['pagesSection'] = ['section:14'];
+
         $this->renderTemplate('lantra/settings', $variables);
     }
 
