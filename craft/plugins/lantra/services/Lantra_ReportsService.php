@@ -113,7 +113,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function getCustomReportData($manager, $type, $filter = []) {
         $userFilter = [];
         $resultFilter = [];
-        if (isset($filter['reportCompanies']) && is_array($filter['reportCompanies']) && count($filter['reportUnits'])) {
+        if (isset($filter['reportCompanies']) && is_array($filter['reportCompanies']) && count($filter['reportCompanies'])) {
             $userFilter['relatedTo'] = [
                 'targetElement' => $filter['reportCompanies'],
                 'field' => 'userCompany'
