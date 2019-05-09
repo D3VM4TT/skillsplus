@@ -148,7 +148,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 }
                 else {
                     $days = $filter['reportResultExpiry'];
-                    if ($filter['reportIncludeExpired']) {
+                    if (isset($filter['reportIncludeExpired']) && $filter['reportIncludeExpired']) {
                         $resultFilter['expiryDate'] = '<' . (time() + ($days*86400));
                     }
                     else {
