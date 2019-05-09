@@ -9,9 +9,9 @@
     {% set entry = craft.entries.id(entryId).first %}
 {% endif %}
 
-{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
-{% set unitEntries = craft.entries.section('units').limit(null) %}
-{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers') %}
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('title') %}
+{% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
+{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName') %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
@@ -100,7 +100,7 @@
         <label for="reportIncludeExpired" class="no-float">
             <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
                 {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
-                Include expired results with expiring result
+                Include expired results with expiring results
         </label>
         <label for="reportResultExpiry" class="no-float">Result expiry:</label>
         <select name="fields[reportResultExpiry]" id="reportResultExpiry">
