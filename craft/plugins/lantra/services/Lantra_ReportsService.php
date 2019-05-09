@@ -161,13 +161,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
                     }
                 }
             }
-            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter);
-            // include required results too
-            if (isset($filter['reportIncludeRequired'])) {
-                $required = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
-                array_shift($required);
-                $values = array_merge($values, $required);
-            }
+            $includeRequired = isset($filter['reportIncludeRequired']) && $filter['reportIncludeRequired'];
+            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter, $includeRequired);
         }
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);

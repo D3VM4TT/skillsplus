@@ -919,10 +919,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param null $userId
      * @param array $userFilter
      * @param $resultFilter
+     * @param $includeRequired
      * @return array
      * @throws Exception
      */
-    public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter) {
+    public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter, $includeRequired = false) {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $this->getIds($subordinates);
@@ -940,8 +941,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
-        $rows = [$header];
-
+        $rows = [];
         foreach($allResults as $userId => $results) {
             foreach ($results as $id => $result) {
                 $user = $result->author;
@@ -960,7 +960,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $rows[] = $row;
             }
         }
-        return $rows;
+        if ($includeRequired) {
+            foreach($subordinates as $user) {
+                $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
+                $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds));
+            }
+            usort($rows, function ($a, $b) {return strcmp($a[0], $b[0]);});
+        }
+        return array_merge([$header], $rows);
     }
 
     /**
