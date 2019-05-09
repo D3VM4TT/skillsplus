@@ -124,6 +124,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 'targetElement' => $filter['reportUnits'],
                 'field' => 'resultUnit'
             ];
+            $resultFilter['unitIds'] = $filter['reportUnits'];
         }
         if (isset($filter['reportResultType']) && $filter['reportResultType'] != 'all') {
             $resultFilter['resultType'] = $filter['reportResultType'];
@@ -141,12 +142,15 @@ class Lantra_ReportsService extends BaseApplicationComponent
             if (isset($filter['reportResultExpiry'])) {
                 $resultFilter['status'] = ['expired', 'live'];
                 $resultFilter['expiryDate'] = ':notempty';
+                // expired
                 if ($filter['reportResultExpiry'] == '0') {
                     $resultFilter['expiryDate'] = '<' . time();
                 }
-                elseif ($filter['reportResultExpiry'] == 'none') {
-                    $resultFilter['expiryDate'] = '>' . time();
+                // after 365
+                elseif ($filter['reportResultExpiry'] == '365+') {
+                    $resultFilter['expiryDate'] = '>' . (time() + (365*86400));
                 }
+                // within x days
                 else {
                     $days = $filter['reportResultExpiry'];
                     if (isset($filter['reportIncludeExpired']) && $filter['reportIncludeExpired']) {
@@ -157,11 +161,13 @@ class Lantra_ReportsService extends BaseApplicationComponent
                     }
                 }
             }
-            if ( ! isset($filter['reportNoDates']) || ! $filter['reportNoDates']) {
-                $resultFilter['startDate'] = ':notempty';
-                $resultFilter['finishDate'] = ':notempty';
-            }
             $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter);
+            // include required results too
+            if (isset($filter['reportIncludeRequired'])) {
+                $required = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
+                array_shift($required);
+                $values = array_merge($values, $required);
+            }
         }
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);

@@ -718,6 +718,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'expiryDate'    => null,
             'startDate'     => null,
             'resultStatus'  => null,
+            ## used for filtering required units
+            'unitIds'       => null,
         ];
         return array_merge($defaults, $filter);
     }
@@ -989,7 +991,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $rows = [$header];
         foreach($subordinates as $user) {
             if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
-                $rows = array_merge($rows, $this->userRequiredRows($user, $resultFilter));
+                $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
+                $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds));
             }
             if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
                 $rows = array_merge($rows, $this->userExpiredRows($user, $resultFilter));
@@ -1003,7 +1006,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    private function userExpiredRows($user)  {
+    private function userExpiredRows($user, $resultFilter)  {
         $rows = [];
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->type = 'userResult';
@@ -1034,8 +1037,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    private function userRequiredRows($user)  {
-        $units = $this->userUnits($user);
+    private function userRequiredRows($user, $unitIds = [])  {
+        $units = $this->userUnits($user, $unitIds);
         $rows = [];
         foreach ($units as $unit) {
             $result = $this->unitResult($user, $unit->id);
@@ -1085,17 +1088,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * Get all the units for a user
      *
      * @param $user
+     * @param $unitIds
      * @return array
      * @throws Exception
      */
-    private function userUnits($user)  {
+    private function userUnits($user, $unitIds)  {
         $units = [];
         foreach($user->userRole as $role) {
             $modules = $this->roleModules($role);
             foreach ($modules as $module) {
                 $moduleUnits = $this->moduleUnits($module);
                 foreach ($moduleUnits as $unit) {
-                    if (! isset($units[$unit->id])) {
+                    if (! isset($units[$unit->id]) && (! count($unitIds) || in_array($unit->id, $unitIds))) {
                         $units[$unit->id] = $unit;
                     }
                 }
