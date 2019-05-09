@@ -152,7 +152,7 @@
                         {% for companyEntry in companyEntries %}
                             {% set selected = '' %}
                             {% if account is defined and companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %}
-                                {% set primaryManagerCompanies = primaryManagerCompanies|merge([company]) %}
+                                {% set primaryManagerCompanies = primaryManagerCompanies|merge([companyEntry]) %}
                                 {% set selected = ' selected="selected"' %}
                             {% endif %}
                             <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
@@ -166,7 +166,7 @@
                         {% for companyEntry in companyEntries %}
                             {% set selected = '' %}
                             {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %}
-                                {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([company]) %}
+                                {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([companyEntry]) %}
                                 {% set selected = ' selected="selected"' %}
                             {% endif %}
                         <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
