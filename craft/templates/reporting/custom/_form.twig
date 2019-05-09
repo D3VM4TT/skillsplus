@@ -29,7 +29,7 @@
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 
-<form class="page-form" method="get" role="form" accept-charset="UTF-8" class="no-loading">
+<form class="page-form no-loading" method="get" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/reports/save">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
