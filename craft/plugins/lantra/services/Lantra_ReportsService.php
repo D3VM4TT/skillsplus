@@ -138,7 +138,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         elseif ($type == 'expired') {
             $resultFilter['status'] = 'expired';
-            if (isset($filter['reportResultExpiry']) && $filter['reportResultExpiry'] != 'none') {
+            if (isset($filter['reportResultExpiry'])) {
+                $resultFilter['status'] = ['expired', 'live'];
                 $resultFilter['expiryDate'] = ':notempty';
                 if ($filter['reportResultExpiry'] == '0') {
                     $resultFilter['expiryDate'] = '<' . time();
