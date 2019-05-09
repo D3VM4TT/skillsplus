@@ -713,6 +713,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'search'        => '',
             'relatedTo'     => [],
             'order'         => 'authorId',
+            'status'        => ['live', 'expired'],
             'resultType'    => null,
             'expiryDate'    => null,
             'startDate'     => null,
@@ -886,7 +887,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $criteria->order = $resultFilter['order'];
         }
         $criteria->authorId = $subordinateIds;
-        $criteria->status = ['live', 'expired'];
+        $criteria->status = $resultFilter['status'];
         if ($resultFilter['relatedTo']) {
             $criteria->relatedTo = $resultFilter['relatedTo'];
         }

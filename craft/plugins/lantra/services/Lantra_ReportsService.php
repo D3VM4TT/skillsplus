@@ -137,6 +137,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
         elseif ($type == 'expired') {
+            $resultFilter['status'] = 'expired';
             if (isset($filter['reportResultExpiry']) && $filter['reportResultExpiry'] != 'none') {
                 $resultFilter['expiryDate'] = ':notempty';
                 if ($filter['reportResultExpiry'] == '0') {
@@ -147,11 +148,17 @@ class Lantra_ReportsService extends BaseApplicationComponent
                 }
                 else {
                     $days = $filter['reportResultExpiry'];
-                    $resultFilter['expiryDate'] = 'and, >' . time() . ', <' . (time() + ($days*86400));
+                    if ($filter['reportIncludeExpired']) {
+                        $resultFilter['expiryDate'] = '<' . (time() + ($days*86400));
+                    }
+                    else {
+                        $resultFilter['expiryDate'] = 'and, >' . time() . ', <' . (time() + ($days*86400));
+                    }
                 }
             }
-            if (isset($filter['reportNoDates']) && $filter['reportNoDates']) {
-                $resultFilter['expiryDate'] = ':empty';
+            if ( ! isset($filter['reportNoDates']) || ! $filter['reportNoDates']) {
+                $resultFilter['startDate'] = ':notempty';
+                $resultFilter['finishDate'] = ':notempty';
             }
             $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter);
         }
