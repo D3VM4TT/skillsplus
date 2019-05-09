@@ -15,7 +15,7 @@
         </div>
         <div class="page-content">
             <p class="scheme-profile">
-                <span class="label">Scheme Name:</span> {{ globalsScheme.schemeName|default('unknown') }}<br />
+                <span class="label">Scheme Name:</span> {{ craft.lantra.setting('schemeName', 'unknown') }}<br />
                 <span class="label">Scheme Renewal Date:</span> {{ globalsScheme.schemeExpiryDate|date(dateFormat) }}<br />
                 <span class="label">Total licences issued:</span> {{ licencesScheme + licencesCompany + usersAll }}<br />
                 <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />

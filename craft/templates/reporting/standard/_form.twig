@@ -137,14 +137,14 @@
                 </label>
                 {% endfor %}
             </div>
-            <p style="text-align: right">
+            <p>
                 <label for="modules-all">Include data for all modules
                     <input class="scopeAll" name="fields[reportAllModules]" {% if entry is defined and entry.reportAllModules %} checked{% endif %} id="modules-all" type="checkbox" value="1">
                 </label>
             </p>
         </div>
         <div class="field--wrapper">
-            <label for="reportResultExpiry" >Result expiry:</label>
+            <label for="reportResultExpiry">Result expiry:</label>
             <select name="fields[reportResultExpiry]" id="reportResultExpiry">
                 <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">Expired</option>
                 <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">30 days</option>

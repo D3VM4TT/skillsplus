@@ -684,6 +684,10 @@ form ul.options li strong {
     width: 95% !important;
 }
 
+form#reports .select2-container {
+    width: 100% !important;
+}
+
 #address-fields .field--wrapper textarea {
     width: 88% !important;
 }

@@ -29,7 +29,7 @@
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 
-<form class="page-form no-loading" method="get" role="form" accept-charset="UTF-8">
+<form id="reports" class="page-form no-loading" method="get" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/reports/save">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
@@ -43,7 +43,10 @@
                 Results (Qual User)
             </option>
             <option value="required" {% if entry is defined and entry.reportType == 'required' %} selected="selected"{% endif %}>
-                Required (Expired Training)
+                Required (Required Training)
+            </option>
+            <option value="expired" {% if entry is defined and entry.reportType == 'expired' %} selected="selected"{% endif %}>
+                Expired (Expired Training)
             </option>
         </select>
     </div>
@@ -64,24 +67,7 @@
             Include all companies
         </label>
     </div>
-    <div class="field--wrapper">
-        <label for="unitIds" class="no-float">Filter Units</label>
-        <input type="hidden" name="fields[reportUnits]" value="" />
-        <select multiple class="js-select2" name="fields[reportUnits][]" id="unitIds">
-            {% for unitEntry in unitEntries %}
-                <option {% if entry is defined and unitEntry.id in entry.reportUnits.ids() %} selected="selected"{% endif %}
-                    value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="field--wrapper">
-        <label for="reportAllUnits" class="no-float">
-            <input name="fields[reportAllUnits]" id="reportAllUnits" type="checkbox" value="1"
-                {% if entry is defined and entry.reportAllUnits %} checked{% endif %}>
-            Include all units
-        </label>
-    </div>
-    <div class="field--wrapper">
+    <div class="field--wrapper fields fields-results fields-required">
         <label for="reportResultType" class="no-float">Result Type</label>
         <select name="fields[reportResultType]" id="reportResultType">
             <option value="all" {% if entry is defined and entry.reportResultType == 'all' %} selected="selected"{% endif %}>
@@ -95,8 +81,34 @@
             </option>
         </select>
     </div>
-    <div class="field--wrapper">
-        <label for="reportDisplayField" class="no-float">Results (Qual User) Field</label>
+    <div class="field--wrapper fields fields-results fields-expired">
+        <label for="unitIds" class="no-float">Filter Mandatory Units</label>
+        <input type="hidden" name="fields[reportUnits]" value="" />
+        <select multiple class="js-select2" name="fields[reportUnits][]" id="unitIds">
+            {% for unitEntry in unitEntries %}
+                <option {% if entry is defined and unitEntry.id in entry.reportUnits.ids() %} selected="selected"{% endif %}
+                    value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper fields fields-expired">
+        <label for="reportNoDates" class="no-float">
+            <input name="fields[reportNoDates]" id="reportNoDates" type="checkbox" value="1"
+                {% if entry is defined and entry.reportNoDates %} checked{% endif %}>
+                Include results with no start or finish dates
+        </label>
+        <label for="reportResultExpiry" class="no-float">Result expiry:</label>
+        <select name="fields[reportResultExpiry]" id="reportResultExpiry">
+            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">Expired</option>
+            <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">30 days</option>
+            <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">90 days</option>
+            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">180 days</option>
+            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">365 days</option>
+            <option value="none" {% if entry is defined and entry.reportResultExpiry == 'none' %} selected="selected{% endif %}">more than 365 days</option>
+        </select>
+    </div>
+    <div class="field--wrapper fields fields-results">
+        <label for="reportDisplayField" class="no-float">Display Field</label>
         <select name="fields[reportDisplayField]" id="reportDisplayField">
             <option value="expiryDate" {% if entry is defined and entry.reportDisplayField == 'expiryDate' %} selected="selected"{% endif %}>
                 Expiry Date
@@ -113,6 +125,10 @@
     <div {% if entry is not defined %}id="reportAutomated"{% endif %}>
         <h2>Automated Report Settings</h2>
         <div class="field--wrapper">
+            <label for="reportTitle" class="">Report title:</label>
+            <input id="reportTitle" type="text" name="title" value="{{ entry is defined ? entry.title }}" />
+        </div>
+        <div class="field--wrapper">
             <label for="reportRecipients" class="">Report recipients (managers):</label>
             <input type="hidden" name="fields[reportRecipients]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
@@ -121,6 +137,10 @@
                         value="{{ manager.id }}">{{ manager.fullName }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="field--wrapper">
+            <label for="reportEmails" class="">Report recipients (emails):</label>
+            <input id="reportEmails" type="text" name="fields[reportEmails]" value="{{ entry is defined ? entry.reportEmails }}" />
         </div>
         <div class="field--wrapper">
             <label for="reportSendFrequency">Report send frequency:</label>

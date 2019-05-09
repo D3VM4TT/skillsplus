@@ -709,10 +709,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     private function formatResultsFilter($filter) {
         $defaults = [
-            'limit'      => 0,
-            'search'     => '',
-            'relatedTo'  => [],
-            'resultType' => null
+            'limit'         => 0,
+            'search'        => '',
+            'relatedTo'     => [],
+            'order'         => 'authorId',
+            'resultType'    => null,
+            'expiryDate'    => null,
+            'startDate'     => null,
+            'resultStatus'  => null,
         ];
         return array_merge($defaults, $filter);
     }
@@ -869,6 +873,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
         else {
             $criteria->type = ['unitResult', 'userResult'];
         }
+        if ($resultFilter['startDate']) {
+            $criteria->startDate = $resultFilter['startDate'];
+        }
+        if ($resultFilter['expiryDate']) {
+            $criteria->expiryDate = $resultFilter['expiryDate'];
+        }
+        if ($resultFilter['resultStatus']) {
+            $criteria->resultStatus = $resultFilter['resultStatus'];
+        }
+        if ($resultFilter['order']) {
+            $criteria->order = $resultFilter['order'];
+        }
         $criteria->authorId = $subordinateIds;
         $criteria->status = ['live', 'expired'];
         if ($resultFilter['relatedTo']) {
@@ -897,6 +913,54 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param null $userId
+     * @param array $userFilter
+     * @param $resultFilter
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter) {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinateIds = $this->getIds($subordinates);
+
+        $header = [
+            'User ID',
+            'User Name',
+            'Company ID',
+            'Company Title',
+            'User Job Title',
+            'Unit/Result Title',
+            'Expiry Date',
+            'Status'
+        ];
+
+        $resultFilter = $this->formatResultsFilter($resultFilter);
+        $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
+        $rows = [$header];
+
+        foreach($allResults as $userId => $results) {
+            foreach ($results as $id => $result) {
+                $user = $result->author;
+                $company = craft()->lantra_users->userCompany($user);
+                $role = $user->userRole->first();
+                $row = [
+                    $userId,
+                    $user->fullName,
+                    $company ? $company->id : 'unknown',
+                    $company ? $company->title : 'unknown',
+                    $role ? $role->title : 'unknown',
+                    $result->title,
+                    $result->expiryDate,
+                    $result->status == 'expired' ? 'expired' : 'expiring'
+                ];
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
+    /**
      * Return all required (including expired)
      *
      * @param null $userId
@@ -920,13 +984,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'Status'
         ];
 
+        $resultFilter = $this->formatResultsFilter($resultFilter);
         $rows = [$header];
         foreach($subordinates as $user) {
             if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
-                $rows = array_merge($rows, $this->userRequiredRows($user));
+                $rows = array_merge($rows, $this->userRequiredRows($user, $resultFilter));
             }
             if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
-                $rows = array_merge($rows, $this->userExpiredRows($user));
+                $rows = array_merge($rows, $this->userExpiredRows($user, $resultFilter));
             }
         }
         return $rows;

@@ -58,14 +58,14 @@ class Lantra_ReportsService extends BaseApplicationComponent
     }
 
     /**
-     * Save report
-     *
-     * @param object
-     * @param array
-     * @return null
-     * @throws Mixed
+     * @param $author
+     * @param string $title
+     * @param array $fields
+     * @param null $entryId
+     * @return EntryModel|null
+     * @throws \Exception
      */
-    public function saveCustomReport($author, $fields, $entryId) {
+    public function saveCustomReport($author, $title = '', $fields = [], $entryId = null) {
         if ($entryId) {
             $reportEntry = craft()->entries->getEntryById($entryId);
         }
@@ -75,8 +75,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $reportEntry->typeId = $this->typeIdReport;
             $reportEntry->enabled = true;
             $reportEntry->authorId = $author->id;
-            $reportEntry->getContent()->title = $author->fullName . ' ' . ucwords($fields['reportType']);
         }
+        $reportEntry->getContent()->title = $title;
         $reportEntry->setContentFromPost($fields);
         craft()->entries->saveEntry($reportEntry);
         return $reportEntry;
@@ -90,7 +90,9 @@ class Lantra_ReportsService extends BaseApplicationComponent
 
         $filter = [
             'reportResultType'      => $reportEntry->reportResultType,
-            'reportDisplayField'    => $reportEntry->reportDisplayField
+            'reportDisplayField'    => $reportEntry->reportDisplayField,
+            'reportResultExpiry'    => $reportEntry->reportResultExpiry,
+            'reportNoDates'         => $reportEntry->reportNoDates,
         ];
 
         if ($reportEntry->reportCompanies->total()) {
@@ -111,13 +113,13 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function getCustomReportData($manager, $type, $filter = []) {
         $userFilter = [];
         $resultFilter = [];
-        if (isset($filter['reportCompanies'])) {
+        if (isset($filter['reportCompanies']) && is_array($filter['reportCompanies']) && count($filter['reportUnits'])) {
             $userFilter['relatedTo'] = [
                 'targetElement' => $filter['reportCompanies'],
                 'field' => 'userCompany'
             ];
         }
-        if (isset($filter['reportUnits'])) {
+        if (isset($filter['reportUnits']) && is_array($filter['reportUnits']) && count($filter['reportUnits'])) {
             $resultFilter['relatedTo'] = [
                 'targetElement' => $filter['reportUnits'],
                 'field' => 'resultUnit'
@@ -130,40 +132,34 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'results') {
+            $resultFilter['resultStatus'] = 'endorsed';
             $displayField = isset($filter['reportDisplayField']) ? $filter['reportDisplayField'] : 'expiryDate';
             $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
-        ## @todo change to 'expired'
+        elseif ($type == 'expired') {
+            if (isset($filter['reportResultExpiry']) && $filter['reportResultExpiry'] != 'none') {
+                $resultFilter['expiryDate'] = ':notempty';
+                if ($filter['reportResultExpiry'] == '0') {
+                    $resultFilter['expiryDate'] = '<' . time();
+                }
+                elseif ($filter['reportResultExpiry'] == 'none') {
+                    $resultFilter['expiryDate'] = '>' . time();
+                }
+                else {
+                    $days = $filter['reportResultExpiry'];
+                    $resultFilter['expiryDate'] = 'and, >' . time() . ', <' . (time() + ($days*86400));
+                }
+            }
+            if (isset($filter['reportNoDates']) && $filter['reportNoDates']) {
+                $resultFilter['expiryDate'] = ':empty';
+            }
+            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter);
+        }
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
 
         return $values;
-
-        /* @todo save report as asset for download later?
-
-        // create csv file in temp folder
-        $filePath = craft()->path->getTempUploadsPath();
-        $fileName = $manager->id . '-' . $type . '.csv';
-
-        $this->reportCsv($values, $filePath.$fileName);
-
-        $sourceId = 3;
-        $source = craft()->assetSources->getSourceTypeById($sourceId);
-        $folder = craft()->assets->findFolder(array(
-            'sourceId' => $sourceId,
-        ));
-
-        // copy to assets
-        $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
-
-        // delete temp file
-        unlink($filePath . $fileName);
-
-        $fileId = $response->getDataItem('fileId');
-        return craft()->assets->getFileById($fileId);
-
-         */
     }
 
     /**
@@ -206,6 +202,10 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $emails = [];
             foreach($reportEntry->reportRecipients as $user) {
                 $emails[] = $user->email;
+            }
+            // add on custom report emails
+            if ($reportEntry->reportEmails) {
+                $emails = array_merge($emails, explode(',', $reportEntry->reportEmails));
             }
             craft()->lantra_notify->notify($emails, $reportEntry->title, '', [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);

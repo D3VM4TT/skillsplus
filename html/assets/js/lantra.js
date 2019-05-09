@@ -287,6 +287,14 @@ $(document).ready(function(){
         $('#buttonSubmit').text('Save Report');
     })
 
+    $('#reportType').change(function(){
+        var type = $(this).val();
+        $('form#reports').find('div.fields').hide();
+        $('form#reports').find('div.fields-' + type).show();
+    });
+
+    $('#reportType').change();
+
     // delete user photo
     $("#deleteUserPhotoAction").on('click', function(e) {
         e.preventDefault();

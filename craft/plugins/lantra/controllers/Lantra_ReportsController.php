@@ -17,8 +17,9 @@ class Lantra_ReportsController extends Lantra_BaseController
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
         $entryId = craft()->request->getParam('entryId');
+        $title = craft()->request->getParam('title');
         if ($entryId || $automated) {
-            $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $fields, $entryId);
+            $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $title, $fields, $entryId);
             if ($reportEntry->hasErrors()) {
                 craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
                 return $this->redirectToPostedUrl();
