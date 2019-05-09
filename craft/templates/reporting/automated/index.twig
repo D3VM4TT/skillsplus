@@ -2,7 +2,7 @@
 
 {% extends "_layout" %}
 
-{% set metaTitle = "Reporting > Custom Reports" %}
+{% set metaTitle = "Reporting > Automated Reports" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
@@ -16,8 +16,8 @@
     </div>
     <section class="page">
         <div class="page-header secondary-bg">
-            <h2>Custom Reports</h2>
-            <p>Manage custom reports in your scheme.</p>
+            <h2>Automated Reports</h2>
+            <p>Manage automated reports in your scheme.</p>
         </div>
         {% if reportEntries is defined and reportEntries|length %}
             <div class="page-content">
@@ -61,7 +61,7 @@
         {% endif %}
         <div class="page-content">
             <div class="container-btn">
-                <a class="button primary-bg" href="/reporting/create">Create report</a>
+                <a class="button primary-bg" href="/reporting/custom/new">Create report</a>
             </div>
         </div>
     </section>

@@ -23,7 +23,7 @@ class Lantra_ReportsController extends Lantra_BaseController
                 craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
                 return $this->redirectToPostedUrl();
             }
-            $redirect = '/reporting/custom';
+            $redirect = '/reporting/automated';
             return $this->_returnMessage('Custom report has been saved.', true, $redirect);
         }
         $data = craft()->lantra_reports->getCustomReportData($manager, $type, $fields);

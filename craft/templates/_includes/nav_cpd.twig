@@ -57,8 +57,11 @@
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
-                </li>                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom/new">Custom Report</a>
+                </li>
+                <li>
+                    <a class="{% if craft.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
+                </li>
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
                     {% if craft.request.getSegment(2) == 'standard' %}

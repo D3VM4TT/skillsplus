@@ -110,7 +110,7 @@
         </select>
     </div>
 
-    <div {% if not entry.id %}id="reportAutomated"{% endif %}>
+    <div {% if entry is not defined %}id="reportAutomated"{% endif %}>
         <h2>Automated Report Settings</h2>
         <div class="field--wrapper">
             <label for="reportRecipients" class="">Report recipients (managers):</label>
@@ -147,7 +147,7 @@
         </div>
     </div>
 
-    {% if entry.id %}
+    {% if entry is defined %}
         <div class="container-btn">
             <button id="buttonSubmit" type="submit" class="button primary-bg">Save Report</button>
         </div>
