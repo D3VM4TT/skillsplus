@@ -147,10 +147,12 @@
                 {% endfor %}
             </select>
         </div>
+        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
         <div class="field--wrapper">
             <label for="reportEmails" class="">Report recipients (emails):</label>
             <input id="reportEmails" type="text" name="fields[reportEmails]" value="{{ entry is defined ? entry.reportEmails }}" />
         </div>
+        {% endif %}
         <div class="field--wrapper">
             <label for="reportSendFrequency">Report send frequency:</label>
             <select name="fields[reportSendFrequency]" id="reportSendFrequency">
