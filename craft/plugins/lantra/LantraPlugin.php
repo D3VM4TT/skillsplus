@@ -95,11 +95,11 @@ class LantraPlugin extends BasePlugin
                 }
                 // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
-                // Auto endorse
                 $currentUser = craft()->userSession->getUser();
-                if ($authorId != $currentUser->id && $entry->resultStatus != 'draft') {
+                // Auto endorse
+                if ($entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
                     $entry->setContentFromPost(['resultStatus' => 'endorsed']);
-                    if (! $oldEntry) {
+                    if (!$oldEntry) {
                         $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                     }
                 }
@@ -185,7 +185,8 @@ class LantraPlugin extends BasePlugin
             }
             // Send notifications on completed module result
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
-                craft()->lantra_notify->sendModuleResult($entry);
+                // module notifications disabled 09/05
+                // craft()->lantra_notify->sendModuleResult($entry);
             }
         });
     }
