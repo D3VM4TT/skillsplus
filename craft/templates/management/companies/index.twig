@@ -6,6 +6,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
 
 {% if currentUser.isInGroup('schemeManagers') %}
     {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit).order('title') %}
@@ -44,8 +45,10 @@
                      <th class="title">Name</th>
                      <th class="title">Parent</th>
                      <th class="title">Primary Manager</th>
-                     <th class=""></th>
-                     <th class=""></th>
+                     {% if lantraLicences %}
+                        <th class="">Licences</th>
+                     {% endif %}
+                     <th class="">Users</th>
                      <th class=""></th>
                      <th class=""></th>
                      <th class=""></th>
@@ -65,8 +68,12 @@
                             <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
                         {% endif %}
                     </td>
-                    <td><p class="td-title-responsive">Licences: </p>
-                    {{ company.companyRemainingLicences }}</td>
+                    {% if lantraLicences %}
+                    <td>
+                        <p class="td-title-responsive">Licences: </p>
+                        {{ company.companyRemainingLicences }}
+                    </td>
+                    {% endif %}
                     <td>
                         <p class="td-title-responsive">Users: </p>
                         {{ userCount }}
