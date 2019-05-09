@@ -15,7 +15,7 @@
 {% set hierarchyCompany = craft.request.getParam('company') %}
 {% set hierarchyTeam = craft.request.getParam('team') %}
 
-{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null) %}
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('id') %}
 {% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}
 
 {% block content %}
@@ -141,37 +141,47 @@
                         <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
                         <span>Make Read Only Manager</span>
                         </div>
+
+                            {% set primaryManagerCompanies = [] %}
+                            {% set secondaryManagerCompanies = [] %}
+
                         <div class="field--wrapper ">
                         <label for="userCompany">Primary manager companies:</label>
+
                         <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
                         {% for companyEntry in companyEntries %}
-                        <option {% if account is defined and companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %} selected="selected"{% endif %} value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                            {% set selected = '' %}
+                            {% if account is defined and companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %}
+                                {% set primaryManagerCompanies = primaryManagerCompanies|merge([company]) %}
+                                {% set selected = ' selected="selected"' %}
+                            {% endif %}
+                            <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
                         {% endfor %}
                         </select>
 
                         <div class="field--wrapper col-pd-top">
                         <label for="userCompany">Secondary manager companies:</label>
+
                         <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
                         {% for companyEntry in companyEntries %}
-                        <option {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %} selected="selected"{% endif %} value="{{ companyEntry.id }}">{{ craft.lantra.companyLabel(companyEntry) }}</option>
+                            {% set selected = '' %}
+                            {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %}
+                                {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([company]) %}
+                                {% set selected = ' selected="selected"' %}
+                            {% endif %}
+                        <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
                         {% endfor %}
                         </select>
                         {% if account is defined %}
-                        {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: account, field: 'companyPrimaryManager'}).limit(null) %}
-                        {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: account, field: 'companySecondaryManagers'}).limit(null) %}
-                        {% if primaryManagerCompanies|length or secondaryManagerCompanies|length %}
-                        <div class="field--wrapper">
-                        <h3>Manager</h3>
-                        <p>
-                        {%  for company in primaryManagerCompanies %}
-                        {{ company.title }}<br />
-                        {% endfor %}
-                        {%  for company in secondaryManagerCompanies %}
-                        {{ company.title }}<br />
-                        {% endfor %}
-                        </p>
-                        </div>
-                        {% endif %}
+                            {% if primaryManagerCompanies|length or secondaryManagerCompanies|length %}
+                                <div class="field--wrapper">
+                                    <h3>Manager</h3>
+                                    <p>
+                                    {% for company in primaryManagerCompanies %}{{ company.title }}<br />{% endfor %}
+                                    {% for company in secondaryManagerCompanies %}{{ company.title }}<br />{% endfor %}
+                                    </p>
+                                </div>
+                            {% endif %}
                         {% endif %}
                         {% if craft.lantra.setting('schemeTeams', false) %}
                         </div>
