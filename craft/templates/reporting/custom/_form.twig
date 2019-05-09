@@ -67,7 +67,7 @@
             Include all companies
         </label>
     </div>
-    <div class="field--wrapper fields fields-results fields-required">
+    <div class="field--wrapper fields fields-results fields-required fields-expired">
         <label for="reportResultType" class="no-float">Result Type</label>
         <select name="fields[reportResultType]" id="reportResultType">
             <option value="all" {% if entry is defined and entry.reportResultType == 'all' %} selected="selected"{% endif %}>
