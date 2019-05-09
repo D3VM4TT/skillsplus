@@ -1,0 +1,48 @@
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Result > Edit" %}
+
+{% set entryId = craft.request.getSegment(2) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).status('live, expired').first %}
+{% endif %}
+
+{% if currentUser.id == entry.authorId %}
+    {% set isAuthor = true %}
+    {% set isManager = false %}
+    {% set resultLocked = entry.resultStatus == 'endorsed' %}
+{% else %}
+    {% set isAuthor = true %}
+    {% set isManager = craft.lantra.isManager(entry.authorId) %}
+    {% set resultLocked = false %}
+{% endif %}
+
+{% if not currentUser.id == entry.authorId and not isManager %}{% exit 403 %}{% endif %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <div class="page-header secondary-bg">
+        <h2>Edit result</h2>
+        <p>{{ entry.title }}</p>
+    </div>
+
+    {% if entry is defined %}
+        {{ ui.errorList(entry.getAllErrors()) }}
+    {% endif %}
+
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="entries/saveEntry">
+        <input type="hidden" name="sectionId" value="3">
+        <input type="hidden" name="enabled" value="1">
+        <input type="hidden" name="redirect" value="/cpd/{{ entry.authorId }}">
+        <input type="hidden" name="entryId" value="{{ entry.id }}">
+
+        {% include 'cpd/_units/fields' with {columnLayout:globalsTheme.columnLayout, resultEntry:entry, accountId:entry.authorId, resultLocked:resultLocked, isManager:isManager} %}
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Save result</button>
+        </div>
+    </form>
+{% endblock %}

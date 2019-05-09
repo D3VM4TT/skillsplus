@@ -13,6 +13,7 @@
                             <tr>
                                 <th>Result Title</th>
                                 {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -26,7 +27,7 @@
                                         result:resultEntry,
                                         columnLayout:globalsTheme.columnLayout}
                                     %}
-                                </tr>
+                                    <td><a href="/result/{{ resultEntry.id }}">edit</a></td>
                             {% endfor %}
                             </tbody>
                         </table>

@@ -3,7 +3,10 @@
 {% set customNew = 1 %}
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
-{% for row in moduleGroup.columnLayout %}
+{% if moduleGroup is defined %}
+    {% set columnLayout = moduleGroup.columnLayout %}
+{% endif %}
+{% for row in columnLayout %}
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue' %}
