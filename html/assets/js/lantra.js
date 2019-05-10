@@ -295,6 +295,18 @@ $(document).ready(function(){
 
     $('#reportType').change();
 
+    $('#reportResultType').change(function(){
+        var type = $(this).val();
+        if (type == 'userResult') {
+            $('#reportUnitsDropdown').hide();
+        }
+        else {
+            $('#reportUnitsDropdown').show();
+        }
+    });
+
+    $('#reportResultType').change();
+
     // delete user photo
     $("#deleteUserPhotoAction").on('click', function(e) {
         e.preventDefault();

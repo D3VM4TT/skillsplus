@@ -113,21 +113,25 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function getCustomReportData($manager, $type, $filter = []) {
         $userFilter = [];
         $resultFilter = [];
-        if (isset($filter['reportCompanies']) && is_array($filter['reportCompanies']) && count($filter['reportCompanies'])) {
+        if ($filter['reportResultType'] != 'all') {
+            $resultFilter['resultType'] = $filter['reportResultType'];
+        }
+        // clear report units if non mandatory
+        if ($filter['reportResultType'] == 'userResult') {
+            $filter['reportUnits'] = null;
+        }
+        if (count($filter['reportCompanies'])) {
             $userFilter['relatedTo'] = [
                 'targetElement' => $filter['reportCompanies'],
                 'field' => 'userCompany'
             ];
         }
-        if (isset($filter['reportUnits']) && is_array($filter['reportUnits']) && count($filter['reportUnits'])) {
+        if (count($filter['reportUnits'])) {
             $resultFilter['relatedTo'] = [
                 'targetElement' => $filter['reportUnits'],
                 'field' => 'resultUnit'
             ];
             $resultFilter['unitIds'] = $filter['reportUnits'];
-        }
-        if (isset($filter['reportResultType']) && $filter['reportResultType'] != 'all') {
-            $resultFilter['resultType'] = $filter['reportResultType'];
         }
         if ($type == 'users') {
             $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
@@ -161,13 +165,11 @@ class Lantra_ReportsService extends BaseApplicationComponent
                     }
                 }
             }
-            $includeRequired = isset($filter['reportIncludeRequired']) && $filter['reportIncludeRequired'];
-            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter, $includeRequired);
+            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter, $filter['reportIncludeRequired']);
         }
         elseif ($type == 'required') {
             $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
-
         return $values;
     }
 

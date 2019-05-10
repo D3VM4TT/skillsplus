@@ -5,15 +5,50 @@ namespace Craft;
 class Lantra_ReportsController extends Lantra_BaseController
 {
     /**
-     * Create a new automated report
-     *
+     * @return array
+     */
+    private function getFields(){
+        $fields = craft()->request->getParam('fields');
+        if ( ! $fields['reportCompanies']) {
+            $fields['reportCompanies'] = [];
+        }
+        if ( ! $fields['reportUnits']) {
+            $fields['reportUnits'] = [];
+        }
+        $default = [
+            'reportType'            => 'users',
+            'reportCompanies'       => [],
+            'reportAllCompanies'    => false,
+            'reportResultType'      => 'all',
+            'reportUnits'           => [],
+            'reportResultExpiry'    => 0,
+            'reportIncludeExpired'  => false,
+            'reportIncludeRequired' => false,
+            'reportDisplayField'    => 'expiryDate',
+            // automated fields
+            'reportTitle'           => '',
+            'reportRecipients'      => [],
+            'reportEmails'          => '',
+            'reportSendFrequency'   => 'never',
+            'reportSendValue'       => 1
+        ];
+        return array_merge($default, $fields);
+    }
+
+    /**
+     * @return null|void
      * @throws Exception
+     * @throws \CException
      */
     public function actionSave()
     {
         craft()->userSession->requireLogin();
         $manager = craft()->userSession->getUser();
-        $fields = craft()->request->getParam('fields');
+        $fields = $this->getFields();
+        if (! $fields['reportAllCompanies'] && ! count($fields['reportCompanies'])) {
+            $this->_returnError('You must select some companies or select Include all companies.');
+            return;
+        }
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
         $entryId = craft()->request->getParam('entryId');

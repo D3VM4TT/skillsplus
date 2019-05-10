@@ -84,16 +84,16 @@
                 Non Mandatory
             </option>
         </select>
-    </div>
-    <div class="field--wrapper fields fields-results fields-expired">
-        <label for="unitIds" class="no-float">Filter Mandatory Units</label>
-        <input type="hidden" name="fields[reportUnits]" value="" />
-        <select multiple class="js-select2" name="fields[reportUnits][]" id="unitIds">
-            {% for unitEntry in unitEntries %}
-                <option {% if entry is defined and unitEntry.id in entry.reportUnits.ids() %} selected="selected"{% endif %}
-                    value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
-            {% endfor %}
-        </select>
+        <div id="reportUnitsDropdown" style="margin-top:30px;">
+            <label for="unitIds" class="no-float">Filter Mandatory Units</label>
+            <input type="hidden" name="fields[reportUnits]" value="" />
+            <select multiple class="js-select2" name="fields[reportUnits][]" id="reportUnits">
+                {% for unitEntry in unitEntries %}
+                    <option {% if entry is defined and unitEntry.id in entry.reportUnits.ids() %} selected="selected"{% endif %}
+                            value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="field--wrapper fields fields-expired">
         <label for="reportResultExpiry" class="no-float">Result expiry:</label>
@@ -139,7 +139,7 @@
         </div>
         <div class="field--wrapper">
             <label for="reportRecipients" class="">Report recipients (managers):</label>
-            <input type="hidden" name="fields[reportRecipients]" value="" />
+            <input type="hidden" name="fields[reportRecipients][]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
                 {% for manager in allManagers %}
                     <option {% if entry is defined and manager.id in entry.reportRecipients.ids() %} selected="selected"{% endif %}
