@@ -124,17 +124,17 @@
                                                                 <a href="#" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
                                                                     <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
                                                                 </a>
-                                                                {% if unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
-                                                                data-tooltip title="Delete this result">
-                                                                <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
-                                                                {% if unitResultEntry.resultStatus == 'pending' %}
-                                                                    <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
-                                                                    data-tooltip title="Endorse this result">
-                                                                    <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
+                                                                {% if not readOnly and unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
+                                                                    <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
+                                                                    data-tooltip title="Delete this result">
+                                                                    <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
+                                                                    {% if unitResultEntry.resultStatus == 'pending' %}
+                                                                        <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
+                                                                        data-tooltip title="Endorse this result">
+                                                                        <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
+                                                                    {% endif %}
                                                                 {% endif %}
-                                                            {% endif %}
-                                                            {% if totalComments %}
+                                                                {% if totalComments %}
                                                                 <div class="cpd-comment" data-tooltip title="Click the Unit title above to view comments">
                                                                     <div class="cpd-comment-number">
                                                                         <p>{{ totalComments }}</p>
@@ -143,7 +143,7 @@
                                                                         comment{{ unreadComments != 1 ? 's' }}
                                                                     </div>
                                                                 </div>
-                                                            {% endif %}
+                                                                {% endif %}
                                                             </div>
                                                         </td>
                                                         {% include '_includes/columnLayout' with {
@@ -194,7 +194,7 @@
                                                                 </a>
                                                             {% endif %}
                                                             <div class="cpd-icons">
-                                                            {% if userResultEntry and craft.lantra.isManager(cpdUser.id) %}
+                                                            {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
                                                                 data-tooltip title="Delete this result">
                                                                 <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
