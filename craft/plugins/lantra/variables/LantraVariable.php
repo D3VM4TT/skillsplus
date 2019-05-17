@@ -5,11 +5,30 @@ class LantraVariable
 {
     public $plugin;
 
+    /**
+     * LantraVariable constructor.
+     */
     public function __construct() {
         $this->plugin = craft()->plugins->getPlugin('lantra');
         $this->settings = $this->plugin->getSettings();
     }
 
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function userUnitIds($userId) {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return craft()->lantra_users->getUserUnitIds($user);
+    }
+
+    /**
+     * @param $resultEntryId
+     * @param $customKey
+     * @param bool $id
+     * @return string
+     * @throws Exception
+     */
     public function resultCustom($resultEntryId, $customKey, $id = false) {
         $field = craft()->fields->getFieldByHandle('resultCustom');
         $criteria = craft()->elements->getCriteria('SuperTable_Block');

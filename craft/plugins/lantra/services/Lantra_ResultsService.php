@@ -1099,7 +1099,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    private function userUnits($user, $unitIds)  {
+    public function userUnits($user, $unitIds = [])  {
         $units = [];
         foreach($user->userRole as $role) {
             $modules = $this->roleModules($role);

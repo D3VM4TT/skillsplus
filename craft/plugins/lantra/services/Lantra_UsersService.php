@@ -7,6 +7,18 @@ class Lantra_UsersService extends BaseApplicationComponent
     private $hierarchyFilter = [];
 
     /**
+     * @param UserModel|null $user
+     * @return array
+     */
+    function getUserUnitIds(UserModel $user = null) {
+        if (is_null($user)) {
+            $user = craft()->userSession->getUser();
+        }
+        $userUnits = craft()->lantra_results->userUnits($user);
+        return array_keys($userUnits);
+    }
+
+    /**
      * Get manager hierarchy [replaced by Lantra_StructureService.php getHierarchy()]
      *
      * @param $user

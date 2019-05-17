@@ -16,7 +16,10 @@
 
 {% set moduleEntry = false %}
 {% set resultEntry = false %}
-{% set allUnits = craft.entries.section('units').order('title') %}
+
+{% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
+{% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
+{% set optionalUnits = craft.entries.section('units').id(excludeString).order('title') %}
 
 {# module id in URL #}
 {% if craft.request.segment(3) == 'achievement' and entryId %}
@@ -80,15 +83,17 @@
                     <label for="title" class="float">Result Title</label>
                     <input value="{{ resultEntry ? resultEntry.title }}" type="text" name="title" class="float-label" placeholder="Enter the result title" />
                 </div>
+                {% if optionalUnits|length %}
                 <div class="field--wrapper">
                     <label for="resultUnit" class="">Result unit</label>
                     <select data-relation="fields[resultUnit]" data-value="{{ resultEntry and resultEntry.resultUnit.total ? resultEntry.resultUnit.first.id }}" id="resultUnit">
                         <option value="">Not applicable</option>
-                        {% for unit in allUnits %}
+                        {% for unit in optionalUnits %}
                             <option value="{{ unit.id }}">{{ unit.title }}</option>
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
                 {% if moduleEntry %}
                     <input type="hidden" name="fields[resultModule][]" value="{{ moduleEntry.id }}">
                 {% elseif not resultEntry and userModules|length %}
