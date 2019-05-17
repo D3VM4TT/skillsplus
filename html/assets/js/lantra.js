@@ -208,6 +208,10 @@ $(document).ready(function(){
                     alert('Undefined server error, check the logs.');
                 }
             }
+        }).fail(function(error) {
+            $('body').removeClass('loading');
+            console.log(error);
+            alert('Server error, check the console.');
         });
     });
 
