@@ -93,6 +93,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
             'reportDisplayField'    => $reportEntry->reportDisplayField,
             'reportResultExpiry'    => $reportEntry->reportResultExpiry,
             'reportNoDates'         => $reportEntry->reportNoDates,
+            'reportCompanies'       => [],
+            'reportUnits'           => []
         ];
 
         if ($reportEntry->reportCompanies->total()) {
