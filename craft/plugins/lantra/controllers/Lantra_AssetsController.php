@@ -31,8 +31,26 @@ class Lantra_AssetsController extends Lantra_BaseController
     public function actionUploadEvidence()
     {
         $this->requireAjaxRequest();
+        craft()->userSession->requireLogin();
+
+        if (empty($_FILES) || ! isset($_FILES['assets-upload']) || ! isset($_FILES['assets-upload']['name']) || ! isset($_FILES['assets-upload']['tmp_name'])) {
+            $data = [
+                'success' => false,
+                'message' => 'Invalid upload parameters. Refresh and try again.'
+            ];
+
+            return $this->returnJson($data);
+        }
+
+        $fileName = $_FILES['assets-upload']['name'];
+        $tmpName = $_FILES['assets-upload']['tmp_name'];
+
         $folderId = craft()->request->getPost('folderId');
-        $response = craft()->assets->uploadFile($folderId);
+        $fileLocation = AssetsHelper::getTempFilePath(pathinfo($fileName, PATHINFO_EXTENSION));
+        move_uploaded_file($tmpName, $fileLocation);
+        $response = craft()->assets->insertFileByLocalPath($fileLocation, $fileName, $folderId, AssetConflictResolution::KeepBoth);
+        IOHelper::deleteFile($fileLocation, true);
+
         if ($response->isError()) {
             $data = [
                 'success' => false,
