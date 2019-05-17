@@ -29,6 +29,7 @@ return array(
         'siteUrl' => 'http://cpd.lantra.local',
         'environmentVariables' => array(
             'basePath' => '/websites/cpd.lantra.co.uk/',
+            'assetsPath' => '/websites/cpd.lantra.co.uk/craft-assets/',
             'server' => 'local',
         ),
     ),
