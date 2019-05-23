@@ -37,7 +37,7 @@
     {% if account is defined %}
         {{ ui.errorList(account.getAllErrors()) }}
     {% endif %}
-    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8" autocomplete="off">
         {{ getCsrfInput() }}
         <input type="hidden" name="action" value="lantra/users/saveUser">
         <input type="hidden" name="fields[userDummyEmail]" value="{{ account.userDummyEmail|default(0) }}">
