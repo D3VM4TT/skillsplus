@@ -301,7 +301,7 @@ $(document).ready(function(){
 
     $('#reportResultType').change(function(){
         var type = $(this).val();
-        if (type == 'userResult') {
+        if (type != 'unitResult') {
             $('#reportUnitsDropdown').hide();
         }
         else {
