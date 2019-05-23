@@ -907,10 +907,16 @@ class Lantra_ResultsService extends BaseApplicationComponent
         return $data;
     }
 
-    private function getIds($array ){
+    /**
+     * @param array $array
+     * @return array
+     */
+    private function getIds($array = []){
         $ids = [];
-        foreach ($array as $item) {
-            $ids [] = $item->id;
+        if (is_array($array) && count($array)) {
+            foreach ($array as $item) {
+                $ids [] = $item->id;
+            }
         }
         return $ids;
     }
