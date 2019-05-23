@@ -17,6 +17,8 @@
 {% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
 {% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName') %}
 
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 {% block content %}
 <div class="page-subHeader primary-bg">
     {% include '_includes/topNavigation' %}
@@ -190,6 +192,32 @@
             <button id="buttonAutomated" type="button" class="button primary-bg">Create Automated</button>
             <input type="hidden" name="automated" value="0">
         </div>
+    {% endif %}
+
+    {% if entry is defined and entry.reportData|length %}
+        <h2>Report Archive</h2>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Filename</th>
+                <th>Date Created</th>
+                <th>Size</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in entry.reportData %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.filename }}</td>
+                    <td>{{ report.dateCreated|format(dateFormat) }}</td>
+                    <td>{{ report.size|filesize }}</td>
+                    <td style="text-align: right;"><a href="/internal/{{ report.id }}" rel="external">download</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 </form>
 {% endblock %}

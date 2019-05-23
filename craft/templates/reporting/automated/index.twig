@@ -30,6 +30,7 @@
                         <th>Type</th>
                         <th>Frequency</th>
                         <th>Last Sent</th>
+                        <th>Archive</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -42,11 +43,11 @@
                             <td>{{ report.reportType|title }}</td>
                             <td>{{ report.reportSendFrequency|title }}</td>
                             <td>{{ report.reportLastSentDate|format(dateFormat)|default('Never') }}</td>
+                            <td>{{ report.reportData|length }}</td>
                             <td style="text-align: right;">
                                 <a class="action" href="#" data-action="lantra/reports/run" data-id="{{ report.id }}">run</a> |
                                 <a href="/reporting/custom/edit/{{ report.id }}">edit</a> |
                                 <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ report.id }}">delete</a>
-                                <!-- | <a href="/reporting/custom/{{ report.id }}">data ({{ report.reportData|length }})</a> -->
                             </td>
                         </tr>
                     {% endfor %}
