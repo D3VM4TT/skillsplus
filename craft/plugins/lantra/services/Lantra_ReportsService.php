@@ -120,7 +120,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         // clear report units if non mandatory
         if ($filter['reportResultType'] != 'unitResult') {
-            $filter['reportUnits'] = null;
+            $filter['reportUnits'] = [];
         }
         if (count($filter['reportCompanies'])) {
             $userFilter['relatedTo'] = [
