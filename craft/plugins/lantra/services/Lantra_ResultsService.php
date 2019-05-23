@@ -783,7 +783,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $user->userDateOfBirth ? $user->userDateOfBirth->format($format) : '',
                 $user->userStartDate,
                 $company ? $company->title : 'unknown',
-                '~'
+                $user->userAddress
             ];
             foreach ($units as $unit) {
                 if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
