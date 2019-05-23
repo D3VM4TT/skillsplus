@@ -719,7 +719,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'startDate'     => null,
             'resultStatus'  => null,
             ## used for filtering required units
-            'unitIds'       => null,
+            'unitIds'       => [],
         ];
         return array_merge($defaults, $filter);
     }
