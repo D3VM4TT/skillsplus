@@ -658,6 +658,14 @@ form ul.options input#userSettings {
     margin:6px 14px 0 0;
 }
 
+ul.errors {
+    margin-bottom: 20px;
+}
+
+ul.errors li {
+    color:#a94442;
+}
+
 form ul.options li strong {
     width:50%;
     display:inline-block;

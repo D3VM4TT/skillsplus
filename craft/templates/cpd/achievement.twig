@@ -14,8 +14,10 @@
 
 {% set dashboardUri = '/cpd/' ~ account.id %}
 
-{% set moduleEntry = false %}
-{% set resultEntry = false %}
+{%  if resultEntry is not defined %}
+    {% set moduleEntry = false %}
+    {% set resultEntry = false %}
+{% endif %}
 
 {% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
 {% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
@@ -26,7 +28,7 @@
     {% set moduleEntry = craft.entries.id(entryId).first %}
     {% if not moduleEntry %}{% exit 404 %}{% endif %}
     {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
-{% elseif craft.request.segment(3) == 'result' and entryId %}
+{% elseif resultEntry is not defined and craft.request.segment(3) == 'result' and entryId %}
     {% set resultEntry = craft.entries.id(entryId).status('live, expired').first %}
     {% if not resultEntry %}{% exit 404 %}{% endif %}
     {% set moduleEntry = resultEntry.resultModule.first %}
@@ -57,13 +59,20 @@
             <p>{% if moduleEntry %}{{ moduleEntry.title }}{% endif %}</p>
         </div>
         <div class="page-form">
+            <div class="col-pd-btm">
             {% if resultEntry and resultEntry.id %}
-                <div class="col-pd-btm">
                 <h3>Edit Achievement</h3>
-                </div>
             {% else %}
-                <div class="col-pd-btm">
                 <h3>Create a new achievement</h3>
+            {% endif %}
+            </div>
+            {% if resultEntry and resultEntry.hasErrors %}
+                <div class="col-pd-btm">
+                    <ul class="errors">
+                        {% for error in resultEntry.allErrors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
             <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">

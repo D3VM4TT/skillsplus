@@ -127,6 +127,29 @@ class LantraPlugin extends BasePlugin
                     $userFinishDate = $date->getTimestamp();
                 }
                 $entry->setContentFromPost(['resultFinishDate' => $userFinishDate]);
+                // validate dates
+                $userExpiryDate = craft()->request->getPost('userExpiryDate');
+                if ($userExpiryDate && false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
+                    $userExpiryDate = $date->getTimestamp();
+                    $entry->expiryDate = $date->getTimestamp();
+                }
+                if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
+                    $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
+                    $event->performAction = false;
+                }
+                if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
+                    $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
+                    $event->performAction = false;
+                }
+                if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
+                    $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
+                    $event->performAction = false;
+                }
+                if ($event->performAction == false) {
+                    craft()->urlManager->setRouteVariables(array(
+                        'resultEntry'    => $entry
+                    ));
+                }
             }
             // check remaining attempts
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts) {
