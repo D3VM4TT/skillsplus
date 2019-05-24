@@ -1,5 +1,5 @@
 {% set currentUserCompany = craft.lantra.userCompany() %}
-{% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companyPrimaryManager'}).limit(null) %}
+{% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 <p class="profile">

@@ -1,5 +1,5 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companyPrimaryManager'}).limit(null) %}
+{% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 <div id="account-details-expand" class="acc-info">

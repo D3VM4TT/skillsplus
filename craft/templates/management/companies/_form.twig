@@ -66,12 +66,14 @@
             {% endfor %}
         </select>
     </div>
+    {% set userCompanyManagers = craft.users.group('companyManagers') %}
     <div class="field--wrapper">
-        <label for="companyPrimaryManager">Company primary manager:</label>
-        {% set userCompanyManagers = craft.users.group('companyManagers') %}
-        <select data-relation="fields[companyPrimaryManager]" id="companyPrimaryManager" data-value="{{ entry.companyPrimaryManager.first().id|default('') }}">
+        <label for="companySecondaryManagers">Company primary managers:</label>
+        <input type="hidden" name="fields[companyPrimaryManagers]" value="" />
+        <select multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
             {% for userEntry in userCompanyManagers %}
-                <option value="{{ userEntry.id }}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+                <option value="{{ userEntry.id }}"
+                        {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>

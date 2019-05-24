@@ -43,7 +43,7 @@
                  <tr>
                     <th>ID</th>
                      <th class="title">Name</th>
-                     <th class="title">Primary Manager</th>
+                     <th class="title">Primary Managers</th>
                      {% if lantraLicences %}
                         <th class="">Licences</th>
                      {% endif %}
@@ -55,15 +55,17 @@
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
-            {% set primaryManager = company.companyPrimaryManager.first %}
             {% set userCount = craft.lantra.userCount(company.id) %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ craft.lantra.companyLabel(company) }}</td>
                     <td>
-                        {% if primaryManager %}
-                            <p class="td-title-responsive">Primary Manager: </p>
-                            <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
+                        {% if company.companyPrimaryManagers.total %}
+                            <p class="td-title-responsive">Primary Managers: </p>
+                            {% for primaryManager in company.companyPrimaryManagers %}
+                                <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
+                                {% if not loop.last %}<br />{% endif %}
+                            {% endfor %}
                         {% endif %}
                     </td>
                     {% if lantraLicences %}
