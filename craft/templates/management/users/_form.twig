@@ -50,11 +50,11 @@
         
         <div id="name-fields">
         <div class="col-6 field--wrapper">
-            <label for="firstName" class="no-float">First name:</label>
+            <label for="firstName" class="no-float"><em class="required">*</em> First name:</label>
             <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
         </div>
         <div class="col-6 field--wrapper">
-            <label for="lastName" class="no-float">Last name:</label>
+            <label for="lastName" class="no-float"><em class="required">*</em> Last name:</label>
             <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
         </div>
         </div>

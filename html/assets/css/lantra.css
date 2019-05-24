@@ -666,6 +666,11 @@ ul.errors li {
     color:#a94442;
 }
 
+em.required {
+    color:#a94442;
+    font-weight:700;
+}
+
 form ul.options li strong {
     width:50%;
     display:inline-block;
