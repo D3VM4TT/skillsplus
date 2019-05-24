@@ -151,7 +151,7 @@
                         <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
                         {% for companyEntry in companyEntries %}
                             {% set selected = '' %}
-                            {% if account is defined and companyEntry.companyPrimaryManager.total() and account.id == companyEntry.companyPrimaryManager.first().id %}
+                            {% if account is defined and account.id in companyEntry.companyPrimaryManagers.ids() %}
                                 {% set primaryManagerCompanies = primaryManagerCompanies|merge([companyEntry]) %}
                                 {% set selected = ' selected="selected"' %}
                             {% endif %}

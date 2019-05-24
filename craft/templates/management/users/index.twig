@@ -88,7 +88,7 @@
                 {% set company = craft.lantra.userCompany(user.id) %}
                 {% set managerCompanies = [] %}
                 {% if user.isInGroup('companyManagers') %}
-                    {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companyPrimaryManager'}).limit(null) %}
+                    {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companyPrimaryManagers'}).limit(null) %}
                     {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companySecondaryManagers'}).limit(null) %}
                     {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
                 {% endif %}

@@ -339,8 +339,8 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     public function getCompanyMangers(EntryModel $company, $count = false) {
         $return = [];
-        if ($company->companyPrimaryManager->first()) {
-            $return[] = $company->companyPrimaryManager->first();
+        foreach ($company->companyPrimaryManagers as $manager ){
+            $return[] = $manager;
         }
         foreach ($company->companySecondaryManagers as $manager ){
             $return[] = $manager;
@@ -455,7 +455,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->section = 'companies';
         if ($type == 'primary')
         {
-            $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'];
+            $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyPrimaryManagers'];
 
         }
         elseif ($type == 'secondary')
@@ -466,7 +466,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         {
             $criteria->relatedTo = [
                 'or',
-                ['targetElement' => $user->id, 'field' => 'companyPrimaryManager'],
+                ['targetElement' => $user->id, 'field' => 'companyPrimaryManagers'],
                 ['targetElement' => $user->id, 'field' => 'companySecondaryManagers'],
             ];
         }
@@ -726,9 +726,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $return = [];
         $company = $user->userCompany->first();
         if ($company) {
-            $primaryManager = $company->companyPrimaryManager->first();
-            if($primaryManager)
-            {
+            foreach ($company->companyPrimaryManagers as $primaryManager) {
                 $return[$primaryManager->id] = $primaryManager;
             }
             foreach ($company->companySecondaryManagers as $secondaryManager) {
@@ -752,9 +750,8 @@ class Lantra_UsersService extends BaseApplicationComponent
         $companyParent = $company->companyParent->first();
         if ($includeHierarchy && $companyParent) {
             while ($company != null) {
-                $companyPrimaryManager = $company->companyPrimaryManager->first();
-                if ($companyPrimaryManager) {
-                    $return[$companyPrimaryManager->id] = $companyPrimaryManager;
+                foreach ($company->companyPrimaryManagers as $primaryManager) {
+                    $return[$primaryManager->id] = $primaryManager;
                 }
                 $company = $company->companyParent->first();
             }
@@ -965,7 +962,12 @@ class Lantra_UsersService extends BaseApplicationComponent
                 $company = craft()->entries->getEntryById($companyId);
                 if ($type == 'primary')
                 {
-                    $company->setContentFromPost(['companyPrimaryManager' => []]);
+                    $primaryManagerIds = $company->companyPrimaryManagers->ids();
+                    // remove userId from array
+                    if (($key = array_search($user->id, $primaryManagerIds)) !== false) {
+                        unset($primaryManagerIds[$key]);
+                    }
+                    $company->setContentFromPost(['companyPrimaryManagers' => $primaryManagerIds]);
                     craft()->elements->saveElement($company);
                 }
                 else
@@ -983,10 +985,12 @@ class Lantra_UsersService extends BaseApplicationComponent
         // add to new
         foreach($companyIds as $companyId) {
             $company = craft()->entries->getEntryById($companyId);
-            $primaryManagerId = $company->companyPrimaryManager->total() ? $company->companyPrimaryManager->first()->id : null;
+            $primaryManagerIds = $company->companyPrimaryManagers->total() ? $company->companyPrimaryManagers->ids() : [];
             $secondaryManagerIds = $company->companySecondaryManagers->total() ? $company->companySecondaryManagers->ids() : [];
-            if ($type == 'primary' && $user->id != $primaryManagerId) {
-                $company->setContentFromPost(['companyPrimaryManager' => [$user->id]]);
+            if ($type == 'primary' && ! in_array($user->id, $primaryManagerIds))
+            {
+                $primaryManagerIds[] = $user->id;
+                $company->setContentFromPost(['companyPrimaryManagers' => $primaryManagerIds]);
                 craft()->elements->saveElement($company);
             }
             if ($type == 'secondary' && ! in_array($user->id, $secondaryManagerIds))
