@@ -93,6 +93,15 @@ class LantraPlugin extends BasePlugin
                 if ($entry->type == 'userResult' && $authorId) {
                     $entry->authorId = $authorId;
                 }
+                $fields = craft()->request->getPost('fields');
+                $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
+                // set result title
+                if ($entry->type == 'userResult' && $resultUnitId) {
+                    $unitEntry = craft()->entries->getEntryById($resultUnitId);
+                    if ($unitEntry) {
+                        $entry->getContent()->title = $unitEntry->title;
+                    }
+                }
                 // Check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 $currentUser = craft()->userSession->getUser();
