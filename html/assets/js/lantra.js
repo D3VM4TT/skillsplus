@@ -311,6 +311,18 @@ $(document).ready(function(){
 
     $('#reportResultType').change();
 
+    $('#resultUnit').change(function(){
+        var unitId = $(this).val();
+        if (unitId) {
+            $('#resultTitle').hide();
+        }
+        else {
+            $('#resultTitle').show();
+        }
+    });
+
+    $('#resultUnit').change();
+
     // delete user photo
     $("#deleteUserPhotoAction").on('click', function(e) {
         e.preventDefault();

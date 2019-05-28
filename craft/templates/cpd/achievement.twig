@@ -92,7 +92,7 @@
                 {%  endif %}
                 <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry ? resultEntry.resultStatus : 'pending' }}">
                 <input type="hidden" name="fields[unitEndorsementManagerLevel]" value="1">
-                <div class="field--wrapper">
+                <div class="field--wrapper" id="resultTitle">
                     <label for="title" class="float">Result Title</label>
                     <input value="{{ resultEntry ? resultEntry.title }}" type="text" name="title" class="float-label" placeholder="Enter the result title" />
                 </div>
