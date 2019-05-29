@@ -15,10 +15,10 @@
             <h2>My profile</h2>
         </div>
         <div class="page-content">
-        <h4>A snapshot of your personal information, Companies and Job roles.</h4>
+        {# <h4>A snapshot of your personal information, Companies and Job roles.</h4> #}
             
         {% set currentUserCompany = craft.lantra.userCompany() %}
-        <div class="field--wrapper">
+        <div class="field--wrapper border-btm">
         <label class="no-float">Name:</label>
         <h4>{{ currentUser.fullName }}</h4>
         </div>

@@ -61,6 +61,9 @@ table {
     float: right;
 }
 
+.border-bottom {border-bottom: 2px #e8ecef solid;}
+
+
 /* Typography
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 body,
