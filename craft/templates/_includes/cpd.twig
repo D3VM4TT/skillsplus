@@ -10,11 +10,10 @@
 <article class="cpd">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
 {% if not cpdUser.userRole.total %}
-
     <h2>Job Role</h2>
     <div class="col-pd-btm col-flex">
     <img src="/assets/img/delete.svg" class="test-icon" alt="">
-    <p>This user has no job role allocated, please add a job role to have access to modules.</p>
+    <p>You have no job role(s) allocated to your account.</p>
     </div>
 {% else %}
     {% for role in cpdUser.userRole %}
