@@ -26,16 +26,19 @@
         <label class="no-float primary-color">Email address:</label>
         <h4>{{ currentUser.email }}</h4>
         </div>
-        {% if currentUser.userStartDate %}
+
         <div class="field--wrapper">
         <label class="no-float primary-color">Start date:</label>
         <h4>{{ currentUser.userStartDate }}</h4>
         </div>
-        {% endif %}
+
+        {#
         <div class="field--wrapper">
         <label class="no-float primary-color">User type:</label>
         <h4>{{ craft.lantra.userType() }}</h4>
         </div>
+        #}
+        
         {% if currentUser.userDateOfBirth %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Date of Birth:</label>
@@ -48,18 +51,18 @@
         <h4>{{ currentUser.userAddress }}</h4>
         </div>
         {% endif %}
-        {% if currentUser.userTelephone %}
+
         <div class="field--wrapper">
         <label class="no-float primary-color">Telephone:</label>
         <h4>{{ currentUser.userTelephone }}</h4>
         </div>        
-        {% endif %}
-        {% if currentUserCompany %}
+
+
         <div class="field--wrapper">
         <label class="no-float primary-color">User Company:</label>
         <h4>{{ currentUserCompany }}</h4>
         </div> 
-        {% endif %}
+
         {% if managerCompanies|length %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Manager:</label>
