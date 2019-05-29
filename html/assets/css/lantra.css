@@ -1312,6 +1312,12 @@ body .topNavigation a, body.logged-in .topNavigation a {
     padding-right: 40px;
 }
 
+#toggle h6 {
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 9px;
+}
+
 nav.cpd {
     padding: 0 0 60px 0;
 }
