@@ -20,61 +20,61 @@
         {% set currentUserCompany = craft.lantra.userCompany() %}
         
         <div class="field--wrapper border-btm">
-        <label class="no-float">Name:</label>
+        <label class="no-float primary-color">Name:</label>
         <h4>{{ currentUser.fullName }}</h4>
         </div>
         <div class="field--wrapper border-btm">
-        <label class="no-float">Email address:</label>
+        <label class="no-float primary-color">Email address:</label>
         <h4>{{ currentUser.email }}</h4>
         </div>
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Start date:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Start date:</label>
         <h4>{{ currentUser.userStartDate }}</h4>
         </div>
-        <div class="field--wrapper border-btm">
-        <label class="no-float">User type:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">User type:</label>
         <h4>{{ craft.lantra.userType() }}</h4>
         </div>
         {% if currentUser.userDateOfBirth %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Date of Birth:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Date of Birth:</label>
         <h4>{{ currentUser.userDateOfBirth|format('y-m-d') }}</h4>
         </div>
         {% endif %}
         {% if currentUser.userAddress %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Address:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Address:</label>
         <h4>{{ currentUser.userAddress }}</h4>
         </div>
         {% endif %}
         {% if currentUser.userTelephone %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Telephone:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Telephone:</label>
         <h4>{{ currentUser.userTelephone }}</h4>
         </div>        
         {% endif %}
         {% if currentUserCompany %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">User Company:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">User Company:</label>
         <h4>{{ currentUserCompany }}</h4>
         </div> 
         {% endif %}
         {% if managerCompanies|length %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Manager:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Manager:</label>
         <h4>{{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</h4>
         {% for company in managerCompanies %}
         {{ company.title }}{{ not loop.last ? ', ' }}
         </div>
         {% endfor %}
         {% endif %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Legacy User ID:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Legacy User ID:</label>
         <h4>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</h4>
         </div>
         {% if not userProfile.userEditRole %}
-        <div class="field--wrapper border-btm">
-        <label class="no-float">Job Role:</label>
+        <div class="field--wrapper">
+        <label class="no-float primary-color">Job Role:</label>
         {% if currentUser.userRole.total %}
         {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
         {% else %}
@@ -88,7 +88,6 @@
         <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
         {%  endfor %}
         </div>
-
             {% if not craft.lantra.setting('schemeUserReadOnly') %}
                 <div class="container-btn col-pd-top">
                     <a class="button primary-bg" href="/profile/edit">Edit profile</a>
