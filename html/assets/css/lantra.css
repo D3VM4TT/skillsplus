@@ -1417,6 +1417,7 @@ body.logged-in .topNavigation {
     }
 .module-group-tabs .tabs li {
     float:left;
+    min-width: 200px;
     }
 .module-group-tabs .tabs a {
     display:block;
