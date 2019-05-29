@@ -27,10 +27,12 @@
         <label class="no-float primary-color">Email address:</label>
         <h4>{{ currentUser.email }}</h4>
         </div>
+        {% if currentUser.userStartDate %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Start date:</label>
         <h4>{{ currentUser.userStartDate }}</h4>
         </div>
+        {% endif %}
         <div class="field--wrapper">
         <label class="no-float primary-color">User type:</label>
         <h4>{{ craft.lantra.userType() }}</h4>
