@@ -22,6 +22,7 @@
         <div class="field--wrapper">
         <h4>{{ currentUser.fullName }}</h4>
         </div>
+
         <div class="field--wrapper">
         <label class="no-float primary-color">Email address:</label>
         <h4>{{ currentUser.email }}</h4>
@@ -29,8 +30,13 @@
 
         <div class="field--wrapper">
         <label class="no-float primary-color">Start date:</label>
-        <h4>{{ currentUser.userStartDate }}</h4>
+        {% if currentUser.userStartDate %}
+        <span class="label">{{ currentUser.userStartDate }}</span>
+        {% else %}
+        ~
+        {% endif %}
         </div>
+
 
         {#
         <div class="field--wrapper">
@@ -42,31 +48,31 @@
         {% if currentUser.userDateOfBirth %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Date of Birth:</label>
-        <h4>{{ currentUser.userDateOfBirth|format('y-m-d') }}</h4>
+        <span class="label">{{ currentUser.userDateOfBirth|format('y-m-d') }}</span>
         </div>
         {% endif %}
         {% if currentUser.userAddress %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Address:</label>
-        <h4>{{ currentUser.userAddress }}</h4>
+        <span class="label">{{ currentUser.userAddress }}</span>
         </div>
         {% endif %}
 
         <div class="field--wrapper">
         <label class="no-float primary-color">Telephone:</label>
-        <h4>{{ currentUser.userTelephone }}</h4>
+        <span class="label">{{ currentUser.userTelephone }}</span>
         </div>        
 
 
         <div class="field--wrapper">
         <label class="no-float primary-color">User Company:</label>
-        <h4>{{ currentUserCompany }}</h4>
+        <span class="label">{{ currentUserCompany }}</span>
         </div> 
 
         {% if managerCompanies|length %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Manager:</label>
-        <h4>{{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</h4>
+        <span class="label">{{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</span>
         {% for company in managerCompanies %}
         {{ company.title }}{{ not loop.last ? ', ' }}
         </div>
@@ -74,7 +80,7 @@
         {% endif %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Legacy User ID:</label>
-        <h4>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</h4>
+        <span class="label">{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</span>
         </div>
         {% if not userProfile.userEditRole %}
         <div class="field--wrapper">
