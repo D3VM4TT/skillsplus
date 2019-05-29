@@ -13,58 +13,84 @@
             <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {{ currentUserCompany|default('') }}
             <h2>My profile</h2>
+            <p>A snapshot of your personal information, Companies and Job roles.</p>
         </div>
         <div class="page-content">
-        {# <h4>A snapshot of your personal information, Companies and Job roles.</h4> #}
             
         {% set currentUserCompany = craft.lantra.userCompany() %}
+        
         <div class="field--wrapper border-btm">
         <label class="no-float">Name:</label>
         <h4>{{ currentUser.fullName }}</h4>
         </div>
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Email address:</label>
+        <h4>{{ currentUser.userStartDate }}</h4>
+        </div>
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Start date:</label>
+        <h4>{{ currentUser.userStartDate }}</h4>
+        </div>
+        <div class="field--wrapper border-btm">
+        <label class="no-float">User type:</label>
+        <h4>{{ craft.lantra.userType() }}</h4>
+        </div>
+        {% if currentUser.userDateOfBirth %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Date of Birth:</label>
+        <h4>{{ currentUser.userDateOfBirth|format('y-m-d') }}</h4>
+        </div>
+        {% endif %}
+        {% if currentUser.userAddress %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Address:</label>
+        <h4>{{ currentUser.userAddress }}</h4>
+        </div>
+        {% endif %}
+        {% if currentUser.userTelephone %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Telephone:</label>
+        <h4>{{ currentUser.userTelephone }}</h4>
+        </div>        
+        {% endif %}
+        {% if currentUserCompany %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">User Company:</label>
+        <h4>{{ currentUserCompany }}</h4>
+        </div> 
+        {% endif %}
+        {% if managerCompanies|length %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Manager:</label>
+        <h4>{{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</h4>
+        {% for company in managerCompanies %}
+        {{ company.title }}{{ not loop.last ? ', ' }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Legacy User ID:</label>
+        <h4>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</h4>
+        </div>
+        {% if not userProfile.userEditRole %}
+        <div class="field--wrapper border-btm">
+        <label class="no-float">Job Role:</label>
+        {% if currentUser.userRole.total %}
+        {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+        {% else %}
+        ~
+        {% endif %}
+        <br/>
+        {% endif %}
+        {% set userCustomFields = userProfile.userEditCustomFields %}
+        {% for block in userCustomFields %}
+        {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+        <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
+        {%  endfor %}
+        </div>
 
-            
-            <p class="profile">
-                <span class="label">Name:</span> {{ currentUser.fullName }}<br/>
-                <span class="label">Email address:</span> {{ currentUser.email }}<br/>
-                <span class="label">Start date:</span> {{ currentUser.userStartDate }}<br/>
-                <span class="label">User type:</span> {{ craft.lantra.userType() }}<br/>
-                {% if currentUser.userDateOfBirth %}
-                    <span class="label">Date of Birth:</span> {{ currentUser.userDateOfBirth|format('y-m-d') }}<br/>
-                {% endif %}
-                {% if currentUser.userAddress %}
-                    <span class="label">Address:</span> {{ currentUser.userAddress }}<br/>
-                {% endif %}
-                {% if currentUser.userTelephone %}
-                    <span class="label">Telephone:</span> {{ currentUser.userTelephone }}<br/>
-                {% endif %}
-                {% if currentUserCompany %}
-                    <span class="label">User Company:</span> {{ currentUserCompany }}<br />
-                {% endif %}
-                {% if managerCompanies|length %}
-                    <span class="label">Manager {{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</span>
-                    {% for company in managerCompanies %}
-                        {{ company.title }}{{ not loop.last ? ', ' }}
-                    {% endfor %}
-                {% endif %}
-                <span class="label">Legacy User ID:</span>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}<br/>
-                {% if not userProfile.userEditRole %}
-                    <span class="label">Job Role:</span>
-                    {% if currentUser.userRole.total %}
-                        {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
-                    {% else %}
-                        ~
-                    {% endif %}
-                    <br/>
-                {% endif %}
-                {% set userCustomFields = userProfile.userEditCustomFields %}
-                {% for block in userCustomFields %}
-                    {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
-                    <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
-                {%  endfor %}
-            </p>
             {% if not craft.lantra.setting('schemeUserReadOnly') %}
-                <div class="container-btn">
+                <div class="container-btn col-pd-top">
                     <a class="button primary-bg" href="/profile/edit">Edit profile</a>
                 </div>
             {% endif %}
