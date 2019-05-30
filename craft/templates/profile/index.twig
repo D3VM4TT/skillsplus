@@ -1,3 +1,6 @@
+{% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
+{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
@@ -30,7 +33,7 @@
 
         <div class="field--wrapper">
         <label class="no-float primary-color">Start date:</label>
-        <span class="label">{{ currentUser.userStartDate }}</span>
+        <span class="label">{{ currentUser.userStartDate|date(dateFormat) }}</span>
         </div>
 
 
@@ -44,7 +47,7 @@
         {% if currentUser.userDateOfBirth %}
         <div class="field--wrapper">
         <label class="no-float primary-color">Date of Birth:</label>
-        <span class="label">{{ currentUser.userDateOfBirth|format('y-m-d') }}</span>
+        <span class="label">{{ currentUser.userDateOfBirth|date(dateFormat)  }}</span>
         </div>
         {% endif %}
         {% if currentUser.userAddress %}
