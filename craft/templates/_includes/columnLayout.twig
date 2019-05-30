@@ -27,6 +27,16 @@
                 <p class="td-title-responsive">Endorsed Date: </p>
                 {{ resultEntry and resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate|date(dateFormat) : '-' }}
             </td>
+        {% elseif row.fieldType == 'resultEndorsedUser'  %}
+            <td class="resultEndorsedUser">
+                <p class="td-title-responsive">Endorsed Manager: </p>
+                {% if resultEntry and resultEntry.resultEndorsedUser.total %}
+                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.first %}
+                    {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
+                {% else %}
+                    unknown
+                {% endif %}
+            </td>
         {% elseif row.fieldType == 'resultExpiryDate'  %}
             <td class="expiryDate">
                 <p class="td-title-responsive">Expiry Date: </p>
