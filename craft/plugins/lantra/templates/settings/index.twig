@@ -308,6 +308,36 @@
 
             #}
 
+            <h2>Account Information</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"User ID",
+                id:				"userAccountInformationId",
+                name:			"userAccountInformation[userId]",
+                on:		        settings.userAccountInformation.userId is defined and settings.userAccountInformation.userId == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Start Date",
+                id:				"userAccountInformationIdUserStartDate",
+                name:			"userAccountInformation[userStartDate]",
+                on:		        settings.userAccountInformation.userStartDate is defined and settings.userAccountInformation.userStartDate == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"User Company",
+                id:				"userAccountInformationUserCompany",
+                name:			"userAccountInformation[userCompany]",
+                on:		        settings.userAccountInformation.userCompany is defined and settings.userAccountInformation.userCompany == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Manager Companies",
+                id:				"userAccountInformationManagerCompanies",
+                name:			"userAccountInformation[managerCompanies]",
+                on:		        settings.userAccountInformation.managerCompanies is defined and settings.userAccountInformation.managerCompanies == 1,
+            }) }}
+
         {% endnamespace %}
 
     </div>

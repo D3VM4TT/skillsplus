@@ -287,6 +287,9 @@ class LantraPlugin extends BasePlugin
             'userEditRole'                      => AttributeType::Bool,
             'userEditPhoto'                     => AttributeType::Bool,
             'userEditCustomFields'              => AttributeType::Mixed,
+
+            ## user profile
+            'userAccountInformation'            => AttributeType::Mixed,
         );
     }
 

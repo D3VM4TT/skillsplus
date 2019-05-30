@@ -70,6 +70,9 @@ class Lantra_SettingsModel extends BaseModel
             'userEditRole'                      => AttributeType::Bool,
             'userEditPhoto'                     => AttributeType::Bool,
             'userEditCustomFields'              => AttributeType::Mixed,
+
+            ## user profile
+            'userAccountInformation'            => AttributeType::Mixed,
 		);
 	}
 
