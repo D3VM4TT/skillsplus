@@ -67,7 +67,7 @@
             {% endfor %}
         </select>
     </div>
-    {% set userCompanyManagers = craft.users.group('companyManagers') %}
+    {% set userCompanyManagers = craft.users.group('companyManagers').limit(null) %}
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company primary managers:</label>
         <input type="hidden" name="fields[companyPrimaryManagers]" value="" />
