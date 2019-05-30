@@ -54,9 +54,9 @@
     <div class="field--wrapper">
         <label for="companyParent">Company Parent (if applicable):</label>
         {% if currentUser.isInGroup('schemeManagers') %}
-            {% set companyEntries = craft.entries.section('companies') %}
+            {% set companyEntries = craft.entries.section('companies').order('title').limit(null) %}
         {% else %}
-            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('title').limit(null) %}
         {% endif %}
         <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
             <option value="">~ none ~</option>
