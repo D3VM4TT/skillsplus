@@ -88,14 +88,13 @@ class LantraVariable
             'sourceId' => 1,
             'name' => (string) $accountId
         ));
-        if ($folder) {
-            return $folder->id;
+        if ( ! $folder) {
+            // create folder if it doesn't exist
+            $source = craft()->assetSources->getSourceTypeById(1);
+            $parent = craft()->assets->getRootFolderBySourceId(1);
+            $folder = $source->createFolder($parent, $accountId);
         }
-        // create folder if it doesn't exist
-        $source = craft()->assetSources->getSourceTypeById(1);
-        $parent = craft()->assets->getRootFolderBySourceId(1);
-        $folder = $source->createFolder($parent, $accountId);
-        return $folder->folderId;
+        return $folder ? $folder->id : null;
     }
 
     /**

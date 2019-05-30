@@ -52,16 +52,21 @@
         {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
         <div class="field--wrapper">
             {% if not resultLocked and not fieldDisabled %}
-            <span class="btn btn-success fileinput-button primary-bg">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add files...</span>
-                    <input id="fileupload" type="file" name="assets-upload" multiple data-folderid="{{ craft.lantra.evidenceFolderId(accountId) }}">
-            </span>
-            <br>
-            <br>
-            <div id="progress" class="progress">
-                <div class="progress-bar progress-bar-success"></div>
-            </div>
+                {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
+                {% if evidenceFolderId %}
+                    <span class="btn btn-success fileinput-button primary-bg">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <input id="fileupload" type="file" name="assets-upload" multiple data-folderid="{{ evidenceFolderId }}">
+                    </span>
+                    <br>
+                    <br>
+                    <div id="progress" class="progress">
+                        <div class="progress-bar progress-bar-success"></div>
+                    </div>
+                {% else %}
+                    <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
+                {% endif %}
             {% endif %}
             <div id="files" class="files">
                 {% if resultEvidence %}
