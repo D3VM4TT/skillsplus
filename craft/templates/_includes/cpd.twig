@@ -39,7 +39,7 @@
                 {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
                 {% for moduleGroup in moduleGroups %}
                     <li>
-                        <a href="#tab{{ moduleGroup.id }}" class="primary-bg">
+                        <a href="#tab{{ role.id }}-{{ moduleGroup.id }}" class="primary-bg">
                             <h4>{{ moduleGroup.title }}</h4>
                         </a>
                     </li>
@@ -48,14 +48,14 @@
             </div>
             <section id="groups-tab-group" class="tabgroup">
                 {% for moduleGroup in moduleGroups %}
-                <div class="groups-tab-group" id="tab{{ moduleGroup.id }}">
+                <div class="groups-tab-group" id="tab{{ role.id }}-{{ moduleGroup.id }}">
                     <div class="module-tabs">
                         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
                         {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
                         {% for module in modules %}
                             {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
                             <li>
-                                <a href="#module{{ module.id }}" class="module-status">
+                                <a href="#module{{ role.id }}-{{ moduleGroup.id }}-{{ module.id }}" class="module-status">
                                     {% if moduleResultEntry %}
                                         <span class="status-complete"></span>
                                     {% else %}
@@ -74,7 +74,7 @@
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
                     {% for module in modules %}
                         {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
-                        <div id="module{{ module.id }}" class="module open">
+                        <div id="module{{ role.id }}-{{ moduleGroup.id }}-{{ module.id }}{{ module.id }}" class="module open">
                             {% set totalPoints = 0 %}
                             <div class="header" data-target="#m{{ role.id ~ module.id }}">
                                 <h4>{{ module.title }}</h4>
