@@ -59,6 +59,7 @@
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom/new">Custom Report</a>
                 </li>
+                {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
                 </li>
@@ -81,6 +82,7 @@
                         </ul>
                     {% endif %}
                 </li>
+                {% endif %}
                 <!--
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'dynamic' %}active{% endif %}" href="/reporting/dynamic">Dynamic Reports</a>

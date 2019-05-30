@@ -188,10 +188,12 @@
         <div class="container-btn">
             <button id="buttonSubmit" type="submit" class="button primary-bg">Download Data</button>
         </div>
+        {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
         <div class="container-btn">
             <button id="buttonAutomated" type="button" class="button primary-bg">Create Automated</button>
             <input type="hidden" name="automated" value="0">
         </div>
+        {% endif %}
     {% endif %}
 
     {% if entry is defined and entry.reportData|length %}
