@@ -7,6 +7,8 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterUserStatus = craft.request.getParam('status')|default('all') %}
+{% set userStatus = filterUserStatus == 'suspended' ? 'suspended' : null %}
 {% set sortParam = craft.request.getParam('sort') %}
 {% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'lastName, userCompanyName' %}
@@ -26,11 +28,18 @@
     {% set filterSearch = '' %}
 {% endif %}
 
+{# orphaned users #}
+{% if filterUserStatus == 'orphaned' %}
+    {% set allCompanies = craft.entries.section('companies').limit(null) %}
+    {% set relatedUserIds = craft.users.relatedTo(allCompanies).limit(null).ids() %}
+    {% set excludeIdsString = excludeIdsString ~ relatedUserIds|join(', not ') %}
+{% endif %}
+
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
     {% if companyId %}
-        {% set criteria = craft.users.status(null).admin('not 1').relatedTo(companyId).limit(pageLimit).order(sort ~ ' ' ~ order) %}
+        {% set criteria = craft.users.status(userStatus).admin('not 1').id(excludeIdsString).relatedTo(companyId).limit(pageLimit).order(sort ~ ' ' ~ order) %}
     {% else %}
-        {% set criteria = craft.users.status(null).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
+        {% set criteria = craft.users.status(userStatus).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
     {% endif %}
 {% elseif currentUser.isInGroup('companyManagers') %}
     {% if companyId %}
@@ -57,7 +66,7 @@
         <p>Add, Edit and view the Dashboard of Users within {{ companyId ? company.title : 'your Scheme' }}.</p>
                     <div class="header-controls">
                 {% if not companyId %}
-                    <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                    <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterUserStatus:filterUserStatus} %}</div>
                 {% endif %}
                 {% if not currentUser.managerReadOnly %}
                     <div class="container-btn primary-bg">

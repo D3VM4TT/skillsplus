@@ -13,5 +13,12 @@
     </p>
     {% endif %}
     <input type="text" class="text-search" placeholder="search" name="search" value="{{ filterSearch }}" />
+    {% if filterUserStatus is defined and filterUserStatus %}
+        <select name="status">
+            <option value="all"{% if filterUserStatus == 'all' %} selected="selected"{% endif %}>All Users</option>
+            <option value="suspended"{% if filterUserStatus == 'suspended' %} selected="selected"{% endif %}>Suspended Users</option>
+            <option value="orphaned"{% if filterUserStatus == 'orphaned' %} selected="selected"{% endif %}>Orphaned Users</option>
+        </select>
+    {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>
 </form>
