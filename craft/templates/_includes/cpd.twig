@@ -136,9 +136,13 @@
                                                                     <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
                                                                 </a>
                                                                 {% if not readOnly and unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                    <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
-                                                                    data-tooltip title="Delete this result">
-                                                                    <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
+                                                                    {% set managerDelete = unitResultEntry.resultOwner.total and unitResultEntry.resultOwner.first.id == currentUser.id %}
+                                                                    {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                                                                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
+                                                                            data-tooltip title="Delete this result">
+                                                                            <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
+                                                                        </a>
+                                                                    {% endif %}
                                                                     {% if unitResultEntry.resultStatus == 'pending' %}
                                                                         <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
                                                                         data-tooltip title="Endorse this result">
@@ -206,9 +210,13 @@
                                                             {% endif %}
                                                             <div class="cpd-icons">
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
-                                                                data-tooltip title="Delete this result">
-                                                                <img src="/assets/img/delete.svg" width="16" height="16" class="" alt=""></a>
+                                                                {% set managerDelete = userResultEntry.resultOwner.total and userResultEntry.resultOwner.first.id == currentUser.id %}
+                                                                {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                                                                    <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
+                                                                        data-tooltip title="Delete this result">
+                                                                        <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
+                                                                    </a>
+                                                                {% endif %}
                                                                 {% if userResultEntry.resultStatus == 'pending' %}
                                                                     <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ userResultEntry.id }}"
                                                                     data-tooltip title="Endorse this result">
