@@ -1,5 +1,6 @@
 {% requirePermission 'editEntries:3' %}
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
+{% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
@@ -87,10 +88,12 @@
             {% endfor %}
         </select>
     </div>
+    {% if lantraLicences %}
     <div class="field--wrapper">
         <label for="companyRemainingLicences" class="no-float">Remaining Company licences:</label>
         <input type="number" id="companyRemainingLicences" class="float-label" placeholder="Enter the remaining company licences"  name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
     </div>
+    {% endif %}
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Save company</button>
     </div>
