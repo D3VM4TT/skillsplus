@@ -327,17 +327,18 @@ class LantraVariable
      *
      * @param null $userId
      * @param int $level
+     * @param bool $includeHierarchy
      * @return BaseElementModel|null
      * @throws Mixed
      */
-    public function userManagers($userId = null, $level = 0) {
+    public function userManagers($userId = null, $level = 0, $includeHierarchy = true) {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
         if ($level > 0) {
             return craft()->lantra_users->getUserManagerByLevel($user, $level);
         }
-        return craft()->lantra_users->getUserMangers($user, true);
+        return craft()->lantra_users->getUserMangers($user, $includeHierarchy);
     }
 
     /**
