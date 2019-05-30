@@ -13,7 +13,13 @@
     <h2>Job Role</h2>
     <div class="col-pd-btm col-flex">
     <img src="/assets/img/delete.svg" class="test-icon" alt="">
-    <p>You have no job role(s) allocated to your account.</p>
+    <p>
+        {% if isManager %}
+            This user has no job role(s) allocated to their account.
+        {% else %}
+            You have no job role(s) allocated to your account.
+        {% endif %}
+    </p>
     </div>
 {% else %}
     {% for role in cpdUser.userRole %}
