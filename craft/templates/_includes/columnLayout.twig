@@ -33,7 +33,7 @@
                 {% if resultEntry and resultEntry.resultEndorsedUser.total %}
                     {% set resultEndorsedUser = resultEntry.resultEndorsedUser.first %}
                     {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
-                {% else %}
+                {% elseif resultEntry %}
                     unknown
                 {% endif %}
             </td>
