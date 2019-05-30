@@ -94,7 +94,7 @@ class LantraVariable
             $parent = craft()->assets->getRootFolderBySourceId(1);
             $folder = $source->createFolder($parent, $accountId);
         }
-        return $folder ? $folder->id : null;
+        return $folder && isset($folder->id) ? $folder->id : null;
     }
 
     /**
