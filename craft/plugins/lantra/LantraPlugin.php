@@ -39,8 +39,6 @@ class LantraPlugin extends BasePlugin
         
         parent::init();
 
-        craft()->lantra_settings->updateSettings($this->settingsVersion);
-
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
