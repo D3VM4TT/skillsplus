@@ -42,7 +42,10 @@
                     <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
-                <p>{{ unitEntry.title }}</p>
+                <p>
+                    {{ unitEntry.title }} 
+                    {{ unitEntry.unitHeading }}
+                </p>
             </div>
             <div class="page-content">
                 <h2>This is an e-learning unit</h2>
@@ -108,7 +111,10 @@
                     <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
-                <p>{{ unitEntry.title }}</p>
+                <p>
+                    {{ unitEntry.title }}
+                    {{ unitEntry.unitHeading }}
+                </p>
             </div>
             <div class="page-content">
                 <h2>This is an evidence based unit</h2>
