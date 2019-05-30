@@ -358,11 +358,13 @@ $(document).ready(function(){
 
     $('.tabgroup > div').hide();
     $('.tabgroup > div:first-of-type').show();
+    $('.module-tabs > ul > li:first-of-type > a').addClass('active');
+    $('.module-group-tabs > ul > li:first-of-type > a').addClass('active');
     $('.tabs a').click(function(e){
         e.preventDefault();
         var $this = $(this),
         tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
-        others = $this.closest('li').siblings().children('a'),
+        others = $this.closest('ul').find('a'),
         target = $this.attr('href');
         others.removeClass('active');
         $this.addClass('active');
@@ -371,8 +373,6 @@ $(document).ready(function(){
         // make sure tab is selected too
         if (target.match("^#module")) {
             var t = $(this).closest('div.groups-tab-group');
-
-            console.log("#" + t.attr('id'));
             $('a[href="#' + t.attr('id') + '"]').click();
         }
     });

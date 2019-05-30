@@ -35,7 +35,7 @@
             <p>No modules have been assigned to this role.</p>
         {% else %}
             <div class="module-group-tabs">
-                <ul class="tabs clearfix" data-tabgroup="groups-tab-group">
+                <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ role.id }}">
                 {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
                 {% for moduleGroup in moduleGroups %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
@@ -47,31 +47,33 @@
                 {% endfor %}
                 </ul>
             </div>
-            <section id="groups-tab-group" class="tabgroup">
+            <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
                 {% for moduleGroup in moduleGroups %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                 <div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
                     <div class="module-tabs">
                         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
-                        {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
-                        {% for module in modules %}
-                            {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                            {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
-                            <li>
-                                <a href="#module{{ moduleElementId }}" class="module-status">
-                                    {% if moduleResultEntry %}
-                                        <span class="status-complete"></span>
-                                    {% else %}
-                                        <span class="status-inprogress"></span>
-                                    {% endif %}
-                                    {{ module.title }}
-                                </a>
-                            </li>
-                            {% if not loop.last and loop.index is divisible by(4) %}
-                        </ul>
-                        <ul class="module-links">
-                            {% endif %}
-                        {% endfor %}
+                            <div class="tabs-group">
+                            {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
+                            {% for module in modules %}
+                                {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
+                                <li>
+                                    <a href="#module{{ moduleElementId }}" class="module-status">
+                                        {% if moduleResultEntry %}
+                                            <span class="status-complete"></span>
+                                        {% else %}
+                                            <span class="status-inprogress"></span>
+                                        {% endif %}
+                                        {{ module.title }}
+                                    </a>
+                                </li>
+                                {% if not loop.last and loop.index is divisible by(4) %}
+                                </div>
+                                <div class="tabs-group">
+                                {% endif %}
+                            {% endfor %}
+                            </div>
                         </ul>
                     </div>
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">

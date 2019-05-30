@@ -1456,29 +1456,30 @@ body.logged-in .topNavigation {
   clear:both;
 }
 
-.module-tabs {
+.module-tabs ul {
     display:flex;
+    width:100%;
 }
 
-.module-tabs ul {
+.module-tabs ul div.tabs-group {
     flex: 50%;
     margin-top:40px;
     margin-bottom:40px;
 }
 
-.module-tabs ul li {
+.module-tabs ul div.tabs-group li {
     padding:5px 20px;
     line-height:20px;
 }
 
-.module-tabs ul li a.module-status {
+.module-tabs ul div.tabs-group li a.module-status {
     text-decoration: none;
     font-weight:700;
     font-size:16px;
     padding: 10px 15px;
 }
 
-.module-tabs ul li a.module-status.active {
+.module-tabs ul div.tabs-group li a.module-status.active {
  background-color:#f4f4fa; 
 }
 
