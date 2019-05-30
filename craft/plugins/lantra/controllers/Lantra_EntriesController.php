@@ -67,11 +67,14 @@ class Lantra_EntriesController extends Lantra_BaseController {
             $results = craft()->request->getPost('results');
         }
         $count = 0;
+        $userId = craft()->userSession->getId();
         // loop entries and update status
         foreach ($results as $result) {
             if (isset($result['entryId']) && FALSE != $entry = craft()->entries->getEntryById($result['entryId'])) {
                 $entry->setContentFromPost([
-                    'resultStatus' => 'endorsed'
+                    'resultStatus' => 'endorsed',
+                    'resultEndorsedDate' => DateTimeHelper::currentTimeForDb(),
+                    'resultEndorsedUser' => [$userId]
                     ]);
                 craft()->entries->saveEntry($entry);
                 $count ++;

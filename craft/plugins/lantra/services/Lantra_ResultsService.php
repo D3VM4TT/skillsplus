@@ -197,7 +197,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
     function saveNewResult($resultEntry) {
         $saveContent = false;
         $unitEntry = $resultEntry->resultUnit->first();
+        $userId = craft()->userSession->getId();
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
+            $resultEntry->setContentFromPost(['resultOwner' => [$userId]]);
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
@@ -211,11 +213,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $author = craft()->users->getUserById($authorId[0]);
             }
             //  (manager submitting on behalf of user)
-            if ($author && $author->id != craft()->userSession->getId()) {
+            if ($author && $author->id != $userId) {
                 // auto endorse
                 if ($resultEntry->resultStatus == 'endorsed' && (
                     $resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult'))) {
                     $resultEntry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                    $resultEntry->setContentFromPost(['resultEndorsedUser' => [$userId]]);
                     $saveContent = true;
                 }
             }
