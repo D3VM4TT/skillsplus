@@ -27,7 +27,15 @@
                                         result:resultEntry,
                                         columnLayout:globalsTheme.columnLayout}
                                     %}
-                                    <td><a href="/result/{{ resultEntry.id }}">edit</a></td>
+                                    <td>
+                                        <a href="/result/{{ resultEntry.id }}">edit</a>
+                                        {% set managerDelete = resultEntry.resultOwner.total and resultEntry.resultOwner.first.id == currentUser.id %}
+                                        {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ resultEntry.id }}"
+                                               data-tooltip title="Delete this result">delete
+                                            </a>
+                                        {% endif %}
+                                    </td>
                             {% endfor %}
                             </tbody>
                         </table>
