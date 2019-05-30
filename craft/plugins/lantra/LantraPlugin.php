@@ -104,7 +104,7 @@ class LantraPlugin extends BasePlugin
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 $currentUser = craft()->userSession->getUser();
                 // Auto endorse
-                if ($entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
+                if (! craft()->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
                     $entry->setContentFromPost(['resultStatus' => 'endorsed']);
                     if (!$oldEntry) {
                         $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
