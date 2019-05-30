@@ -247,7 +247,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     function checkRemainingAttempts($resultEntry) {
         $resultUnitEntry = $resultEntry->resultUnit->first();
         $totalAttempts = $resultEntry->resultAttempts->total();
-        if ($resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
+        if ($resultUnitEntry->resultStatus != 'endorsed' && $resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
             $this->blockResult($resultEntry);
         }
     }
