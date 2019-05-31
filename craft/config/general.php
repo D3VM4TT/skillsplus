@@ -27,6 +27,7 @@ return array(
     /* local server */
     'cpd.lantra.local' => array(
         'siteUrl' => 'http://cpd.lantra.local',
+        'devMode' => true,
         'environmentVariables' => array(
             'basePath' => '/websites/cpd.lantra.co.uk/',
             'assetsPath' => '/websites/cpd.lantra.co.uk/craft-assets/',
@@ -35,33 +36,32 @@ return array(
     ),
     /* demo server */
     'splusdev.ukwest.cloudapp.azure.com' => array(
+        'devMode' => true,
         'environmentVariables' => array(
             'server' => 'demo',
         ),
     ),
     /* dev server */
     'newdev.skills-plus.net' => array(
+        'devMode' => true,
         'environmentVariables' => array(
             'server' => 'dev',
         ),
     ),
     /* uat server */
     'newuat.skills-plus.net' => array(
-        'devMode' => false,
         'environmentVariables' => array(
             'server' => 'uat',
         ),
     ),
     /* stg server */
     'newstg.skills-plus.net' => array(
-        'devMode' => false,
         'environmentVariables' => array(
             'server' => 'stg',
         ),
     ),
     /* prod server */
     'newprod.skills-plus.net' => array(
-        'devMode' => false,
         'environmentVariables' => array(
             'server' => 'prod',
         ),

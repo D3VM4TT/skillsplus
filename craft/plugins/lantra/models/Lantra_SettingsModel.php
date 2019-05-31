@@ -78,6 +78,7 @@ class Lantra_SettingsModel extends BaseModel
             'userEditAddress'                   => AttributeType::Bool,
             'userEditTelephone'                 => AttributeType::Bool,
             'userEditDob'                       => AttributeType::Bool,
+            'userEditStartDate'                 => AttributeType::Bool,
             'userEditRole'                      => AttributeType::Bool,
             'userEditPhoto'                     => AttributeType::Bool,
             'userEditCustomFields'              => AttributeType::Mixed,

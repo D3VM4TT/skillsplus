@@ -17,6 +17,8 @@
 
     <div id="settings-cp">
 
+        <input type="hidden" name="settings[settingsVersion]" value="{{ settings.settingsVersion ? settings.settingsVersion : 1 }}" />
+
         {% namespace 'settings' %}
 
             <h2>System Settings</h2>
@@ -325,8 +327,6 @@
                 value:		    settings.notifyFooter
             }) }}
 
-            {# fields to be added
-
             <hr />
 
             <h2>User Profile Settings</h2>
@@ -367,6 +367,13 @@
             }) }}
 
             {{ forms.lightswitchField ({
+                label:			"Edit Date of Start Date?",
+                id:				"userEditStartDate",
+                name:			"userEditStartDate",
+                on:		        settings.userEditStartDate == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
                 label:			"Edit Role?",
                 id:				"userEditRole",
                 name:			"userEditRole",
@@ -395,7 +402,7 @@
                 rows:           settings.userEditCustomFields
             }) }}
 
-            #}
+            <hr />
 
             <h2>Account Information</h2>
 

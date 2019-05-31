@@ -80,7 +80,7 @@
             <label class="no-float primary-color">Legacy User ID:</label>
             <span class="label">{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</span>
         </div>
-        {% if not userProfile.userEditRole %}
+        {% if not craft.lantra.setting('userEditRole') %}
             <div class="field--wrapper">
                 <label class="no-float primary-color">Job Role:</label>
                 {% if currentUser.userRole.total %}
@@ -89,7 +89,7 @@
                 ~
                 {% endif %}
                 <br/>
-            {% set userCustomFields = userProfile.userEditCustomFields %}
+            {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
             {% for block in userCustomFields %}
                 {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
                 <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />

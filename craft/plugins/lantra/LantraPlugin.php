@@ -11,7 +11,7 @@ class LantraPlugin extends BasePlugin
     /*
      * Settings version (auto migrate settings)
      */
-    private $settingsVersion = 2;
+    private $settingsVersion = 3;
 
     function getName()
     {
@@ -299,6 +299,7 @@ class LantraPlugin extends BasePlugin
             'userEditAddress'                   => AttributeType::Bool,
             'userEditTelephone'                 => AttributeType::Bool,
             'userEditDob'                       => AttributeType::Bool,
+            'userEditStartDate'                 => AttributeType::Bool,
             'userEditRole'                      => AttributeType::Bool,
             'userEditPhoto'                     => AttributeType::Bool,
             'userEditCustomFields'              => AttributeType::Mixed,

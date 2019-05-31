@@ -10,6 +10,16 @@ class Lantra_SettingsService extends BaseApplicationComponent
         return (bool)$affectedRows;
     }
 
+    public function getDbSettings()
+    {
+        $result = craft()->db->createCommand()
+            ->select('settings')
+            ->from('plugins')
+            ->where(['class' => 'Lantra'])
+            ->queryRow();
+        return $result ? JsonHelper::decode($result['settings']) : [];
+    }
+
     public function getSettings()
     {
         $plugin = craft()->plugins->getPlugin('lantra');
@@ -53,7 +63,9 @@ class Lantra_SettingsService extends BaseApplicationComponent
      */
     public function updateSettings($currentVersion)
     {
-        $dbVersion = $this->getSetting('settingsVersion' , 0);
+        // direct from db so that it always loads correctly
+        $dbSettings = $this->getDbSettings();
+        $dbVersion = isset($dbSettings['settingsVersion']) ? $dbSettings['settingsVersion'] : $currentVersion;
 
         if ($dbVersion >= $currentVersion) {
             return;
@@ -87,27 +99,60 @@ class Lantra_SettingsService extends BaseApplicationComponent
 
         ## VERSION 2 - migrate system globals 08/05/19
         if ($dbVersion < 2) {
-
-            ## set defaults
-            craft()->lantra_settings->saveSetting('themeDateFormat', 'd-m-Y');
-            craft()->lantra_settings->saveSetting('themeDefaultLimit', 10);
-
-            $fields = [
-                'dateFormat',
-                'defaultLimit'
-            ];
-            foreach ($fields as $name) {
-                ## delete fields
-                $field = craft()->fields->getFieldByHandle($name);
-                if ($field) {
-                    craft()->fields->deleteFieldById($field->id);
+            // make sure fields still exist as globals
+            $field = craft()->fields->getFieldByHandle('dateFormat');
+            if ($field) {
+                ## set defaults
+                craft()->lantra_settings->saveSetting('themeDateFormat', 'd-m-Y');
+                craft()->lantra_settings->saveSetting('themeDefaultLimit', 10);
+                $fields = [
+                    'dateFormat',
+                    'defaultLimit'
+                ];
+                foreach ($fields as $name) {
+                    ## delete fields
+                    $field = craft()->fields->getFieldByHandle($name);
+                    if ($field) {
+                        craft()->fields->deleteFieldById($field->id);
+                    }
                 }
+                ## delete global set
+                craft()->globals->deleteSetById(489);
             }
-
-            ## delete global set
-            craft()->globals->deleteSetById(489);
-
             $dbVersion = 2;
+        }
+
+        ## VERSION 3 - move over user profile fields & theme fields
+        if ($dbVersion < 3) {
+            $globalsUserProfile = craft()->globals->getSetByHandle('userProfile');
+            if ($globalsUserProfile) {
+                $globals = [
+                    'userEditName',
+                    'userEditEmail',
+                    'userEditAddress',
+                    'userEditTelephone',
+                    'userEditDob',
+                    'userEditStartDate',
+                    'userEditRole',
+                    'userEditPhoto',
+                    'userEditCustomFields'
+                ];
+                foreach ($globals as $name) {
+                    if (isset($globalsUserProfile->$name)) {
+                        ## copy value from globals to settings
+                        $global = $globalsUserProfile->$name;
+                        craft()->lantra_settings->saveSetting($name, $global);
+                        ## delete field
+                        $field = craft()->fields->getFieldByHandle($name);
+                        if ($field) {
+                            craft()->fields->deleteFieldById($field->id);
+                        }
+                    }
+                }
+                ## delete global set
+                craft()->globals->deleteSetById($globalsUserProfile->id);
+            }
+            $dbVersion = 3;
         }
 
         $this->saveSetting('settingsVersion' , $dbVersion);
