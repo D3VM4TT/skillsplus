@@ -10,7 +10,7 @@ return array(
         'enableCsrfProtection' => false,
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
-        'devMode' => true,
+        'devMode' => false,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
@@ -21,7 +21,7 @@ return array(
         'environmentVariables' => array(
             'basePath' => '/datadisk/sites/' . $site . '/',
             'assetsPath' => '/datadisk/azureshare/' . $site . '/',
-            'server' => 'dev',
+            'server' => 'prod',
         ),
     ),
     /* local server */
