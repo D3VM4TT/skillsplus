@@ -13,7 +13,6 @@
 {% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'lastName, userCompanyName' %}
 {% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
-{% set excludeIdsString = 'not ' ~ currentUser.id %}
 
 {# company users #}
 {% set companyId = false %}
@@ -31,8 +30,11 @@
 {# orphaned users #}
 {% if filterUserStatus == 'orphaned' %}
     {% set allCompanies = craft.entries.section('companies').limit(null) %}
-    {% set relatedUserIds = craft.users.relatedTo(allCompanies).limit(null).ids() %}
-    {% set excludeIdsString = excludeIdsString ~ relatedUserIds|join(', not ') %}
+    {% set excludeIds = craft.users.relatedTo(allCompanies).limit(null).ids() %}
+    {% set excludeIds = excludeIds|merge([currentUser.id]) %}
+    {% set excludeIdsString = 'and, not ' ~ excludeIds|join(', not ') %}
+{% else %}
+    {% set excludeIdsString = 'not ' ~ currentUser.id %}
 {% endif %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
