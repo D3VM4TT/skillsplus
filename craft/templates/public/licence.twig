@@ -9,13 +9,13 @@
             <h2>Thank You</h2>
             <p>You will be redirected to your dashboard...</p>
             <script>setTimeout(function () {window.location.href = "/";}, 3000);</script>
-            </div>
+    </div>
         {% else %}
             <h2>Activate your Licence</h2>
             <p>Make a payment to activate your licence and authorize your account.</p>
             </div>
             <div class="page-form">
-            {{ include(template_from_string(globalsScheme.individualLicencePaypalButton)|raw) }}
+            {{ include(template_from_string(craft.lantra.setting('individualLicencePaypalButton'))|raw) }}
             <!-- PayPal Logo -->
             <div style="margin-top:40px;">
 <table border="0" cellpadding="10" cellspacing="0" align="center"><tr><td align="center"></td></tr><tr><td align="center"><a href="https://www.paypal.com/uk/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/uk/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/bdg_payments_by_pp_2line.png" border="0" alt="Payments by PayPal"></a></td></tr></table>
@@ -23,5 +23,5 @@
             <!-- PayPal Logo -->
             </div>
         {% endif %}
-    
+    </section>
 {% endblock %}

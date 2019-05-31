@@ -9,7 +9,12 @@ class Lantra_SettingsModel extends BaseModel
 
     private $entryFields = [
         'themeNavigationPublic',
-        'themeNavigationPrivate'
+        'themeNavigationPrivate',
+        'individualCompany'
+    ];
+
+    private $categoryFields = [
+        'individualJobRole',
     ];
 
     /*
@@ -49,9 +54,10 @@ class Lantra_SettingsModel extends BaseModel
             'schemeExpiryDate'                  => AttributeType::DateTime,
 
             ## individual company settings
-            'individualCompany'                 => AttributeType::Number,
+            'individualCompany'                 => AttributeType::Mixed,
             'individualLicenceDays'             => AttributeType::Number,
             'individualLicencePaypalButton'     => AttributeType::String,
+            'individualJobRole'                 => AttributeType::Mixed,
 
             ## notifications
             'notifyFooter'                      => AttributeType::String,
@@ -92,7 +98,8 @@ class Lantra_SettingsModel extends BaseModel
      * @return null|void
      */
     public function setAttributes($values) {
-	    parent::setAttributes($values);
+
+        parent::setAttributes($values);
 
 	    foreach ($this->assetFields as $key) {
             if ($this->$key && is_array($this->$key)) {
@@ -111,6 +118,16 @@ class Lantra_SettingsModel extends BaseModel
                     $entries[] = craft()->entries->getEntryById($entryId);
                 }
                 $this->$key = $entries;
+            }
+        }
+
+        foreach ($this->categoryFields as $key) {
+            if ($this->$key && is_array($this->$key)) {
+                $categories = [];
+                foreach($this->$key as $categoryId) {
+                    $categories[] = craft()->categories->getCategoryById($categoryId);
+                }
+                $this->$key = $categories;
             }
         }
 	}

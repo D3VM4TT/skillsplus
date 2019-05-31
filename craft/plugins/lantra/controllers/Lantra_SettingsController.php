@@ -27,6 +27,8 @@ class Lantra_SettingsController extends BaseController
 
         ## config for navigation entries
         $variables['pagesSection'] = ['section:14'];
+        $variables['companiesSection'] = ['section:3'];
+        $variables['jobRoleCategoryGroup'] = ['group:1'];
 
         $this->renderTemplate('lantra/settings', $variables);
     }

@@ -155,6 +155,37 @@ class Lantra_SettingsService extends BaseApplicationComponent
             $dbVersion = 3;
         }
 
+        ## VERSION 4 - move over licence globals
+        if ($dbVersion < 4) {
+            $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
+            if ($globalsScheme) {
+                $globals = [
+                    'schemeRemainingLicences',
+                    'schemeExpiryDate',
+                    'individualCompany',
+                    'individualLicenceDays',
+                    'individualLicencePaypalButton'
+                ];
+                foreach ($globals as $name) {
+                    if (isset($globalsScheme->$name)) {
+                        if ($name != 'individualCompany') {
+                            ## copy value from globals to settings
+                            $global = $globalsScheme->$name;
+                            craft()->lantra_settings->saveSetting($name, $global);
+                        }
+                        ## delete field
+                        $field = craft()->fields->getFieldByHandle($name);
+                        if ($field) {
+                            craft()->fields->deleteFieldById($field->id);
+                        }
+                    }
+                }
+                ## delete global set
+                craft()->globals->deleteSetById($globalsScheme->id);
+            }
+            $dbVersion = 4;
+        }
+
         $this->saveSetting('settingsVersion' , $dbVersion);
     }
 }

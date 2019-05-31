@@ -92,10 +92,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function addSchemeLicences($number = 1) {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences + (int) $number];
-        $globalsScheme->setContentFromPost($content);
-        return craft()->globals->saveContent($globalsScheme);
+        $schemeRemainingLicences = craft()->lantra_setting->getSetting('schemeRemainingLicences');
+        return craft()->lantra_setting->saveSetting($schemeRemainingLicences + (int) $number);
     }
 
     /**
@@ -106,10 +104,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function subtractSchemeLicences($number = 1) {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        $content = ['schemeRemainingLicences' => $globalsScheme->schemeRemainingLicences - (int) $number];
-        $globalsScheme->setContentFromPost($content);
-        return craft()->globals->saveContent($globalsScheme);
+        $schemeRemainingLicences = craft()->lantra_setting->getSetting('schemeRemainingLicences');
+        return craft()->lantra_setting->saveSetting($schemeRemainingLicences - (int) $number);
     }
 
     /**
@@ -118,8 +114,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return DateTime $schemeExpiryDate
      */
     function getSchemeExpiryDate() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return $globalsScheme->schemeExpiryDate;
+        return craft()->lantra_setting->getSetting('schemeExpiryDate');
     }
 
     /**
@@ -128,8 +123,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return int $number
      */
     function getSchemeLicences() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return (int) $globalsScheme->schemeRemainingLicences;
+        return craft()->lantra_setting->getSetting('schemeRemainingLicences');
     }
 
     /** Get individual days till expiry
@@ -138,7 +132,6 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return null
      */
     public function getIndividualLicenceDays() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return (int) $globalsScheme->individualLicenceDays;
+        return craft()->lantra_setting->getSetting('individualLicenceDays');
     }
 }

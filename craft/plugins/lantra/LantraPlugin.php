@@ -11,7 +11,7 @@ class LantraPlugin extends BasePlugin
     /*
      * Settings version (auto migrate settings)
      */
-    private $settingsVersion = 3;
+    private $settingsVersion = 4;
 
     function getName()
     {
@@ -273,6 +273,7 @@ class LantraPlugin extends BasePlugin
             'individualCompany'                 => AttributeType::Number,
             'individualLicenceDays'             => AttributeType::Number,
             'individualLicencePaypalButton'     => AttributeType::String,
+            'individualJobRole'                 => AttributeType::Mixed,
 
             ## notifications
             'notifyFooter'                      => AttributeType::String,

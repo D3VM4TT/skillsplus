@@ -849,8 +849,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return null
      */
     public function getIndividualCompany() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return $globalsScheme->individualCompany->first();
+        return craft()->lantra_settings->getSetting('individualCompany');
     }
 
     /** Get emails
@@ -891,8 +890,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return null
      */
     public function getIndividualJobRole() {
-        $globalsScheme = craft()->globals->getSetByHandle('globalsScheme');
-        return $globalsScheme->individualJobRole->first();
+        return craft()->lantra_settings->getSetting('individualJobRole');
     }
 
     /** Get expired users
