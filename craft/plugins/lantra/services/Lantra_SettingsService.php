@@ -206,9 +206,9 @@ class Lantra_SettingsService extends BaseApplicationComponent
                         if ($name == 'schemeLogo' && $globalsTheme->schemeLogo) {
                             craft()->lantra_settings->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->first()->id]);
                         } elseif ($name == 'themeNavigationPublic' && $globalsTheme->themeNavigationPublic) {
-                            craft()->lantra_settings->saveSetting('themeNavigationPublic', [$globalsTheme->themeNavigationPublic->ids()]);
+                            craft()->lantra_settings->saveSetting('themeNavigationPublic', $globalsTheme->themeNavigationPublic->ids());
                         } elseif ($name == 'themeNavigationPrivate' && $globalsTheme->themeNavigationPrivate) {
-                            craft()->lantra_settings->saveSetting('themeNavigationPrivate', [$globalsTheme->themeNavigationPrivate->ids()]);
+                            craft()->lantra_settings->saveSetting('themeNavigationPrivate', $globalsTheme->themeNavigationPrivate->ids());
                         } else {
                             craft()->lantra_settings->saveSetting($name, $global);
                         }
