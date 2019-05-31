@@ -159,6 +159,21 @@
             }) }}
 
             {{ forms.lightswitchField ({
+                instructions:   "If selected Results History will be hidden on CPD page.",
+                label:			"Result History Link",
+                id:				"themeResultHistoryLink",
+                name:			"themeResultHistoryLink",
+                on:		         settings.themeResultHistoryLink == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Result History",
+                id:				"themeDisableResultHistory",
+                name:			"themeDisableResultHistory",
+                on:		        settings.themeDisableResultHistory == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
                 label:			"Disable Certificates?",
                 id:				"themeDisableCertificates",
                 name:			"themeDisableCertificates",

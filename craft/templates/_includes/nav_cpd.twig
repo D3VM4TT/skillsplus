@@ -10,6 +10,11 @@
         <li>
             <a class="secondary-bg-hover" href="/profile">My Profile</a>
         </li>
+        {% if not craft.lantra.setting('themeDisableResultHistory') and craft.lantra.setting('themeResultHistoryLink') %}
+            <li>
+                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/archive">{{ craft.lantra.setting('themeResultHistoryTitle', 'Result Archive') }} </a>
+            </li>
+        {% endif %}
     </ul>
     {% if craft.lantra.canManage() %}
     <ul>

@@ -1812,8 +1812,13 @@ body.loading div.loading {
 
 /* Archive styles
 -------------------------------------------------- */
-body.archive div#job-role-cpd {
+body.archive div#job-role-cpd,
+section#archive.hidden {
     display:none;
+}
+
+body.archive section#archive {
+    display:block !important;
 }
 
 /* Print styles

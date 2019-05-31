@@ -246,6 +246,8 @@ class LantraPlugin extends BasePlugin
             'themeLoginMessage'                 => AttributeType::String,
             'themeDisableCertificates'          => AttributeType::Bool,
             'themeResultHistoryTitle'           => AttributeType::String,
+            'themeResultHistoryLink'            => AttributeType::Bool,
+            'themeDisableResultHistory'         => AttributeType::Bool,
             'themeColorPrimary'                 => AttributeType::String,
             'themeColorSecondary'               => AttributeType::String,
             'themeNavigationPublic'             => AttributeType::Mixed,
