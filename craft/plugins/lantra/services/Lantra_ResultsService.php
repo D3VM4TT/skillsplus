@@ -737,6 +737,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = []) {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        if (! $subordinates) {
+            return [];
+        }
         $subordinateIds = $this->getIds($subordinates);
 
         $header = [
