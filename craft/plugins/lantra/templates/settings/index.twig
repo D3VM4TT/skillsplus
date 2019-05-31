@@ -59,8 +59,6 @@
 
             <h2>Theme Settings</h2>
 
-            {# fields to be added
-
             {{ forms.textField ({
                 label:			"Scheme Name",
                 id:				"schemeName",
@@ -90,14 +88,14 @@
                 label:			"Theme Colour Primary",
                 id:				"themeColorPrimary",
                 name:			"themeColorPrimary",
-                on:		        settings.themeColorPrimary,
+                value:		    settings.themeColorPrimary,
             }) }}
 
             {{ forms.colorField ({
                 label:			"Theme Colour Secondary",
                 id:				"themeColorSecondary",
                 name:			"themeColorSecondary",
-                on:		        settings.themeColorSecondary,
+                value:		    settings.themeColorSecondary,
             }) }}
 
             {{ forms.elementSelectField ({
@@ -127,8 +125,6 @@
                 viewMode:           'list',
                 limit:              ''
             }) }}
-
-            #}
 
             {{ forms.textField ({
                 label:			"Theme Date Format (default d-m-Y)",

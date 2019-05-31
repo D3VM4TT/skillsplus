@@ -45,7 +45,6 @@ class Lantra_StructureService extends BaseApplicationComponent
     }
 
     private function getJsTreeRoot() {
-        $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
         $user = craft()->userSession->getUser();
         if ($user->admin or $user->isInGroup('schemeManagers')) {
             $children[] = $this->createNode('scheme', 'managers', 's', 'Scheme Managers', 'group', true);
@@ -78,7 +77,7 @@ class Lantra_StructureService extends BaseApplicationComponent
 
         return [
             'icon'  => '/assets/img/tree-root.png',
-            'text'  => $globalsTheme->schemeName,
+            'text'  => craft()->lantra_settings->getSetting('schemeName'),
             'state' => ['opened' => true],
             'children' => $children
         ];

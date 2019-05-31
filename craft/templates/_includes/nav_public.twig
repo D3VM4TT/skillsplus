@@ -1,5 +1,5 @@
 <nav class="menu-pages">
-    {% for pageEntry in globalsTheme.themeNavigationPublic %}
+    {% for pageEntry in craft.lantra.setting('themeNavigationPublic') %}
         <a class="button hollow primary-bg" href="{{ pageEntry.url }}">{{ pageEntry.title }}</a>
     {% endfor %}
 </nav>

@@ -10,7 +10,7 @@
             <a href="/profile"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {{ currentUserCompany|default('') }}
             <h2>Hello {{ currentUser.firstName }},</h2>
-            <p class="welcome-back">welcome back to your {{ globalsTheme.schemeName }} dashboard.</p>
+            <p class="welcome-back">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
         </div>
         <div class="page-content">
             {% if craft.lantra.canManage() %}

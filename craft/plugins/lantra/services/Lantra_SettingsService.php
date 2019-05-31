@@ -186,6 +186,44 @@ class Lantra_SettingsService extends BaseApplicationComponent
             $dbVersion = 4;
         }
 
+        ## VERSION 5 - move over theme settings
+        if ($dbVersion < 5) {
+            $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
+            if ($globalsTheme) {
+                $globals = [
+                    'schemeName',
+                    'schemeDescription',
+                    'themeColorPrimary',
+                    'themeColorSecondary',
+                    'schemeLogo',
+                    'themeNavigationPublic',
+                    'themeNavigationPrivate'
+                ];
+                foreach ($globals as $name) {
+                    if (isset($globalsTheme->$name)) {
+                        ## copy value from globals to settings
+                        $global = $globalsTheme->$name;
+                        if ($name == 'schemeLogo' && $globalsTheme->schemeLogo) {
+                            craft()->lantra_settings->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->first()->id]);
+                        } elseif ($name == 'themeNavigationPublic' && $globalsTheme->themeNavigationPublic) {
+                            craft()->lantra_settings->saveSetting('themeNavigationPublic', [$globalsTheme->themeNavigationPublic->ids()]);
+                        } elseif ($name == 'themeNavigationPrivate' && $globalsTheme->themeNavigationPrivate) {
+                            craft()->lantra_settings->saveSetting('themeNavigationPrivate', [$globalsTheme->themeNavigationPrivate->ids()]);
+                        } else {
+                            craft()->lantra_settings->saveSetting($name, $global);
+                        }
+                        ## delete field
+                        $field = craft()->fields->getFieldByHandle($name);
+                        if ($field) {
+                            craft()->fields->deleteFieldById($field->id);
+                        }
+                    }
+                }
+            }
+
+            $dbVersion = 5;
+        }
+
         $this->saveSetting('settingsVersion' , $dbVersion);
     }
 }

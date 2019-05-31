@@ -7,7 +7,7 @@
 </div>
 <div id="menu">
 <ul>
-{% for pageEntry in globalsTheme.themeNavigationPublic %}
+{% for pageEntry in craft.lantra.setting('themeNavigationPublic') %}
 <li>
 <a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
 </li>
@@ -28,7 +28,7 @@
 </div>
 <div id="menu">
 <ul>
-{% for pageEntry in globalsTheme.themeNavigationPrivate %}
+{% for pageEntry in craft.lantra.setting('themeNavigationPrivate') %}
 <li>
 <a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
 </li>

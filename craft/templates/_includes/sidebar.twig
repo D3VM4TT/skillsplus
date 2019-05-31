@@ -7,8 +7,8 @@
     </div>
     <div class="primary-bg menu-hide">
         <div class="menu-intro">
-            <h1>{{ globalsTheme.schemeName }}</h1>
-            <p>{{ globalsTheme.schemeDescription }}</p>
+            <h1>{{ craft.lantra.setting('schemeName') }}</h1>
+            <p>{{ craft.lantra.setting('schemeDescription') }}</p>
         </div>
         <div class="container-menus">
             {% if currentUser %}
@@ -27,15 +27,16 @@
         </div>
     </div>
 #}
+{% set schemeLogo = craft.lantra.setting('schemeLogo') %}
     <div class="container-sidebar">
     {% if not currentUser %}
         <div class="sidebar-form">
         <div class="scheme-logo">
         <a href="/">
-            {%  if globalsTheme.schemeLogo|length %}
-                <img src="{{ globalsTheme.schemeLogo.first().url }}">
+            {% if schemeLogo %}
+                <img src="{{ schemeLogo.url }}">
             {% else %}
-                {{  globalsTheme.schemeName }}
+                {{ craft.lantra.setting('schemeName') }}
             {% endif %}
         </a>
         </div>
@@ -56,10 +57,10 @@
     <div class="sidebar-form">
         <div class="scheme-logo">
             <a href="/">
-                {%  if globalsTheme.schemeLogo|length %}
-                    <img src="{{ globalsTheme.schemeLogo.first().url }}">
+                {% if schemeLogo %}
+                    <img src="{{ schemeLogo.url }}">
                 {% else %}
-                    {{  globalsTheme.schemeName }}
+                    {{ craft.lantra.setting('schemeName') }}
                 {% endif %}
             </a>
         </div>

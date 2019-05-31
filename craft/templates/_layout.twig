@@ -18,9 +18,9 @@
     <!-- Basic Page Needs
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta charset="utf-8">
-    <title>{{ globalsTheme.schemeName }}</title>
-    <meta name="description" content="{{ globalsTheme.schemeDescription }}">
-    <meta name="author" content="{{ globalsTheme.schemeName }}">
+    <title>{{ craft.lantra.setting('schemeName') }}</title>
+    <meta name="description" content="{{ craft.lantra.setting('schemeDescription') }}">
+    <meta name="author" content="{{ craft.lantra.setting('schemeName') }}">
 
     <!-- Mobile Specific Metas
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -57,37 +57,37 @@
         .primary-bg.active,
         .primary-bg.show,
         .button.hollow:hover{
-            background-color: {{ globalsTheme.themeColorPrimary }}
+            background-color: {{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .primary-color,
         .button.hollow a,
         form label {
-            color: {{ globalsTheme.themeColorPrimary }}
+            color: {{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .button.hollow,
         .primary-border,
         .button.hollow.white:hover {
-            border-color:{{ globalsTheme.themeColorPrimary }}
+            border-color:{{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .secondary-color {
-            color: {{ globalsTheme.themeColorSecondary }}
+            color: {{ craft.lantra.setting('themeColorSecondary') }}
         }
         .secondary-bg,
         .secondary-bg-hover:hover,
         .nav-open > a {
-            background-color: {{ globalsTheme.themeColorSecondary }}
+            background-color: {{ craft.lantra.setting('themeColorSecondary') }}
         }
 
         .secondary-border {
-            border-color: {{ globalsTheme.themeColorSecondary }}
+            border-color: {{ craft.lantra.setting('themeColorSecondary') }}
         }
 
         .secondary-bg,
         .button.primary-bg:hover {
-            background-color: {{ globalsTheme.themeColorSecondary }}
+            background-color: {{ craft.lantra.setting('themeColorSecondary') }}
         }
     </style>
 

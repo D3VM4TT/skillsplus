@@ -10,7 +10,9 @@ class LantraVariable
      */
     public function __construct() {
         $this->plugin = craft()->plugins->getPlugin('lantra');
-        $this->settings = $this->plugin->getSettings();
+        $settingsModel = new Lantra_SettingsModel;
+        $settingsModel->setAttributes($this->plugin->getSettings());
+        $this->settings = $settingsModel;
     }
 
     /**
@@ -52,6 +54,9 @@ class LantraVariable
      */
     public function setting($key, $default = '') {
         $setting = $this->settings->getAttribute($key);
+        if ($key == 'schemeLogo' && $setting) {
+            return $setting[0];
+        }
         return $setting ? $setting : $default;
     }
 
@@ -160,11 +165,9 @@ class LantraVariable
      */
     public function jsTreeData($userId = null, $currentNode = 0)
     {
-        $globalsTheme = craft()->globals->getSetByHandle('globalsTheme');
-
         $js = [
             'icon'  => '/assets/img/tree-root.png',
-            'text'  => $globalsTheme->schemeName,
+            'text'  => craft()->lantra_settings->getSetting('schemeName'),
             'state' => ['opened' => true],
         ];
 

@@ -11,7 +11,7 @@ class LantraPlugin extends BasePlugin
     /*
      * Settings version (auto migrate settings)
      */
-    private $settingsVersion = 4;
+    private $settingsVersion = 5;
 
     function getName()
     {
