@@ -15,7 +15,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
-        $message = "Your scheme expires on " . date('d-m-Y', $expiryDate->getTimestamp()) . ".";
+        $variables = ['expiryDate' => $expiryDate];
+        $template = $this->getNotifySetting('userExpiry', "Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.");
+        $message = craft()->templates->renderString($template, $variables);
         foreach ($criteria->find() as $manager) {
             $this->notify($manager->email, $subject, $message);
         }
@@ -31,7 +33,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
        if ($criteria->total()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
            foreach ($criteria->find() as $user) {
-               $message = "Your individual licence expires on " . date('d-m-Y', $user->userExpiryDate->getTimestamp()) . ".";
+               $variables = ['user' => $user];
+               $template = $this->getNotifySetting('userExpiry', "Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.");
+               $message = craft()->templates->renderString($template, $variables);
                $this->notify($user->email, $subject, $message);
            }
        }
@@ -51,7 +55,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
         foreach ($criteria->find() as $manager) {
             $remainingLicences = craft()->lantra_licence->getSchemeLicences();
             if ($remainingLicences <= 10) {
-                $message = "Your scheme has  " . craft()->lantra_licence->getSchemeLicences() . " remaining licences.";
+                $variables = ['title' =>  craft()->getSiteName(), 'licences' => craft()->lantra_licence->getSchemeLicences()];
+                $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
+                $message = craft()->templates->renderString($template, $variables);
                 $this->notify($manager->email, $subject, $message);
             }
         }
@@ -66,7 +72,9 @@ class Lantra_NotifyService extends BaseApplicationComponent
                 foreach($company->companyPrimaryManagers as $primaryManager) {
                     $emails[] = $primaryManager->email;
                 }
-                $message = $company->title . " has  " . $remainingLicences . " remaining licences.";
+                $variables = ['title' =>  $company->title, 'licences' => $remainingLicences];
+                $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
+                $message = craft()->templates->renderString($template, $variables);
                 $this->notify($emails, $subject, $message);
             }
         }
@@ -79,7 +87,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $user = craft()->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
-        $template = $this->getNotifySetting('comment', "{{ entry.title }}\n\n{{ user.fullName}}: {{ comment }}");
+        $template = $this->getNotifySetting('comment', "{{ entry.title }} - {{ user.fullName}}: {{ comment }}");
         $message = craft()->templates->renderString($template, $variables);
         // manager commenting - notify user
         if ($userId != $entry->authorId) {
@@ -103,7 +111,7 @@ class Lantra_NotifyService extends BaseApplicationComponent
         $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
         $variables = ['entry' => $moduleEntry, 'user' => $user];
-        $template = $this->getNotifySetting('moduleResult', "{{ user.fullName}} has completed {{ entry.title }}");
+        $template = $this->getNotifySetting('moduleResult', "{{ user.fullName}} has completed {{ entry.title }}.");
         $message = craft()->templates->renderString($template, $variables);
 
         // send the emails to managers
