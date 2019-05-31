@@ -281,7 +281,7 @@
             }) }}
 
             {{ forms.textareaField ({
-                instructions:   "Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
+                instructions:   "Default: Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
                 label:			"Message Scheme Expiry",
                 id:				"notifySchemeExpiry",
                 name:			"notifySchemeExpiry",
@@ -296,7 +296,7 @@
             }) }}
 
             {{ forms.textareaField ({
-                instructions:   "Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.",
+                instructions:   "Default: Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.",
                 label:			"Message User Expiry",
                 id:				"notifyUserExpiry",
                 name:			"notifyUserExpiry",
