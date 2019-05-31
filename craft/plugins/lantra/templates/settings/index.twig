@@ -202,6 +202,14 @@
                 value:		    settings.notifySubjectBlockedResult
             }) }}
 
+            {{ forms.textareaField ({
+                instructions:   "Available variables: {{ entry }} {{ user }}",
+                label:			"Message Blocked Result",
+                id:				"notifyBlockedResult",
+                name:			"notifyBlockedResult",
+                value:		    settings.notifyBlockedResult
+            }) }}
+
             {{ forms.textField ({
                 label:			"Subject Endorsement Result",
                 id:				"notifySubjectEndorsementResult",
@@ -209,11 +217,28 @@
                 value:		    settings.notifySubjectEndorsementResult
             }) }}
 
+            {{ forms.textareaField ({
+                instructions:   "Available variables: {{ entry }} {{ user }}",
+                label:			"Message Endorsement Result",
+                id:				"notifyEndorsementResult",
+                name:			"notifyEndorsementResult",
+                value:		    settings.notifyEndorsementResult
+            }) }}
+
+            {#
+
             {{ forms.textField ({
                 label:			"Subject Licences Remaining",
                 id:				"notifySubjectLicencesRemaining",
                 name:			"notifySubjectLicencesRemaining",
                 value:		    settings.notifySubjectLicencesRemaining
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Message Licences Remaining",
+                id:				"notifyLicencesRemaining",
+                name:			"notifyLicencesRemaining",
+                value:		    settings.notifyLicencesRemaining
             }) }}
 
             {{ forms.textField ({
@@ -223,13 +248,32 @@
                 value:		    settings.notifySubjectManagerSummary
             }) }}
 
+            {{ forms.textareaField ({
+                label:			"Message Manager Summary",
+                id:				"notifyManagerSummary",
+                name:			"notifyManagerSummary",
+                value:		    settings.notifyManagerSummary
+            }) }}
+
+            #}
+
             {{ forms.textField ({
+                instructions:   "Available variables: {{ entry }} {{ user }}",
                 label:			"Subject Module Result",
                 id:				"notifySubjectModuleResult",
                 name:			"notifySubjectModuleResult",
                 value:		    settings.notifySubjectModuleResult
             }) }}
 
+            {{ forms.textareaField ({
+                instructions:   "Available variables: {{ entry }} {{ user }}",
+                label:			"Message Module Result",
+                id:				"notifyModuleResult",
+                name:			"notifyModuleResult",
+                value:		    settings.notifyModuleResult
+            }) }}
+
+            {#
             {{ forms.textField ({
                 label:			"Subject Scheme Expiry",
                 id:				"notifySubjectSchemeExpiry",
@@ -237,11 +281,41 @@
                 value:		    settings.notifySubjectSchemeExpiry
             }) }}
 
+            {{ forms.textareaField ({
+                label:			"Message Scheme Expiry",
+                id:				"notifySchemeExpiry",
+                name:			"notifySchemeExpiry",
+                value:		    settings.notifySchemeExpiry
+            }) }}
+
             {{ forms.textField ({
                 label:			"Subject User Expiry",
                 id:				"notifySubjectUserExpiry",
                 name:			"notifySubjectUserExpiry",
                 value:		    settings.notifySubjectUserExpiry
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Message User Expiry",
+                id:				"notifyUserExpiry",
+                name:			"notifyUserExpiry",
+                value:		    settings.notifyUserExpiry
+            }) }}
+            #}
+
+            {{ forms.textField ({
+                label:			"Subject Comment",
+                id:				"notifySubjectComment",
+                name:			"notifySubjectComment",
+                value:		    settings.notifySubjectComment
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Available variables: {{ entry }} {{ user }} {{ comment}}",
+                label:			"Message Comment",
+                id:				"notifyComment",
+                name:			"notifyComment",
+                value:		    settings.notifyComment
             }) }}
 
             {{ forms.textareaField ({

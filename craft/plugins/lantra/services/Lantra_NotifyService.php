@@ -76,10 +76,11 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @param EntryModel $entry
      */
     function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
-        $subject = $this->getNotifySetting('subjectNewComment', 'New Comment');
         $user = craft()->users->getUserById($userId);
-        $message = $entry->title . "\n\n";
-        $message .= $user->getFullName() . ": " . $comment . "\n\n";
+        $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
+        $subject = $this->getNotifySetting('subjectComment', 'New Comment');
+        $template = $this->getNotifySetting('comment', "{{ entry.title }}\n\n{{ user.fullName}}: {{ comment }}");
+        $message = craft()->templates->renderString($template, $variables);
         // manager commenting - notify user
         if ($userId != $entry->authorId) {
             $this->notify($entry->getAuthor()->email, $subject, $message);
@@ -98,14 +99,16 @@ class Lantra_NotifyService extends BaseApplicationComponent
     * @throws mixed
     */
     function sendModuleResult(EntryModel $entry) {
-        $module = $entry->resultModule->first();
-        $author = $entry->getAuthor();
-        $authorFullName = $author->getFullName();
+        $moduleEntry = $entry->resultModule->first();
+        $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
-        $message = $authorFullName  . " has completed " . $module->title;
+        $variables = ['entry' => $moduleEntry, 'user' => $user];
+        $template = $this->getNotifySetting('moduleResult', "{{ user.fullName}} has completed {{ entry.title }}");
+        $message = craft()->templates->renderString($template, $variables);
+
         // send the emails to managers
-        $this->notify($entry->getAuthor()->email, $subject, $message);
-        $this->notifyManagers($entry->getAuthor(), $subject, $message);
+        $this->notify($user->email, $subject, $message);
+        $this->notifyManagers($user, $subject, $message);
     }
 
     /**
@@ -115,12 +118,13 @@ class Lantra_NotifyService extends BaseApplicationComponent
      */
     function sendManagerBlockedResult(EntryModel $resultEntry) {
         $unitEntry = $resultEntry->resultUnit->first();
-        $author = $resultEntry->getAuthor();
-        $authorFullName = $author->getFullName();
+        $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
-        $message = $authorFullName  . " has run out of attempts for unit " . $unitEntry->id . ' and the result is blocked.';
+        $variables = ['entry' => $unitEntry, 'user' => $user];
+        $template = $this->getNotifySetting('blockedResult', "{{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.");
+        $message = craft()->templates->renderString($template, $variables);
         // send the emails to managers
-        $this->notifyManagers($author, $subject, $message);
+        $this->notifyManagers($user, $subject, $message);
     }
 
     /**
@@ -131,12 +135,13 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @throws Exception
      */
     function sendManagerEndorsementResult(EntryModel $resultEntry, $level = 1) {
-        $author = $resultEntry->getAuthor();
-        $authorFullName = $author->getFullName();
+        $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
-        $message = $authorFullName  . " has submitted a result " . $resultEntry->title . '.';
+        $variables = ['entry' => $resultEntry, 'user' => $user];
+        $template = $this->getNotifySetting('endorsementResult', "{{ user.fullName}} has submitted a result {{ entry.title }}.");
+        $message = craft()->templates->renderString($template, $variables);
         // send the emails to managers
-        $manager = craft()->lantra_users->getUserManagerByLevel($author, $level);
+        $manager = craft()->lantra_users->getUserManagerByLevel($user, $level);
         if ($manager) {
             $this->notify($manager->email, $subject, $message);
         }
@@ -239,6 +244,8 @@ class Lantra_NotifyService extends BaseApplicationComponent
         }
         // add notification footer
         $message .= $this->getNotifySetting('footer');
+        $message = craft()->templates->render('lantra/emails/default', ['message' => $message]);
+
         // build the email
         $email = new EmailModel();
         $email->subject = $subject;

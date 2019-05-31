@@ -281,6 +281,15 @@ class LantraPlugin extends BasePlugin
             'notifySubjectModuleResult'         => AttributeType::String,
             'notifySubjectSchemeExpiry'         => AttributeType::String,
             'notifySubjectUserExpiry'           => AttributeType::String,
+            'notifySubjectComment'              => AttributeType::String,
+            'notifyBlockedResult'               => AttributeType::String,
+            'notifyEndorsementResult'           => AttributeType::String,
+            'notifyLicencesRemaining'           => AttributeType::String,
+            'notifyManagerSummary'              => AttributeType::String,
+            'notifyModuleResult'                => AttributeType::String,
+            'notifySchemeExpiry'                => AttributeType::String,
+            'notifyUserExpiry'                  => AttributeType::String,
+            'notifyComment'                     => AttributeType::String,
 
             ## user profile
             'userEditName'                      => AttributeType::Bool,
