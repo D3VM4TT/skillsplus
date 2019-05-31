@@ -1810,6 +1810,56 @@ body.loading div.loading {
     display: none;
 }*/
 
+/* Archive styles
+-------------------------------------------------- */
+body.archive div#job-role-cpd {
+    display:none;
+}
+
+/* Print styles
+-------------------------------------------------- */
+body.print div.container-sidebar,
+body.print footer,
+body.print div#notifications,
+body.print div#server,
+body.print div.loading,
+body.print div.page-subHeader,
+body.print div.link-toggle,
+body.print div.account-details-toggle,
+body.print div.module-group-tabs,
+body.print div.module-tabs,
+body.print div.unit-group div.status,
+body.print a.button,
+body.print div.cpd-icons {
+    display:none !important
+}
+
+body.print div#account-details-expand,
+body.print div.groups-tab-group {
+    display:block !important;
+}
+
+body.print .container-content {
+    width:100% !important;
+}
+
+body.print div.page-header {
+    background: none !important;
+}
+
+body.print .page-header h2 {
+    color:#000000 !important;
+}
+
+body.print div.groups-tab-group {
+    margin:0 0 20px 0;
+}
+
+body.print a {
+    text-decoration: none;
+    cursor: text;
+}
+
 /*Media Queries
 -------------------------------------------------- */
 @media screen and (max-width: 1400px) {

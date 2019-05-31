@@ -5,6 +5,12 @@
         {% requireLogin %}
     {% endif %}
 {% endif %}
+{% set pageClass = '' %}
+{% if craft.request.getSegment(3) == 'archive' %}
+    {% set pageClass = 'archive' %}
+{% elseif craft.request.getSegment(3) == 'print' %}
+    {% set pageClass = 'print' %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,7 +94,8 @@
     {% block css %}{% endblock %}
 
 </head>
-<body class="{% if currentUser %}logged-in{% endif %}">
+
+<body class="{% if currentUser %}logged-in{% endif %} {{ pageClass }}">
 
         {% set server = craft.config.environmentVariables.server|default('dev') %}
         {% if server != 'prod' %}

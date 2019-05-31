@@ -9,6 +9,7 @@
 
 <article class="cpd">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
+    <div id="job-role-cpd">
 {% if not cpdUser.userRole.total %}
     <h2>Job Role</h2>
     <div class="col-pd-btm col-flex">
@@ -286,7 +287,15 @@
         {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired').id('and, not ' ~ existingResultIdsString) %}
     {% endif %}
 {% endif %}
+    </div>
 {% if resultArchive|length %}
     {% include '_includes/resultArchive' with {resultEntries:resultArchive} %}
 {% endif %}
+
+    <p style="text-align:right">
+        <a class="button no-shadow primary-bg" target="_blank" href="/cpd/{{ cpdUser.id }}/print">
+            <span>Print Version</span>
+        </a>
+    </p>
+    
 </article>
