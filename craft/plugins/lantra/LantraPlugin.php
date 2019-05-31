@@ -108,6 +108,7 @@ class LantraPlugin extends BasePlugin
                     $entry->setContentFromPost(['resultStatus' => 'endorsed']);
                     if (!$oldEntry) {
                         $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                        $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
                     }
                 }
                 // force clear endorsed date if pending
@@ -115,6 +116,7 @@ class LantraPlugin extends BasePlugin
                     $entry->setContentFromPost(['resultEndorsedDate' => null]);
                 } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                    $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
                 }
                 if ($entry->type == 'unitResult') {
                     $unitEntry = $entry->resultUnit->first();
