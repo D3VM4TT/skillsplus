@@ -65,7 +65,7 @@ class Lantra_SettingsService extends BaseApplicationComponent
     {
         // direct from db so that it always loads correctly
         $dbSettings = $this->getDbSettings();
-        $dbVersion = isset($dbSettings['settingsVersion']) ? $dbSettings['settingsVersion'] : $currentVersion;
+        $dbVersion = isset($dbSettings['settingsVersion']) ? $dbSettings['settingsVersion'] : 0;
 
         if ($dbVersion >= $currentVersion) {
             return;
