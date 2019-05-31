@@ -7,7 +7,7 @@
     {% set readOnly = currentUser.managerReadOnly %}
 {% endif %}
 
-<article class="cpd">
+<article id="cpd-wrapper" class="cpd" data-ref="{{ craft.request.getParam('ref')|default('') }}">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
 {% if not cpdUser.userRole.total %}
@@ -139,13 +139,13 @@
                                                                 {% if not readOnly and unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                     {% set managerDelete = unitResultEntry.resultOwner.total and unitResultEntry.resultOwner.first.id == currentUser.id %}
                                                                     {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                                                        <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
+                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
                                                                             data-tooltip title="Delete this result">
                                                                             <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
                                                                         </a>
                                                                     {% endif %}
                                                                     {% if unitResultEntry.resultStatus == 'pending' %}
-                                                                        <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
+                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
                                                                         data-tooltip title="Endorse this result">
                                                                         <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                     {% endif %}
@@ -213,13 +213,13 @@
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 {% set managerDelete = userResultEntry.resultOwner.total and userResultEntry.resultOwner.first.id == currentUser.id %}
                                                                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                                                    <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
+                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
                                                                         data-tooltip title="Delete this result">
                                                                         <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
                                                                     </a>
                                                                 {% endif %}
                                                                 {% if userResultEntry.resultStatus == 'pending' %}
-                                                                    <a class="action" href="#" data-action="lantra/entries/endorseEvidence" data-id="{{ userResultEntry.id }}"
+                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/endorseEvidence" data-id="{{ userResultEntry.id }}"
                                                                     data-tooltip title="Endorse this result">
                                                                     <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                 {% endif %}

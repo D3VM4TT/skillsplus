@@ -36,6 +36,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public function actionDeleteEntry() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
+        $return = $this->_returnRef(craft()->request->getUrlReferrer());
         // get the posted entryId
         $entryId = craft()->request->getPost('entryId');
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
@@ -48,7 +49,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         }
         // save disabled entry
         $this->_disableEntry($entry);
-        $this->_returnMessage('Entry has been removed.', true, craft()->request->getUrlReferrer());
+        $this->_returnMessage('Entry has been removed.', true, $return);
     }
 
     /**
@@ -59,6 +60,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public function actionEndorseEvidence() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
+        $return = $this->_returnRef(craft()->request->getUrlReferrer());
         // get all the posted entryId(s)
         if (false != $entryId = craft()->request->getPost('entryId')) {
             $results = [['entryId' => $entryId]];
@@ -80,9 +82,21 @@ class Lantra_EntriesController extends Lantra_BaseController {
                 $count ++;
             }
         }
-        $this->_returnMessage($count . ' results endorsed.', true, craft()->request->getUrlReferrer());
+        $this->_returnMessage($count . ' results endorsed.', true, $return);
     }
 
+    /**
+     * @param $url
+     * @return string
+     */
+    private function _returnRef($url) {
+        $ref = craft()->request->getPost('ref');
+        if ($ref) {
+            $refString = '?ref=' . $ref;
+            $url = str_replace($refString, '', $url) . $refString;
+        }
+        return $url;
+    }
     /**
      * @param $entry
      * @throws mixed

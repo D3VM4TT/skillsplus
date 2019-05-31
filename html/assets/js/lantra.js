@@ -146,14 +146,14 @@ $(document).ready(function(){
             if ( ! confirm('Are you sure you want to delete this entry?')) {
                 return false;
             }
-            var data = {entryId: $(this).data('id')};
+            var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
             deleteRow = true;
         }
         if (action == 'lantra/entries/endorseEvidence') {
             if ( ! confirm('Are you sure you want to endorse this result?')) {
                 return false;
             }
-            var data = {entryId: $(this).data('id')};
+            var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
         }
         if (action == 'lantra/categories/deleteCategory') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
@@ -356,10 +356,10 @@ $(document).ready(function(){
     $("#account-details-expand").slideToggle(400);
     });
 
+    /* cpd module groups and tabs */
     $('.tabgroup > div').hide();
-    $('.tabgroup > div:first-of-type').show();
-    $('.module-tabs > ul > li:first-of-type > a').addClass('active');
-    $('.module-group-tabs > ul > li:first-of-type > a').addClass('active');
+    $('.module-group-tabs').hide();
+
     $('.tabs a').click(function(e){
         e.preventDefault();
         var $this = $(this),
@@ -370,21 +370,25 @@ $(document).ready(function(){
         $this.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
-        // make sure tab is selected too
-        if (target.match("^#module")) {
-            var t = $(this).closest('div.groups-tab-group');
-            $('a[href="#' + t.attr('id') + '"]').click();
+        // make sure first unit group is shown
+        if (target.startsWith("#tab")) {
+            $(target).find('ul.tabs:first-of-type').find('li:first-of-type a').click();
         }
     });
 
     // add on load module click
-    var m = window.location.hash.replace('m', 'module');
-    if (m) {
-        $('.tabs a[href="' + m + '"]').click();
+    var cpdWrapper = $('#cpd-wrapper');
+    if ( cpdWrapper.data('ref') ) {
+        var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
+            moduleGroupLinkId = moduleLink.closest('div.groups-tab-group').attr('id');
+        $('a[href="#' + moduleGroupLinkId + '"]').click();
+        moduleLink.click();
     }
     else {
-        $('.tabs a[href^="#module"]').eq(0).click();
+       $('.tabs:first-of-type li:first-of-type a').click();
     }
+
+    $('.module-group-tabs').show();
 
     $('input#companyManagers').change(function(){
         if ($(this).is(':checked')){
