@@ -920,7 +920,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     private function getIds($array = []){
         $ids = [];
-        if (is_array($array) && count($array)) {
+        if ((is_array($array) || is_object($array)) && count($array)) {
             foreach ($array as $item) {
                 $ids [] = $item->id;
             }

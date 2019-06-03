@@ -670,7 +670,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $criteria->relatedTo = $relatedTo;
         }
         // get the subordinate ids if not admin or scheme manager
-        if ( ! $manager->admin && ! $manager->isInGroup('SchemeManager')) {
+        if ( ! $manager->admin && ! $manager->isInGroup('schemeManagers')) {
             $subordinateIds = $this->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
