@@ -96,7 +96,7 @@
             </ul>
         </li>
         {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
-        {% if (pendingEntryCount) %}
+        {% if not currentUser.managerReadOnly and pendingEntryCount %}
             <li class="secondary-bg-hover">
                 <a href="/management/endorsements">Endorsements ({{ pendingEntryCount }})</a>
             </li>
