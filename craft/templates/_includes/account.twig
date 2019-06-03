@@ -11,7 +11,7 @@
             <p class="link-bold">{{ cpdUser.id }}</p>
         </div>
         {% endif %}
-        {% if accountSettings.startDate is defined and accountSettings.startDate %}
+        {% if accountSettings.userStartDate is defined and accountSettings.userStartDate %}
             <h5 class="primary-color">Start Date:</h5>
             <p class="link-bold">{{ cpdUser.userStartDate|date(dateFormat) }}</p>
         {% endif %}
