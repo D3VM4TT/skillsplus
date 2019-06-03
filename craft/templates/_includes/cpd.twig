@@ -288,7 +288,7 @@
     {% endif %}
 {% endif %}
     </div>
-    {% if not craft.lantra.setting('themeDisableResultHistory') %}
+    {% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
         {% include '_includes/resultArchive' with {resultEntries:resultArchive} %}
     {% endif %}
     <p style="text-align:right">
