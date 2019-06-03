@@ -92,8 +92,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function addSchemeLicences($number = 1) {
-        $schemeRemainingLicences = craft()->lantra_setting->getSetting('schemeRemainingLicences');
-        return craft()->lantra_setting->saveSetting($schemeRemainingLicences + (int) $number);
+        $schemeRemainingLicences = craft()->lantra_settings->getSetting('schemeRemainingLicences');
+        return craft()->lantra_settings->saveSetting($schemeRemainingLicences + (int) $number);
     }
 
     /**
@@ -104,8 +104,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function subtractSchemeLicences($number = 1) {
-        $schemeRemainingLicences = craft()->lantra_setting->getSetting('schemeRemainingLicences');
-        return craft()->lantra_setting->saveSetting($schemeRemainingLicences - (int) $number);
+        $schemeRemainingLicences = craft()->lantra_settings->getSetting('schemeRemainingLicences');
+        return craft()->lantra_settings->saveSetting($schemeRemainingLicences - (int) $number);
     }
 
     /**
@@ -114,7 +114,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return DateTime $schemeExpiryDate
      */
     function getSchemeExpiryDate() {
-        return craft()->lantra_setting->getSetting('schemeExpiryDate');
+        return craft()->lantra_settings->getSetting('schemeExpiryDate');
     }
 
     /**
@@ -123,7 +123,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return int $number
      */
     function getSchemeLicences() {
-        return craft()->lantra_setting->getSetting('schemeRemainingLicences');
+        return craft()->lantra_settings->getSetting('schemeRemainingLicences');
     }
 
     /** Get individual days till expiry
@@ -132,6 +132,6 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return null
      */
     public function getIndividualLicenceDays() {
-        return craft()->lantra_setting->getSetting('individualLicenceDays');
+        return craft()->lantra_settings->getSetting('individualLicenceDays');
     }
 }
