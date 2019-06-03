@@ -779,10 +779,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $rows = [$header];
         foreach($subordinates as $user) {
             $company = craft()->lantra_users->userCompany($user);
-            $label = craft()->lantra_structure->getCompanyLabel($company);
             $role = $user->userRole->first();
             $row = [
-                $company ? $label : 'unknown',
+                $company ? $company->companyLabel : 'unknown',
                 $user->id,
                 $user->fullName,
                 $user->email,
@@ -852,11 +851,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $rows = [$header];
         foreach($subordinates as $user) {
             $company = craft()->lantra_users->userCompany($user);
-            $label = craft()->lantra_structure->getCompanyLabel($company);
             $row = [
                 $user->id,
                 $user->fullName,
-                $company ? $label : 'unknown'
+                $company->companyLabel
             ];
             foreach ($headerIds as $id) {
                 $value = 'N/A';
@@ -961,15 +959,19 @@ class Lantra_ResultsService extends BaseApplicationComponent
             foreach ($results as $id => $result) {
                 $user = $result->author;
                 $company = craft()->lantra_users->userCompany($user);
-                $label = craft()->lantra_structure->getCompanyLabel($company);
                 $role = $user->userRole->first();
+                $title = $result->title;
+                if ($result->type == 'unitResult') {
+                    $resultUnit = $result->resultUnit->first();
+                    $title = $resultUnit ? $resultUnit->title : '[unit not found] ' . $title;
+                }
                 $row = [
                     $userId,
                     $user->fullName,
                     $company ? $company->id : 'unknown',
-                    $company ? $label : 'unknown',
+                    $company ? $company->companyLabel : 'unknown',
                     $role ? $role->title : 'unknown',
-                    $result->title,
+                    $title,
                     $result->expiryDate,
                     $result->status == 'expired' ? 'expired' : 'expiring'
                 ];
@@ -1039,13 +1041,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $results = $criteria->find();
         foreach ($results as $result) {
             $company = craft()->lantra_users->userCompany($user);
-            $label = craft()->lantra_structure->getCompanyLabel($company);
             $role = $user->userRole->first();
             $row = [
                 $user->id,
                 $user->fullName,
                 $company ? $company->id : '~',
-                $company ? $label : 'unknown',
+                $company ? $company->companyLabel : 'unknown',
                 $role ? $role->title : 'unknown',
                 $result->title,
                 $result->expiryDate,
@@ -1068,13 +1069,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $result = $this->unitResult($user, $unit->id);
             if ( ! $result || $result->status == 'expired') {
                 $company = craft()->lantra_users->userCompany($user);
-                $label = craft()->lantra_structure->getCompanyLabel($company);
                 $role = $user->userRole->first();
                 $row = [
                     $user->id,
                     $user->fullName,
                     $company ? $company->id : '~',
-                    $company ? $label : 'unknown',
+                    $company ? $company->companyLabel : 'unknown',
                     $role ? $role->title : 'unknown',
                     $unit->title,
                     $result ? $result->expiryDate : null,

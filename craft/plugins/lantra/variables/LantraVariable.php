@@ -131,7 +131,7 @@ class LantraVariable
      * @return mixed
      */
     public function companyLabel($company) {
-        return craft()->lantra_structure->getCompanyLabel($company);
+        return $company->companyLabel;
     }
 
     /**
