@@ -2,12 +2,12 @@
     <h2>User Login</h2>
     {% set themeLoginMessage = craft.lantra.setting('themeLoginMessage')  %}
     {% if themeLoginMessage %}
-        <p style="font-size:12px;text-align:justify;margin-bottom:20px">{{ themeLoginMessage }}</p>
+        <p style="text-align:center;font-size:12px;text-align:justify;margin-bottom:40px">{{ themeLoginMessage }}</p>
     {% endif %}
     <input type="hidden" name="action" value="users/login">
     <input type="hidden" name="redirect" value="/">
     <div class="field--wrapper" style="">
-        <label for="loginName" style="" class="float">Email address</label>
+        <label for="loginName" style="" class="float">Username or Email Address</label>
         <input type="text" id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.session.rememberedUsername }}">
     </div>
     <div class="field--wrapper last" style="">
