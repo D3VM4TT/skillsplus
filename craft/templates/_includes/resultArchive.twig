@@ -28,12 +28,14 @@
                                         columnLayout:globalsTheme.columnLayout}
                                     %}
                                     <td>
-                                        <a href="/result/{{ resultEntry.id }}">edit</a>
-                                        {% set managerDelete = resultEntry.resultOwner.total and resultEntry.resultOwner.first.id == currentUser.id %}
-                                        {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                            | <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ resultEntry.id }}"
-                                               data-tooltip title="Delete this result">delete
-                                            </a>
+                                        {% if not isManager or (isManager and not readOnly) %}
+                                            <a href="/result/{{ resultEntry.id }}">edit</a>
+                                            {% set managerDelete = resultEntry.resultOwner.total and resultEntry.resultOwner.first.id == currentUser.id %}
+                                            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                                                | <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ resultEntry.id }}"
+                                                   data-tooltip title="Delete this result">delete
+                                                </a>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
                             {% endfor %}

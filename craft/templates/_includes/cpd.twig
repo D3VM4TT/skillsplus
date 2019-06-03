@@ -289,7 +289,7 @@
 {% endif %}
     </div>
     {% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
-        {% include '_includes/resultArchive' with {resultEntries:resultArchive} %}
+        {% include '_includes/resultArchive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
     {% endif %}
     <p style="text-align:right">
         <a class="button no-shadow primary-bg" target="_blank" href="/cpd/{{ cpdUser.id }}/print">
