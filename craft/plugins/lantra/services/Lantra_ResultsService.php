@@ -745,13 +745,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $header = [
             'Company ID',
+            'Company Label',
             'User ID',
             'User Name',
             'User Email',
             'User Job Title',
             'User Birthday',
             'User Start Date',
-            'Company Title',
             'User Address'
         ];
 
@@ -778,17 +778,28 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $rows = [$header];
         foreach($subordinates as $user) {
-            $company = craft()->lantra_users->userCompany($user);
+            if ($user->isInGroup('schemeManagers')) {
+                $companyId = '~';
+                $companyLabel = 'Scheme Manager';
+            }
+            else {
+                $company = craft()->lantra_users->userCompany($user);
+                if (! $company && $user->isInGroup('companyManagers')) {
+                    $company = craft()->lantra_users->getManagerFirstCompany($user);
+                }
+                $companyId = $company ? $company->id : '~';
+                $companyLabel = $company ? $company->companyLabel : 'unknown';
+            }
             $role = $user->userRole->first();
             $row = [
-                $company ? $company->companyLabel : 'unknown',
+                $companyId,
+                $companyLabel,
                 $user->id,
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
                 $user->userDateOfBirth ? $user->userDateOfBirth->format($format) : '',
                 $user->userStartDate,
-                $company ? $company->title : 'unknown',
                 $user->userAddress
             ];
             foreach ($units as $unit) {
@@ -825,7 +836,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $header = [
             'User ID',
             'User Name',
-            'Company Title'
+            'Company Label'
         ];
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
@@ -945,7 +956,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'User ID',
             'User Name',
             'Company ID',
-            'Company Title',
+            'Company Label',
             'User Job Title',
             'Unit/Result Title',
             'Expiry Date',
@@ -1005,7 +1016,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'User ID',
             'User Name',
             'Company ID',
-            'Company Title',
+            'Company Label',
             'User Job Title',
             'Unit/Result Title',
             'Expiry Date',

@@ -475,6 +475,16 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * @param UserModel $user
+     * @return string
+     * @throws Exception
+     */
+    public function getManagerFirstCompany(UserModel $user) {
+        $companies = $this->getManagerCompanies($user);
+        return $companies ? $companies[0] : null;
+    }
+
+    /**
      * Get manager companies
      *
      * @param UserModel $user
@@ -663,6 +673,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->limit = $limit;
         $criteria->order = 'lastName asc';
+        $criteria->admin = 'not 1';
         if ($search) {
             $criteria->search = $search;
         }
