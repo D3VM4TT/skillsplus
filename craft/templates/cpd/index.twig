@@ -9,10 +9,11 @@
     {% else %}
         {% set account = craft.users.id(userId).status(null).first %}
     {% endif %}
-    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% else %}
     {% set account = currentUser %}
 {% endif %}
+
+{% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 
 {% set metaTitle = 'CPD > ' ~ account.fullname %}
 
