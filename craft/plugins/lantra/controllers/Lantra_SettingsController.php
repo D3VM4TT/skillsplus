@@ -36,6 +36,25 @@ class Lantra_SettingsController extends BaseController
     /**
      * @throws HttpException
      */
+    public function actionTools()
+    {
+        $tool = craft()->request->getParam('tool');
+        if ($tool == 'saveCompanies') {
+            $topCompanies = craft()->lantra_structure->getCompanyChildren(null, false, null);
+            if ($topCompanies){
+                foreach($topCompanies as $company) {
+                    craft()->entries->saveEntry($company);
+                }
+            }
+            craft()->userSession->setNotice(Craft::t('All companies saved.'));
+            $this->redirectToPostedUrl();
+        }
+        $this->renderTemplate('lantra/settings/tools');
+    }
+
+    /**
+     * @throws HttpException
+     */
     public function actionSaveSettings()
     {
         $this->requirePostRequest();

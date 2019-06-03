@@ -18,7 +18,7 @@
 {% set hierarchyCompany = craft.request.getParam('company') %}
 {% set hierarchyTeam = craft.request.getParam('team') %}
 
-{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('title') %}
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('companyLabel') %}
 {% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.request.getPost('companyManagers') %}
 
 {% block content %}
@@ -112,7 +112,7 @@
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
                 <option value="">Not required if User is a Manager (see note below)</option>
                 {% for companyEntry in companyEntries %}
-                    <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
                 {% endfor %}
             </select>
             <p class="col-pd-top">Note:<br />If the User is a Manager click 'Make Company Manager' and assign to Companies in the Manager settings below.</p>

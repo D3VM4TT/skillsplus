@@ -102,7 +102,7 @@ class LantraPlugin extends BasePlugin
                         $entry->getContent()->title = $unitEntry->title;
                     }
                 }
-                // Check endorsed change
+                // check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 $currentUser = craft()->userSession->getUser();
                 // Auto endorse
@@ -182,13 +182,19 @@ class LantraPlugin extends BasePlugin
                 if (! $this->getSettings()->lantraDisableLicences && ! craft()->lantra_licence->updateCompanyLicences($entry)){
                    $entry->addError('companyRemainingLicences', 'There are insufficient scheme licences.');
                    $event->performAction = false;
-               }
+                }
+                // update company label
+                $companyLabel = craft()->lantra_structure->getCompanyLabel($entry);
+                $event->params['entry']->setContentFromPost(array('companyLabel' => $companyLabel));
             }
         });
 
         craft()->on('entries.onSaveEntry', function(Event $event) {
             $this->resetUploads();
             $entry = $event->params['entry'];
+            if ($entry->sectionId == $this->sectionIdCompanies) {
+                craft()->lantra_structure->saveCompanyChildren($entry);
+            }
             // saving user/unit results
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdResults) {
                 craft()->lantra_results->saveNewResult($entry);
@@ -203,7 +209,7 @@ class LantraPlugin extends BasePlugin
                     $entryRecord->save(false);
                 }
             }
-            // Mark unit attempt and create result entry
+            // mark unit attempt and create result entry
             if ($event->params['isNewEntry'] && $entry->sectionId == $this->sectionIdAttempts && ! craft()->request->isCpRequest()){
                 craft()->lantra_attempts->markAttempt($entry);
                 craft()->lantra_results->saveAttemptResult($entry);
@@ -325,6 +331,8 @@ class LantraPlugin extends BasePlugin
                 array('action' => 'lantra/settings/index'),
             'lantra/settings' =>
                 array('action' => 'lantra/settings/index'),
+            'lantra/settings/tools' =>
+                array('action' => 'lantra/settings/tools'),
         );
     }
 

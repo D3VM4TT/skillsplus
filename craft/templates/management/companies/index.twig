@@ -9,9 +9,9 @@
 {% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
 
 {% if currentUser.isInGroup('schemeManagers') %}
-    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit).order('title') %}
+    {% set criteria = craft.entries.section('companies').search(filterSearch).limit(pageLimit).order('companyLabel') %}
 {% else %}
-    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit).order('title') %}
+    {% set criteria = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).search(filterSearch).limit(pageLimit).order('companyLabel') %}
 {% endif %}
 {% if criteria %}{% paginate criteria as pageInfo, companyEntries %}{% endif %}
 

@@ -184,12 +184,13 @@ class Lantra_StructureService extends BaseApplicationComponent
      * @throws Exception
      * @throws \CException
      */
-    private function getCompanyChildren($companyId = null, $count = false) {
+    public function getCompanyChildren($companyId = null, $count = false, $status = 'live') {
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = null;
         $criteria->order = 'title';
+        $criteria->status = $status;
         if ($companyId) {
             $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'companyParent'];
         }
@@ -200,7 +201,7 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     }
 
-    private function getTopCompanyIds() {
+    public function getTopCompanyIds() {
         // just return all companies without a parent
         $query = craft()->db->createCommand()
             ->select('e.id' )
@@ -214,6 +215,20 @@ class Lantra_StructureService extends BaseApplicationComponent
             $return[] = $row['id'];
         }
         return $return;
+    }
+
+    /**
+     * @param $company
+     * @throws Exception
+     * @throws \CException
+     */
+    public function saveCompanyChildren($company) {
+        $children = $this->getCompanyChildren($company, null, null);
+        if ($children) {
+            foreach ($children as $child) {
+                craft()->entries->saveEntry($child);
+            }
+        }
     }
 
     /**
