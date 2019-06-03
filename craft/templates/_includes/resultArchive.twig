@@ -28,7 +28,7 @@
                                         columnLayout:globalsTheme.columnLayout}
                                     %}
                                     <td>
-                                        {% if not isManager or (isManager and not readOnly) %}
+                                        {% if (not isManager and not readOnly) or not readOnly %}
                                             <a href="/result/{{ resultEntry.id }}">edit</a>
                                             {% set managerDelete = resultEntry.resultOwner.total and resultEntry.resultOwner.first.id == currentUser.id %}
                                             {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}

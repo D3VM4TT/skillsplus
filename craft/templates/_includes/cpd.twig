@@ -1,7 +1,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set existingResultIds = [] %}
 {% set isManager = false %}
-{% set readOnly = craft.lantra.setting('schemeUserReadOnly') and not craft.lantra.isManager(cpdUser.id) %}
+{% set readOnly = craft.lantra.setting('schemeUserReadOnly') %}
 {% if cpdUser.id != currentUser.id %}
     {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
