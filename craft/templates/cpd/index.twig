@@ -3,17 +3,12 @@
 {% extends "_layout" %}
 
 {% set userId = craft.request.getSegment(2) %}
-{% if userId %}
-    {% if userId == currentUser.id %}
-        {% set account = currentUser %}
-    {% else %}
-        {% set account = craft.users.id(userId).status(null).first %}
-    {% endif %}
-{% else %}
+{% if not userId or userId == currentUser.id %}
     {% set account = currentUser %}
+{% else %}
+    {% set account = craft.users.id(userId).status(null).first %}
+    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% endif %}
-
-{% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 
 {% set metaTitle = 'CPD > ' ~ account.fullname %}
 
