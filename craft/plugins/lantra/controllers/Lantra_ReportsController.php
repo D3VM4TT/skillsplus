@@ -16,21 +16,22 @@ class Lantra_ReportsController extends Lantra_BaseController
             $fields['reportUnits'] = [];
         }
         $default = [
-            'reportType'            => 'users',
-            'reportCompanies'       => [],
-            'reportAllCompanies'    => false,
-            'reportResultType'      => 'all',
-            'reportUnits'           => [],
-            'reportResultExpiry'    => 0,
-            'reportIncludeExpired'  => false,
-            'reportIncludeRequired' => false,
-            'reportDisplayField'    => 'expiryDate',
+            'reportType'                => 'users',
+            'reportCompanies'           => [],
+            'reportAllCompanies'        => false,
+            'reportIncludeHierarchy'    => false,
+            'reportResultType'          => 'all',
+            'reportUnits'               => [],
+            'reportResultExpiry'        => 0,
+            'reportIncludeExpired'      => false,
+            'reportIncludeRequired'     => false,
+            'reportDisplayField'        => 'expiryDate',
             // automated fields
-            'reportTitle'           => '',
-            'reportRecipients'      => [],
-            'reportEmails'          => '',
-            'reportSendFrequency'   => 'never',
-            'reportSendValue'       => 1
+            'reportTitle'               => '',
+            'reportRecipients'          => [],
+            'reportEmails'              => '',
+            'reportSendFrequency'       => 'never',
+            'reportSendValue'           => 1
         ];
         return array_merge($default, $fields);
     }

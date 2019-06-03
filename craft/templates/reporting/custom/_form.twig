@@ -70,6 +70,11 @@
                 {% if entry is defined and entry.reportAllCompanies %} checked{% endif %}>
             Include all companies
         </label>
+        <label for="reportIncludeHierarchy" class="no-float">
+            <input name="fields[reportIncludeHierarchy]" id="reportIncludeHierarchy" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeHierarchy %} checked{% endif %}>
+            Include hierarchy
+        </label>
     </div>
     <div class="field--wrapper fields fields-results fields-required fields-expired">
         <label for="reportResultType" class="no-float">Result Type</label>

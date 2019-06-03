@@ -201,6 +201,36 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     }
 
+    /* cache children */
+    private $_companyDescendants = [];
+
+    public function getCompanyDescendants($companyId = null) {
+        if (isset($this->_companyDescendants[$companyId])) {
+            return $this->_companyDescendants[$companyId];
+        }
+        $descendants = [];
+        if (null != $children = $this->getCompanyChildren($companyId)) {
+            foreach($children as $child) {
+                $descendants[] = $child->id;
+                $descendants[] = $this->getCompanyDescendants($child->id);
+            }
+        }
+        $this->_companyDescendants[$companyId] = $descendants;
+        return $descendants;
+    }
+
+    public function appendCompanyDescendants($companyIds = []) {
+        $return = $companyIds;
+        foreach($companyIds as $id) {
+            foreach( $this->getCompanyDescendants($id) as $descendantId) {
+                if ( ! in_array($descendantId, $return)) {
+                    $return[] = $descendantId;
+                }
+            }
+        }
+        return $return;
+    }
+
     public function getTopCompanyIds() {
         // just return all companies without a parent
         $query = craft()->db->createCommand()

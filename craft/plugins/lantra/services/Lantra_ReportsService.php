@@ -123,6 +123,9 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $filter['reportUnits'] = [];
         }
         if (count($filter['reportCompanies'])) {
+            if ($filter['reportIncludeHierarchy']) {
+                $filter['reportCompanies'] = craft()->lantra_structure->appendCompanyDescendants($filter['reportCompanies']);
+            }
             $userFilter['relatedTo'] = [
                 'targetElement' => $filter['reportCompanies'],
                 'field' => 'userCompany'
