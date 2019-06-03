@@ -2,7 +2,7 @@
     <h2>User Login</h2>
     {% set themeLoginMessage = craft.lantra.setting('themeLoginMessage')  %}
     {% if themeLoginMessage %}
-        <p style="text-align:center;font-size:12px;text-align:justify;margin-bottom:40px">{{ themeLoginMessage }}</p>
+        <p style="text-align:center;font-size:12px;margin-bottom:40px">{{ themeLoginMessage }}</p>
     {% endif %}
     <input type="hidden" name="action" value="users/login">
     <input type="hidden" name="redirect" value="/">
