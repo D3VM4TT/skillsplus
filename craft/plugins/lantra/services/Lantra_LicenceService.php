@@ -92,8 +92,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function addSchemeLicences($number = 1) {
-        $schemeRemainingLicences = craft()->lantra_settings->getSetting('schemeRemainingLicences');
-        return craft()->lantra_settings->saveSetting($schemeRemainingLicences + (int) $number);
+        $schemeRemainingLicences = (int) craft()->lantra_settings->getSetting('schemeRemainingLicences', 0);
+        return craft()->lantra_settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences + (int) $number);
     }
 
     /**
@@ -104,8 +104,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function subtractSchemeLicences($number = 1) {
-        $schemeRemainingLicences = craft()->lantra_settings->getSetting('schemeRemainingLicences');
-        return craft()->lantra_settings->saveSetting($schemeRemainingLicences - (int) $number);
+        $schemeRemainingLicences = (int) craft()->lantra_settings->getSetting('schemeRemainingLicences', 0);
+        return craft()->lantra_settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences - (int) $number);
     }
 
     /**

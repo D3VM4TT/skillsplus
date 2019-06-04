@@ -44,10 +44,11 @@ class LantraPlugin extends BasePlugin
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
-            $licenceSource = '';
-            if ($event->params['isNewUser'] && ! $user->admin) {
+            $licenceSource = 'None';
+            $lantraLicences = ! $this->getSettings()->lantraDisableLicences;
+            if ($lantraLicences && $event->params['isNewUser'] && ! $user->admin) {
                 // assign company licence if joining a team
-                if (! $this->getSettings()->lantraDisableLicences && $user->userCompany->count() OR $user->userTeam->count()) {
+                if ($user->userCompany->count() OR $user->userTeam->count()) {
                     $companyEntry = craft()->lantra_users->userCompany($user);
                     if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
                         $event->performAction = false;
