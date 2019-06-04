@@ -60,7 +60,7 @@
         <select multiple class="js-select2" name="fields[reportCompanies][]" id="reportCompanies">
             {% for companyEntry in companyEntries %}
                 <option {% if entry is defined and companyEntry.id in entry.reportCompanies.ids() %} selected="selected"{% endif %}
-                    value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
+                    value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
             {% endfor %}
         </select>
     </div>
