@@ -10,7 +10,7 @@
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
     {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('companyLabel') %}
 {% else %}
-    {% set companyEntries = craft.lantra.managerCompanies(currentUser.id, true).order('companyLabel') %}
+    {% set companyEntries = craft.lantra.managerCompanies(currentUser.id, true) %}
 {% endif %}
 {% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
 {% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName') %}

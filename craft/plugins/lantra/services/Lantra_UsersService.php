@@ -489,10 +489,11 @@ class Lantra_UsersService extends BaseApplicationComponent
      *
      * @param UserModel $user
      * @param bool $includeChildren
+     * @param string $order
      * @return BaseElementModel|null
      * @throws Exception
      */
-    function getManagerCompanies(UserModel $user, $includeChildren = false) {
+    function getManagerCompanies(UserModel $user, $includeChildren = false, $order = 'companyLabel') {
         $companyIds = $this->getCompanyManagerCompanyIds($user);
         if ($includeChildren) {
             $parentIds = $companyIds;
