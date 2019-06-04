@@ -966,8 +966,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
         $rows = [];
+        $resultIds = [];
         foreach($allResults as $userId => $results) {
             foreach ($results as $id => $result) {
+                $resultIds[] = $result->id;
                 $user = $result->author;
                 $company = craft()->lantra_users->userCompany($user);
                 $role = $user->userRole->first();
@@ -992,7 +994,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if ($includeRequired) {
             foreach($subordinates as $user) {
                 $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
-                $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds));
+                $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds, false));
             }
             usort($rows, function ($a, $b) {return strcmp($a[0], $b[0]);});
         }
@@ -1070,15 +1072,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
     /**
      * @param null $user
+     * @param array $unitIds
+     * @param bool $includeExpired
      * @return array
      * @throws Exception
      */
-    private function userRequiredRows($user, $unitIds = [])  {
+    private function userRequiredRows($user, $unitIds = [], $includeExpired = true)  {
         $units = $this->userUnits($user, $unitIds);
         $rows = [];
         foreach ($units as $unit) {
             $result = $this->unitResult($user, $unit->id);
-            if ( ! $result || $result->status == 'expired') {
+            if ( ! $result || ($includeExpired && $result->status == 'expired')) {
                 $company = craft()->lantra_users->userCompany($user);
                 $role = $user->userRole->first();
                 $row = [
