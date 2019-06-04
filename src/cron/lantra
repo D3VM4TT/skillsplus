@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# domains i.e. folders (separated by space)
+DOMAINS="bics cha iopf ltp poultrypassport ptr bcsa poultec"
+
+SERVER="skills-plus.net"
+
+for DOMAIN in $DOMAINS;
+do
+    URL="$DOMAIN.$SERVER/actions/lantra/cron/run?frequency=daily"
+    echo "lantra daily cron "$SERVER" > "$DOMAIN
+done
