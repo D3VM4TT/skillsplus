@@ -33,6 +33,7 @@
     {% set excludeIds = craft.users.relatedTo(allCompanies).limit(null).ids() %}
     {% set excludeIds = excludeIds|merge([currentUser.id]) %}
     {% set excludeIdsString = 'and, not ' ~ excludeIds|join(', not ') %}
+    {% set userStatus = 'active' %}
 {% else %}
     {% set excludeIdsString = 'not ' ~ currentUser.id %}
 {% endif %}
@@ -50,10 +51,10 @@
         {% set companies = craft.lantra.managerCompanies(currentUser.id, true) %}
     {% endif %}
     {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
+    {% set criteria = craft.users.status(userStatus).admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% elseif currentUser.isInGroup('teamManagers') %}
     {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
+    {% set criteria = craft.users.status(userStatus).admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
 {% endif %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
