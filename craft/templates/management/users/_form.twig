@@ -160,7 +160,7 @@
                                 {% set primaryManagerCompanies = primaryManagerCompanies|merge([companyEntry]) %}
                                 {% set selected = ' selected="selected"' %}
                             {% endif %}
-                            <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
+                            <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
                         {% endfor %}
                         </select>
 
@@ -174,7 +174,7 @@
                                 {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([companyEntry]) %}
                                 {% set selected = ' selected="selected"' %}
                             {% endif %}
-                        <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.id }} - {{ companyEntry.title }}</option>
+                        <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
                         {% endfor %}
                         </select>
                         {% if account is defined %}
