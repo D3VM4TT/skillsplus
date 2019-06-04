@@ -33,6 +33,14 @@ class Lantra_SettingsController extends BaseController
         $this->renderTemplate('lantra/settings', $variables);
     }
 
+    private function getUsers() {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = [2,3,4];
+        $criteria->admin = false;
+        $criteria->limit = null;
+        return $criteria;
+    }
+
     /**
      * @throws HttpException
      */
@@ -47,6 +55,34 @@ class Lantra_SettingsController extends BaseController
                 }
             }
             craft()->userSession->setNotice(Craft::t('All companies saved.'));
+            $this->redirectToPostedUrl();
+        }
+        if ($tool == 'setUsernames') {
+            $users = $this->getUsers();
+            $message = '';
+            foreach($users as $user) {
+                $username = strtolower($user->firstName);
+                if ($user->lastName) {
+                    $username.= '.' . strtolower($user->lastName);
+                }
+                $user->username = $username;
+                if ( ! craft()->users->saveUser($user)) {
+                    $message .= ' ' . $user->fullName . ' not updated.';
+                };
+            }
+            craft()->userSession->setNotice(Craft::t('Usernames updated.' . $message));
+            $this->redirectToPostedUrl();
+        }
+        if ($tool == 'setPasswords') {
+            $users = $this->getUsers();
+            $message = '';
+            foreach($users as $user) {
+                $user->newPassword = $user->userDateOfBirth->format('dmy');
+                if ( ! craft()->users->saveUser($user)) {
+                    $message .= ' ' . $user->fullName . ' not updated.';
+                };
+            }
+            craft()->userSession->setNotice(Craft::t('Passwords updated.' . $message));
             $this->redirectToPostedUrl();
         }
         $this->renderTemplate('lantra/settings/tools');
