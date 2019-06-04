@@ -61,6 +61,7 @@ class Lantra_ImportController extends Lantra_BaseController
         $this->getData('users');
         $this->getData('companyManagers');
         $this->getData('companyUsers');
+        $this->getData('results');
         $this->loadTemplate();
     }
 
@@ -560,6 +561,7 @@ class Lantra_ImportController extends Lantra_BaseController
 
             $resultType = $legacyUnitId ? 'unitResult' : 'userResult';
             $author = $this->getUserByLegacyId($legacyUserId);
+            $postDate = empty(trim($result[7])) ? date('d/m/Y') : $result[4];
 
             if (!$author) {
                 $this->log [] = 'Author ID not found ' . $legacyUserId;
@@ -574,7 +576,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $entryModel->typeId = $resultType == 'unitResult' ? 10 : 17;
             $entryModel->enabled = true;
             $entryModel->authorId = $author->id;
-            $entryModel->postDate = DateTime::createFromFormat('d/m/Y', $result[4]);
+            $entryModel->postDate = DateTime::createFromFormat('d/m/Y', $postDate);
 
             if (!empty(trim($result[7]))) {
                 $entryModel->expiryDate = DateTime::createFromFormat('d/m/Y', $result[7]);
