@@ -77,7 +77,7 @@ class Lantra_SettingsController extends BaseController
             $users = $this->getUsers();
             $message = '';
             foreach($users as $user) {
-                $user->newPassword = $user->userDateOfBirth->format('dmy');
+                $user->newPassword = $user->userDateOfBirth ? $user->userDateOfBirth->format('dmy') : 010101;
                 if ( ! craft()->users->saveUser($user)) {
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
