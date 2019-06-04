@@ -485,6 +485,28 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $companies ? $companies[0] : null;
     }
 
+    public function removeCompanyManager($company, $user, $type = 'both') {
+
+        $primaryManagerIds = $company->companyPrimaryManagers->ids();
+        $secondaryManagerIds = $company->companySecondaryManagers->ids();
+
+        if (($type == 'both' || $type == 'primary') && in_array($user->id, $primaryManagerIds)) {
+            $key = array_search($user->id, $primaryManagerIds);
+            unset($primaryManagerIds[$key]);
+        }
+        if (($type == 'both' || $type == 'secondary') && in_array($user->id, $secondaryManagerIds)) {
+            $key = array_search($user->id, $secondaryManagerIds);
+            unset($secondaryManagerIds[$key]);
+        }
+
+        $company->setContentFromPost ([
+            'companyPrimaryManagers' => $primaryManagerIds,
+            'companySecondaryManagers' => $secondaryManagerIds
+        ]);
+
+        craft()->entries->saveEntry($company);
+    }
+
     /**
      * Get manager companies
      *

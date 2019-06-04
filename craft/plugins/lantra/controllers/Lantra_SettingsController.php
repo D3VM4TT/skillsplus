@@ -107,6 +107,22 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t('Managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
+
+        if ($tool == 'removeManagersChildren') {
+            $managers = $this->getManagers();
+            foreach($managers as $user) {
+                $companies = craft()->lantra_users->getManagerCompanies($user, true);
+                $companyIds = [];
+                foreach($companies as $company) {
+                    $companyIds[] = $company->id;
+                }
+                foreach($companies as $company) {
+                    if ($company->companyParent->first() && in_array($company->companyParent->first()->id, $companyIds)) {
+                        craft()->lantra_users->removeCompanyManager($company, $user);
+                    }
+                }
+            }
+        }
         $this->renderTemplate('lantra/settings/tools');
     }
 
