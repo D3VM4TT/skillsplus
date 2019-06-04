@@ -41,6 +41,14 @@ class Lantra_SettingsController extends BaseController
         return $criteria;
     }
 
+    private function getManagers() {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = [2,3];
+        $criteria->admin = false;
+        $criteria->limit = null;
+        return $criteria;
+    }
+
     /**
      * @throws HttpException
      */
@@ -83,6 +91,20 @@ class Lantra_SettingsController extends BaseController
                 };
             }
             craft()->userSession->setNotice(Craft::t('Passwords updated.' . $message));
+            $this->redirectToPostedUrl();
+        }
+        if ($tool == 'setManagerReadOnly') {
+            $managers = $this->getManagers();
+            $message = '';
+            foreach($managers as $user) {
+                $user->setContentFromPost([
+                    'managerReadOnly' => 1
+                ]);
+                if ( ! craft()->users->saveUser($user)) {
+                    $message .= ' ' . $user->fullName . ' not updated.';
+                };
+            }
+            craft()->userSession->setNotice(Craft::t('Managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
         $this->renderTemplate('lantra/settings/tools');

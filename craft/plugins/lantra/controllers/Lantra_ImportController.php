@@ -502,6 +502,7 @@ class Lantra_ImportController extends Lantra_BaseController
             // legacyId, legacyCompanyId
             $companyManager = $this->getUserByLegacyId((int)$manager[0]);
             $companyEntry = $this->getCompanyByLegacyId((int)$manager[1]);
+            $managerReadOnly = isset($manager[2]) && $manager[2] == '1';
 
             if ($companyEntry && $companyManager) {
                 $companyEntry->setContentFromPost([
@@ -510,6 +511,10 @@ class Lantra_ImportController extends Lantra_BaseController
                 craft()->entries->saveEntry($companyEntry);
                 // make sure user is in company manager group
                 craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
+                $companyManager->setContentFromPost([
+                    'managerReadOnly' => $managerReadOnly
+                ]);
+                craft()->elements->saveElement($companyManager, false);
                 $this->success++;
             }
         }
