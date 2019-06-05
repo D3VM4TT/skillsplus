@@ -865,7 +865,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $row = [
                 $user->id,
                 $user->fullName,
-                $company->companyLabel
+                $company ? $company->companyLabel : 'unknown',
             ];
             foreach ($headerIds as $id) {
                 $value = 'N/A';
