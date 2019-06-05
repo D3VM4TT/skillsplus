@@ -1,6 +1,6 @@
 {% extends "_layout" %}
 {% import "_macros" as ui %}
-{% set metaTitle = "Management > Companies" %}
+{% set metaTitle = "Management > Reports" %}
 
 {% set entryId = craft.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
@@ -33,7 +33,7 @@
     {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 
-<form id="reports" class="page-form no-loading" method="get" role="form" accept-charset="UTF-8">
+<form id="reports" class="page-form no-loading" method="post" role="form" accept-charset="UTF-8">
     {{ getCsrfInput() }}
     <input type="hidden" name="action" value="lantra/reports/save">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
@@ -144,7 +144,7 @@
         </div>
         <div class="field--wrapper">
             <label for="reportRecipients" class="">Report recipients (managers):</label>
-            <input type="hidden" name="fields[reportRecipients][]" value="" />
+            <input type="hidden" name="fields[reportRecipients]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
                 {% for manager in allManagers %}
                     <option {% if entry is defined and manager.id in entry.reportRecipients.ids() %} selected="selected"{% endif %}

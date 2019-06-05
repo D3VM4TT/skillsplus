@@ -48,7 +48,6 @@ class Lantra_ReportsController extends Lantra_BaseController
         $fields = $this->getFields();
         if (! $fields['reportAllCompanies'] && ! count($fields['reportCompanies'])) {
             $this->_returnError('You must select some companies or select Include all companies.');
-            return;
         }
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
@@ -57,8 +56,7 @@ class Lantra_ReportsController extends Lantra_BaseController
         if ($entryId || $automated) {
             $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $title, $fields, $entryId);
             if ($reportEntry->hasErrors()) {
-                craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
-                return $this->redirectToPostedUrl();
+                return craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
             }
             $redirect = '/reporting/automated';
             return $this->_returnMessage('Custom report has been saved.', true, $redirect);
