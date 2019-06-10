@@ -10,7 +10,7 @@ return array(
         'enableCsrfProtection' => false,
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
-        'devMode' => true,
+        'devMode' => false,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
