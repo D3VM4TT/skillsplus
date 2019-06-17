@@ -147,8 +147,12 @@
             <input type="hidden" name="fields[reportRecipients]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
                 {% for manager in allManagers %}
+                    {% set primaryCompany = craft.entries.section('companies').relatedTo(manager).first() %}
                     <option {% if entry is defined and manager.id in entry.reportRecipients.ids() %} selected="selected"{% endif %}
-                        value="{{ manager.id }}">{{ manager.fullName }}</option>
+                        value="{{ manager.id }}">
+                            {{ manager.fullName }}
+                            {% if primaryCompany|length %}({{ primaryCompany.title }}){% endif %}
+                    </option>
                 {% endfor %}
             </select>
         </div>
