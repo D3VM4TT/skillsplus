@@ -22,11 +22,6 @@
     {% set pageTitle = pageTitle ~ " > " ~ company.title %}
 {% endif %}
 
-{% if filterSearch and craft.users.id(filterSearch).total() %}
-    {% set excludeIdsString = filterSearch %}
-    {% set filterSearch = '' %}
-{% endif %}
-
 {# orphaned users #}
 {% if filterUserStatus == 'orphaned' %}
     {% set allCompanies = craft.entries.section('companies').limit(null) %}
@@ -36,6 +31,12 @@
     {% set userStatus = 'active' %}
 {% else %}
     {% set excludeIdsString = 'not ' ~ currentUser.id %}
+{% endif %}
+
+{# search by id #}
+{% if filterSearch and craft.users.id(filterSearch).total() %}
+    {% set excludeIdsString = filterSearch %}
+    {% set filterSearch = '' %}
 {% endif %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
