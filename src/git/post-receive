@@ -3,12 +3,10 @@
 # remote server ips
 DEV_IP="10.1.4.4"
 UAT_IP="10.1.4.5"
-STG_IP="10.1.4.7"
 PRODUCTION_IP="10.1.4.9"
 
 # repo branches to sync
 DEV_BRANCH="develop"
-STG_BRANCH="staging"
 UAT_BRANCH="uat"
 PRODUCTION_BRANCH="master"
 
@@ -35,8 +33,6 @@ git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
 # set remote server ip
 if [ "$DEV_BRANCH" == "$BRANCH" ]; then
   REMOTE_IP="$DEV_IP"
-elif [ "$STG_BRANCH" == "$BRANCH" ]; then
-  REMOTE_IP="$STG_IP"
 elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
   REMOTE_IP="$UAT_IP"
 elif [ "$PRODUCTION_BRANCH" == "$BRANCH" ]; then
