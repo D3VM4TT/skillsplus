@@ -254,6 +254,17 @@ class LantraVariable
     }
 
     /**
+     * @param null $entry
+     * @return null
+     */
+    public function legacyResultFiles($entry = null) {
+        if ( ! $entry->legacyResultFiles) {
+            return $entry;
+        }
+        return craft()->lantra_results->legacyResultFiles($entry);
+    }
+
+    /**
      * Can add user
      *
      * @param null $userId

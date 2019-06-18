@@ -820,47 +820,72 @@ class Lantra_ResultsService extends BaseApplicationComponent
         return $rows;
     }
 
+
     /**
      * @param EntryModel $resultEntry
+     * @return EntryModel
      * @throws \Exception
      */
-    public function findResultLegacyFile(EntryModel $resultEntry) {
+    public function legacyResultFiles(EntryModel $resultEntry) {
         if (count($resultEntry->resultEvidence) || ! $resultEntry->legacyResultFiles) {
-            return;
+            return $resultEntry;
         }
         $folderName = $resultEntry->authorId;
         $parentFolder = craft()->assets->getFolderById(1);
-        $folder = craft()->assets->findFolder([
-            'parent' => $parentFolder,
-            'name' => $folderName
-        ]);
+        $folder = craft()->assets->findFolder(['parent' => $parentFolder, 'name' => $folderName]);
         if (! $folder) {
-            $folder = craft()->assets->createFolder($parentFolder, $folderName);
+            $folder = craft()->assets->createFolder($parentFolder->id, $folderName);
         }
-
         $legacyFiles = explode(',', $resultEntry->legacyResultFiles);
-        $source = craft()->assetSources->getSourceById(1);
         $assetIds = [];
+        $updatedLegacyResultFiles = $legacyFiles;
 
-        foreach($legacyFiles as $filePath){
-            $legacyPath = $source->settings['path'] . $parentFolder->path . '/archive/' . $filePath;
+        $unchanged = true;
 
+        foreach($legacyFiles as $key => $filePath){
+            $env = craft()->config->get('environmentVariables');
+            $legacyPath = $env['assetsPath'] . '/archive' . $filePath;
             $parts = explode('/', $legacyPath);
             $filename = end($parts);
 
+            // $filename = str_replace('%20', ' ', $filename);
+
             if (file_exists($legacyPath)) {
-                $assetIds[] = craft()->assets->insertFileByLocalPath(
+                $response = craft()->assets->insertFileByLocalPath(
                     $legacyPath,
                     $filename,
                     $folder->id,
                     AssetConflictResolution::Replace
                 );
-                unlink ($legacyPath);
+
+                $fileId = $response->getDataItem('fileId');
+
+                if ($response->isError()) {
+
+                }
+
+                if ($response->isSuccess() && $fileId) {
+                    $assetIds[] = $fileId;
+                    unlink($legacyPath);
+                    unset($updatedLegacyResultFiles[$key]);
+                    $unchanged = false;
+                }
             }
         }
 
-        $resultEntry->setContentFromPost(['resultEvidence' => $assetIds]);
+        if ($unchanged || ! count($assetIds)) {
+            return $resultEntry;
+        }
+
+        $resultEntry->getContent()->title = $resultEntry->title;
+        $resultEntry->setContentFromPost([
+            'resultEvidence' => $assetIds,
+            'legacyResultFiles' => implode(',', $updatedLegacyResultFiles)
+        ]);
         craft()->entries->saveEntry($resultEntry);
+        ## get entry again to force refresh on data
+        $resultEntry = craft()->entries->getEntryById($resultEntry->id);
+        return $resultEntry;
     }
 
     /**

@@ -49,6 +49,8 @@
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultEvidence' %}
+        {# try to move legacy result files #}
+        {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
         {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
         <div class="field--wrapper">
             {% if not resultLocked and not fieldDisabled %}
@@ -69,6 +71,10 @@
                 {% endif %}
             {% endif %}
             <div id="files" class="files">
+                {% if resultEntry.legacyResultFiles %}
+                    <p style="color:#FF0000;font-weight:700">ERROR: Could not copy legacy result files, contact technical support.</p>
+                    <p>{{ resultEntry.legacyResultFiles  }}</p>
+                {% endif %}
                 {% if resultEvidence %}
                     {% for resultAsset in resultEntry.resultEvidence %}
                     <p>
