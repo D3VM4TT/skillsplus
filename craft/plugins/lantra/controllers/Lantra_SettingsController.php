@@ -65,6 +65,14 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t('All companies saved.'));
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'saveUsers') {
+            $users = $this->getUsers();
+            foreach($users as $user) {
+                craft()->users->saveUser($user);
+            }
+            craft()->userSession->setNotice(Craft::t('All users saved.'));
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'setUsernames') {
             $users = $this->getUsers();
             $message = '';
