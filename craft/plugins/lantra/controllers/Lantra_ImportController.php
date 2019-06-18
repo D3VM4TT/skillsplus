@@ -254,6 +254,7 @@ class Lantra_ImportController extends Lantra_BaseController
             'users' => count($this->users),
             'companyUsers' => count($this->companyUsers),
             'companyManagers' => count($this->companyManagers),
+            'results' => count($this->results),
             'complete' => $complete,
             'success' => $this->success,
             'failed' => $this->failed,
@@ -275,15 +276,29 @@ class Lantra_ImportController extends Lantra_BaseController
 
     private function deleteData()
     {
-        // nuke the results
+        $this->deleteUsers();
+        $this->deleteResults();
+        $this->deleteCompanies();
+        $this->deleteJobRoles();
+        $this->deleteUsers();
+    }
+
+    private function deleteResults() {
         $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = " . $this->sectionIdResults . ");";
         craft()->db->createCommand($mysql)->queryAll();
+    }
+    private function deleteCompanies()
+    {
         $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = " . $this->sectionIdCompanies . ");";
         craft()->db->createCommand($mysql)->queryAll();
-        // nuke the job roles
+    }
+
+    private function deleteJobRoles() {
         $mysql = "DELETE from {{categories}} WHERE groupId = " . $this->categoryGroupIdJobRoles . ";";
         craft()->db->createCommand($mysql)->queryAll();
-        // nuke all users (apart from admin)
+    }
+
+    private function deleteUsers() {
         $mysql = "DELETE from {{users}} WHERE admin = 0;";
         craft()->db->createCommand($mysql)->queryAll();
     }
@@ -297,7 +312,7 @@ class Lantra_ImportController extends Lantra_BaseController
             }
 
             // title, legacyId, legacyParentId
-            $title = trim($company[0]);
+            $title = utf8_encode(trim($company[0]));
             $legacyId = (int)trim($company[1]);
             $legacyParentId = (int)trim($company[2]);
 
@@ -388,21 +403,24 @@ class Lantra_ImportController extends Lantra_BaseController
         $x = 1;
         foreach ($this->users as $user) {
             // skip headers and empty
-            if (trim($user[0]) == 'name' || trim($user[0]) == '') {
+            if (trim($user[0]) == 'username' || trim($user[0]) == '') {
                 continue;
             }
 
-            // name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress
-            $names = $this->getNames($user[0]);
-            $legacyEmail = $user[1];
-            $legacyId = (int)trim($user[2]);
-            $legacyJobRoleId = (int)trim($user[3]);
-            $userDateOfBirth = trim((string)$user[4]);
-            $userStartDate = trim((string)$user[5]);
-            $userAddress = $user[6];
+            // username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress
+            $username = $user[0];
+            $names = $this->getNames($user[1]);
+            $legacyEmail = $user[2];
+            $legacyId = (int)trim($user[3]);
+            $legacyJobRoleId = (int)trim($user[4]);
+            $userDateOfBirth = trim((string)$user[5]);
+            $userStartDate = trim((string)$user[6]);
+            $userAddress = utf8_encode($user[7]);
             $userDummyEmail = 0;
 
-            $username = craft()->lantra_users->generateUsername($names[0], $names[1]);
+            if ($username != $legacyEmail) {
+                $username = craft()->lantra_users->generateUsername($username, $names[0], $names[1]);
+            }
 
             // generate an email address
             if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail)) {
@@ -554,9 +572,11 @@ class Lantra_ImportController extends Lantra_BaseController
 
     private function createResults()
     {
+        // $this->deleteResults();
+
         foreach ($this->results as $result) {
             // skip headers and empty
-            if (trim($result[0]) == 'type' || trim($result[0]) == '') {
+            if (trim(strtolower($result[0])) == 'type') {
                 continue;
             }
 
@@ -591,8 +611,9 @@ class Lantra_ImportController extends Lantra_BaseController
                 $entryModel->setContentFromPost([
                     'resultUnit' => [$unitEntry->id]
                 ]);
+                $entryModel->getContent()->title = $unitEntry->title;
             } else {
-                $entryModel->getContent()->title = $result[3];
+                $entryModel->getContent()->title = utf8_encode($result[3]);
             }
             $entryModel->setContentFromPost([
                 'resultStatus' => 'endorsed',
@@ -601,7 +622,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 'resultLocation' => $result[8],
                 'resultHours' => (int)$result[9] ? (int)$result[9] : null,
                 'resultValue' => (int)$result[10] ? (int)$result[10] : null,
-                'resultNotes' => $result[12],
+                'resultNotes' => utf8_encode($result[12]),
                 'resultEndorsedDate' => $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : DateTime::createFromFormat('d/m/Y', $result[4]),
                 'legacyResultFiles' => $result[13]
 
@@ -641,7 +662,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $firstName = implode(' ', $name);
         }
 
-        return [$firstName, $lastName];
+        return [utf8_encode($firstName), utf8_encode($lastName)];
     }
 
     private function getUserByLegacyId($legacyId)
@@ -651,6 +672,7 @@ class Lantra_ImportController extends Lantra_BaseController
         }
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->legacyId = $legacyId;
+        $criteria->status = null;
         return $criteria->first();
     }
 

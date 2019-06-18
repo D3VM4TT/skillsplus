@@ -966,11 +966,8 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws Exception
      */
     public function generateEmail($firstName = null, $lastName = null, $handle = null) {
-        if (is_null($handle)) {
-            $handle = $this->generateUsername($firstName, $lastName);
-        }
         $domain = craft()->lantra_settings->getConfig('schemeEmailDomain', 'lantra.co.uk');
-        return $handle . '@' . $domain;
+        return mt_rand(10000, 99999) . '@' . $domain;
     }
 
     /**
@@ -978,12 +975,23 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @param null $lastName
      * @return string
      */
-    public function generateUsername($firstName = null, $lastName = null) {
-        if ($firstName && $lastName) {
-            $handle =  preg_replace('/\s+/', '', strtolower(trim($firstName) . '.' . trim($lastName)));
-            return $handle . '.' . mt_rand(1000, 9999);
+    public function generateUsername($username, $firstName = null, $lastName = null) {
+        if ($username) {
+            // remove all characters except A-Z, a-z, 0-9, dots, hyphens and spaces, replace spaces with dots
+            $username = preg_replace('/\s+/', '.', preg_replace('/[^A-Za-z0-9\. -]/', '', strtolower($username)));
+            if ( ! $username || craft()->users->getUserByUsernameOrEmail($username)) {
+                $username = $username . mt_rand(10000, 99999);
+            }
         }
-        return 'user.'. mt_rand(1000, 9999);
+        elseif ($firstName && $lastName) {
+            $handle =  preg_replace('/\s+/', '', strtolower(trim($firstName) . '.' . trim($lastName)));
+            $username = $handle . '.' . mt_rand(10000, 99999);
+        }
+        else {
+            $username = 'user.'. mt_rand(10000, 99999);
+        }
+
+        return $username;
     }
 
     /**

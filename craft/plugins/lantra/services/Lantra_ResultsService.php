@@ -821,6 +821,49 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param EntryModel $resultEntry
+     * @throws \Exception
+     */
+    public function findResultLegacyFile(EntryModel $resultEntry) {
+        if (count($resultEntry->resultEvidence) || ! $resultEntry->legacyResultFiles) {
+            return;
+        }
+        $folderName = $resultEntry->authorId;
+        $parentFolder = craft()->assets->getFolderById(1);
+        $folder = craft()->assets->findFolder([
+            'parent' => $parentFolder,
+            'name' => $folderName
+        ]);
+        if (! $folder) {
+            $folder = craft()->assets->createFolder($parentFolder, $folderName);
+        }
+
+        $legacyFiles = explode(',', $resultEntry->legacyResultFiles);
+        $source = craft()->assetSources->getSourceById(1);
+        $assetIds = [];
+
+        foreach($legacyFiles as $filePath){
+            $legacyPath = $source->settings['path'] . $parentFolder->path . '/archive/' . $filePath;
+
+            $parts = explode('/', $legacyPath);
+            $filename = end($parts);
+
+            if (file_exists($legacyPath)) {
+                $assetIds[] = craft()->assets->insertFileByLocalPath(
+                    $legacyPath,
+                    $filename,
+                    $folder->id,
+                    AssetConflictResolution::Replace
+                );
+                unlink ($legacyPath);
+            }
+        }
+
+        $resultEntry->setContentFromPost(['resultEvidence' => $assetIds]);
+        craft()->entries->saveEntry($resultEntry);
+    }
+
+    /**
      * @param null $userId
      * @param array $userFilter
      * @param array $resultFilter

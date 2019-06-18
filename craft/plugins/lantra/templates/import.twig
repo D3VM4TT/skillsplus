@@ -6,13 +6,6 @@
 <body>
 
 <h1>Import Lantra Data</h1>
-
-<p>Companies: {{ companies }}</p>
-<p>Job Roles: {{ jobRoles }}</p>
-<p>User Accounts: {{ users }}</p>
-<p>Company Managers: {{ companyManagers }}</p>
-<p>Company Users: {{ companyUsers }}</p>
-
 {% if complete %}
     <p>Import complete in {{ time }} seconds!</p>
     <p>{{ success }} elements imported, {{ failed }} failed.</p>
@@ -21,7 +14,13 @@
     {% for l in log %}
     <p>{{ l }}</p>
     {% endfor %}
-
+{% else %}
+    <p>Companies: {{ companies }}</p>
+    <p>Job Roles: {{ jobRoles }}</p>
+    <p>User Accounts: {{ users }}</p>
+    <p>Company Managers: {{ companyManagers }}</p>
+    <p>Company Users: {{ companyUsers }}</p>
+    <p>Results : {{ results }}</p>
 {% endif %}
 <p>
     <a href="/actions/lantra/import/delete">Delete Existing Data</a>
@@ -33,7 +32,6 @@
     <a href="/actions/lantra/import/assignJobRoles">Assign Job Roles</a>
     <a href="/actions/lantra/import/results">Import Results</a>
 </p>
-
 
 <form enctype="multipart/form-data" action="/actions/lantra/import/upload" method="post">
     <input type="file" name="import[]" />
