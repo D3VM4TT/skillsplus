@@ -931,6 +931,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $rows = [$header];
         foreach($subordinates as $user) {
+            $mandatoryUnits = $this->userUnits($user);
             $company = craft()->lantra_users->userCompany($user);
             $row = [
                 $user->id,
@@ -938,9 +939,15 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $company ? $company->companyLabel : 'unknown',
             ];
             foreach ($headerIds as $id) {
-                $value = 'N/A';
                 if (isset($allResults[$user->id]) && isset($allResults[$user->id][$id])) {
-                    $value = $allResults[$user->id][$id]->$displayField;
+                    $fieldValue = $allResults[$user->id][$id]->$displayField;
+                    $value = $fieldValue ? $fieldValue: '-';
+                }
+                elseif (isset($mandatoryUnits[$id])) {
+                    $value = '';
+                }
+                else {
+                    $value = 'N/A';
                 }
                 $row[] = $value;
             }
