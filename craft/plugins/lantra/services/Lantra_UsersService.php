@@ -977,8 +977,8 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     public function generateUsername($username, $firstName = null, $lastName = null) {
         if ($username) {
-            // remove all characters except A-Z, a-z, 0-9, dots, hyphens and spaces, replace spaces with dots
-            $username = preg_replace('/\s+/', '.', preg_replace('/[^A-Za-z0-9\. -]/', '', strtolower($username)));
+            // remove all characters except A-Z, a-z, 0-9, dots, @, hyphens and spaces, replace spaces with dots
+            $username = preg_replace('/\s+/', '.', preg_replace('/[^A-Za-z0-9@\. -]/', '', strtolower($username)));
             if ( ! $username || craft()->users->getUserByUsernameOrEmail($username)) {
                 $username = $username . mt_rand(10000, 99999);
             }

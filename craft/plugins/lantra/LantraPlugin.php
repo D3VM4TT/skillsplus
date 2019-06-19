@@ -334,6 +334,8 @@ class LantraPlugin extends BasePlugin
                 array('action' => 'lantra/settings/index'),
             'lantra/settings/tools' =>
                 array('action' => 'lantra/settings/tools'),
+            'lantra/import' =>
+                array('action' => 'lantra/import/index'),
         );
     }
 

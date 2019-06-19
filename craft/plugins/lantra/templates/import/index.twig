@@ -1,0 +1,130 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+{% set title = 'Lantra Import' %}
+
+{% set fullPageForm = false %}
+
+{% set saveButton = null %}
+
+{% block content %}
+
+    <div>
+
+        {% if log %}
+            <h2>Process Log</h2>
+            {% for l in log %}
+                <p>{{ l }}</p>
+            {% endfor %}
+            <hr />
+        {% endif %}
+
+        <h2>Upload Import Data</h2>
+        <p>Column order <strong>MUST</strong> be accurate or the process will fail.</p>
+
+        <form method="post" action="" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="lantra/import/upload">
+            {{ forms.fileField ({
+                id:				"data",
+                name:			"data"
+            }) }}
+            <div>
+                <label>Data Type:</label>
+                <select name="type">
+                    <option value="companies">Companies</option>
+                    <option value="roles">Roles</option>
+                    <option value="users">Users</option>
+                    <option value="results">Results</option>
+                    <option value="companyUsers">Company Users</option>
+                    <option value="companyManagers">Company Managers</option>
+                </select>
+            </div>
+            <p>
+                <input type="submit" class="btn submit" value="{{ 'Upload' }}">
+            </p>
+        </form>
+
+        <hr />
+
+            <h2>Unprocessed Data</h2>
+
+            <table class="data fullwidth">
+                <tr>
+                    <th>Companies</th>
+                    <th>Roles</th>
+                    <th>Users</th>
+                    <th>Results</th>
+                    <th>Company Users</th>
+                    <th>Company Managers</th>
+                </tr>
+                <tr>
+                    <td>{{ unprocessed.companies }}</td>
+                    <td>{{ unprocessed.roles }}</td>
+                    <td>{{ unprocessed.users }}</td>
+                    <td>{{ unprocessed.results }}</td>
+                    <td>{{ unprocessed.companyUsers }}</td>
+                    <td>{{ unprocessed.companyManagers }}</td>
+                </tr>
+                <tr>
+                    <td><a href="/admin/lantra/import?process=removeCompanies" class="btn btn-small">Remove Companies</a></td>
+                    <td><a href="/admin/lantra/import?process=removeRoles" class="btn btn-small">Remove Roles</a></td>
+                    <td><a href="/admin/lantra/import?process=removeUsers" class="btn btn-small">Remove Users</a></td>
+                    <td><a href="/admin/lantra/import?process=removeResults" class="btn btn-small">Remove Results</a></td>
+                    <td><a href="/admin/lantra/import?process=removeCompanyUsers" class="btn btn-small">Remove Company Users</a></td>
+                    <td><a href="/admin/lantra/import?process=removeCompanyManagers" class="btn btn-small">Remove Company Managers</a></td>
+                </tr>
+            </table>
+
+            <p>
+                <a href="/admin/lantra/import?process=removeData" class="btn btn-small">Remove All Import Data</a>
+                <a href="/admin/lantra/import?process=resetData" class="btn btn-small">Reset All Import Data</a>
+            </p>
+
+            <hr />
+
+            <h2>Import Data To Craft ({{ limit }} each request)</h2>
+
+            <p><a href="/admin/lantra/import?process=importCompanies" class="btn btn-small">Import Companies</a></p>
+
+            <p><a href="/admin/lantra/import?process=importRoles" class="btn btn-small">Import Roles</a></p>
+
+            <p><a href="/admin/lantra/import?process=importUsers" class="btn btn-small">Import Users</a></p>
+
+            <p><a href="/admin/lantra/import?process=importResults" class="btn btn-small">Import Results</a></p>
+
+            <hr />
+
+            <h2>Process Craft Data ({{ limit }} each request)</h2>
+
+            <p><a href="/admin/lantra/import?process=buildHierarchy" class="btn btn-small">Build Hierarchy</a></p>
+
+            <p><a href="/admin/lantra/import?process=assignJobRoles" class="btn btn-small">Assign Job Roles</a></p>
+
+            <p><a href="/admin/lantra/import?process=assignCompanyManagers" class="btn btn-small">Assign Company Managers</a></p>
+
+            <p><a href="/admin/lantra/import?process=assignCompanyUsers" class="btn btn-small">Assign Company Users</a></p>
+
+            <hr />
+
+            <h2>Column Order</h2>
+
+            <p>Companies<br />title, legacyId, legacyCompanyId</p>
+            <p>Company Managers<br />legacyId, legacyCompanyId</p>
+            <p>Company Users<br />legacyId, legacyCompanyId</p>
+            <p>Results<br />type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours, resultValue, resultEndorsedDate, resultStatus, resultNotes, legacyResultFiles</p>
+            <p>Roles<br />title, legacyId</p>
+            <p>Users<br />username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress</p>
+
+            <hr />
+
+            <h2>Dangerous Stuff - Delete Craft Data</h2>
+
+            <p><a href="/admin/lantra/import?process=deleteCompanies" class="btn btn-small">Delete All Companies</a></p>
+
+            <p><a href="/admin/lantra/import?process=deleteResults" class="btn btn-small">Delete All Results</a></p>
+
+            <p><a href="/admin/lantra/import?process=deleteUsers" class="btn btn-small">Delete All Users</a></p>
+
+            <p><a href="/admin/lantra/import?process=deleteRoles" class="btn btn-small">Delete All Roles</a></p>
+    </div>
+
+{% endblock %}

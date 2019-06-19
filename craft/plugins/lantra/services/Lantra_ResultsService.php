@@ -199,8 +199,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $unitEntry = $resultEntry->resultUnit->first();
         $userId = craft()->userSession->getId();
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
-            $resultEntry->setContentFromPost(['resultOwner' => [$userId]]);
-            $saveContent = true;
+            if ( ! $resultEntry->resultOwner) {
+                $resultEntry->setContentFromPost(['resultOwner' => [$userId]]);
+                $saveContent = true;
+            }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);

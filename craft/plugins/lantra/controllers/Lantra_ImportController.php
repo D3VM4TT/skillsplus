@@ -2,23 +2,50 @@
 
 namespace Craft;
 
+class Lantra_ImportRecord extends BaseRecord
+{
+    /**
+     * Return table name.
+     *
+     * @return string
+     */
+    public function getTableName()
+    {
+        return 'lantra_import';
+    }
+
+    /**
+     * Return table attributes.
+     *
+     * @return array
+     */
+    protected function defineAttributes()
+    {
+        return array(
+            'type' => AttributeType::String,
+            'data' => AttributeType::String,
+            'processed' => AttributeType::Bool
+        );
+    }
+}
+
+class Lantra_ImportModel extends BaseModel
+{
+    protected function defineAttributes()
+    {
+        return array(
+            'type' => AttributeType::String,
+            'data' => AttributeType::String,
+            'processed' => AttributeType::Bool
+        );
+    }
+}
+
 class Lantra_ImportController extends Lantra_BaseController
 {
-
-    public $allowAnonymous = array('actionIndex', 'actionUpdate', 'actionUpload', 'actionDelete', 'actionCompanies', 'actionRoles', 'actionUsers', 'actionManagers', 'actionCompanyUsers', 'actionAssignJobRoles', 'actionResults', 'actionClean');
-    private $dataPath = '../craft-assets/import/';
-
-    private $companies = [];
-    private $roles = [];
-    private $users = [];
-    private $companyUsers = [];
-    private $companyManagers = [];
-    private $results = [];
-
-    private $update = [];
+    public $allowAnonymous = array('actionIndex', 'actionUpload');
 
     private $success = 0;
-    private $failed = 0;
     private $log = [];
 
     private $sectionIdResults = 10;
@@ -26,20 +53,19 @@ class Lantra_ImportController extends Lantra_BaseController
     private $typeIdCompany = 3;
     private $categoryGroupIdJobRoles = 1;
 
-    private $emailDomain = 'lantra.co.uk';
     private $emails;
 
     // temp array legacyId => id
     private $companyTemp = [];
     private $jobRoleTemp = [];
 
-    private $start;
+    private $limit = 250;
 
     public function __construct($id, $module = null)
     {
         craft()->userSession->requireAdmin();
 
-        $this->start = microtime(true);
+        $this->log = craft()->userSession->getFlash('log', []);
 
         // this might take some time...
         ini_set('memory_limit', '-1');
@@ -56,144 +82,282 @@ class Lantra_ImportController extends Lantra_BaseController
      */
     public function actionIndex()
     {
-        $this->getData('companies');
-        $this->getData('roles');
-        $this->getData('users');
-        $this->getData('companyManagers');
-        $this->getData('companyUsers');
-        $this->getData('results');
-        $this->loadTemplate();
-    }
-
-    public function actionUpdate()
-    {
-        $this->getData('update');
-
-        $count = 0;
-
-        foreach ($this->update as $row) {
-            $legacyId = $row[0];
-            $firstName = $row[1];
-            $lastName = $row[2];
-            $username = str_replace(' ', '', strtolower($firstName) . '.' . strtolower($lastName));
-            if ($legacyId && null != $user = $this->getUserByLegacyId($legacyId)) {
-                $user->firstName = $firstName;
-                $user->lastName = $lastName;
-                $user->username = $username;
-                if (craft()->users->saveUser($user)) {
-                    $count++;
-                }
-            }
-
-            echo $count . ' users updated ';
+        $process = craft()->request->getParam('process');
+        if ($process) {
+            $this->$process();
+            craft()->userSession->setFlash('log', $this->log);
+            craft()->request->redirect('/admin/lantra/import');
         }
-    }
-
-    /**
-     * Delete existing data
-     */
-    public function actionDelete()
-    {
-        $this->deleteData();
         $this->loadTemplate();
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionCompanies()
-    {
-        $this->getData('companies');
-        $this->createCompanies();
-        $this->createHierarchy();
-        $this->loadTemplate(true);
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionRoles()
-    {
-        $this->getData('roles');
-        $this->createJobRoles();
-        $this->loadTemplate(true);
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionUsers()
-    {
-        $this->getData('users');
-        $this->createUsers();
-        $this->loadTemplate(true);
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionManagers()
-    {
-        $this->getData('companyManagers');
-        $this->assignCompanyManagers();
-        $this->loadTemplate(true);
-    }
-
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionCompanyUsers()
-    {
-        $this->getData('companyUsers');
-        $this->assignCompanyUsers();
-        $this->loadTemplate(true);
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionAssignJobRoles()
-    {
-        $this->assignJobRoles();
-        $this->loadTemplate(true);
-    }
-
-    /**
-     * Import Lantra Data
-     *
-     * @throws mixed
-     */
-    public function actionResults()
-    {
-        $this->getData('results');
-        $this->createResults();
-        $this->loadTemplate(true);
     }
 
     /**
      * @throws Exception
+     * @throws HttpException
+     * @throws \CException
      */
-    public function actionClean()
-    {
+    public function actionUpload() {
+        $type = craft()->request->getRequiredPost('type');
+        $file = \CUploadedFile::getInstanceByName('data');
 
+        if (is_null($file)) {
+            craft()->userSession->setError(Craft::t('No file to upload!'));
+            $this->loadTemplate();
+        }
+
+        $filePath = AssetsHelper::getTempFilePath($file->extensionName);
+        $file->saveAs($filePath);
+        $csv = array_map('str_getcsv', file($filePath));
+        $total = 0;
+        $number = 0;
+        foreach ($csv as $row) {
+            $number++;
+            if ($this->isHeaderRow($row)) {
+                continue;
+            }
+            if (! $this->validateRowLength($row, $type)) {
+                $this->log[] = 'Invalid row length row number ' . $number;
+                continue;
+            }
+            $record = new Lantra_ImportRecord();
+            $record->type = $type;
+            $record->data = json_encode($row);
+            $record->save();
+            $total++;
+        }
+        @unlink($filePath);
+        craft()->userSession->setNotice($type . ' file uploaded, ' . $total . ' added for processing.');
+        $this->loadTemplate();
+    }
+
+    private function isHeaderRow($row) {
+        if (! count($row)) {
+            return true;
+        }
+        $first = strtolower($row[0]);
+        if ($first == 'legacyId' || $first == 'type' || $first == 'username' || $first == 'title') {
+            return true;
+        }
+        return false;
+    }
+
+    private function validateRowLength($row, $type) {
+        $lengths = [
+            'companies'         => 3,
+            'roles'             => 2,
+            'users'             => 8,
+            'results'           => 15,
+            'companyUsers'      => 2,
+            'companyManagers'   => 2,
+        ];
+        return count($row) == $lengths[$type];
+    }
+
+    ## DATA FUNCTIONS ##
+
+    public function removeData() {
+        Lantra_ImportRecord::model()->deleteAll();
+        craft()->userSession->setNotice(Craft::t('All raw import data removed.'));
+    }
+
+    public function resetData() {
+        Lantra_ImportRecord::model()->updateAll(['processed' => 0]);
+        craft()->userSession->setNotice(Craft::t('All data reset.'));
+    }
+
+    public function removeCompanies() {
+        $this->deleteDataByType('companies');
+        craft()->userSession->setNotice(Craft::t('All companies import data removed.'));
+    }
+
+    public function removeRoles() {
+        $this->deleteDataByType('roles');
+        craft()->userSession->setNotice(Craft::t('All roles import data removed.'));
+    }
+
+    public function removeUsers() {
+        $this->deleteDataByType('users');
+        craft()->userSession->setNotice(Craft::t('All users import data removed.'));
+    }
+
+    public function removeResults() {
+        $this->deleteDataByType('results');
+        craft()->userSession->setNotice(Craft::t('All results import data removed.'));
+    }
+
+    public function removeCompanyUsers() {
+        $this->deleteDataByType('companyManagers');
+        craft()->userSession->setNotice(Craft::t('All company users import data removed.'));
+    }
+
+    public function removeCompanyManagers() {
+        $this->deleteDataByType('companyUsers');
+        craft()->userSession->setNotice(Craft::t('All company managers import data removed.'));
+    }
+
+    ## IMPORT METHODS ##
+
+    public function importCompanies() {
+        $this->createCompanies($this->limit);
+        $unprocessed = $this->countDataByType('companies');
+        craft()->userSession->setNotice($this->success  . ' companies imported. ' . $unprocessed . ' remaining.');
+    }
+
+    public function importRoles() {
+        $this->createRoles($this->limit);
+        $unprocessed = $this->countDataByType('roles');
+        craft()->userSession->setNotice($this->success  . ' roles imported. ' . $unprocessed . ' remaining.');
+    }
+
+    public function importUsers() {
+        $this->createUsers($this->limit);
+        $unprocessed = $this->countDataByType('users');
+        craft()->userSession->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
+    }
+
+    public function importResults() {
+        $this->createResults($this->limit);
+        $unprocessed = $this->countDataByType('results');
+        craft()->userSession->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
+    }
+
+    ## PROCESS METHODS ##
+
+    public function buildHierarchy() {
+        // @todo limit this process too?
+        // build array of legacyId => id
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->limit = null;
+        foreach ($criteria->find() as $company) {
+            $this->companyTemp[$company->legacyId] = $company->id;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->limit = null;
+        foreach ($criteria->find() as $entryModel) {
+            $parentId = $this->getCompanyId($entryModel->legacyParentId);
+            if ($parentId) {
+                $entryModel->setContentFromPost([
+                    'companyParent' => [$parentId]
+                ]);
+                craft()->entries->saveEntry($entryModel);
+            }
+        }
+        craft()->userSession->setNotice('Company hierarchy created.');
+    }
+
+    public function assignJobRoles()  {
+        // @todo limit this process too??
+        // build array of legacyJobRoleId => id
+        $criteria = craft()->elements->getCriteria(ElementType::Category);
+        $criteria->group = 'roles';
+        $criteria->limit = null;
+        foreach ($criteria as $jobRole) {
+            $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = null;
+        foreach ($criteria->find() as $userModel) {
+            if ($userModel->legacyJobRoleId) {
+                $roleId = $this->getRoleId($userModel->legacyJobRoleId);
+                if ($roleId) {
+                    $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
+                    if (craft()->users->saveUser($userModel)) {
+                        $this->success++;
+                    }
+                }
+            }
+        }
+        craft()->userSession->setNotice('Job roles assigned to ' . $this->success . ' users.');
+    }
+
+    public function assignCompanyManagers() {
+        $companyManagers = $this->getDataByType('companyManagers', $this->limit);
+        if (! $companyManagers) {
+            return craft()->userSession->setNotice('No company managers to process.');
+        }
+        foreach ($companyManagers as $id => $manager) {
+            // legacyId, legacyCompanyId
+            $companyManager = $this->getUserByLegacyId((int)$manager[0]);
+            $companyEntry = $this->getCompanyByLegacyId((int)$manager[1]);
+            $managerReadOnly = isset($manager[2]) && $manager[2] == '1';
+
+            if ($companyEntry && $companyManager) {
+                $companyEntry->setContentFromPost([
+                    'companyPrimaryManagers' => array_merge($companyEntry->companyPrimaryManagers->ids(), [$companyManager->id])
+                ]);
+                craft()->entries->saveEntry($companyEntry);
+                // make sure user is in company manager group
+                craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
+                $companyManager->setContentFromPost([
+                    'managerReadOnly' => $managerReadOnly
+                ]);
+                craft()->elements->saveElement($companyManager, false);
+                $this->success++;
+            }
+            $this->setProcessed($id);
+        }
+        craft()->userSession->setNotice($this->success . ' managers assigned.');
+    }
+
+    public function assignCompanyUsers() {
+        $companyUsers = $this->getDataByType('companyUsers', $this->limit);
+        if (! $companyUsers) {
+            return craft()->userSession->setNotice('No company users to process.');
+        }
+        foreach ($companyUsers as $id => $user) {
+            $legacyUserId = trim($user[0]);
+            $legacyCompanyId = trim($user[1]);
+            // legacyId, legacyCompanyId
+            $companyUser = $this->getUserByLegacyId($legacyUserId);
+            $companyEntry = $this->getCompanyByLegacyId($legacyCompanyId);
+            if ($companyEntry && $companyUser) {
+                // skip if manager
+                $managerIds = (array)$companyEntry->companySecondaryManagers->ids();
+                if (!in_array($companyUser->id, $managerIds)) {
+                    $companyUser->setContentFromPost([
+                        'userCompany' => [$companyEntry->id]
+                    ]);
+                    craft()->elements->saveElement($companyUser, false);
+                    $this->success++;
+                }
+            }
+            $this->setProcessed($id);
+        }
+        craft()->userSession->setNotice($this->success . ' users assigned.');
+    }
+
+    ## DELETE METHODS ##
+
+    public function deleteCompanies() {
+        $this->deleteEntriesBySectionId(3);
+        craft()->userSession->setNotice('All Craft companies deleted.');
+    }
+
+    public function deleteResults() {
+        $this->deleteEntriesBySectionId(10);
+        craft()->userSession->setNotice('All Craft results deleted.');
+    }
+
+    public function deleteRoles() {
+        $mysql = "DELETE from {{categories}} WHERE groupId = 1";
+        craft()->db->createCommand($mysql)->query();
+        craft()->userSession->setNotice('All Craft Roles deleted.');
+    }
+
+    public function deleteUsers() {
+        $mysql = "DELETE from {{users}} WHERE admin = 0;";
+        craft()->db->createCommand($mysql)->query();
+        craft()->userSession->setNotice('All Craft Users deleted.');
+    }
+
+    public function cleanHierarchy() {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->companyUpdated = false;
         $criteria->order = 'title';
-        $criteria->limit = 50;
+        $criteria->limit = 200;
         $count = 0;
 
         foreach ($criteria->find() as $company) {
@@ -205,112 +369,66 @@ class Lantra_ImportController extends Lantra_BaseController
             }
             $company->setContentFromPost([
                 'companyUpdated' => true,
-                'companySecondaryManagers' => $managerIds
+                'companyPrimaryManagers' => $managerIds
             ]);
             if (craft()->entries->saveEntry($company)) {
                 $count++;
             }
         }
-
-        echo $count . ' companies updated ';
-
-        die();
     }
 
-    private function isParentCompanyManager($company, $manager)
-    {
-        $parents = $this->getParents($company);
-        $managerIds = [];
-        foreach ($parents as $parent) {
-            foreach ($parent->companySecondaryManagers as $m) {
-                $managerIds[] = $m->id;
-            }
+    ## PRIVATE METHODS ##
+
+    private function setProcessed($id) {
+        return Lantra_ImportRecord::model()->updateByPk($id, ['processed' => 1]);
+    }
+
+    private function deleteEntriesBySectionId ($sectionId) {
+        $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = '" . $sectionId. "');";
+        craft()->db->createCommand($mysql)->query();
+    }
+
+    private function getDataByType($type, $limit = null, $processed = 0) {
+        $criteria = new \CDbCriteria();
+        $criteria->condition = 'type = :type AND processed = :processed';
+        $criteria->params = array(':type' => $type, ':processed' => $processed);
+        $criteria->limit = $limit;
+        $rows = Lantra_ImportRecord::model()->findAll($criteria);
+        $return = [];
+        foreach($rows as $row) {
+            $return[$row['id']] = json_decode($row['data']);
         }
-        return in_array($manager->id, $managerIds);
+        return $return;
     }
 
-    private function getParents($company, $parents = [])
-    {
-        if (!$company->companyParent->count()) {
-            return $parents;
+    private function countDataByType($type, $processed = 0) {
+        return Lantra_ImportRecord::model()->countByAttributes(['type' => $type, 'processed' => $processed]);
+    }
+
+    private function deleteDataByType($type) {
+        return Lantra_ImportRecord::model()->deleteAllByAttributes(['type' => $type]);
+    }
+
+    private function resetDataByType($type) {
+        return Lantra_ImportRecord::model()->updateAll(['processed' => 0], ['type' => $type]);
+    }
+
+    private function switchManagers() {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        foreach($criteria->find() as $company) {
+            $managers = $company->companySecondaryManagers->ids();
+            $company->setContentFromPost([
+                'companyPrimaryManagers' => $managers,
+                'companySecondaryManagers' => []
+            ]);
+            craft()->elements->saveElement($company, false);
         }
-        $parents[] = $company->companyParent->first();
-        return $this->getParents($company->companyParent->first(), $parents);
     }
 
-    /**
-     * private methods
-     */
-    private function getData($file)
-    {
-        $this->$file = $this->importCsv($file . '.csv');
-    }
-
-    private function loadTemplate($complete = false)
-    {
-        $variables = [
-            'companies' => count($this->companies),
-            'jobRoles' => count($this->roles),
-            'users' => count($this->users),
-            'companyUsers' => count($this->companyUsers),
-            'companyManagers' => count($this->companyManagers),
-            'results' => count($this->results),
-            'complete' => $complete,
-            'success' => $this->success,
-            'failed' => $this->failed,
-            'time' => (int)microtime(true) - $this->start,
-            'log' => $this->log
-        ];
-
-        $this->renderTemplate('lantra/import', $variables);
-    }
-
-    private function importCsv($file)
-    {
-        $path = $this->dataPath . $file;
-        if (!is_file($path)) {
-            return [];
-        }
-        return array_map('str_getcsv', file($path));
-    }
-
-    private function deleteData()
-    {
-        $this->deleteUsers();
-        $this->deleteResults();
-        $this->deleteCompanies();
-        $this->deleteJobRoles();
-        $this->deleteUsers();
-    }
-
-    private function deleteResults() {
-        $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = " . $this->sectionIdResults . ");";
-        craft()->db->createCommand($mysql)->queryAll();
-    }
-    private function deleteCompanies()
-    {
-        $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = " . $this->sectionIdCompanies . ");";
-        craft()->db->createCommand($mysql)->queryAll();
-    }
-
-    private function deleteJobRoles() {
-        $mysql = "DELETE from {{categories}} WHERE groupId = " . $this->categoryGroupIdJobRoles . ";";
-        craft()->db->createCommand($mysql)->queryAll();
-    }
-
-    private function deleteUsers() {
-        $mysql = "DELETE from {{users}} WHERE admin = 0;";
-        craft()->db->createCommand($mysql)->queryAll();
-    }
-
-    private function createCompanies()
-    {
-        foreach ($this->companies as $company) {
-            // skip headers and empty
-            if (trim($company[0]) == 'title' || trim($company[0]) == '') {
-                continue;
-            }
-
+    private function createCompanies($limit = 250) {
+        $companies = $this->getDataByType('companies', $limit);
+        foreach ($companies as $id => $company) {
             // title, legacyId, legacyParentId
             $title = utf8_encode(trim($company[0]));
             $legacyId = (int)trim($company[1]);
@@ -328,47 +446,15 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
             } else {
-                $this->log [] = implode(',', $company);
-                $this->failed++;
+                $this->log[] = 'Could not save company ' . $title;
             }
+            $this->setProcessed($id);
         }
     }
 
-    private function createHierarchy()
-    {
-        // build array of legacyId => id
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
-        $criteria->limit = null;
-
-        foreach ($criteria->find() as $company) {
-            $this->companyTemp[$company->legacyId] = $company->id;
-        }
-
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
-        $criteria->limit = null;
-
-        foreach ($criteria->find() as $entryModel) {
-
-            $parentId = $this->getCompanyId($entryModel->legacyParentId);
-            if ($parentId) {
-                $entryModel->setContentFromPost([
-                    'companyParent' => [$parentId]
-                ]);
-                craft()->entries->saveEntry($entryModel);
-            }
-        }
-    }
-
-    private function createJobRoles()
-    {
-        foreach ($this->roles as $jobRole) {
-            // skip headers and empty
-            if (trim($jobRole[0]) == 'title' || trim($jobRole[0]) == '') {
-                continue;
-            }
-
+    private function createRoles($limit) {
+        $roles = $this->getDataByType('roles', $limit);
+        foreach ($roles as $id => $jobRole) {
             // title, legacyId
             $title = trim($jobRole[0]);
             $legacyId = (int)trim($jobRole[1]);
@@ -383,30 +469,24 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->categories->saveCategory($categoryModel)) {
                 $this->success++;
             } else {
-                $this->log [] = implode(',', $jobRole);
-                $this->failed++;
+                $this->log[] = 'Could not save role ' . $title;
             }
+            $this->setProcessed($id);
         }
     }
 
-    private function createUsers()
-    {
-        // build array of legacyJobRoleId => id
+    private function createUsers($limit) {
+        $users = $this->getDataByType('users', $limit);
+
+        // build array of roles legacyJobRoleId => id
         $criteria = craft()->elements->getCriteria(ElementType::Category);
         $criteria->group = 'roles';
         $criteria->limit = null;
-
         foreach ($criteria as $jobRole) {
             $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
         }
 
-        $x = 1;
-        foreach ($this->users as $user) {
-            // skip headers and empty
-            if (trim($user[0]) == 'username' || trim($user[0]) == '') {
-                continue;
-            }
-
+        foreach ($users as $id => $user) {
             // username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress
             $username = $user[0];
             $names = $this->getNames($user[1]);
@@ -429,15 +509,14 @@ class Lantra_ImportController extends Lantra_BaseController
             } else {
                 $emailAddress = $legacyEmail;
             }
+
             // make sure same email not given twice
             $this->emails[] = $legacyEmail;
-
             $userModel = new UserModel();
             $userModel->username = $username;
             $userModel->email = $emailAddress;
             $userModel->firstName = $names[0];
             $userModel->lastName = $names[1];
-
             $userModel->getContent()->setAttributes([
                 'legacyId' => $legacyId,
                 'legacyEmail' => $legacyEmail,
@@ -445,156 +524,58 @@ class Lantra_ImportController extends Lantra_BaseController
                 'userAddress' => $userAddress,
                 'userDummyEmail' => $userDummyEmail
             ]);
-
             if (strlen($userDateOfBirth) == 10) {
                 $userModel->getContent()->setAttributes([
                     'userDateOfBirth' => DateTime::createFromFormat('d/m/Y', $userDateOfBirth)
                 ]);
             }
-
             if (strlen($userStartDate) == 10) {
                 $userModel->getContent()->setAttributes([
                     'userStartDate' => DateTime::createFromFormat('d/m/Y', $userStartDate)
                 ]);
             }
-
             $roleId = $this->getRoleId($user[5]);
             if ($roleId) {
                 $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
             }
-
             $groups = [4];
-
             if (craft()->users->saveUser($userModel) && craft()->userGroups->assignUserToGroups($userModel->id, $groups)) {
                 $this->success++;
             } else {
-                $this->log [] = implode(',', $user);
-                $this->log [] = implode(',', $userModel->getAllErrors());
-                $this->failed++;
+                $this->log[] = 'Could not save user ' . $legacyId;
             }
-            $x++;
+            $this->setProcessed($id);
         }
     }
 
-    private function assignJobRoles()
-    {
-        // build array of legacyJobRoleId => id
-        $criteria = craft()->elements->getCriteria(ElementType::Category);
-        $criteria->group = 'roles';
-        $criteria->limit = null;
-
-        foreach ($criteria as $jobRole) {
-            $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
-        }
-
-        $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->limit = null;
-
-        $x = 1;
-        foreach ($criteria->find() as $userModel) {
-            if ($userModel->legacyJobRoleId) {
-                $roleId = $this->getRoleId($userModel->legacyJobRoleId);
-                if ($roleId) {
-                    $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
-                    if (craft()->users->saveUser($userModel)) {
-                        $this->success++;
-                    } else {
-                        $this->log [] = implode(',', $userModel->getAllErrors());
-                        $this->failed++;
-                    }
-                    $x++;
-                }
-            }
-        }
-    }
-
-    private function assignCompanyManagers()
-    {
-        foreach ($this->companyManagers as $manager) {
-
-            // skip headers and empty
-            if ($manager[0] == 'legacyId' || trim($manager[0]) == '') {
-                continue;
-            }
-
-            // legacyId, legacyCompanyId
-            $companyManager = $this->getUserByLegacyId((int)$manager[0]);
-            $companyEntry = $this->getCompanyByLegacyId((int)$manager[1]);
-            $managerReadOnly = isset($manager[2]) && $manager[2] == '1';
-
-            if ($companyEntry && $companyManager) {
-                $companyEntry->setContentFromPost([
-                    'companySecondaryManagers' => array_merge($companyEntry->companySecondaryManagers->ids(), [$companyManager->id])
-                ]);
-                craft()->entries->saveEntry($companyEntry);
-                // make sure user is in company manager group
-                craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
-                $companyManager->setContentFromPost([
-                    'managerReadOnly' => $managerReadOnly
-                ]);
-                craft()->elements->saveElement($companyManager, false);
-                $this->success++;
-            }
-        }
-    }
-
-    private function assignCompanyUsers()
-    {
-        foreach ($this->companyUsers as $row) {
-
-            $legacyUserId = trim($row[0]);
-            $legacyCompanyId = trim($row[1]);
-
-            // skip headers and empty
-            if ($legacyUserId == 'legacyId' || empty($legacyUserId)) {
-                continue;
-            }
-
-            // legacyId, legacyCompanyId
-            $companyUser = $this->getUserByLegacyId($legacyUserId);
-            $companyEntry = $this->getCompanyByLegacyId($legacyCompanyId);
-
-            if ($companyEntry && $companyUser) {
-                // skip if manager
-                $managerIds = (array)$companyEntry->companySecondaryManagers->ids();
-                if (!in_array($companyUser->id, $managerIds)) {
-                    $companyUser->setContentFromPost([
-                        'userCompany' => [$companyEntry->id]
-                    ]);
-                    craft()->elements->saveElement($companyUser, false);
-                    $this->success++;
-                } else {
-                    $this->failed++;
-                }
-            }
-        }
-    }
-
-    private function createResults()
-    {
-        // $this->deleteResults();
-
-        foreach ($this->results as $result) {
-            // skip headers and empty
-            if (trim(strtolower($result[0])) == 'type') {
-                continue;
-            }
-
-            // type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultValue, resultEndorsedDate, resultNotes, resultEvidence
+    private function createResults($limit) {
+        $results = $this->getDataByType('results', $limit);
+        foreach ($results as $id => $result) {
+            // type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultValue, resultEndorsedDate, resultStatus, resultNotes, resultEvidence
             $legacyUserId = (int)$result[1];
             $legacyUnitId = (int)$result[2];
-
-            $resultType = $legacyUnitId ? 'unitResult' : 'userResult';
+            $title = $result[3];
+            $postDate = $result[4];
+            $resultStartDate = $result[5];
+            $resultEndDate = $result[6];
+            $expiryDate = $result[7];
+            $resultLocation = $result[8];
+            $resultHours = $result[9];
+            $resultValue = $result[10];
+            $resultEndorsedDate = $result[11];
+            $resultStatus = strtolower($result[12]) == 'unendorsed' ? 'pending' : 'endorsed';
+            $resultNotes = $result[13];
+            $legacyResultFiles = $result[14];
             $author = $this->getUserByLegacyId($legacyUserId);
-            $postDate = empty(trim($result[7])) ? date('d/m/Y') : $result[4];
 
             if (!$author) {
-                $this->log [] = 'Author ID not found ' . $legacyUserId;
-                $this->failed++;
+                $this->log[] = 'legacyUserId not found ' . $legacyUserId;
+                $this->setProcessed($id);
                 continue;
             }
 
             $unitEntry = $legacyUnitId ? $this->getEntryByLegacyId($legacyUnitId) : null;
+            $resultType = $unitEntry ? 'unitResult' : 'userResult';
 
             $entryModel = new EntryModel();
             $entryModel->sectionId = $this->sectionIdResults;
@@ -604,7 +585,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $entryModel->postDate = DateTime::createFromFormat('d/m/Y', $postDate);
 
             if (!empty(trim($result[7]))) {
-                $entryModel->expiryDate = DateTime::createFromFormat('d/m/Y', $result[7]);
+                $entryModel->expiryDate = DateTime::createFromFormat('d/m/Y', $expiryDate);
             }
 
             if ($resultType == 'unitResult') {
@@ -613,39 +594,67 @@ class Lantra_ImportController extends Lantra_BaseController
                 ]);
                 $entryModel->getContent()->title = $unitEntry->title;
             } else {
-                $entryModel->getContent()->title = utf8_encode($result[3]);
+                $entryModel->getContent()->title = utf8_encode($title);
             }
             $entryModel->setContentFromPost([
-                'resultStatus' => 'endorsed',
-                'resultStartDate' => DateTime::createFromFormat('d/m/Y', $result[5]),
-                'resultFinishDate' => DateTime::createFromFormat('d/m/Y', $result[6]),
-                'resultLocation' => $result[8],
-                'resultHours' => (int)$result[9] ? (int)$result[9] : null,
-                'resultValue' => (int)$result[10] ? (int)$result[10] : null,
-                'resultNotes' => utf8_encode($result[12]),
-                'resultEndorsedDate' => $result[10] ? DateTime::createFromFormat('d/m/Y', $result[11]) : DateTime::createFromFormat('d/m/Y', $result[4]),
-                'legacyResultFiles' => $result[13]
+                'resultOwner' => [$author->id],
+                'resultStatus' => $resultStatus,
+                'resultStartDate' => DateTime::createFromFormat('d/m/Y', $resultStartDate),
+                'resultFinishDate' => DateTime::createFromFormat('d/m/Y',$resultEndDate),
+                'resultLocation' => $resultLocation,
+                'resultHours' => (int)$resultHours ? (int)$resultHours : null,
+                'resultValue' => (int)$resultValue ? (int)$resultValue : null,
+                'resultNotes' => utf8_encode($resultNotes),
+                'resultEndorsedDate' => $resultEndorsedDate ? DateTime::createFromFormat('d/m/Y', $resultEndorsedDate) : null,
+                'legacyResultFiles' => $legacyResultFiles
 
             ]);
-
-            $resultEvidenceId = $this->getAssetId($result[13]);
-            if ($resultEvidenceId) {
-                $entryModel->setContentFromPost([
-                    'resultEvidence' => [$resultEvidenceId],
-                ]);
-            }
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
             } else {
-                $this->log [] = implode(',', $entryModel->getAllErrors());
-                $this->failed++;
+                $this->log[] = 'Could not save result';
             }
+            $this->setProcessed($id);
         }
     }
 
-    private function getAssetId($filename)
+    private function loadTemplate()
     {
-        return null;
+        $variables = [
+            'unprocessed' => [
+                'companies'         => $this->countDataByType('companies'),
+                'roles'             => $this->countDataByType('roles'),
+                'users'             => $this->countDataByType('users'),
+                'companyUsers'      => $this->countDataByType('companyUsers'),
+                'companyManagers'   => $this->countDataByType('companyManagers'),
+                'results'           => $this->countDataByType('results')
+            ],
+            'log' => $this->log,
+            'limit' => $this->limit
+        ];
+
+        $this->renderTemplate('lantra/import/index', $variables);
+    }
+
+    private function isParentCompanyManager($company, $manager)
+    {
+        $parents = $this->getParents($company);
+        $managerIds = [];
+        foreach ($parents as $parent) {
+            foreach ($parent->companySecondaryManagers as $m) {
+                $managerIds[] = $m->id;
+            }
+        }
+        return in_array($manager->id, $managerIds);
+    }
+
+    private function getParents($company, $parents = [])
+    {
+        if (!$company->companyParent->count()) {
+            return $parents;
+        }
+        $parents[] = $company->companyParent->first();
+        return $this->getParents($company->companyParent->first(), $parents);
     }
 
     private function getNames($fullName)
@@ -707,9 +716,7 @@ class Lantra_ImportController extends Lantra_BaseController
         return $legacyId && isset($this->jobRoleTemp[$legacyId]) ? $this->jobRoleTemp[$legacyId] : null;
     }
 
-    private function validEmail($email)
-    {
-
+    private function validEmail($email) {
         return (boolean)preg_match(
             '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}' .
             '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/sD',
