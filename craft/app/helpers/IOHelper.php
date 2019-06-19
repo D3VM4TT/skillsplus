@@ -761,7 +761,7 @@ class IOHelper
 			}
 
 			// Because setting permission with mkdir is a crapshoot.
-			$suppressErrors ? @chmod($path, $permissions) : chmod($path, $permissions);
+			$suppressErrors ? @chmod($path, $permissions) : @chmod($path, $permissions);
 			$suppressErrors ? @umask($oldumask) : umask($oldumask);
 			return new Folder($path);
 		}
