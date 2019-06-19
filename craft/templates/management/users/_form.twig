@@ -50,6 +50,14 @@
         {% else %}
             <input type="hidden" name="redirect" value="/management/users">
         {% endif %}
+
+        {% if account is defined and account.id %}
+            <div id="name-fields">
+                <div class="col-6 field--wrapper">
+                    <h3>Account ID: {{ account.id }}</h3>
+                </div>
+            </div>
+        {% endif %}
         
         <div id="name-fields">
         <div class="col-6 field--wrapper">
