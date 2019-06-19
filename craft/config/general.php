@@ -22,6 +22,7 @@ return array(
             'basePath' => '/datadisk/sites/' . $site . '/',
             'assetsPath' => '/datadisk/azureshare/' . $site . '/',
             'server' => 'prod',
+            'site' => $site,
         ),
     ),
     /* local server */
