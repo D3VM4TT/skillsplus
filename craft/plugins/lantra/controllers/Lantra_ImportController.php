@@ -72,6 +72,8 @@ class Lantra_ImportController extends Lantra_BaseController
         ini_set('max_execution_time', 0);
         set_time_limit(0);
 
+        $this->createTable();
+
         parent::__construct($id, $module);
     }
 
@@ -721,5 +723,20 @@ class Lantra_ImportController extends Lantra_BaseController
             '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}' .
             '[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/sD',
             $email);
+    }
+
+    private function createTable() {
+        $mysql = "CREATE TABLE IF NOT EXISTS `craft_lantra_import` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `type` varchar(20) DEFAULT NULL,
+            `data` text,
+            `processed` char(1) DEFAULT '0',
+            `dateCreated` text,
+            `dateUpdated` text,
+            `uid` varchar(45) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=28465 DEFAULT CHARSET=latin1;";
+
+        craft()->db->createCommand($mysql)->query();
     }
 }
