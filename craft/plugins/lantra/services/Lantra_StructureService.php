@@ -148,16 +148,21 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     private function getJsTreeUsers($entryId) {
         $entry =  craft()->entries->getEntryById($entryId);
-        // company managers
+        // company users
         if ($entry->getSection()->id == 3) {
+            $managerIds = craft()->lantra_users->getCompanyManagerIds($entry);
             $users = craft()->lantra_users->getCompanyUsers($entry);
         }
-        // team managers
+        // team users
         else {
+            $managerIds = craft()->lantra_users->getTeamManagerIds($entry);
             $users = craft()->lantra_users->getTeamUsers($entry);
         }
         $return = [];
         foreach($users as $user) {
+            if (in_array($user->id, $managerIds)) {
+                continue;
+            }
             $nodeId = $entryId.'u'.$user->id;
             $title = $user->fullname;
             if ($user->userRole->total()) {

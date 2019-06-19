@@ -309,11 +309,12 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return object
      * @throws Exception
      */
-    public function getCompanyUsers($companyId, $count = false) {
+    public function getCompanyUsers($companyId, $count = false, $includeManagers = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
+        $criteria->group = $includeManagers ? [2, 3, 4] : [4];
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -324,11 +325,12 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return object
      * @throws Exception
      */
-    public function getTeamUsers($teamId, $count = false) {
+    public function getTeamUsers($teamId, $count = false, $includeManagers = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
         $criteria->order = 'lastName';
+        $criteria->group = $includeManagers ? [2, 3, 4] : [4];
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -349,6 +351,20 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $count ? count($return) : $return;
     }
 
+    /** Get all company manager ids
+     *
+     * @param EntryModel $company
+     * @return array
+     * @throws Exception
+     */
+    public function getCompanyMangerIds(EntryModel $company) {
+        $ids = [];
+        foreach($this->getCompanyMangers($company) as $manager) {
+            $ids[] = $manager->id;
+        }
+        return $ids;
+    }
+
     /** Get all team managers
      *
      * @param EntryModel $team
@@ -365,6 +381,21 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         return $count ? count($return) : $return;
     }
+
+    /** Get all team manager ids
+     *
+     * @param EntryModel $team
+     * @return array
+     * @throws Exception
+     */
+    public function getTeamMangerIds(EntryModel $team) {
+        $ids = [];
+        foreach($this->getTeamManagers($team) as $manager) {
+            $ids[] = $manager->id;
+        }
+        return $ids;
+    }
+
     /**
      * Return all company ids (recursive)
      *

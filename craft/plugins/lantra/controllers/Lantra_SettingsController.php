@@ -131,6 +131,29 @@ class Lantra_SettingsController extends BaseController
                 }
             }
         }
+
+        if ($tool == 'setManagerUserCompany') {
+            $managers = $this->getManagers();
+            $message = '';
+            foreach($managers as $manager) {
+                $companies = craft()->lantra_users->getManagerCompanies($manager, true);
+                $companyId = null;
+                foreach($companies as $company) {
+                    $companyId = $company->id;
+                }
+                if ($companyId) {
+                    $manager->setContentFromPost([
+                        'userCompany' => [$companyId]
+                    ]);
+                    if ( ! craft()->users->saveUser($manager)) {
+                        $message .= ' ' . $manager->fullName . ' not updated.';
+                    };
+                }
+            }
+            craft()->userSession->setNotice(Craft::t('Manager user company updated'));
+            $this->redirectToPostedUrl();
+        }
+
         $this->renderTemplate('lantra/settings/tools');
     }
 
