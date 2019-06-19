@@ -390,8 +390,8 @@ $(document).ready(function(){
 
     $('.module-group-tabs').show();
 
-    $('input#companyManagers').change(function(){
-        if ($(this).is(':checked')){
+    $('input[name=companyManagers]').change(function(){
+        if ($(this).attr('id') == 'userManager' && $(this).is(':checked')){
             return $('div#manager-fields').removeClass('hide');
         }
         $('div#manager-fields').addClass('hide');

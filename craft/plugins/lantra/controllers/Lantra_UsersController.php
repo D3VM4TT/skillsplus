@@ -70,6 +70,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         if (craft()->request->getPost('companyManagers')) {
             $groupIds[] = 2;
             $companyManager = true;
+            $primaryManagerCompany = $fields['userCompany'] ? $fields['userCompany'] : null;
         }
         if (craft()->request->getPost('teamManagers')) {
             $groupIds[] = 3;
@@ -88,11 +89,12 @@ class Lantra_UsersController extends Lantra_BaseController {
         elseif (craft()->users->saveUser($user)) {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
             // set user manager relations
-            if ($companyManager )
+            if ($companyManager)
             {
-                $primaryManagerCompanyIds = craft()->request->getPost('userPrimaryManagerCompanies', []);
+                if ($primaryManagerCompany) {
+                    craft()->lantra_users->setManager([$primaryManagerCompany], $user, 'primary');
+                }
                 $secondaryManagerCompanyIds = craft()->request->getPost('userSecondaryManagerCompanies', []);
-                craft()->lantra_users->setManager($primaryManagerCompanyIds, $user, 'primary');
                 craft()->lantra_users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
             }
             $this->_returnMessage('User has been saved.', true, $redirect);

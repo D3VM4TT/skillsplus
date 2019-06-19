@@ -114,116 +114,96 @@
             </div>
         {%  endfor %}
         <h2>User settings</h2>
-        <div class="col-6">
-        <div class="field--wrapper">
-            <label for="userCompany">Company:</label>
-            <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
-                <option value="">Not required if User is a Manager (see note below)</option>
-                {% for companyEntry in companyEntries %}
-                    <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
-                {% endfor %}
-            </select>
-            <p class="col-pd-top">Note:<br />If the User is a Manager click 'Make Company Manager' and assign to Companies in the Manager settings below.</p>
-        </div>
-        </div>
-        <div class="col-6">
         <div class="field--wrapper">
             <label for="userRole">Job Roles (optional):</label>
             {% set roleCategories = craft.categories.group('roles') %}
             <input type="hidden" name="fields[userRole]" value="" />
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
-                <option value="{{ roleCategory.id }}"
-                        {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                    <option value="{{ roleCategory.id }}"
+                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
                 {% endfor %}
             </select>
         </div>
+        <div class="field--wrapper">
+            <label for="userCompany">Primary Location: For Hierarchy and Reporting</label>
+            <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
+                {% for companyEntry in companyEntries %}
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="field--wrapper">
-        <h2>Manager settings</h2>
-                <ul class="options">
-                    <li class="col-6">
-                        <input type="checkbox" id="companyManagers" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %}>
-                        <span>Make Company Manager</span>
-                        <div id="manager-fields" class="hide {% if not isCompanyManager %}{% endif %}">
-                        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                        {% endif %}
+            <label><input type="radio" id="userMember" name="companyManagers" value="0" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member</label>
+            <label><input type="radio" id="userManager" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager</label>
+        </div>
+        <div class="field--wrapper">
+            <div id="manager-fields" class="hide {% if not isCompanyManager %}{% endif %}">
+                <div class="col-6">
+                    <h2>Manager settings</h2>
+                    {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}{% endif %}
 
-                        <div class="col-pd-top field--wrapper">
+                    <div class="field--wrapper">
                         <input type="hidden" name="fields[managerReadOnly]" value="0">
-                        <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1" {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
+                        <input type="checkbox" id="readOnly" name="fields[managerReadOnly]" value="1"
+                               {% if account is defined and account.managerReadOnly %}checked="checked"{% endif %}>
                         <span>Make Read Only Manager</span>
-                        </div>
+                    </div>
 
-                            {% set primaryManagerCompanies = [] %}
-                            {% set secondaryManagerCompanies = [] %}
+                    {% set secondaryManagerCompanies = [] %}
 
-                        <div class="field--wrapper ">
-                        <label for="userCompany">Primary manager companies:</label>
-
-                        <select multiple class="js-select2" name="userPrimaryManagerCompanies[]" id="userPrimaryManagerCompanies">
-                        {% for companyEntry in companyEntries %}
-                            {% set selected = '' %}
-                            {% if account is defined and account.id in companyEntry.companyPrimaryManagers.ids() %}
-                                {% set primaryManagerCompanies = primaryManagerCompanies|merge([companyEntry]) %}
-                                {% set selected = ' selected="selected"' %}
-                            {% endif %}
-                            <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
-                        {% endfor %}
-                        </select>
-
-                        <div class="field--wrapper col-pd-top">
+                    <div class="field--wrapper">
                         <label for="userCompany">Secondary manager companies:</label>
 
-                        <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
-                        {% for companyEntry in companyEntries %}
-                            {% set selected = '' %}
-                            {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %}
-                                {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([companyEntry]) %}
-                                {% set selected = ' selected="selected"' %}
-                            {% endif %}
-                        <option{{ selected }} value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
-                        {% endfor %}
+                        <select multiple class="js-select2" name="userSecondaryManagerCompanies[]"
+                                id="userSecondaryManagerCompanies">
+                            {% for companyEntry in companyEntries %}
+                                {% set selected = '' %}
+                                {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %}
+                                    {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([companyEntry]) %}
+                                    {% set selected = ' selected="selected"' %}
+                                {% endif %}
+                                <option{{ selected }}
+                                        value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+                            {% endfor %}
                         </select>
                         {% if account is defined %}
-                            {% if primaryManagerCompanies|length or secondaryManagerCompanies|length %}
+                            {% set managerCompanies = craft.lantra.managerCompanies(account) %}
+                            {% if managerCompanies|length %}
                                 <div class="field--wrapper">
-                                    <h3>Manager</h3>
+                                    <h3>Existing manager of:</h3>
                                     <p>
-                                    {% for company in primaryManagerCompanies %}{{ company.title }}<br />{% endfor %}
-                                    {% for company in secondaryManagerCompanies %}{{ company.title }}<br />{% endfor %}
+                                        {% for company in managerCompanies %}{{ company.title }}<br/>{% endfor %}
                                     </p>
                                 </div>
                             {% endif %}
                         {% endif %}
                         {% if craft.lantra.setting('schemeTeams', false) %}
-                        </div>
-                        </div>
-                        </div>
-                    </li>
-                    
-                    <li class="col-6">
-                        <input type="checkbox" id="teamManagers" name="teamManagers" value="1" {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
-                        <span>Make Team manager</span>
-                        {% endif %}
-                        {% if craft.lantra.setting('schemeTeams', false) %}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" id="teamManagers" name="teamManagers" value="1"
+                           {% if account is defined and account.isInGroup('teamManagers') or craft.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                         <span>Make Team manager</span>
+                    {% endif %}
+                    {% if craft.lantra.setting('schemeTeams', false) %}
                         <div id="team-fields" class="hide">
-                        <div class="field--wrapper">
-                        {#<label for="userCompany">User team:</label>#}
-                        {% set teamEntries = craft.entries.section('teams').limit(null) %}
-                        <select data-relation="fields[userTeam]" data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam" >
-                        <option value="">Select User Team</option>
-                        {% for teamEntry in teamEntries %}
-                        <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
-                        {% endfor %}
-                        </select>
+                            <div class="field--wrapper">
+                                {#<label for="userCompany">User team:</label>#}
+                                {% set teamEntries = craft.entries.section('teams').limit(null) %}
+                                <select data-relation="fields[userTeam]"
+                                        data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam">
+                                    <option value="">Select User Team</option>
+                                    {% for teamEntry in teamEntries %}
+                                        <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
-                        </div>
-                        {% endif %}
-                    </li>
-                </ul>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
         
         {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
             <h2>Advanced</h2>
