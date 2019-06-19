@@ -43,6 +43,7 @@
                  <tr>
                     <th>ID</th>
                      <th class="title">Name</th>
+                     <th class="title">Location</th>
                      <th class="title">Primary Managers</th>
                      {% if lantraLicences %}
                         <th class="">Licences</th>
@@ -58,7 +59,8 @@
             {% set userCount = craft.lantra.userCount(company.id) %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
-                    <td><p class="td-title-responsive">Name: </p>{{ craft.lantra.companyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
+                    <td><p class="td-title-responsive">Location: </p>{{ craft.lantra.hierarchyLabel(company) }}</td>
                     <td>
                         {% if company.companyPrimaryManagers.total %}
                             <p class="td-title-responsive">Primary Managers: </p>

@@ -444,6 +444,14 @@ class LantraVariable
     }
 
     /**
+     * @param $company
+     * @return string
+     */
+    public function hierarchyLabel($company) {
+        return str_replace(' > ' . $company->title, '', $company->companyLabel);
+    }
+
+    /**
      * Return all result entries requiring endorsement for a manager
      *
      * @param null $userId

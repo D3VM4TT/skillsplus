@@ -90,6 +90,7 @@
                 <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
                 <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
                 <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
+                <th>Location</th>
                 {% if craft.lantra.setting('schemeTeams', false) %}
                     <th>Team</th>
                 {% endif %}
@@ -109,15 +110,8 @@
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
-                    <td><p class="td-title-responsive">Company: </p>
-                        {% if company %}
-                            {{ craft.lantra.companyLabel(company) }}
-                        {% elseif managerCompanies|length %}
-                            {% for company in managerCompanies %}
-                                {{ company.title }}{{ not loop.last ? ', ' }}
-                            {% endfor %}
-                        {% endif %}
-                    </td>
+                    <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
+                    <td><p class="td-title-responsive">Location: </p>{{ company ? craft.lantra.hierarchyLabel(company) }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
