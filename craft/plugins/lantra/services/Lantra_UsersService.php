@@ -306,6 +306,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      *
      * @param int $companyId
      * @param bool $count
+     * @param bool $includeManagers
      * @return object
      * @throws Exception
      */
@@ -314,7 +315,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
-        $criteria->group = $includeManagers ? [2, 3, 4] : [4];
+        $criteria->groupId = $includeManagers ? [2, 3, 4] : [4];
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -330,7 +331,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
         $criteria->order = 'lastName';
-        $criteria->group = $includeManagers ? [2, 3, 4] : [4];
+        $criteria->groupId = $includeManagers ? [2, 3, 4] : [4];
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -952,10 +953,10 @@ class Lantra_UsersService extends BaseApplicationComponent
         }
         // get company users
         if ($entry->sectionId == 3) {
-            return $this->getCompanyUsers($entryId);
+            return $this->getCompanyUsers($entryId, false, true);
         }
         // get team users
-        return $this->getTeamUsers($entryId);
+        return $this->getTeamUsers($entryId, false, true);
     }
 
     /** Get individual job role

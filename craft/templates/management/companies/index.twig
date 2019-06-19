@@ -51,7 +51,6 @@
                      <th class="">Users</th>
                      <th class=""></th>
                      <th class=""></th>
-                     <th class=""></th>
                  </tr>
             <tbody>
             {% for company in companyEntries %}
@@ -78,11 +77,10 @@
                     {% endif %}
                     <td>
                         <p class="td-title-responsive">Users: </p>
-                        {{ userCount }}
-                    </td>
-                    <td>
                         {% if not currentUser.managerReadOnly and userCount %}
-                            <a href="/management/users/company/{{ company.id }}">view users</a>
+                            <a href="/management/users/company/{{ company.id }}">{{ userCount }}</a>
+                         {% else %}
+                            {{ userCount }}
                         {% endif %}
                     </td>
                     <td>
