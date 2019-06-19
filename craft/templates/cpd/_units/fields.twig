@@ -71,7 +71,7 @@
                 {% endif %}
             {% endif %}
             <div id="files" class="files">
-                {% if resultEntry.legacyResultFiles %}
+                {% if resultExists and resultEntry.legacyResultFiles %}
                     <p style="color:#FF0000;font-weight:700">ERROR: Could not copy legacy result files, contact technical support.</p>
                     <p>{{ resultEntry.legacyResultFiles  }}</p>
                 {% endif %}

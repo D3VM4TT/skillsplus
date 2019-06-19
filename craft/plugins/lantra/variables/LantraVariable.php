@@ -258,7 +258,7 @@ class LantraVariable
      * @return null
      */
     public function legacyResultFiles($entry = null) {
-        if ( ! $entry->legacyResultFiles) {
+        if (! $entry || ! $entry->legacyResultFiles) {
             return $entry;
         }
         return craft()->lantra_results->legacyResultFiles($entry);
