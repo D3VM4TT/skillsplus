@@ -19,7 +19,7 @@
 {% if craft.request.segment(3) == 'company' and craft.request.segment(4) %}
     {% set companyId = craft.request.segment(4) %}
     {% set company = craft.entries.id(companyId).first() %}
-    {% set pageTitle = pageTitle ~ " > " ~ company.title %}
+    {% set pageTitle = company.title %}
 {% endif %}
 
 {# orphaned users #}
