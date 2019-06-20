@@ -850,11 +850,18 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $parts = explode('/', $legacyPath);
             $filename = end($parts);
 
-            // $filename = str_replace('%20', ' ', $filename);
+            ## look for path with spaces
+            $legacyPathSpaces = str_replace('%20', ' ', $legacyPath);
+            $localPath = false;
+            if (file_exists($legacyPathSpaces)) {
+                $localPath = $legacyPathSpaces;
+            } elseif (file_exists($legacyPath)) {
+                $localPath = $legacyPath;
+            }
 
-            if (file_exists($legacyPath)) {
+            if ($filePath) {
                 $response = craft()->assets->insertFileByLocalPath(
-                    $legacyPath,
+                    $localPath,
                     $filename,
                     $folder->id,
                     AssetConflictResolution::Replace
@@ -868,7 +875,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
                 if ($response->isSuccess() && $fileId) {
                     $assetIds[] = $fileId;
-                    unlink($legacyPath);
+                    unlink($localPath);
                     unset($updatedLegacyResultFiles[$key]);
                     $unchanged = false;
                 }
