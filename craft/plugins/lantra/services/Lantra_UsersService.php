@@ -317,24 +317,24 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $count ? $criteria->count() : $criteria;
     }
 
-    /** Get all company members
-     *
-     * @param int $companyId
+    /**
+     * @param $companyId
      * @param bool $count
-     * @return object
+     * @return ElementCriteriaModel|int|object
      * @throws Exception
+     * @throws \CException
      */
     public function getCompanyMembers($companyId, $count = false) {
         $company = craft()->entries->getEntryById($companyId);
-        $managerCompanyIds = $this->getCompanyManagerIds($company);
-        if (! count($managerCompanyIds)) {
+        $companyManagerIds = $company ? $this->getCompanyManagerIds($company) : [];
+        if (! count($companyManagerIds)) {
             return $this->getCompanyUsers($companyId, $count);
         }
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
-        $criteria->id = 'not ' . implode(', not', $managerCompanyIds);
+        $criteria->id = 'and, not ' . implode(', not ', $companyManagerIds);
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -345,80 +345,106 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return object
      * @throws Exception
      */
-    public function getTeamUsers($teamId, $count = false, $includeManagers = false) {
+    public function getTeamUsers($teamId, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
         $criteria->order = 'lastName';
-        if ( ! $includeManagers) {
-            $team = craft()->entries->getEntryById($teamId);
-            if ($team) {
-                $criteria->id = 'not ' . implode(', not', $this->getCompanyManagerIds($team));
-            }
-        }
         return $count ? $criteria->count() : $criteria;
     }
 
-    /** Get all company managers
-     *
-     * @param EntryModel $team
-     * @return array
+
+    /**
+     * @param $teamId
+     * @param bool $count
+     * @return ElementCriteriaModel|int|object
      * @throws Exception
+     * @throws \CException
      */
-    public function getCompanyMangers(EntryModel $company, $count = false) {
-        $return = [];
-        foreach ($company->companyPrimaryManagers as $manager ){
-            $return[] = $manager;
+    public function getTeamMembers($teamId, $count = false) {
+        $team = craft()->entries->getEntryById($teamId);
+        $teamManagerIds = $team ? $this->getTeamManagerIds($team) : [];
+        if (! count($teamManagerIds)) {
+            return $this->getTeamUsers($teamId, $count);
         }
-        foreach ($company->companySecondaryManagers as $manager ){
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
+        $criteria->order = 'lastName';
+        $criteria->limit = null;
+        $criteria->id = 'and not ' . implode(', not ', $teamManagerIds);
+        return $count ? $criteria->count() : $criteria;
+    }
+
+    /**
+     * @param EntryModel $entry
+     * @param bool $count
+     * @return array|int
+     */
+    public function getManagers(EntryModel $entry, $count = false) {
+        $return = [];
+        $primaryManagerIds = [];
+        foreach ($entry->companyPrimaryManagers as $manager){
             $return[] = $manager;
+            $primaryManagerIds[] = $manager->id;
+        }
+        foreach ($entry->companySecondaryManagers as $manager ){
+            // avoid duplicates from primary
+            if (! in_array($manager->id, $primaryManagerIds)) {
+                $return[] = $manager;
+            }
         }
         return $count ? count($return) : $return;
     }
 
-    /** Get all company manager ids
-     *
+    /**
+     * @param EntryModel $entry
+     * @return array
+     * @throws \CException
+     */
+    public function getManagerIds(EntryModel $entry) {
+        $ids = [];
+        foreach($this->getCompanyManagers($entry) as $manager) {
+            $ids[] = $manager->id;
+        }
+        return $ids;
+    }
+
+    /**
+     * @param EntryModel $company
+     * @param bool $count
+     * @return mixed
+     * @throws \CException
+     */
+    public function getCompanyManagers(EntryModel $company, $count = false) {
+        return $this->getManagers($company, $count);
+    }
+
+    /**
      * @param EntryModel $company
      * @return array
-     * @throws Exception
+     * @throws \CException
      */
     public function getCompanyManagerIds(EntryModel $company) {
-        $ids = [];
-        foreach($this->getCompanyMangers($company) as $manager) {
-            $ids[] = $manager->id;
-        }
-        return $ids;
+        return $this->getManagerIds($company);
     }
 
-    /** Get all team managers
-     *
+    /**
      * @param EntryModel $team
-     * @return array
-     * @throws Exception
+     * @param bool $count
+     * @return mixed
+     * @throws \CException
      */
     public function getTeamManagers(EntryModel $team, $count = false) {
-        $return = [];
-        if ($team->teamPrimaryManager->first()) {
-            $return[] = $team->teamPrimaryManager->first();
-        }
-        foreach ($team->teamSecondaryManagers as $manager ){
-            $return[] = $manager;
-        }
-        return $count ? count($return) : $return;
+        return $this->getManagers($team, $count);
     }
 
-    /** Get all team manager ids
-     *
+    /**
      * @param EntryModel $team
      * @return array
-     * @throws Exception
+     * @throws \CException
      */
-    public function getTeamMangerIds(EntryModel $team) {
-        $ids = [];
-        foreach($this->getTeamManagers($team) as $manager) {
-            $ids[] = $manager->id;
-        }
-        return $ids;
+    public function getTeamManagerIds(EntryModel $team) {
+        return $this->getManagerIds($team);
     }
 
     /**

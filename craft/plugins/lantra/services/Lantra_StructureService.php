@@ -85,7 +85,7 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     private function getJsTreeCompany($companyId) {
         $company = $this->getCompanyById($companyId);
-        $managerCount = $companyId ? craft()->lantra_users->getCompanyMangers($company, true) : 0;
+        $managerCount = $companyId ? craft()->lantra_users->getCompanyManagers($company, true) : 0;
         $memberCount = $companyId ? craft()->lantra_users->getCompanyMembers($companyId, true) : 0;
         $teams = $companyId ? craft()->lantra_users->getCompanyTeams($companyId) : [];
         $childrenCount = $this->getCompanyChildren($companyId, true);
@@ -119,7 +119,7 @@ class Lantra_StructureService extends BaseApplicationComponent
             $entry = craft()->entries->getEntryById($entryId);
             // company managers
             if ($entry->getSection()->id == 3) {
-                $managers = craft()->lantra_users->getCompanyMangers($entry);
+                $managers = craft()->lantra_users->getCompanyManagers($entry);
             } // team managers
             else {
                 $managers = craft()->lantra_users->getTeamManagers($entry);
@@ -148,21 +148,16 @@ class Lantra_StructureService extends BaseApplicationComponent
 
     private function getJsTreeUsers($entryId) {
         $entry =  craft()->entries->getEntryById($entryId);
-        // company users
+        // company members
         if ($entry->getSection()->id == 3) {
-            $managerIds = craft()->lantra_users->getCompanyManagerIds($entry);
-            $users = craft()->lantra_users->getCompanyUsers($entry);
+            $members = craft()->lantra_users->getCompanyMembers($entry->id);
         }
-        // team users
+        // team members
         else {
-            $managerIds = craft()->lantra_users->getTeamManagerIds($entry);
-            $users = craft()->lantra_users->getTeamUsers($entry);
+            $members = craft()->lantra_users->getTeamMembers($entry->id);
         }
         $return = [];
-        foreach($users as $user) {
-            if (in_array($user->id, $managerIds)) {
-                continue;
-            }
+        foreach($members as $user) {
             $nodeId = $entryId.'u'.$user->id;
             $title = $user->fullname;
             if ($user->userRole->total()) {
