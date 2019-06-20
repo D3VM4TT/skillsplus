@@ -194,7 +194,7 @@ $(document).ready(function(){
                    row.fadeOut().remove();
                 }
                 if (reload) {
-                    location.reload();
+                    window.location = window.location;
                 }
                 alert(response.message);
             }
@@ -371,7 +371,7 @@ $(document).ready(function(){
         $(tabgroup).children('div').hide();
         $(target).show();
         // make sure first unit group is shown
-        if (target.startsWith("#tab")) {
+        if (target.match("^#tab")) {
             $(target).find('ul.tabs:first-of-type').find('li:first-of-type a').click();
         }
     });
