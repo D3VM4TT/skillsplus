@@ -136,7 +136,7 @@
         <div class="field--wrapper">
 
             {# just in case validation fails #}
-            {% if saveUserError %}
+            {% if saveUserError is defined and saveUserError %}
                 {% set isCompanyManager = craft.request.post('companyManagers')  %}
             {% endif %}
 
@@ -162,7 +162,7 @@
                         <label for="userCompany">Secondary manager companies:</label>
 
                         {# just in case validation fails #}
-                        {% if saveUserError %}
+                        {% if saveUserError is defined and saveUserError %}
                             {% set postedCompanies = craft.request.post('userSecondaryManagerCompanies') %}
                         {% else %}
                             {% set postedCompanies = [] %}
