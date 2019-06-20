@@ -86,7 +86,7 @@ class Lantra_StructureService extends BaseApplicationComponent
     private function getJsTreeCompany($companyId) {
         $company = $this->getCompanyById($companyId);
         $managerCount = $companyId ? craft()->lantra_users->getCompanyMangers($company, true) : 0;
-        $userCount = $companyId ? craft()->lantra_users->getCompanyUsers($companyId, true) : 0;
+        $memberCount = $companyId ? craft()->lantra_users->getCompanyMembers($companyId, true) : 0;
         $teams = $companyId ? craft()->lantra_users->getCompanyTeams($companyId) : [];
         $childrenCount = $this->getCompanyChildren($companyId, true);
 
@@ -96,8 +96,8 @@ class Lantra_StructureService extends BaseApplicationComponent
             $title = 'Managers (' . $managerCount . ')';
             $return['children'][]  = $this->createNode($companyId, 'managers', $companyId . 'm', $title, 'group', true);
         }
-        if ($userCount) {
-            $title = 'Users (' . $userCount . ')';
+        if ($memberCount) {
+            $title = 'Members (' . $memberCount . ')';
             $return['children'][] = $this->createNode($companyId, 'users', $companyId . 'u', $title, 'group', true);
         }
         if ($childrenCount) {

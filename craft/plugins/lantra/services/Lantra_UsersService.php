@@ -306,16 +306,35 @@ class Lantra_UsersService extends BaseApplicationComponent
      *
      * @param int $companyId
      * @param bool $count
-     * @param bool $includeManagers
      * @return object
      * @throws Exception
      */
-    public function getCompanyUsers($companyId, $count = false, $includeManagers = false) {
+    public function getCompanyUsers($companyId, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
-        $criteria->groupId = $includeManagers ? [2, 3, 4] : [4];
+        return $count ? $criteria->count() : $criteria;
+    }
+
+    /** Get all company members
+     *
+     * @param int $companyId
+     * @param bool $count
+     * @return object
+     * @throws Exception
+     */
+    public function getCompanyMembers($companyId, $count = false) {
+        $company = craft()->entries->getEntryById($companyId);
+        $managerCompanyIds = $this->getCompanyManagerIds($company);
+        if (! count($managerCompanyIds)) {
+            return $this->getCompanyUsers($companyId, $count);
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
+        $criteria->order = 'lastName';
+        $criteria->limit = null;
+        $criteria->id = 'not ' . implode(', not', $managerCompanyIds);
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -331,7 +350,12 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
         $criteria->order = 'lastName';
-        $criteria->groupId = $includeManagers ? [2, 3, 4] : [4];
+        if ( ! $includeManagers) {
+            $team = craft()->entries->getEntryById($teamId);
+            if ($team) {
+                $criteria->id = 'not ' . implode(', not', $this->getCompanyManagerIds($team));
+            }
+        }
         return $count ? $criteria->count() : $criteria;
     }
 
@@ -358,7 +382,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    public function getCompanyMangerIds(EntryModel $company) {
+    public function getCompanyManagerIds(EntryModel $company) {
         $ids = [];
         foreach($this->getCompanyMangers($company) as $manager) {
             $ids[] = $manager->id;
