@@ -20,6 +20,7 @@ class Lantra_SettingsController extends BaseController
         $settings = JsonHelper::decode($settings);
         $settingsModel->setAttributes($settings);
         $variables['settings'] = $settingsModel;
+        $variables['version'] = craft()->plugins->getPlugin('lantra')->getVersion();
 
         ## config for logo asset
         $themeFolder = craft()->assets->getRootFolderBySourceId(4)->id;
