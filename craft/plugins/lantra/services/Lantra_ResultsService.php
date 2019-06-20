@@ -875,7 +875,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
                 if ($response->isSuccess() && $fileId) {
                     $assetIds[] = $fileId;
-                    unlink($localPath);
+                    ## leave archive file in place, just in case.
+                    ## unlink($localPath);
                     unset($updatedLegacyResultFiles[$key]);
                     $unchanged = false;
                 }
