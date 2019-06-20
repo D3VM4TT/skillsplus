@@ -69,7 +69,7 @@
                     {% for resultEvidenceAsset in resultEntry.resultEvidence %}
                         <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
                     {% endfor %}
-                {% elseif resultEntry and resultEntry.resultLegacyFiles %}
+                {% elseif resultEntry and resultEntry.legacyResultFiles %}
                     file(s) exist
                 {% endif %}
             </td>
