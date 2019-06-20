@@ -1056,7 +1056,7 @@ class IOHelper
 
 		if (static::fileExists($path, false, $suppressErrors) || static::folderExists($path, false, $suppressErrors))
 		{
-			if ($suppressErrors ? @chmod($path, $permissions) : chmod($path, $permissions))
+			if ($suppressErrors ? @chmod($path, $permissions) : @chmod($path, $permissions))
 			{
 				return true;
 			}
