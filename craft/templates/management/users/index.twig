@@ -62,6 +62,9 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
+    {% if companyId and craft.request.urlReferrer %}
+        <a class="back-link" href="{{ craft.request.urlReferrer }}">&laquo; back to Companies</a>
+    {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
 <section class="page">
