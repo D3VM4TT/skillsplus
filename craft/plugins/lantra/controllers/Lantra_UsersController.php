@@ -67,13 +67,13 @@ class Lantra_UsersController extends Lantra_BaseController {
         $companyManager = false;
         // assign user to groups (always in 'user' group from front end)
         $groupIds = array(4);
+        $userCompanyId = isset($fields['userCompany']) ? $fields['userCompany'] : null;
         if (craft()->request->getPost('companyManagers')) {
             $groupIds[] = 2;
             $companyManager = true;
-            $primaryManagerCompany = $fields['userCompany'] ? $fields['userCompany'] : null;
         }
         // remove as manager from this company
-        elseif (isset($fields['userCompany']) && $fields['userCompany'] && false != $company = craft()->entries->getEntryById($fields['userCompany'])) {
+        elseif ($userCompanyId && false != $company = craft()->entries->getEntryById($userCompanyId)) {
             craft()->lantra_users->removeCompanyManager($company, $user);
         }
         if (craft()->request->getPost('teamManagers')) {
@@ -93,17 +93,16 @@ class Lantra_UsersController extends Lantra_BaseController {
         elseif (craft()->users->saveUser($user)) {
             craft()->userGroups->assignUserToGroups($user->id, $groupIds);
             // set user manager relations
-            if ($companyManager)
-            {
-                if ($primaryManagerCompany) {
-                    craft()->lantra_users->setManager([$primaryManagerCompany], $user, 'primary');
+            if ($companyManager) {
+                if ($userCompanyId) {
+                    craft()->lantra_users->setManager([$userCompanyId], $user, 'primary');
                 }
                 $secondaryManagerCompanyIds = craft()->request->getPost('userSecondaryManagerCompanies', []);
                 craft()->lantra_users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
             }
             $this->_returnMessage('User has been saved.', true, $redirect);
         } else {
-            craft()->urlManager->setRouteVariables(array('account' => $user));
+            craft()->urlManager->setRouteVariables(array('account' => $user, 'saveUserError' => true));
         }
     }
 

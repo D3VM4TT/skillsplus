@@ -134,11 +134,17 @@
             </select>
         </div>
         <div class="field--wrapper">
+
+            {# just in case validation fails #}
+            {% if saveUserError %}
+                {% set isCompanyManager = craft.request.post('companyManagers')  %}
+            {% endif %}
+
             <label><input type="radio" id="userMember" name="companyManagers" value="0" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member</label>
             <label><input type="radio" id="userManager" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager</label>
         </div>
         <div class="field--wrapper">
-            <div id="manager-fields" class="hide {% if not isCompanyManager %}{% endif %}">
+            <div id="manager-fields" class="{% if not isCompanyManager %}hide{% endif %}">
                 <div class="col-6">
                     <h2>Manager settings</h2>
                     {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}{% endif %}
@@ -155,11 +161,17 @@
                     <div class="field--wrapper">
                         <label for="userCompany">Secondary manager companies:</label>
 
-                        <select multiple class="js-select2" name="userSecondaryManagerCompanies[]"
-                                id="userSecondaryManagerCompanies">
+                        {# just in case validation fails #}
+                        {% if saveUserError %}
+                            {% set postedCompanies = craft.request.post('userSecondaryManagerCompanies') %}
+                        {% else %}
+                            {% set postedCompanies = [] %}
+                        {% endif %}
+
+                        <select multiple class="js-select2" name="userSecondaryManagerCompanies[]" id="userSecondaryManagerCompanies">
                             {% for companyEntry in companyEntries %}
                                 {% set selected = '' %}
-                                {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() %}
+                                {% if account is defined and account.id in companyEntry.companySecondaryManagers.ids() or companyEntry.id in postedCompanies %}
                                     {% set secondaryManagerCompanies = secondaryManagerCompanies|merge([companyEntry]) %}
                                     {% set selected = ' selected="selected"' %}
                                 {% endif %}
