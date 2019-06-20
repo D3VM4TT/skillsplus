@@ -853,9 +853,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
             ## look for path with spaces
             $legacyPathSpaces = str_replace('%20', ' ', $legacyPath);
             $localPath = false;
-            if (file_exists($legacyPathSpaces)) {
+            if (is_file($legacyPathSpaces)) {
                 $localPath = $legacyPathSpaces;
-            } elseif (file_exists($legacyPath)) {
+            } elseif (is_file($legacyPath)) {
                 $localPath = $legacyPath;
             }
 
