@@ -1671,6 +1671,14 @@ div.links {
     margin: 40px 0 40px 0;
 }
 
+a.icon img {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin: 0 5px;
+    padding: 0;
+}
+
 div.links a,
 div.links span {
     text-decoration: none;

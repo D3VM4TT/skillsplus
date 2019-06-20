@@ -50,7 +50,6 @@
                      {% endif %}
                      <th class="">Users</th>
                      <th class=""></th>
-                     <th class=""></th>
                  </tr>
             <tbody>
             {% for company in companyEntries %}
@@ -83,18 +82,16 @@
                             {{ userCount }}
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="icons" style="width:140px;text-align:right">
                         {% if not currentUser.managerReadOnly %}
                             {% set companyEmails = craft.lantra.emailList(company.id) %}
                             {% if companyEmails %}
-                                <a href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}">email users</a>
+                                <a class="icon" href="mailto:{{ currentUser.email }}?bcc={{ companyEmails }}"><img src="/assets/img/email.svg" title="Email" /></a>
                             {% endif %}
                         {% endif %}
-                    </td>
-                    <td>
                         {% if not currentUser.managerReadOnly %}
-                            <a href="/management/companies/edit/{{ company.id }}">edit</a> |
-                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}">delete</a>
+                            <a class="icon" href="/management/companies/edit/{{ company.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
+                            <a class="icon" class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
                         {% endif %}
                     </td>
                 </tr>
