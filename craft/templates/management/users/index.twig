@@ -111,7 +111,7 @@
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
                     <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
-                    <td><p class="td-title-responsive">Location: </p>{{ company ? craft.lantra.hierarchyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>

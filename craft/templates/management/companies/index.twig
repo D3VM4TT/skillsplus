@@ -59,7 +59,7 @@
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
-                    <td><p class="td-title-responsive">Location: </p>{{ craft.lantra.hierarchyLabel(company) }}</td>
+                    <td><p class="td-title-responsive">Location: </p>{{ company.companyLabel }}</td>
                     <td>
                         {% if company.companyPrimaryManagers.total %}
                             <p class="td-title-responsive">Primary Managers: </p>
