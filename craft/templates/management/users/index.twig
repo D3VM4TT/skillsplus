@@ -34,7 +34,7 @@
 {% endif %}
 
 {# search by id #}
-{% if filterSearch and craft.users.id(filterSearch).total() %}
+{% if filterSearch and craft.users.status(null).id(filterSearch).total() %}
     {% set excludeIdsString = filterSearch %}
     {% set filterSearch = '' %}
 {% endif %}
