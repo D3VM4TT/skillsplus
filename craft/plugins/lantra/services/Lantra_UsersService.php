@@ -541,6 +541,12 @@ class Lantra_UsersService extends BaseApplicationComponent
         return $companies ? $companies[0] : null;
     }
 
+    /**
+     * @param $company
+     * @param $user
+     * @param string $type
+     * @throws \Exception
+     */
     public function removeCompanyManager($company, $user, $type = 'both') {
 
         $primaryManagerIds = $company->companyPrimaryManagers->ids();
