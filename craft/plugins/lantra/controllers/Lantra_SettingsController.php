@@ -137,6 +137,9 @@ class Lantra_SettingsController extends BaseController
             $message = '';
             foreach($managers as $manager) {
                 $companies = craft()->lantra_users->getManagerCompanies($manager, true);
+                if (! $companies) {
+                    continue;
+                }
                 $companyId = null;
                 foreach($companies as $company) {
                     $companyId = $company->id;
