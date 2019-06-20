@@ -33,6 +33,11 @@
     {% endif %}
 
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        <div id="name-fields">
+            <div class="col-6 field--wrapper">
+                <h3>Result ID: {{ entry.id }}</h3>
+            </div>
+        </div>
         {{ getCsrfInput() }}
         <input type="hidden" name="action" value="entries/saveEntry">
         <input type="hidden" name="sectionId" value="3">

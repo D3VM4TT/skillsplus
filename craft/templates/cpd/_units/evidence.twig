@@ -10,6 +10,13 @@
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ getCsrfInput() }}
+    {% if resultEntry is defined and resultEntry.id %}
+        <div id="name-fields">
+            <div class="col-6 field--wrapper">
+                <h3>Result ID: {{ resultEntry.id }}</h3>
+            </div>
+        </div>
+    {% endif %}
     <input type="hidden" name="action" value="entries/saveEntry">
     <input type="hidden" name="redirect" value="{{ userId != currentUser.id ? 'cpd/' ~ account.id : '/' }}">
     <input type="hidden" name="typeId" value="10">
