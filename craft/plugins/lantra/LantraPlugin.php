@@ -215,14 +215,16 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_attempts->markAttempt($entry);
                 craft()->lantra_results->saveAttemptResult($entry);
             }
-            // Check unit result for new module result
-            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
-                craft()->lantra_results->checkUnitResult($entry);
-                craft()->lantra_results->checkRemainingAttempts($entry);
-            }
-            // Check user result for new module result
-            if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'userResult') {
-                craft()->lantra_results->checkUserResult($entry);
+            if (!craft()->request->isCpRequest()) {
+                // Check unit result for new module result
+                if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                    craft()->lantra_results->checkUnitResult($entry);
+                    craft()->lantra_results->checkRemainingAttempts($entry);
+                }
+                // Check user result for new module result
+                if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'userResult') {
+                    craft()->lantra_results->checkUserResult($entry);
+                }
             }
             // Send notifications on completed module result
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
