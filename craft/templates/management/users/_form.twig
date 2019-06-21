@@ -81,14 +81,19 @@
         </div>
         <div id="date-fields">
         <div class="col-6 field--wrapper">
-            <label for="address" class="no-float">Start date:</label>
+            {% if account is defined %}
+                {% set startDateValue = account.userStartDate ? account.userStartDate|date(dateFormat) : '' %}
+            {% else %}
+                {% set startDateValue = now|date(dateFormat) %}
+        {% endif %}
+        <label for="address" class="no-float">Start date:</label>
             <input name="fields[userStartDate][date]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left'
-                   value="{{ account is defined ? account.userStartDate|date(dateFormat)  : '' }}" data-date-format="{{ jsDateFormat }}">
+                   value="{{ startDateValue }}" data-date-format="{{ jsDateFormat }}">
         </div>
         <div class="col-6 field--wrapper">
             <label for="address" class="no-float">Date of birth:</label>
             <input name="fields[userDateOfBirth][date]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left'
-                   value="{{ account is defined ? account.userDateOfBirth|date(dateFormat) : '' }}" data-date-format="{{ jsDateFormat }}">
+                   value="{{ account is defined and account.userDateOfBirth ? account.userDateOfBirth|date(dateFormat) : '' }}" data-date-format="{{ jsDateFormat }}">
         </div>
         </div>
         <div id="address-fields">
