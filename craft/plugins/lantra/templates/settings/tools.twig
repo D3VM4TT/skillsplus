@@ -15,9 +15,18 @@
 
     <p><a href="/admin/lantra/settings/tools?tool=setManagerReadOnly" class="btn btn-small">Set all managers to read only</a></p>
 
-    <p><a href="/admin/lantra/settings/tools?tool=removeManagersChildren" class="btn btn-small">Remove company manager duplicates from hierarchy</a></p>
 
-    <p><a href="/admin/lantra/settings/tools?tool=setManagerUserCompany" class="btn btn-small">Add managers' company as user company</a></p>
+    <hr />
+
+    <p>{{ craft.users.status(null).group('users').search('dataClean:0').total() }} users remaining to process.</p>
+
+    <p>{{ craft.users.status(null).group('companyManagers').search('dataClean:0').total() }} managers remaining to process.</p>
+
+    <p><a href="/admin/lantra/settings/tools?tool=dataDirtyUsers" class="btn btn-small">Reset all users (data clean)</a></p>
+
+    <p><a href="/admin/lantra/settings/tools?tool=removeManagersChildren" class="btn btn-small">Remove company manager duplicates from hierarchy (1000)</a></p>
+
+    <p><a href="/admin/lantra/settings/tools?tool=setManagerUserCompany" class="btn btn-small">Add managers' company as user company (1000)</a></p>
 
 </div>
 
