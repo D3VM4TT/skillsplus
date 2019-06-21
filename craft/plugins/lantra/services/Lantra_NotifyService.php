@@ -107,6 +107,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
     * @throws mixed
     */
     function sendModuleResult(EntryModel $entry) {
+        // ignore endorsement notifications in CP
+        if (craft()->request->isCpRequest()){
+            return;
+        }
         $moduleEntry = $entry->resultModule->first();
         $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
@@ -143,6 +147,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
      * @throws Exception
      */
     function sendManagerEndorsementResult(EntryModel $resultEntry, $level = 1) {
+        // ignore endorsement notifications in CP
+        if (craft()->request->isCpRequest()){
+            return;
+        }
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
         $variables = ['entry' => $resultEntry, 'user' => $user];
