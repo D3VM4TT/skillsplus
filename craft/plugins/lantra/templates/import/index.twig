@@ -81,15 +81,31 @@
 
             <hr />
 
-            <h2>Import Data To Craft ({{ limit }} each request)</h2>
+            <h2>Import Data To Craft</h2>
 
-            <p><a href="/admin/lantra/import?process=importCompanies" class="btn btn-small">Import Companies</a></p>
-
-            <p><a href="/admin/lantra/import?process=importRoles" class="btn btn-small">Import Roles</a></p>
-
-            <p><a href="/admin/lantra/import?process=importUsers" class="btn btn-small">Import Users</a></p>
-
-            <p><a href="/admin/lantra/import?process=importResults" class="btn btn-small">Import Results</a></p>
+            <form method="post" action="" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="lantra/import/import">
+                <div>
+                    <label>Data Type:</label>
+                    <select name="type">
+                        <option value="companies">Companies</option>
+                        <option value="roles">Roles</option>
+                        <option value="users">Users</option>
+                        <option value="results">Results</option>
+                    </select>
+                    <label>Limit:</label>
+                    <select name="limit">
+                        <option>100</option>
+                        <option>250</option>
+                        <option>1000</option>
+                        <option>2000</option>
+                        <option>5000</option>
+                    </select>
+                </div>
+                <p>
+                    <input type="submit" class="btn submit" value="{{ 'Import' }}">
+                </p>
+            </form>
 
             <hr />
 

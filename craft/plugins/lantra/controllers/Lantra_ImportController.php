@@ -43,7 +43,7 @@ class Lantra_ImportModel extends BaseModel
 
 class Lantra_ImportController extends Lantra_BaseController
 {
-    public $allowAnonymous = array('actionIndex', 'actionUpload');
+    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionImport');
 
     private $success = 0;
     private $log = [];
@@ -130,6 +130,20 @@ class Lantra_ImportController extends Lantra_BaseController
         @unlink($filePath);
         craft()->userSession->setNotice($type . ' file uploaded, ' . $total . ' added for processing.');
         $this->loadTemplate();
+    }
+
+    /**
+     * @return mixed
+     * @throws HttpException
+     * @throws \CException
+     */
+    public function actionImport() {
+        $type = craft()->request->getRequiredPost('type');
+        $this->limit = craft()->request->getRequiredPost('limit', 250);
+        $method = 'import' . strtoupper($type);
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
     }
 
     private function isHeaderRow($row) {
@@ -220,7 +234,7 @@ class Lantra_ImportController extends Lantra_BaseController
     public function importResults() {
         $this->createResults($this->limit);
         $unprocessed = $this->countDataByType('results');
-        craft()->userSession->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
+        craft()->userSession->setNotice($this->success  . ' results imported. ' . $unprocessed . ' remaining.');
     }
 
     ## PROCESS METHODS ##
