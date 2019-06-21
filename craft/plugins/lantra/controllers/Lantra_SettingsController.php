@@ -123,7 +123,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'removeManagersChildren') {
-            $managers = $this->getManagers('dirty', 1000);
+            $managers = $this->getManagers('dirty', 250);
             $message = '';
             foreach($managers as $user) {
                 $companies = craft()->lantra_users->getManagerCompanies($user, true);
@@ -145,7 +145,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setManagerUserCompany') {
-            $managers = $this->getManagers('dirty', 1000);
+            $managers = $this->getManagers('dirty', 250);
             $message = '';
             foreach($managers as $manager) {
                 $companies = craft()->lantra_users->getManagerCompanies($manager, true);
