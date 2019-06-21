@@ -899,6 +899,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $subordinates
+     * @return array
+     * @throws Exception
+     */
+    private function mandatoryUnitTitles($subordinates) {
+        $return = [];
+        foreach($subordinates as $user) {
+            $mandatoryUnits = $this->userUnits($user);
+            foreach($mandatoryUnits as $unit) {
+                if (! isset($return[$unit->id])){
+                    $return[$unit->id] = $unit->title;
+                }
+            }
+        }
+        return $return;
+    }
+
+    /**
      * @param null $userId
      * @param array $userFilter
      * @param array $resultFilter
@@ -920,8 +938,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
-
         $headerIds = [];
+        ## add the mandatory result headers
+        $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
+        foreach($mandatoryUnits as $id => $title) {
+            $headerIds[] = $id;
+            $header[] = $title;
+        }
+
         ## add the result title columns (might be unit id or result id)
         foreach($allResults as $userId => $results) {
             foreach($results as $id => $result) {
