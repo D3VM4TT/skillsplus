@@ -72,9 +72,11 @@ class Lantra_UsersController extends Lantra_BaseController {
             $groupIds[] = 2;
             $companyManager = true;
         }
-        // remove as manager from this company
-        elseif ($userCompanyId && false != $company = craft()->entries->getEntryById($userCompanyId)) {
-            craft()->lantra_users->removeCompanyManager($company, $user);
+        // remove as manager from all companies
+        elseif (false != $companies = craft()->lantra_users->getManagerCompanies($user)) {
+            foreach ($companies as $company) {
+                craft()->lantra_users->removeCompanyManager($company, $user);
+            }
         }
         if (craft()->request->getPost('teamManagers')) {
             $groupIds[] = 3;
