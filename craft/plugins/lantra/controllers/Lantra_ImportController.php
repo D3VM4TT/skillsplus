@@ -572,7 +572,7 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->users->saveUser($userModel) && craft()->userGroups->assignUserToGroups($userModel->id, $groups)) {
                 $this->success++;
             } else {
-                Craft::log("Lantra Import: User: " . json_encode($userModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
+                Craft::log("Lantra Import: User: [" . $legacyId . '] ' . json_encode($userModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
                 $this->log[] = 'Could not save user ' . json_encode($userModel->getAllErrors());
             }
             $this->setProcessed($id);
