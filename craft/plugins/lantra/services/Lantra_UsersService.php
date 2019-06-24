@@ -1079,7 +1079,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $username = 'user.'. mt_rand(10000, 99999);
         }
 
-        return $username;
+        return str_replace(' ', '', $username);
     }
 
     /**
