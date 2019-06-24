@@ -109,9 +109,17 @@
 
             <hr />
 
-            <h2>Process Craft Data ({{ limit }} each request)</h2>
+            <h2>Build Hierarchy ({{ limit }} each request)</h2>
 
-            <p><a href="/admin/lantra/import?process=buildHierarchy" class="btn btn-small">Build Hierarchy</a></p>
+            <p><a href="/admin/lantra/import?process=buildHierarchy" class="btn btn-small">Update Company Parent</a></p>
+
+            {% set totalCompanies = craft.entries.section('companies').total() %}
+
+            <p>{{ dataClean.companies }}/{{ totalCompanies }} remaining</p>
+
+            <hr />
+
+            <h2>Process Craft Data</h2>
 
             <p><a href="/admin/lantra/import?process=assignJobRoles" class="btn btn-small">Assign Job Roles</a></p>
 

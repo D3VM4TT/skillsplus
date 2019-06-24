@@ -226,4 +226,15 @@ class Lantra_SettingsService extends BaseApplicationComponent
 
         $this->saveSetting('settingsVersion' , $dbVersion);
     }
+
+    /**
+     * @param $key
+     * @throws \CException
+     */
+    public function resetDataClean($key)
+    {
+        $key = 'field_dataClean' . $key;
+        $mysql = "UPDATE craft_content SET `" . $key . "` = '0' WHERE `" . $key . "` = '1'";
+        craft()->db->createCommand($mysql)->query();
+    }
 }

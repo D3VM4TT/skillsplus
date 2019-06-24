@@ -239,28 +239,38 @@ class Lantra_ImportController extends Lantra_BaseController
 
     ## PROCESS METHODS ##
 
-    public function buildHierarchy() {
-        // @todo limit this process too?
+    private function tempCompanyLegacyIds() {
         // build array of legacyId => id
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = null;
-        foreach ($criteria->find() as $company) {
+        $allCompanies = $criteria->find();
+        foreach ($allCompanies as $company) {
             $this->companyTemp[$company->legacyId] = $company->id;
         }
+    }
+
+    public function buildHierarchy() {
+
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
-        $criteria->limit = null;
-        foreach ($criteria->find() as $entryModel) {
-            $parentId = $this->getCompanyId($entryModel->legacyParentId);
+        $criteria->limit = $this->limit;
+        $criteria->dataCleanCompanyParent = 0;
+        $companies = $criteria->find();
+        $total = count($companies);
+        // build array of legacyId => id
+        $this->tempCompanyLegacyIds();
+        foreach ($companies as $company) {
+            $parentId = $this->getCompanyId($company->legacyParentId);
+            $data = ['dataCleanCompanyParent' => 1];
             if ($parentId) {
-                $entryModel->setContentFromPost([
-                    'companyParent' => [$parentId]
-                ]);
-                craft()->entries->saveEntry($entryModel);
+                $data['companyParent'] = [$parentId];
             }
+            $company->setContentFromPost($data);
+            craft()->elements->saveElement($company, false);
+
         }
-        craft()->userSession->setNotice('Company hierarchy created.');
+        craft()->userSession->setNotice('Company hierarchy created for ' . $total . ' companies.');
     }
 
     public function assignJobRoles()  {
@@ -278,8 +288,8 @@ class Lantra_ImportController extends Lantra_BaseController
             if ($userModel->legacyJobRoleId) {
                 $roleId = $this->getRoleId($userModel->legacyJobRoleId);
                 if ($roleId) {
-                    $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
-                    if (craft()->users->saveUser($userModel)) {
+                    $userModel->setContentFromPost(['userRole' => [$roleId]]);
+                    if (craft()->elements->saveElement($userModel, false)) {
                         $this->success++;
                     }
                 }
@@ -307,6 +317,8 @@ class Lantra_ImportController extends Lantra_BaseController
                 // make sure user is in company manager group
                 craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
                 $companyManager->setContentFromPost([
+                    // add manager to company
+                    'userCompany' => [$companyEntry->id],
                     'managerReadOnly' => $managerReadOnly
                 ]);
                 craft()->elements->saveElement($companyManager, false);
@@ -634,6 +646,14 @@ class Lantra_ImportController extends Lantra_BaseController
         }
     }
 
+    private function dataCleanTotal($dataCleanKey, $dataCleanValue = false) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $fieldName = 'dataClean' . $dataCleanKey;
+        $criteria->$fieldName = $dataCleanValue ? 1 : 0;
+        return $criteria->total();
+    }
+
     private function loadTemplate()
     {
         $variables = [
@@ -644,6 +664,9 @@ class Lantra_ImportController extends Lantra_BaseController
                 'companyUsers'      => $this->countDataByType('companyUsers'),
                 'companyManagers'   => $this->countDataByType('companyManagers'),
                 'results'           => $this->countDataByType('results')
+            ],
+            'dataClean' => [
+                'companies' => $this->dataCleanTotal('CompanyParent', true)
             ],
             'log' => $this->log,
             'limit' => $this->limit

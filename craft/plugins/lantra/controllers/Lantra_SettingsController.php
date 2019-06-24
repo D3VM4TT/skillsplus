@@ -45,15 +45,16 @@ class Lantra_SettingsController extends BaseController
         return $criteria;
     }
 
-    private function getManagers($clean = 'both', $limit = null) {
+    private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->groupId = [2,3];
         $criteria->admin = false;
         $criteria->limit = $limit;
-        if ($clean != 'both'){
-            $criteria->dataClean = $clean === 'dirty' ? 0 : 1;
+        if ($dataCleanKey) {
+            $fieldName = 'dataClean' . $dataCleanKey;
+            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
         }
-        return $criteria;
+        return $count ? $criteria->count() : $criteria;
     }
 
     /**
@@ -61,6 +62,7 @@ class Lantra_SettingsController extends BaseController
      */
     public function actionTools()
     {
+        craft()->db->createCommand()->truncateTable('searchindex');
         $tool = craft()->request->getParam('tool');
         if ($tool == 'saveCompanies') {
             $topCompanies = craft()->lantra_structure->getCompanyChildren(null, false, null);
@@ -123,9 +125,13 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'removeManagersChildren') {
-            $managers = $this->getManagers('dirty', 250);
+            $managers = $this->getManagers(100, 'ManagersChildren', false);
             $message = '';
             foreach($managers as $user) {
+                $user->setContentFromPost([
+                    'dataCleanManagersChildren' => 1
+                ]);
+                craft()->elements->saveElement($user, false);
                 $companies = craft()->lantra_users->getManagerCompanies($user, true);
                 $companyIds = [];
                 foreach($companies as $company) {
@@ -136,18 +142,23 @@ class Lantra_SettingsController extends BaseController
                         craft()->lantra_users->removeCompanyManager($company, $user);
                     }
                 }
-                $user->setContentFromPost(['dataClean' => 1]);
-                if ( ! craft()->users->saveUser($user)) {
-                    $message .= ' ' . $user->fullName . ' not updated.';
-                };
             }
             craft()->userSession->setNotice(Craft::t(count($managers) . ' managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'dataResetManagersChildren') {
+            craft()->lantra_settings->resetDataClean('ManagersChildren');
+            craft()->userSession->setNotice('All managers have been reset.');
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'setManagerUserCompany') {
-            $managers = $this->getManagers('dirty', 250);
+            $managers = $this->getManagers(100, 'ManagersUserCompany', false);
             $message = '';
             foreach($managers as $manager) {
+                $manager->setContentFromPost([
+                    'dataCleanManagersUserCompany' => 1
+                ]);
+                craft()->elements->saveElement($manager, false);
                 $companies = craft()->lantra_users->getManagerCompanies($manager, true);
                 if (! $companies) {
                     continue;
@@ -158,10 +169,9 @@ class Lantra_SettingsController extends BaseController
                 }
                 if ($companyId) {
                     $manager->setContentFromPost([
-                        'userCompany' => [$companyId],
-                        'dataClean' => 1
+                        'userCompany' => [$companyId]
                     ]);
-                    if ( ! craft()->users->saveUser($manager)) {
+                    if ( ! craft()->elements->saveElement($manager, false)) {
                         $message .= ' ' . $manager->fullName . ' not updated.';
                     };
                 }
@@ -169,17 +179,16 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t(count($managers) . ' managers user company updated'));
             $this->redirectToPostedUrl();
         }
-        if ($tool == 'dataDirtyUsers') {
-            $users = $this->getUsers('dirty');
-            foreach($users as $user) {
-                $user->setContentFromPost(['dataClean' => 0]);
-                craft()->users->saveUser($user);
-            }
-            craft()->userSession->setNotice(Craft::t('All users have been reset (data clean).'));
+        if ($tool == 'dataResetManagersUserCompany') {
+            craft()->lantra_settings->resetDataClean('ManagersUserCompany');
+            craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
-
-        $this->renderTemplate('lantra/settings/tools');
+        $variables = [
+            'dataCleanManagersChildrenTotal' => $this->getManagers(null, 'ManagersChildren', 1, true),
+            'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
+        ];
+        $this->renderTemplate('lantra/settings/tools', $variables);
     }
 
     /**

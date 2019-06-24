@@ -18,15 +18,23 @@
 
     <hr />
 
-    <p>{{ craft.users.status(null).group('users').search('dataClean:0').total() }} users remaining to process.</p>
+    {% set totalManagers = craft.users.status(null).group('companyManagers').total() %}
 
-    <p>{{ craft.users.status(null).group('companyManagers').search('dataClean:0').total() }} managers remaining to process.</p>
+    <p><a href="/admin/lantra/settings/tools?tool=removeManagersChildren" class="btn btn-small">Remove company manager duplicates from hierarchy (100)</a></p>
 
-    <p><a href="/admin/lantra/settings/tools?tool=dataDirtyUsers" class="btn btn-small">Reset all users (data clean)</a></p>
+    <p>
+        {{ dataCleanManagersChildrenTotal }}/{{ totalManagers }} managers processed.</p>
 
-    <p><a href="/admin/lantra/settings/tools?tool=removeManagersChildren" class="btn btn-small">Remove company manager duplicates from hierarchy (250)</a></p>
+    <p><a href="/admin/lantra/settings/tools?tool=dataResetManagersChildren" class="btn btn-small">Reset managers (data clean)</a></p>
 
-    <p><a href="/admin/lantra/settings/tools?tool=setManagerUserCompany" class="btn btn-small">Add managers' company as user company (250)</a></p>
+    <hr />
+
+    <p><a href="/admin/lantra/settings/tools?tool=setManagerUserCompany" class="btn btn-small">Add managers' company as user company (100)</a></p>
+
+    <p>
+        {{ dataCleanManagersUserCompanyTotal }}/{{ totalManagers }} managers processed.</p>
+
+    <p><a href="/admin/lantra/settings/tools?tool=dataResetManagersUserCompany" class="btn btn-small">Reset managers (data clean)</a></p>
 
 </div>
 
