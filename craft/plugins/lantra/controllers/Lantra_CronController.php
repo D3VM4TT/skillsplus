@@ -16,15 +16,17 @@ class Lantra_CronController extends Lantra_BaseController {
         $frequency = craft()->request->getParam('frequency');
         if ($frequency == 'daily') {
             Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
-            $this->notifyUserExpiry();
-            $this->expireIndividualUsers();
+            # stop all notifications but user generated automatic report
+            # $this->notifyUserExpiry();
+            # $this->expireIndividualUsers();
             craft()->lantra_reports->sendDailyReports();
         }
         if ($frequency == 'weekly') {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
-            $this->notifyManagerSummary();
-            $this->notifyLicencesRemaining();
-            $this->notifySchemeExpiry();
+            # stop all notifications but user generated automatic report
+            # $this->notifyManagerSummary();
+            # $this->notifyLicencesRemaining();
+            # $this->notifySchemeExpiry();
         }
         $this->returnJson(['cron'=> $frequency]);
     }
