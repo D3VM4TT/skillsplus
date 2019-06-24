@@ -474,7 +474,7 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
             } else {
-                $this->log[] = 'Could not save company ' . $title;
+                $this->log[] = 'Could not save company ' . $title . ' ' . json_encode($entryModel->getAllErrors());
             }
             $this->setProcessed($id);
         }
@@ -570,7 +570,7 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->users->saveUser($userModel) && craft()->userGroups->assignUserToGroups($userModel->id, $groups)) {
                 $this->success++;
             } else {
-                $this->log[] = 'Could not save user ' . $legacyId;
+                $this->log[] = 'Could not save user ' . json_encode($userModel->getAllErrors());
             }
             $this->setProcessed($id);
         }
@@ -640,7 +640,7 @@ class Lantra_ImportController extends Lantra_BaseController
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
             } else {
-                $this->log[] = 'Could not save result';
+                $this->log[] = 'Could not save result ' . json_encode($entryModel->getAllErrors());
             }
             $this->setProcessed($id);
         }
