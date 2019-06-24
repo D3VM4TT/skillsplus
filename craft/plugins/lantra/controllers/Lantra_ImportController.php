@@ -528,7 +528,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $userAddress = utf8_encode($user[7]);
             $userDummyEmail = 0;
 
-            if ($username != $legacyEmail) {
+            if (empty($username) || $username != $legacyEmail) {
                 $username = craft()->lantra_users->generateUsername($username, $names[0], $names[1]);
             }
 
@@ -540,10 +540,10 @@ class Lantra_ImportController extends Lantra_BaseController
                 $emailAddress = $legacyEmail;
             }
 
-            // make sure same email not given twice
+            // make sure same email not given twice this loop
             $this->emails[] = $legacyEmail;
             $userModel = new UserModel();
-            $userModel->username = $username;
+            $userModel->username = str_replace(' ', '', $username);
             $userModel->email = $emailAddress;
             $userModel->firstName = $names[0];
             $userModel->lastName = $names[1];

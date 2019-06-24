@@ -1055,7 +1055,8 @@ class Lantra_UsersService extends BaseApplicationComponent
      */
     public function generateEmail($firstName = null, $lastName = null, $handle = null) {
         $domain = craft()->lantra_settings->getConfig('schemeEmailDomain', 'lantra.co.uk');
-        return mt_rand(1000000, 9999999) . '@' . $domain;
+        $email = mt_rand(1000000, 9999999) . '@' . $domain;
+        return craft()->users->getUserByUsernameOrEmail($email) ? $this->generateEmail($firstName, $lastName, $handle) : $email;
     }
 
     /**
@@ -1080,7 +1081,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $username = 'user.'. mt_rand(100000, 999999);
         }
 
-        return str_replace(' ', '', $username);
+        return $username;
     }
 
     /**
