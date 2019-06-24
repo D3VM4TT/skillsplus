@@ -1068,15 +1068,16 @@ class Lantra_UsersService extends BaseApplicationComponent
             // remove all characters except A-Z, a-z, 0-9, dots, @, hyphens and spaces, replace spaces with dots
             $username = preg_replace('/\s+/', '.', preg_replace('/[^A-Za-z0-9@\. -]/', '', strtolower($username)));
             if ( ! $username || craft()->users->getUserByUsernameOrEmail($username)) {
-                $username = $username . mt_rand(10000, 99999);
+                $username = $username . mt_rand(100000, 999999);
             }
         }
         elseif ($firstName && $lastName) {
             $handle =  preg_replace('/\s+/', '', strtolower(trim($firstName) . '.' . trim($lastName)));
-            $username = $handle . '.' . mt_rand(10000, 99999);
+            $username = $handle . '.' . mt_rand(100000, 999999);
         }
-        else {
-            $username = 'user.'. mt_rand(10000, 99999);
+
+        if ( ! $username) {
+            $username = 'user.'. mt_rand(100000, 999999);
         }
 
         return str_replace(' ', '', $username);

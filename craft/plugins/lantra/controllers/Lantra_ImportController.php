@@ -533,7 +533,7 @@ class Lantra_ImportController extends Lantra_BaseController
             }
 
             // generate an email address
-            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail)) {
+            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail) || craft()->users->getUserByUsernameOrEmail($legacyEmail)) {
                 $emailAddress = craft()->lantra_users->generateEmail($names[0], $names[1], $username);
                 $userDummyEmail = 1;
             } else {
