@@ -1,12 +1,31 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space)
-DOMAINS="bics cha iopf ltp poultrypassport ptr bcsa poultec"
-
-SERVER="skills-plus.net"
+DOMAINS="bcsa bics cha iopf ltp poultrypassport ptr poultec"
+F=$1
+URI="/actions/lantra/cron/run?frequency=$F"
 
 for DOMAIN in $DOMAINS;
 do
-    URL="$DOMAIN.$SERVER/actions/lantra/cron/run?frequency=daily"
-    echo "lantra daily cron "$SERVER" > "$DOMAIN
+        # production
+        RESPONSE=$(curl --silent $DOMAIN.skills-plus.net$URI)
+        echo "$F cron run for $DOMAIN on PROD"
+        echo $RESPONSE
+
+        # uat
+        RESPONSE=$(curl --silent $DOMAIN.newuat.skills-plus.net$URI)
+        echo "$F cron run for $DOMAIN on UAT"
+        echo $RESPONSE
 done
+
+
+#!/bin/bash
+
+DOMAIN="bcsa"
+F=$1
+URI="/actions/lantra/cron/run?frequency=$F"
+
+# production
+RESPONSE=$(curl --silent $DOMAIN.skills-plus.net$URI)
+echo "$F cron run for $DOMAIN on PROD"
+echo $RESPONSE
