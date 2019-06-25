@@ -21,11 +21,11 @@ class Lantra_ImportRecord extends BaseRecord
      */
     protected function defineAttributes()
     {
-        return array(
+        return [
             'type' => AttributeType::String,
             'data' => AttributeType::String,
             'processed' => AttributeType::Bool
-        );
+        ];
     }
 }
 
@@ -33,17 +33,17 @@ class Lantra_ImportModel extends BaseModel
 {
     protected function defineAttributes()
     {
-        return array(
+        return [
             'type' => AttributeType::String,
             'data' => AttributeType::String,
             'processed' => AttributeType::Bool
-        );
+        ];
     }
 }
 
 class Lantra_ImportController extends Lantra_BaseController
 {
-    public $allowAnonymous = array('actionIndex', 'actionUpload', 'actionImport');
+    public $allowAnonymous = ['actionIndex', 'actionUpload', 'actionImport'];
 
     private $success = 0;
     private $log = [];
@@ -172,71 +172,85 @@ class Lantra_ImportController extends Lantra_BaseController
     public function removeData() {
         Lantra_ImportRecord::model()->deleteAll();
         craft()->userSession->setNotice(Craft::t('All raw import data removed.'));
+        return $this->complete();
     }
 
     public function resetData() {
         Lantra_ImportRecord::model()->updateAll(['processed' => 0]);
         craft()->userSession->setNotice(Craft::t('All data reset.'));
+        return $this->complete();
     }
 
     public function removeCompanies() {
         $this->deleteDataByType('companies');
         craft()->userSession->setNotice(Craft::t('All companies import data removed.'));
+        return $this->complete();
     }
 
     public function resetCompanies() {
         $this->resetDataByType('companies');
         craft()->userSession->setNotice(Craft::t('All companies import data reset.'));
+        return $this->complete();
     }
 
     public function removeRoles() {
         $this->deleteDataByType('roles');
         craft()->userSession->setNotice(Craft::t('All roles import data removed.'));
+        return $this->complete();
     }
 
     public function resetRoles() {
         $this->resetDataByType('roles');
         craft()->userSession->setNotice(Craft::t('All roles import data reset.'));
+        return $this->complete();
     }
 
     public function removeUsers() {
         $this->deleteDataByType('users');
         craft()->userSession->setNotice(Craft::t('All users import data removed.'));
+        return $this->complete();
     }
 
     public function resetUsers() {
         $this->resetDataByType('users');
         craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+        return $this->complete();
     }
 
     public function removeResults() {
         $this->deleteDataByType('results');
         craft()->userSession->setNotice(Craft::t('All results import data removed.'));
+        return $this->complete();
     }
 
     public function resetResults() {
         $this->resetDataByType('results');
         craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+        return $this->complete();
     }
 
     public function removeCompanyUsers() {
         $this->deleteDataByType('companyUsers');
         craft()->userSession->setNotice(Craft::t('All company users import data removed.'));
+        return $this->complete();
     }
 
     public function resetCompanyUsers() {
         $this->resetDataByType('companyUsers');
         craft()->userSession->setNotice(Craft::t('All company users import data reset.'));
+        return $this->complete();
     }
 
     public function removeCompanyManagers() {
         $this->deleteDataByType('companyManagers');
         craft()->userSession->setNotice(Craft::t('All company managers import data removed.'));
+        return $this->complete();
     }
 
     public function resetCompanyManagers() {
         $this->resetDataByType('companyManagers');
         craft()->userSession->setNotice(Craft::t('All company managers import data reset.'));
+        return $this->complete();
     }
 
     ## IMPORT METHODS ##
@@ -298,6 +312,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $this->setProcessed($id);
         }
         craft()->userSession->setNotice($this->success . ' managers assigned.');
+        return $this->complete();
     }
 
     public function importCompanyUsers() {
@@ -325,11 +340,12 @@ class Lantra_ImportController extends Lantra_BaseController
             $this->setProcessed($id);
         }
         craft()->userSession->setNotice($this->success . ' users assigned.');
+        return $this->complete();
     }
 
    private function complete() {
        craft()->userSession->setFlash('importLog', $this->log);
-       $this->redirectToPostedUrl();
+       return $this->redirectToPostedUrl();
    }
 
     ## PROCESS METHODS ##
@@ -473,7 +489,8 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     private function resetDataByType($type) {
-        return Lantra_ImportRecord::model()->updateAll(['processed' => 0], ['type' => $type]);
+        $mysql = "UPDATE {{lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
+        return craft()->db->createCommand($mysql)->query();
     }
 
     private function switchManagers() {
