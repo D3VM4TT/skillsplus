@@ -186,9 +186,19 @@ class Lantra_ImportController extends Lantra_BaseController
         craft()->userSession->setNotice(Craft::t('All companies import data removed.'));
     }
 
+    public function resetCompanies() {
+        $this->resetDataByType('companies');
+        craft()->userSession->setNotice(Craft::t('All companies import data reset.'));
+    }
+
     public function removeRoles() {
         $this->deleteDataByType('roles');
         craft()->userSession->setNotice(Craft::t('All roles import data removed.'));
+    }
+
+    public function resetRoles() {
+        $this->resetDataByType('roles');
+        craft()->userSession->setNotice(Craft::t('All roles import data reset.'));
     }
 
     public function removeUsers() {
@@ -196,19 +206,39 @@ class Lantra_ImportController extends Lantra_BaseController
         craft()->userSession->setNotice(Craft::t('All users import data removed.'));
     }
 
+    public function resetUsers() {
+        $this->resetDataByType('users');
+        craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+    }
+
     public function removeResults() {
         $this->deleteDataByType('results');
         craft()->userSession->setNotice(Craft::t('All results import data removed.'));
     }
 
+    public function resetResults() {
+        $this->resetDataByType('results');
+        craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+    }
+
     public function removeCompanyUsers() {
-        $this->deleteDataByType('companyManagers');
+        $this->deleteDataByType('companyUsers');
         craft()->userSession->setNotice(Craft::t('All company users import data removed.'));
     }
 
+    public function resetCompanyUsers() {
+        $this->resetDataByType('companyUsers');
+        craft()->userSession->setNotice(Craft::t('All company users import data reset.'));
+    }
+
     public function removeCompanyManagers() {
-        $this->deleteDataByType('companyUsers');
+        $this->deleteDataByType('companyManagers');
         craft()->userSession->setNotice(Craft::t('All company managers import data removed.'));
+    }
+
+    public function resetCompanyManagers() {
+        $this->resetDataByType('companyManagers');
+        craft()->userSession->setNotice(Craft::t('All company managers import data reset.'));
     }
 
     ## IMPORT METHODS ##
