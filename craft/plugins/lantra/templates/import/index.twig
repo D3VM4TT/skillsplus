@@ -88,10 +88,12 @@
                 <div>
                     <label>Data Type:</label>
                     <select name="type">
-                        <option value="companies">Companies</option>
-                        <option value="roles">Roles</option>
-                        <option value="users">Users</option>
-                        <option value="results">Results</option>
+                        <option value="companies">Create Companies</option>
+                        <option value="roles">Create Roles</option>
+                        <option value="users">Create Users</option>
+                        <option value="results">Create Results</option>
+                        <option value="companyManagers">Assign Company Managers</option>
+                        <option value="companyUsers">Assign Company Users</option>
                     </select>
                     <label>Limit:</label>
                     <select name="limit">
@@ -115,17 +117,19 @@
 
             {% set totalCompanies = craft.entries.section('companies').total() %}
 
-            <p>{{ dataClean.companies }}/{{ totalCompanies }} remaining</p>
+            <p>{{ dataClean.companies }}/{{ totalCompanies }} processed</p>
 
             <hr />
 
-            <h2>Process Craft Data</h2>
+            <h2>Assign Job Roles ({{ limit }} each request)</h2>
+
+            <p>This only needs to be run if roles are added after users.</p>
 
             <p><a href="/admin/lantra/import?process=assignJobRoles" class="btn btn-small">Assign Job Roles</a></p>
 
-            <p><a href="/admin/lantra/import?process=assignCompanyManagers" class="btn btn-small">Assign Company Managers</a></p>
+            {% set totalUsers = craft.users.admin(0).total() %}
 
-            <p><a href="/admin/lantra/import?process=assignCompanyUsers" class="btn btn-small">Assign Company Users</a></p>
+            <p>{{ dataClean.users }}/{{ totalUsers }} processed</p>
 
             <hr />
 
