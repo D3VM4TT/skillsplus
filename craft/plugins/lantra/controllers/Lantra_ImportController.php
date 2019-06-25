@@ -473,11 +473,11 @@ class Lantra_ImportController extends Lantra_BaseController
             ]);
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
+                $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: Company: " . json_encode($entryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
                 $this->log[] = 'Could not save company ' . $title . ' ' . json_encode($entryModel->getAllErrors());
             }
-            $this->setProcessed($id);
         }
     }
 
@@ -497,11 +497,11 @@ class Lantra_ImportController extends Lantra_BaseController
 
             if (craft()->categories->saveCategory($categoryModel)) {
                 $this->success++;
+                $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: Role: " . json_encode($categoryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
                 $this->log[] = 'Could not save role ' . $title;
             }
-            $this->setProcessed($id);
         }
     }
 
@@ -571,11 +571,11 @@ class Lantra_ImportController extends Lantra_BaseController
             $groups = [4];
             if (craft()->users->saveUser($userModel) && craft()->userGroups->assignUserToGroups($userModel->id, $groups)) {
                 $this->success++;
+                $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: User: [" . $legacyId . '] ' . json_encode($userModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
                 $this->log[] = 'Could not save user ' . json_encode($userModel->getAllErrors());
             }
-            $this->setProcessed($id);
         }
     }
 
@@ -642,11 +642,11 @@ class Lantra_ImportController extends Lantra_BaseController
             ]);
             if (craft()->entries->saveEntry($entryModel)) {
                 $this->success++;
+                $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: Result: " . json_encode($entryModel->getAllErrors(),LogLevel::Error, true, 'import', 'lantra'));
+                Craft::log("Lantra Import: Result: [". $id . "] " . json_encode($entryModel->getAllErrors(),LogLevel::Error, true, 'import', 'lantra'));
                 $this->log[] = 'Could not save result ' . json_encode($entryModel->getAllErrors());
             }
-            $this->setProcessed($id);
         }
     }
 
