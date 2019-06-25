@@ -65,7 +65,7 @@ class Lantra_ImportController extends Lantra_BaseController
     {
         craft()->userSession->requireAdmin();
 
-        $this->log = explode(',', craft()->userSession->getFlash('log', ''));
+        $this->log  = craft()->userSession->getFlash('importLog', []);
 
         // this might take some time...
         ini_set('memory_limit', '-1');
@@ -86,9 +86,7 @@ class Lantra_ImportController extends Lantra_BaseController
     {
         $process = craft()->request->getParam('process');
         if ($process) {
-            $this->$process();
-            craft()->userSession->setFlash('log', implode(',', $this->log));
-            craft()->request->redirect('/admin/lantra/import');
+            return $this->$process();
         }
         $this->loadTemplate();
     }
@@ -247,24 +245,28 @@ class Lantra_ImportController extends Lantra_BaseController
         $this->createCompanies($this->limit);
         $unprocessed = $this->countDataByType('companies');
         craft()->userSession->setNotice($this->success  . ' companies imported. ' . $unprocessed . ' remaining.');
+        return $this->complete();
     }
 
     public function importRoles() {
         $this->createRoles($this->limit);
         $unprocessed = $this->countDataByType('roles');
         craft()->userSession->setNotice($this->success  . ' roles imported. ' . $unprocessed . ' remaining.');
+        return $this->complete();
     }
 
     public function importUsers() {
         $this->createUsers($this->limit);
         $unprocessed = $this->countDataByType('users');
         craft()->userSession->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
+        return $this->complete();
     }
 
     public function importResults() {
         $this->createResults($this->limit);
         $unprocessed = $this->countDataByType('results');
         craft()->userSession->setNotice($this->success  . ' results imported. ' . $unprocessed . ' remaining.');
+        return $this->complete();
     }
 
     public function importCompanyManagers() {
@@ -324,6 +326,11 @@ class Lantra_ImportController extends Lantra_BaseController
         }
         craft()->userSession->setNotice($this->success . ' users assigned.');
     }
+
+   private function complete() {
+       craft()->userSession->setFlash('importLog', $this->log);
+       $this->redirectToPostedUrl();
+   }
 
     ## PROCESS METHODS ##
 
@@ -504,7 +511,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: Company: " . json_encode($entryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
-                $this->log[] = 'Could not save company ' . $title . ' ' . json_encode($entryModel->getAllErrors());
+                $this->log[] = 'Could not save company [' . $legacyId . '] ' . json_encode($entryModel->getAllErrors());
             }
         }
     }
@@ -528,7 +535,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: Role: " . json_encode($categoryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
-                $this->log[] = 'Could not save role ' . $title;
+                $this->log[] = 'Could not save role [' . $legacyId . ']' . json_encode($categoryModel->getAllErrors());
             }
         }
     }
@@ -602,7 +609,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: User: [" . $legacyId . '] ' . json_encode($userModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
-                $this->log[] = 'Could not save user ' . json_encode($userModel->getAllErrors());
+                $this->log[] = 'Could not save user [' . $legacyId . '] ' . json_encode($userModel->getAllErrors());
             }
         }
     }
@@ -628,7 +635,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $author = $this->getUserByLegacyId($legacyUserId);
 
             if (!$author) {
-                $this->log[] = 'legacyUserId not found ' . $legacyUserId;
+                $this->log[] = 'Could not save result legacyUserId not found [' . $legacyUserId . ']';
                 $this->setProcessed($id);
                 continue;
             }
@@ -673,7 +680,8 @@ class Lantra_ImportController extends Lantra_BaseController
                 $this->setProcessed($id);
             } else {
                 Craft::log("Lantra Import: Result: [". $id . "] " . json_encode($entryModel->getAllErrors(),LogLevel::Error, true, 'import', 'lantra'));
-                $this->log[] = 'Could not save result ' . json_encode($entryModel->getAllErrors());
+                $this->log[] = 'Could not save result legacyUserId [' . $legacyUserId . '] legacyUnitId [' . $legacyUnitId . '] title [' . $title . '] ' .
+                    json_encode($entryModel->getAllErrors());
             }
         }
     }
