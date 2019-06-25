@@ -648,9 +648,15 @@ class Lantra_ImportController extends Lantra_BaseController
         }
     }
 
-    private function dataCleanTotal($dataCleanKey, $dataCleanValue = false) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
+    private function dataCleanTotal($dataCleanKey, $dataCleanValue = false, $type = 'companies') {
+        if ($type == 'companies') {
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria->section = 'companies';
+        }
+        if ($type == 'users') {
+            $criteria = craft()->elements->getCriteria(ElementType::User);
+            $criteria->admin = false;
+        }
         $fieldName = 'dataClean' . $dataCleanKey;
         $criteria->$fieldName = $dataCleanValue ? 1 : 0;
         return $criteria->total();
@@ -668,8 +674,8 @@ class Lantra_ImportController extends Lantra_BaseController
                 'results'           => $this->countDataByType('results')
             ],
             'dataClean' => [
-                'companies' => $this->dataCleanTotal('CompanyParent', true),
-                'users' => $this->dataCleanTotal('JobRole', true)
+                'companies' => $this->dataCleanTotal('CompanyParent', true, 'companies'),
+                'users' => $this->dataCleanTotal('JobRole', true, 'users')
             ],
             'log' => $this->log,
             'limit' => $this->limit
