@@ -65,7 +65,7 @@ class Lantra_ImportController extends Lantra_BaseController
     {
         craft()->userSession->requireAdmin();
 
-        $this->log = explode(',', craft()->userSession->getFlash('log', []));
+        $this->log = explode(',', craft()->userSession->getFlash('log', ''));
 
         // this might take some time...
         ini_set('memory_limit', '-1');
