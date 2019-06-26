@@ -137,6 +137,33 @@
 
             <hr />
 
+            <h2>Batch Update Users</h2>
+
+            <form method="post" action="" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="lantra/import/users">
+                <div>
+                    <label>ID:</label>
+                    <select name="refId">
+                        <option value="legacyId">legacyId</option>
+                        <option value="userId">userId</option>
+                    </select>
+                    <label>Action:</label>
+                    <select name="userAction">
+                        <option value="suspend">Suspend</option>
+                        <option value="delete">Delete</option>
+                    </select>
+                </div>
+                <div style="margin:20px 0 20px 0;">
+                    <textarea rows="6" name="ids" class="fullwidth"></textarea>
+                    <p>Copy comma separated list of legacyId or userId (i.e. Craft id) and select action.</p>
+                </div>
+                <p>
+                    <input type="submit" class="btn submit" value="{{ 'Update' }}">
+                </p>
+            </form>
+
+            <hr />
+
             <h2>Column Order</h2>
 
             <p>Companies<br />title, legacyId, legacyCompanyId</p>

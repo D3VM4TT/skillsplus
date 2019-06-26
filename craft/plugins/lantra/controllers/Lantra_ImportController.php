@@ -43,7 +43,7 @@ class Lantra_ImportModel extends BaseModel
 
 class Lantra_ImportController extends Lantra_BaseController
 {
-    public $allowAnonymous = ['actionIndex', 'actionUpload', 'actionImport'];
+    public $allowAnonymous = ['actionIndex', 'actionUpload', 'actionImport', 'actionUsers'];
 
     private $success = 0;
     private $log = [];
@@ -142,6 +142,61 @@ class Lantra_ImportController extends Lantra_BaseController
         if (method_exists($this, $method)) {
             return $this->$method();
         }
+    }
+
+    public function actionUsers() {
+        $refId = craft()->request->getRequiredPost('refId', 'legacyId');
+        $ids = craft()->request->getRequiredPost('ids');
+        $action = craft()->request->getRequiredPost('userAction', 'suspend');
+        $userIds = $this->getUserIdsByRef($ids, $refId);
+        if ($action == 'suspend'){
+            $success =$this->batchSuspendUsers($userIds);
+        }
+        elseif ($action == 'delete'){
+            $success =$this->batchDeleteUsers($userIds);
+        }
+        craft()->userSession->setNotice($success . ' users updated.');
+        return $this->complete();
+    }
+
+    private function getUserIdsByRef($ids, $refId = 'legacyId') {
+        $ids = explode(',', $ids);
+        $ids = array_map('trim', $ids);
+        $ids = $this->cleanIds($ids);
+        $userIds = [];
+        if ($refId == 'userId') {
+            $userIds = $ids;
+        }
+        elseif ($refId == 'legacyId' && count($ids)) {
+            $mysql = "SELECT elementId from {{content}} WHERE field_legacyId IN (" . implode(',', $ids) . ");";
+            $result = craft()->db->createCommand($mysql)->queryAll();
+            foreach($result as $row){
+                $userIds[] = $row['elementId'];
+            }
+        }
+        return $userIds;
+    }
+
+    private function cleanIds($ids) {
+        $return = [];
+        foreach($ids as $id) {
+            if ((int) $id) {
+                $return[] = $id;
+            }
+        }
+        return $return;
+    }
+
+    private function batchSuspendUsers($ids) {
+        $mysql = "UPDATE {{users}} SET suspended = '1' WHERE id IN (" . implode(',', $ids) . ")";
+        $result = craft()->db->createCommand($mysql)->query();
+        return $result->getRowCount();
+    }
+
+    private function batchDeleteUsers($ids) {
+        $mysql = "DELETE FROM {{users}} WHERE id IN (" . implode(',', $ids) . ")";
+        $result = craft()->db->createCommand($mysql)->query();
+        return $result->getRowCount();
     }
 
     private function isHeaderRow($row) {
