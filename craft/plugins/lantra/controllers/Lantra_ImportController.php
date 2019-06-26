@@ -214,7 +214,7 @@ class Lantra_ImportController extends Lantra_BaseController
         $lengths = [
             'companies'         => 3,
             'roles'             => 2,
-            'users'             => 8,
+            'users'             => 9,
             'results'           => 15,
             'companyUsers'      => 2,
             'companyManagers'   => 2,
@@ -467,23 +467,27 @@ class Lantra_ImportController extends Lantra_BaseController
     public function deleteCompanies() {
         $this->deleteEntriesBySectionId(3);
         craft()->userSession->setNotice('All Craft companies deleted.');
+        $this->complete();
     }
 
     public function deleteResults() {
         $this->deleteEntriesBySectionId(10);
         craft()->userSession->setNotice('All Craft results deleted.');
+        $this->complete();
     }
 
     public function deleteRoles() {
         $mysql = "DELETE from {{categories}} WHERE groupId = 1";
         craft()->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All Craft Roles deleted.');
+        $this->complete();
     }
 
     public function deleteUsers() {
         $mysql = "DELETE from {{users}} WHERE admin = 0;";
         craft()->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All Craft Users deleted.');
+        $this->complete();
     }
 
     public function cleanHierarchy() {
@@ -633,6 +637,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $userDateOfBirth = trim((string)$user[5]);
             $userStartDate = trim((string)$user[6]);
             $userAddress = utf8_encode($user[7]);
+            $userMembershipNumber = utf8_encode($user[8]);
             $userDummyEmail = 0;
 
             if (empty($username) || $username != $legacyEmail) {
@@ -659,6 +664,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 'legacyEmail' => $legacyEmail,
                 'legacyJobRoleId' => $legacyJobRoleId,
                 'userAddress' => $userAddress,
+                'userMembershipNumber' => $userMembershipNumber,
                 'userDummyEmail' => $userDummyEmail
             ]);
             if (strlen($userDateOfBirth) == 10) {
