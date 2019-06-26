@@ -127,8 +127,6 @@
 
             <h2>Assign Job Roles ({{ limit }} each request)</h2>
 
-            <p>This only needs to be run if roles are added after users.</p>
-
             <p><a href="/admin/lantra/import?process=assignJobRoles" class="btn btn-small">Assign Job Roles</a></p>
 
             {% set totalUsers = craft.users.admin(0).total() %}
