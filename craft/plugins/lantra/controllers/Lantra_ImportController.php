@@ -436,6 +436,7 @@ class Lantra_ImportController extends Lantra_BaseController
 
         }
         craft()->userSession->setNotice('Company hierarchy created for ' . $total . ' companies.');
+        $this->complete();
     }
 
     public function assignJobRoles()  {
@@ -460,6 +461,7 @@ class Lantra_ImportController extends Lantra_BaseController
             craft()->elements->saveElement($user, false);
         }
         craft()->userSession->setNotice('Job roles assigned to ' . $total . ' users.');
+        $this->complete();
     }
 
     ## DELETE METHODS ##
