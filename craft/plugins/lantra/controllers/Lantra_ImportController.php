@@ -59,7 +59,7 @@ class Lantra_ImportController extends Lantra_BaseController
     private $companyTemp = [];
     private $jobRoleTemp = [];
 
-    private $limit = 250;
+    private $limit = 1000;
 
     public function __construct($id, $module = null)
     {
