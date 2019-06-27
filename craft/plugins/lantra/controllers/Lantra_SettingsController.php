@@ -153,6 +153,25 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'copyDatabase') {
+            $environmentVariables = craft()->config->get('environmentVariables');
+            $server = $environmentVariables['server'];
+            if ($server == 'prod' || $server == 'dev' || $server == 'local') {
+                $target = 'uat';
+            }
+            else {
+                $target = 'dev';
+            }
+            $result = craft()->lantra_deploy->copyDatabase($target);
+            $message = craft()->lantra_deploy->message;
+            if ($result) {
+                craft()->userSession->setNotice($message);
+            }
+            else {
+                craft()->userSession->setError($message);
+            }
+            $this->redirectToPostedUrl();
+        }
         $variables = [
             'dataCleanManagersChildrenTotal' => $this->getManagers(null, 'ManagersChildren', 1, true),
             'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
