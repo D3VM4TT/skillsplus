@@ -837,7 +837,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $folder = craft()->assets->findFolder(['parent' => $parentFolder, 'name' => $folderName]);
         if (! $folder) {
             $folder = craft()->assets->createFolder($parentFolder->id, $folderName);
-            $folderId = $folder->getDataItem('id');
+            $response = $folder->getResponseData();
+            $folderId = isset($response['folderId']) ? $response['folderId'] : null;
         } else {
             $folderId = $folder->id;
         }
