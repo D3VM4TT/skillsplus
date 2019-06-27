@@ -859,7 +859,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $localPath = $legacyPath;
             }
 
-            if ($localPath) {
+            if ($localPath && $folder) {
                 $response = craft()->assets->insertFileByLocalPath(
                     $localPath,
                     $filename,
