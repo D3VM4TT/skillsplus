@@ -34,14 +34,11 @@ class Lantra_SettingsController extends BaseController
         $this->renderTemplate('lantra/settings', $variables);
     }
 
-    private function getUsers($clean = 'both', $limit = null) {
+    private function getUsers($limit = null) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->groupId = [2,3,4];
         $criteria->admin = false;
         $criteria->limit = $limit;
-        if ($clean != 'both'){
-            $criteria->dataClean = $clean === 'dirty' ? 0 : 1;
-        }
         return $criteria;
     }
 
@@ -80,34 +77,6 @@ class Lantra_SettingsController extends BaseController
                 craft()->users->saveUser($user);
             }
             craft()->userSession->setNotice(Craft::t('All users saved.'));
-            $this->redirectToPostedUrl();
-        }
-        if ($tool == 'setUsernames') {
-            $users = $this->getUsers();
-            $message = '';
-            foreach($users as $user) {
-                $username = strtolower($user->firstName);
-                if ($user->lastName) {
-                    $username.= '.' . strtolower($user->lastName);
-                }
-                $user->username = $username;
-                if ( ! craft()->users->saveUser($user)) {
-                    $message .= ' ' . $user->fullName . ' not updated.';
-                };
-            }
-            craft()->userSession->setNotice(Craft::t('Usernames updated.' . $message));
-            $this->redirectToPostedUrl();
-        }
-        if ($tool == 'setPasswords') {
-            $users = $this->getUsers();
-            $message = '';
-            foreach($users as $user) {
-                $user->newPassword = $user->userDateOfBirth ? $user->userDateOfBirth->format('dmy') : 010101;
-                if ( ! craft()->users->saveUser($user)) {
-                    $message .= ' ' . $user->fullName . ' not updated.';
-                };
-            }
-            craft()->userSession->setNotice(Craft::t('Passwords updated.' . $message));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setManagerReadOnly') {

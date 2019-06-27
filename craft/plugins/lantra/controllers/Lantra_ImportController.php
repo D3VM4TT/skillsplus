@@ -449,6 +449,7 @@ class Lantra_ImportController extends Lantra_BaseController
         }
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->limit = $this->limit;
+        $criteria->dataCleanJobRole = 0;
         $users = $criteria->find();
         $total = count($users);
         foreach ($users as $user) {
@@ -461,6 +462,53 @@ class Lantra_ImportController extends Lantra_BaseController
             craft()->elements->saveElement($user, false);
         }
         craft()->userSession->setNotice('Job roles assigned to ' . $total . ' users.');
+        $this->complete();
+    }
+
+    public function setUsernames() {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = [2,3,4];
+        $criteria->admin = false;
+        $criteria->limit = $this->limit;
+        $criteria->dataCleanUsername = 0;
+        $users = $criteria->find();
+        foreach ($users as $user) {
+            $username = strtolower(str_replace('.', '', $user->firstName));
+            if ($user->lastName) {
+                $username.= '.' . strtolower(str_replace('.', '', $user->lastName));
+            }
+            $username = str_replace(' ', '', $username);
+            $user->username = $username;
+            $user->getContent()->dataCleanUsername = 1;
+            if (craft()->users->saveUser($user)) {
+                $this->success++;
+            }
+            else {
+                $this->log[] = 'Could not save user [' . $user->id . '] ' . json_encode($user->getAllErrors());
+            }
+        }
+        craft()->userSession->setNotice('Username updated for ' . $this->success . ' users.');
+        $this->complete();
+    }
+
+    public function setPasswords() {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->groupId = [2,3,4];
+        $criteria->admin = false;
+        $criteria->limit = $this->limit;
+        $criteria->dataCleanPassword = 0;
+        $users = $criteria->find();
+        foreach ($users as $user) {
+            $user->newPassword = empty($user->userDateOfBirth) ? '010101' : $user->userDateOfBirth->format('dmy');
+            $user->getContent()->dataCleanPassword = 1;
+            if (craft()->users->saveUser($user)) {
+                $this->success++;
+            }
+            else {
+                $this->log[] = 'Could not save user [' . $user->id . '] ' . json_encode($user->getAllErrors());
+            }
+        }
+        craft()->userSession->setNotice('Password updated for ' . $this->success . ' users.');
         $this->complete();
     }
 
@@ -490,31 +538,6 @@ class Lantra_ImportController extends Lantra_BaseController
         craft()->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All Craft Users deleted.');
         $this->complete();
-    }
-
-    public function cleanHierarchy() {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = 'companies';
-        $criteria->companyUpdated = false;
-        $criteria->order = 'title';
-        $criteria->limit = 200;
-        $count = 0;
-
-        foreach ($criteria->find() as $company) {
-            $managerIds = [];
-            foreach ($company->companySecondaryManagers as $m) {
-                if (!$this->isParentCompanyManager($company, $m)) {
-                    $managerIds[] = $m->id;
-                }
-            }
-            $company->setContentFromPost([
-                'companyUpdated' => true,
-                'companyPrimaryManagers' => $managerIds
-            ]);
-            if (craft()->entries->saveEntry($company)) {
-                $count++;
-            }
-        }
     }
 
     ## PRIVATE METHODS ##
@@ -793,7 +816,9 @@ class Lantra_ImportController extends Lantra_BaseController
             ],
             'dataClean' => [
                 'companies' => $this->dataCleanTotal('CompanyParent', true, 'companies'),
-                'users' => $this->dataCleanTotal('JobRole', true, 'users')
+                'users' => $this->dataCleanTotal('JobRole', true, 'users'),
+                'usernames' => $this->dataCleanTotal('Username', true, 'users'),
+                'passwords' => $this->dataCleanTotal('Password', true, 'users')
             ],
             'log' => $this->log,
             'limit' => $this->limit
