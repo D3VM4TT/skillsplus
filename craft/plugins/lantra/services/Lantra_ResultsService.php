@@ -829,7 +829,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws \Exception
      */
     public function legacyResultFiles(EntryModel $resultEntry) {
-        if (count($resultEntry->resultEvidence) || ! $resultEntry->legacyResultFiles) {
+        if (! $resultEntry->legacyResultFiles) {
             return $resultEntry;
         }
         $folderName = $resultEntry->authorId;
@@ -849,7 +849,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         foreach($legacyFiles as $key => $filePath){
             $env = craft()->config->get('environmentVariables');
-            $legacyPath = $env['assetsPath'] . '/archive' . $filePath;
+            $legacyPath = $env['assetsPath'] . '/archive' . trim($filePath);
             $parts = explode('/', $legacyPath);
             $filename = end($parts);
 
@@ -883,6 +883,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
                     unset($updatedLegacyResultFiles[$key]);
                     $unchanged = false;
                 }
+            }
+            else {
+                Craft::log("Legacy files not found: [". $localPath . "] ",LogLevel::Error, true, 'results', 'lantra');
             }
         }
 
