@@ -512,7 +512,7 @@ class Lantra_ImportController extends Lantra_BaseController
         $this->complete();
     }
 
-    ## DELETE METHODS ##
+    ## DELETE METHODS  ##
 
     public function deleteCompanies() {
         $this->deleteEntriesBySectionId(3);
