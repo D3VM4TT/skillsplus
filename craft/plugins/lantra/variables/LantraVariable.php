@@ -221,10 +221,20 @@ class LantraVariable
      * Return count of users for a team or company
      *
      * @param int $entryId
+     * @param string
+     * @param string
      * @return int
      */
-    public function userCount($entryId = null) {
-        return count(craft()->lantra_users->getUsersByEntryId($entryId));
+    public function userCount($entryId = null, $status = 'active', $type = 'company') {
+        $active = count(craft()->lantra_users->getUsersByEntryId($entryId));
+        if ($status == 'active') {
+            return $active;
+        }
+        $suspended = craft()->lantra_users->countSuspendedUsers($entryId, $type);
+        if ($status == 'suspended') {
+            return $suspended;
+        }
+        return $active + $suspended;
     }
 
     /**

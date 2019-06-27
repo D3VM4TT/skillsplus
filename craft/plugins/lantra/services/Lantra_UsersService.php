@@ -318,6 +318,22 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * @param $entryId
+     * @param $type
+     * @return int
+     * @throws Exception
+     */
+    public function countSuspendedUsers($entryId, $type = 'company') {
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $fieldName = 'user' . ucwords($type);
+        $criteria->relatedTo = ['targetElement' => $entryId, 'field' => $fieldName];
+        $criteria->order = 'lastName';
+        $criteria->limit = null;
+        $criteria->status = 'suspended';
+        return $criteria->count();
+    }
+
+    /**
      * @param $companyId
      * @param bool $count
      * @return ElementCriteriaModel|int|object

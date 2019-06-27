@@ -54,7 +54,7 @@
             <tbody>
             {% for company in companyEntries %}
             {% set parent = company.companyParent.first %}
-            {% set userCount = craft.lantra.userCount(company.id) %}
+            {% set userCount = craft.lantra.userCount(company.id, 'both') %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
