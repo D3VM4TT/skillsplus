@@ -837,6 +837,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $folder = craft()->assets->findFolder(['parent' => $parentFolder, 'name' => $folderName]);
         if (! $folder) {
             $folder = craft()->assets->createFolder($parentFolder->id, $folderName);
+            $folderId = $folder->getDataItem('id');
+        } else {
+            $folderId = $folder->id;
         }
         $legacyFiles = explode(',', $resultEntry->legacyResultFiles);
         $assetIds = [];
@@ -859,11 +862,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $localPath = $legacyPath;
             }
 
-            if ($localPath && $folder) {
+            if ($localPath && $folderId) {
                 $response = craft()->assets->insertFileByLocalPath(
                     $localPath,
                     $filename,
-                    $folder->id,
+                    $folderId,
                     AssetConflictResolution::Replace
                 );
 
