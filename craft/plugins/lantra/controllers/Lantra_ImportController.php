@@ -782,7 +782,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: Result: [". $id . "] " . json_encode($entryModel->getAllErrors(),LogLevel::Error, true, 'import', 'lantra'));
+                Craft::log("Lantra Import: Result: [". $id . "] " . json_encode($entryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
                 $this->log[] = 'Could not save result legacyUserId [' . $legacyUserId . '] legacyUnitId [' . $legacyUnitId . '] title [' . $title . '] ' .
                     json_encode($entryModel->getAllErrors());
             }
