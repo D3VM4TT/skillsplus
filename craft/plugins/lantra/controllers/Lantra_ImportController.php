@@ -702,7 +702,7 @@ class Lantra_ImportController extends Lantra_BaseController
                     'userStartDate' => DateTime::createFromFormat('d/m/Y', $userStartDate)
                 ]);
             }
-            $roleId = $this->getRoleId($user[5]);
+            $roleId = $this->getRoleId($legacyJobRoleId);
             if ($roleId) {
                 $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
             }
