@@ -151,6 +151,10 @@ class Lantra_NotifyService extends BaseApplicationComponent
         if (craft()->request->isCpRequest()){
             return;
         }
+        // endorsement notify is disabled
+        if (craft()->lantra_settings->getSetting('disableEndorsementNotify', false)) {
+            return;
+        }
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
         $variables = ['entry' => $resultEntry, 'user' => $user];

@@ -305,6 +305,8 @@ class LantraPlugin extends BasePlugin
             'notifySubjectCustomReport'         => AttributeType::String,
             'notifyCustomReport'                => AttributeType::String,
 
+            'disableEndorsementNotify'          => AttributeType::Bool,
+
             ## user profile
             'userEditName'                      => AttributeType::Bool,
             'userEditEmail'                     => AttributeType::Bool,

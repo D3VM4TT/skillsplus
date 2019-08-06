@@ -397,6 +397,13 @@
                 value:		    settings.notifyFooter
             }) }}
 
+            {{ forms.lightswitchField ({
+                label:			"Disable Endorsement Notification?",
+                id:				"disableEndorsementNotify",
+                name:			"disableEndorsementNotify",
+                on:		        settings.disableEndorsementNotify == 1
+            }) }}
+
             <hr />
 
             <h2>User Profile Settings</h2>

@@ -80,6 +80,8 @@ class Lantra_SettingsModel extends BaseModel
             'notifySubjectCustomReport'         => AttributeType::String,
             'notifyCustomReport'                => AttributeType::String,
 
+            'disableEndorsementNotify'          => AttributeType::Bool,
+
             ## user profile
             'userEditName'                      => AttributeType::Bool,
             'userEditEmail'                     => AttributeType::Bool,
