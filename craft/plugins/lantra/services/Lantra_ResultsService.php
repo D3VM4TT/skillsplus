@@ -207,7 +207,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
                 $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
                 $saveContent = true;
-                craft()->lantra_notify->sendManagerEndorsementResult($resultEntry, $unitEntry->unitEndorsementManagerLevel);
             }
             // set author
             $author = null;
@@ -231,13 +230,33 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $resultEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 $saveContent = true;
             }
-            elseif ($resultEntry->type == 'userResult') {
+            // send notification
+            if ($this->notifyManagerEndorsementResult($resultEntry)){
                 craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
             }
         }
         if ($saveContent) {
             craft()->entries->saveEntry($resultEntry, false);
         }
+    }
+
+    /**
+     * Check whether to send the endorsement notification (can be disabled using lantra settings)
+     *
+     * @param $resultEntry
+     * @return bool
+     */
+    function notifyManagerEndorsementResult($resultEntry) {
+        if ($resultEntry->resultStatus != 'pending') {
+            return false;
+        }
+        if ($resultEntry->type == 'userResult') {
+            return true;
+        }
+        if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult'){
+            return true;
+        }
+        return false;
     }
 
     /**

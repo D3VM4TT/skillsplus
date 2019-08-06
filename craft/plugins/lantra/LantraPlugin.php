@@ -125,6 +125,13 @@ class LantraPlugin extends BasePlugin
                     $unitEntry = $entry->resultUnit->first();
                     $unitEvidence = $entry->resultEvidence->first();
                 }
+                // check change from draft to pending
+                if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
+                    // send notification
+                    if (craft()->lantra_results->notifyManagerEndorsementResult($entry)) {
+                        craft()->lantra_notify->sendManagerEndorsementResult($entry);
+                    }
+                }
 
                 $dateFormat = craft()->lantra_settings->getSetting('themeDateFormat', 'd-m-Y');
                 // set a user start date
