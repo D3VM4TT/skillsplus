@@ -150,10 +150,19 @@ class Lantra_ImportController extends Lantra_BaseController
         $action = craft()->request->getRequiredPost('userAction', 'suspend');
         $userIds = $this->getUserIdsByRef($ids, $refId);
         if ($action == 'suspend'){
-            $success =$this->batchSuspendUsers($userIds);
+            $success = $this->batchSuspendUsers($userIds);
+        }
+        elseif ($action == 'restore') {
+            $success = $this->batchRestoreUsers($userIds);
+        }
+        elseif ($action == 'setManagerReadOnly') {
+            $success = $this->batchManagerReadOnlyUsers($userIds, 1);
+        }
+        elseif ($action == 'unsetManagerReadOnly') {
+            $success = $this->batchManagerReadOnlyUsers($userIds, 0);
         }
         elseif ($action == 'delete'){
-            $success =$this->batchDeleteUsers($userIds);
+            $success = $this->batchDeleteUsers($userIds);
         }
         craft()->userSession->setNotice($success . ' users updated.');
         return $this->complete();
@@ -189,6 +198,18 @@ class Lantra_ImportController extends Lantra_BaseController
 
     private function batchSuspendUsers($ids) {
         $mysql = "UPDATE {{users}} SET suspended = '1' WHERE id IN (" . implode(',', $ids) . ")";
+        $result = craft()->db->createCommand($mysql)->query();
+        return $result->getRowCount();
+    }
+
+    private function batchRestoreUsers($ids) {
+        $mysql = "UPDATE {{users}} SET suspended = '0' WHERE id IN (" . implode(',', $ids) . ")";
+        $result = craft()->db->createCommand($mysql)->query();
+        return $result->getRowCount();
+    }
+
+    private function batchManagerReadOnlyUsers($ids, $value = 1) {
+        $mysql = "UPDATE {{content}} SET field_managerReadOnly = '" . $value . "' WHERE elementId IN (" . implode(',', $ids) . ")";
         $result = craft()->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
