@@ -27,7 +27,7 @@
                 <thead>
                     <tr>
                         <th class="title">User</th>
-                        <th>Unit</th>
+                        <th>Title</th>
                         <th>Date</th>
                         <th>Level</th>
                         <th>Evidence</th>
@@ -43,7 +43,7 @@
                         {% if entry.resultUnit|length %}
                             Unit {{ entry.resultUnit.first.id }} {{ entry.resultUnit.first.title }}
                         {% else %}
-                            ~
+                            {{ entry.title }}
                         {% endif %}
                     </td>
                     <td>{{ entry.postDate|date(dateFormat) }}</td>
