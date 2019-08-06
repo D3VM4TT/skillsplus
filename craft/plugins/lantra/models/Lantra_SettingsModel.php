@@ -77,6 +77,8 @@ class Lantra_SettingsModel extends BaseModel
             'notifySchemeExpiry'                => AttributeType::String,
             'notifyUserExpiry'                  => AttributeType::String,
             'notifyComment'                     => AttributeType::String,
+            'notifySubjectCustomReport'         => AttributeType::String,
+            'notifyCustomReport'                => AttributeType::String,
 
             ## user profile
             'userEditName'                      => AttributeType::Bool,

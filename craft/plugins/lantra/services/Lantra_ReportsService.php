@@ -223,7 +223,11 @@ class Lantra_ReportsService extends BaseApplicationComponent
             if ($reportEntry->reportEmails) {
                 $emails = array_merge($emails, explode(',', $reportEntry->reportEmails));
             }
-            craft()->lantra_notify->notify($emails, $reportEntry->title, '', [$attachment]);
+            $subject = $this->getNotifySetting('subjectCustomReport', $reportEntry->title);
+            $variables = ['entry' => $reportEntry];
+            $template = $this->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
+            $message = craft()->templates->renderString($template, $variables);
+            craft()->lantra_notify->notify($emails, $subject, $message, [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
             craft()->entries->saveEntry($reportEntry);
         }

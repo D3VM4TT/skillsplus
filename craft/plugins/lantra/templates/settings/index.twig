@@ -375,6 +375,21 @@
                 value:		    settings.notifyComment
             }) }}
 
+            {{ forms.textField ({
+                label:			"Subject Custom Report",
+                id:				"notifySubjectCustomReport",
+                name:			"notifySubjectCustomReport",
+                value:		    settings.notifySubjectCustomReport
+            }) }}
+
+            {{ forms.textField ({
+                instructions:   "Default: Custom report: {{ entry.title }}.",
+                label:			"Message Custom Report",
+                id:				"notifyCustomReport",
+                name:			"notifyCustomReport",
+                value:		    settings.notifyCustomReport
+            }) }}
+
             {{ forms.textareaField ({
                 label:			"Notify Footer",
                 id:				"notifyFooter",
