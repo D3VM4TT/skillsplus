@@ -499,6 +499,8 @@ class Lantra_ImportController extends Lantra_BaseController
                 $username.= '.' . strtolower(str_replace('.', '', $user->lastName));
             }
             $username = str_replace(' ', '', $username);
+            $username = str_replace('..', '.', $username);
+            $username = rtrim($username, '.');
             $user->username = $username;
             $user->getContent()->dataCleanUsername = 1;
             if (craft()->users->saveUser($user)) {
