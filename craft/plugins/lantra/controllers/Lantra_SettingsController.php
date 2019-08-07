@@ -79,6 +79,16 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t('All users saved.'));
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'cleanUsernames') {
+            $users = $this->getUsers();
+            foreach($users as $user) {
+                $user->username = str_replace('..','.', $user->username);
+                $user->username = rtrim($user->username, '.');
+                craft()->users->saveUser($user);
+            }
+            craft()->userSession->setNotice(Craft::t('All usernames cleaned.'));
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'setManagerReadOnly') {
             $managers = $this->getManagers();
             $message = '';
