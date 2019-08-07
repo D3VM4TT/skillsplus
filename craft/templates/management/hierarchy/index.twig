@@ -22,6 +22,7 @@
 <script>
     $(function () {
 
+        $('body').addClass('loading');
         $('#jstree').jstree({
             'plugins' : ['actions', 'json_data'],
             'core': {
@@ -35,6 +36,7 @@
                 }
             }
         }).bind('ready.jstree', function (event, data) {
+            $('body').removeClass('loading');
             {% if hierarchyNode %}
             {# opening node only works if we know the id #}
             $("#jstree").jstree('select_node', 'node-{{ hierarchyNode }}');
