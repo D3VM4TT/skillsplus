@@ -89,12 +89,13 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function getCustomReportFilter($reportEntry) {
 
         $filter = [
-            'reportResultType'      => $reportEntry->reportResultType,
-            'reportDisplayField'    => $reportEntry->reportDisplayField,
-            'reportResultExpiry'    => $reportEntry->reportResultExpiry,
-            'reportNoDates'         => $reportEntry->reportNoDates,
-            'reportCompanies'       => [],
-            'reportUnits'           => []
+            'reportResultType'          => $reportEntry->reportResultType,
+            'reportDisplayField'        => $reportEntry->reportDisplayField,
+            'reportResultExpiry'        => $reportEntry->reportResultExpiry,
+            'reportNoDates'             => $reportEntry->reportNoDates,
+            'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
+            'reportCompanies'           => [],
+            'reportUnits'               => []
         ];
 
         if ($reportEntry->reportCompanies->total()) {
