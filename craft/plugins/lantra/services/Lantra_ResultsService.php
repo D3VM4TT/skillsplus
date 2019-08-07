@@ -768,6 +768,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'Company ID',
             'Company Label',
             'User ID',
+            'User Type',
             'User Name',
             'User Email',
             'User Job Title',
@@ -777,22 +778,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
         ];
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
-        $resultFilter['resultType'] = 'unitResult';
+        $allUnits = $this->managerUnits($subordinates);
         $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
-        $units = [];
-        foreach ($data as $results) {
-            foreach ($results as $result) {
-                $unit = $result->resultUnit->first();
-                if (! isset($units[$unit->id])){
-                    $units[$unit->id] = $unit;
-
-                    $header[] = 'Qual Title';
-                    $header[] = 'Date Started';
-                    $header[] = 'Date Finished';
-                    $header[] = 'Date Expired';
-                }
-            }
+        foreach ($allUnits as $unit) {
+            $header[] = 'Qual Title';
+            $header[] = 'Date Started';
+            $header[] = 'Date Finished';
+            $header[] = 'Date Expired';
         }
 
         $format = 'd-m-Y';
@@ -812,10 +805,12 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $companyLabel = $company ? $company->companyLabel : 'unknown';
             }
             $role = $user->userRole->first();
+            $canManage = craft()->lantra_users->canManage($user);
             $row = [
                 $companyId,
                 $companyLabel,
                 $user->id,
+                $canManage ? 'Manager' : 'Member',
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
@@ -823,18 +818,28 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $user->userStartDate,
                 $user->userAddress
             ];
-            foreach ($units as $unit) {
-                if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
-                    $row[] = $unit->title;
-
-                    $startDate = $data[$user->id][$unit->id]->resultStartDate;
-                    $finishDate = $data[$user->id][$unit->id]->resultFinishDate;
-                    $expiryDate = $data[$user->id][$unit->id]->expiryDate;
-
-                    $row[] = $startDate ? $startDate->format($format) : '';
-                    $row[] = $finishDate ? $finishDate->format($format) : '';
-                    $row[] = $expiryDate ? $expiryDate->format($format) : '';
+            $userUnits = $this->userUnits($user);
+            foreach ($allUnits as $unit) {
+                // set defaults
+                $title = '';
+                $startDate = false;
+                $finishDate = false;
+                $expiryDate = false;
+                // this unit is required for this user
+                if (isset($userUnits[$unit->id])) {
+                    $title = $unit->title;
+                    // does a result exist?
+                    if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
+                        $startDate = $data[$user->id][$unit->id]->resultStartDate;
+                        $finishDate = $data[$user->id][$unit->id]->resultFinishDate;
+                        $expiryDate = $data[$user->id][$unit->id]->expiryDate;
+                    }
                 }
+                // output the data
+                $row[] = $title;
+                $row[] = $startDate ? $startDate->format($format) : '';
+                $row[] = $finishDate ? $finishDate->format($format) : '';
+                $row[] = $expiryDate ? $expiryDate->format($format) : '';
             }
             $rows[] = $row;
         }
@@ -1023,6 +1028,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     private function getSubordinateResults($subordinateIds, $resultFilter = []) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
+        $criteria->limit = null;
         if ($resultFilter['resultType']) {
             $criteria->type = $resultFilter['resultType'];
         }

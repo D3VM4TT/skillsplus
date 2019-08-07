@@ -212,7 +212,7 @@ class Lantra_StructureService extends BaseApplicationComponent
         if (null != $children = $this->getCompanyChildren($companyId)) {
             foreach($children as $child) {
                 $descendants[] = $child->id;
-                $descendants[] = $this->getCompanyDescendants($child->id);
+                $descendants = array_merge($descendants, $this->getCompanyDescendants($child->id));
             }
         }
         $this->_companyDescendants[$companyId] = $descendants;
