@@ -238,6 +238,17 @@ class LantraVariable
     }
 
     /**
+     * Return criteria based on username, firstName, lastName, userCompany
+     *
+     * @param $search
+     * @param $status
+     * @return mixed
+     */
+    public function userCriteria($search, $status = 'all') {
+        return craft()->lantra_users->userCriteria($search, $status);
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
