@@ -22,41 +22,7 @@
     {% set pageTitle = company.title %}
 {% endif %}
 
-{# orphaned users #}
-{% if filterUserStatus == 'orphaned' %}
-    {% set allCompanies = craft.entries.section('companies').limit(null) %}
-    {% set excludeIds = craft.users.relatedTo(allCompanies).limit(null).ids() %}
-    {% set excludeIds = excludeIds|merge([currentUser.id]) %}
-    {% set excludeIdsString = 'and, not ' ~ excludeIds|join(', not ') %}
-    {% set userStatus = 'active' %}
-{% else %}
-    {% set excludeIdsString = 'not ' ~ currentUser.id %}
-{% endif %}
-
-{# search by id #}
-{% if filterSearch and craft.users.status(null).id(filterSearch).total() %}
-    {% set excludeIdsString = filterSearch %}
-    {% set filterSearch = '' %}
-{% endif %}
-
-{% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-    {% if companyId %}
-        {% set criteria = craft.users.status(userStatus).admin('not 1').id(excludeIdsString).relatedTo(companyId).limit(pageLimit).order(sort ~ ' ' ~ order) %}
-    {% else %}
-        {% set criteria = craft.users.status(userStatus).admin('not 1').id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order) %}
-    {% endif %}
-{% elseif currentUser.isInGroup('companyManagers') %}
-    {% if companyId %}
-        {% set companies = [companyId] %}
-    {% else %}
-        {% set companies = craft.lantra.managerCompanies(currentUser.id, true) %}
-    {% endif %}
-    {% set teams = craft.entries.section('teams').relatedTo(companies) %}
-    {% set criteria = craft.users.status(userStatus).admin('not 1').group(['users', 'teamManagers']).relatedTo("or", { targetElement: companies }, { targetElement: teams }).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
-{% elseif currentUser.isInGroup('teamManagers') %}
-    {% set teams = craft.entries.section('teams').relatedTo(currentUser) %}
-    {% set criteria = craft.users.status(userStatus).admin('not 1').group('users, teamManagers').relatedTo(teams).id(excludeIdsString).search(filterSearch).limit(pageLimit).order(sort ~ ' ' ~ order)  %}
-{% endif %}
+{% set criteria = craft.lantra.userCriteria(filterSearch, filterUserStatus, companyId, pageLimit, sort ~ ' ' ~ order) %}
 
 {% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
 

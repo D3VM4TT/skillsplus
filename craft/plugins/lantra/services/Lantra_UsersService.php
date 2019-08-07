@@ -7,6 +7,74 @@ class Lantra_UsersService extends BaseApplicationComponent
     private $hierarchyFilter = [];
 
     /**
+     * @param $search
+     * @param string $userStatus
+     * @return array
+     * @throws \CException
+     */
+    public function userCriteria($search = '', $userStatus = 'all', $companyId = false, $limit = 25, $order = 'username') {
+        $user = craft()->userSession->getUser();
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $excludeIds = [$user->id];
+        if ($userStatus == 'orphaned') {
+            $criteria->userCompany = ':empty:';
+        }
+        elseif ($userStatus == 'suspended') {
+            $criteria->status = 'suspended';
+        }
+        if ($search) {
+            $searchIds = $this->searchUserIds(trim($search));
+            if (empty($searchIds)) {
+                return null;
+            }
+            $criteria->id = 'or, ' . implode(',', array_diff($searchIds, $excludeIds));
+        }
+        else {
+            $criteria->id = 'and, not ' . implode(', not ', $excludeIds);
+        }
+
+        $criteria->admin = 'not 1';
+        $criteria->limit = $limit;
+        $criteria->order = $order;
+
+        if ($user->isInGroup('companyManagers')) {
+            $criteria->group = ['users', 'teamManagers'];
+            $criteria->relatedTo = ['targetElement' => $this->getManagerCompanies($user, true, 'companyLabel', true), 'field' => 'userCompany'];
+        }
+        elseif ($user->isInGroup('teamManagers')) {
+            $criteria->group = ['users', 'teamManagers'];
+            $criteria->relatedTo = ['targetElement' => $this->getManagerTeams($user, false, true), 'field' => 'userCompany'];
+        }
+        if ($companyId) {
+            $criteria->relatedTo = [$companyId];
+        }
+
+        return $criteria;
+    }
+
+    /** more efficient way to search users */
+    private function searchUserIds($search = '') {
+        $mysql = 'SELECT u.id FROM {{users}} u 
+            JOIN {{relations}} AS r ON r.sourceId = u.id
+            JOIN {{content}} AS c ON u.id = c.elementId
+            JOIN {{content}} AS rc ON r.targetId = rc.elementId
+            WHERE u.id = "' . $search . '"
+            OR u.username LIKE "%' . $search . '%"
+            OR u.firstName LIKE "%' . $search . '%"
+            OR u.lastName LIKE "%' . $search . '%"
+            OR rc.title LIKE "%' . $search . '%"
+            OR c.field_legacyId = "' . $search . '";
+            OR c.field_userCompanyName LIKE "%' . $search . '%"';
+
+        $result = craft()->db->createCommand($mysql)->query();
+        $ids = [];
+        foreach ($result as $row) {
+            $ids [] = $row['id'];
+        }
+        return $ids;
+    }
+
+    /**
      * @param UserModel|null $user
      * @return array
      */
@@ -617,10 +685,11 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @param UserModel $user
      * @param bool $includeChildren
      * @param string $order
+     * @param bool $ids
      * @return BaseElementModel|null
      * @throws Exception
      */
-    function getManagerCompanies(UserModel $user, $includeChildren = false, $order = 'companyLabel') {
+    function getManagerCompanies(UserModel $user, $includeChildren = false, $order = 'companyLabel', $ids = false) {
         $companyIds = $this->getCompanyManagerCompanyIds($user);
         if ($includeChildren) {
             $parentIds = $companyIds;
@@ -636,7 +705,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->limit = null;
         $criteria->id = $companyIds;
         $criteria->order = $order;
-        return $criteria->find();
+        return $ids ? $criteria->ids() : $criteria->find();
     }
 
     /**
@@ -698,7 +767,7 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @return array
      * @throws Exception
      */
-    function getManagerTeams(UserModel $user, $includeCompanyTeams = false) {
+    function getManagerTeams(UserModel $user, $includeCompanyTeams = false, $ids = false) {
         $teamIds = $this->getManagerTeamIds($user, $includeCompanyTeams);
         if (!count($teamIds)) {
             return null;
@@ -708,7 +777,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->limit = null;
         $criteria->id = $teamIds;
         $criteria->fixedOrder = true;
-        return $criteria->find();
+        return $ids ? $criteria->ids() : $criteria->find();
     }
 
     /**
