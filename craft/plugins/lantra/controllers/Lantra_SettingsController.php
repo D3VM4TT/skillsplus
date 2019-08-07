@@ -89,6 +89,19 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t('All usernames cleaned.'));
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'fixLastNames') {
+            $users = $this->getUsers();
+            foreach($users as $user) {
+                if (empty($user->lastName)) {
+                    $names = $this->getNames($user->firstName);
+                    $user->firstName = $names[0];
+                    $user->lastName = $names[1];
+                    craft()->users->saveUser($user);
+                }
+            }
+            craft()->userSession->setNotice(Craft::t('All users with empty last names updated.'));
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'setManagerReadOnly') {
             $managers = $this->getManagers();
             $message = '';
@@ -204,5 +217,25 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setError(Craft::t('Settings not saved.'));
             craft()->urlManager->setRouteVariables(array('settings' => $settings));
         }
+    }
+
+    /**
+     * @param $name
+     * @return array
+     */
+    private function getNames($name) {
+        $parts = explode(' ', trim($name));
+        if (count($parts) == 1) {
+            $firstName = $parts[0];
+            $lastName = '';
+        } else if (count($parts) == 2) {
+            $firstName = $parts[0];
+            $lastName = $parts[1];
+        } else {
+            $lastName = array_pop($parts);
+            $firstName = implode(' ', $parts);
+        }
+
+        return [utf8_encode($firstName), utf8_encode($lastName)];
     }
 }
