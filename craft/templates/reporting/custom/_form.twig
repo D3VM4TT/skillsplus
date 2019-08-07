@@ -49,12 +49,9 @@
             <option value="expired" {% if entry is defined and entry.reportType == 'expired' %} selected="selected"{% endif %}>
                 Expired (Expired Training)
             </option>
-            {% set site = craft.config.environmentVariables.site|default('local') %}
-            {% if site != 'ltp' and site != 'poultec' and site != 'ptr' and site != 'poultrypassport' %}
-                <option value="required" {% if entry is defined and entry.reportType == 'required' %} selected="selected"{% endif %}>
-                    Required (Required Training)
-                </option>
-            {% endif %}
+            <option value="required" {% if entry is defined and entry.reportType == 'required' %} selected="selected"{% endif %}>
+                Required (Required Training)
+            </option>
         </select>
     </div>
     <div class="field--wrapper">
