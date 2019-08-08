@@ -54,17 +54,23 @@ class Lantra_UsersService extends BaseApplicationComponent
 
     /** more efficient way to search users */
     private function searchUserIds($search = '') {
-        $mysql = 'SELECT u.id FROM {{users}} u 
-            JOIN {{relations}} AS r ON r.sourceId = u.id
-            JOIN {{content}} AS c ON u.id = c.elementId
-            JOIN {{content}} AS rc ON r.targetId = rc.elementId
-            WHERE u.id = "' . $search . '"
-            OR u.username LIKE "%' . $search . '%"
-            OR u.firstName LIKE "%' . $search . '%"
-            OR u.lastName LIKE "%' . $search . '%"
-            OR rc.title LIKE "%' . $search . '%"
-            OR c.field_legacyId = "' . $search . '";
-            OR c.field_userCompanyName LIKE "%' . $search . '%"';
+        if (intval($search)) {
+            $mysql = 'SELECT u.id FROM {{users}} u 
+                JOIN {{content}} AS c ON u.id = c.elementId
+                WHERE u.id = "' . $search . '"
+                OR c.field_legacyId = "' . $search . '"';
+        }
+        else {
+            $mysql = 'SELECT u.id FROM {{users}} u 
+                JOIN {{relations}} AS r ON r.sourceId = u.id
+                JOIN {{content}} AS c ON u.id = c.elementId
+                JOIN {{content}} AS rc ON r.targetId = rc.elementId
+                WHERE u.username LIKE "%' . $search . '%"
+                OR u.firstName LIKE "%' . $search . '%"
+                OR u.lastName LIKE "%' . $search . '%"
+                OR rc.title LIKE "%' . $search . '%"
+                OR c.field_userCompanyName LIKE "%' . $search . '%"';
+        }
 
         $result = craft()->db->createCommand($mysql)->query();
         $ids = [];
