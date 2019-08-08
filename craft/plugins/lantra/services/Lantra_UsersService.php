@@ -22,6 +22,9 @@ class Lantra_UsersService extends BaseApplicationComponent
         elseif ($userStatus == 'suspended') {
             $criteria->status = 'suspended';
         }
+        else {
+            $criteria->status = null;
+        }
         if ($search) {
             $searchIds = $this->searchUserIds(trim($search));
             if (empty($searchIds)) {
