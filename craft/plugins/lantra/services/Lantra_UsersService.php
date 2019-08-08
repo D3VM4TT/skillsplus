@@ -69,6 +69,7 @@ class Lantra_UsersService extends BaseApplicationComponent
                 OR u.firstName LIKE "%' . $search . '%"
                 OR u.lastName LIKE "%' . $search . '%"
                 OR rc.title LIKE "%' . $search . '%"
+                OR UPPER(CONCAT_WS(" ", u.firstName, u.lastName)) LIKE UPPER("%' . $search . '%")
                 OR c.field_userCompanyName LIKE "%' . $search . '%"';
         }
 
