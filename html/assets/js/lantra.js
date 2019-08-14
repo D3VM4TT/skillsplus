@@ -1,5 +1,40 @@
 $(document).ready(function(){
 
+    $("div.date-selector").bind("update",function(){
+        var s = $(this),
+            d = s.find('select.day').val(),
+            m = s.find('select.month').val(),
+            y = s.find('select.year').val(),
+            i = s.find('input.date'),
+            c = s.find('span.clear');
+        if (d != '-' && m != '-' && y != '-') {
+            c.show();
+            i.val(y + '-' + m + '-' + d + ' 12:00:00');
+        }
+        else {
+            i.val('');
+            c.hide();
+        }
+    });
+    $("div.date-selector").bind("clear", function(){
+        var s = $(this);
+        s.find('select.day').val('-');
+        s.find('select.month').val('-');
+        s.find('select.year').val('-');
+        s.trigger('update');
+    });
+    $('div.date-selector').each(function(){
+        var s = $(this);
+        s.find('select').change(function(){
+            s.trigger('update');
+        });
+        s.find('a.clear').click(function(e){
+            e.preventDefault();
+            s.trigger('clear');
+        });
+        s.trigger('update');
+    });
+
     $("#toggle").click(function() {
     $(this).toggleClass("on");
     $("#menu").slideToggle();

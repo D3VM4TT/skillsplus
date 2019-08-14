@@ -32,7 +32,7 @@
 
     <!-- CSS
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <link rel="stylesheet" href="/assets/css/lantra.css">
+    <link rel="stylesheet" href="/assets/css/lantra.css?{{ random(10000, 99999) }}">
     <link rel="stylesheet" href="/assets/js/vendor/datepicker/css/datepicker.min.css">
 
     <!-- File Upload
@@ -133,7 +133,7 @@
             window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
             window.csrfTokenValue = "{{ craft.request.csrfToken|e('js') }}";
         </script>
-        <script src="/assets/js/lantra.js" async defer></script>
+        <script src="/assets/js/lantra.js?{{ random(10000, 99999) }}" async defer></script>
         <script src="/assets/js/tooltip.js" async defer></script>
         <script src="/assets/js/vendor/datepicker/js/datepicker.min.js"></script>
         <script src="/assets/js/vendor/datepicker/js/i18n/datepicker.en.js"></script>

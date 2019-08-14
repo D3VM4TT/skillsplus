@@ -133,7 +133,7 @@ class LantraPlugin extends BasePlugin
                     }
                 }
 
-                $dateFormat = craft()->lantra_settings->getSetting('themeDateFormat', 'd-m-Y');
+                $dateFormat = 'Y-m-d H:i:s';
                 // set a user start date
                 $userStartDate = craft()->request->getPost('userStartDate');
                 if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
@@ -208,7 +208,7 @@ class LantraPlugin extends BasePlugin
                 craft()->lantra_results->saveNewResult($entry);
             }
             // set expiry date on entry record
-            $dateFormat = craft()->lantra_settings->getSetting('themeDateFormat', 'd-m-Y');
+            $dateFormat = 'Y-m-d H:i:s';
             $userExpiryDate = craft()->request->getPost('userExpiryDate');
             if ($entry->sectionId == $this->sectionIdResults && $userExpiryDate) {
                 if (false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {

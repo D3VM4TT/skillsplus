@@ -26,17 +26,13 @@
 
     {% if craft.lantra.setting('userEditStartDate') %}
     <div class="field--wrapper">
-        <label for="StartDate" class="no-float">Start date:</label>
-        <input id="StartDate" name="fields[userStartDate][date]" type="text" class="float-label datepicker-here" placeholder="Enter the start date" data-language="en" data-position='top left'
-               value="{{ currentUser.userStartDate ? currentUser.userStartDate|date(dateFormat) : '' }}" data-date-format="{{ jsDateFormat }}">
+        {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value: currentUser.userStartDate} %}
     </div>
     {% endif %}
 
     {% if craft.lantra.setting('userEditDob') %}
     <div class="field--wrapper">
-        <label for="DateOfBirth" class="no-float">Date of birth:</label>
-        <input id="DateOfBirth" name="fields[userDateOfBirth][date]" type="text" class="float-label datepicker-here" placeholder="Enter the date of birth" data-language="en" data-position='top left'
-               value="{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '' }}" data-date-format="{{ jsDateFormat }}">
+        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: currentUser.userDateOfBirth} %}
     </div>
     {% endif %}
 

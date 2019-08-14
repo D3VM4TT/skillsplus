@@ -1,0 +1,28 @@
+{% set d = value ? value|date('d') : '-' %}
+{% set m = value ? value|date('m') : '-' %}
+{% set y = value ? value|date('Y') : '-' %}
+<div class="date-selector">
+    <input class="date" type="hidden" name="{{ name }}" value="{{ value ? value|date('Y-m-d H:i:s') : '' }}" />
+    <label for="date" class="">{{ label }}</label>
+    <select class="day">
+        <option{% if not value %} selected="selected"{% endif %}>-</option>
+        {% for i in 1..31 %}
+            <option{% if i == d %} selected="selected"{% endif %}>{{ "%02d"|format(i) }}</option>
+        {% endfor %}
+    </select>
+    <select class="month">
+        <option{% if not value %} selected="selected"{% endif %}>-</option>
+        {% for i in 1..12 %}
+            <option{% if i == m %} selected="selected"{% endif %}>{{ "%02d"|format(i) }}</option>
+        {% endfor %}
+    </select>
+    <select class="year">
+        <option{% if not value %} selected="selected"{% endif %}>-</option>
+        {% for i in 1950..2050 %}
+            <option{% if i == y %} selected="selected"{% endif %}>{{ i }}</option>
+        {% endfor %}
+    </select>
+    <span class="clear">
+        [<a style="color:#FF0000" class="clear" href="#">x</a>]
+    </span>
+</div>

@@ -1873,6 +1873,12 @@ body.print a {
     cursor: text;
 }
 
+.date-selector select {
+    width:100px;
+    display:inline;
+    margin-right:10px;
+}
+
 /*Media Queries
 -------------------------------------------------- */
 @media screen and (max-width: 1400px) {
