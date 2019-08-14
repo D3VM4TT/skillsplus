@@ -63,6 +63,7 @@
                 {% if craft.lantra.setting('schemeTeams', false) %}
                     <th>Team</th>
                 {% endif %}
+                <th style="width:210px;">&nbsp;</th>
                 <th>&nbsp;</th>
             </tr>
             </thead>
@@ -85,7 +86,7 @@
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
-                    <td>
+                    <td style="text-align:right">
                         <a href="/cpd/{{ user.id }}">dashboard</a>
                         {% if not currentUser.managerReadOnly %}
                             | <a href="/management/users/edit/{{ user.id }}">edit</a> |
@@ -94,6 +95,11 @@
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
                             {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="icons" style="text-align:right">
+                        {% if not user.userDummyEmail %}
+                            <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
                         {% endif %}
                     </td>
                 </tr>
