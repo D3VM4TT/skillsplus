@@ -144,9 +144,16 @@
             {% if saveUserError is defined and saveUserError %}
                 {% set isCompanyManager = craft.request.post('companyManagers')  %}
             {% endif %}
-
-            <label><input type="radio" id="userMember" name="companyManagers" value="0" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member</label>
-            <label><input type="radio" id="userManager" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager</label>
+            <div>
+                <label style="display:inline-block">
+                    <input type="radio" id="userMember" name="companyManagers" value="0" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member
+                </label>
+            </div>
+            <div>
+                <label style="display:inline-block">
+                    <input type="radio" id="userManager" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager
+                </label>
+            </div>
         </div>
         <div class="field--wrapper">
             <div id="manager-fields" class="{% if not isCompanyManager %}hide{% endif %}">
