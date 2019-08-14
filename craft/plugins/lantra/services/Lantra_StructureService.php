@@ -3,6 +3,62 @@ namespace Craft;
 
 class Lantra_StructureService extends BaseApplicationComponent
 {
+    /**
+     * @param $search
+     * @param $limit
+     * @param $order
+     * @return array
+     * @throws \CException
+     */
+    public function companyCriteria($search = '', $limit = 25, $order = 'companyLabel') {
+        $user = craft()->userSession->getUser();
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->status = null;
+        $criteria->limit = $limit;
+        $criteria->order = $order;
+        $excludeIds = [];
+        if ( ! $user->isInGroup('schemeManagers')) {
+            $individualCompany = craft()->lantra_users->getIndividualCompany();
+            if ($individualCompany) {
+                $excludeIds[] = $individualCompany->id;
+            }
+        }
+        if ($search) {
+            $searchIds = $this->searchCompanyIds(trim($search));
+            if (empty($searchIds)) {
+                return null;
+            }
+            $criteria->id = 'or, ' . implode(',', array_diff($searchIds, $excludeIds));
+        }
+        elseif (count($excludeIds)) {
+            $criteria->id = 'and, not ' . implode(', not ', $excludeIds);
+        }
+        return $criteria;
+    }
+
+
+    /** more efficient way to search companies */
+    private function searchCompanyIds($search = '') {
+        if (intval($search)) {
+            $mysql = 'SELECT c.elementId as id FROM {{content}} c                
+                WHERE c.elementId = "' . $search . '"
+                OR c.field_legacyId = "' . $search . '"';
+        }
+        else {
+            $mysql = 'SELECT c.elementId as id FROM {{content}} c               
+                WHERE c.title LIKE "%' . $search . '%"
+                OR c.field_companyLabel LIKE "%' . $search . '%"';
+        }
+
+        $result = craft()->db->createCommand($mysql)->query();
+        $ids = [];
+        foreach ($result as $row) {
+            $ids [] = $row['id'];
+        }
+        return $ids;
+    }
+
     public function getHierarchy($entryId = null, $type = 'companies') {
         if (! $entryId) {
             $return = $this->getJsTreeRoot();

@@ -252,6 +252,18 @@ class LantraVariable
     }
 
     /**
+     * Return criteria based on company name and location
+     *
+     * @param $search
+     * @param $limit
+     * @param $order
+     * @return mixed
+     */
+    public function companyCriteria($search, $limit, $order) {
+        return craft()->lantra_structure->companyCriteria($search, $limit, $order);
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
