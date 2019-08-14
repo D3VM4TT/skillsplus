@@ -95,6 +95,9 @@ class Lantra_SettingsModel extends BaseModel
 
             ## user profile
             'userAccountInformation'            => AttributeType::Mixed,
+
+            ## labels
+            'labelJobRole'                      => AttributeType::String,
 		);
 	}
 

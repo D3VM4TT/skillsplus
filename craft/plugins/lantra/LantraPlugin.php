@@ -327,6 +327,9 @@ class LantraPlugin extends BasePlugin
 
             ## user profile
             'userAccountInformation'            => AttributeType::Mixed,
+
+            ## labels
+            'labelJobRole'                      => AttributeType::String,
         );
     }
 

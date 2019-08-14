@@ -183,6 +183,18 @@
 
             <hr />
 
+            <h2>Labels</h2>
+
+            {{ forms.textField ({
+                instructions:   "Default: Job Role",
+                label:			"Label Job Role",
+                id:				"labelJobRole",
+                name:			"labelJobRole",
+                value:		    settings.labelJobRole
+            }) }}
+
+            <hr />
+
             <h2>Licence Settings</h2>
 
             {{ forms.lightswitchField ({
