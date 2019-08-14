@@ -6,7 +6,7 @@
 {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
-{% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or currentUser.userReadOnly) %}
+{% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (currentUser['userReadOnly'] is defined and currentUser.userReadOnly)) %}
 
 {% extends "_layout" %}
 
