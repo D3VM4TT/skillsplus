@@ -7,6 +7,8 @@
     {% set readOnly = currentUser.managerReadOnly %}
 {% endif %}
 
+{% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}
+
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.request.getParam('ref')|default('') }}">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
@@ -24,13 +26,20 @@
     </div>
 {% else %}
     {% for role in cpdUser.userRole %}
-    <div class="align-vertical">
-        <div class="align-horizontal"><img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt=""></div>
-        <div class="align-horizontal">
-            <div><h4>{{ craft.lantra.setting('labelJobRole', 'Job Role') }}</h4></div>
-            <div><h2>{{ role.title }}</h2></div>
+        <div class="job-role" style="position: relative;">
+        {# number of results to complete - line 123 #}
+        {% set jobRoleNoResult = 0 %}
+        <div class="align-vertical">
+            <div class="align-horizontal"><img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt=""></div>
+            <div class="align-horizontal">
+                <div><h4>{{ craft.lantra.setting('labelJobRole', 'Job Role') }}</h4></div>
+                <div><h2>{{ role.title }}</h2></div>
+                {% if jobRoleEndorse %}
+                    <a href="javascript:" data-target="#j{{ role.id }}"><img src="/assets/img/img-arrow-down.png"></a>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    <div id="j{{ role.id }}" {% if jobRoleEndorse %}class="closed"{% endif %}>
         {% set allModules = craft.entries.section('modules').relatedTo(role).order('title') %}
         {% if not allModules|length %}
             <p>No modules have been assigned to this role.</p>
@@ -102,7 +111,7 @@
                                                 <img src="/assets/img/img-arrow-down-white-trans.png">
                                             </div>
                                         </div>
-                                        <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units closed">
+                                        <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units">
                                             <table class="data">
                                                 <thead>
                                                 <tr>
@@ -113,6 +122,8 @@
                                                 <tbody>
                                                 {% for unitEntry in unitGroupEntries %}
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
+                                                    {# if no result set jobRoleComplete to false #}
+                                                    {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
                                                     {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                                     {% if unitResultEntry %}
@@ -188,7 +199,7 @@
                                                 <img src="/assets/img/img-arrow-down-trans.png">
                                             </div>
                                         </div>
-                                        <div id="u{{ role.id ~ module.id }}-user" class="units open">
+                                        <div id="u{{ role.id ~ module.id }}-user" class="units">
                                             <table class="data">
                                                 <thead>
                                                 <tr>
@@ -280,6 +291,18 @@
                 {% endfor %}
             </section>
         {% endif %}
+        </div>
+        {% if jobRoleEndorse %}
+            <p style="position:absolute;right:0;top:0;width:400px;text-align:right;">
+            {% if jobRoleNoResult == 0 %}
+                <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
+                   data-userid="{{ cpdUser.id }}" data-action="lantra/entries/pendingResult">Submit for Endorsement</a>
+            {% else %}
+                Complete {{ jobRoleNoResult }} more unit(s) and then submit for endorsement.
+            {% endif %}
+            </p>
+        {% endif %}
+    </div>
     {% endfor %}
     {% if existingResultIds|length %}
         {# get all the results no longer related to existing job role #}

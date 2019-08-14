@@ -473,6 +473,42 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param array $jobRoleIds
+     * @throws Exception
+     * @return mixed
+     */
+    public function jobRoleModules($jobRoleIds = []) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'modules';
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $jobRoleIds, 'field' => 'moduleRoles'];
+        return $criteria->find();
+    }
+
+    /**
+     * @param $jobRoleId
+     * @param $userId
+     * @return array
+     * @throws Exception
+     */
+    public function getJobRoleUserResults($jobRoleId, $userId = null) {
+        if (! $userId) {
+            return [];
+        }
+        // get all modules for job role
+        $modules = $this->jobRoleModules([$jobRoleId]);
+        $results = [];
+        foreach ($modules as $moduleEntry) {
+            // get unit results relating to module
+            $unitResults = $this->getModuleUnitResults($moduleEntry, $userId);
+            // get user results relating to module
+            $userResults = $this->getModuleUserResults($moduleEntry, $userId, false);
+            $results = array_merge($results, $unitResults, $userResults);
+        }
+        return $results;
+    }
+
+    /**
      * Get all the module unit IDs
      *
      * @param $moduleEntry
@@ -493,17 +529,20 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      * @param $moduleEntry
      * @param $userId
+     * @param $resultValue
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntry, $userId) {
+    function getModuleUserResults($moduleEntry, $userId, $resultValue = true) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = 'userResult';
         $criteria->authorId = $userId;
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
-        $criteria->resultValue = '> 0';
+        if ($resultValue) {
+            $criteria->resultValue = '> 0';
+        }
         return $criteria->find();
     }
 
@@ -721,7 +760,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     private function formatUserFilter($filter) {
         $defaults = [
-            'limit'      => 0,
+            'limit'      => null,
             'search'     => '',
             'relatedTo'  => []
         ];
@@ -734,7 +773,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     private function formatResultsFilter($filter) {
         $defaults = [
-            'limit'         => 0,
+            'limit'         => null,
             'search'        => '',
             'relatedTo'     => [],
             'order'         => 'authorId',

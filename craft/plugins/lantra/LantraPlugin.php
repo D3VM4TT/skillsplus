@@ -279,6 +279,7 @@ class LantraPlugin extends BasePlugin
             'schemeUserReadOnly'                => AttributeType::Bool,
             'schemeEmailDomain'                 => AttributeType::String,
             'schemeTestEmailAddress'            => AttributeType::String,
+            'jobRoleEndorse'                    => AttributeType::Bool,
 
             ## licence settings
             'lantraDisableLicences'             => AttributeType::Bool,

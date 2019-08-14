@@ -8,8 +8,35 @@ class Lantra_EntriesController extends Lantra_BaseController {
         'actionDeleteEntry',
         'actionEndorseEvidence',
         'actionResetResult',
+        'actionPendingResult',
         'actionRunReport'
     );
+
+    /**
+     * Sets all results to pending
+     *
+     * @throws mixed
+     */
+    public function actionPendingResult() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted id, ref and userId
+        $id =  craft()->request->getPost('id');
+        $ref =  craft()->request->getPost('ref');
+        $userId =  craft()->request->getPost('userId');
+        $results = [];
+        if ($ref == 'jobRole') {
+            $results = craft()->lantra_results->getJobRoleUserResults($id, $userId);
+        }
+        $count = 0;
+        // loop entries and update status
+        foreach ($results as $resultEntry) {
+            $resultEntry->setContentFromPost(['resultStatus' => 'pending']);
+            craft()->entries->saveEntry($resultEntry);
+            $count ++;
+        }
+        $this->_returnMessage('Endorsement requested for ' . $count . ' result(s).', true);
+    }
 
     /**
      * Unlinks unit result attempts and unblocks result

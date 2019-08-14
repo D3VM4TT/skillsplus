@@ -47,6 +47,7 @@ class Lantra_SettingsModel extends BaseModel
             'schemeUserReadOnly'                => AttributeType::Bool,
             'schemeEmailDomain'                 => AttributeType::String,
             'schemeTestEmailAddress'            => AttributeType::String,
+            'jobRoleEndorse'                    => AttributeType::Bool,
 
             ## licence settings
             'lantraDisableLicences'             => AttributeType::Bool,

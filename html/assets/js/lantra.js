@@ -98,7 +98,8 @@ $(document).ready(function(){
         ul.slideUp(function(){li.attr('class', 'nav-closed')});
     });
     // toggle accordion
-    $('[data-target]').click(function(){
+    $('[data-target]').click(function(e){
+        e.preventDefault();
         var t = $($(this).data('target'));
         if (t.hasClass('closed')) {
             t.slideDown(function(){t.removeClass('closed')});
@@ -181,6 +182,12 @@ $(document).ready(function(){
                 return false;
             }
             var data = {entryId: $(this).data('id')};
+        }
+        if (action == 'lantra/entries/pendingResult') {
+            if ( ! confirm('Are you sure you want to request endorsement?')) {
+                return false;
+            }
+            var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
         }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');
