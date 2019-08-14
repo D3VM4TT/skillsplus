@@ -149,7 +149,7 @@
                 {% elseif not craft.lantra.setting('jobRoleEndorse', false) %}
                     <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
                     <div class="container-btn">
-                        {% if resultEntry and resultEntry.resultStatus == 'draft' %}
+                        {% if resultEntry and (resultEntry.resultStatus == 'draft' or resultEntry.resultStatus == 'endorsed') %}
                             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
                         {% else %}
                             <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
