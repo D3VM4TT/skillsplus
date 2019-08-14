@@ -242,10 +242,13 @@ class LantraVariable
      *
      * @param $search
      * @param $status
+     * @param $companyId
+     * @param $limit
+     * @param $order
      * @return mixed
      */
-    public function userCriteria($search, $status = 'all') {
-        return craft()->lantra_users->userCriteria($search, $status);
+    public function userCriteria($search, $status = 'all', $companyId, $limit, $order) {
+        return craft()->lantra_users->userCriteria($search, $status, $companyId, $limit, $order);
     }
 
     /**

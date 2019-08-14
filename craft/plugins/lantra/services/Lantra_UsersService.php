@@ -49,7 +49,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             $criteria->relatedTo = ['targetElement' => $this->getManagerTeams($user, false, true), 'field' => 'userCompany'];
         }
         if ($companyId) {
-            $criteria->relatedTo = [$companyId];
+            $criteria->relatedTo = ['targetElement' => [$companyId], 'field' => 'userCompany'];
         }
 
         return $criteria;
