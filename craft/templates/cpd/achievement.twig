@@ -50,6 +50,8 @@
 {% endfor %}
 {# result is locked when a result entry is pending or endorsed #}
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{# undo result locked #}
+{% set resultLocked = false %}
 {% set metaTitle = 'Achievements > ' ~ account.fullname %}
 
 {% block content %}

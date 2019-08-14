@@ -8,6 +8,8 @@
 {% endif %}
 {# result is locked when a result entry is pending or endorsed #}
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{# undo result locked #}
+{% set resultLocked = false %}
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ getCsrfInput() }}
     {% if resultEntry is defined and resultEntry %}
