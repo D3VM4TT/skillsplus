@@ -292,6 +292,11 @@
         {% include '_includes/resultArchive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
     {% endif %}
     <p style="text-align:right">
+        {% if craft.lantra.setting('themeResultHistoryLink') and resultArchive|length %}
+            <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
+                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
+            </a>
+        {% endif %}
         <a class="button no-shadow primary-bg" target="_blank" href="/cpd/{{ cpdUser.id }}/print">
             <span>Print Version</span>
         </a>
