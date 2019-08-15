@@ -115,6 +115,14 @@
             </div>
         {%  endfor %}
         <h2>User settings</h2>
+        {% if account['userReadOnly'] is defined %}
+            <div class="field--wrapper">
+                <input type="hidden" name="fields[userReadOnly]" value="0">
+                <input type="checkbox" id="readOnly" name="fields[userReadOnly]" value="1"
+                       {% if account is defined and account.userReadOnly %}checked="checked"{% endif %}>
+                <span>Make Read Only User</span>
+            </div>
+        {% endif %}
         <div class="field--wrapper">
             <label for="userRole">Job Roles (optional):</label>
             {% set roleCategories = craft.categories.group('roles') %}
