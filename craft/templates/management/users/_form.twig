@@ -89,7 +89,8 @@
             {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value:startDateValue} %}
         </div>
         <div class="col-6 field--wrapper">
-            {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value:account.userDateOfBirth} %}
+            {% set dateOfBirthValue = account is defined ? account.userDateOfBirth : false %}
+            {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value:dateOfBirthValue} %}
         </div>
         </div>
         <div id="address-fields">
