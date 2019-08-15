@@ -839,6 +839,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         $teamIds = $this->getManagerTeamIds($user, $includeHierarchy);
         // get all users who belong to any of the manager's companies or teams
         $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->limit = null;
         $criteria->relatedTo = ['or', ['targetElement' => $companyIds, 'field' => 'userCompany'], ['targetElement' => $teamIds, 'field' => 'userTeam']];
         return $criteria->ids();
     }
