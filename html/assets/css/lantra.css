@@ -100,7 +100,7 @@ h2 {
 }
 
 h3, h5 {
-	font-weight: 600;
+    font-weight: 600;
 }
 
 h4, h4 a {
@@ -875,7 +875,7 @@ form.filter {
 }
 
 .scheme-logo img {
-	max-width: 250px;
+    max-width: 250px;
     mix-blend-mode: multiply;
 }
 
@@ -925,7 +925,7 @@ article.cpd div.header {
 }
 
 /*article.cpd div.header:hover {
-	background-color: #F7F7Fa;
+    background-color: #F7F7Fa;
 }*/
 
 article.cpd div.header h4 {
@@ -959,14 +959,40 @@ article.cpd p {
     padding-top: 10px;
 }
 
+article.cpd div.job-role {
+    border-bottom: 2px #e8ecef solid;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+
+article.cpd p.jobroleEndorse {
+    position: absolute;
+    right: 50px;
+    top: 40px;
+    width: 800px;
+    text-align: right;
+    padding-top: 0;
+    font-weight: initial;
+}
+
+article.cpd a.jobroleEndorseExpand {
+    position: absolute;
+    right: 0;
+    top: 43px;
+}
+
+article.cpd p.jobroleEndorse .button.no-shadow {
+    margin-top: 0;
+}
+
 span.module-status-complete {
-	font-weight: 600;
-	color: #59c269;
+    font-weight: 600;
+    color: #59c269;
 }
 
 span.module-status-inprogress {
-	font-weight: 600;
-	color: #ffb848;
+    font-weight: 600;
+    color: #ffb848;
 }
 
 span.module-status-complete img, span.module-status-inprogress img {
@@ -1213,7 +1239,7 @@ overflow: auto;
 }
 
 .page-content {
-    padding: 60px;
+    padding: 130px 60px;
 }
 
 .page-content:first-child {
@@ -2144,7 +2170,7 @@ body.print a {
         padding: 0;
     }
     .page-content {
-        padding: 15px 20px;
+        padding: 150px 20px;
     }
     .module-group-tabs ul {
         border-bottom: none; 
@@ -2166,6 +2192,25 @@ body.print a {
     }
     article.cpd div.status img {
      margin-left: 0px; 
+    }
+    article.cpd p.jobroleEndorse {
+    position: initial;
+    right: 0;
+    top: 0;
+    width: initial;
+    text-align: initial;
+    padding-top: 0;
+    font-weight: initial;
+    }
+
+    article.cpd a.jobroleEndorseExpand {
+    position: initial;
+    right: 0;
+    top: 0;
+    }
+
+    article.cpd p.jobroleEndorse .button.no-shadow {
+    margin-top: initial;
     }
     .page-form {
     padding: 60px 30px;

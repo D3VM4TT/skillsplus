@@ -35,7 +35,7 @@
                 <div><h4>{{ craft.lantra.setting('labelJobRole', 'Job Role') }}</h4></div>
                 <div><h2>{{ role.title }}</h2></div>
                 {% if jobRoleEndorse %}
-                    <a href="javascript:" data-target="#j{{ role.id }}"><img src="/assets/img/img-arrow-down.png"></a>
+                    <a class="jobroleEndorseExpand" href="javascript:" data-target="#j{{ role.id }}"><img src="/assets/img/img-arrow-down.png"></a>
                 {% endif %}
             </div>
         </div>
@@ -293,7 +293,7 @@
         {% endif %}
         </div>
         {% if jobRoleEndorse %}
-            <p style="position:absolute;right:0;top:0;width:400px;text-align:right;">
+            <p class="jobroleEndorse">
             {% if jobRoleNoResult == 0 %}
                 <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
                    data-userid="{{ cpdUser.id }}" data-action="lantra/entries/pendingResult">Submit for Endorsement</a>
