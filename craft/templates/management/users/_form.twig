@@ -81,11 +81,7 @@
         </div>
         <div id="date-fields">
         <div class="col-6 field--wrapper">
-            {% if account is defined %}
-                {% set startDateValue = account.userStartDate ? account.userStartDate|date(dateFormat) : '' %}
-            {% else %}
-                {% set startDateValue = now|date(dateFormat) %}
-            {% endif %}
+            {% set startDateValue = account is defined ? account.userStartDate : now %}
             {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value:startDateValue} %}
         </div>
         <div class="col-6 field--wrapper">
