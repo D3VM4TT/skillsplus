@@ -18,7 +18,7 @@
     </select>
     <select class="year">
         <option{% if not value %} selected="selected"{% endif %}>-</option>
-        {% for i in 1950..2050 %}
+        {% for i in 1930..2050 %}
             <option{% if i == y %} selected="selected"{% endif %}>{{ i }}</option>
         {% endfor %}
     </select>
