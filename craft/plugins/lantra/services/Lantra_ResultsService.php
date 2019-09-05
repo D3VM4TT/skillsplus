@@ -601,6 +601,34 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Return all users requiring endorsement for a manager
+     *
+     * @param UserModel $manager
+     * @param int|null $limit
+     * @param bool $count
+     * @param bool $directSubordinates
+     * @return mixed
+     * @throws mixed
+     */
+    public function getManagerEndorsementUsers(UserModel $manager, $limit = null, $count = false, $directSubordinates = false) {
+        $resultsCriteria = $this->getManagerEndorsementResults($manager);
+        $authorIds = [];
+        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, false);
+        foreach($resultsCriteria as $result) {
+            $authorId = $result->author->id;
+            // add to list if it doesn't exists and is direct subordinate of required
+            if ( ! in_array($authorId, $authorIds) && ( ! $directSubordinates || in_array($authorId, $subordinateIds) )) {
+                $authorIds[] = $result->author->id;
+            }
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria->id =  $authorIds;
+        $criteria->order = 'lastName desc';
+        $criteria->limit = $limit;
+        return ($count) ? $criteria->count() : $criteria;
+    }
+
+    /**
      * Return all expiring module result entries
      *
      * @param null $userId

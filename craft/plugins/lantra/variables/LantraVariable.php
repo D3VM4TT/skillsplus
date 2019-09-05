@@ -282,11 +282,12 @@ class LantraVariable
      *
      * @param null $subordinateId
      * @param bool $managerId
+     * @param bool $includeHierarchy
      * @return bool
      */
-    public function isManager($subordinateId = null, $managerId = null) {
+    public function isManager($subordinateId = null, $managerId = null, $includeHierarchy = true) {
         $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
-        return craft()->lantra_users->isManager($subordinateId, $manager);
+        return craft()->lantra_users->isManager($subordinateId, $manager, $includeHierarchy);
     }
 
     /**
@@ -491,7 +492,7 @@ class LantraVariable
      * Return all result entries requiring endorsement for a manager
      *
      * @param null $userId
-     * @param bool $limit
+     * @param int $limit
      * @param bool $count
      * @return mixed
      * @throws Exception
@@ -501,6 +502,22 @@ class LantraVariable
             return null;
         }
         return craft()->lantra_results->getManagerEndorsementResults($user, ($count == false ? $limit : null), $count);
+    }
+
+    /**
+     * Return all users requiring endorsement for a manager
+     *
+     * @param null $userId
+     * @param int $limit
+     * @param bool $count
+     * @param bool $directSubordinates
+     * @return mixed
+     */
+    public function managerEndorsementUsers($userId = null, $limit = 10, $count = false, $directSubordinates = false) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return craft()->lantra_results->getManagerEndorsementUsers($user, ($count == false ? $limit : null), $count, $directSubordinates);
     }
 
     /**

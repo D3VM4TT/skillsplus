@@ -95,10 +95,10 @@
                 -->
             </ul>
         </li>
-        {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
-        {% if not currentUser.managerReadOnly and pendingEntryCount %}
+        {% set pendingEndorsementCount = craft.lantra.managerEndorsementUsers(null, null, true) %}
+        {% if not currentUser.managerReadOnly and pendingEndorsementCount %}
             <li class="secondary-bg-hover">
-                <a href="/management/endorsements">Endorsements ({{ pendingEntryCount }})</a>
+                <a href="/management/endorsements">Endorsements ({{ pendingEndorsementCount }})</a>
             </li>
         {% endif %}
     </ul>
