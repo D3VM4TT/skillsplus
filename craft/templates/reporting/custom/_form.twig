@@ -13,7 +13,7 @@
     {% set companyEntries = craft.lantra.managerCompanies(currentUser.id, true) %}
 {% endif %}
 {% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
-{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName') %}
+{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName').limit(null) %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
