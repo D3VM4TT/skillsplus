@@ -176,10 +176,13 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
-        if ($tool == 'copyDatabase') {
+        if ($tool == 'copyDatabase' || $tool == 'copyDatabaseProd') {
             $environmentVariables = craft()->config->get('environmentVariables');
             $server = $environmentVariables['server'];
-            if ($server == 'prod' || $server == 'dev' || $server == 'local') {
+            if ($tool == 'copyDatabaseProd') {
+                $target = 'prod';
+            }
+            elseif ($server == 'prod' || $server == 'dev' || $server == 'local') {
                 $target = 'uat';
             }
             else {

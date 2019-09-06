@@ -63,6 +63,8 @@
         <p><a href="/admin/lantra/settings/tools?tool=copyDatabase" class="btn btn-small">Copy DB to UAT</a></p>
     {% elseif server == 'uat' %}
         <p><a href="/admin/lantra/settings/tools?tool=copyDatabase" class="btn btn-small">Copy DB to DEV</a></p>
+        <p style="color:#FF0000"><strong>WARNING - LIVE DATA</strong></p>
+        <p><a href="/admin/lantra/settings/tools?tool=copyDatabaseProd" class="btn btn-small">Copy DB to PROD</a></p>
     {% endif %}
 
 </div>
