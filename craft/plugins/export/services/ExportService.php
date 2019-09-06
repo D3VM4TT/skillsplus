@@ -80,7 +80,7 @@ class ExportService extends BaseApplicationComponent
     public function findMap(\CDbCriteria $criteria)
     {
         $map = Export_MapRecord::model()->find($criteria);
-        return is_countable($map) ? $map : [];
+        return is_array($map) || is_object($map) ? $map : [];
     }
 
     /**
