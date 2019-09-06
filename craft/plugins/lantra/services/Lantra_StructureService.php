@@ -60,6 +60,10 @@ class Lantra_StructureService extends BaseApplicationComponent
     }
 
     public function getHierarchy($entryId = null, $type = 'companies') {
+        $cache = 'lantra_' . (!$entryId ? 'root' : $entryId . $type);
+        if (false != $return = craft()->cache->get($cache)) {
+            return $return;
+        }
         if (! $entryId) {
             $return = $this->getJsTreeRoot();
         }
@@ -78,6 +82,7 @@ class Lantra_StructureService extends BaseApplicationComponent
         elseif ($type == 'children') {
             $return = $this->getJsTreeChildren($entryId);
         }
+        craft()->cache->set($cache, $return, 86400);
         return $return;
     }
 
