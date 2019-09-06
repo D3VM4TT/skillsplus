@@ -13,7 +13,7 @@ namespace Craft;
  *
  * @link      http://github.com/boboldehampsink
  */
-class Export_MapRecord extends BaseRecord
+class Export_MapRecord extends BaseRecord implements \Countable
 {
     /**
      * Get table name.
