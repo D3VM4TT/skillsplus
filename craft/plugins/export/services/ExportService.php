@@ -58,7 +58,7 @@ class ExportService extends BaseApplicationComponent
         // Check if we have a map already
         $mapRecord = $this->findMap($criteria);
 
-        if (! $mapRecord || !count($mapRecord) || $mapRecord->settings != $settings) {
+        if (!count($mapRecord) || $mapRecord->settings != $settings) {
 
             // Save settings and map to database
             $mapRecord = $this->getNewMap();
@@ -79,7 +79,8 @@ class ExportService extends BaseApplicationComponent
      */
     public function findMap(\CDbCriteria $criteria)
     {
-        return Export_MapRecord::model()->find($criteria);
+        $map = Export_MapRecord::model()->find($criteria);
+        return is_countable($map) ? $map : [];
     }
 
     /**

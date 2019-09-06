@@ -66,7 +66,7 @@ class Export_EntryService extends BaseApplicationComponent implements IExportEle
         // Check if we have a map already
         $stored = craft()->export->findMap($criteria);
 
-        if (! $stored || !count($stored) || $reset) {
+        if (!count($stored) || $reset) {
 
             // Get section id
             $section = $settings['elementvars']['section'];
