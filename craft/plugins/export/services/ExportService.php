@@ -79,7 +79,7 @@ class ExportService extends BaseApplicationComponent
      */
     public function findMap(\CDbCriteria $criteria)
     {
-        return Export_MapRecord::model()->find($criteria);
+        return (array) Export_MapRecord::model()->find($criteria);
     }
 
     /**
