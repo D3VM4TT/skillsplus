@@ -614,6 +614,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultsCriteria = $this->getManagerEndorsementResults($manager);
         $authorIds = [];
         $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, false);
+        if ( ! $resultsCriteria) {
+            return ($count) ? 0 : null;
+        }
         foreach($resultsCriteria as $result) {
             $authorId = $result->author->id;
             // add to list if it doesn't exists and is direct subordinate of required
