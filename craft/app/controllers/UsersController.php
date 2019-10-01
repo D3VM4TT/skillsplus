@@ -1060,7 +1060,7 @@ class UsersController extends BaseController
 			}
 
 			// Save the user's photo, if it was submitted
-			$this->_processUserPhoto($user);
+			$this->_processUserPhoto($user, $userPhoto);
 
 			// If this is public registration, assign the user to the default user group
 			if ($thisIsPublicRegistration)
@@ -1765,10 +1765,11 @@ class UsersController extends BaseController
 
 	/**
 	 * @param $user
+     * @param $userPhoto
 	 *
 	 * @return null
 	 */
-	private function _processUserPhoto($user)
+	private function _processUserPhoto($user, $userPhoto)
 	{
 		// Delete their photo?
 		if (craft()->request->getPost('deleteUserPhoto'))
@@ -1777,7 +1778,7 @@ class UsersController extends BaseController
 		}
 
 		// Did they upload a new one?
-		if ($userPhoto = UploadedFile::getInstanceByName('userPhoto'))
+		if ($userPhoto)
 		{
 			craft()->users->deleteUserPhoto($user);
 			$image = craft()->images->loadImage($userPhoto->getTempName());

@@ -79,8 +79,7 @@
     {%  endfor %}
     {% if craft.lantra.setting('userEditPhoto') %}
     <p class="profile">Change profile picture:</p>
-    <input type="file" name="userPhoto" value="{{ (currentUser.photoUrl ? 'Change Photo' : 'Upload') }}">
-    <input type="hidden" name="deleteUserPhoto" value="">
+    <input type="file" name="userPhoto" />
     {% endif %}
     <div class="container-btn">
         <button class="button no-shadow primary-bg" style="margin:0px;"><span>Save Profile</span></button>
