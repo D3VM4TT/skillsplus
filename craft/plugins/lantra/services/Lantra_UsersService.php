@@ -326,7 +326,7 @@ class Lantra_UsersService extends BaseApplicationComponent
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
             return true;
         }
-        $companyManagers = $this->getCompanyMangers($company);
+        $companyManagers = $this->getCompanyManagers($company);
         foreach($companyManagers as $companyManager) {
             if ($manager->id == $companyManager->id) {
                 return true;
