@@ -55,6 +55,22 @@ class Lantra_SettingsController extends BaseController
     }
 
     /**
+     *
+     */
+    public function actionDeleteJob()
+    {
+        $elementId = craft()->request->getParam('elementId');
+        if ($elementId == 'all') {
+            craft()->lantra_queue->clear();
+        }
+        else {
+            craft()->lantra_queue->delete($elementId);
+        }
+        craft()->userSession->setNotice(Craft::t('Queue updated.'));
+        $this->redirect('lantra/settings/queue');
+    }
+
+    /**
      * @throws HttpException
      */
     public function actionTools()

@@ -62,7 +62,7 @@
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom/new">Custom Report</a>
+                    <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
                 </li>
                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
                 <li>

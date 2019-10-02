@@ -30,7 +30,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         $reportEntries = $this->getReports();
         foreach ($reportEntries as $reportEntry) {
             if (($reportEntry->reportSendFrequency == 'weekly' && $reportEntry->reportSendValue == $weekDay) || ($reportEntry->reportSendFrequency == 'monthly' && $reportEntry->reportSendValue == $monthDay)) {
-                $this->runCustomReport($reportEntry);
+                craft()->lantra_queue->add($reportEntry->id);
             }
         }
     }
@@ -92,8 +92,9 @@ class Lantra_ReportsService extends BaseApplicationComponent
             'reportResultType'          => $reportEntry->reportResultType,
             'reportDisplayField'        => $reportEntry->reportDisplayField,
             'reportResultExpiry'        => $reportEntry->reportResultExpiry,
-            'reportNoDates'             => $reportEntry->reportNoDates,
+            // 'reportNoDates'             => $reportEntry->reportNoDates,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
+            'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
             'reportUnits'               => []
         ];
@@ -234,6 +235,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         // delete the temp file
         unlink($filePath . $fileName);
+        // delete from queue
+        craft()->lantra_queue->delete($reportEntry->id);
         return $total;
     }
 

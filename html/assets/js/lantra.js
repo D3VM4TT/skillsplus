@@ -212,6 +212,13 @@ $(document).ready(function(){
             var data = {userId: $(this).data('id')};
             reload = true;
         }
+        if (action == 'lantra/reports/delete') {
+            if ( ! confirm('Are you sure you want to delete this report?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+            reload = true;
+        }
         if (action == 'lantra/reports/run') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;

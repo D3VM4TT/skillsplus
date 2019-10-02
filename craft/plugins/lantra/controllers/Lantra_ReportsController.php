@@ -52,17 +52,54 @@ class Lantra_ReportsController extends Lantra_BaseController
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
         $entryId = craft()->request->getParam('entryId');
-        $title = craft()->request->getParam('title');
-        if ($entryId || $automated) {
-            $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $title, $fields, $entryId);
-            if ($reportEntry->hasErrors()) {
-                return craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
-            }
+        // custom title
+        if ($automated) {
+            $title = craft()->request->getParam('title');
+            $fields['reportAutomated'] = true;
+            $fields['reportPending'] = false;
             $redirect = '/reporting/automated';
-            return $this->_returnMessage('Custom report has been saved.', true, $redirect);
         }
-        $data = craft()->lantra_reports->getCustomReportData($manager, $type, $fields);
-        return craft()->lantra_reports->downloadReport($type, $data);
+        else {
+            $title = $manager->getFullName() . ' ' . $type;
+            $fields['reportAutomated'] = false;
+            $fields['reportPending'] = true;
+            $redirect = '/reporting/custom';
+        }
+        $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $title, $fields, $entryId);
+        if ($reportEntry->hasErrors()) {
+            return craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
+        }
+        // add to queue
+        if (!$automated) {
+            craft()->lantra_queue->add($reportEntry->id);
+        }
+        return $this->_returnMessage('Custom report has been saved.', true, $redirect);
+    }
+
+    /**
+     * @return null|void
+     * @throws Exception
+     * @throws \CException
+     */
+    public function actionDelete()
+    {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        $manager = craft()->userSession->getUser();
+        // get the posted entryId
+        $entryId = craft()->request->getPost('entryId');
+        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
+        }
+        if ($manager->id != $entry->getAuthor()->id) {
+            $this->_returnError('Invalid report author.');
+        }
+        // delete report assets
+        if ($entry->reportData) {
+            craft()->assets->deleteFiles($entry->reportData->ids());
+        }
+        craft()->entries->deleteEntryById($entryId);
+        $this->_returnMessage( 'Report has been deleted.', true);
     }
 
     /**

@@ -331,6 +331,9 @@ class LantraPlugin extends BasePlugin
 
             ## labels
             'labelJobRole'                      => AttributeType::String,
+
+            ## queue
+            'queue'                             => AttributeType::Mixed,
         );
     }
 

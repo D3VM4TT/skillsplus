@@ -1,0 +1,69 @@
+{% requirePermission 'editEntries:13' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Reporting > Custom Reports" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+
+{% set criteria = craft.entries.section('reports').reportAutomated(0).authorId(currentUser.id).limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Custom Reports</h2>
+            <div class="header-controls">
+                <div class="container-btn primary-bg" style="margin-left:0;">
+                    <a class="btn-add-new" href="/reporting/custom/new">Create New Report</a>
+                </div>
+            </div>
+        </div>
+        {% if reportEntries is defined and reportEntries|length %}
+            <div class="page-content">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="title">Type</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for report in reportEntries %}
+                        {% set complete = report.reportData|length %}
+                        {% set job = craft.lantra.job(report.id) %}
+                        <tr>
+                            <td>{{ report.id }}</td>
+                            <td>{{ report.reportType }}</td>
+                            <td>{{ report.postDate|format(dateFormat) }}</td>
+                            <td>
+                                {% if complete %}
+                                    {% set asset = report.reportData.first %}
+                                    <a href="/internal/{{ asset.id }}" rel="external">download</a>
+                                {% elseif job %}
+                                    {{ job.status }}
+                                {% else %}
+                                    unknown
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <a class="action" href="#" data-action="lantra/reports/delete" data-id="{{ report.id }}" href="">delete</a>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+        {% else %}
+            <div class="page-content">
+                <h3>There are no reports to display.</h3>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

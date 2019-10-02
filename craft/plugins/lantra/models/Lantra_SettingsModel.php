@@ -99,6 +99,9 @@ class Lantra_SettingsModel extends BaseModel
 
             ## labels
             'labelJobRole'                      => AttributeType::String,
+
+            ## queue
+            'queue'                             => AttributeType::Mixed,
 		);
 	}
 

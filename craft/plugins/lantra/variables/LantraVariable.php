@@ -46,6 +46,20 @@ class LantraVariable
     }
 
     /**
+     * @return mixed
+     */
+    public function queue() {
+        return craft()->lantra_queue->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function job($elementId) {
+        return craft()->lantra_queue->job($elementId);
+    }
+
+    /**
      * Get setting
      *
      * @param $key
