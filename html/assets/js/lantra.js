@@ -264,6 +264,30 @@ $(document).ready(function(){
         });
     });
 
+    // update report managers based on selected companies
+    $('select#reportCompanies').on('change', function () {
+        var data = {companyIds: $(this).val()};
+        data[window.csrfTokenName] = window.csrfTokenValue;
+        $('#reportRecipientsLabel span').show();
+        $.post("/actions/lantra/users/companyManagers", data, function(response) {
+            $('#reportRecipientsLabel span').hide();
+            var selectedIds = $("select#reportRecipients").val();
+            // first get rid of non selected
+            $('select#reportRecipients option').not(':eq(0), :selected').remove();
+            $('select#reportRecipients').trigger('change');
+            $.each(response, function (id, name) {
+                if (!$('select#reportRecipients').find("option[value='" + id + "']").length) {
+                    var newOption = new Option(name, id);
+                    $('select#reportRecipients').append(newOption).trigger('change');
+                }
+            });
+        }).fail(function(error) {
+
+        });
+    });
+
+    $('select#reportCompanies').change();
+
     $('form:not(.no-loading)').submit(function(){
         $('body').addClass('loading');
     });

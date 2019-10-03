@@ -28,6 +28,25 @@ class Lantra_UsersController extends Lantra_BaseController {
     }
 
     /**
+     * return key value managers for report option js
+     */
+    public function actionCompanyManagers() {
+        craft()->userSession->requireLogin();
+        $companyIds = craft()->request->getParam('companyIds');
+        $return = [];
+        if (count($companyIds)) {
+            $managers = craft()->lantra_users->getMultipleCompanyManagers($companyIds);
+            if (count($managers)) {
+                foreach ($managers as $manager) {
+                    $return[$manager->id] = $manager->fullName;
+                }
+                sort($managers);
+            }
+        }
+        return craft()->controller->returnJson($return);
+    }
+
+    /**
      * Saves user from the management form
      *
      * @throws mixed

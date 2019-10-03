@@ -504,6 +504,29 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * @param array $companyIds
+     * @return array
+     * @throws Exception
+     * @throws \CException
+     */
+    public function getMultipleCompanyManagers($companyIds = []) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->order = 'title';
+        $criteria->id = $companyIds;
+        $managers = [];
+        foreach($criteria->find() as $company) {
+            foreach($this->getCompanyManagers($company) as $manager) {
+                // avoid duplicates
+                if (!isset($managers[$manager->id])) {
+                    $managers[$manager->id] = $manager;
+                }
+            }
+        }
+        return $managers;
+    }
+
+    /**
      * @param EntryModel $company
      * @param bool $count
      * @return mixed
