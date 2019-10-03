@@ -6,6 +6,7 @@ $site = array_shift($parts);
 return array(
     /* all environments */
     '*' => array(
+        'backupDbOnUpdate'  => false,
         'defaultWeekStartDay' => 0,
         'enableCsrfProtection' => false,
         'omitScriptNameInUrls' => true,
