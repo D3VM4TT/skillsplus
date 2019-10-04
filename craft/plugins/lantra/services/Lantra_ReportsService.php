@@ -25,12 +25,14 @@ class Lantra_ReportsService extends BaseApplicationComponent
      */
     public function sendDailyReports()
     {
-        $weekDay = date('N');
-        $monthDay = date('j');
-        $reportEntries = $this->getReports();
+        $weekDay = (int) date('N');
+        $monthDay = (int) date('j');
+        $reportEntries = $this->getAutomatedReports();
         foreach ($reportEntries as $reportEntry) {
-            if (($reportEntry->reportSendFrequency == 'weekly' && $reportEntry->reportSendValue == $weekDay) || ($reportEntry->reportSendFrequency == 'monthly' && $reportEntry->reportSendValue == $monthDay)) {
-                craft()->lantra_queue->add($reportEntry->id);
+            $reportSendValue = (int) $reportEntry->reportSendValue;
+            $reportSendFrequency = $reportEntry->reportSendFrequency->value;
+            if (($reportSendFrequency == 'weekly' && $reportSendValue == $weekDay) || ($reportSendFrequency == 'monthly' && $reportSendValue == $monthDay)) {
+                craft()->lantra_queue->add($reportEntry->id, 9);
             }
         }
     }
@@ -376,6 +378,23 @@ class Lantra_ReportsService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'reports';
+        $criteria->limit = null;
+        return $criteria->find();
+    }
+
+    /**
+     * Get all reports
+     *
+     * @param int
+     * @param int
+     * @return null
+     * @throws Mixed
+     */
+    private function getAutomatedReports()
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'reports';
+        $criteria->reportAutomated = 1;
         $criteria->limit = null;
         return $criteria->find();
     }
