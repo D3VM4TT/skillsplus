@@ -191,6 +191,9 @@
         <div class="container-btn">
             <button id="buttonSubmit" type="submit" class="button primary-bg">Save Report</button>
         </div>
+        {% if entry.reportAutomated %}
+            <input type="hidden" name="automated" value="1">
+        {% endif %}
     {% else %}
         <div class="container-btn">
             <button id="buttonSubmit" type="submit" class="button primary-bg">Add to Queue</button>
