@@ -26,6 +26,7 @@ class Lantra_ReportsController extends Lantra_BaseController
             'reportIncludeExpired'      => false,
             'reportIncludeRequired'     => false,
             'reportDisplayField'        => 'expiryDate',
+            'reportAutomated'           => false,
             // automated fields
             'reportTitle'               => '',
             'reportRecipients'          => [],
@@ -56,13 +57,11 @@ class Lantra_ReportsController extends Lantra_BaseController
         if ($automated) {
             $title = craft()->request->getParam('title');
             $fields['reportAutomated'] = true;
-            $fields['reportPending'] = false;
             $redirect = '/reporting/automated';
         }
         else {
             $title = $manager->getFullName() . ' ' . $type;
             $fields['reportAutomated'] = false;
-            $fields['reportPending'] = true;
             $redirect = '/reporting/custom';
         }
         $reportEntry = craft()->lantra_reports->saveCustomReport($manager, $title, $fields, $entryId);
