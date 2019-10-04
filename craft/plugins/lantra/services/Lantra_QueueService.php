@@ -9,22 +9,11 @@ class Lantra_QueueService extends BaseApplicationComponent
      * Lantra_QueueService constructor.
      */
     public function __construct() {
-        $this->queue = (array) craft()->lantra_settings->getSetting('queue');
-    }
-
-    /**
-     *
-     */
-    public function save() {
-        craft()->lantra_settings->saveSetting('queue', $this->queue);
-    }
-
-    /**
-     *
-     */
-    public function clear() {
-        $this->queue = [];
-        $this->save();
+        $this->queue = craft()->db->createCommand()
+            ->select()
+            ->order(['priority', 'dateCreated'])
+            ->from('lantra_queue')
+            ->queryAll();
     }
 
     /**
@@ -44,8 +33,9 @@ class Lantra_QueueService extends BaseApplicationComponent
 
     /**
      * @param $elementId
+     * @param $priority
      */
-    public function add($elementId) {
+    public function add($elementId, $priority = 1) {
         // only one job per element
         if ($this->job($elementId) != null) {
             return;
@@ -53,10 +43,10 @@ class Lantra_QueueService extends BaseApplicationComponent
         $job = [
             'elementId' => $elementId,
             'status' => 'pending',
+            'priority' => $priority,
             'dateCreated' => DateTimeHelper::currentTimeForDb()
         ];
-        $this->queue[] = $job;
-        $this->save();
+        craft()->db->createCommand()->insert('lantra_queue', $job);
     }
 
     /**
@@ -64,25 +54,20 @@ class Lantra_QueueService extends BaseApplicationComponent
      * @return bool
      */
     public function job($elementId) {
-        foreach ($this->queue as $key => $job) {
-            if ($job['elementId'] == $elementId) {
-                return $job;
-            }
-        }
-        return null;
+        return craft()->db->createCommand()
+            ->select()
+            ->from('lantra_queue')
+            ->where(['elementId' => $elementId])
+            ->queryRow();
     }
 
     /**
      * @param $elementId
+     * @param string $status
      */
-    public function delete($elementId) {
-        foreach ($this->queue as $key => $job) {
-            if ($job['elementId'] == $elementId) {
-                unset($this->queue[$key]);
-                $this->save();
-                break;
-            }
-        }
+    public function status($elementId, $status = 'running') {
+        craft()->db->createCommand()
+            ->update('lantra_queue', ['status' => $status], ['elementId' => $elementId]);
     }
 
     /**
@@ -93,13 +78,11 @@ class Lantra_QueueService extends BaseApplicationComponent
         // expire jobs four hours old
         $expired = $job['dateCreated'] < (time() - 14400);
         if ($job['status'] == 'running' && $expired) {
-            $this->save();
+            $this->delete($job['elementId']);
         }
         if ($job['status'] == 'pending') {
-            $job['status'] = 'running';
-            array_unshift($this->queue, $job);
+            $this->status($job['elementId'], 'running');
             $this->run($job['elementId']);
-            $this->save();
         }
     }
 
@@ -114,5 +97,19 @@ class Lantra_QueueService extends BaseApplicationComponent
         if ($entry->sectionId == 13) {
             craft()->lantra_reports->runCustomReport($entry);
         }
+    }
+
+    /**
+     * @param $elementId
+     */
+    public function delete($elementId) {
+        craft()->db->createCommand()->delete('lantra_queue', ['elementId' => $elementId]);
+    }
+
+    /**
+     *
+     */
+    public function clear() {
+        craft()->db->createCommand()->truncateTable('lantra_queue');
     }
 }

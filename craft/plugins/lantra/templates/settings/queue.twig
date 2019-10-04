@@ -11,10 +11,11 @@
                     <table class="data fullwidth">
                         <thead>
                         <tr>
-                            <th><div class="first"><h3>Element ID</h3></div></th>
+                            <th><div class="first"><h3>Element</h3></div></th>
                             <th><div><h3>Section</h3></div></th>
-                            <th><div><h3>Title</h3></div></th>
+                            <th><div><h3>Automated</h3></div></th>
                             <th><div><h3>Date Created</h3></div></th>
+                            <th><div><h3>Priority</h3></div></th>
                             <th><div><h3>Status</h3></div></th>
                             <th></th>
                         </tr>
@@ -26,7 +27,11 @@
                             <tr class="table_row">
                                 <td>
                                     <div class="item_content">
-                                        {{ element ? element.id :'unknown element' }}
+                                        {% if element %}
+                                            <a href="{{ element.getCpEditUrl() }}">{{ element.title }}</a>
+                                        {% else %}
+                                            unknown element
+                                        {% endif %}
                                     </div>
                                 </td>
                                 <td>
@@ -36,12 +41,17 @@
                                 </td>
                                 <td>
                                     <div class="item_content">
-                                        {{ element ? element.title :'unknown element' }}
+                                        <div class="status{% if element and element.reportAutomated %} enabled{% endif %}"></div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="item_content">
                                         {{ job.dateCreated }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item_content">
+                                        {{ job.priority }}
                                     </div>
                                 </td>
                                 <td>

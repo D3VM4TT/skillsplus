@@ -15,7 +15,8 @@ class Lantra_CronController extends Lantra_BaseController {
     function actionRun() {
         $frequency = craft()->request->getParam('frequency');
         if ($frequency == 'queue') {
-            # run the next task (report) in the queue
+            # run the next 2 jobs (reports) in the queue
+            craft()->lantra_queue->next();
             craft()->lantra_queue->next();
         }
         if ($frequency == 'daily') {
