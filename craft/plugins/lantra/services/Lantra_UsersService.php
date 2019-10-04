@@ -510,10 +510,15 @@ class Lantra_UsersService extends BaseApplicationComponent
      * @throws \CException
      */
     public function getMultipleCompanyManagers($companyIds = []) {
+        $ancestorIds = [];
+        foreach($companyIds as $companyId) {
+            $ancestorIds[] = $companyId;
+            $ancestorIds = array_merge($ancestorIds, craft()->lantra_structure->getCompanyAncestors($companyId));
+        }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->order = 'title';
-        $criteria->id = $companyIds;
+        $criteria->id = $ancestorIds;
         $managers = [];
         foreach($criteria->find() as $company) {
             foreach($this->getCompanyManagers($company) as $manager) {

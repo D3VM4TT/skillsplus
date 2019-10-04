@@ -275,6 +275,27 @@ class Lantra_StructureService extends BaseApplicationComponent
         return $descendants;
     }
 
+    /* cache parents */
+    private $_companyAncestors = [];
+
+    public function getCompanyParent($company) {
+        return $company->companyParent->count() ? $company->companyParent->first() : null;
+    }
+
+    public function getCompanyAncestors($companyId = null) {
+        if (isset($this->_companyAncestors[$companyId])) {
+            return $this->_companyAncestors[$companyId];
+        }
+        $ancestors = [];
+        $company = craft()->entries->getEntryById($companyId);
+        if (null != $parent = $this->getCompanyParent($company)) {
+            $ancestors[] = $parent->id;
+            $ancestors = array_merge($ancestors, $this->getCompanyAncestors($parent->id));
+        }
+        $this->_companyAncestors[$companyId] = $ancestors;
+        return $ancestors;
+    }
+
     public function appendCompanyDescendants($companyIds = []) {
         $return = $companyIds;
         foreach($companyIds as $id) {
