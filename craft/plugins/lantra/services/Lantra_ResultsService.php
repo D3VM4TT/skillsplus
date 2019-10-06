@@ -832,7 +832,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         if (! $subordinates) {
             return [];
         }
-        $subordinateIds = $this->getIds($subordinates);
+        $subordinateIds = $subordinates->ids();
 
         $header = [
             'Company ID',
@@ -848,7 +848,15 @@ class Lantra_ResultsService extends BaseApplicationComponent
         ];
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
-        $allUnits = $this->managerUnits($subordinates);
+
+        // only filter units if less than 10 users
+        if (count($subordinateIds) < 10) {
+            $allUnits = $this->managerUnits($subordinates);
+        }
+        else {
+            $allUnits = $this->allUnits();
+        }
+
         $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
         foreach ($allUnits as $unit) {
@@ -1405,6 +1413,21 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $units = array_merge($units, $group->unitEntries->find());
         }
         $this->moduleUnits[$module->id] = $units;
+        return $units;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    private function allUnits() {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'units';
+        $criteria->limit = null;
+        $units = [];
+        foreach($criteria->find() as $unit) {
+            $units[$unit->id] = $unit;
+        }
         return $units;
     }
 
