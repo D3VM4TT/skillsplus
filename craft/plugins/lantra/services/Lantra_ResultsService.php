@@ -1550,6 +1550,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $resultEntry
+     */
+    public function deleteUserResultCache($resultEntry) {
+        $userId = $resultEntry->getAuthor()->id;
+        $unitId = $resultEntry->resultUnit->first()->id;
+        if ($userId && $unitId) {
+            craft()->db->createCommand()->update('lantra_result_cache', ['unit' . $unitId => ""], ['userId' => $userId]);
+        }
+    }
+
+    /**
      * get user result
      *
      * @param $userIds

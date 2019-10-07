@@ -128,10 +128,6 @@ class LantraPlugin extends BasePlugin
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                     $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
                 }
-                // save unit result in user result cache
-                if ($entry->type == 'unitResult') {
-                    craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
-                }
                 // check change from draft to pending
                 if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
                     // send notification
@@ -248,6 +244,10 @@ class LantraPlugin extends BasePlugin
             // create user result column
             if ($entry->sectionId == $this->sectionIdUnits) {
                 craft()->lantra_results->addUnitColumn($entry->id);
+            }
+            // save unit result in user result cache
+            if ($entry->enabled && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
             }
         });
 

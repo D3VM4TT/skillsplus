@@ -217,7 +217,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setResultCache') {
-            $users = $this->getUsers(100, 'ResultCache', false);
+            $users = $this->getUsers(500, 'ResultCache', false);
             $message = '';
             foreach($users as $user) {
                 $results = $this->getUserUnitResults($user->id);
