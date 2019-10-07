@@ -34,12 +34,17 @@ class Lantra_SettingsController extends BaseController
         $this->renderTemplate('lantra/settings', $variables);
     }
 
-    private function getUsers($limit = null) {
+    private function getUsers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->groupId = [2,3,4];
         $criteria->admin = false;
         $criteria->limit = $limit;
-        return $criteria;
+        $criteria->order = 'id';
+        if ($dataCleanKey) {
+            $fieldName = 'dataClean' . $dataCleanKey;
+            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
+        }
+        return $count ? $criteria->count() : $criteria;
     }
 
     private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
@@ -52,6 +57,15 @@ class Lantra_SettingsController extends BaseController
             $criteria->$fieldName = $dataCleanValue ? 1 : 0;
         }
         return $count ? $criteria->count() : $criteria;
+    }
+
+    private function getUserUnitResults($userId) {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        $criteria->status = null;
+        return $criteria;
     }
 
     /**
@@ -85,6 +99,16 @@ class Lantra_SettingsController extends BaseController
                 }
             }
             craft()->userSession->setNotice(Craft::t('All companies saved.'));
+            $this->redirectToPostedUrl();
+        }
+        if ($tool == 'saveUnits') {
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria->section = 'units';
+            $criteria->limit = null;
+            foreach($criteria->find() as $unit) {
+                craft()->entries->saveEntry($unit);
+            }
+            craft()->userSession->setNotice(Craft::t('All units saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUsers') {
@@ -192,6 +216,28 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'setResultCache') {
+            $users = $this->getUsers(100, 'ResultCache', false);
+            $message = '';
+            foreach($users as $user) {
+                $results = $this->getUserUnitResults($user->id);
+                if ($results->count()) {
+                    craft()->lantra_results->saveUserResultCache($user->id, $results->find());
+                }
+                $user->setContentFromPost([
+                    'dataCleanResultCache' => 1
+                ]);
+                if (!craft()->elements->saveElement($user, false)) {
+                    $message .= ' ' . $user->fullName . ' not updated.';
+                };
+            }
+            craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached.'));
+        }
+        if ($tool == 'dataResetResultCache') {
+            craft()->lantra_settings->resetDataClean('ResultCache');
+            craft()->userSession->setNotice('All users have been reset.');
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'copyDatabase' || $tool == 'copyDatabaseProd') {
             $environmentVariables = craft()->config->get('environmentVariables');
             $server = $environmentVariables['server'];
@@ -217,6 +263,7 @@ class Lantra_SettingsController extends BaseController
         $variables = [
             'dataCleanManagersChildrenTotal' => $this->getManagers(null, 'ManagersChildren', 1, true),
             'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
+            'dataCleanResultCacheTotal' => $this->getUsers(null, 'ResultCache', 1, true),
         ];
         $this->renderTemplate('lantra/settings/tools', $variables);
     }

@@ -1500,4 +1500,111 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
         return $criteria->total() ? $criteria->find() : [];
     }
+
+    /**
+     * create unit column
+     *
+     * @param $id
+     */
+    public function addUnitColumn($id) {
+        if ( ! craft()->db->columnExists('lantra_result_cache', 'unit' . $id)) {
+            craft()->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
+        }
+    }
+
+    /**
+     * remove unit column
+     *
+     * @param $id
+     */
+    public function removeUnitColumn($id) {
+        if (craft()->db->columnExists('lantra_result_cache', 'unit' . $id)) {
+            craft()->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
+        }
+    }
+
+    /**
+     * save user result
+     *
+     * @param $userId
+     * @param $resultEntries
+     *
+     */
+    public function saveUserResultCache($userId, $resultEntries = null) {
+        $keyColumns = [
+            'userId' => $userId
+        ];
+        $updateColumns = [];
+        if ($resultEntries) {
+            if (!is_array($resultEntries)) {
+                $resultEntries = [$resultEntries];
+            }
+            foreach ($resultEntries as $resultEntry) {
+                $unitId = $resultEntry->resultUnit->first()->id;
+                if ($unitId) {
+                    $updateColumns['unit' . $unitId] = $this->setResultValue($resultEntry);
+                }
+            }
+        }
+        craft()->db->createCommand()->insertOrUpdate('lantra_result_cache', $keyColumns, $updateColumns);
+    }
+
+    /**
+     * get user result
+     *
+     * @param $userIds
+     * @return array
+     *
+     */
+    public function getUserResultCache($userIds = []) {
+        $single = ! is_array($userIds);
+        if ($single) {
+            $where = ['userId' => $userIds];
+        }
+        else {
+            $where = ['IN', 'userId', $userIds];
+        }
+        $query = craft()->db->createCommand()->from('lantra_result_cache')->where($where);
+        $result = $query->queryAll();
+
+        if ( ! $result) {
+            return null;
+        }
+        $return = [];
+        foreach($result as $id => $row) {
+            $return[$row['userId']] = [];
+            foreach($row as $column => $value) {
+                if (substr($column,0 , 4) == 'unit') {
+                    $unitId = trim($column, 'unit');
+                    $return[$row['userId']][$unitId] = $this->getResultValue($value);
+                }
+            }
+        }
+        return $single ? array_pop($return) : $return;
+    }
+
+    /**
+     * @param $value
+     * @return array
+     */
+    private function getResultValue($value) {
+        $value = json_decode($value);
+        return [
+            'expiryDate' => $value && isset($value->expiryDate) ? DateTime::createFromFormat('U', $value->expiryDate) : null,
+            'startDate' => $value && isset($value->startDate) ? DateTime::createFromFormat('U', $value->startDate) : null,
+            'finishDate' => $value && isset($value->finishDate) ? DateTime::createFromFormat('U', $value->finishDate) : null,
+        ];
+    }
+
+    /**
+     * @param $resultEntry
+     * @return string
+     */
+    private function setResultValue($resultEntry) {
+        return json_encode([
+            'expiryDate' => $resultEntry->expiryDate ? $resultEntry->expiryDate->getTimestamp() : null,
+            'startDate' => $resultEntry->resultStartDate ? $resultEntry->resultStartDate->getTimestamp() : null,
+            'finishDate' => $resultEntry->resultFinishDate ? $resultEntry->resultFinishDate->getTimestamp() : null
+        ]);
+    }
 }

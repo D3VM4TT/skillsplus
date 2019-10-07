@@ -48,6 +48,13 @@ class LantraVariable
     /**
      * @return mixed
      */
+    public function userResultCache($userIds) {
+        return craft()->lantra_results->getUserResultCache($userIds);
+    }
+
+    /**
+     * @return mixed
+     */
     public function queue() {
         return craft()->lantra_queue->get();
     }

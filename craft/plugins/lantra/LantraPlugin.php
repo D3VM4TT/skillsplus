@@ -7,6 +7,7 @@ class LantraPlugin extends BasePlugin
     private $sectionIdAttempts = 12;
     private $sectionIdResults = 10;
     private $sectionIdCompanies = 3;
+    private $sectionIdUnits = 7;
 
     /*
      * Settings version (auto migrate settings)
@@ -40,6 +41,12 @@ class LantraPlugin extends BasePlugin
         parent::init();
 
         craft()->lantra_settings->updateSettings($this->settingsVersion);
+
+        // create user result cache
+        craft()->on('users.onSaveUser', function(Event $event) {
+            $user = $event->params['user'];
+            craft()->lantra_results->saveUserResultCache($user->id);
+        });
 
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
@@ -121,9 +128,9 @@ class LantraPlugin extends BasePlugin
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                     $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
                 }
+                // save unit result in user result cache
                 if ($entry->type == 'unitResult') {
-                    $unitEntry = $entry->resultUnit->first();
-                    $unitEvidence = $entry->resultEvidence->first();
+                    craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
                 }
                 // check change from draft to pending
                 if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
@@ -237,6 +244,18 @@ class LantraPlugin extends BasePlugin
             if ($entry->sectionId == $this->sectionIdResults && $entry->type == 'moduleResult' && $entry->resultStatus == 'complete') {
                 // module notifications disabled 09/05
                 // craft()->lantra_notify->sendModuleResult($entry);
+            }
+            // create user result column
+            if ($entry->sectionId == $this->sectionIdUnits) {
+                craft()->lantra_results->addUnitColumn($entry->id);
+            }
+        });
+
+        craft()->on('entries.onDeleteEntry', function(Event $event) {
+            $entry = $event->params['entry'];
+            // delete user result column
+            if ($entry->sectionId == $this->sectionIdUnits) {
+                craft()->lantra_results->removeUnitColumn($entry->id);
             }
         });
     }

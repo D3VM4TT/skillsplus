@@ -9,6 +9,8 @@
 
     <p><a href="/admin/lantra/settings/tools?tool=saveCompanies" class="btn btn-small">Re-save all companies</a></p>
 
+    <p><a href="/admin/lantra/settings/tools?tool=saveUnits" class="btn btn-small">Re-save all units</a></p>
+
     <p><a href="/admin/lantra/settings/tools?tool=saveUsers" class="btn btn-small">Re-save all users</a></p>
 
     <hr />
@@ -52,6 +54,19 @@
         {{ dataCleanManagersUserCompanyTotal }}/{{ totalManagers }} managers processed.</p>
 
     <p><a href="/admin/lantra/settings/tools?tool=dataResetManagersUserCompany" class="btn btn-small">Reset managers (data clean)</a></p>
+
+    <hr />
+
+    <h3>Set User Result Cache</h3>
+
+    {% set totalUsers = craft.users.status(null).admin(0).total() %}
+
+    <p><a href="/admin/lantra/settings/tools?tool=setResultCache" class="btn btn-small">Set users result cache (500)</a></p>
+
+    <p>
+        {{ dataCleanResultCacheTotal }}/{{ totalUsers }} users processed.</p>
+
+    <p><a href="/admin/lantra/settings/tools?tool=dataResetResultCache" class="btn btn-small">Reset users result cache (data clean)</a></p>
 
     <hr />
 
