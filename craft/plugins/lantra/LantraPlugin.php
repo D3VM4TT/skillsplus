@@ -51,6 +51,8 @@ class LantraPlugin extends BasePlugin
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
+            // automatically set userType for reports
+            $user->setContentFromPost(['userType' => craft()->lantra_users->canManage($user) ? 'manager' : 'member']);
             $licenceSource = 'None';
             $lantraLicences = ! $this->getSettings()->lantraDisableLicences;
             if ($lantraLicences && $event->params['isNewUser'] && ! $user->admin) {

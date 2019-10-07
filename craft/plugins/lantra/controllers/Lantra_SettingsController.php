@@ -225,13 +225,15 @@ class Lantra_SettingsController extends BaseController
                     craft()->lantra_results->saveUserResultCache($user->id, $results->find());
                 }
                 $user->setContentFromPost([
-                    'dataCleanResultCache' => 1
+                    'dataCleanResultCache' => 1,
+                    // update userType here
+                    'userType' => craft()->lantra_users->canManage($user) ? 'manager' : 'member'
                 ]);
-                if (!craft()->elements->saveElement($user, false)) {
+                if ( ! craft()->elements->saveElement($user, false)) {
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
-            craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached.'));
+            craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
         }
         if ($tool == 'dataResetResultCache') {
             craft()->lantra_settings->resetDataClean('ResultCache');

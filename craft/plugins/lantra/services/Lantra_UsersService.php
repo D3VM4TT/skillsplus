@@ -893,6 +893,51 @@ class Lantra_UsersService extends BaseApplicationComponent
     }
 
     /**
+     * streamlined version of get users for big reports
+     *
+     * @param $userIds
+     * @return array
+     * @throws \CException
+     */
+    public function getReportUsers($userIds) {
+
+        $sql = 'SELECT 
+            u.id,           
+            CONCAT(u.firstName, " ", u.lastName) as fullName,
+            u.email,    
+            c.field_userType as userType,        
+            c.field_userCompanyName as companyLabel,
+            c.field_userDateOfBirth as userDateOfBirth,
+            c.field_userStartDate as userStartDate,
+            c.field_userAddress as userAddress,
+            rj.targetId as roleId,
+            rc.targetId as companyId    
+            FROM craft_users AS u
+            LEFT JOIN craft_content as c ON c.elementId = u.id
+            LEFT JOIN craft_relations as rj ON rj.sourceId = u.id      
+            LEFT JOIN craft_relations as rc ON rc.sourceId = u.id  
+            WHERE rj.fieldId = 30
+            AND rc.fieldId = 128
+            AND u.id IN(' . implode(',', $userIds) . ')';
+
+        $rows = craft()->db->createCommand($sql)->query();
+        $return = [];
+        $format = 'd-m-Y';
+        foreach($rows as $user) {
+            if ($user['userDateOfBirth']) {
+                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userDateOfBirth']);
+                $user['userDateOfBirth'] = $dateObject->format($format);
+            }
+            if ($user['userStartDate']) {
+                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userStartDate']);
+                $user['userStartDate'] = $dateObject->format($format);
+            }
+            $return[] = (object) $user;
+        }
+        return $return;
+    }
+
+    /**
      * Return subordinate users (as criteria for report) for a manager (similar to above)
      *
      * @param null $userId

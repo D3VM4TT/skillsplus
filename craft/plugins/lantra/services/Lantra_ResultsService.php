@@ -833,6 +833,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
             return [];
         }
         $subordinateIds = $subordinates->ids();
+        // streamlined sql to get users
+        $users = craft()->lantra_users->getReportUsers($subordinateIds);
 
         $header = [
             'Company ID',
@@ -847,8 +849,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
             'User Address'
         ];
 
-        $resultFilter = $this->formatResultsFilter($resultFilter);
-
         // only filter units if less than 10 users
         if (count($subordinateIds) < 10) {
             $allUnits = $this->managerUnits($subordinates);
@@ -857,7 +857,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             $allUnits = $this->allUnits();
         }
 
-        $data = $this->getSubordinateResults($subordinateIds, $resultFilter);
+        $data = $this->getUserResultCache($subordinateIds);
 
         foreach ($allUnits as $unit) {
             $header[] = 'Qual Title';
@@ -869,34 +869,23 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $format = 'd-m-Y';
 
         $rows = [$header];
-        foreach($subordinates as $user) {
-            if ($user->isInGroup('schemeManagers')) {
-                $companyId = '~';
-                $companyLabel = 'Scheme Manager';
-            }
-            else {
-                $company = craft()->lantra_users->userCompany($user);
-                if (! $company && $user->isInGroup('companyManagers')) {
-                    $company = craft()->lantra_users->getManagerFirstCompany($user);
-                }
-                $companyId = $company ? $company->id : '~';
-                $companyLabel = $company ? $company->companyLabel : 'unknown';
-            }
-            $role = $user->userRole->first();
-            $canManage = craft()->lantra_users->canManage($user);
+        foreach($users as $user) {
+
+            $role = $this->getRole($user->roleId);
+
             $row = [
-                $companyId,
-                $companyLabel,
+                $user->companyId,
+                $user->companyLabel,
                 $user->id,
-                $canManage ? 'Manager' : 'Member',
+                $user->userType,
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
-                $user->userDateOfBirth ? $user->userDateOfBirth->format($format) : '',
+                $user->userDateOfBirth,
                 $user->userStartDate,
                 $user->userAddress
             ];
-            $userUnits = $this->userUnits($user);
+            $userUnits = $this->roleUnits($user->roleId);
             foreach ($allUnits as $unit) {
                 // set defaults
                 $title = '';
@@ -908,9 +897,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
                     $title = $unit->title;
                     // does a result exist?
                     if (isset($data[$user->id]) && isset($data[$user->id][$unit->id])) {
-                        $startDate = $data[$user->id][$unit->id]->resultStartDate;
-                        $finishDate = $data[$user->id][$unit->id]->resultFinishDate;
-                        $expiryDate = $data[$user->id][$unit->id]->expiryDate;
+                        $startDate = $data[$user->id][$unit->id]['startDate'];
+                        $finishDate = $data[$user->id][$unit->id]['finishDate'];
+                        $expiryDate = $data[$user->id][$unit->id]['expiryDate'];
                     }
                 }
                 // output the data
@@ -1320,7 +1309,24 @@ class Lantra_ResultsService extends BaseApplicationComponent
         return $rows;
     }
 
+    // cache of roles
+    private $roles;
+
+    private function getRole($roleId = null) {
+        if (is_null($this->roles)) {
+            $criteria = craft()->elements->getCriteria(ElementType::Category);
+            $criteria->group = 'roles';
+            $criteria->limit = null;
+            foreach($criteria->find() as $role) {
+                $this->roles[$role->id] = $role;
+            }
+        }
+        return isset($this->roles[$roleId]) ? $this->roles[$roleId] : null;
+
+    }
+
     /* cache of role modules */
+    private $roleUnits;
     private $roleModules = [];
     private $moduleUnits = [];
 
@@ -1341,6 +1347,35 @@ class Lantra_ResultsService extends BaseApplicationComponent
             }
         }
         return $units;
+    }
+
+    /**
+     * Get all the units for a role
+     *
+     * @param $roleId
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function roleUnits($roleId)  {
+        if (is_null($this->roleUnits)) {
+            $criteria = craft()->elements->getCriteria(ElementType::Category);
+            $criteria->group = 'roles';
+            $criteria->limit = null;
+            foreach ($criteria->find() as $role) {
+                $modules = $this->roleModules($role);
+                $units = [];
+                foreach ($modules as $module) {
+                    $moduleUnits = $this->moduleUnits($module);
+                    foreach ($moduleUnits as $unit) {
+                        if (!isset($units[$unit->id])) {
+                            $units[$unit->id] = $unit;
+                        }
+                    }
+                }
+                $this->roleUnits[$role->id] = $units;
+            }
+        }
+        return isset($this->roleUnits[$roleId]) ? $this->roleUnits[$roleId] : [];
     }
 
     /**
@@ -1540,9 +1575,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $resultEntries = [$resultEntries];
             }
             foreach ($resultEntries as $resultEntry) {
-                $unitId = $resultEntry->resultUnit->first()->id;
-                if ($unitId) {
-                    $updateColumns['unit' . $unitId] = $this->setResultValue($resultEntry);
+                $unit = $resultEntry->resultUnit->first();
+                if ($unit) {
+                    $updateColumns['unit' . $unit->id] = $this->setResultValue($resultEntry);
                 }
             }
         }

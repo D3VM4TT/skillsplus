@@ -59,7 +59,7 @@
 
     <h3>Set User Result Cache</h3>
 
-    {% set totalUsers = craft.users.status(null).admin(0).total() %}
+    {% set totalUsers = craft.users.admin(0).total() %}
 
     <p><a href="/admin/lantra/settings/tools?tool=setResultCache" class="btn btn-small">Set users result cache (500)</a></p>
 
