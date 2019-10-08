@@ -179,5 +179,17 @@ JSON;
 	 */
 	public function safeUp()
 	{
-	    return craft()->migrationManager_migrations->import($this->json);    }
+	    craft()->migrationManager_migrations->import($this->json);
+
+	    // update existing reports
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'reports';
+        $criteria->limit = null;
+        foreach($criteria->find() as $report) {
+            $report->setContentFromPost(['reportAutomated' => 1]);
+            craft()->elements->saveElement($report, false);
+        };
+
+        return true;
+	}
 }

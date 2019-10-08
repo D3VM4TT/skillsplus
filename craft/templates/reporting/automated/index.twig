@@ -7,7 +7,7 @@
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.entries.section('reports').limit(pageLimit) %}
+{% set criteria = craft.entries.section('reports').reportAutomated(1).limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
 
 {% block content %}
