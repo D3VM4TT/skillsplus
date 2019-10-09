@@ -240,6 +240,19 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice('All users have been reset.');
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'setReportIncludeRequired') {
+            // update existing reports
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria->section = 'reports';
+            $criteria->limit = null;
+            $criteria->status = null;
+            foreach($criteria->find() as $report) {
+                $report->setContentFromPost(['reportIncludeRequired' => 1]);
+                craft()->elements->saveElement($report, false);
+            };
+            craft()->userSession->setNotice($criteria->count() . ' reports updated.');
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'copyDatabase' || $tool == 'copyDatabaseProd') {
             $environmentVariables = craft()->config->get('environmentVariables');
             $server = $environmentVariables['server'];
