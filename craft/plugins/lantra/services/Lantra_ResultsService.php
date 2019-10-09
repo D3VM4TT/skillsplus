@@ -1015,6 +1015,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * Get subordinate's results as matrix (Qual User)
+     *
      * @param null $userId
      * @param array $userFilter
      * @param array $resultFilter
@@ -1025,7 +1027,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = [], $displayField = 'expiryDate') {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        $subordinateIds = $this->getIds($subordinates);
+        $subordinateIds = $subordinates->ids();
 
         $header = [
             'User ID',
@@ -1036,12 +1038,20 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
+        $reportUnits = count($resultFilter['relatedTo']) ? $resultFilter['relatedTo']['targetElement'] : [];
+
         $headerIds = [];
-        ## add the mandatory result headers
-        $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
-        foreach($mandatoryUnits as $id => $title) {
-            $headerIds[] = $id;
-            $header[] = $title;
+        ## add all the mandatory result headers
+        if ($resultFilter['resultType'] != 'userResult') {
+            $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
+            foreach ($mandatoryUnits as $id => $title) {
+                // skip mandatory units if filter is on
+                if (count($reportUnits) && ! in_array($id, $reportUnits)) {
+                    continue;
+                }
+                $headerIds[] = $id;
+                $header[] = $title;
+            }
         }
 
         ## add the result title columns (might be unit id or result id)
@@ -1061,7 +1071,10 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $rows = [$header];
         foreach($subordinates as $user) {
-            $mandatoryUnits = $this->userUnits($user);
+            // if user results we don't need mandatory units
+            if ($resultFilter['resultType'] != 'userResult') {
+                $mandatoryUnits = $this->userUnits($user);
+            }
             $company = craft()->lantra_users->userCompany($user);
             $row = [
                 $user->id,
@@ -1069,15 +1082,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $company ? $company->companyLabel : 'unknown',
             ];
             foreach ($headerIds as $id) {
+                // show result value if exists
                 if (isset($allResults[$user->id]) && isset($allResults[$user->id][$id])) {
                     $fieldValue = $allResults[$user->id][$id]->$displayField;
                     $value = $fieldValue ? $fieldValue: '-';
                 }
-                elseif (isset($mandatoryUnits[$id])) {
-                    $value = '';
+                // if mandatory report
+                elseif ($resultFilter['resultType'] == 'unitResult' && !isset($mandatoryUnits[$id])) {
+                    $value = 'N/A';
                 }
                 else {
-                    $value = 'N/A';
+                    $value = '';
                 }
                 $row[] = $value;
             }
