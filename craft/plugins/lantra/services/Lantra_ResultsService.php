@@ -1097,7 +1097,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->section = 'results';
         $criteria->limit = null;
         if ($resultFilter['resultType']) {
-            $criteria->type = $resultFilter['resultType']->value;
+            $criteria->type = $resultFilter['resultType'];
         }
         else {
             $criteria->type = ['unitResult', 'userResult'];
