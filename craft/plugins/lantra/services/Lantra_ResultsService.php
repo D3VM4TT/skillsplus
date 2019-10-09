@@ -1089,7 +1089,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 }
                 // if mandatory report
                 elseif ($resultFilter['resultType'] == 'unitResult' && !isset($mandatoryUnits[$id])) {
-                    $value = 'N/A';
+                    $value = 'N/R';
                 }
                 else {
                     $value = '';
