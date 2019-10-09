@@ -1015,6 +1015,30 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $userResults
+     * @param $userId
+     * @param $unitId
+     * @param string $title
+     * @return null
+     */
+    private function getUserResult($userResults, $userId, $unitId, $title = '') {
+        if ( !isset($userResults[$userId])) {
+            return null;
+        }
+        ## look for unitId
+        if (isset($userResults[$userId][$unitId])) {
+            return $userResults[$userId][$unitId];
+        }
+        ## search for title
+        foreach ($userResults[$userId] as $result) {
+            if ($title && $title == $result->title) {
+                return $result;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get subordinate's results as matrix (Qual User)
      *
      * @param null $userId
@@ -1040,7 +1064,6 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $reportUnits = count($resultFilter['relatedTo']) ? $resultFilter['relatedTo']['targetElement'] : [];
 
-        $headerIds = [];
         ## add all the mandatory result headers
         if ($resultFilter['resultType'] != 'userResult') {
             $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
@@ -1049,25 +1072,31 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 if (count($reportUnits) && ! in_array($id, $reportUnits)) {
                     continue;
                 }
-                $headerIds[] = $id;
-                $header[] = $title;
+                $header[$id] = $title;
             }
         }
 
-        ## add the result title columns (might be unit id or result id)
+        $headerUnits = [];
+        ## add the title columns (might be unit id or result id)
         foreach($allResults as $userId => $results) {
             foreach($results as $id => $result) {
-                if (in_array($id, $headerIds)) {
+                if (isset($headerUnits[$id])) {
                     continue;
                 }
-                $headerIds[] = $id;
                 $title = $result->title;
                 if ($result->type == 'unitResult' && $unitEntry = $result->resultUnit->count()) {
                     $title = $result->resultUnit->first()->title;
                 }
-                $header[] = $title;
+                ## hack to remove duplicate results with same title
+                if (in_array($title, $headerUnits)) {
+                    continue;
+                }
+                $headerUnits[$id] = $title;
             }
         }
+
+        sort($headerUnits);
+        $header = array_merge($header, $headerUnits);
 
         $rows = [$header];
         foreach($subordinates as $user) {
@@ -1081,10 +1110,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $user->fullName,
                 $company ? $company->companyLabel : 'unknown',
             ];
-            foreach ($headerIds as $id) {
+            foreach ($headerUnits as $id => $title) {
                 // show result value if exists
-                if (isset($allResults[$user->id]) && isset($allResults[$user->id][$id])) {
-                    $fieldValue = $allResults[$user->id][$id]->$displayField;
+                $result = $this->getUserResult($allResults, $user->id, $id, $title);
+                if ($result) {
+                    $fieldValue = $result->$displayField;
                     $value = $fieldValue ? $fieldValue: '-';
                 }
                 // if mandatory report
