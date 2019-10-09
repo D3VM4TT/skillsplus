@@ -14,7 +14,6 @@ class Lantra_StructureService extends BaseApplicationComponent
         $user = craft()->userSession->getUser();
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
-        $criteria->status = null;
         $criteria->limit = $limit;
         $criteria->order = $order;
         $excludeIds = [];
