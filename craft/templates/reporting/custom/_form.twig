@@ -219,7 +219,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for report in entry.reportData %}
+            {% for report in entry.reportData.order('id desc') %}
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.filename }}</td>
