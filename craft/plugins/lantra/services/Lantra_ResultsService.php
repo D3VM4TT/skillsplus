@@ -1203,7 +1203,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
     public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter, $includeRequired = false) {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        $subordinateIds = $this->getIds($subordinates);
+        $subordinateIds = $subordinates->ids();
 
         $header = [
             'User ID',
@@ -1226,9 +1226,14 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 $user = $result->author;
                 $company = craft()->lantra_users->userCompany($user);
                 $role = $user->userRole->first();
+                $userUnits = $this->roleUnits($role->id);
                 $title = $result->title;
                 if ($result->type == 'unitResult') {
                     $resultUnit = $result->resultUnit->first();
+                    // skip non-mandatory unitResults (i.e. from previous job role)
+                    if ($resultFilter['resultType'] == 'unitResult' && !isset($userUnits[$resultUnit->id])) {
+                       continue;
+                    }
                     $title = $resultUnit ? $resultUnit->title : '[unit not found] ' . $title;
                 }
                 $row = [

@@ -933,7 +933,7 @@ class Lantra_UsersService extends BaseApplicationComponent
                 $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userStartDate']);
                 $user['userStartDate'] = $dateObject->format($format);
             }
-            $return[] = (object) $user;
+            $return[$user['id']] = (object) $user;
         }
         return $return;
     }
