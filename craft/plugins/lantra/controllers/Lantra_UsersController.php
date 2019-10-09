@@ -106,6 +106,10 @@ class Lantra_UsersController extends Lantra_BaseController {
         if (craft()->request->getPost('teamManagers')) {
             $groupIds[] = 3;
         }
+        // save scheme manager
+        if ($user->isInGroup(1)) {
+            $groupIds[] = 1;
+        }
         // mimic cp form for onSaveUser event
         $_POST['groups'] = $groupIds;
         // set new password (if present)
