@@ -478,11 +478,11 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getManagers(EntryModel $entry, $count = false) {
         $return = [];
         $primaryManagerIds = [];
-        foreach ($entry->companyPrimaryManagers as $manager){
+        foreach ($entry->companyPrimaryManagers->order('lastName') as $manager){
             $return[] = $manager;
             $primaryManagerIds[] = $manager->id;
         }
-        foreach ($entry->companySecondaryManagers as $manager ){
+        foreach ($entry->companySecondaryManagers->order('lastName') as $manager ){
             // avoid duplicates from primary
             if (! in_array($manager->id, $primaryManagerIds)) {
                 $return[] = $manager;
