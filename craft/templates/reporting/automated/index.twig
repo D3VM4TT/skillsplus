@@ -7,7 +7,7 @@
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.entries.section('reports').reportAutomated(1).limit(pageLimit) %}
+{% set criteria = craft.lantra.reportCriteria(filterSearch, pageLimit, 'id desc', true) %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
 
 {% block content %}
@@ -17,7 +17,14 @@
     <section class="page">
         <div class="page-header secondary-bg">
             <h2>Automated Reports</h2>
-            <p>Manage automated reports in your scheme.</p>
+            <div class="header-controls">
+                <div class="header-search">
+                    {% include '_includes/filter' with{filterDays:false} %}
+                </div>
+                <div class="container-btn primary-bg">
+                    <a class="btn-add-new" href="/reporting/custom/new">Create New Report</a>
+                </div>
+            </div>
         </div>
         {% if reportEntries is defined and reportEntries|length %}
             <div class="page-content">

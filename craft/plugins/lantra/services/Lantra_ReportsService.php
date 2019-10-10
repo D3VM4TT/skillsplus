@@ -19,6 +19,55 @@ class Lantra_ReportsService extends BaseApplicationComponent
     }
 
     /**
+     * @param $search
+     * @param $limit
+     * @param $order
+     * @param $automated
+     * @return array
+     */
+    public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false) {
+        $user = craft()->userSession->getUser();
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'reports';
+        $criteria->limit = $limit;
+        $criteria->order = $order;
+        if ($automated) {
+            $criteria->reportAutomated = '1';
+        }
+        else {
+            $criteria->reportAutomated = 'not 1';
+            $criteria->authorId = $user->id;
+        }
+        if ($search) {
+            $searchIds = $this->searchReportIds(trim($search));
+            if (empty($searchIds)) {
+                return null;
+            }
+            $criteria->id = 'or, ' . implode(',', $searchIds);
+        }
+        return $criteria;
+    }
+
+    /** more efficient way to search companies */
+    private function searchReportIds($search = '') {
+        if (intval($search)) {
+            $mysql = 'SELECT c.elementId as id FROM {{content}} c                
+                WHERE c.elementId = "' . $search . '"';
+        }
+        else {
+            $mysql = 'SELECT c.elementId as id FROM {{content}} c               
+                WHERE c.title LIKE "%' . $search . '%"';
+        }
+
+        $result = craft()->db->createCommand($mysql)->query();
+        $ids = [];
+        foreach ($result as $row) {
+            $ids [] = $row['id'];
+        }
+        return $ids;
+    }
+
+    /**
      * Run all reports for today
      *
      * @throws Mixed

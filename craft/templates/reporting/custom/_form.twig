@@ -38,6 +38,10 @@
     <input type="hidden" name="action" value="lantra/reports/save">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
     <div class="field--wrapper">
+        <label for="reportTitle" class="">Report title:</label>
+        <input id="reportTitle" type="text" name="title" required value="{{ entry is defined ? entry.title }}" />
+    </div>
+    <div class="field--wrapper">
         <label for="reportType">Report Type</label>
         <select id="reportType" name="fields[reportType]">
             <option value="users" {% if entry is defined and entry.reportType == 'user' %} selected="selected"{% endif %}>
@@ -140,10 +144,6 @@
 
     <div {% if entry is not defined %}id="reportAutomated"{% endif %}>
         <h2>Automated Report Settings</h2>
-        <div class="field--wrapper">
-            <label for="reportTitle" class="">Report title:</label>
-            <input id="reportTitle" type="text" name="title" value="{{ entry is defined ? entry.title }}" />
-        </div>
         <div class="field--wrapper">
             <label id="reportRecipientsLabel" for="reportRecipients" class="">Report recipients (managers of companies selected above):
                 <span style="display:none;color:#000">loading</span></label>

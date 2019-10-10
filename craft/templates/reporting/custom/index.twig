@@ -5,8 +5,9 @@
 {% set metaTitle = "Reporting > Custom Reports" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.entries.section('reports').reportAutomated(0).authorId(currentUser.id).limit(pageLimit) %}
+{% set criteria = craft.lantra.reportCriteria(filterSearch, pageLimit, 'id desc') %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
 
 {% block content %}
@@ -17,7 +18,10 @@
         <div class="page-header secondary-bg">
             <h2>Custom Reports</h2>
             <div class="header-controls">
-                <div class="container-btn primary-bg" style="margin-left:0;">
+                <div class="header-search">
+                    {% include '_includes/filter' with{filterDays:false} %}
+                </div>
+                <div class="container-btn primary-bg">
                     <a class="btn-add-new" href="/reporting/custom/new">Create New Report</a>
                 </div>
             </div>
@@ -28,7 +32,8 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th class="title">Type</th>
+                        <th class="title">Title</th>
+                        <th>Type</th>
                         <th>Created</th>
                         <th>Status</th>
                         <th>&nbsp;</th>
@@ -40,7 +45,8 @@
                         {% set job = craft.lantra.job(report.id) %}
                         <tr>
                             <td>{{ report.id }}</td>
-                            <td>{{ report.reportType }}</td>
+                            <td>{{ report.title }}</td>
+                            <td>{{ report.reportType|title }}</td>
                             <td>{{ report.postDate|format(dateFormat) }}</td>
                             <td>
                                 {% if complete %}
