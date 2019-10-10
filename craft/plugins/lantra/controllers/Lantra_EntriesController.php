@@ -74,6 +74,10 @@ class Lantra_EntriesController extends Lantra_BaseController {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
+        // if a result update cache
+        if ($entry->section->id == 10 && $entry->type == 'unitResult') {
+            craft()->lantra_results->deleteUserResultCache($entry);
+        }
         // save disabled entry
         $this->_disableEntry($entry);
         $this->_returnMessage('Entry has been removed.', true, $return);

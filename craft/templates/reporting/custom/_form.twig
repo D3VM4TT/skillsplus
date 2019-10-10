@@ -145,17 +145,15 @@
             <input id="reportTitle" type="text" name="title" value="{{ entry is defined ? entry.title }}" />
         </div>
         <div class="field--wrapper">
-            <label for="reportRecipients" class="">Report recipients (managers):</label>
+            <label id="reportRecipientsLabel" for="reportRecipients" class="">Report recipients (managers of companies selected above):
+                <span style="display:none;color:#000">loading</span></label>
             <input type="hidden" name="fields[reportRecipients]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
-                {% for manager in allManagers %}
-                    {% set primaryCompany = craft.entries.section('companies').relatedTo(manager).first() %}
-                    <option {% if entry is defined and manager.id in entry.reportRecipients.ids() %} selected="selected"{% endif %}
-                        value="{{ manager.id }}">
-                            {{ manager.fullName }}
-                            {% if primaryCompany|length %}({{ primaryCompany.title }}){% endif %}
-                    </option>
-                {% endfor %}
+                {% if entry is defined and entry.reportRecipients.length %}
+                    {% for manager in entry.reportRecipients %}
+                        <option selected="selected" value="{{ manager.id }}"> {{ manager.fullName }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
         {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
@@ -193,9 +191,12 @@
         <div class="container-btn">
             <button id="buttonSubmit" type="submit" class="button primary-bg">Save Report</button>
         </div>
+        {% if entry.reportAutomated %}
+            <input type="hidden" name="automated" value="1">
+        {% endif %}
     {% else %}
         <div class="container-btn">
-            <button id="buttonSubmit" type="submit" class="button primary-bg">Download Data</button>
+            <button id="buttonSubmit" type="submit" class="button primary-bg">Add to Queue</button>
         </div>
         {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
         <div class="container-btn">
@@ -218,7 +219,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for report in entry.reportData %}
+            {% for report in entry.reportData.order('id desc') %}
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.filename }}</td>

@@ -72,6 +72,7 @@ class Lantra_UsersService extends BaseApplicationComponent
                 OR u.firstName LIKE "%' . $search . '%"
                 OR u.lastName LIKE "%' . $search . '%"
                 OR rc.title LIKE "%' . $search . '%"
+                OR rc.field_companyLabel LIKE "%' . $search . '%"
                 OR UPPER(CONCAT_WS(" ", u.firstName, u.lastName)) LIKE UPPER("%' . $search . '%")
                 OR c.field_userCompanyName LIKE "%' . $search . '%"';
         }
@@ -477,11 +478,11 @@ class Lantra_UsersService extends BaseApplicationComponent
     public function getManagers(EntryModel $entry, $count = false) {
         $return = [];
         $primaryManagerIds = [];
-        foreach ($entry->companyPrimaryManagers as $manager){
+        foreach ($entry->companyPrimaryManagers->order('lastName') as $manager){
             $return[] = $manager;
             $primaryManagerIds[] = $manager->id;
         }
-        foreach ($entry->companySecondaryManagers as $manager ){
+        foreach ($entry->companySecondaryManagers->order('lastName') as $manager ){
             // avoid duplicates from primary
             if (! in_array($manager->id, $primaryManagerIds)) {
                 $return[] = $manager;
@@ -501,6 +502,34 @@ class Lantra_UsersService extends BaseApplicationComponent
             $ids[] = $manager->id;
         }
         return $ids;
+    }
+
+    /**
+     * @param array $companyIds
+     * @return array
+     * @throws Exception
+     * @throws \CException
+     */
+    public function getMultipleCompanyManagers($companyIds = []) {
+        $ancestorIds = [];
+        foreach($companyIds as $companyId) {
+            $ancestorIds[] = $companyId;
+            $ancestorIds = array_merge($ancestorIds, craft()->lantra_structure->getCompanyAncestors($companyId));
+        }
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'companies';
+        $criteria->order = 'title';
+        $criteria->id = $ancestorIds;
+        $managers = [];
+        foreach($criteria->find() as $company) {
+            foreach($this->getCompanyManagers($company) as $manager) {
+                // avoid duplicates
+                if (!isset($managers[$manager->id])) {
+                    $managers[$manager->id] = $manager;
+                }
+            }
+        }
+        return $managers;
     }
 
     /**
@@ -862,6 +891,51 @@ class Lantra_UsersService extends BaseApplicationComponent
         $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
         return $criteria->find();
+    }
+
+    /**
+     * streamlined version of get users for big reports
+     *
+     * @param $userIds
+     * @return array
+     * @throws \CException
+     */
+    public function getReportUsers($userIds) {
+
+        $sql = 'SELECT 
+            u.id,           
+            CONCAT(u.firstName, " ", u.lastName) as fullName,
+            u.email,    
+            c.field_userType as userType,        
+            c.field_userCompanyName as companyLabel,
+            c.field_userDateOfBirth as userDateOfBirth,
+            c.field_userStartDate as userStartDate,
+            c.field_userAddress as userAddress,
+            rj.targetId as roleId,
+            rc.targetId as companyId    
+            FROM craft_users AS u
+            LEFT JOIN craft_content as c ON c.elementId = u.id
+            LEFT JOIN craft_relations as rj ON rj.sourceId = u.id      
+            LEFT JOIN craft_relations as rc ON rc.sourceId = u.id  
+            WHERE rj.fieldId = 30
+            AND rc.fieldId = 128
+            AND u.id IN(' . implode(',', $userIds) . ')';
+
+        $rows = craft()->db->createCommand($sql)->query();
+        $return = [];
+        $format = 'd-m-Y';
+        foreach($rows as $user) {
+            if ($user['userDateOfBirth']) {
+                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userDateOfBirth']);
+                $user['userDateOfBirth'] = $dateObject->format($format);
+            }
+            if ($user['userStartDate']) {
+                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userStartDate']);
+                $user['userStartDate'] = $dateObject->format($format);
+            }
+            $return[$user['id']] = (object) $user;
+        }
+        return $return;
     }
 
     /**

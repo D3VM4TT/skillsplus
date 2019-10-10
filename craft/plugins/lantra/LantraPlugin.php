@@ -7,6 +7,7 @@ class LantraPlugin extends BasePlugin
     private $sectionIdAttempts = 12;
     private $sectionIdResults = 10;
     private $sectionIdCompanies = 3;
+    private $sectionIdUnits = 7;
 
     /*
      * Settings version (auto migrate settings)
@@ -41,9 +42,17 @@ class LantraPlugin extends BasePlugin
 
         craft()->lantra_settings->updateSettings($this->settingsVersion);
 
+        // create user result cache
+        craft()->on('users.onSaveUser', function(Event $event) {
+            $user = $event->params['user'];
+            craft()->lantra_results->saveUserResultCache($user->id);
+        });
+
         // check user licence
         craft()->on('users.onBeforeSaveUser', function(Event $event) {
             $user = $event->params['user'];
+            // automatically set userType for reports
+            $user->setContentFromPost(['userType' => craft()->lantra_users->canManage($user) ? 'manager' : 'member']);
             $licenceSource = 'None';
             $lantraLicences = ! $this->getSettings()->lantraDisableLicences;
             if ($lantraLicences && $event->params['isNewUser'] && ! $user->admin) {
@@ -120,10 +129,6 @@ class LantraPlugin extends BasePlugin
                 } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                     $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
                     $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
-                }
-                if ($entry->type == 'unitResult') {
-                    $unitEntry = $entry->resultUnit->first();
-                    $unitEvidence = $entry->resultEvidence->first();
                 }
                 // check change from draft to pending
                 if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
@@ -238,6 +243,22 @@ class LantraPlugin extends BasePlugin
                 // module notifications disabled 09/05
                 // craft()->lantra_notify->sendModuleResult($entry);
             }
+            // create user result column
+            if ($entry->sectionId == $this->sectionIdUnits) {
+                craft()->lantra_results->addUnitColumn($entry->id);
+            }
+            // save unit result in user result cache
+            if ($entry->enabled && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
+            }
+        });
+
+        craft()->on('entries.onDeleteEntry', function(Event $event) {
+            $entry = $event->params['entry'];
+            // delete user result column
+            if ($entry->sectionId == $this->sectionIdUnits) {
+                craft()->lantra_results->removeUnitColumn($entry->id);
+            }
         });
     }
 
@@ -331,6 +352,9 @@ class LantraPlugin extends BasePlugin
 
             ## labels
             'labelJobRole'                      => AttributeType::String,
+
+            ## queue
+            'queue'                             => AttributeType::Mixed,
         );
     }
 

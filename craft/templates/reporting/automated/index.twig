@@ -7,7 +7,7 @@
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
-{% set criteria = craft.entries.section('reports').limit(pageLimit) %}
+{% set criteria = craft.entries.section('reports').reportAutomated(1).limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
 
 {% block content %}
@@ -43,7 +43,13 @@
                             <td>{{ report.reportType|title }}</td>
                             <td>{{ report.reportSendFrequency|title }}</td>
                             <td>{{ report.reportLastSentDate|format(dateFormat)|default('Never') }}</td>
-                            <td>{{ report.reportData|length }}</td>
+                            <td>
+                                {{ report.reportData|length }}
+                                {% if report.reportData|length %}
+                                    {% set asset = report.reportData.order('id desc').first() %}
+                                    <a href="/internal/{{ asset.id }}" rel="external">download latest</a>
+                                {% endif %}
+                                </td>
                             <td style="text-align: right;">
                                 <a class="action" href="#" data-action="lantra/reports/run" data-id="{{ report.id }}">run</a> |
                                 <a href="/reporting/custom/edit/{{ report.id }}">edit</a> |

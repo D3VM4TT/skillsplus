@@ -25,12 +25,14 @@ class Lantra_ReportsService extends BaseApplicationComponent
      */
     public function sendDailyReports()
     {
-        $weekDay = date('N');
-        $monthDay = date('j');
-        $reportEntries = $this->getReports();
+        $weekDay = (int) date('N');
+        $monthDay = (int) date('j');
+        $reportEntries = $this->getAutomatedReports();
         foreach ($reportEntries as $reportEntry) {
-            if (($reportEntry->reportSendFrequency == 'weekly' && $reportEntry->reportSendValue == $weekDay) || ($reportEntry->reportSendFrequency == 'monthly' && $reportEntry->reportSendValue == $monthDay)) {
-                $this->runCustomReport($reportEntry);
+            $reportSendValue = (int) $reportEntry->reportSendValue;
+            $reportSendFrequency = $reportEntry->reportSendFrequency->value;
+            if (($reportSendFrequency == 'weekly' && $reportSendValue == $weekDay) || ($reportSendFrequency == 'monthly' && $reportSendValue == $monthDay)) {
+                craft()->lantra_queue->add($reportEntry->id, 9);
             }
         }
     }
@@ -89,11 +91,12 @@ class Lantra_ReportsService extends BaseApplicationComponent
     public function getCustomReportFilter($reportEntry) {
 
         $filter = [
-            'reportResultType'          => $reportEntry->reportResultType,
-            'reportDisplayField'        => $reportEntry->reportDisplayField,
-            'reportResultExpiry'        => $reportEntry->reportResultExpiry,
-            'reportNoDates'             => $reportEntry->reportNoDates,
+            'reportResultType'          => $reportEntry->reportResultType->value,
+            'reportDisplayField'        => $reportEntry->reportDisplayField->value,
+            'reportResultExpiry'        => $reportEntry->reportResultExpiry->value,
+            // 'reportNoDates'             => $reportEntry->reportNoDates,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
+            'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
             'reportUnits'               => []
         ];
@@ -234,6 +237,8 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         // delete the temp file
         unlink($filePath . $fileName);
+        // delete from queue
+        craft()->lantra_queue->delete($reportEntry->id);
         return $total;
     }
 
@@ -373,6 +378,23 @@ class Lantra_ReportsService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'reports';
+        $criteria->limit = null;
+        return $criteria->find();
+    }
+
+    /**
+     * Get all reports
+     *
+     * @param int
+     * @param int
+     * @return null
+     * @throws Mixed
+     */
+    private function getAutomatedReports()
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'reports';
+        $criteria->reportAutomated = 1;
         $criteria->limit = null;
         return $criteria->find();
     }

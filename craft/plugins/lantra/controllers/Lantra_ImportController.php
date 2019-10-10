@@ -539,27 +539,33 @@ class Lantra_ImportController extends Lantra_BaseController
 
     public function deleteCompanies() {
         $this->deleteEntriesBySectionId(3);
-        craft()->userSession->setNotice('All Craft companies deleted.');
+        craft()->userSession->setNotice('All imported companies deleted.');
         $this->complete();
     }
 
     public function deleteResults() {
         $this->deleteEntriesBySectionId(10);
-        craft()->userSession->setNotice('All Craft results deleted.');
+        craft()->userSession->setNotice('All imported results deleted.');
         $this->complete();
     }
 
     public function deleteRoles() {
-        $mysql = "DELETE from {{categories}} WHERE groupId = 1";
+        $mysql = "DELETE {{categories}} FROM {{categories}}
+          JOIN {{content}} ON {{content}}.elementId = {{categories}}.id
+          WHERE {{categories}}.groupId = 1
+          AND {{content}}.field_dataImported = 1";
         craft()->db->createCommand($mysql)->query();
-        craft()->userSession->setNotice('All Craft Roles deleted.');
+        craft()->userSession->setNotice('All imported roles deleted.');
         $this->complete();
     }
 
     public function deleteUsers() {
-        $mysql = "DELETE from {{users}} WHERE admin = 0;";
+        $mysql = "DELETE {{users}} FROM {{users}} 
+          JOIN {{content}} ON {{content}}.elementId = {{users}}.id
+          WHERE {{users}}.admin = 0
+          AND {{content}}.field_dataImported = 1";
         craft()->db->createCommand($mysql)->query();
-        craft()->userSession->setNotice('All Craft Users deleted.');
+        craft()->userSession->setNotice('All imported users deleted.');
         $this->complete();
     }
 
@@ -570,7 +576,14 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     private function deleteEntriesBySectionId ($sectionId) {
-        $mysql = "DELETE from {{elements}} WHERE {{elements}}.id IN (SELECT {{entries}}.id FROM {{entries}} where sectionId = '" . $sectionId. "');";
+        $mysql = "DELETE FROM {{elements}} 
+            WHERE {{elements}}.id IN (
+              SELECT {{entries}}.id 
+              FROM {{entries}} 
+              JOIN {{content}} ON {{content}}.elementId = {{entries}}.id
+              WHERE {{entries}}.sectionId = '" . $sectionId. "'
+              AND {{content}}.field_dataImported = 1
+          );";
         craft()->db->createCommand($mysql)->query();
     }
 
@@ -627,6 +640,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $entryModel->enabled = true;
             $entryModel->getContent()->title = $title;
             $entryModel->setContentFromPost([
+                'dataImported' => true,
                 'legacyId' => $legacyId,
                 'legacyParentId' => $legacyParentId
             ]);
@@ -651,6 +665,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $categoryModel->groupId = $this->categoryGroupIdJobRoles;
             $categoryModel->getContent()->title = $title;
             $categoryModel->setContentFromPost([
+                'dataImported' => true,
                 'legacyId' => $legacyId
             ]);
 
@@ -708,6 +723,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $userModel->firstName = $names[0];
             $userModel->lastName = $names[1];
             $userModel->getContent()->setAttributes([
+                'dataImported' => true,
                 'legacyId' => $legacyId,
                 'legacyEmail' => $legacyEmail,
                 'legacyJobRoleId' => $legacyJobRoleId,
@@ -789,6 +805,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $entryModel->getContent()->title = utf8_encode($title);
             }
             $entryModel->setContentFromPost([
+                'dataImported' => true,
                 'resultOwner' => [$author->id],
                 'resultStatus' => $resultStatus,
                 'resultStartDate' => DateTime::createFromFormat('d/m/Y', $resultStartDate),

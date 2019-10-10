@@ -14,6 +14,11 @@ class Lantra_CronController extends Lantra_BaseController {
      */
     function actionRun() {
         $frequency = craft()->request->getParam('frequency');
+        if ($frequency == 'queue') {
+            # run the next 2 jobs (reports) in the queue
+            craft()->lantra_queue->next();
+            craft()->lantra_queue->next();
+        }
         if ($frequency == 'daily') {
             Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
             # stop all notifications but user generated automatic report

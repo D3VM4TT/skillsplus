@@ -11,7 +11,7 @@
 {% set userStatus = filterUserStatus == 'suspended' ? 'suspended' : null %}
 {% set sortParam = craft.request.getParam('sort') %}
 {% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
-{% set sort = sortParam in validSorts ? sortParam : 'lastName, userCompanyName' %}
+{% set sort = sortParam in validSorts ? sortParam : 'lastName' %}
 {% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
 {# company users #}
