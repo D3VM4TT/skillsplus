@@ -2,6 +2,10 @@
 
 namespace Craft;
 
+/**
+ * Class LantraPlugin
+ * @package Craft
+ */
 class LantraPlugin extends BasePlugin
 {
     private $sectionIdAttempts = 12;
