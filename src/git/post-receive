@@ -11,7 +11,7 @@ UAT_BRANCH="uat"
 PRODUCTION_BRANCH="master"
 
 # domains i.e. folders (separated by space)
-DOMAINS="bics cha iopf ltp poultrypassport ptr bcsa poultec"
+DOMAINS="bcsa bics cha demo demo1 demo2 demo3 demo4 demo5 eoc iopf ltp poultec poultrypassport ptr"
 
 ## END OF CONFIG ##
 

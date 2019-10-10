@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space)
-DOMAINS="bcsa bics cha iopf ltp poultrypassport ptr poultec"
+DOMAINS="bcsa bics cha demo demo1 demo2 demo3 demo4 demo5 eoc iopf ltp poultec poultrypassport ptr"
 F=$1
 URI="/actions/lantra/cron/run?frequency=$F"
 
