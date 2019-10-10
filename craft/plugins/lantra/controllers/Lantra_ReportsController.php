@@ -53,14 +53,13 @@ class Lantra_ReportsController extends Lantra_BaseController
         $type = $fields['reportType'];
         $automated = craft()->request->getParam('automated');
         $entryId = craft()->request->getParam('entryId');
+        $title = craft()->request->getParam('title');
         // custom title
         if ($automated) {
-            $title = craft()->request->getParam('title');
             $fields['reportAutomated'] = true;
             $redirect = '/reporting/automated';
         }
         else {
-            $title = $manager->getFullName() . ' ' . $type;
             $fields['reportAutomated'] = false;
             $redirect = '/reporting/custom';
         }

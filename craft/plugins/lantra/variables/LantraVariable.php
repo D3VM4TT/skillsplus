@@ -285,6 +285,19 @@ class LantraVariable
     }
 
     /**
+     * Return criteria based on report name
+     *
+     * @param $search
+     * @param $limit
+     * @param $order
+     * @param $automated
+     * @return mixed
+     */
+    public function reportCriteria($search, $limit, $order, $automated = false) {
+        return craft()->lantra_reports->reportCriteria($search, $limit, $order, $automated);
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
