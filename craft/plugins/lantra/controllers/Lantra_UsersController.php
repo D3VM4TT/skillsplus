@@ -17,13 +17,14 @@ class Lantra_UsersController extends Lantra_BaseController {
         $companyId = craft()->request->getParam('companyId');
         $type = craft()->request->getParam('type');
         $user = craft()->userSession->getUser();
-        // look in cache
-        $cache = 'lantraHierarchy' . $user->id . (!$companyId ? 'root' : $companyId . $type);
-        if (false == $node = craft()->cache->get($cache)) {
-            $node = craft()->lantra_structure->getHierarchy($companyId, $type);
-            // set cache
-            craft()->cache->set($cache, $node, 86400);
-        }
+        $node = craft()->lantra_structure->getHierarchy($companyId, $type, $user->id);
+        //*** look in cache
+        // $cache = 'lantraHierarchy' . $user->id . (!$companyId ? 'root' : $companyId . $type);
+        // if (false == $node = craft()->cache->get($cache)) {
+            // $node = craft()->lantra_structure->getHierarchy($companyId, $type);
+            //*** set cache
+            // craft()->cache->set($cache, $node, 86400);
+        //}
         return craft()->controller->returnJson($node);
     }
 
