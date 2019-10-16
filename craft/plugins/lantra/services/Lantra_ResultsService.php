@@ -1064,6 +1064,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
 
         $reportUnits = count($resultFilter['relatedTo']) ? $resultFilter['relatedTo']['targetElement'] : [];
 
+        $headerUnits = [];
+
         ## add all the mandatory result headers
         if ($resultFilter['resultType'] != 'userResult') {
             $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
@@ -1072,31 +1074,31 @@ class Lantra_ResultsService extends BaseApplicationComponent
                 if (count($reportUnits) && ! in_array($id, $reportUnits)) {
                     continue;
                 }
-                $header[$id] = $title;
-            }
-        }
-
-        $headerUnits = [];
-        ## add the title columns (might be unit id or result id)
-        foreach($allResults as $userId => $results) {
-            foreach($results as $id => $result) {
-                if (isset($headerUnits[$id])) {
-                    continue;
-                }
-                $title = $result->title;
-                if ($result->type == 'unitResult' && $unitEntry = $result->resultUnit->count()) {
-                    $title = $result->resultUnit->first()->title;
-                }
-                ## hack to remove duplicate results with same title
-                if (in_array($title, $headerUnits)) {
-                    continue;
-                }
                 $headerUnits[$id] = $title;
+                $header[] = $title;
             }
         }
 
-        sort($headerUnits);
-        $header = array_merge($header, $headerUnits);
+        if ($resultFilter['resultType'] != 'unitResult') {
+            ## add the title columns (might be unit id or result id)
+            foreach ($allResults as $userId => $results) {
+                foreach ($results as $id => $result) {
+                    if (isset($headerUnits[$id])) {
+                        continue;
+                    }
+                    $title = $result->title;
+                    if ($result->type == 'unitResult' && $unitEntry = $result->resultUnit->count()) {
+                        $title = $result->resultUnit->first()->title;
+                    }
+                    ## hack to remove duplicate results with same title
+                    if (in_array($title, $headerUnits)) {
+                        continue;
+                    }
+                    $headerUnits[$id] = $title;
+                    $header[] = $title;
+                }
+            }
+        }
 
         $rows = [$header];
         foreach($subordinates as $user) {
