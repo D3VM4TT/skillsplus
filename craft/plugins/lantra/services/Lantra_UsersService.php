@@ -907,7 +907,8 @@ class Lantra_UsersService extends BaseApplicationComponent
             CONCAT(u.firstName, " ", u.lastName) as fullName,
             u.email,    
             c.field_userType as userType,        
-            c.field_userCompanyName as companyLabel,
+            c.field_userCompanyName as companyName,
+            cc.field_companyLabel as companyLabel,
             c.field_userDateOfBirth as userDateOfBirth,
             c.field_userStartDate as userStartDate,
             c.field_userAddress as userAddress,
@@ -917,6 +918,7 @@ class Lantra_UsersService extends BaseApplicationComponent
             LEFT JOIN craft_content as c ON c.elementId = u.id
             LEFT JOIN craft_relations as rj ON rj.sourceId = u.id      
             LEFT JOIN craft_relations as rc ON rc.sourceId = u.id  
+            LEFT JOIN craft_content as cc ON cc.elementId = rc.targetId
             WHERE rj.fieldId = 30
             AND rc.fieldId = 128
             AND u.id IN(' . implode(',', $userIds) . ')';
