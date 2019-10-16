@@ -104,27 +104,44 @@
 
         <div class="loading"><div class="spinner"></div></div>
 
+        <!-- Flex Container
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <div class="container">
+
         <!-- Sidebar
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <div class="sidebar">
+        <div class="sidebar-sticky">
+
         {% include '_includes/sidebar' %}
+
+        <!-- Footer in Sidebar
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+        <footer class="footer">
+            <div class="col-copyright"><img src="/assets/img/lantra_footer_grey_logo.png"></div>
+            <div class="col-copyright"><img src="/assets/img/iso_27001.png"></div>
+            <div class="col-terms"><p>&copy; {{ "now"|date("Y") }} Lantra. All rights reserved. <a href="/terms">Terms &amp; Privacy</a></p></div>
+        </footer>
+
+        </div>
+        </div>
 
         <!-- Content
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <div class="container-content">
-
+        <div class="content">
+            <button class="btn" id="btn-toggle"><i class="arrow"></i></button>
+            
             {% if craft.request.firstSegment != '' %}
                 {% include '_includes/notifications' %}
             {% endif %}
             {% block content %}{% endblock %}
+            
         </div>
 
-        <!-- Footer
+        <!-- Close Flex Container
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <footer class="footer">
-            <div class="col-copyright"><img src="/assets/img/lantra_footer_grey_logo.png"></div>
-            <div class="col-copyright"><img src="/assets/img/iso_27001.png"></div>
-            <div class="col-terms"><p>&copy; 2018 Lantra. <a href="/terms">Terms &amp; Privacy</a></p></div>
-        </footer>
+        </div>
 
         <!-- Scripts
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->

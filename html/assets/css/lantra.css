@@ -2,7 +2,6 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -22,6 +21,9 @@ time, mark, audio, video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+}
+html, body {
+  height: 100%;
 }
 #alerts {display: none !important;}
 /* HTML5 display-role reset for older browsers */
@@ -112,6 +114,110 @@ h4, h4 a {
 
 /*Layout and Positioning
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.sidebar, .content {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    transition: all .3s ease-out;
+}
+.sidebar {
+flex: 1;
+}
+.footer {
+    position: fixed;
+    bottom: 80px;
+    left: 60px;
+    height: 40px;
+    line-height: 40px;
+}
+.col-copyright {
+    padding-right: 20px;
+    display: inline-block;
+}
+.col-copyright p {
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    left: 120px;
+}
+.col-copyright img {
+    width: 90px;
+}
+.col-terms p {
+    font-size: 12px;
+    padding-top: 19px;
+    margin: 0;
+}
+.content {
+    flex: 3;
+    background: #FFF;
+    transition: all .3s ease-out;
+    box-shadow: 5px 10px 18px #888888;
+}
+.sidebar.is-collapsed {
+  -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+        flex: initial;
+}
+.btn, .sidebar-sticky {
+    position: sticky;
+    top: 0;
+}
+header, .page-subHeader {
+    position: sticky;
+    top: 42px;
+    width:100%;
+    z-index:10;
+}
+.page-header {
+    position: sticky;
+    top: 161px;
+    z-index:10;
+}
+.btn {
+    border: 0;
+    padding: 11px 11px 11px 37px;
+    margin: 0;
+    font-size: 12px;
+    text-align: left;
+    color: #333;
+    background-color: #F7F7Fa;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.btn i {
+    border: solid #333;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 4px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+.btn-right {
+  transform: rotate(-45deg) !important;
+  -webkit-transform: rotate(-45deg) !important;
+}
+}
+@media screen and (max-width: 949px) {
+.sidebar, .content {
+    transition: initial;
+}
+.sidebar.is-collapsed {
+  -webkit-transform: translateX(initial);
+          transform: translateX(initial);
+  -webkit-transform: translateY(-100%);
+          transform: translateY(-100%);
+  height: initial;
+}
+}
 .row {
     display: flex;
     flex-direction: row;
@@ -410,13 +516,13 @@ img.unit-img {
     margin: 0;
 }
 
-.container-content .content-col.left {
+.content .content-col.left {
     width: 50%;
     display: inline-block;
     float: left;
 }
 
-.container-content .content-col.right {
+.content .content-col.right {
     width: 50%;
     display: inline-block;
     float: initial;
@@ -443,7 +549,6 @@ img.unit-img {
 /*Public header
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 header {
-    position: absolute;
     width:100%;
     z-index:10;
 }
@@ -501,7 +606,7 @@ input.text-search {
     margin-bottom: 40px;
 }
 
-.container-sidebar-btn {
+.sidebar-btn {
     padding-top: 30px;
 }
 
@@ -811,58 +916,20 @@ form.filter {
 
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-
-.footer {
-    position: fixed;
-    bottom: 20px;
-        left: 20px;
-    height: 40px;
-    line-height: 40px;
-}
-
 .footer p, .footer a, .footer a:hover, .footer a:focus, .footer a:active {
-    color: #000;
+    color: #a0a0a0;
     text-decoration: none;
     font-size: 12px;
 }
 
-.container-sidebar .footer p, .container-sidebar .footer a, .container-sidebar .footer a:hover, .container-sidebar .footer a:focus, .container-sidebar .footer a:active {
-    color: #fff;
+.sidebar .footer p, .sidebar .footer a, .sidebar .footer a:hover, .sidebar .footer a:focus, .sidebar .footer a:active {
+    color: #a0a0a0;
 }
 
 .container-fluid {
     width: 100%;
     padding: 0px !important;
     margin: 0px !important;
-}
-
-.container-sidebar, .container-content {
-    float: left;
-    display: inline-block;
-}
-
-.container-content {
-   min-height:100vh;
-}
-
-.container-sidebar, div.sidebar {
-    width: 33.3333%;
-}
-
-.container-content {
-    position: relative;
-    width: 66.6666%;
-    /*border-left: 1px solid #eeeeee;*/
-    background-color: #fff;
-    box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 24px 2px rgba(0,0,0,.1);
-}
-
-.col-copyright {
-    float: left;
-    padding-right: 20px;
-    display: inline-block;
 }
 
 .scheme-logo {
@@ -877,29 +944,6 @@ form.filter {
 .scheme-logo img {
     max-width: 250px;
     mix-blend-mode: multiply;
-}
-
-.col-copyright p {
-    font-size: 12px;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    left: 120px;
-}
-
-.col-copyright img {
-    width: 90px;
-}
-
-.col-terms {
-    width: 180px;
-    display: inline-block;
-}
-
-.col-terms p {
-    font-size: 12px;
-    padding-top: 19px;
-    margin: 0;
 }
 
 /*CPD
@@ -1325,13 +1369,6 @@ width: 100%;
     padding: 20px 0px !important;
 }
 
-.sidebar {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    position: fixed;
-    overflow-y: auto;
-}
-
 body .topNavigation a, body.logged-in .topNavigation a {
     color: #fff;
     text-decoration: none;
@@ -1567,38 +1604,6 @@ div.cpd-comment-txt {
     margin-left: 4px;
     font-size: 13px;  
 }
-
-/*logged-in classes
--------------------------------------------------- */
-
-body.logged-in .container-sidebar, body.logged-in .container-sidebar, body.logged-in div.sidebar, body.logged-in .container-footer-links {
-    width: 22.3333%;
-}
-
-body.logged-in .menu-hide{
-    width: 22.3333%;
-}
-
-body.logged-in .menu-hide {
-    left: -22.3333%;
-}
-
-body.logged-in .menu-hide.show {
-    left: 0%;
-}
-
-body.logged-in .menu-tab.active {
-    left: 22.3333%;
-}
-
-body.logged-in .container-content {
-    width: 77.6666%;
-}
-
-body.logged-in .sidebar-form {
-    padding: 40px 80px 10px 80px;
-}
-
 p.profile span.label {
     display: inline-block;
     width: 150px;
@@ -1723,24 +1728,9 @@ table.data tbody tr td p.td-title-responsive, table.data thead th p.td-title-res
     display: none;
 }
 
-/*div.links span.current {
-    color:#FFFFFF;
-}*/
-
 /*Hierarchy Custom Styling
 -------------------------------------------------- */
 
-/*.jstree-default .jstree-last {
-    background-image: url(32px.png) !important;
-        background-position: -292px -4px;
-    background-repeat: repeat-y;
-    background-color: transparent;
-}
-
-li.jstree-node .jstree-ocl {
-    margin-top: 20px !important;
-}
-*/
 .jstree-default .jstree-open>.jstree-ocl {
     background-position: -132px -5px !important;
 }
@@ -1840,10 +1830,6 @@ body.loading div.loading {
     font-family:'Courier New', Courier, monospace;
 }
 
-/*li.jstree-node .jstree-last .jstree-open:first-child i {
-    display: none;
-}*/
-
 /* Archive styles
 -------------------------------------------------- */
 body.archive div#job-role-cpd,
@@ -1857,7 +1843,7 @@ body.archive section#archive {
 
 /* Print styles
 -------------------------------------------------- */
-body.print div.container-sidebar,
+body.print div.sidebar,
 body.print footer,
 body.print div#notifications,
 body.print div#server,
@@ -1878,7 +1864,7 @@ body.print div.groups-tab-group {
     display:block !important;
 }
 
-body.print .container-content {
+body.print .content {
     width:100% !important;
 }
 
@@ -1908,21 +1894,6 @@ body.print a {
 /*Media Queries
 -------------------------------------------------- */
 @media screen and (max-width: 1400px) {
-    .container-sidebar {
-        width: 33.3%;
-    }
-    .menu-hide{
-        width: 33.3%;
-    }
-    .menu-hide {
-        left: -33.3%;
-    }
-    .menu-tab.active {
-        left: 33.3%;
-    }
-    .container-content{
-        width: 66.6%;
-    }
     .container-carousel-caption {
         width: 80%;
     }
@@ -1940,15 +1911,6 @@ body.print a {
 }
 
 @media screen and (max-width: 950px) {
-    /*Hide desktop navigation elements on smaller screens
-    header,
-    nav.cpd,
-    .page-subHeader,
-    .account-details-expand,
-    .link-toggle,
-    .account-details-toggle {
-        display: none;
-    }*/
 
     header {
     position: initial;
@@ -1991,8 +1953,7 @@ body.print a {
 
     nav.cpd ul > li:last-child {
     margin-bottom: 20px;
-}
-
+    }
     .header-controls {
         position: initial;
         float: initial;
@@ -2065,33 +2026,6 @@ body.print a {
         position: initial;
         padding: 20px;
     }
-    body.logged-in .container-sidebar {
-        width: 100%;
-        width: 100%;
-        max-width: 100% !important;
-        height: auto;
-        float: initial;
-        margin: 0;
-    }
-    body.logged-in .container-content {
-        width: 100%;
-        max-width: 100% !important;
-        height: auto;
-        float: initial;
-        margin: 0;
-    }
-    .container-sidebar,
-    div.sidebar,
-    body.logged-in div.sidebar {
-        width: 100%;
-        max-width: 100% !important;
-        height:auto;
-        float: initial;
-        margin: 0;
-    }
-    div.sidebar {
-        position: static;
-    }
     .sidebar-form,
     body.logged-in .sidebar-form {
         padding: 0px;
@@ -2113,15 +2047,15 @@ body.print a {
         height: initial;
         min-height: initial;
     }
-    .container-content {
+/*    .content {
         box-shadow: none !important;
         width: 100%;
         max-width: 100%;
         float: initial;
         margin: 0;
         overflow: hidden;
-    }
-    .container-content .content-col {
+    }*/
+    .content .content-col {
         display: initial;
     }
     .menu-tab, .menu-hide {
@@ -2228,9 +2162,6 @@ body.print a {
     }
     .menu-hide .container-menus {
         padding: 60px 0px;
-    }
-    .container-sidebar {
-        height: 880px;
     }
     .menu-hide .container-create-account-btn {
         padding: 60px;

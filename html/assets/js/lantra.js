@@ -1,5 +1,15 @@
 $(document).ready(function(){
 
+    $('.btn').on('click', function() {
+        $('.sidebar').toggleClass('is-collapsed');
+        $('.sidebar-sticky').toggleClass('hide');
+        $('.content').toggleClass('is-full-width');
+    });
+
+    $("#btn-toggle").click(function() {
+    $(".arrow").toggleClass("btn-right");
+    });
+
     $("div.date-selector").bind("update",function(){
         var s = $(this),
             d = s.find('select.day').val(),
