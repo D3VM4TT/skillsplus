@@ -187,7 +187,7 @@ body.logged-in header, body.logged-in .page-subHeader {
 }
 body.logged-in .page-header {
     position: sticky;
-    top: 149px;
+    top: 150px;
     z-index:10;
 }
 .btn {
@@ -645,7 +645,7 @@ input.text-search {
 }
 
 .sidebar-form {
-    padding: 80px;
+    padding: 80px 0px;
 }
 
 .sidebar-form h2 {
