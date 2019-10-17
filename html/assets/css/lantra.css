@@ -191,6 +191,8 @@ body.logged-in .page-header {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    width: 100%;
+    cursor: pointer;
 }
 body.logged-in .btn {
     display: initial;
@@ -1360,8 +1362,8 @@ width: 100%;
 }
 
 #toggle {
-
-  width: 25px;
+    cursor: pointer;
+    width: 25px;
 }
 
 #toggle div {
