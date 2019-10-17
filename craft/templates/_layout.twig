@@ -136,7 +136,14 @@
         <!-- Content
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <div class="content">
-            <button class="btn" id="btn-toggle"><i class="arrow"></i></button>
+            <button class="btn" id="btn-toggle">
+            <div class="btn-arrow">
+            <i class="arrow"></i>
+            </div>
+            <div class="btn-txt">
+            <h6 class="btn-close">close left menu</h6><h6 class="btn-open is-hidden">open left menu</h6>
+            </div>
+            </button>
 
             {% if craft.request.firstSegment != '' %}
                 {% include '_includes/notifications' %}

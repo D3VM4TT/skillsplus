@@ -8,6 +8,8 @@ $(document).ready(function(){
 
     $("#btn-toggle").click(function() {
     $(".arrow").toggleClass("btn-right");
+    $(".btn-close").toggleClass("is-hidden");
+    $(".btn-open").toggleClass("is-visible");
     });
 
     $("div.date-selector").bind("update",function(){
