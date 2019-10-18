@@ -181,13 +181,13 @@ h4, h4 a {
 }
 body.logged-in header, body.logged-in .page-subHeader {
     position: sticky;
-    top: 31px;
+    top: 32px;
     width:100%;
     z-index:10;
 }
 body.logged-in .page-header {
     position: sticky;
-    top: 150px;
+    top: 151px;
     z-index:10;
 }
 .btn {
@@ -654,7 +654,7 @@ input.text-search {
 }
 
 .container-form-toggle {
-    margin-top: 60px;
+    margin: 60px;
 }
 
 .button {
