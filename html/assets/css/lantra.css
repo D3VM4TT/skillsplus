@@ -131,11 +131,11 @@ h4, h4 a {
     top: 0;
 }
 .sidebar-sticky {
-     position: sticky;
+    position: sticky;
     top: 0;   
 }
 .footer {
-    padding: 100px 0px 20px 20px;
+    padding: 100px 0px 20px 60px;
 }
 .col-copyright {
     padding-right: 20px;
@@ -150,6 +150,9 @@ h4, h4 a {
 }
 .col-copyright img {
     width: 90px;
+}
+.col-terms {
+    display: inline-block;
 }
 .col-terms p {
     font-size: 12px;
