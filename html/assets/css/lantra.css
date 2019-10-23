@@ -187,7 +187,7 @@ body.logged-in header, body.logged-in .page-subHeader {
 }
 body.logged-in .page-header {
     position: sticky;
-    top: 151px;
+    top: 83px;
     z-index:10;
 }
 .btn {
@@ -1477,7 +1477,7 @@ nav.cpd#sign-out li a {
 }
 
 body.logged-in .page-subHeader {
-    padding: 12.5px 0px 0px 0px;
+    padding: 12px 0px;
 }
 
 .topNavigation {

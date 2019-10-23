@@ -113,5 +113,16 @@
         {% endif %}
     </ul>
     {% endif %}
-
+    <ul>
+        <li class="{% if craft.request.getSegment(1) == 'public' %}nav-open{% else %}nav-closed{% endif %}">
+            <a class="secondary-bg-hover" href="#">Informational Pages</a>
+                <ul>
+                {% for pageEntry in craft.lantra.setting('themeNavigationPrivate') %}
+                <li>
+                <a class="" href="{{ pageEntry.getUrl() }}">{{ pageEntry.title }}</a>
+                </li>
+                {% endfor %}
+                </ul>
+        </li>
+    </ul>
 </nav>
