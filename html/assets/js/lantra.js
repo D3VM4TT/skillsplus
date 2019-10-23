@@ -2,7 +2,7 @@ $(document).ready(function(){
 
     $('.btn').on('click', function() {
         $('.sidebar').toggleClass('is-collapsed');
-        $('.sidebar-sticky').toggleClass('hide');
+        $('.sidebar-not-sticky').toggleClass('hide');
         $('.content').toggleClass('is-full-width');
     });
 
