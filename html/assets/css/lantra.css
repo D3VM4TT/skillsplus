@@ -122,6 +122,7 @@ h4, h4 a {
 .content {
     background: #FFF;
     transition: all .3s ease-out;
+    box-shadow: 5px 10px 18px #888888;
 }
 .sidebar {
     transition: all .3s ease-out;
@@ -1263,10 +1264,10 @@ body.logged-in .alert {
 
 /*Page layout
 -------------------------------------------------- */
-section.page {
+/*section.page {
     box-shadow: 5px 10px 18px #888888;
     min-height:100vh;
-}
+}*/
 
 /*section.page div:last-child {
     margin-bottom:60px;
