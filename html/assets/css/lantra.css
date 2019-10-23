@@ -194,7 +194,7 @@ body.logged-in .page-header {
     display: none;
     background-color: #F7F7Fa;
     border: 0;
-    padding: 6px 11px 5px 10px;
+    padding: 7px 11px 5px 10px;
     margin: 0;
     font-size: 12px;
     text-align: left;
@@ -204,6 +204,7 @@ body.logged-in .page-header {
     box-shadow: none;
     width: 100%;
     cursor: pointer;
+    z-index: 99;
 }
 body.logged-in .btn {
     display: initial;
