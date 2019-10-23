@@ -1273,7 +1273,7 @@ section.page {
 }*/
 
 .page-header {
-    padding: 10px 60px 10px 60px;
+    padding: 25px 60px;
     display: block;
     overflow: auto;
 }
