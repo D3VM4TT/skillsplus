@@ -116,21 +116,12 @@
         <!-- Sidebar
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <div class="sidebar">
-        <div class="sidebar-sticky">
-
+        {# <div class="sidebar-sticky"> #}
+        
+        <div>
         {% include '_includes/sidebar' %}
-
-        <!-- Footer in Sidebar
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-        <footer class="footer">
-            <div class="col-copyright"><img src="/assets/img/lantra_footer_grey_logo.png"></div>
-            <div class="col-copyright"><img src="/assets/img/iso_27001.png"></div>
-            <div class="col-terms"><p>&copy; {{ "now"|date("Y") }} Lantra. All rights reserved. <a href="/terms">Terms &amp; Privacy</a></p></div>
-        </footer>
-
-
         </div>
+
         </div>
 
         <!-- Content
@@ -160,6 +151,15 @@
         <!-- Close Main Container
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         </div>
+
+        <!-- Footer below content
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+        <footer class="footer">
+            <div class="col-copyright"><img src="/assets/img/lantra_footer_grey_logo.png"></div>
+            <div class="col-copyright"><img src="/assets/img/iso_27001.png"></div>
+            <div class="col-terms"><p>&copy; {{ "now"|date("Y") }} Lantra. All rights reserved. <a href="/terms">Terms &amp; Privacy</a></p></div>
+        </footer>
 
         <!-- Scripts
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
