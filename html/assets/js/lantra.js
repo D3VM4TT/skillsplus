@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    $('.btn-small').on('click', function() {
+    $('.btn-toggle-small').on('click', function() {
         $('.sidebar').toggleClass('is-collapsed');
         $('.sidebar-not-sticky').toggleClass('hide');
         $('.content').toggleClass('is-full-width');

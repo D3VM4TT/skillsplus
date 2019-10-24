@@ -165,7 +165,7 @@ h4, h4 a {
     transform: translateX(-100%);
         flex: initial;
 }
-.btn-small {
+.btn-toggle-small {
     position: sticky;
     top: 0;
 }
@@ -195,7 +195,7 @@ body.logged-in .page-header {
     top: 83px;
     z-index:10;
 }
-.btn-smal {
+.btn-toggle-small {
     display: none;
     background-color: #F7F7Fa;
     border: 0;
@@ -211,10 +211,10 @@ body.logged-in .page-header {
     cursor: pointer;
     z-index: 99;
 }
-body.logged-in .btn {
+body.logged-in .btn-toggle-small {
     display: initial;
 }
-.btn-small i {
+.btn-toggle-small i {
     border: solid #333;
     border-width: 0 2px 2px 0;
     display: inline-block;
