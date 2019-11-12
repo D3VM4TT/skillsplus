@@ -56,15 +56,15 @@
                             <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                         </div>
                     {% endif %}
-                    <div class="col-6 col-pd-btm">
-                        <h5>Click the button below to view the unit content.</h5>
-                        <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
-                        {% if unitEntry.unitUrl %}
-                            <div class="col-pd-top">
-                            <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
-                            {% endif %}
-                        </div>
+                </div>
+                <div class="col-6 col-pd-btm">
+                    <h5>Click the button below to view the unit content.</h5>
+                    <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
+                    {% if unitEntry.unitUrl %}
+                    <div class="col-pd-top">
+                    <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="col-12">
                     {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
@@ -72,7 +72,7 @@
                 <div class="col-12 col-pd-btm">
                     <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
                     <div class="cpd-comment-txt">(Questions will appear below)</div>
-                    <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
+                <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
                     {% set resultPassed = false %}
                     {% if resultEntry|length %}
                         {% set resultPassed = resultEntry.resultScore >= unitEntry.testPassPercent %}
