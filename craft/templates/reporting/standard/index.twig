@@ -1,4 +1,4 @@
-{% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
+ {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 
 {% set reportType = craft.request.segment(3)|default('users') %}
 {% set filterDays = craft.request.getParam('days')|default(28) %}
@@ -33,7 +33,7 @@
 
     {% else %}
         <div class="page-content">
-            <p>There are no results to display.</p>
+            <h3>There are no results to display.</h3>
         </div>
     {% endif %}
 </section>
