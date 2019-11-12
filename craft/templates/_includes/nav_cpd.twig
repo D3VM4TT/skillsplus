@@ -68,6 +68,8 @@
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
                 </li>
+                {% endif %}
+                {% if currentUser.isInGroup('schemeManagers') %}
                 <li>
                     <a class="{% if craft.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
                     {% if craft.request.getSegment(2) == 'standard' %}

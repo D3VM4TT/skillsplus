@@ -120,6 +120,8 @@ h4, h4 a {
     flex-direction: column;
 }
 .content {
+    display: flex;
+flex-direction: column;
     min-height: 100vh;
     background: #FFF;
     transition: all .3s ease-out;
@@ -140,8 +142,12 @@ h4, h4 a {
     position: sticky;
     top: 0;   
 }
+.page {
+    flex: 1 0 auto; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+}
 .footer {
     padding: 100px 0px 20px 60px;
+    flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
 }
 .col-copyright {
     padding-right: 20px;
