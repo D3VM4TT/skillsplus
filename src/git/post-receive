@@ -10,9 +10,11 @@ BRANCH="${REF[2]}"
 
 # call lantra script /home/git/bin/lantra
 if [ "$BRANCH" == "develop" ]; then
+  lantra dev tag
   lantra dev all
-  echo "git deploy all sites on dev"
-elif [ "$BRANCH" == uat ]; then
+elif [ "$BRANCH" == "uat" ]; then
+  lantra uat tag
   lantra uat all
-  echo "git deploy all sites on uat"
+elif [ "$BRANCH" == "master" ]; then
+  lantra prod tag
 fi

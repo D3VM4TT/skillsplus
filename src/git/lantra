@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# database credentials for release record
+DB_USER="craft"
+DB_PASS="RIrYmX!rFp2fxPRT%yu4"
+DB_HOST="10.1.4.6"
+
 # remote server ips
 DEV_IP="10.1.4.4"
 UAT_IP="10.1.4.5"
@@ -39,11 +44,22 @@ else
     REMOTE_IP="$DEV_IP"
 fi
 
+# add release tag
+if [[ "$SITES" == "tag" ]] ; then
+    NOW=$(date +"%Y%m%d_%H%M")
+    TAG="release_$NOW"
+    git --git-dir="/git/cpd.git" tag $TAG $BRANCH
+    echo "$TAG created"
+    exit 0
+fi
+
+# make temp directory for checkout
 TMP_DIR="/git/tmp/$BRANCH"
 mkdir -p $TMP_DIR
 
 # checkout repo to temp directory
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
+RELEASE_TAG=$(git --git-dir="/git/cpd.git" describe --tags)
 
 # loop through domains and copy to server
 for SITE in $SITES;
@@ -68,6 +84,9 @@ do
     ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
     ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
 
+    SQL_QUERY="INSERT INTO \`versions\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
+    mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
+
     echo "finished deploy $SITE on $1"
 done
 
@@ -75,4 +94,5 @@ done
 rm -rf "$TMP_DIR"
 
 # send notification
-echo "$SITES" | mail -s "Lantra Deploy [$1]" -r "Skills Plus REPO<noreply@skills-plus.net>" portia.hartley@skills-plus.co.uk
+echo "$SITES" | mail -s "Lantra Deploy [$1]" -r "Skills Plus REPO<noreply@skills-plus.net>" robin@coffeebean.design
+
