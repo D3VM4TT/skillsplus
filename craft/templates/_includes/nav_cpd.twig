@@ -97,18 +97,19 @@
                 -->
             </ul>
         </li>
+        {#
         {% set pendingEndorsementCount = craft.lantra.managerEndorsementUsers(null, null, true) %}
         {% set pendingEndorsementCountDirect = craft.lantra.managerEndorsementUsers(null, null, true, true) %}
-        {% if not currentUser.managerReadOnly and pendingEndorsementCount %}
+        #}
+        {% if not currentUser.managerReadOnly %}
             <li class="{% if craft.request.getSegment(2) == 'endorsements' %}nav-open{% else %}nav-closed{% endif %}">
-                <a class="secondary-bg-hover" href="#">Endorsements ({{ pendingEndorsementCount }})</a>
+                <a class="secondary-bg-hover" href="#">Endorsements</a>
                 <ul>
                     <li>
                         <a href="/management/endorsements">All Members</a>
                     </li>
                     <li>
                         <a href="/management/endorsements?direct=true">My Direct Members</a>
-                        <!-- FIX -->
                     </li>
                 </ul>
             </li>
