@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# remote server ips
+DEV_IP="10.1.4.4"
+UAT_IP="10.1.4.5"
+PROD_IP="10.1.4.9"
+
+# domains i.e. folders (separated by space) included in 'all' command
+ALL_SITES="bcsa bics cha demo demo1 demo2 demo3 demo4 demo5 eoc iopf ltp poultec poultrypassport ptr"
+
+# make sure we have input
+if [[ $# -eq 0 || $2 == "" ]] ; then
+    echo 'You must enter branch and site parameters i.e. lantra dev bics'
+    exit 0
+fi
+
+# check name of server
+if [[ "$1" != "dev" && "$1" != "uat" && "$1" != "prod" ]] ; then
+    echo 'You must enter server as dev uat or prod i.e. lantra dev bics'
+    exit 0
+fi
+
+# set sites (might be one or all)
+if [[ "$2" == "all" ]] ; then
+    SITES="$ALL_SITES"
+else
+    SITES="$2"
+fi
+
+# set branch
+if [[ "$1" == "prod" ]] ; then
+   BRANCH="master"
+   REMOTE_IP="$PROD_IP"
+elif [[ "$1" == "uat" ]] ; then
+    BRANCH="uat"
+    REMOTE_IP="$UAT_IP"
+else
+    BRANCH="develop"
+    REMOTE_IP="$DEV_IP"
+fi
+
+TMP_DIR="/git/tmp/$BRANCH"
+mkdir -p $TMP_DIR
+
+# checkout repo to temp directory
+git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
+
+# loop through domains and copy to server
+for SITE in $SITES;
+do
+    REMOTE_FOLDER="/datadisk/sites/$SITE"
+
+    echo "sending files to git@$REMOTE_IP:$REMOTE_FOLDER"
+
+    # sync files
+    rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude '/src' --exclude 'craft/storage' $TMP_DIR/ git@$REMOTE_IP:$REMOTE_FOLDER
+
+    # crate storage if it doesn't exist
+    ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage
+
+    echo "setting file permissions on $REMOTE_IP"
+
+    # set folder permissions
+    ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
+    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+
+    ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
+    ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
+
+    echo "finished deploy $SITE on $1"
+done
+
+# remove temp files
+rm -rf "$TMP_DIR"
+
+# send notification
+echo "$SITES" | mail -s "Lantra Deploy [$1]" -r "Skills Plus REPO<noreply@skills-plus.net>" portia.hartley@skills-plus.co.uk

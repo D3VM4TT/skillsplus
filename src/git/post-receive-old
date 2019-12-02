@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# remote server ips
+DEV_IP="10.1.4.4"
+UAT_IP="10.1.4.5"
+PRODUCTION_IP="10.1.4.9"
+
+# repo branches to sync
+DEV_BRANCH="develop"
+UAT_BRANCH="uat"
+PRODUCTION_BRANCH="master"
+
+
+# domains i.e. folders (separated by space)
+DOMAINS="bics cha iopf ltp poultrypassport ptr bcsa poultec demo eoc demo1 demo2 demo3 demo4 demo5 fbaass"
+
+## END OF CONFIG ##
+
+# get branch name from ref head
+if ! [ -t 0 ]; then
+  read -a ref
+fi
+
+IFS='/' read -ra REF <<< "${ref[2]}"
+BRANCH="${REF[2]}"
+
+# make tmp dir
+TMP_DIR="/git/tmp/$BRANCH"
+mkdir -p $TMP_DIR
+
+# checkout repo to temp directory
+git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
+
+# set remote server ip
+if [ "$DEV_BRANCH" == "$BRANCH" ]; then
+  REMOTE_IP="$DEV_IP"
+elif [ "$UAT_BRANCH" == "$BRANCH" ]; then
+  REMOTE_IP="$UAT_IP"
+elif [ "$PRODUCTION_BRANCH" == "$BRANCH" ]; then
+  REMOTE_IP="$PRODUCTION_IP"
+fi
+
+# make sure we have an ip then sync the individual domains
+if [ -n "$REMOTE_IP" ]; then
+
+    # loop through domains and copy to server
+    for DOMAIN in $DOMAINS ;
+    do
+        REMOTE_FOLDER="/datadisk/sites/$DOMAIN"
+
+	rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude '/src' --exclude '/craft/storage/runtime' $TMP_DIR/ git@$REMOTE_IP:$REMOTE_FOLDER
+
+        # set folder permissions
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
+
+        echo "lantra cpd deploy "$BRANCH" > "$DOMAIN
+   done
+
+fi
+
+# remove temp files
+rm -rf "$TMP_DIR"
