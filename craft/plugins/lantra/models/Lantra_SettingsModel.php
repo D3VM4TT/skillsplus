@@ -102,6 +102,9 @@ class Lantra_SettingsModel extends BaseModel
 
             ## queue
             'queue'                             => AttributeType::Mixed,
+
+            ## config settings
+            'disableResultCache'                => AttributeType::Bool,
 		);
 	}
 

@@ -247,21 +247,25 @@ class LantraPlugin extends BasePlugin
                 // module notifications disabled 09/05
                 // craft()->lantra_notify->sendModuleResult($entry);
             }
-            // create user result column
-            if ($entry->sectionId == $this->sectionIdUnits) {
-                craft()->lantra_results->addUnitColumn($entry->id);
-            }
-            // save unit result in user result cache
-            if ($entry->enabled && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
-                craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
+            if (!$this->getSettings()->disableResultCache) {
+                // create user result column
+                if ($entry->sectionId == $this->sectionIdUnits) {
+                    craft()->lantra_results->addUnitColumn($entry->id);
+                }
+                // save unit result in user result cache
+                if ($entry->enabled && $entry->sectionId == $this->sectionIdResults && $entry->type == 'unitResult') {
+                    craft()->lantra_results->saveUserResultCache($entry->authorId, $entry);
+                }
             }
         });
 
         craft()->on('entries.onDeleteEntry', function(Event $event) {
             $entry = $event->params['entry'];
-            // delete user result column
-            if ($entry->sectionId == $this->sectionIdUnits) {
-                craft()->lantra_results->removeUnitColumn($entry->id);
+            if (!$this->getSettings()->disableResultCache) {
+                // delete user result column
+                if ($entry->sectionId == $this->sectionIdUnits) {
+                    craft()->lantra_results->removeUnitColumn($entry->id);
+                }
             }
         });
     }
@@ -359,6 +363,9 @@ class LantraPlugin extends BasePlugin
 
             ## queue
             'queue'                             => AttributeType::Mixed,
+
+            ## config settings
+            'disableResultCache'                => AttributeType::Bool,
         );
     }
 

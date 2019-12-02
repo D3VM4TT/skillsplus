@@ -1618,6 +1618,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
+        if (craft()->lantra_settings->getSetting('disableResultCache')) {
+            return;
+        }
         $keyColumns = [
             'userId' => $userId
         ];
@@ -1640,6 +1643,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $resultEntry
      */
     public function deleteUserResultCache($resultEntry) {
+        if (craft()->lantra_settings->getSetting('disableResultCache')) {
+            return;
+        }
         $userId = $resultEntry->getAuthor()->id;
         $unitId = $resultEntry->resultUnit->first()->id;
         if ($userId && $unitId) {
