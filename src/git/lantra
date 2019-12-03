@@ -67,6 +67,9 @@ if [[ "$SITES" == "tag" ]] ; then
         echo "$RELEASE_TAG already exists on $BRANCH"
     fi
 else
+    # write release tag
+    echo "$RELEASE_TAG" > $TMP_DIR/craft/config/.release
+
     # loop through domains and copy to server
     for SITE in $SITES;
     do
@@ -93,9 +96,6 @@ else
         # write release to database
         SQL_QUERY="INSERT INTO \`admin\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
         mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
-
-        # write release to config file
-        ssh git@$REMOTE_IP "echo $RELEASE_TAG > $REMOTE_FOLDER/craft/config/.release"
 
         echo "finished deploy $SITE on $1"
     done
