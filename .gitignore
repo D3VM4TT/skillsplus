@@ -8,7 +8,6 @@ src/dev/*
 ###################
 craft/storage/userphotos/*
 craft/config/db.php
-craft/config/.release
 
 craft-assets/*
 
