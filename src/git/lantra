@@ -54,14 +54,18 @@ mkdir -p $TMP_DIR
 # checkout repo to temp directory
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
 RELEASE_TAG=$(git --git-dir="/git/cpd.git" tag -l --points-at HEAD)
+COMMIT=$(git --git-dir="/git/cpd.git" rev-parse --short HEAD)
 
 # add release tag
 if [[ "$SITES" == "tag" ]] ; then
-    # ignore if tag exists
     if [[ "$RELEASE_TAG" == "" ]] ; then
         NOW=$(date +"%Y%m%d_%H%M")
         TAG="release_$NOW"
         git --git-dir="/git/cpd.git" tag $TAG $BRANCH
+
+        # write release to database
+        SQL_QUERY="INSERT INTO \`admin\`.\`releases\` (\`tag\`, \`commit\`) VALUES ('$TAG', '$COMMIT');"
+        mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
         echo "$TAG added to $BRANCH"
     else
         echo "$RELEASE_TAG already exists on $BRANCH"
@@ -93,8 +97,8 @@ else
         ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
         ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
 
-        # write release to database
-        SQL_QUERY="INSERT INTO \`admin\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
+        # write deployment to database
+        SQL_QUERY="INSERT INTO \`admin\`.\`deployments\` (\`server\`, \`site\`, \`release\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
         mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
 
         echo "finished deploy $SITE on $1"
