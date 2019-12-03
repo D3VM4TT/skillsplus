@@ -632,6 +632,42 @@ class Lantra_ResultsService extends BaseApplicationComponent
     }
 
     /**
+     * @param UserModel $manager
+     * @param bool $directSubordinates
+     * @return int
+     */
+    public function countManagerEndorsementUsers(UserModel $manager, $directSubordinates = false) {
+
+        $onlySubordinates = false;
+        if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
+            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, $directSubordinates == false);
+            if (!count($subordinateIds)) {
+                return 0;
+            }
+            $onlySubordinates = true;
+            $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
+        }
+
+        $mysql = "SELECT COUNT(DISTINCT authorId) AS total FROM {{entries}} e
+            JOIN {{content}} c ON c.elementId = e.id
+            JOIN {{elements}} el ON el.id = e.id
+            WHERE e.sectionId = 10 
+            AND c.field_resultStatus = 'pending'
+            AND e.typeId = 10
+            AND e.typeId = 10";
+
+        # add subordinates and level to query
+        if ($onlySubordinates) {
+            $mysql .= " 
+            AND c.field_unitEndorsementManagerLevel <= " . $level . "
+            AND authorId IN(" . implode(',', $subordinateIds) . ")";
+        }
+
+        $result = craft()->db->createCommand($mysql)->queryRow();
+        return $result['total'];
+    }
+
+    /**
      * Return all expiring module result entries
      *
      * @param null $userId

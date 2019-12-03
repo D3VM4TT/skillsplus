@@ -21,7 +21,7 @@
             {% endif %}
             {% include '_includes/cpd' with{cpdUser:currentUser} %}
              {% if craft.lantra.canManage() %}
-                {% set pendingEntryCount = craft.lantra.managerEndorsementResults(null, null, true) %}
+                {% set pendingEntryCount = craft.lantra.managerCountEndorsementUsers() %}
                 {% if not currentUser.managerReadOnly and pendingEntryCount %}
                     <article class="endorsements-pending col-pd-btm secondary-bg">
                     <h4>Endorsements</h4>

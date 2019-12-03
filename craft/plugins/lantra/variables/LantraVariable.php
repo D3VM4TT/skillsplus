@@ -562,6 +562,20 @@ class LantraVariable
     }
 
     /**
+     * Return count of users requiring endorsement for a manager
+     *
+     * @param null $userId
+     * @param bool $directSubordinates
+     * @return mixed
+     */
+    public function managerCountEndorsementUsers($userId = null, $directSubordinates = false) {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return craft()->lantra_results->countManagerEndorsementUsers($user, $directSubordinates);
+    }
+
+    /**
      * Return a manager report
      *
      * @param string $reportType
