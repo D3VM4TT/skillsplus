@@ -5,6 +5,9 @@ DB_USER="craft"
 DB_PASS="RIrYmX!rFp2fxPRT%yu4"
 DB_HOST="10.1.4.6"
 
+# email address for notification
+EMAIL=""
+
 # remote server ips
 DEV_IP="10.1.4.4"
 UAT_IP="10.1.4.5"
@@ -44,15 +47,6 @@ else
     REMOTE_IP="$DEV_IP"
 fi
 
-# add release tag
-if [[ "$SITES" == "tag" ]] ; then
-    NOW=$(date +"%Y%m%d_%H%M")
-    TAG="release_$NOW"
-    git --git-dir="/git/cpd.git" tag $TAG $BRANCH
-    echo "$TAG created"
-    exit 0
-fi
-
 # make temp directory for checkout
 TMP_DIR="/git/tmp/$BRANCH"
 mkdir -p $TMP_DIR
@@ -61,42 +55,56 @@ mkdir -p $TMP_DIR
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
 RELEASE_TAG=$(git --git-dir="/git/cpd.git" describe --tags)
 
-# loop through domains and copy to server
-for SITE in $SITES;
-do
-    REMOTE_FOLDER="/datadisk/sites/$SITE"
+# add release tag
+if [[ "$SITES" == "tag" ]] ; then
+    # ignore if tag exists
+    if [[ "$RELEASE_TAG" == "" ]] ; then
+        NOW=$(date +"%Y%m%d_%H%M")
+        TAG="release_$NOW"
+        git --git-dir="/git/cpd.git" tag $TAG $BRANCH
+        echo "$TAG added to $BRANCH"
+    else
+        echo "$RELEASE_TAG already exists on $BRANCH"
+    fi
+else
+    # loop through domains and copy to server
+    for SITE in $SITES;
+    do
+        REMOTE_FOLDER="/datadisk/sites/$SITE"
 
-    echo "sending files to git@$REMOTE_IP:$REMOTE_FOLDER"
+        echo "sending files to git@$REMOTE_IP:$REMOTE_FOLDER"
 
-    # sync files
-    rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude '/src' --exclude 'craft/storage' $TMP_DIR/ git@$REMOTE_IP:$REMOTE_FOLDER
+        # sync files
+        rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.gitignore' --exclude '/src' --exclude 'craft/storage' $TMP_DIR/ git@$REMOTE_IP:$REMOTE_FOLDER
 
-    # crate storage if it doesn't exist
-    ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage
+        # create storage if it doesn't exist
+        ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage
 
-    echo "setting file permissions on $REMOTE_IP"
+        echo "setting file permissions on $REMOTE_IP"
 
-    # set folder permissions
-    ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
-    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/craft/config/.release
-    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+        # set folder permissions
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/craft/config/.release
+        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
 
-    ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
-    ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
 
-    # write release to database
-    SQL_QUERY="INSERT INTO \`versions\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
-    mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
+        # write release to database
+        SQL_QUERY="INSERT INTO \`admin\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
+        mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
 
-    # write release to config file
-    ssh git@$REMOTE_IP "echo $RELEASE_TAG > $REMOTE_FOLDER/craft/config/.release"
+        # write release to config file
+        ssh git@$REMOTE_IP "echo $RELEASE_TAG > $REMOTE_FOLDER/craft/config/.release"
 
-    echo "finished deploy $SITE on $1"
-done
+        echo "finished deploy $SITE on $1"
+    done
+
+    # send notification
+    if [[ "$EMAIL" != "" ]] ; then
+        echo "$SITES - $RELEASE_TAG" | mail -s "Lantra Deploy [$1]" -r "Skills Plus REPO<noreply@skills-plus.net>" $EMAIL
+    fi
+fi
 
 # remove temp files
 rm -rf "$TMP_DIR"
-
-# send notification
-echo "$SITES" | mail -s "Lantra Deploy [$1]" -r "Skills Plus REPO<noreply@skills-plus.net>" robin@coffeebean.design
-
