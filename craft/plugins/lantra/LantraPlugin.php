@@ -44,6 +44,8 @@ class LantraPlugin extends BasePlugin
         
         parent::init();
 
+        Craft::import('plugins.lantra.helpers.LantraHelper');
+
         craft()->lantra_settings->updateSettings($this->settingsVersion);
 
         // create user result cache

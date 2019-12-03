@@ -78,14 +78,18 @@ do
 
     # set folder permissions
     ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
-    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+    ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/craft/config/.release
     ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
 
     ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
     ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads
 
+    # write release to database
     SQL_QUERY="INSERT INTO \`versions\`.\`releases\` (\`server\`, \`site\`, \`tag\`) VALUES ('$1', '$SITE', '$RELEASE_TAG');"
     mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
+
+    # write release to config file
+    ssh git@$REMOTE_IP "echo $RELEASE_TAG > $REMOTE_FOLDER/craft/config/.release"
 
     echo "finished deploy $SITE on $1"
 done

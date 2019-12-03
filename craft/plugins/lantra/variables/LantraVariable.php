@@ -16,6 +16,13 @@ class LantraVariable
     }
 
     /**
+     * @return mixed
+     */
+    public function release() {
+        return LantraHelper::getRelease();
+    }
+
+    /**
      * @param $userId
      * @return mixed
      */
