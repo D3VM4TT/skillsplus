@@ -15,7 +15,7 @@
 {% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
 {% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName').limit(null) %}
 
-{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set dateFormat = 'd-m-y H:i' %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">

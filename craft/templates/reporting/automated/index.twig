@@ -3,7 +3,7 @@
 {% extends "_layout" %}
 
 {% set metaTitle = "Reporting > Automated Reports" %}
-{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set dateFormat = 'd-m-y H:i' %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.request.getParam('search')|default('') %}
 
