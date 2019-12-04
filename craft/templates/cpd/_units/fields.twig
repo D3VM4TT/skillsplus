@@ -72,7 +72,7 @@
                         <input type="hidden" name="fields[resultEvidence][]" value="{{ resultAsset.id }}" />
                         [<a href="#" class="delete-file" data-id="{{ resultAsset.id }}" style="color:#FF0000">x</a>]
                         <a target="_blank" href="/internal/{{ resultAsset.id }}">{{ resultAsset.filename }}</a>
-                        {{ resultAsset.dateCreated|date('d/m/Y') }}
+                        <br /><span style="font-size: small">Uploaded {{ resultAsset.dateCreated|date('d/m/Y') }}</span>
                     </p>
                     {% endfor %}
                 {% endif %}
