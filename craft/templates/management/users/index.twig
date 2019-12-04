@@ -63,6 +63,7 @@
                 {% if craft.lantra.setting('schemeTeams', false) %}
                     <th>Team</th>
                 {% endif %}
+                <th>Last Login</th>
                 <th style="width:210px;">&nbsp;</th>
                 <th>&nbsp;</th>
             </tr>
@@ -86,6 +87,7 @@
                         {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
+                    <td><p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}</td>
                     <td style="text-align:right">
                         <a href="/cpd/{{ user.id }}">dashboard</a>
                         {% if not currentUser.managerReadOnly %}
