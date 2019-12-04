@@ -611,21 +611,8 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @throws mixed
      */
     public function getManagerEndorsementUsers(UserModel $manager, $limit = null, $count = false, $directSubordinates = false) {
-        $resultsCriteria = $this->getManagerEndorsementResults($manager);
-        $authorIds = [];
-        $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, false);
-        if ( ! $resultsCriteria) {
-            return ($count) ? 0 : null;
-        }
-        foreach($resultsCriteria as $result) {
-            $authorId = $result->author->id;
-            // add to list if it doesn't exists and is direct subordinate of required
-            if ( ! in_array($authorId, $authorIds) && ( ! $directSubordinates || in_array($authorId, $subordinateIds) )) {
-                $authorIds[] = $result->author->id;
-            }
-        }
         $criteria = craft()->elements->getCriteria(ElementType::User);
-        $criteria->id =  $authorIds;
+        $criteria->id =  $this->getManagerEndorsementUserIds($manager, $directSubordinates);
         $criteria->order = 'lastName desc';
         $criteria->limit = $limit;
         return ($count) ? $criteria->count() : $criteria;
@@ -637,18 +624,37 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return int
      */
     public function countManagerEndorsementUsers(UserModel $manager, $directSubordinates = false) {
+        return $this->getManagerEndorsementUserIds($manager, $directSubordinates, true);
+    }
 
+    /**
+     * @param UserModel $manager
+     * @param bool $directSubordinates
+     * @param bool $count
+     * @return array|int
+     */
+    public function getManagerEndorsementUserIds(UserModel $manager, $directSubordinates = false, $count = false) {
         $onlySubordinates = false;
+        # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
             $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, $directSubordinates == false);
+            # make sure there are any subordinates
             if (!count($subordinateIds)) {
-                return 0;
+                return $count ? 0 : [];
             }
             $onlySubordinates = true;
             $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
         }
 
-        $mysql = "SELECT COUNT(DISTINCT authorId) AS total FROM {{entries}} e
+        if ($count) {
+            $mysql = "SELECT COUNT(DISTINCT authorId) AS total";
+        }
+        else {
+            $mysql = "SELECT DISTINCT authorId";
+        }
+
+        $mysql .= "
+            FROM {{entries}} e
             JOIN {{content}} c ON c.elementId = e.id
             JOIN {{elements}} el ON el.id = e.id
             WHERE e.sectionId = 10 
@@ -663,8 +669,17 @@ class Lantra_ResultsService extends BaseApplicationComponent
             AND authorId IN(" . implode(',', $subordinateIds) . ")";
         }
 
-        $result = craft()->db->createCommand($mysql)->queryRow();
-        return $result['total'];
+        if ($count) {
+            return craft()->db->createCommand($mysql)->queryRow()['total'];
+        }
+
+        # return array or authorIds of users that have pending results
+        $result = craft()->db->createCommand($mysql)->queryAll();
+        $return = [];
+        foreach ($result as $row) {
+            $return[] = $row['authorId'];
+        }
+        return $return;
     }
 
     /**
