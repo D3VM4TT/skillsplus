@@ -138,7 +138,7 @@
                                                                 {{ unitEntry.title }}
                                                                 {{ unitEntry['unitHeading'] is defined and unitEntry.unitHeading ? unitEntry.unitHeading : '' }}
                                                             {% else %}
-                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}" >
+                                                                <a href="/cpd/{{ cpdUser.id }}/{{ module.id }}/{{ unitEntry.id }}?ref=module{{ moduleElementId }}" >
                                                                     {{ unitEntry.title }}
                                                                     {{ unitEntry['unitHeading'] is defined and unitEntry.unitHeading ? unitEntry.unitHeading : '' }}
                                                                 </a>

@@ -11,6 +11,7 @@
 {% elseif craft.request.getSegment(3) == 'print' %}
     {% set pageClass = 'print' %}
 {% endif %}
+{% set lightbox = craft.request.getParam('lightbox') %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +96,7 @@
 
 </head>
 
-<body class="{% if currentUser %}logged-in{% endif %} {{ pageClass }}">
+<body class="{% if currentUser %}logged-in{% endif %} {{ pageClass }}{% if lightbox %} lightbox{% endif %}">
 
         {% set server = craft.config.environmentVariables.server|default('dev') %}
         {% if server != 'prod' %}
@@ -109,6 +110,8 @@
 
         <div class="container-main">
 
+        {% if not lightbox %}
+
         <!-- Flex Container
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <div class="container-flex">
@@ -121,6 +124,8 @@
         </div>
 
         </div>
+
+        {% endif %}
 
         <!-- Content
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->

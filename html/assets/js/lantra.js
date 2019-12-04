@@ -468,16 +468,20 @@ $(document).ready(function(){
         }
     });
 
+    $('.module-group-tabs ul.tabs li:first-child a').click();
+
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
-    if ( cpdWrapper.data('ref') ) {
+    if (cpdWrapper.data('ref')) {
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
-            moduleGroupLinkId = moduleLink.closest('div.groups-tab-group').attr('id');
-        $('a[href="#' + moduleGroupLinkId + '"]').click();
+            moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
+            jobRoleLink = moduleGroupLink.closest('div.job-role').find('a.jobroleEndorseExpand');
+        jobRoleLink.click();
+        moduleGroupLink.click();
         moduleLink.click();
-    }
-    else {
-       $('.module-group-tabs ul.tabs li:first-child a').click();
+        $('html, body').animate({
+            scrollTop: jobRoleLink.offset().top - 200
+        }, 500, function(){});
     }
 
     $('.module-group-tabs').show();
