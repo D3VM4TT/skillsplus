@@ -4,7 +4,7 @@ namespace Craft;
 
 class Lantra_UsersController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionHierarchy', 'actionRefreshHierarchy', 'actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
+    public $allowAnonymous = array('actionHierarchy', 'actionRefreshHierarchy', 'actionSaveUser', 'actionSuspendUser', 'actionRestoreUser', 'actionDeleteUser');
 
     /**
      * Clear hierarchy cache for logged in user
@@ -171,11 +171,30 @@ class Lantra_UsersController extends Lantra_BaseController {
         if (false == $user = craft()->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
+        if ( ! craft()->users->deleteUser($user)) {
+            $this->_returnError('Error deleting user.');
+        }
+        $this->_returnMessage('User has been deleted.');
+    }
+
+    /**
+     * Suspends users from the front end
+     *
+     * @throws mixed
+     */
+    public function actionSuspendUser() {
+        $this->requirePostRequest();
+        craft()->userSession->requireLogin();
+        // get the posted userId
+        $userId = craft()->request->getPost('userId');
+        if (false == $user = craft()->users->getUserById($userId)) {
+            $this->_returnError('Invalid user ID ' . $userId . '.');
+        }
         $user->suspended = true;
         if ( ! craft()->users->saveUser($user)) {
-            $this->_returnError('Error removing user.');
+            $this->_returnError('Error suspending user.');
         }
-        $this->_returnMessage('User has been removed.');
+        $this->_returnMessage('User has been suspended.');
     }
 
     /**

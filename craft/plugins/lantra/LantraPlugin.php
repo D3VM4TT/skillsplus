@@ -93,9 +93,10 @@ class LantraPlugin extends BasePlugin
             }
         });
 
-        // Stop deletes
+        // Stop deletes on front end (apart from SM and admin)
         craft()->on('users.onBeforeDeleteUser', function(Event $event) {
-            if ( ! craft()->request->isCpRequest()){
+            $user = craft()->userSession->getUser();
+            if (!craft()->request->isCpRequest() && !$user->isInGroup('schemeManagers') && !$user->admin){
                 $event->performAction = false;
             }
         });

@@ -80,7 +80,7 @@
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
-                    <td><p class="td-title-responsive">Name: </p>{{ user.fullname }} {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                    <td><p class="td-title-responsive">Name: </p><a href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
                     <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                     <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
@@ -91,11 +91,14 @@
                     <td style="text-align:right">
                         <a href="/cpd/{{ user.id }}">dashboard</a>
                         {% if not currentUser.managerReadOnly %}
-                            | <a href="/management/users/edit/{{ user.id }}">edit</a> |
+                           | <a href="/management/users/edit/{{ user.id }}">edit</a>
                             {% if user.status == 'active' %}
-                                <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">suspend</a>
+                                 | <a class="action" href="#" data-action="lantra/users/suspendUser" data-id="{{ user.id }}">suspend</a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                                <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
+                                | <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
+                            {% endif %}
+                            {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+                                | <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
                             {% endif %}
                         {% endif %}
                     </td>

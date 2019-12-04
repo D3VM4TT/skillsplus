@@ -210,8 +210,15 @@ $(document).ready(function(){
             var data = {categoryId: $(this).data('id')};
             deleteRow = true;
         }
-        if (action == 'lantra/users/deleteUser') {
+        if (action == 'lantra/users/suspendUser') {
             if ( ! confirm('Are you sure you want to suspend this user?')) {
+                return false;
+            }
+            var data = {userId: $(this).data('id')};
+            reload = true;
+        }
+        if (action == 'lantra/users/deleteUser') {
+            if ( ! confirm('Are you sure you want to delete this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
