@@ -67,7 +67,7 @@
                 <p class="td-title-responsive">Evidence: </p>
                 {% if resultEntry and resultEntry.resultEvidence|length %}
                     {% for resultEvidenceAsset in resultEntry.resultEvidence %}
-                        <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a><br />
+                        <a target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">{{ resultEvidenceAsset.filename }}</a>  {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}<br />
                     {% endfor %}
                 {% elseif resultEntry and resultEntry.legacyResultFiles %}
                     file(s) exist
