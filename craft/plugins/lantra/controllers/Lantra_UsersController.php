@@ -4,7 +4,19 @@ namespace Craft;
 
 class Lantra_UsersController extends Lantra_BaseController {
 
-    public $allowAnonymous = array('actionHierarchy', 'actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
+    public $allowAnonymous = array('actionHierarchy', 'actionRefreshHierarchy', 'actionSaveUser', 'actionDeleteUser', 'actionRestoreUser');
+
+    /**
+     * Clear hierarchy cache for logged in user
+     *
+     * @throws Exception
+     */
+    public function actionRefreshHierarchy() {
+        craft()->userSession->requireLogin();
+        $user = craft()->userSession->getUser();
+        craft()->lantra_structure->clearHierarchyCache($user->id);
+        return $this->_returnMessage('Hierarchy cache deleted.', true, '/management/hierarchy');
+    }
 
     /**
      * Get company users for hierarchy
@@ -17,14 +29,22 @@ class Lantra_UsersController extends Lantra_BaseController {
         $companyId = craft()->request->getParam('companyId');
         $type = craft()->request->getParam('type');
         $user = craft()->userSession->getUser();
-        $node = craft()->lantra_structure->getHierarchy($companyId, $type, $user->id);
-        //*** look in cache
-        // $cache = 'lantraHierarchy' . $user->id . (!$companyId ? 'root' : $companyId . $type);
-        // if (false == $node = craft()->cache->get($cache)) {
-            // $node = craft()->lantra_structure->getHierarchy($companyId, $type);
-            //*** set cache
-            // craft()->cache->set($cache, $node, 86400);
-        //}
+        // look in cache
+        $name = 'lantraHierarchy' . $user->id;
+        if (false == $cache = craft()->cache->get($name)){
+            $cache = [];
+            craft()->cache->set($name, $cache);
+        }
+        $key = (!$companyId ? 'root' : $companyId . $type);
+        if (isset($cache[$key])) {
+            $node = $cache[$key];
+        }
+        else {
+            $node = craft()->lantra_structure->getHierarchy($companyId, $type);
+            // set cache
+            $cache[$key] = $node;
+            craft()->cache->set($name, $cache, 86400);
+        }
         return craft()->controller->returnJson($node);
     }
 

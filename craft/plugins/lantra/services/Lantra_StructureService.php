@@ -4,6 +4,13 @@ namespace Craft;
 class Lantra_StructureService extends BaseApplicationComponent
 {
     /**
+     * @param $userId
+     */
+    public function clearHierarchyCache($userId) {
+        craft()->cache->delete('lantraHierarchy' . $userId);
+    }
+
+    /**
      * @param $search
      * @param $limit
      * @param $order
