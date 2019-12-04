@@ -253,6 +253,38 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice($criteria->count() . ' reports updated.');
             $this->redirectToPostedUrl();
         }
+        if ($tool == 'copyNotes') {
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria->section = 'results';
+            $criteria->limit = 1000;
+            $criteria->type = ['unitResult', 'userResult'];
+            $criteria->resultNotes = ':notempty:';
+            $criteria->status = null;
+            foreach($criteria->find() as $result) {
+                $comments['new1'] = array(
+                    'type' => 3,
+                    'enabled' => true,
+                    'fields' => [
+                        'user' => [$result->authorId],
+                        'comment' => $result->resultNotes,
+                        'date' => time(),
+                        'read' => 1
+                    ]
+                );
+                $result->setContentFromPost([
+                    'resultNotes' => '',
+                    'resultComments' => $comments
+                ]);
+                craft()->elements->saveElement($result, false);
+            }
+            if ($criteria->count()) {
+                craft()->userSession->setNotice($criteria->count() . ' result updated. ');
+            }
+            else {
+                craft()->userSession->seError('No results to update. ');
+            }
+            $this->redirectToPostedUrl();
+        }
         if ($tool == 'copyDatabase' || $tool == 'copyDatabaseProd') {
             $environmentVariables = craft()->config->get('environmentVariables');
             $server = $environmentVariables['server'];
@@ -275,7 +307,18 @@ class Lantra_SettingsController extends BaseController
             }
             $this->redirectToPostedUrl();
         }
+
+        ## count results with notes
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = 'results';
+        $criteria->limit = null;
+        $criteria->type = ['unitResult', 'userResult'];
+        $criteria->resultNotes = ':notempty:';
+        $criteria->status = null;
+        $resultNotes = $criteria->count();
+
         $variables = [
+            'dataCleanResultNotes' => $resultNotes,
             'dataCleanManagersChildrenTotal' => $this->getManagers(null, 'ManagersChildren', 1, true),
             'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
             'dataCleanResultCacheTotal' => $this->getUsers(null, 'ResultCache', 1, true),
