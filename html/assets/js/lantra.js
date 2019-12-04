@@ -464,7 +464,7 @@ $(document).ready(function(){
         $(target).show();
         // make sure first unit group is shown
         if (target.match("^#tab")) {
-            $(target).find('ul.tabs:first-of-type').find('li:first-of-type a').click();
+            $(target).find('ul.tabs').eq(0).find('a').eq(0).click();
         }
     });
 
@@ -477,7 +477,7 @@ $(document).ready(function(){
         moduleLink.click();
     }
     else {
-       $('.tabs:first-of-type li:first-of-type a').click();
+       $('.module-group-tabs ul.tabs li:first-child a').click();
     }
 
     $('.module-group-tabs').show();
