@@ -97,9 +97,11 @@
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 | <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
                             {% endif %}
+                            {#
                             {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 | <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
                             {% endif %}
+                            #}
                         {% endif %}
                     </td>
                     <td class="icons" style="text-align:right">
