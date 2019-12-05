@@ -246,6 +246,8 @@ class UsersController extends BaseController
 			}
 		}
 
+		$loginName = null;
+
 		if (!isset($user))
 		{
 			$loginName = craft()->request->getPost('loginName');
@@ -267,6 +269,12 @@ class UsersController extends BaseController
 			}
 		}
 
+		// If no one is logged in and preventUserEnumeration is enabled, clear out the login errors
+		if (!$existingUser && craft()->config->get('preventUserEnumeration'))
+		{
+			$errors = array();
+		}
+
 		if (!empty($user))
 		{
 			if (!craft()->users->sendPasswordResetEmail($user))
@@ -275,9 +283,7 @@ class UsersController extends BaseController
 			}
 		}
 
-		// If there haven't been any errors, or there were, and it's not one logged in user editing another
-		// and we want to pretend like there wasn't any errors...
-		if (empty($errors) || (count($errors) > 0 && !$existingUser && craft()->config->get('preventUserEnumeration')))
+		if (empty($errors))
 		{
 			if (craft()->request->isAjaxRequest())
 			{
@@ -498,6 +504,11 @@ class UsersController extends BaseController
 	 */
 	public function actionEditUser(array $variables = array(), $account = null)
 	{
+		if (!empty($variables['errors']))
+		{
+			craft()->userSession->setError(reset($variables['errors']));
+		}
+
 		// Determine which user account we're editing
 		// ---------------------------------------------------------------------
 
@@ -596,7 +607,7 @@ class UsersController extends BaseController
 			{
 				case UserStatus::Pending:
 				{
-					$variables['statusLabel'] = Craft::t('Unverified');
+					$variables['statusLabel'] = Craft::t('Pending');
 
 					$statusActions[] = array('action' => 'users/sendActivationEmail', 'label' => Craft::t('Send activation email'));
 
@@ -1060,7 +1071,7 @@ class UsersController extends BaseController
 			}
 
 			// Save the user's photo, if it was submitted
-			$this->_processUserPhoto($user, $userPhoto);
+			$this->_processUserPhoto($user);
 
 			// If this is public registration, assign the user to the default user group
 			if ($thisIsPublicRegistration)
@@ -1716,8 +1727,7 @@ class UsersController extends BaseController
 
 		// Otherwise go with the CP's template
 		craft()->templates->setTemplateMode(TemplateMode::CP);
-		$templatePath = craft()->config->getCpSetPasswordPath();
-		$this->renderTemplate($templatePath, $variables);
+		$this->renderTemplate('setpassword', $variables);
 	}
 
 	/**
@@ -1765,11 +1775,10 @@ class UsersController extends BaseController
 
 	/**
 	 * @param $user
-     * @param $userPhoto
 	 *
 	 * @return null
 	 */
-	private function _processUserPhoto($user, $userPhoto)
+	private function _processUserPhoto($user)
 	{
 		// Delete their photo?
 		if (craft()->request->getPost('deleteUserPhoto'))
@@ -1778,7 +1787,7 @@ class UsersController extends BaseController
 		}
 
 		// Did they upload a new one?
-		if ($userPhoto)
+		if ($userPhoto = UploadedFile::getInstanceByName('userPhoto'))
 		{
 			craft()->users->deleteUserPhoto($user);
 			$image = craft()->images->loadImage($userPhoto->getTempName());

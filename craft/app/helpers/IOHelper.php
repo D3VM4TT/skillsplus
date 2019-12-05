@@ -761,7 +761,7 @@ class IOHelper
 			}
 
 			// Because setting permission with mkdir is a crapshoot.
-			$suppressErrors ? @chmod($path, $permissions) : @chmod($path, $permissions);
+			$suppressErrors ? @chmod($path, $permissions) : chmod($path, $permissions);
 			$suppressErrors ? @umask($oldumask) : umask($oldumask);
 			return new Folder($path);
 		}
@@ -1056,7 +1056,7 @@ class IOHelper
 
 		if (static::fileExists($path, false, $suppressErrors) || static::folderExists($path, false, $suppressErrors))
 		{
-			if ($suppressErrors ? @chmod($path, $permissions) : @chmod($path, $permissions))
+			if ($suppressErrors ? @chmod($path, $permissions) : chmod($path, $permissions))
 			{
 				return true;
 			}
@@ -1293,7 +1293,7 @@ class IOHelper
 		{
 			$folderContents = static::getFolderContents($path, true, null, true, $suppressErrors);
 
-			if ($folderContents)
+			if ($folderContents !== false)
 			{
 				foreach ($folderContents as $item)
 				{
@@ -1311,10 +1311,8 @@ class IOHelper
 
 				return true;
 			}
-			else
-			{
-				Craft::log('Tried to read the folder contents of '.$path.', but could not.', LogLevel::Error);
-			}
+
+			Craft::log('Tried to read the folder contents of '.$path.', but could not.', LogLevel::Error);
 		}
 		else
 		{
@@ -1556,15 +1554,16 @@ class IOHelper
 		// Strip any characters not allowed.
 		$fileName = str_replace($disallowedChars, '', strip_tags($fileName));
 
-		if (!is_null($separator))
-		{
-			$fileName = preg_replace('/(\s|'.preg_quote($separator).')+/u', $separator, $fileName);
-		}
-
 		// Nuke any trailing or leading .-_
 		$fileName = trim($fileName, '.-_');
 
 		$fileName = ($onlyAscii) ? StringHelper::asciiString($fileName) : $fileName;
+
+		if ($separator !== null) {
+			$qSeparator = preg_quote($separator, '/');
+			$fileName = preg_replace("/[\s{$qSeparator}]+/u", $separator, $fileName);
+			$fileName = preg_replace("/^{$qSeparator}+|{$qSeparator}+$/u", '', $fileName);
+		}
 
 		return $fileName;
 	}
