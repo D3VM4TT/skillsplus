@@ -1,0 +1,61 @@
+{% requirePermission 'editEntries:6' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Modules" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+
+{% set criteria = craft.categories.group('roles').search(filterSearch).order('title').limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
+
+{% block content %}
+
+<section class="page">
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
+    <div class="page-header secondary-bg">
+        <h2>Roles / Modules</h2>
+        <p>Job roles and Modules within your scheme</p>
+        {% include '_includes/filter' with{filterDays:false} %}
+    </div>
+    {% if roleCategories is defined and roleCategories|length %}
+    <div class="page-content">
+        <table class="data">
+            <thead>
+                <tr>
+                    <th class="title">Job Role</th>
+                    <th>Module(s)</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for role in roleCategories %}
+                {% set modules = craft.entries.section('modules').order('title').relatedTo(role).limit(null) %}
+                <tr>
+                    <td style="text-align: left">
+                        <p class="td-title-responsive">
+                            Job role: </p>
+                        {{ role.title }}
+                    </td>
+                    <td style="text-align: left">
+                        <p class="td-title-responsive">
+                            Module(s):
+                        </p>
+                        {% for module in modules %}
+                            {{ module.title }}{{ loop.last ? '' : ', ' }}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>There are no modules to display.</h3>
+    {% endif %}
+    </div>
+</section>
+{% endblock %}

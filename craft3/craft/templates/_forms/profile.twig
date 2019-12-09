@@ -1,0 +1,87 @@
+{% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
+{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+
+<form class="public" id="form-photo" method="post" enctype="multipart/form-data" autocomplete="off">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="users/saveUser">
+    <input type="hidden" name="redirect" value="/profile">
+    <input type="hidden" name="userId" value="{{ currentUser.id }}">
+    {% if craft.lantra.setting('userEditName') %}
+        <div class="field--wrapper">
+            <label for="firstName" class="no-float">First Name:</label>
+            <input name="firstName" type="text" class="float-label" placeholder="Enter your first name" value="{{ currentUser.firstName }}">
+        </div>
+        <div class="field--wrapper">
+            <label for="lastName" class="no-float">Last Name:</label>
+            <input name="lastName" type="text" class="float-label" placeholder="Enter your last name" value="{{ currentUser.lastName }}">
+        </div>
+    {% endif %}
+    
+    {% if craft.lantra.setting('userEditEmail') %}
+        <div class="field--wrapper">
+            <label for="email" class="no-float">Email:</label>
+            <input name="email" type="text" class="float-label" placeholder="Enter your email" value="{{ currentUser.email }}">
+        </div>
+    {% endif %}
+
+    {% if craft.lantra.setting('userEditStartDate') %}
+    <div class="field--wrapper">
+        {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value: currentUser.userStartDate} %}
+    </div>
+    {% endif %}
+
+    {% if craft.lantra.setting('userEditDob') %}
+    <div class="field--wrapper">
+        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: currentUser.userDateOfBirth} %}
+    </div>
+    {% endif %}
+
+    {% if craft.lantra.setting('userEditAddress') %}
+    <div class="field--wrapper">
+        <label for="address" class="no-float">Address:</label>
+        <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ currentUser.userAddress|default('') }}</textarea>
+    </div>
+    {% endif %}
+
+    {% if craft.lantra.setting('userEditTelephone') %}
+        <div class="field--wrapper">
+            <label for="telephone" class="no-float">Telephone:</label>
+            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ currentUser.userTelephone|default('') }}">
+        </div>
+    {% endif %}
+
+    {% if craft.lantra.setting('userEditRole') %}
+        <div class="field--wrapper">
+            <label for="telephone" class="no-float">Role:</label>
+            {% set roleCategories = craft.categories.group('roles') %}
+            <input type="hidden" name="fields[userRole]" value="" />
+            <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
+                {% for roleCategory in roleCategories %}
+                    <option value="{{ roleCategory.id }}"
+                      {% if roleCategory.id in currentUser.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+    {%  set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
+    {%  for block in userCustomFields %}
+        {% if block.userEdit %}
+        <div class="field--wrapper">
+            <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
+            {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+            {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
+            <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+        </div>
+        {% endif %}
+    {%  endfor %}
+    {% if craft.lantra.setting('userEditPhoto') %}
+    <p class="profile">Change profile picture:</p>
+    <input type="file" name="userPhoto" />
+    {% endif %}
+    <div class="container-btn">
+        <button class="button no-shadow primary-bg" style="margin:0px;"><span>Save Profile</span></button>
+    </div>
+</form>

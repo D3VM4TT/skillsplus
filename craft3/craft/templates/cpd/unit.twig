@@ -1,0 +1,140 @@
+{% set hierarchyNode = craft.app.request.getParam('node') %}
+{% extends "_layout" %}
+
+{% set userId = craft.app.request.segment(2) %}
+{% set moduleId = craft.app.request.segment(3) %}
+{% set unitId = craft.app.request.segment(4) %}
+
+{% if userId != currentUser.id %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+    {%  set dashboardUri = '/cpd/' ~ userId %}
+    {% set isManager = true %}
+{% else %}
+    {% set account = currentUser %}
+    {% set dashboardUri = '/' %}
+    {% set isManager = false %}
+{% endif %}
+
+{% set moduleEntry = craft.entries.id(moduleId).first() %}
+{% if not moduleEntry %}{% exit 404 %}{% endif %}
+{% set unitEntry = craft.entries.id(unitId).first() %}
+{% if not unitEntry %}{% exit 404 %}{% endif %}
+{% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
+{% set moduleGroup = moduleEntry.moduleGroup.first %}
+{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').first() %}
+{% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
+
+{% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
+        {% include '_includes/topNavigation' %}
+    </div>
+    {% if unitEntry.unitType == 'elearning' %}
+        <section class="page">
+            <div class="page-header secondary-bg">
+                {% if hierarchyNode %}
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                {% else %}
+                    <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                {% endif %}
+                <h2>{{ moduleEntry.title }}</h2>
+                <p>
+                    {{ unitEntry.title }}
+                    {{ unitEntry.unitHeading }}
+                </p>
+            </div>
+            <div class="page-content">
+                <h2>This is an assessment unit</h2>
+                <div class="col-12">
+                    {% if unitEntry.unitImage|length %}
+                        {% set unitImage = unitEntry.unitImage.first %}
+                        <div class="col-6 col-pd-btm">
+                            <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-6 col-pd-btm">
+                    <h5>Click the button below to view the unit content.</h5>
+                    <div class="cpd-comment-txt">(Opens in a new browser tab)</div>
+                    {% if unitEntry.unitUrl %}
+                    <div class="col-pd-top">
+                    <p><a class="button secondary-bg" target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                </div>
+                <div class="col-12 col-pd-btm">
+                    <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
+                    <div class="cpd-comment-txt">(Questions will appear below)</div>
+                <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test">Complete unit test</a></p>
+                    {% set resultPassed = false %}
+                    {% if resultEntry|length %}
+                        {% set resultPassed = resultEntry.resultScore >= unitEntry.testPassPercent %}
+                        <div class="col-pd-top col-pd-btm col-flex">
+                        {% if resultPassed %}
+                            <img src="/assets/img/endorse.svg" class="test-icon" alt="">
+                            <h2>Well done! You have passed this test.</h2>
+                        {% else %}
+                            <img src="/assets/img/delete.svg" class="test-icon" alt="">
+                            <h2>Sorry, you have not passed this test.</h2>
+                        {% endif %}
+                        </div>
+                        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
+                        <p>You have made <span class="link-bold">{{ totalAttempts }}</span> attempts and you have {{ remainingAttempts }} attempts remaining.</p>
+                        <p>Your best result is <span class="link-bold">{{ resultEntry.resultScore }}%</span></p>
+                        {% set attempts = resultEntry.resultAttempts %}
+                        {% for attempt in attempts %}
+                            {% set meta = craft.lantra.getAttemptMeta(attempt) %}
+                            <p>On <span class="link-bold">{{ attempt.postDate|date('d/m/y') }}</span> you scored <span class="link-bold">{{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</span></p>
+                        {% endfor %}
+                    {% elseif not remainingAttempts %}
+                        <h5>You have no remaining attempts, contact your team manager.</h5>
+                    {% endif %}
+                    {% if not resultPassed and remainingAttempts and craft.app.request.getSegment(5) == 'test' %}
+                        {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    {% else %}
+        <section class="page">
+            <div class="page-header secondary-bg">
+                {% if hierarchyNode %}
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                {% else %}
+                    <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                {% endif %}
+                <h2>{{ moduleEntry.title }}</h2>
+                <p>
+                    {{ unitEntry.title }}
+                    {{ unitEntry.unitHeading }}
+                </p>
+            </div>
+            <div class="page-content">
+                <h2>This is an evidence based unit</h2>
+                {% if unitEntry.unitImage|length %}
+                    <div class="col-pd-btm">
+                        {% set unitImage = unitEntry.unitImage.first %}
+                        <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                    </div>
+                {% endif %}
+                {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                {% if not resultEntry %}
+                    <div class="col-pd-btm">
+                        <h5>Complete the form below and attach files to submit evidence for endorsement.</h5>
+                    </div>
+                {% endif %}
+                {% if unitEntry.unitUrl %}
+                    <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+                {% endif %}
+                {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager} %}
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

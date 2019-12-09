@@ -1,0 +1,45 @@
+{% requirePermission 'editEntries:6' %}
+{% set entryId = craft.app.request.getSegment(4) %}
+{% if not entryId %}{% exit 404 %}{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Modules" %}
+
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).first %}
+{% endif %}
+
+{% block content %}
+
+<div class="page-header">
+    <h2>Assign job roles {{ entry.title }}</h2>
+    <p><a href="/management/modules">&laquo; back to modules</a></p>
+</div>
+
+{% if entry is defined %}
+    {{ ui.errorList(entry.getAllErrors()) }}
+{% endif %}
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="entries/saveEntry">
+    <input type="hidden" name="redirect" value="management/modules">
+    <input type="hidden" name="entryId" value="{{ entry.id }}">
+    <div class="field--wrapper">
+        <label for="moduleRoles" class="no-float">Module roles:</label>
+        {% set roleCategories = craft.categories.group('roles') %}
+        <input type="hidden" name="fields[moduleRoles]" value="" />
+        <select multiple name="fields[moduleRoles][]" id="moduleRoles">
+            {% for roleCategory in roleCategories %}
+            <option value="{{ roleCategory.id }}"
+                    {% if entry is defined and roleCategory.id in entry.moduleRoles.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save module</button>
+    </div>
+</form>
+
+{% endblock %}

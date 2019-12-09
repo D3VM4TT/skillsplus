@@ -1,0 +1,60 @@
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > User Mangers" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+
+{% set criteria = craft.users.group('users').search(filterSearch).limit(pageLimit) %}
+
+{% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
+
+{% block content %}
+    <section class="list">
+        <div class="page-header">
+            <h2>User Mangers</h2>
+        </div>
+        <div class="page-subHeader primary-bg"></div>
+        {% include '_includes/filter' with{filterDays:false} %}
+        {% if userEntries is defined and userEntries|length %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>All Managers</th>
+                        <th>Level One</th>
+                        <th>Level Two</th>
+                        <th>Level Three</th>
+                        <th>Level Four</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in userEntries %}
+                        {% set userManagers = craft.lantra.userManagers(user.id) %}
+                        {% set manager1 = craft.lantra.userManagers(user.id, 1) %}
+                        {% set manager2 = craft.lantra.userManagers(user.id, 2) %}
+                        {% set manager3 = craft.lantra.userManagers(user.id, 3) %}
+                        {% set manager4 = craft.lantra.userManagers(user.id, 4) %}
+                        <tr class="item">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.fullname }}</td>
+                            <td>{% for manager in userManagers %}{{ manager.fullname }}<br />{% endfor %}</td>
+                            <td>{{ manager1.fullname  }}</td>
+                            <td>{{ manager2.fullname  }}</td>
+                            <td>{{ manager3.fullname  }}</td>
+                            <td>{{ manager4.fullname  }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+        {% else %}
+            <div class="table-actions">
+                <h3>There are no users to display.</h3>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% requirePermission 'editEntries:5' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Teams" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+
+{% if currentUser.isInGroup('schemeManagers') or currentUser.admin  %}
+    {% set criteria = craft.entries.section('teams').search(filterSearch).limit(pageLimit) %}
+{% else %}
+    {% set companies = craft.entries.section('companies').relatedTo(currentUser).id('not ' ~ craft.lantra.individualCompanyId()) %}
+    {% set criteria = craft.entries.section('teams').relatedTo(companies).search(filterSearch).limit(pageLimit) %}
+{% endif %}
+
+{% if criteria %}{% paginate criteria as pageInfo, teamEntries %}{% endif %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>Teams</h2>
+        <p>Add, Edit and delete teams within your Scheme.</p>
+                <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+                {% if not currentUser.managerReadOnly %}
+
+                <div class="container-btn primary-bg">
+                    {#<button class="btn-add-new primary-bg">#}
+                    <a class="btn-add-new" href="/management/teams/new">Add a new Team</a>
+                    {#</button>#}
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+    {% if teamEntries is defined and teamEntries|length %}
+        <div class="page-content">
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company</th>
+                    <th class="title">Name</th>
+                    <th>Users</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for team in teamEntries %}
+                <tr>
+                    <td>{{ team.id }}</td>
+                    <td>{{ team.teamCompany.first.title }}</td>
+                    <td>{{ team.title }}</td>
+                    <td>{{ craft.lantra.userCount(team.id) }}</td>
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            {% set teamEmails = craft.lantra.emailList(team.id) %}
+                            {% if teamEmails %}
+                                <a href="mailto:{{ currentUser.email }}?bcc={{ teamEmails }}">email users</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not currentUser.managerReadOnly %}
+                            <a href="/management/teams/edit/{{ team.id }}">edit</a> |
+                            <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ team.id }}">delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>There are no teams to display.</h3>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
