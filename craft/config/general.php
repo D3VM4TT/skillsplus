@@ -27,12 +27,12 @@ return array(
         ),
     ),
     /* local server */
-    'cpd.lantra.local' => array(
-        'siteUrl' => 'http://cpd.lantra.local',
+    'skills-plus.local' => array(
+        'siteUrl' => 'http://craft2.skills-plus.net',
         'devMode' => true,
         'environmentVariables' => array(
-            'basePath' => '/websites/cpd.lantra.co.uk/',
-            'assetsPath' => '/websites/cpd.lantra.co.uk/craft-assets/',
+            'basePath' => '/websites/skills-plus.net/',
+            'assetsPath' => '/websites/skills-plus.net/craft-assets/',
             'server' => 'local',
         ),
     ),

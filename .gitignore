@@ -1,15 +1,10 @@
-# Site Specific #
+# Craft 2  #
 ###################
-public_html/assets/uploads/*
-assets/*
+html/assets/uploads/*
 src/dev/*
-
-# Craft CMS #
-###################
 craft/storage/userphotos/*
-craft/config/db.php
-
 craft-assets/*
+craft/config/db.php
 
 # PHPStorm #
 ######################
