@@ -27,8 +27,8 @@ return array(
         ),
     ),
     /* local server */
-    'skills-plus.local' => array(
-        'siteUrl' => 'http://craft2.skills-plus.net',
+    'craft2.skills-plus.local' => array(
+        'siteUrl' => 'http://craft2.skills-plus.local',
         'devMode' => true,
         'environmentVariables' => array(
             'basePath' => '/websites/skills-plus.net/',
