@@ -1,10 +1,15 @@
 <?php
-
-namespace Craft;
-
 /**
- * Class LantraHelper
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
  */
+
+namespace lantra\sp\helpers;
+
+use craft\helpers\FileHelper;
+
 class LantraHelper
 {
     /**
@@ -13,7 +18,7 @@ class LantraHelper
      */
     public static function getRelease()
     {
-        $release = IOHelper::getFileContents(CRAFT_CONFIG_PATH . '.release', false, true);
+        $release = file_get_contents(CRAFT_BASE_PATH . '/config/.release');
         return $release ? $release : 'unknown';
     }
 }

@@ -75,10 +75,10 @@ class Lantra_SettingsController extends BaseController
     {
         $elementId = craft()->request->getParam('elementId');
         if ($elementId == 'all') {
-            craft()->lantra_queue->clear();
+            Lantra::$app->queue->clear();
         }
         else {
-            craft()->lantra_queue->delete($elementId);
+            Lantra::$app->queue->delete($elementId);
         }
         craft()->userSession->setNotice(Craft::t('Queue updated.'));
         $this->redirect('lantra/settings/queue');
@@ -92,7 +92,7 @@ class Lantra_SettingsController extends BaseController
         craft()->db->createCommand()->truncateTable('searchindex');
         $tool = craft()->request->getParam('tool');
         if ($tool == 'saveCompanies') {
-            $topCompanies = craft()->lantra_structure->getCompanyChildren(null, false, null);
+            $topCompanies = Lantra::$app->structure->getCompanyChildren(null, false, null);
             if ($topCompanies){
                 foreach($topCompanies as $company) {
                     craft()->entries->saveEntry($company);
@@ -164,14 +164,14 @@ class Lantra_SettingsController extends BaseController
                     'dataCleanManagersChildren' => 1
                 ]);
                 craft()->elements->saveElement($user, false);
-                $companies = craft()->lantra_users->getManagerCompanies($user, true);
+                $companies = Lantra::$app->user->getManagerCompanies($user, true);
                 $companyIds = [];
                 foreach($companies as $company) {
                     $companyIds[] = $company->id;
                 }
                 foreach($companies as $company) {
                     if ($company->companyParent->first() && in_array($company->companyParent->first()->id, $companyIds)) {
-                        craft()->lantra_users->removeCompanyManager($company, $user);
+                        Lantra::$app->user->removeCompanyManager($company, $user);
                     }
                 }
             }
@@ -179,7 +179,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersChildren') {
-            craft()->lantra_settings->resetDataClean('ManagersChildren');
+            Lantra::$app->setting->resetDataClean('ManagersChildren');
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -191,7 +191,7 @@ class Lantra_SettingsController extends BaseController
                     'dataCleanManagersUserCompany' => 1
                 ]);
                 craft()->elements->saveElement($manager, false);
-                $companies = craft()->lantra_users->getManagerCompanies($manager, true);
+                $companies = Lantra::$app->user->getManagerCompanies($manager, true);
                 if (! $companies) {
                     continue;
                 }
@@ -212,7 +212,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersUserCompany') {
-            craft()->lantra_settings->resetDataClean('ManagersUserCompany');
+            Lantra::$app->setting->resetDataClean('ManagersUserCompany');
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -222,12 +222,12 @@ class Lantra_SettingsController extends BaseController
             foreach($users as $user) {
                 $results = $this->getUserUnitResults($user->id);
                 if ($results->count()) {
-                    craft()->lantra_results->saveUserResultCache($user->id, $results->find());
+                    Lantra::$app->result->saveUserResultCache($user->id, $results->find());
                 }
                 $user->setContentFromPost([
                     'dataCleanResultCache' => 1,
                     // update userType here
-                    'userType' => craft()->lantra_users->canManage($user) ? 'manager' : 'member'
+                    'userType' => Lantra::$app->user->canManage($user) ? 'manager' : 'member'
                 ]);
                 if ( ! craft()->elements->saveElement($user, false)) {
                     $message .= ' ' . $user->fullName . ' not updated.';
@@ -236,7 +236,7 @@ class Lantra_SettingsController extends BaseController
             craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
         }
         if ($tool == 'dataResetResultCache') {
-            craft()->lantra_settings->resetDataClean('ResultCache');
+            Lantra::$app->setting->resetDataClean('ResultCache');
             craft()->userSession->setNotice('All users have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -334,7 +334,7 @@ class Lantra_SettingsController extends BaseController
         $this->requirePostRequest();
         $settings = craft()->request->getPost('settings');
 
-        if (craft()->lantra_settings->saveSettings($settings)) {
+        if (Lantra::$app->setting->saveSettings($settings)) {
             craft()->userSession->setNotice(Craft::t('Settings saved.'));
             $this->redirectToPostedUrl();
         } else {

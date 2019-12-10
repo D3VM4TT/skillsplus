@@ -14,7 +14,7 @@ class Lantra_UsersController extends Lantra_BaseController {
     public function actionRefreshHierarchy() {
         craft()->userSession->requireLogin();
         $user = craft()->userSession->getUser();
-        craft()->lantra_structure->clearHierarchyCache($user->id);
+        Lantra::$app->structure->clearHierarchyCache($user->id);
         return $this->_returnMessage('Hierarchy cache deleted.', true, '/management/hierarchy');
     }
 
@@ -40,7 +40,7 @@ class Lantra_UsersController extends Lantra_BaseController {
             $node = $cache[$key];
         }
         else {
-            $node = craft()->lantra_structure->getHierarchy($companyId, $type);
+            $node = Lantra::$app->structure->getHierarchy($companyId, $type);
             // set cache
             $cache[$key] = $node;
             craft()->cache->set($name, $cache, 86400);
@@ -56,7 +56,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         $companyIds = craft()->request->getParam('companyIds');
         $return = [];
         if (count($companyIds)) {
-            $managers = craft()->lantra_users->getMultipleCompanyManagers($companyIds);
+            $managers = Lantra::$app->user->getMultipleCompanyManagers($companyIds);
             if (count($managers)) {
                 foreach ($managers as $manager) {
                     $return[$manager->id] = $manager->fullName;
@@ -96,7 +96,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         $user->firstName = craft()->request->getPost('firstName');
         $user->lastName = craft()->request->getPost('lastName');
         if ($fields['userDummyEmail']) {
-            $user->email = craft()->lantra_users->generateEmail($user->firstName, $user->lastName);
+            $user->email = Lantra::$app->user->generateEmail($user->firstName, $user->lastName);
         }
         else {
             $user->email = craft()->request->getPost('email');
@@ -119,9 +119,9 @@ class Lantra_UsersController extends Lantra_BaseController {
             $companyManager = true;
         }
         // remove as manager from all companies
-        elseif (false != $companies = craft()->lantra_users->getManagerCompanies($user)) {
+        elseif (false != $companies = Lantra::$app->user->getManagerCompanies($user)) {
             foreach ($companies as $company) {
-                craft()->lantra_users->removeCompanyManager($company, $user);
+                Lantra::$app->user->removeCompanyManager($company, $user);
             }
         }
         if (craft()->request->getPost('teamManagers')) {
@@ -147,10 +147,10 @@ class Lantra_UsersController extends Lantra_BaseController {
             // set user manager relations
             if ($companyManager) {
                 if ($userCompanyId) {
-                    craft()->lantra_users->setManager([$userCompanyId], $user, 'primary');
+                    Lantra::$app->user->setManager([$userCompanyId], $user, 'primary');
                 }
                 $secondaryManagerCompanyIds = craft()->request->getPost('userSecondaryManagerCompanies', []);
-                craft()->lantra_users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
+                Lantra::$app->user->setManager($secondaryManagerCompanyIds, $user, 'secondary');
             }
             $this->_returnMessage('User has been saved.', true, $redirect);
         } else {

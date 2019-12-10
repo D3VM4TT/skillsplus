@@ -16,15 +16,15 @@ class Lantra_CronController extends Lantra_BaseController {
         $frequency = craft()->request->getParam('frequency');
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
-            craft()->lantra_queue->next();
-            craft()->lantra_queue->next();
+            Lantra::$app->queue->next();
+            Lantra::$app->queue->next();
         }
         if ($frequency == 'daily') {
             Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
             # stop all notifications but user generated automatic report
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
-            craft()->lantra_reports->sendDailyReports();
+            Lantra::$app->report->sendDailyReports();
         }
         if ($frequency == 'weekly') {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
@@ -80,10 +80,10 @@ class Lantra_CronController extends Lantra_BaseController {
      * @throws Exception
      */
     function expireIndividualUsers() {
-        $users = craft()->lantra_users->getExpiredUsers();
+        $users = Lantra::$app->user->getExpiredUsers();
         if ($users) {
             foreach($users as $user) {
-                craft()->lantra_users->deactivateIndividualUser($user);
+                Lantra::$app->user->deactivateIndividualUser($user);
             }
         }
     }

@@ -37,14 +37,14 @@ class Lantra_PaypalController extends Lantra_BaseController
         // save payment
         craft()->matrix->saveBlock($payment);
         // add user to user group
-        craft()->lantra_users->activateIndividualUser($user);
+        Lantra::$app->user->activateIndividualUser($user);
         // add to Lantra company
-        craft()->lantra_users->addUserToIndividualCompany($user);
+        Lantra::$app->user->addUserToIndividualCompany($user);
         // add to Lantra job role
-        craft()->lantra_users->addUserToIndividualJobRole($user);
+        Lantra::$app->user->addUserToIndividualJobRole($user);
         // set account expiry
         $days = craft()->lantra_licence->getIndividualLicenceDays();
-        craft()->lantra_users->setUserExpiryDate($user, $days);
+        Lantra::$app->user->setUserExpiryDate($user, $days);
         // log success message
         Craft::log('IPN request received [' . $payerEmail . ']',LogLevel::Info, true, 'paypal', 'lantra');
         die();
