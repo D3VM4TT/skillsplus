@@ -1,5 +1,5 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 <form class="public" id="form-photo" method="post" enctype="multipart/form-data" autocomplete="off">
     {{ getCsrfInput() }}
