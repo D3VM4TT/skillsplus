@@ -1,10 +1,110 @@
 <?php
-namespace Craft;
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-use FontLib\Table\Type\post;
+namespace lantra\sp\services;
 
-class Lantra_ResultsService extends BaseApplicationComponent
+use Craft;
+use craft\base\Component;
+use craft\elements\Entry;
+
+class Results extends Component
 {
+
+    /**
+     * @param Entry $entry
+     */
+    public function onBeforeSaveResult(Entry $entry) {
+        // set comment
+        $comment = craft()->request->getPost('comment');
+        if ($comment) {
+            unset($_POST['comment']);
+            $resultComments = Lantra::$app->results->addComment($entry, $comment);
+            $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
+        }
+        // set custom author
+        $authorId = craft()->request->getPost('authorId');
+        if ($entry->type == 'userResult' && $authorId) {
+            $entry->authorId = $authorId;
+        }
+        $fields = craft()->request->getPost('fields');
+        $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
+        // set result title
+        if ($entry->type == 'userResult' && $resultUnitId) {
+            $unitEntry = craft()->entries->getEntryById($resultUnitId);
+            if ($unitEntry) {
+                $entry->getContent()->title = $unitEntry->title;
+            }
+        }
+        // check endorsed change
+        $oldEntry = craft()->entries->getEntryById($entry->id);
+        $currentUser = craft()->userSession->getUser();
+        // Auto endorse
+        if (! craft()->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
+            $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+            if (!$oldEntry) {
+                $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+            }
+        }
+        // force clear endorsed date if pending
+        if ($entry->resultStatus == 'pending') {
+            $entry->setContentFromPost(['resultEndorsedDate' => null]);
+        } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
+            $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+            $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+        }
+        // check change from draft to pending
+        if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
+            // send notification
+            if (Lantra::$app->results->notifyManagerEndorsementResult($entry)) {
+                craft()->lantra_notify->sendManagerEndorsementResult($entry);
+            }
+        }
+
+        $dateFormat = 'Y-m-d H:i:s';
+        // set a user start date
+        $userStartDate = craft()->request->getPost('userStartDate');
+        if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
+            $userStartDate = $date->getTimestamp();
+        }
+        $entry->setContentFromPost(['resultStartDate' => $userStartDate]);
+        // set a user finish date
+        $userFinishDate = craft()->request->getPost('userFinishDate');
+        if ($userFinishDate && false != $date = DateTime::createFromFormat($dateFormat, $userFinishDate)) {
+            $userFinishDate = $date->getTimestamp();
+        }
+        $entry->setContentFromPost(['resultFinishDate' => $userFinishDate]);
+        // validate dates
+        $userExpiryDate = craft()->request->getPost('userExpiryDate');
+        if ($userExpiryDate && false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
+            $userExpiryDate = $date->getTimestamp();
+            $entry->expiryDate = $date->getTimestamp();
+        }
+        if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
+            $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
+            $event->performAction = false;
+        }
+        if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
+            $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
+            $event->performAction = false;
+        }
+        if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
+            $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
+            $event->performAction = false;
+        }
+        if ($event->performAction == false) {
+            craft()->urlManager->setRouteVariables(array(
+                'resultEntry'    => $entry
+            ));
+        }
+
+    }
+
     // @todo move ids to config?
     private $sectionIdResults = 10;
     private $typeIdUnitResult = 10;
@@ -580,7 +680,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws mixed
      */
-    public function getManagerEndorsementResults(UserModel $manager, $limit = null,  $count = false) {
+    public function getManagerEndorsementResults($manager, $limit = null,  $count = false) {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'results';
         $criteria->type = ['userResult', 'unitResult'];
@@ -589,7 +689,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->limit = $limit;
         // limit by subordinates and check unit level if team or company manager
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
-            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
             if (!count($subordinateIds)) {
                 return null;
             }
@@ -610,7 +710,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @return mixed
      * @throws mixed
      */
-    public function getManagerEndorsementUsers(UserModel $manager, $limit = null, $count = false, $directSubordinates = false) {
+    public function getManagerEndorsementUsers($manager, $limit = null, $count = false, $directSubordinates = false) {
         $criteria = craft()->elements->getCriteria(ElementType::User);
         $criteria->id =  $this->getManagerEndorsementUserIds($manager, $directSubordinates);
         $criteria->order = 'lastName desc';
@@ -623,7 +723,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param bool $directSubordinates
      * @return int
      */
-    public function countManagerEndorsementUsers(UserModel $manager, $directSubordinates = false) {
+    public function countManagerEndorsementUsers($manager, $directSubordinates = false) {
         return $this->getManagerEndorsementUserIds($manager, $directSubordinates, true);
     }
 
@@ -633,11 +733,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param bool $count
      * @return array|int
      */
-    public function getManagerEndorsementUserIds(UserModel $manager, $directSubordinates = false, $count = false) {
+    public function getManagerEndorsementUserIds($manager, $directSubordinates = false, $count = false) {
         $onlySubordinates = false;
         # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
-            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, $directSubordinates == false);
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, $directSubordinates == false);
             # make sure there are any subordinates
             if (!count($subordinateIds)) {
                 return $count ? 0 : [];
@@ -670,11 +770,11 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
 
         if ($count) {
-            return craft()->db->createCommand($mysql)->queryRow()['total'];
+            return Craft::$app->db->createCommand($mysql)->queryRow()['total'];
         }
 
         # return array or authorIds of users that have pending results
-        $result = craft()->db->createCommand($mysql)->queryAll();
+        $result = Craft::$app->db->createCommand($mysql)->queryAll();
         $return = [];
         foreach ($result as $row) {
             $return[] = $row['authorId'];
@@ -749,7 +849,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         // limit by subordinates if team or company manager
         if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
-            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
             }
@@ -879,13 +979,13 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = []) {
         $userFilter = $this->formatUserFilter($userFilter);
-        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         if (! $subordinates) {
             return [];
         }
         $subordinateIds = $subordinates->ids();
         // streamlined sql to get users
-        $users = craft()->lantra_users->getReportUsers($subordinateIds);
+        $users = Lantra::$app->users->getReportUsers($subordinateIds);
 
         $header = [
             'Company ID',
@@ -1101,7 +1201,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = [], $displayField = 'expiryDate') {
         $userFilter = $this->formatUserFilter($userFilter);
-        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $subordinates->ids();
 
         $header = [
@@ -1157,7 +1257,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             if ($resultFilter['resultType'] != 'userResult') {
                 $mandatoryUnits = $this->userUnits($user);
             }
-            $company = craft()->lantra_users->userCompany($user);
+            $company = Lantra::$app->users->userCompany($user);
             $row = [
                 $user->id,
                 $user->fullName,
@@ -1255,7 +1355,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter, $includeRequired = false) {
         $userFilter = $this->formatUserFilter($userFilter);
-        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $subordinates->ids();
 
         $header = [
@@ -1277,7 +1377,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             foreach ($results as $id => $result) {
                 $resultIds[] = $result->id;
                 $user = $result->author;
-                $company = craft()->lantra_users->userCompany($user);
+                $company = Lantra::$app->users->userCompany($user);
                 $role = $user->userRole->first();
                 $userUnits = $this->roleUnits($role->id);
                 $title = $result->title;
@@ -1323,7 +1423,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      */
     public function getManagerUnitRequiredResults($userId = null, $userFilter = [], $resultFilter) {
         $userFilter = $this->formatUserFilter($userFilter);
-        $subordinates = craft()->lantra_users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
 
         $header = [
             'User ID',
@@ -1364,7 +1464,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         $criteria->authorId = $user->id;
         $results = $criteria->find();
         foreach ($results as $result) {
-            $company = craft()->lantra_users->userCompany($user);
+            $company = Lantra::$app->users->userCompany($user);
             $role = $user->userRole->first();
             $row = [
                 $user->id,
@@ -1394,7 +1494,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         foreach ($units as $unit) {
             $result = $this->unitResult($user, $unit->id);
             if ( ! $result || ($includeExpired && $result->status == 'expired')) {
-                $company = craft()->lantra_users->userCompany($user);
+                $company = Lantra::$app->users->userCompany($user);
                 $role = $user->userRole->first();
                 $row = [
                     $user->id,
@@ -1615,7 +1715,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
         }
         // limit by subordinates if team or company manager
         if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
-            $subordinateIds = craft()->lantra_users->getManagerSubordinateIds($manager, true);
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
             }
@@ -1669,7 +1769,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      *
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
-        if (craft()->lantra_settings->getSetting('disableResultCache')) {
+        if (Lantra::$app->setting->getSetting('disableResultCache')) {
             return;
         }
         $keyColumns = [
@@ -1694,7 +1794,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
      * @param $resultEntry
      */
     public function deleteUserResultCache($resultEntry) {
-        if (craft()->lantra_settings->getSetting('disableResultCache')) {
+        if (Lantra::$app->setting->getSetting('disableResultCache')) {
             return;
         }
         $userId = $resultEntry->getAuthor()->id;

@@ -26,7 +26,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $userId =  craft()->request->getPost('userId');
         $results = [];
         if ($ref == 'jobRole') {
-            $results = Lantra::$app->result->getJobRoleUserResults($id, $userId);
+            $results = Lantra::$app->results->getJobRoleUserResults($id, $userId);
         }
         $count = 0;
         // loop entries and update status
@@ -51,7 +51,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        Lantra::$app->result->unblockResult($entry);
+        Lantra::$app->results->unblockResult($entry);
         $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, craft()->request->getUrlReferrer());
     }
 
@@ -76,7 +76,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         }
         // if a result update cache
         if ($entry->section->id == 10 && $entry->type == 'unitResult') {
-            Lantra::$app->result->deleteUserResultCache($entry);
+            Lantra::$app->results->deleteUserResultCache($entry);
         }
         // save disabled entry
         $this->_disableEntry($entry);

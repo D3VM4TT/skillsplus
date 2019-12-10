@@ -164,14 +164,14 @@ class Lantra_SettingsController extends BaseController
                     'dataCleanManagersChildren' => 1
                 ]);
                 craft()->elements->saveElement($user, false);
-                $companies = Lantra::$app->user->getManagerCompanies($user, true);
+                $companies = Lantra::$app->users->getManagerCompanies($user, true);
                 $companyIds = [];
                 foreach($companies as $company) {
                     $companyIds[] = $company->id;
                 }
                 foreach($companies as $company) {
                     if ($company->companyParent->first() && in_array($company->companyParent->first()->id, $companyIds)) {
-                        Lantra::$app->user->removeCompanyManager($company, $user);
+                        Lantra::$app->users->removeCompanyManager($company, $user);
                     }
                 }
             }
@@ -191,7 +191,7 @@ class Lantra_SettingsController extends BaseController
                     'dataCleanManagersUserCompany' => 1
                 ]);
                 craft()->elements->saveElement($manager, false);
-                $companies = Lantra::$app->user->getManagerCompanies($manager, true);
+                $companies = Lantra::$app->users->getManagerCompanies($manager, true);
                 if (! $companies) {
                     continue;
                 }
@@ -222,12 +222,12 @@ class Lantra_SettingsController extends BaseController
             foreach($users as $user) {
                 $results = $this->getUserUnitResults($user->id);
                 if ($results->count()) {
-                    Lantra::$app->result->saveUserResultCache($user->id, $results->find());
+                    Lantra::$app->results->saveUserResultCache($user->id, $results->find());
                 }
                 $user->setContentFromPost([
                     'dataCleanResultCache' => 1,
                     // update userType here
-                    'userType' => Lantra::$app->user->canManage($user) ? 'manager' : 'member'
+                    'userType' => Lantra::$app->users->canManage($user) ? 'manager' : 'member'
                 ]);
                 if ( ! craft()->elements->saveElement($user, false)) {
                     $message .= ' ' . $user->fullName . ' not updated.';

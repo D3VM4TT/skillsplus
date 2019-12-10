@@ -63,7 +63,7 @@ class Lantra_ReportsController extends Lantra_BaseController
             $fields['reportAutomated'] = false;
             $redirect = '/reporting/custom';
         }
-        $reportEntry = Lantra::$app->report->saveCustomReport($manager, $title, $fields, $entryId);
+        $reportEntry = Lantra::$app->reports->saveCustomReport($manager, $title, $fields, $entryId);
         if ($reportEntry->hasErrors()) {
             return craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
         }
@@ -113,7 +113,7 @@ class Lantra_ReportsController extends Lantra_BaseController
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        $total = Lantra::$app->report->runCustomReport($entry);
+        $total = Lantra::$app->reports->runCustomReport($entry);
         if ($total) {
             return $this->_returnMessage( $entry->title . ' has been successfully run (' . $total . ' rows).', true);
 

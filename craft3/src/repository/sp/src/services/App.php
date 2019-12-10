@@ -17,30 +17,30 @@ use craft\base\Component;
  */
 class App extends Component
 {
-    public $attempt;
+    public $attempts;
     public $deploy;
-    public $licence;
-    public $migration;
+    public $licences;
+    public $migrations;
     public $notify;
     public $queue;
-    public $report;
-    public $result;
+    public $reports;
+    public $results;
     public $settings;
     public $structure;
-    public $user;
+    public $users;
 
     public function init()
     {
-        $this->attempt = new Attempt();
+        $this->attempts = new Attempts();
         $this->deploy = new Deploy();
-        $this->licence = new Licence();
-        $this->migration = new Migration();
+        $this->licences = new Licences();
+        $this->migrations = new Migrations();
         $this->notify = new Notify();
         $this->queue = new Queue();
-        $this->report = new Report();
-        $this->result = new Result();
+        $this->reports = new Reports();
+        $this->results = new Results();
         $this->settings = new Settings();
         $this->structure = new Structure();
-        $this->user = new User();
+        $this->users = new Users();
     }
 }

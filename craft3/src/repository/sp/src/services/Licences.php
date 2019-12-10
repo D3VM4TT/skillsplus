@@ -1,7 +1,17 @@
 <?php
-namespace Craft;
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-class Lantra_LicenceService extends BaseApplicationComponent
+namespace lantra\sp\services;
+
+use Craft;
+use craft\base\Component;
+
+class Licences extends Component
 {
     /**
      * Assign user to a company licence
@@ -92,8 +102,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function addSchemeLicences($number = 1) {
-        $schemeRemainingLicences = (int) craft()->lantra_settings->getSetting('schemeRemainingLicences', 0);
-        return craft()->lantra_settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences + (int) $number);
+        $schemeRemainingLicences = (int) Lantra::$app->setting->getSetting('schemeRemainingLicences', 0);
+        return Lantra::$app->setting->saveSetting('schemeRemainingLicences', $schemeRemainingLicences + (int) $number);
     }
 
     /**
@@ -104,8 +114,8 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return mixed
      */
     function subtractSchemeLicences($number = 1) {
-        $schemeRemainingLicences = (int) craft()->lantra_settings->getSetting('schemeRemainingLicences', 0);
-        return craft()->lantra_settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences - (int) $number);
+        $schemeRemainingLicences = (int) Lantra::$app->setting->getSetting('schemeRemainingLicences', 0);
+        return Lantra::$app->setting->saveSetting('schemeRemainingLicences', $schemeRemainingLicences - (int) $number);
     }
 
     /**
@@ -114,7 +124,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return DateTime $schemeExpiryDate
      */
     function getSchemeExpiryDate() {
-        return craft()->lantra_settings->getSetting('schemeExpiryDate');
+        return Lantra::$app->setting->getSetting('schemeExpiryDate');
     }
 
     /**
@@ -123,7 +133,7 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return int $number
      */
     function getSchemeLicences() {
-        return craft()->lantra_settings->getSetting('schemeRemainingLicences');
+        return Lantra::$app->setting->getSetting('schemeRemainingLicences');
     }
 
     /** Get individual days till expiry
@@ -132,6 +142,6 @@ class Lantra_LicenceService extends BaseApplicationComponent
      * @return null
      */
     public function getIndividualLicenceDays() {
-        return craft()->lantra_settings->getSetting('individualLicenceDays');
+        return Lantra::$app->setting->getSetting('individualLicenceDays');
     }
 }

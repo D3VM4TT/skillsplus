@@ -56,7 +56,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         $companyIds = craft()->request->getParam('companyIds');
         $return = [];
         if (count($companyIds)) {
-            $managers = Lantra::$app->user->getMultipleCompanyManagers($companyIds);
+            $managers = Lantra::$app->users->getMultipleCompanyManagers($companyIds);
             if (count($managers)) {
                 foreach ($managers as $manager) {
                     $return[$manager->id] = $manager->fullName;
@@ -96,7 +96,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         $user->firstName = craft()->request->getPost('firstName');
         $user->lastName = craft()->request->getPost('lastName');
         if ($fields['userDummyEmail']) {
-            $user->email = Lantra::$app->user->generateEmail($user->firstName, $user->lastName);
+            $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
         }
         else {
             $user->email = craft()->request->getPost('email');
@@ -119,9 +119,9 @@ class Lantra_UsersController extends Lantra_BaseController {
             $companyManager = true;
         }
         // remove as manager from all companies
-        elseif (false != $companies = Lantra::$app->user->getManagerCompanies($user)) {
+        elseif (false != $companies = Lantra::$app->users->getManagerCompanies($user)) {
             foreach ($companies as $company) {
-                Lantra::$app->user->removeCompanyManager($company, $user);
+                Lantra::$app->users->removeCompanyManager($company, $user);
             }
         }
         if (craft()->request->getPost('teamManagers')) {
@@ -147,10 +147,10 @@ class Lantra_UsersController extends Lantra_BaseController {
             // set user manager relations
             if ($companyManager) {
                 if ($userCompanyId) {
-                    Lantra::$app->user->setManager([$userCompanyId], $user, 'primary');
+                    Lantra::$app->users->setManager([$userCompanyId], $user, 'primary');
                 }
                 $secondaryManagerCompanyIds = craft()->request->getPost('userSecondaryManagerCompanies', []);
-                Lantra::$app->user->setManager($secondaryManagerCompanyIds, $user, 'secondary');
+                Lantra::$app->users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
             }
             $this->_returnMessage('User has been saved.', true, $redirect);
         } else {

@@ -50,7 +50,7 @@ class Structure extends Component
         $criteria->order = $order;
         $excludeIds = [];
         if ( ! $user->isInGroup('schemeManagers')) {
-            $individualCompany = Lantra::$app->user->getIndividualCompany();
+            $individualCompany = Lantra::$app->users->getIndividualCompany();
             if ($individualCompany) {
                 $excludeIds[] = $individualCompany->id;
             }
@@ -139,14 +139,14 @@ class Structure extends Component
         }
         else {
             // does this user manage teams or companies?
-            $managerTeams = Lantra::$app->user->getManagerTeams($user);
-            $managerCompanies = Lantra::$app->user->getManagerCompanies($user);
+            $managerTeams = Lantra::$app->users->getManagerTeams($user);
+            $managerCompanies = Lantra::$app->users->getManagerCompanies($user);
 
             $children = [];
             if ($managerCompanies && count($managerCompanies)) {
                 foreach ($managerCompanies as $company) {
                     // skip companies where they are the manager of the parent too
-                    if (Lantra::$app->user->isParentCompanyManager($company, $user)){
+                    if (Lantra::$app->users->isParentCompanyManager($company, $user)){
                         continue;
                     }
                     $children[] = $this->getHierarchy($company->id, 'companies');
@@ -172,9 +172,9 @@ class Structure extends Component
 
     private function getJsTreeCompany($companyId) {
         $company = $this->getCompanyById($companyId);
-        $managerCount = $companyId ? Lantra::$app->user->getCompanyManagers($company, true) : 0;
-        $memberCount = $companyId ? Lantra::$app->user->getCompanyMembers($companyId, true) : 0;
-        $teams = $companyId ? Lantra::$app->user->getCompanyTeams($companyId) : [];
+        $managerCount = $companyId ? Lantra::$app->users->getCompanyManagers($company, true) : 0;
+        $memberCount = $companyId ? Lantra::$app->users->getCompanyMembers($companyId, true) : 0;
+        $teams = $companyId ? Lantra::$app->users->getCompanyTeams($companyId) : [];
         $childrenCount = $this->getCompanyChildren($companyId, true);
 
         $return = $this->createNode($companyId ? $companyId : 0, 'company', $companyId, $company->title, 'company');
@@ -200,16 +200,16 @@ class Structure extends Component
 
     private function getJsTreeManagers($entryId) {
         if ($entryId == 'scheme') {
-            $managers = Lantra::$app->user->getSchemeManagers();
+            $managers = Lantra::$app->users->getSchemeManagers();
         }
         else {
             $entry = craft()->entries->getEntryById($entryId);
             // company managers
             if ($entry->getSection()->id == 3) {
-                $managers = Lantra::$app->user->getCompanyManagers($entry);
+                $managers = Lantra::$app->users->getCompanyManagers($entry);
             } // team managers
             else {
-                $managers = Lantra::$app->user->getTeamManagers($entry);
+                $managers = Lantra::$app->users->getTeamManagers($entry);
             }
         }
         $return = [];
@@ -226,7 +226,7 @@ class Structure extends Component
 
     private function getJsTreeTeam($teamId) {
         $team =  craft()->entries->getEntryById($teamId);
-        $managerCount = Lantra::$app->user->getTeamManagers($team, true);
+        $managerCount = Lantra::$app->users->getTeamManagers($team, true);
         $return[]  = $this->createNode($teamId, 'managers', $team->id . 'm', 'Managers (' . $managerCount . ')', 'group', true);
         $users = $this->getJsTreeUsers($teamId);
         $return = array_merge($return, $users);
@@ -237,11 +237,11 @@ class Structure extends Component
         $entry =  craft()->entries->getEntryById($entryId);
         // company members
         if ($entry->getSection()->id == 3) {
-            $members = Lantra::$app->user->getCompanyMembers($entry->id);
+            $members = Lantra::$app->users->getCompanyMembers($entry->id);
         }
         // team members
         else {
-            $members = Lantra::$app->user->getTeamMembers($entry->id);
+            $members = Lantra::$app->users->getTeamMembers($entry->id);
         }
         $return = [];
         foreach($members as $user) {

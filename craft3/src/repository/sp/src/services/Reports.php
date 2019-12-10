@@ -1,22 +1,22 @@
 <?php
-namespace Craft;
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
+
+namespace lantra\sp\services;
+
+use Craft;
+use craft\base\Component;
 
 use League\Csv\Writer;
 
-class Lantra_ReportsService extends BaseApplicationComponent
+class Reports extends Component
 {
     private $sectionIdReports = 13;
     private $typeIdReport = 15;
-
-    /**
-     *
-     * Load in the vendor dependencies
-     */
-    public function init()
-    {
-        parent::init();
-        require_once dirname(__FILE__) . '/../vendor/autoload.php';
-    }
 
     /**
      * @param $search
@@ -81,7 +81,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $reportSendValue = (int) $reportEntry->reportSendValue;
             $reportSendFrequency = $reportEntry->reportSendFrequency->value;
             if (($reportSendFrequency == 'weekly' && $reportSendValue == $weekDay) || ($reportSendFrequency == 'monthly' && $reportSendValue == $monthDay)) {
-                craft()->lantra_queue->add($reportEntry->id, 9);
+                Lantra::$app->queue->add($reportEntry->id, 9);
             }
         }
     }
@@ -177,7 +177,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         }
         if (count($filter['reportCompanies'])) {
             if ($filter['reportIncludeHierarchy']) {
-                $filter['reportCompanies'] = craft()->lantra_structure->appendCompanyDescendants($filter['reportCompanies']);
+                $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
             }
             $userFilter['relatedTo'] = [
                 'targetElement' => $filter['reportCompanies'],
@@ -192,12 +192,12 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $resultFilter['unitIds'] = $filter['reportUnits'];
         }
         if ($type == 'users') {
-            $values = craft()->lantra_results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
+            $values = Lantra::$app->results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
         elseif ($type == 'results') {
             $resultFilter['resultStatus'] = 'endorsed';
             $displayField = isset($filter['reportDisplayField']) ? $filter['reportDisplayField'] : 'expiryDate';
-            $values = craft()->lantra_results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
+            $values = Lantra::$app->results->getManagerUserCompletedResults($manager->id, $userFilter, $resultFilter, $displayField);
         }
         elseif ($type == 'expired') {
             $resultFilter['status'] = 'expired';
@@ -223,10 +223,10 @@ class Lantra_ReportsService extends BaseApplicationComponent
                     }
                 }
             }
-            $values = craft()->lantra_results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter, $filter['reportIncludeRequired']);
+            $values = Lantra::$app->results->getManagerUnitExpiredResults($manager->id, $userFilter, $resultFilter, $filter['reportIncludeRequired']);
         }
         elseif ($type == 'required') {
-            $values = craft()->lantra_results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
+            $values = Lantra::$app->results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
         return $values;
     }
@@ -287,7 +287,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         // delete the temp file
         unlink($filePath . $fileName);
         // delete from queue
-        craft()->lantra_queue->delete($reportEntry->id);
+        Lantra::$app->queue->delete($reportEntry->id);
         return $total;
     }
 
@@ -325,7 +325,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         foreach($data as $row) {
             // user fields go in all reports
             $user = ($type == 'result') ? $row->author : $row;
-            $company = craft()->lantra_users->userCompany($user);
+            $company = Lantra::$app->users->userCompany($user);
             $roles = [];
             foreach ($user->userRole as $role) {
                 $roles[] = $role->title;
@@ -369,7 +369,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
             $expiring = 'expired';
             $days = 'all';
         }
-        $criteria = craft()->lantra_results->getModuleResults($days, null, $expiring, 'complete', null, $userIds);
+        $criteria = Lantra::$app->results->getModuleResults($days, null, $expiring, 'complete', null, $userIds);
         return $criteria->find();
     }
 
@@ -386,7 +386,7 @@ class Lantra_ReportsService extends BaseApplicationComponent
         $criteria->limit = null;
         $companyTeamIds = [];
         foreach($reportEntry->reportCompanies as $company) {
-            $companyTeamIds = array_merge($companyTeamIds, craft()->lantra_users->getCompanyTeamIds($company->id));
+            $companyTeamIds = array_merge($companyTeamIds, Lantra::$app->users->getCompanyTeamIds($company->id));
         }
         $teamIds = array_merge($companyTeamIds,$reportEntry->reportTeams->ids());
         $jobRoleIds = $reportEntry->reportRoles->ids();

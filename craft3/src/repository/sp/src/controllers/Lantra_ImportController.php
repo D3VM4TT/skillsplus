@@ -704,12 +704,12 @@ class Lantra_ImportController extends Lantra_BaseController
             $userDummyEmail = 0;
 
             if (empty($username) || $username != $legacyEmail) {
-                $username = Lantra::$app->user->generateUsername($username, $names[0], $names[1]);
+                $username = Lantra::$app->users->generateUsername($username, $names[0], $names[1]);
             }
 
             // generate an email address
             if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail) || craft()->users->getUserByUsernameOrEmail($legacyEmail)) {
-                $emailAddress = Lantra::$app->user->generateEmail($names[0], $names[1], $username);
+                $emailAddress = Lantra::$app->users->generateEmail($names[0], $names[1], $username);
                 $userDummyEmail = 1;
             } else {
                 $emailAddress = $legacyEmail;

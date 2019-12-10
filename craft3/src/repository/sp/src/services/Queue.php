@@ -105,7 +105,7 @@ class Queue extends Component
         }
         // only works with reports
         if ($entry->sectionId == 13) {
-            Lantra::$app->report->runCustomReport($entry);
+            Lantra::$app->reports->runCustomReport($entry);
         }
     }
 

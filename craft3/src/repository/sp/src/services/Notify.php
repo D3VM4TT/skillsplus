@@ -39,7 +39,7 @@ class Notify extends Component
      * @throws mixed
      */
     function sendUserExpiry($expiryDate) {
-       $criteria = Lantra::$app->user->getExpiringUsers($expiryDate);
+       $criteria = Lantra::$app->users->getExpiringUsers($expiryDate);
        if ($criteria->total()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
            foreach ($criteria->find() as $user) {
@@ -171,7 +171,7 @@ class Notify extends Component
         $template = $this->getNotifySetting('endorsementResult', "{{ user.fullName}} has submitted a result {{ entry.title }}.");
         $message = craft()->templates->renderString($template, $variables);
         // send the emails to managers
-        $manager = Lantra::$app->user->getUserManagerByLevel($user, $level);
+        $manager = Lantra::$app->users->getUserManagerByLevel($user, $level);
         if ($manager) {
             $this->notify($manager->email, $subject, $message);
         }
@@ -187,7 +187,7 @@ class Notify extends Component
      */
     function sendManagerSummary(UserModel $manager, $days = 7) {
         $subject = $this->getNotifySetting('subjectManagerSummary', 'Manager Summary');
-        $criteria = Lantra::$app->result->getManagerModuleExpiringResults($manager->id, $days, null);
+        $criteria = Lantra::$app->results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {
@@ -203,7 +203,7 @@ class Notify extends Component
             $message = "There are no expiring results in the next " . $days . " days:\n\n";
         }
 
-        $criteria = Lantra::$app->result->getManagerModuleCompletedResults($manager->id, $days, null);
+        $criteria = Lantra::$app->results->getManagerModuleCompletedResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
             foreach ($criteria->find() as $result) {
@@ -231,7 +231,7 @@ class Notify extends Component
      * @throws mixed
      */
     function notifyManagers($user, $subject, $message) {
-        $managers = Lantra::$app->user->getUserMangers($user);
+        $managers = Lantra::$app->users->getUserMangers($user);
         if ($managers && count($managers)) {
             foreach ($managers as $manager) {
                 $this->notify($manager->email, $subject, $message);

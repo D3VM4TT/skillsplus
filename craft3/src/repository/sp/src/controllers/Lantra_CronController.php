@@ -24,7 +24,7 @@ class Lantra_CronController extends Lantra_BaseController {
             # stop all notifications but user generated automatic report
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
-            Lantra::$app->report->sendDailyReports();
+            Lantra::$app->reports->sendDailyReports();
         }
         if ($frequency == 'weekly') {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
@@ -80,10 +80,10 @@ class Lantra_CronController extends Lantra_BaseController {
      * @throws Exception
      */
     function expireIndividualUsers() {
-        $users = Lantra::$app->user->getExpiredUsers();
+        $users = Lantra::$app->users->getExpiredUsers();
         if ($users) {
             foreach($users as $user) {
-                Lantra::$app->user->deactivateIndividualUser($user);
+                Lantra::$app->users->deactivateIndividualUser($user);
             }
         }
     }

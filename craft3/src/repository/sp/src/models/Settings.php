@@ -77,6 +77,7 @@ class Settings extends Model
     public $labelJobRole                        = '';
     public $queue                               = [];
     public $disableResultCache                  = false;
+    public $jsDateFormat                        = 'dd-mm-yyyy';
 
     /*
      * modified values

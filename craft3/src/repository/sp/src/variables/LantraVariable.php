@@ -39,7 +39,7 @@ class LantraVariable
      */
     public function userUnitIds($userId) {
         $user = (is_null($userId)) ? null : $this->getUser($userId);
-        return Lantra::$app->user->getUserUnitIds($user);
+        return Lantra::$app->users->getUserUnitIds($user);
     }
 
     /**
@@ -67,7 +67,7 @@ class LantraVariable
      * @return mixed
      */
     public function userResultCache($userIds) {
-        return Lantra::$app->result->getUserResultCache($userIds);
+        return Lantra::$app->results->getUserResultCache($userIds);
     }
 
     /**
@@ -150,7 +150,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return;
         }
-        return Lantra::$app->result->readComment($comment, $user->id);
+        return Lantra::$app->results->readComment($comment, $user->id);
     }
 
     /**
@@ -162,7 +162,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return;
         }
-        return Lantra::$app->result->unreadComments($result, $user->id);
+        return Lantra::$app->results->unreadComments($result, $user->id);
     }
 
     /**
@@ -192,7 +192,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->getManagerHierarchy($user);
+        return Lantra::$app->users->getManagerHierarchy($user);
     }
 
     /**
@@ -252,7 +252,7 @@ class LantraVariable
      * @return string
      */
     public function emailList($entryId = null) {
-        $emails = Lantra::$app->user->getEmails($entryId);
+        $emails = Lantra::$app->users->getEmails($entryId);
         return implode(';', $emails);
     }
 
@@ -265,11 +265,11 @@ class LantraVariable
      * @return int
      */
     public function userCount($entryId = null, $status = 'active', $type = 'company') {
-        $active = count(Lantra::$app->user->getUsersByEntryId($entryId));
+        $active = count(Lantra::$app->users->getUsersByEntryId($entryId));
         if ($status == 'active') {
             return $active;
         }
-        $suspended = Lantra::$app->user->countSuspendedUsers($entryId, $type);
+        $suspended = Lantra::$app->users->countSuspendedUsers($entryId, $type);
         if ($status == 'suspended') {
             return $suspended;
         }
@@ -287,7 +287,7 @@ class LantraVariable
      * @return mixed
      */
     public function userCriteria($search, $status = 'all', $companyId, $limit, $order) {
-        return Lantra::$app->user->userCriteria($search, $status, $companyId, $limit, $order);
+        return Lantra::$app->users->userCriteria($search, $status, $companyId, $limit, $order);
     }
 
     /**
@@ -312,7 +312,7 @@ class LantraVariable
      * @return mixed
      */
     public function reportCriteria($search, $limit, $order, $automated = false) {
-        return Lantra::$app->report->reportCriteria($search, $limit, $order, $automated);
+        return Lantra::$app->reports->reportCriteria($search, $limit, $order, $automated);
     }
 
     /**
@@ -326,7 +326,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return false;
         }
-        return Lantra::$app->user->canManage($user, $scheme);
+        return Lantra::$app->users->canManage($user, $scheme);
     }
 
     /**
@@ -339,7 +339,7 @@ class LantraVariable
      */
     public function isManager($subordinateId = null, $managerId = null, $includeHierarchy = true) {
         $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
-        return Lantra::$app->user->isManager($subordinateId, $manager, $includeHierarchy);
+        return Lantra::$app->users->isManager($subordinateId, $manager, $includeHierarchy);
     }
 
     /**
@@ -350,7 +350,7 @@ class LantraVariable
         if (! $entry || ! $entry->legacyResultFiles) {
             return $entry;
         }
-        return Lantra::$app->result->legacyResultFiles($entry);
+        return Lantra::$app->results->legacyResultFiles($entry);
     }
 
     /**
@@ -363,7 +363,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return false;
         }
-        return Lantra::$app->user->canAddUser($user);
+        return Lantra::$app->users->canAddUser($user);
     }
 
     /**
@@ -422,7 +422,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->userCompany($user);
+        return Lantra::$app->users->userCompany($user);
     }
 
     /**
@@ -439,9 +439,9 @@ class LantraVariable
             return null;
         }
         if ($level > 0) {
-            return Lantra::$app->user->getUserManagerByLevel($user, $level);
+            return Lantra::$app->users->getUserManagerByLevel($user, $level);
         }
-        return Lantra::$app->user->getUserMangers($user, $includeHierarchy);
+        return Lantra::$app->users->getUserMangers($user, $includeHierarchy);
     }
 
     /**
@@ -452,7 +452,7 @@ class LantraVariable
      * @throws Exception
      */
     public function companyUsers($companyId = null) {
-        return Lantra::$app->user->getCompanyUsers($companyId);
+        return Lantra::$app->users->getCompanyUsers($companyId);
     }
 
     /**
@@ -468,9 +468,9 @@ class LantraVariable
             return 0;
         }
         if (is_null($resultEntry)) {
-            $resultEntry = Lantra::$app->result->getUnitResult($user->id, $unitEntry->id);
+            $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
         }
-        return Lantra::$app->attempt->remainingAttempts($unitEntry, $resultEntry, $user->id);
+        return Lantra::$app->attempts->remainingAttempts($unitEntry, $resultEntry, $user->id);
     }
 
     /**
@@ -485,7 +485,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->getManagerCompanies($user, $includeChildren);
+        return Lantra::$app->users->getManagerCompanies($user, $includeChildren);
     }
 
     /**
@@ -500,7 +500,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->getManagerTeams($user, $includeCompanyTeams);
+        return Lantra::$app->users->getManagerTeams($user, $includeCompanyTeams);
     }
 
     /**
@@ -514,7 +514,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->getAvailableTeams($user);
+        return Lantra::$app->users->getAvailableTeams($user);
     }
 
     /**
@@ -529,7 +529,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->user->getManagerSubordinates($user, $includeHierarchy);
+        return Lantra::$app->users->getManagerSubordinates($user, $includeHierarchy);
     }
 
     /**
@@ -553,7 +553,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->result->getManagerEndorsementResults($user, ($count == false ? $limit : null), $count);
+        return Lantra::$app->results->getManagerEndorsementResults($user, ($count == false ? $limit : null), $count);
     }
 
     /**
@@ -569,7 +569,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->result->getManagerEndorsementUsers($user, ($count == false ? $limit : null), $count, $directSubordinates);
+        return Lantra::$app->results->getManagerEndorsementUsers($user, ($count == false ? $limit : null), $count, $directSubordinates);
     }
 
     /**
@@ -584,7 +584,7 @@ class LantraVariable
             return null;
         }
         return 10000;
-        return Lantra::$app->result->countManagerEndorsementUsers($user, $directSubordinates);
+        return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
     }
 
     /**
@@ -606,28 +606,28 @@ class LantraVariable
         $criteria = null;
         switch ($reportType) {
             case 'units-required':
-                $criteria = Lantra::$app->result->getManagerUnitRequiredResults($user->id);
+                $criteria = Lantra::$app->results->getManagerUnitRequiredResults($user->id);
                 break;
             case 'units-blocked':
-                $criteria = Lantra::$app->result->getManagerUnitBlockedResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerUnitBlockedResults($user->id, $days, $limit, $search);
             break;
             case 'units-expiring':
-                $criteria = Lantra::$app->result->getManagerUnitExpiringResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerUnitExpiringResults($user->id, $days, $limit, $search);
             break;
             case 'units-endorsed':
-                $criteria = Lantra::$app->result->getManagerUnitEndorsedResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($user->id, $days, $limit, $search);
                 break;
             case 'modules-active':
-                $criteria = Lantra::$app->result->getManagerModuleActiveResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerModuleActiveResults($user->id, $days, $limit, $search);
             break;
             case 'modules-expiring':
-                $criteria = Lantra::$app->result->getManagerModuleExpiringResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerModuleExpiringResults($user->id, $days, $limit, $search);
             break;
             case 'modules-completed':
-                $criteria = Lantra::$app->result->getManagerModuleCompletedResults($user->id, $days, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerModuleCompletedResults($user->id, $days, $limit, $search);
             break;
             case 'users':
-                $criteria = Lantra::$app->user->getManagerUsers($user->id, $limit, $search);
+                $criteria = Lantra::$app->users->getManagerUsers($user->id, $limit, $search);
             break;
         }
         if ($criteria) {
@@ -684,7 +684,7 @@ class LantraVariable
      * @return int
      */
     public function individualCompanyId() {
-        $company = Lantra::$app->user->getIndividualCompany();
+        $company = Lantra::$app->users->getIndividualCompany();
         return ($company) ? $company->id : null;
     }
 
@@ -696,7 +696,7 @@ class LantraVariable
      */
     public function getReportData($entryId) {
         $reportEntry = craft()->entries->getEntryById($entryId);
-        return ($reportEntry) ? Lantra::$app->report->getReportData($reportEntry) : null;
+        return ($reportEntry) ? Lantra::$app->reports->getReportData($reportEntry) : null;
     }
 
     /**

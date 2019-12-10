@@ -9,11 +9,13 @@
 namespace lantra\sp\services;
 
 use craft\base\Component;
+use craft\elements\User;
+use craft\elements\Entry;
 use craft\events\ModelEvent;
 
 use lantra\sp\Plugin as Lantra;
 
-class User extends Component
+class Users extends Component
 {
 
     /**
@@ -32,13 +34,13 @@ class User extends Component
     {
         $user = $event->params['user'];
         // automatically set userType for reports
-        $user->setContentFromPost(['userType' => Lantra::$app->user->canManage($user) ? 'manager' : 'member']);
+        $user->setContentFromPost(['userType' => Lantra::$app->users->canManage($user) ? 'manager' : 'member']);
         $licenceSource = 'None';
         $lantraLicences = !$this->getSettings()->lantraDisableLicences;
         if ($lantraLicences && $event->params['isNewUser'] && !$user->admin) {
             // assign company licence if joining a team
             if ($user->userCompany->count() OR $user->userTeam->count()) {
-                $companyEntry = Lantra::$app->user->userCompany($user);
+                $companyEntry = Lantra::$app->users->userCompany($user);
                 if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
                     $event->performAction = false;
                     $user->addError('userCompany', 'There are insufficient company licences.');
@@ -147,15 +149,15 @@ class User extends Component
     }
 
     /**
-     * @param UserModel|null $user
+     * @param User|null $user
      * @return array
      */
-    function getUserUnitIds(UserModel $user = null)
+    function getUserUnitIds(User $user = null)
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
         }
-        $userUnits = Lantra::$app->result->userUnits($user);
+        $userUnits = Lantra::$app->results->userUnits($user);
         return array_keys($userUnits);
     }
 
@@ -166,7 +168,7 @@ class User extends Component
      * @return array
      * @throws mixed
      */
-    function getManagerHierarchy(UserModel $user = null)
+    function getManagerHierarchy(User $user = null)
     {
         $this->nodeId = 0;
         if (is_null($user)) {
@@ -539,11 +541,11 @@ class User extends Component
     }
 
     /**
-     * @param EntryModel $entry
+     * @param Entry $entry
      * @param bool $count
      * @return array|int
      */
-    public function getManagers(EntryModel $entry, $count = false)
+    public function getManagers(Entry $entry, $count = false)
     {
         $return = [];
         $primaryManagerIds = [];
@@ -561,11 +563,11 @@ class User extends Component
     }
 
     /**
-     * @param EntryModel $entry
+     * @param Entry $entry
      * @return array
      * @throws \CException
      */
-    public function getManagerIds(EntryModel $entry)
+    public function getManagerIds(Entry $entry)
     {
         $ids = [];
         foreach ($this->getCompanyManagers($entry) as $manager) {
@@ -604,43 +606,43 @@ class User extends Component
     }
 
     /**
-     * @param EntryModel $company
+     * @param Entry $company
      * @param bool $count
      * @return mixed
      * @throws \CException
      */
-    public function getCompanyManagers(EntryModel $company, $count = false)
+    public function getCompanyManagers(Entry $company, $count = false)
     {
         return $this->getManagers($company, $count);
     }
 
     /**
-     * @param EntryModel $company
+     * @param Entry $company
      * @return array
      * @throws \CException
      */
-    public function getCompanyManagerIds(EntryModel $company)
+    public function getCompanyManagerIds(Entry $company)
     {
         return $this->getManagerIds($company);
     }
 
     /**
-     * @param EntryModel $team
+     * @param Entry $team
      * @param bool $count
      * @return mixed
      * @throws \CException
      */
-    public function getTeamManagers(EntryModel $team, $count = false)
+    public function getTeamManagers(Entry $team, $count = false)
     {
         return $this->getManagers($team, $count);
     }
 
     /**
-     * @param EntryModel $team
+     * @param Entry $team
      * @return array
      * @throws \CException
      */
-    public function getTeamManagerIds(EntryModel $team)
+    public function getTeamManagerIds(Entry $team)
     {
         return $this->getManagerIds($team);
     }
@@ -727,7 +729,7 @@ class User extends Component
      * @return array
      * @throws Exception
      */
-    function getCompanyManagerCompanyIds(UserModel $user, $type = 'both')
+    function getCompanyManagerCompanyIds(User $user, $type = 'both')
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
@@ -751,11 +753,11 @@ class User extends Component
     }
 
     /**
-     * @param UserModel $user
+     * @param User $user
      * @return string
      * @throws Exception
      */
-    public function getManagerFirstCompany(UserModel $user)
+    public function getManagerFirstCompany(User $user)
     {
         $companies = $this->getManagerCompanies($user);
         return $companies ? $companies[0] : null;
@@ -793,14 +795,14 @@ class User extends Component
     /**
      * Get manager companies
      *
-     * @param UserModel $user
+     * @param User $user
      * @param bool $includeChildren
      * @param string $order
      * @param bool $ids
      * @return BaseElementModel|null
      * @throws Exception
      */
-    function getManagerCompanies(UserModel $user, $includeChildren = false, $order = 'companyLabel', $ids = false)
+    function getManagerCompanies(User $user, $includeChildren = false, $order = 'companyLabel', $ids = false)
     {
         $companyIds = $this->getCompanyManagerCompanyIds($user);
         if ($includeChildren) {
@@ -827,7 +829,7 @@ class User extends Component
      * @return array
      * @throws Exception
      */
-    function getTeamManagerTeamIds(UserModel $user)
+    function getTeamManagerTeamIds(User $user)
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
@@ -841,12 +843,12 @@ class User extends Component
     /**
      * Return all team ids for a manager
      *
-     * @param UserModel $user
+     * @param User $user
      * @param bool $includeHierarchy
      * @return array
      * @throws Exception
      */
-    function getManagerTeamIds(UserModel $user, $includeHierarchy = false)
+    function getManagerTeamIds(User $user, $includeHierarchy = false)
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
@@ -875,12 +877,12 @@ class User extends Component
     /**
      * Return all teams for a manager
      *
-     * @param UserModel $user
+     * @param User $user
      * @param bool $includeCompanyTeams
      * @return array
      * @throws Exception
      */
-    function getManagerTeams(UserModel $user, $includeCompanyTeams = false, $ids = false)
+    function getManagerTeams(User $user, $includeCompanyTeams = false, $ids = false)
     {
         $teamIds = $this->getManagerTeamIds($user, $includeCompanyTeams);
         if (!count($teamIds)) {
@@ -897,11 +899,11 @@ class User extends Component
     /**
      * Get available teams for a user
      *
-     * @param UserModel $user
+     * @param User $user
      * @return array
      * @throws mixed
      */
-    function getAvailableTeams(UserModel $user)
+    function getAvailableTeams(User $user)
     {
         $teams = $this->getManagerTeams($user, ($user->isInGroup('companyManagers') || $user->isInGroup('schemeManagers')));
         if (empty($teams)) {
@@ -924,7 +926,7 @@ class User extends Component
      * @return array
      * @throws Exception
      */
-    function getManagerSubordinateIds(UserModel $user, $includeHierarchy = true)
+    function getManagerSubordinateIds(User $user, $includeHierarchy = true)
     {
         if (is_null($user)) {
             $user = craft()->userSession->getUser();
@@ -953,12 +955,12 @@ class User extends Component
     /**
      * Return all subordinate users for a manager
      *
-     * @param UserModel $user
+     * @param User $user
      * @param bool $includeHierarchy
      * @return mixed
      * @throws Exception
      */
-    public function getManagerSubordinates(UserModel $user, $includeHierarchy = false)
+    public function getManagerSubordinates(User $user, $includeHierarchy = false)
     {
         $subordinateIds = $this->getManagerSubordinateIds($user, $includeHierarchy);
         if (!count($subordinateIds)) {
@@ -1078,10 +1080,10 @@ class User extends Component
     /**
      * Get the user manager for specific level
      *
-     * @return UserModel
+     * @return User
      * @throws Exception
      */
-    function getUserManagerByLevel(UserModel $user, $level = 1)
+    function getUserManagerByLevel(User $user, $level = 1)
     {
         $managers = $this->getUserMangers($user, true);
         foreach ($managers as $manager) {
@@ -1102,7 +1104,7 @@ class User extends Component
      * @return array
      * @throws Mixed
      */
-    function getUserMangers(UserModel $user, $includeHierarchy = false)
+    function getUserMangers(User $user, $includeHierarchy = false)
     {
         $return = [];
         $company = $user->userCompany->first();
@@ -1142,11 +1144,11 @@ class User extends Component
     /**
      * Check whether they can add a new user
      *
-     * @param UserModel $user
+     * @param User $user
      * @return bool
      * @throws Exception
      */
-    function canAddUser(UserModel $user)
+    function canAddUser(User $user)
     {
         if ($user->managerReadOnly) {
             return false;
@@ -1166,7 +1168,7 @@ class User extends Component
      * @param $user
      * @throws \Exception
      */
-    public function addUserToIndividualCompany(UserModel $user)
+    public function addUserToIndividualCompany(User $user)
     {
         // get the individualCompany
         $company = $this->getIndividualCompany();
@@ -1182,7 +1184,7 @@ class User extends Component
      * @param $user
      * @throws \Exception
      */
-    public function addUserToIndividualJobRole(UserModel $user)
+    public function addUserToIndividualJobRole(User $user)
     {
         // get the jobRole
         $jobRole = $this->getIndividualJobRole();
@@ -1199,7 +1201,7 @@ class User extends Component
      * @param $user
      * @throws \Exception
      */
-    public function activateIndividualUser(UserModel $user)
+    public function activateIndividualUser(User $user)
     {
         craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
     }
@@ -1210,7 +1212,7 @@ class User extends Component
      * @param $user
      * @throws \Exception
      */
-    public function deactivateIndividualUser(UserModel $user)
+    public function deactivateIndividualUser(User $user)
     {
         craft()->userGroups->assignUserToGroups($user->id, array(5));
     }
@@ -1222,7 +1224,7 @@ class User extends Component
      * @param $days
      * @throws \Exception
      */
-    public function setUserExpiryDate(UserModel $user, $days)
+    public function setUserExpiryDate(User $user, $days)
     {
         // set date in future
         $user->setContentFromPost(['userExpiryDate' => strtotime('+' . $days . ' days')]);

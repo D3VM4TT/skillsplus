@@ -1,8 +1,27 @@
 <?php
-namespace Craft;
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-class Lantra_AttemptsService extends BaseApplicationComponent
+namespace lantra\sp\services;
+
+use Craft;
+use craft\base\Component;
+
+class Attempts extends Component
 {
+    public function onBeforeSaveAttempt(Entry $entry, Event $event) {
+        if ($event->params['isNewEntry']) {
+            $unitEntry = $entry->attemptUnit->first();
+            if (!is_object($unitEntry) || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
+                $event->performAction = false;
+                craft()->request->redirect('/unit/' . $unitEntry->id);
+            }
+        }
+    }
     /**
      * Mark an attempt entry
      *
@@ -30,7 +49,7 @@ class Lantra_AttemptsService extends BaseApplicationComponent
      */
     public function canAttempt($userId, $unitEntry) {
         // result does not exist for user
-        if (! is_object($unitEntry) || false == $resultEntry = craft()->lantra_results->getUnitResult($userId, $unitEntry->id)) {
+        if (! is_object($unitEntry) || false == $resultEntry = Lantra::$app->results->getUnitResult($userId, $unitEntry->id)) {
             return true;
         }
         return (bool) $this->remainingAttempts($unitEntry, $resultEntry);

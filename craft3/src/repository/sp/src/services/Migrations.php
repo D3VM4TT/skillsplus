@@ -1,7 +1,17 @@
 <?php
-namespace Craft;
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-class Lantra_MigrationService extends BaseApplicationComponent
+namespace lantra\sp\services;
+
+use Craft;
+use craft\base\Component;
+
+class Migrations extends Component
 {
     public function addField($groupId, $name, $handle, $type, $settings)
     {
