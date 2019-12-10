@@ -8,35 +8,81 @@
 
 namespace lantra\sp\models;
 
+use Craft;
 use craft\base\Model;
 
 class Settings extends Model
 {
-    public $schemeName;
-    public $schemeDescription;
-    public $schemeLogo;
-    public $schemeTeams;
-    public $schemeUserReadOnly;
-    public $schemeEmailDomain;
-    public $schemeTestEmailAddress;
-    public $jobRoleEndorse;
+    public $schemeName                          = 'Skills Plus';
+    public $schemeDescription                   = '';
+    public $schemeLogo                          = null;
+    public $schemeTeams                         = false;
+    public $schemeUserReadOnly                  = false;
+    public $schemeEmailDomain                   = 'skills-plus.co.uk';
+    public $schemeTestEmailAddress              = 'portia@skills-plus.co.uk';
+    public $jobRoleEndorse                      = false;
+    public $themeDateFormat                     = 'd-m-Y';
+    public $themeDefaultLimit                   = 10;
+    public $themeLoginMessage                   = '';
+    public $themeDisableCertificates            = false;
+    public $themeResultHistoryTitle             = 'Result History';
+    public $themeResultHistoryLink              = false;
+    public $themeDisableResultHistory           = false;
+    public $themeColorPrimary                   = '#961e20';
+    public $themeColorSecondary                 = '#2e338f';
+    public $themeNavigationPublic               = ["1090","3618"];
+    public $themeNavigationPrivate              = ["1090","3618"];
+    public $lantraDisableLicences               = false;
+    public $schemeRemainingLicences             = 1000;
+    public $schemeExpiryDate                    = null;
+    public $individualCompany                   = null;
+    public $individualLicenceDays               = 365;
+    public $individualLicencePaypalButton       = '';
+    public $individualJobRole                   = null;
+    public $notifyFooter                        = '';
+    public $notifySubjectBlockedResult          = '';
+    public $notifySubjectEndorsementResult      = '';
+    public $notifySubjectLicencesRemaining      = '';
+    public $notifySubjectManagerSummary         = '';
+    public $notifySubjectModuleResult           = '';
+    public $notifySubjectSchemeExpiry           = '';
+    public $notifySubjectUserExpiry             = '';
+    public $notifySubjectComment                = '';
+    public $notifyBlockedResult                 = '';
+    public $notifyEndorsementResult             = '';
+    public $notifyLicencesRemaining             = '';
+    public $notifyManagerSummary                = '';
+    public $notifyModuleResult                  = '';
+    public $notifySchemeExpiry                  = '';
+    public $notifyUserExpiry                    = '';
+    public $notifyComment                       = '';
+    public $notifySubjectCustomReport           = '';
+    public $notifyCustomReport                  = '';
+    public $disableEndorsementNotify            = false;
+    public $userEditName                        = true;
+    public $userEditEmail                       = true;
+    public $userEditAddress                     = true;
+    public $userEditTelephone                   = true;
+    public $userEditDob                         = true;
+    public $userEditStartDate                   = true;
+    public $userEditRole                        = true;
+    public $userEditPhoto                       = true;
+    public $userEditCustomFields                = true;
+    public $userAccountInformation              = [
+            'userId'            => '',
+            'userStartDate'     => '',
+            'userCompany'       => '',
+            'managerCompanies'  => ''
+    ];
+    public $labelJobRole                        = '';
+    public $queue                               = [];
+    public $disableResultCache                  = false;
 
-    public $themeDateFormat;
-    public $themeDefaultLimit;
-    public $themeLoginMessage;
-    public $themeDisableCertificates;
-    public $themeResultHistoryTitle;
-    public $themeResultHistoryLink;
-    public $themeDisableResultHistory;
-    public $themeColorPrimary;
-    public $themeColorSecondary;
-    public $themeNavigationPublic;
-    public $themeNavigationPrivate;
-
-
+    /*
+     * modified values
+     */
     private $assetFields = [
         'schemeLogo'
-
     ];
 
     private $entryFields = [
@@ -49,107 +95,33 @@ class Settings extends Model
         'individualJobRole',
     ];
 
-	protected function defineAttributes()
-	{
-		return array(
-            ## config settings
-            'settingsVersion'                   => AttributeType::Number,
+    /*
+     * rules
+     */
+    private $requiredFields = [
+        'schemeName',
+        'schemeEmailDomain',
+        'schemeTestEmailAddress'
+    ];
 
-            ## theme settings
-            'themeDateFormat'                   => AttributeType::String,
-            'themeDefaultLimit'                 => AttributeType::Number,
-            'themeLoginMessage'                 => AttributeType::String,
-            'themeDisableCertificates'          => AttributeType::Bool,
-            'themeResultHistoryTitle'           => AttributeType::String,
-            'themeResultHistoryLink'            => AttributeType::Bool,
-            'themeDisableResultHistory'         => AttributeType::Bool,
-            'themeColorPrimary'                 => AttributeType::String,
-            'themeColorSecondary'               => AttributeType::String,
-            'themeNavigationPublic'             => AttributeType::Mixed,
-            'themeNavigationPrivate'            => AttributeType::Mixed,
-
-            ## scheme settings
-            'schemeName'                        => AttributeType::String,
-            'schemeDescription'                 => AttributeType::String,
-            'schemeLogo'                        => AttributeType::Number,
-            'schemeTeams'                       => AttributeType::Bool,
-            'schemeUserReadOnly'                => AttributeType::Bool,
-            'schemeEmailDomain'                 => AttributeType::String,
-            'schemeTestEmailAddress'            => AttributeType::String,
-            'jobRoleEndorse'                    => AttributeType::Bool,
-
-            ## licence settings
-            'lantraDisableLicences'             => AttributeType::Bool,
-            'schemeRemainingLicences'           => AttributeType::Number,
-            'schemeExpiryDate'                  => AttributeType::DateTime,
-
-            ## individual company settings
-            'individualCompany'                 => AttributeType::Mixed,
-            'individualLicenceDays'             => AttributeType::Number,
-            'individualLicencePaypalButton'     => AttributeType::String,
-            'individualJobRole'                 => AttributeType::Mixed,
-
-            ## notifications
-            'notifyFooter'                      => AttributeType::String,
-            'notifySubjectBlockedResult'        => AttributeType::String,
-            'notifySubjectEndorsementResult'    => AttributeType::String,
-            'notifySubjectLicencesRemaining'    => AttributeType::String,
-            'notifySubjectManagerSummary'       => AttributeType::String,
-            'notifySubjectModuleResult'         => AttributeType::String,
-            'notifySubjectSchemeExpiry'         => AttributeType::String,
-            'notifySubjectUserExpiry'           => AttributeType::String,
-            'notifySubjectComment'              => AttributeType::String,
-            'notifyBlockedResult'               => AttributeType::String,
-            'notifyEndorsementResult'           => AttributeType::String,
-            'notifyLicencesRemaining'           => AttributeType::String,
-            'notifyManagerSummary'              => AttributeType::String,
-            'notifyModuleResult'                => AttributeType::String,
-            'notifySchemeExpiry'                => AttributeType::String,
-            'notifyUserExpiry'                  => AttributeType::String,
-            'notifyComment'                     => AttributeType::String,
-            'notifySubjectCustomReport'         => AttributeType::String,
-            'notifyCustomReport'                => AttributeType::String,
-
-            'disableEndorsementNotify'          => AttributeType::Bool,
-
-            ## user profile
-            'userEditName'                      => AttributeType::Bool,
-            'userEditEmail'                     => AttributeType::Bool,
-            'userEditAddress'                   => AttributeType::Bool,
-            'userEditTelephone'                 => AttributeType::Bool,
-            'userEditDob'                       => AttributeType::Bool,
-            'userEditStartDate'                 => AttributeType::Bool,
-            'userEditRole'                      => AttributeType::Bool,
-            'userEditPhoto'                     => AttributeType::Bool,
-            'userEditCustomFields'              => AttributeType::Mixed,
-
-            ## user profile
-            'userAccountInformation'            => AttributeType::Mixed,
-
-            ## labels
-            'labelJobRole'                      => AttributeType::String,
-
-            ## queue
-            'queue'                             => AttributeType::Mixed,
-
-            ## config settings
-            'disableResultCache'                => AttributeType::Bool,
-		);
-	}
+    private $numberFields = [
+        'themeDefaultLimit',
+        'schemeRemainingLicences',
+        'individualLicenceDays'
+    ];
 
     /**
-     * @param array $values
+     *
      */
-    public function setAttributes($values, $safeOnly = true) {
-
-        /*
-        parent::setAttributes($values);
+    public function init ()
+    {
+        parent::init();
 
         foreach ($this->assetFields as $key) {
             if ($this->$key && is_array($this->$key)) {
                 $files = [];
                 foreach($this->$key as $fileId) {
-                    $files[] = craft()->assets->getFileById($fileId);
+                    $files[] = Craft::$app->assets->getAssetById($fileId);
                 }
                 $this->$key = $files;
             }
@@ -159,7 +131,7 @@ class Settings extends Model
             if ($this->$key && is_array($this->$key)) {
                 $entries = [];
                 foreach($this->$key as $entryId) {
-                    $entries[] = craft()->entries->getEntryById($entryId);
+                    $entries[] = Craft::$app->entries->getEntryById($entryId);
                 }
                 $this->$key = $entries;
             }
@@ -169,11 +141,23 @@ class Settings extends Model
             if ($this->$key && is_array($this->$key)) {
                 $categories = [];
                 foreach($this->$key as $categoryId) {
-                    $categories[] = craft()->categories->getCategoryById($categoryId);
+                    $categories[] = Craft::$app->categories->getCategoryById($categoryId);
                 }
                 $this->$key = $categories;
             }
         }
-        */
-	}
+    }
+
+    /**
+     * @return array
+     */
+    public function rules()
+    {
+        $rules = parent::rules();
+
+        $rules[] = [$this->requiredFields, 'required'];
+        $rules[] = [$this->numberFields, 'number', 'integerOnly' => true];
+
+        return $rules;
+    }
 }
