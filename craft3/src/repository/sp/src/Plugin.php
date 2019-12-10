@@ -70,7 +70,8 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
-                Lantra::$app->users->onSaveUser($event);
+                $user = $event->sender;
+                Lantra::$app->users->onSaveUser($event, $user);
             }
         );
 
@@ -78,7 +79,8 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
-                Lantra::$app->users->onBeforeSaveUser($event);
+                $user = $event->sender;
+                Lantra::$app->users->onBeforeSaveUser($event, $user);
             }
         );
 
@@ -86,7 +88,8 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_BEFORE_DELETE,
             function (ModelEvent $event) {
-                Lantra::$app->users->onBeforeDeleteUser($event);
+                $user = $event->sender;
+                Lantra::$app->users->onBeforeDeleteUser($user, $event);
             }
         );
 
@@ -94,7 +97,7 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
-                $entry = $event->params['entry'];
+                $entry = $event->sender;
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
                 }

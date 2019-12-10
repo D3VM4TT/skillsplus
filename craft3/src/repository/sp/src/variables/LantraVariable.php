@@ -404,7 +404,7 @@ class LantraVariable
      * @throws Exception
      */
     public function totalCompanyLicences() {
-        $result = craft()->db->createCommand()
+        $result = Craft::$app->db->createCommand()
             ->from('{{content}}')
             ->select("SUM(field_companyRemainingLicences) as total")
             ->queryRow();
@@ -715,7 +715,7 @@ class LantraVariable
         fclose($export);
         $content = ob_get_clean();
         $content = str_replace("\n", "\r\n", $content);
-        craft()->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+        Craft::$app->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
     }
 
     /**

@@ -21,9 +21,9 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get the posted id, ref and userId
-        $id =  craft()->request->getPost('id');
-        $ref =  craft()->request->getPost('ref');
-        $userId =  craft()->request->getPost('userId');
+        $id =  Craft::$app->request->getPost('id');
+        $ref =  Craft::$app->request->getPost('ref');
+        $userId =  Craft::$app->request->getPost('userId');
         $results = [];
         if ($ref == 'jobRole') {
             $results = Lantra::$app->results->getJobRoleUserResults($id, $userId);
@@ -47,12 +47,12 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get the posted entryId
-        $entryId = craft()->request->getPost('entryId');
+        $entryId = Craft::$app->request->getPost('entryId');
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         Lantra::$app->results->unblockResult($entry);
-        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, craft()->request->getUrlReferrer());
+        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, Craft::$app->request->getUrlReferrer());
     }
 
     /**
@@ -63,9 +63,9 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public function actionDeleteEntry() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-        $return = $this->_returnRef(craft()->request->getUrlReferrer());
+        $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
         // get the posted entryId
-        $entryId = craft()->request->getPost('entryId');
+        $entryId = Craft::$app->request->getPost('entryId');
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
@@ -91,13 +91,13 @@ class Lantra_EntriesController extends Lantra_BaseController {
     public function actionEndorseEvidence() {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-        $return = $this->_returnRef(craft()->request->getUrlReferrer());
+        $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
         // get all the posted entryId(s)
-        if (false != $entryId = craft()->request->getPost('entryId')) {
+        if (false != $entryId = Craft::$app->request->getPost('entryId')) {
             $results = [['entryId' => $entryId]];
         }
         else {
-            $results = craft()->request->getPost('results');
+            $results = Craft::$app->request->getPost('results');
         }
         $count = 0;
         $userId = craft()->userSession->getId();
@@ -121,7 +121,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
      * @return string
      */
     private function _returnRef($url) {
-        $ref = craft()->request->getPost('ref');
+        $ref = Craft::$app->request->getPost('ref');
         if ($ref) {
             $refString = '?ref=' . $ref;
             $url = str_replace($refString, '', $url) . $refString;
@@ -135,7 +135,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
     private function _disableEntry ($entry) {
         // return company licences back to scheme
         if ($entry->section->id == 3) {
-            craft()->lantra_licence->addSchemeLicences($entry->companyRemainingLicences);
+            Lantra::$app->licences->addSchemeLicences($entry->companyRemainingLicences);
             $entry->setContentFromPost(['companyRemainingLicences' => 0]);
         }
         $entry->enabled = false;

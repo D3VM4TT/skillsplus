@@ -1,52 +1,66 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set formUser = user is defined ? user : currentUser  %}
 
 <form class="public" id="form-photo" method="post" enctype="multipart/form-data" autocomplete="off">
-    {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="users/saveUser">
-    <input type="hidden" name="redirect" value="/profile">
-    <input type="hidden" name="userId" value="{{ currentUser.id }}">
+    {{ csrfInput() }}
+    {{ actionInput('users/save-user') }}
+    {{ redirectInput('') }}
+    {{ hiddenInput('userId', currentUser.id) }}
+
+    {% if formUser.hasErrors() %}
+        <div class="error-list">
+            <ul>
+                {% for error in formUser.getFirstErrors() %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
     {% if craft.lantra.setting('userEditName') %}
         <div class="field--wrapper">
             <label for="firstName" class="no-float">First Name:</label>
-            <input name="firstName" type="text" class="float-label" placeholder="Enter your first name" value="{{ currentUser.firstName }}">
+            <input name="firstName" type="text" class="float-label" placeholder="Enter your first name" value="{{ formUser.firstName }}">
         </div>
         <div class="field--wrapper">
             <label for="lastName" class="no-float">Last Name:</label>
-            <input name="lastName" type="text" class="float-label" placeholder="Enter your last name" value="{{ currentUser.lastName }}">
+            <input name="lastName" type="text" class="float-label" placeholder="Enter your last name" value="{{ formUser.lastName }}">
         </div>
     {% endif %}
     
     {% if craft.lantra.setting('userEditEmail') %}
         <div class="field--wrapper">
             <label for="email" class="no-float">Email:</label>
-            <input name="email" type="text" class="float-label" placeholder="Enter your email" value="{{ currentUser.email }}">
+            <input name="email" type="text" class="float-label" placeholder="Enter your email" value="{{ formUser.email }}">
         </div>
     {% endif %}
 
     {% if craft.lantra.setting('userEditStartDate') %}
     <div class="field--wrapper">
-        {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value: currentUser.userStartDate} %}
+        {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value: formUser.userStartDate} %}
     </div>
     {% endif %}
 
     {% if craft.lantra.setting('userEditDob') %}
     <div class="field--wrapper">
-        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: currentUser.userDateOfBirth} %}
+        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: formUser.userDateOfBirth} %}
     </div>
     {% endif %}
 
     {% if craft.lantra.setting('userEditAddress') %}
     <div class="field--wrapper">
         <label for="address" class="no-float">Address:</label>
-        <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ currentUser.userAddress|default('') }}</textarea>
+        <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ formUser.userAddress|default('') }}</textarea>
     </div>
     {% endif %}
 
     {% if craft.lantra.setting('userEditTelephone') %}
         <div class="field--wrapper">
             <label for="telephone" class="no-float">Telephone:</label>
-            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ currentUser.userTelephone|default('') }}">
+            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ formUser.userTelephone|default('') }}">
         </div>
     {% endif %}
 
@@ -58,7 +72,7 @@
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                     <option value="{{ roleCategory.id }}"
-                      {% if roleCategory.id in currentUser.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                      {% if roleCategory.id in formUser.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -68,7 +82,7 @@
         {% if block.userEdit %}
         <div class="field--wrapper">
             <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
-            {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+            {% set userCustomBlock = formUser.userCustomFields.customName('='~block.name).first() %}
             {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">

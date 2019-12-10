@@ -18,7 +18,7 @@ class Lantra_AssetsController extends Lantra_BaseController
     public function actionDeleteEvidence()
     {
         $this->requireAjaxRequest();
-        $fileId = craft()->request->getPost('fileId');
+        $fileId = Craft::$app->request->getPost('fileId');
         $response = craft()->assets->deleteFiles([$fileId]);
         $this->returnJson($response->getResponseData());
     }
@@ -45,7 +45,7 @@ class Lantra_AssetsController extends Lantra_BaseController
         $fileName = $_FILES['assets-upload']['name'];
         $tmpName = $_FILES['assets-upload']['tmp_name'];
 
-        $folderId = craft()->request->getPost('folderId');
+        $folderId = Craft::$app->request->getPost('folderId');
         $fileLocation = AssetsHelper::getTempFilePath(pathinfo($fileName, PATHINFO_EXTENSION));
         move_uploaded_file($tmpName, $fileLocation);
         $response = craft()->assets->insertFileByLocalPath($fileLocation, $fileName, $folderId, AssetConflictResolution::KeepBoth);

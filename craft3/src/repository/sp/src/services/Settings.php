@@ -17,13 +17,13 @@ class Settings extends Component
     public function saveSettings($settings)
     {
         $settings = JsonHelper::encode($settings);
-        $affectedRows = craft()->db->createCommand()->update('plugins', array('settings' => $settings), array('class' => 'Lantra'));
+        $affectedRows = Craft::$app->db->createCommand()->update('plugins', array('settings' => $settings), array('class' => 'Lantra'));
         return (bool)$affectedRows;
     }
 
     public function getDbSettings()
     {
-        $result = craft()->db->createCommand()
+        $result = Craft::$app->db->createCommand()
             ->select('settings')
             ->from('plugins')
             ->where(['class' => 'Lantra'])

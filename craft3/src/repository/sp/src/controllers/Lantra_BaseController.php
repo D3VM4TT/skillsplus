@@ -17,7 +17,7 @@ class Lantra_BaseController extends BaseController {
      * @param bool $redirect
      */
     public function _returnMessage($message, $success = TRUE, $redirect = FALSE) {
-         if(craft()->request->isAjaxRequest()) {
+         if(Craft::$app->request->isAjaxRequest()) {
             craft()->controller->returnJson(['success' => $success, 'message' => $message, 'redirect' => $redirect]);
         }
         else {
@@ -28,7 +28,7 @@ class Lantra_BaseController extends BaseController {
                 craft()->userSession->setError($message);
             }
             if ($redirect) {
-                craft()->request->redirect($redirect);
+                Craft::$app->request->redirect($redirect);
             }
             else {
                 craft()->controller->redirectToPostedUrl();

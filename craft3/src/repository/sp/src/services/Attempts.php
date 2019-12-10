@@ -18,7 +18,7 @@ class Attempts extends Component
             $unitEntry = $entry->attemptUnit->first();
             if (!is_object($unitEntry) || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
                 $event->performAction = false;
-                craft()->request->redirect('/unit/' . $unitEntry->id);
+                Craft::$app->request->redirect('/unit/' . $unitEntry->id);
             }
         }
     }

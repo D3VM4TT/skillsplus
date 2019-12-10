@@ -56,7 +56,7 @@ class Queue extends Component
             'priority' => $priority,
             'dateCreated' => DateTimeHelper::currentTimeForDb()
         ];
-        craft()->db->createCommand()->insert('lantra_queue', $job);
+        Craft::$app->db->createCommand()->insert('lantra_queue', $job);
     }
 
     /**
@@ -64,7 +64,7 @@ class Queue extends Component
      * @return bool
      */
     public function job($elementId) {
-        return craft()->db->createCommand()
+        return Craft::$app->db->createCommand()
             ->select()
             ->from('lantra_queue')
             ->where(['elementId' => $elementId])
@@ -76,7 +76,7 @@ class Queue extends Component
      * @param string $status
      */
     public function status($elementId, $status = 'running') {
-        craft()->db->createCommand()
+        Craft::$app->db->createCommand()
             ->update('lantra_queue', ['status' => $status], ['elementId' => $elementId]);
     }
 
@@ -113,13 +113,13 @@ class Queue extends Component
      * @param $elementId
      */
     public function delete($elementId) {
-        craft()->db->createCommand()->delete('lantra_queue', ['elementId' => $elementId]);
+        Craft::$app->db->createCommand()->delete('lantra_queue', ['elementId' => $elementId]);
     }
 
     /**
      *
      */
     public function clear() {
-        craft()->db->createCommand()->truncateTable('lantra_queue');
+        Craft::$app->db->createCommand()->truncateTable('lantra_queue');
     }
 }

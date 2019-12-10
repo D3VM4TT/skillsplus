@@ -32,7 +32,7 @@ class Lantra_DbController extends Lantra_BaseController
         $sql = "USE " . $database . ";\n\n" . file_get_contents($backupFile);
 
         // import backup
-        craft()->db->createCommand()->setText($sql)->execute();
+        Craft::$app->db->createCommand()->setText($sql)->execute();
 
         // create connection to cleansed db
         $cleansedDb =  Craft::createComponent(array(

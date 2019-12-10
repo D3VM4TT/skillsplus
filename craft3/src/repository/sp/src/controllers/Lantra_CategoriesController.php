@@ -15,7 +15,7 @@ class Lantra_CategoriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get the posted categoryId
-        $categoryId = craft()->request->getPost('categoryId');
+        $categoryId = Craft::$app->request->getPost('categoryId');
         if (false == $category = craft()->categories->getCategoryById($categoryId)) {
             $this->_returnError('Invalid category ID.');
         }

@@ -13,6 +13,7 @@ $site = array_shift($parts);
 
 return [
     '*' => [
+        'elevatedSessionDuration' => 0,
         'enableCsrfProtection' => false,
         'defaultWeekStartDay' => 0,
         'omitScriptNameInUrls' => true,

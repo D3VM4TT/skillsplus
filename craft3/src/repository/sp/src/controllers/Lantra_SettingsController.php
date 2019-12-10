@@ -11,7 +11,7 @@ class Lantra_SettingsController extends BaseController
     {
         $settingsModel = new _SettingsModel;
 
-        $settings = craft()->db->createCommand()
+        $settings = Craft::$app->db->createCommand()
             ->select('settings')
             ->from('plugins')
             ->where('class=:class', array(':class' => 'Lantra'))
@@ -35,7 +35,7 @@ class Lantra_SettingsController extends BaseController
     }
 
     private function getUsers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = [2,3,4];
         $criteria->admin = false;
         $criteria->limit = $limit;
@@ -48,7 +48,7 @@ class Lantra_SettingsController extends BaseController
     }
 
     private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = [2,3];
         $criteria->admin = false;
         $criteria->limit = $limit;
@@ -73,7 +73,7 @@ class Lantra_SettingsController extends BaseController
      */
     public function actionDeleteJob()
     {
-        $elementId = craft()->request->getParam('elementId');
+        $elementId = Craft::$app->request->getParam('elementId');
         if ($elementId == 'all') {
             Lantra::$app->queue->clear();
         }
@@ -89,8 +89,8 @@ class Lantra_SettingsController extends BaseController
      */
     public function actionTools()
     {
-        craft()->db->createCommand()->truncateTable('searchindex');
-        $tool = craft()->request->getParam('tool');
+        Craft::$app->db->createCommand()->truncateTable('searchindex');
+        $tool = Craft::$app->request->getParam('tool');
         if ($tool == 'saveCompanies') {
             $topCompanies = Lantra::$app->structure->getCompanyChildren(null, false, null);
             if ($topCompanies){
@@ -332,7 +332,7 @@ class Lantra_SettingsController extends BaseController
     public function actionSaveSettings()
     {
         $this->requirePostRequest();
-        $settings = craft()->request->getPost('settings');
+        $settings = Craft::$app->request->getPost('settings');
 
         if (Lantra::$app->setting->saveSettings($settings)) {
             craft()->userSession->setNotice(Craft::t('Settings saved.'));

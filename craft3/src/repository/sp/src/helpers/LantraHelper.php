@@ -8,6 +8,7 @@
 
 namespace lantra\sp\helpers;
 
+use lantra\sp\Plugin;
 use craft\helpers\FileHelper;
 
 class LantraHelper
@@ -20,5 +21,24 @@ class LantraHelper
     {
         $release = file_get_contents(CRAFT_BASE_PATH . '/config/.release');
         return $release ? $release : 'unknown';
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getSettings()
+    {
+        return Plugin::getInstance()->getSettings();
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public static function setting($key = '')
+    {
+        $settings = Plugin::getInstance()->getSettings();
+        return isset($settings[$key]) ? $settings[$key] : null;
     }
 }

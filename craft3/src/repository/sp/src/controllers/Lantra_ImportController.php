@@ -84,7 +84,7 @@ class Lantra_ImportController extends Lantra_BaseController
      */
     public function actionIndex()
     {
-        $process = craft()->request->getParam('process');
+        $process = Craft::$app->request->getParam('process');
         if ($process) {
             return $this->$process();
         }
@@ -97,7 +97,7 @@ class Lantra_ImportController extends Lantra_BaseController
      * @throws \CException
      */
     public function actionUpload() {
-        $type = craft()->request->getRequiredPost('type');
+        $type = Craft::$app->request->getRequiredPost('type');
         $file = \CUploadedFile::getInstanceByName('data');
 
         if (is_null($file)) {
@@ -136,8 +136,8 @@ class Lantra_ImportController extends Lantra_BaseController
      * @throws \CException
      */
     public function actionImport() {
-        $type = craft()->request->getRequiredPost('type');
-        $this->limit = craft()->request->getRequiredPost('limit', 250);
+        $type = Craft::$app->request->getRequiredPost('type');
+        $this->limit = Craft::$app->request->getRequiredPost('limit', 250);
         $method = 'import' . strtoupper($type);
         if (method_exists($this, $method)) {
             return $this->$method();
@@ -145,9 +145,9 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     public function actionUsers() {
-        $refId = craft()->request->getRequiredPost('refId', 'legacyId');
-        $ids = craft()->request->getRequiredPost('ids');
-        $action = craft()->request->getRequiredPost('userAction', 'suspend');
+        $refId = Craft::$app->request->getRequiredPost('refId', 'legacyId');
+        $ids = Craft::$app->request->getRequiredPost('ids');
+        $action = Craft::$app->request->getRequiredPost('userAction', 'suspend');
         $userIds = $this->getUserIdsByRef($ids, $refId);
         if ($action == 'suspend'){
             $success = $this->batchSuspendUsers($userIds);
@@ -468,7 +468,7 @@ class Lantra_ImportController extends Lantra_BaseController
         foreach ($criteria as $jobRole) {
             $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = $this->limit;
         $criteria->dataCleanJobRole = 0;
         $users = $criteria->find();
@@ -487,7 +487,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     public function setUsernames() {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = [2,3,4];
         $criteria->admin = false;
         $criteria->limit = $this->limit;
@@ -515,7 +515,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     public function setPasswords() {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = [2,3,4];
         $criteria->admin = false;
         $criteria->limit = $this->limit;
@@ -835,7 +835,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $criteria->section = 'companies';
         }
         if ($type == 'users') {
-            $criteria = craft()->elements->getCriteria(ElementType::User);
+            $criteria = User::find();
             $criteria->admin = false;
         }
         $fieldName = 'dataClean' . $dataCleanKey;
@@ -910,7 +910,7 @@ class Lantra_ImportController extends Lantra_BaseController
         if (!$legacyId) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->legacyId = $legacyId;
         $criteria->status = null;
         return $criteria->first();

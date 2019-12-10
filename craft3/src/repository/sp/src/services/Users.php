@@ -8,54 +8,74 @@
 
 namespace lantra\sp\services;
 
+use Craft;
 use craft\base\Component;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
+
+use DateTime;
 
 class Users extends Component
 {
 
     /**
      * @param ModelEvent $event
+     * @param User $user
      */
-    public function onSaveUser(ModelEvent $event)
+    public function onSaveUser(ModelEvent $event, User $user)
     {
-        $user = $event->params['user'];
         Lantra::$app->results->saveUserResultCache($user->id);
     }
 
     /**
      * @param ModelEvent $event
+     * @param User $user
      */
-    public function onBeforeSaveUser(ModelEvent $event)
+    public function onBeforeSaveUser(ModelEvent $event, User $user)
     {
-        $user = $event->params['user'];
-        // automatically set userType for reports
-        $user->setContentFromPost(['userType' => Lantra::$app->users->canManage($user) ? 'manager' : 'member']);
+        ## automatically set userType for reports
+        $user->userType = Lantra::$app->users->canManage($user) ? 'manager' : 'member';
+
+        $userStartDate = $user->userStartDate ? $user->userStartDate->getTimestamp() : false;
+        $userExpiryDate = $user->userExpiryDate ? $user->userStartDate->getTimestamp() : false;
+
+        ## validate dates
+        if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
+            $user->addError('userStartDate', 'Start date cannot be later than expiry date.');
+            $event->performAction = false;
+        }
+        if ($userExpiryDate && $userExpiryDate > $userExpiryDate) {
+            $user->addError('userExpiryDate', 'Expiry date cannot be later than expiry date.');
+            $event->performAction = false;
+        }
+
+        ## set licence source
         $licenceSource = 'None';
-        $lantraLicences = !$this->getSettings()->lantraDisableLicences;
-        if ($lantraLicences && $event->params['isNewUser'] && !$user->admin) {
-            // assign company licence if joining a team
-            if ($user->userCompany->count() OR $user->userTeam->count()) {
+        $lantraLicences = !LantraHelper::setting('lantraDisableLicences');
+        if ($lantraLicences && $event->isNew && !$user->admin) {
+            ## assign company licence if joining a team
+            if ($user->userCompany->count() || $user->userTeam->count()) {
                 $companyEntry = Lantra::$app->users->userCompany($user);
-                if (false == craft()->lantra_licence->assignCompanyLicence($user, $companyEntry)) {
+                if (false == Lantra::$app->licences->assignCompanyLicence($user, $companyEntry)) {
                     $event->performAction = false;
                     $user->addError('userCompany', 'There are insufficient company licences.');
                 } else {
                     $licenceSource = 'Company #' . $companyEntry->id;
                 }
-            } // assign scheme licence
-            elseif (false == craft()->lantra_licence->assignSchemeLicence()) {
+            }
+            ## assign scheme licence
+            elseif (false == Lantra::$app->licences->assignSchemeLicence()) {
                 $event->performAction = false;
                 $user->addError('userCompany', 'There are insufficient scheme licences.');
             } else {
                 $licenceSource = 'Scheme';
             }
         }
-        $user->setContentFromPost(['userLicenceSource' => $licenceSource]);
+        $user->userLicenceSource = $licenceSource;
     }
 
     /**
@@ -63,8 +83,8 @@ class Users extends Component
      */
     public function onBeforeDeleteUser($event)
     {
-        $user = craft()->userSession->getUser();
-        if (!craft()->request->isCpRequest() && !$user->isInGroup('schemeManagers') && !$user->admin){
+        $user = Craft::$app->getUser();
+        if (!Craft::$app->request->isCpRequest() && !$user->isInGroup('schemeManagers') && !$user->admin){
             $event->performAction = false;
         }
     }
@@ -75,13 +95,11 @@ class Users extends Component
     /**
      * @param $search
      * @param string $userStatus
-     * @return array
-     * @throws \CException
      */
     public function userCriteria($search = '', $userStatus = 'all', $companyId = false, $limit = 25, $order = 'username')
     {
-        $user = craft()->userSession->getUser();
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $user = Craft::$app->getUser();
+        $criteria = User::find();
         $excludeIds = [$user->id];
         if ($userStatus == 'orphaned') {
             $criteria->userCompany = ':empty:';
@@ -155,7 +173,7 @@ class Users extends Component
     function getUserUnitIds(User $user = null)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         $userUnits = Lantra::$app->results->userUnits($user);
         return array_keys($userUnits);
@@ -172,7 +190,7 @@ class Users extends Component
     {
         $this->nodeId = 0;
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         $return = [];
         $array = [];
@@ -339,7 +357,7 @@ class Users extends Component
     function canManage($user = null, $scheme = false)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         if ($scheme) {
             if ($user->admin or $user->isInGroup('schemeManagers')) {
@@ -363,7 +381,7 @@ class Users extends Component
     public function isManager($subordinateId = null, $manager = null, $includeHierarchy = true)
     {
         if (is_null($manager)) {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         // admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
@@ -385,7 +403,7 @@ class Users extends Component
     public function isCompanyManager($company, $manager = null)
     {
         if (is_null($manager)) {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         // admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
@@ -412,7 +430,7 @@ class Users extends Component
             return false;
         }
         if (is_null($manager)) {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         return $this->isCompanyManager($company->companyParent->first(), $manager);
     }
@@ -427,7 +445,7 @@ class Users extends Component
     public function userCompany($user = null)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         if (!$user) {
             return null;
@@ -455,7 +473,7 @@ class Users extends Component
      */
     public function getCompanyUsers($companyId, $count = false)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
@@ -470,7 +488,7 @@ class Users extends Component
      */
     public function countSuspendedUsers($entryId, $type = 'company')
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $fieldName = 'user' . ucwords($type);
         $criteria->relatedTo = ['targetElement' => $entryId, 'field' => $fieldName];
         $criteria->order = 'lastName';
@@ -493,7 +511,7 @@ class Users extends Component
         if (!count($companyManagerIds)) {
             return $this->getCompanyUsers($companyId, $count);
         }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'userCompany'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
@@ -510,7 +528,7 @@ class Users extends Component
      */
     public function getTeamUsers($teamId, $count = false)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->limit = null;
         $criteria->order = 'lastName';
@@ -532,7 +550,7 @@ class Users extends Component
         if (!count($teamManagerIds)) {
             return $this->getTeamUsers($teamId, $count);
         }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->relatedTo = ['targetElement' => $teamId, 'field' => 'userTeam'];
         $criteria->order = 'lastName';
         $criteria->limit = null;
@@ -732,7 +750,7 @@ class Users extends Component
     function getCompanyManagerCompanyIds(User $user, $type = 'both')
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
@@ -832,7 +850,7 @@ class Users extends Component
     function getTeamManagerTeamIds(User $user)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'teams';
@@ -851,7 +869,7 @@ class Users extends Component
     function getManagerTeamIds(User $user, $includeHierarchy = false)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         // add the scheme manager teams (all of them)
         if ($includeHierarchy && $user->isInGroup('schemeManagers')) {
@@ -911,7 +929,7 @@ class Users extends Component
         }
         $return = [];
         foreach ($teams as $team) {
-            if (craft()->lantra_licence->getTeamCompanyLicences($team)) {
+            if (Lantra::$app->licences->getTeamCompanyLicences($team)) {
                 $return[] = $team;
             }
         }
@@ -929,7 +947,7 @@ class Users extends Component
     function getManagerSubordinateIds(User $user, $includeHierarchy = true)
     {
         if (is_null($user)) {
-            $user = craft()->userSession->getUser();
+            $user = Craft::$app->getUser();
         }
         $return = [];
         if (!$this->canManage($user)) {
@@ -946,7 +964,7 @@ class Users extends Component
         }
         $teamIds = $this->getManagerTeamIds($user, $includeHierarchy);
         // get all users who belong to any of the manager's companies or teams
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = null;
         $criteria->relatedTo = ['or', ['targetElement' => $companyIds, 'field' => 'userCompany'], ['targetElement' => $teamIds, 'field' => 'userTeam']];
         return $criteria->ids();
@@ -966,7 +984,7 @@ class Users extends Component
         if (!count($subordinateIds)) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = null;
         $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
@@ -1036,13 +1054,13 @@ class Users extends Component
         if (!is_null($userId)) {
             $manager = craft()->users->getUserById($userId);
         } else {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         if (!$manager) {
             return null;
         }
         // build the criteria model
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = $limit;
         $criteria->order = 'lastName asc';
         $criteria->admin = 'not 1';
@@ -1071,7 +1089,7 @@ class Users extends Component
      */
     function getSchemeManagers($first = false)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
         return $first ? $criteria->first() : $criteria->find();
@@ -1155,7 +1173,7 @@ class Users extends Component
         }
         // check there are scheme licences available
         if ($user->admin or $user->isInGroup('SchemeManager')) {
-            return (bool)craft()->lantra_licence->getSchemeLicences();
+            return (bool)Lantra::$app->licences->getSchemeLicences();
         } else {
             $availableTeams = $this->getAvailableTeams($user, $user->isInGroup('CompanyManager'));
             return (bool)$availableTeams ? count($availableTeams) : false;
@@ -1302,7 +1320,7 @@ class Users extends Component
      */
     public function getExpiringUsers($expiryDate)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->userExpiryDate = '< ' . $expiryDate;
         $criteria->limit = null;
         return $criteria;

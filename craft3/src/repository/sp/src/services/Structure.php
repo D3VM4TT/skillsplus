@@ -19,7 +19,7 @@ class Structure extends Component
      * @param $entry
      */
     public function onBeforeSaveCompany($event, $entry) {
-        if (! $this->getSettings()->lantraDisableLicences && ! craft()->lantra_licence->updateCompanyLicences($entry)){
+        if (! $this->getSettings()->lantraDisableLicences && ! Lantra::$app->licences->updateCompanyLicences($entry)){
             $entry->addError('companyRemainingLicences', 'There are insufficient scheme licences.');
             $event->performAction = false;
         }
@@ -43,7 +43,7 @@ class Structure extends Component
      * @throws \CException
      */
     public function companyCriteria($search = '', $limit = 25, $order = 'companyLabel') {
-        $user = craft()->userSession->getUser();
+        $user = Craft::$app->getUser();
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'companies';
         $criteria->limit = $limit;
@@ -132,7 +132,7 @@ class Structure extends Component
     }
 
     private function getJsTreeRoot() {
-        $user = craft()->userSession->getUser();
+        $user = Craft::$app->getUser();
         if ($user->admin or $user->isInGroup('schemeManagers')) {
             $children[] = $this->createNode('scheme', 'managers', 's', 'Scheme Managers', 'group', true);
             $children = array_merge($children, $this->getJsTreeChildren());
@@ -341,7 +341,7 @@ class Structure extends Component
 
     public function getTopCompanyIds() {
         // just return all companies without a parent
-        $query = craft()->db->createCommand()
+        $query = Craft::$app->db->createCommand()
             ->select('e.id' )
             ->from('entries e')
             ->where('sectionId = 3')

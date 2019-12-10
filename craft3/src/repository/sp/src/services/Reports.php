@@ -26,7 +26,7 @@ class Reports extends Component
      * @return array
      */
     public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false) {
-        $user = craft()->userSession->getUser();
+        $user = Craft::$app->getUser();
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'reports';
         $criteria->limit = $limit;
@@ -105,7 +105,7 @@ class Reports extends Component
         fclose($export);
         $content = ob_get_clean();
         $content = str_replace("\n", "\r\n", $content);
-        craft()->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
+        Craft::$app->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
     }
 
     /**
@@ -382,7 +382,7 @@ class Reports extends Component
      */
     private function getReportDataUsers($reportEntry)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = null;
         $companyTeamIds = [];
         foreach($reportEntry->reportCompanies as $company) {

@@ -12,6 +12,8 @@ use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
 
+use lantra\sp\helpers\LantraHelper;
+
 class Results extends Component
 {
 
@@ -20,18 +22,18 @@ class Results extends Component
      */
     public function onBeforeSaveResult(Entry $entry) {
         // set comment
-        $comment = craft()->request->getPost('comment');
+        $comment = Craft::$app->request->getPost('comment');
         if ($comment) {
             unset($_POST['comment']);
             $resultComments = Lantra::$app->results->addComment($entry, $comment);
             $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
         }
         // set custom author
-        $authorId = craft()->request->getPost('authorId');
+        $authorId = Craft::$app->request->getPost('authorId');
         if ($entry->type == 'userResult' && $authorId) {
             $entry->authorId = $authorId;
         }
-        $fields = craft()->request->getPost('fields');
+        $fields = Craft::$app->request->getPost('fields');
         $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
         // set result title
         if ($entry->type == 'userResult' && $resultUnitId) {
@@ -42,9 +44,9 @@ class Results extends Component
         }
         // check endorsed change
         $oldEntry = craft()->entries->getEntryById($entry->id);
-        $currentUser = craft()->userSession->getUser();
+        $currentUser = Craft::$app->getUser();
         // Auto endorse
-        if (! craft()->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
+        if (! Craft::$app->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
             $entry->setContentFromPost(['resultStatus' => 'endorsed']);
             if (!$oldEntry) {
                 $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
@@ -68,19 +70,19 @@ class Results extends Component
 
         $dateFormat = 'Y-m-d H:i:s';
         // set a user start date
-        $userStartDate = craft()->request->getPost('userStartDate');
+        $userStartDate = Craft::$app->request->getPost('userStartDate');
         if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
             $userStartDate = $date->getTimestamp();
         }
         $entry->setContentFromPost(['resultStartDate' => $userStartDate]);
         // set a user finish date
-        $userFinishDate = craft()->request->getPost('userFinishDate');
+        $userFinishDate = Craft::$app->request->getPost('userFinishDate');
         if ($userFinishDate && false != $date = DateTime::createFromFormat($dateFormat, $userFinishDate)) {
             $userFinishDate = $date->getTimestamp();
         }
         $entry->setContentFromPost(['resultFinishDate' => $userFinishDate]);
         // validate dates
-        $userExpiryDate = craft()->request->getPost('userExpiryDate');
+        $userExpiryDate = Craft::$app->request->getPost('userExpiryDate');
         if ($userExpiryDate && false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
             $userExpiryDate = $date->getTimestamp();
             $entry->expiryDate = $date->getTimestamp();
@@ -119,7 +121,7 @@ class Results extends Component
     function addComment($entry, $comment, $userId = null) {
 
         if (is_null($userId)) {
-            $userId = craft()->userSession->getUser()->id;
+            $userId = Craft::$app->getUser()->id;
         }
         $field = craft()->fields->getFieldByHandle('resultComments');
         $blockTypes = craft()->superTable->getBlockTypesByFieldId($field->id);
@@ -229,7 +231,7 @@ class Results extends Component
         $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
         // author sent from form
-        $authorId = craft()->request->getPost('authorId');
+        $authorId = Craft::$app->request->getPost('authorId');
         if ($authorId && false != $user = craft()->users->getUserById($authorId)) {
             $attemptEntry->authorId = $user->id;
             $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
@@ -310,7 +312,7 @@ class Results extends Component
             }
             // set author
             $author = null;
-            $authorId = craft()->request->getPost('author');
+            $authorId = Craft::$app->request->getPost('author');
             if (is_array($authorId)) {
                 $author = craft()->users->getUserById($authorId[0]);
             }
@@ -711,7 +713,7 @@ class Results extends Component
      * @throws mixed
      */
     public function getManagerEndorsementUsers($manager, $limit = null, $count = false, $directSubordinates = false) {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->id =  $this->getManagerEndorsementUserIds($manager, $directSubordinates);
         $criteria->order = 'lastName desc';
         $criteria->limit = $limit;
@@ -842,7 +844,7 @@ class Results extends Component
             $manager = craft()->users->getUserById($userId);
         }
         else {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         if ( ! $manager) {
             return null;
@@ -1687,7 +1689,7 @@ class Results extends Component
             $manager = craft()->users->getUserById($userId);
         }
         else {
-            $manager = craft()->userSession->getUser();
+            $manager = Craft::$app->getUser();
         }
         if ( ! $manager) {
             return null;
@@ -1746,7 +1748,7 @@ class Results extends Component
      */
     public function addUnitColumn($id) {
         if ( ! craft()->db->columnExists('lantra_result_cache', 'unit' . $id)) {
-            craft()->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
+            Craft::$app->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
         }
     }
 
@@ -1757,7 +1759,7 @@ class Results extends Component
      */
     public function removeUnitColumn($id) {
         if (craft()->db->columnExists('lantra_result_cache', 'unit' . $id)) {
-            craft()->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
+            Craft::$app->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
         }
     }
 
@@ -1769,7 +1771,7 @@ class Results extends Component
      *
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
-        if (Lantra::$app->setting->getSetting('disableResultCache')) {
+        if (LantraHelper::setting('disableResultCache')) {
             return;
         }
         $keyColumns = [
@@ -1787,7 +1789,7 @@ class Results extends Component
                 }
             }
         }
-        craft()->db->createCommand()->insertOrUpdate('lantra_result_cache', $keyColumns, $updateColumns);
+        Craft::$app->db->createCommand()->upsert('lantra_result_cache', $keyColumns, $updateColumns);
     }
 
     /**
@@ -1800,7 +1802,7 @@ class Results extends Component
         $userId = $resultEntry->getAuthor()->id;
         $unitId = $resultEntry->resultUnit->first()->id;
         if ($userId && $unitId) {
-            craft()->db->createCommand()->update('lantra_result_cache', ['unit' . $unitId => ""], ['userId' => $userId]);
+            Craft::$app->db->createCommand()->update('lantra_result_cache', ['unit' . $unitId => ""], ['userId' => $userId]);
         }
     }
 
@@ -1819,7 +1821,7 @@ class Results extends Component
         else {
             $where = ['IN', 'userId', $userIds];
         }
-        $query = craft()->db->createCommand()->from('lantra_result_cache')->where($where);
+        $query = Craft::$app->db->createCommand()->from('lantra_result_cache')->where($where);
         $result = $query->queryAll();
 
         if ( ! $result) {

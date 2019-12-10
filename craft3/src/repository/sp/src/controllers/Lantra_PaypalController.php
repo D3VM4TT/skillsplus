@@ -13,10 +13,10 @@ class Lantra_PaypalController extends Lantra_BaseController
      */
     public function actionPayment(){
         // get variables from PayPal
-        $userId = craft()->request->getParam('custom');
-        $payerEmail = craft()->request->getParam('payer_email');
-        $paymentAmount = craft()->request->getParam('mc_gross');
-        $transactionId = craft()->request->getParam('txn_id');
+        $userId = Craft::$app->request->getParam('custom');
+        $payerEmail = Craft::$app->request->getParam('payer_email');
+        $paymentAmount = Craft::$app->request->getParam('mc_gross');
+        $transactionId = Craft::$app->request->getParam('txn_id');
         // get the user object
         $user = craft()->users->getUserById($userId);
         if ( ! $user) {
@@ -43,7 +43,7 @@ class Lantra_PaypalController extends Lantra_BaseController
         // add to Lantra job role
         Lantra::$app->users->addUserToIndividualJobRole($user);
         // set account expiry
-        $days = craft()->lantra_licence->getIndividualLicenceDays();
+        $days = Lantra::$app->licences->getIndividualLicenceDays();
         Lantra::$app->users->setUserExpiryDate($user, $days);
         // log success message
         Craft::log('IPN request received [' . $payerEmail . ']',LogLevel::Info, true, 'paypal', 'lantra');

@@ -21,7 +21,7 @@ class Notify extends Component
      */
     function sendSchemeExpiry($expiryDate) {
         // send scheme managers remaining scheme licences
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
@@ -58,14 +58,14 @@ class Notify extends Component
      */
     function sendLicencesRemaining() {
         // send scheme managers remaining scheme licences
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectLicencesRemaining', 'Licences Remaining');
         foreach ($criteria->find() as $manager) {
-            $remainingLicences = craft()->lantra_licence->getSchemeLicences();
+            $remainingLicences = Lantra::$app->licences->getSchemeLicences();
             if ($remainingLicences <= 10) {
-                $variables = ['title' =>  craft()->getSiteName(), 'licences' => craft()->lantra_licence->getSchemeLicences()];
+                $variables = ['title' =>  craft()->getSiteName(), 'licences' => Lantra::$app->licences->getSchemeLicences()];
                 $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
                 $message = craft()->templates->renderString($template, $variables);
                 $this->notify($manager->email, $subject, $message);
@@ -118,7 +118,7 @@ class Notify extends Component
     */
     function sendModuleResult(EntryModel $entry) {
         // ignore endorsement notifications in CP
-        if (craft()->request->isCpRequest()){
+        if (Craft::$app->request->isCpRequest()){
             return;
         }
         $moduleEntry = $entry->resultModule->first();
@@ -158,7 +158,7 @@ class Notify extends Component
      */
     function sendManagerEndorsementResult(EntryModel $resultEntry, $level = 1) {
         // ignore endorsement notifications in CP
-        if (craft()->request->isCpRequest()){
+        if (Craft::$app->request->isCpRequest()){
             return;
         }
         // endorsement notify is disabled

@@ -8,7 +8,7 @@ class Lantra_ReportsController extends Lantra_BaseController
      * @return array
      */
     private function getFields(){
-        $fields = craft()->request->getParam('fields');
+        $fields = Craft::$app->request->getParam('fields');
         if ( ! $fields['reportCompanies']) {
             $fields['reportCompanies'] = [];
         }
@@ -45,15 +45,15 @@ class Lantra_ReportsController extends Lantra_BaseController
     public function actionSave()
     {
         craft()->userSession->requireLogin();
-        $manager = craft()->userSession->getUser();
+        $manager = Craft::$app->getUser();
         $fields = $this->getFields();
         if (! $fields['reportAllCompanies'] && ! count($fields['reportCompanies'])) {
             $this->_returnError('You must select some companies or select Include all companies.');
         }
         $type = $fields['reportType'];
-        $automated = craft()->request->getParam('automated');
-        $entryId = craft()->request->getParam('entryId');
-        $title = craft()->request->getParam('title');
+        $automated = Craft::$app->request->getParam('automated');
+        $entryId = Craft::$app->request->getParam('entryId');
+        $title = Craft::$app->request->getParam('title');
         // custom title
         if ($automated) {
             $fields['reportAutomated'] = true;
@@ -83,9 +83,9 @@ class Lantra_ReportsController extends Lantra_BaseController
     {
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
-        $manager = craft()->userSession->getUser();
+        $manager = Craft::$app->getUser();
         // get the posted entryId
-        $entryId = craft()->request->getPost('entryId');
+        $entryId = Craft::$app->request->getPost('entryId');
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
@@ -109,7 +109,7 @@ class Lantra_ReportsController extends Lantra_BaseController
         $this->requirePostRequest();
         craft()->userSession->requireLogin();
         // get the posted entryId
-        $entryId = craft()->request->getPost('entryId');
+        $entryId = Craft::$app->request->getPost('entryId');
         if (false == $entry = craft()->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }

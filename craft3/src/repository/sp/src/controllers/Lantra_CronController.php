@@ -13,7 +13,7 @@ class Lantra_CronController extends Lantra_BaseController {
      * @throws Exception
      */
     function actionRun() {
-        $frequency = craft()->request->getParam('frequency');
+        $frequency = Craft::$app->request->getParam('frequency');
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
             Lantra::$app->queue->next();
@@ -42,7 +42,7 @@ class Lantra_CronController extends Lantra_BaseController {
      * @throws Exception
      */
     function notifyManagerSummary() {
-        $criteria = craft()->elements->getCriteria(ElementType::User);
+        $criteria = User::find();
         $criteria->limit = null;
         $criteria->groupId = array(2, 3);
         $managers = $criteria->find();
@@ -67,7 +67,7 @@ class Lantra_CronController extends Lantra_BaseController {
      * @throws Exception
      */
     function notifySchemeExpiry() {
-        $expiryDate = craft()->lantra_licence->getSchemeExpiryDate();
+        $expiryDate = Lantra::$app->licences->getSchemeExpiryDate();
         $warningDate = strtotime("+4 weeks");
         if ($expiryDate && $expiryDate->getTimestamp() < $warningDate) {
             craft()->lantra_notify->sendSchemeExpiry($expiryDate);
