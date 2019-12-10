@@ -13,6 +13,7 @@ $site = array_shift($parts);
 
 return [
     '*' => [
+        'enableCsrfProtection' => false,
         'defaultWeekStartDay' => 0,
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
