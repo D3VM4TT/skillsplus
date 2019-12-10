@@ -67,22 +67,23 @@ class Licences extends Component
      * @return bool
      * @throws mixed
      */
-    function updateCompanyLicences($companyEntry) {
-        // check existing company entry
-        $oldEntry = Craft::$app->entries->getEntryById($companyEntry->id);
+    function updateCompanyLicences($companyEntry)
+    {
+        ## check existing company entry
+        $oldEntry = $companyEntry->id ? Craft::$app->entries->getEntryById($companyEntry->id) : false;
         $existingCompanyLicences = ($oldEntry) ? $oldEntry->companyRemainingLicences : 0;
-        // look for change
+        ## look for change
         if ($existingCompanyLicences != $companyEntry->companyRemainingLicences) {
-            // return scheme licences
+            ## return scheme licences
             if ($existingCompanyLicences > $companyEntry->companyRemainingLicences) {
                 $returnedLicences = $existingCompanyLicences - $companyEntry->companyRemainingLicences;
                 $this->addSchemeLicences($returnedLicences);
             }
-            // remove scheme licences
+            ## remove scheme licences
             else {
                 $schemeLicences = $this->getSchemeLicences();
                 $newLicences = $companyEntry->companyRemainingLicences - $existingCompanyLicences;
-                // not enough scheme licences
+                ## not enough scheme licences
                 if ($newLicences > $schemeLicences) {
                     return false;
                 }

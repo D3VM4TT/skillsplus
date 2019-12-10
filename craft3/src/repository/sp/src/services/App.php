@@ -10,7 +10,6 @@ namespace lantra\sp\services;
 
 use craft\base\Component;
 
-
 /**
  * Class App
  * @package lantra\sp\services
@@ -29,6 +28,9 @@ class App extends Component
     public $structure;
     public $users;
 
+    /**
+     *
+     */
     public function init()
     {
         $this->attempts = new Attempts();
@@ -42,5 +44,13 @@ class App extends Component
         $this->settings = new Settings();
         $this->structure = new Structure();
         $this->users = new Users();
+    }
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    public function getSetting($key) {
+        return isset($this->settings->$key) ? $this->settings->$key : null;
     }
 }

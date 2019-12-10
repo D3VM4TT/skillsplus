@@ -33,16 +33,16 @@
 </div>
 
 {% if entry is defined %}
-    {{ ui.errorList(entry.getAllErrors()) }}
+    {{ ui.errorList(entry.getFirstErrors()) }}
 {% endif %}
 
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-    {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="entries/saveEntry">
+    {{ csrfInput() }}
+    {{ actionInput('entries/save-entry') }}
     {% if hierarchyNode %}
-       <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
+        {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
     {% else %}
-        <input type="hidden" name="redirect" value="management/companies">
+        {{ redirectInput('/management/hierarchy') }}
     {% endif %}
     <input type="hidden" name="sectionId" value="3">
     <input type="hidden" name="enabled" value="1">

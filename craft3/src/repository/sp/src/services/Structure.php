@@ -22,33 +22,45 @@ class Structure extends Component
      * @param $event
      * @param $entry
      */
-    public function onBeforeSaveCompany($event, $entry) {
-        if (! $this->getSettings()->lantraDisableLicences && ! Lantra::$app->licences->updateCompanyLicences($entry)){
-            $entry->addError('companyRemainingLicences', 'There are insufficient scheme licences.');
+    public function onBeforeSaveCompany($event, $entry)
+    {
+        ## check licences
+        if (!Lantra::$app->getSetting('lantraDisableLicences') && !Lantra::$app->licences->updateCompanyLicences($entry)){
+            $entry->addError('companyRemainingLicences', 'There are insufficient company licences.');
             $event->performAction = false;
         }
-        // update company label
-        $companyLabel = Lantra::$app->structure->getCompanyLabel($entry);
-        $event->params['entry']->setContentFromPost(array('companyLabel' => $companyLabel));
+
+        ## update company label
+        $entry->companyLabel = Lantra::$app->structure->getCompanyLabel($entry);
+    }
+
+    /**
+     * @param $event
+     * @param $entry
+     */
+    public function onSaveCompany($event, $entry)
+    {
+        $this->saveCompanyChildren($entry);
     }
 
     /**
      * @param $userId
      */
-    public function clearHierarchyCache($userId) {
+    public function clearHierarchyCache($userId)
+    {
         Craft::$app->cache->delete('lantraHierarchy' . $userId);
     }
 
     /**
-     * @param $search
-     * @param $limit
-     * @param $order
-     * @return array
-     * @throws \CException
+     * @param string $search
+     * @param int $limit
+     * @param string $order
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function companyCriteria($search = '', $limit = 25, $order = 'companyLabel') {
-        $user = Craft::$app->getUser();
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+    public function companyCriteria($search = '', $limit = 25, $order = 'companyLabel')
+    {
+        $user = Craft::$app->getUser()->getIdentity();
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = $limit;
         $criteria->order = $order;
@@ -86,7 +98,7 @@ class Structure extends Component
                 OR c.field_companyLabel LIKE "%' . $search . '%"';
         }
 
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         $ids = [];
         foreach ($result as $row) {
             $ids [] = $row['id'];
@@ -362,14 +374,16 @@ class Structure extends Component
 
     /**
      * @param $company
-     * @throws Exception
-     * @throws \CException
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    public function saveCompanyChildren($company) {
+    public function saveCompanyChildren($company)
+    {
         $children = $this->getCompanyChildren($company, null, null);
         if ($children) {
             foreach ($children as $child) {
-                Craft::$app->entries->saveEntry($child);
+                Craft::$app->elements->saveElement($child, false);
             }
         }
     }

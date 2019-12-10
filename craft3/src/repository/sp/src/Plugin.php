@@ -133,7 +133,7 @@ class Plugin extends BasePlugin
             Entry::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
                 $this->resetUploads();
-                $entry = $event->params['entry'];
+                $entry = $event->sender;
                 if ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onSaveCompany($event, $entry);
                 }
@@ -152,7 +152,7 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_AFTER_DELETE,
             function (ModelEvent $event) {
-                $entry = $event->params['entry'];
+                $entry = $event->sender;
                 if ($entry->sectionId == $this->sectionIdUnits) {
                     Lantra::$app->structure->onDeleteUnit($event, $entry);
                 }
@@ -189,6 +189,7 @@ class Plugin extends BasePlugin
      */
     private function getCpUrlRules()
     {
+        return [];
     }
 
     /**
@@ -200,6 +201,15 @@ class Plugin extends BasePlugin
             'sp/users/hierarchy' => 'sp/users/hierarchy',
             'sp/users/refresh-hierarchy' => 'sp/users/refresh-hierarchy',
         ];
+    }
+
+    /**
+     *
+     */
+    private function resetUploads()
+    {
+        unset($_FILES);
+        ## UploadedFile::reset();
     }
 }
 

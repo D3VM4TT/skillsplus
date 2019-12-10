@@ -158,7 +158,7 @@ class Users extends Component
                 OR c.field_userCompanyName LIKE "%' . $search . '%"';
         }
 
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         $ids = [];
         foreach ($result as $row) {
             $ids [] = $row['id'];
@@ -1001,7 +1001,7 @@ class Users extends Component
     public function getReportUsers($userIds)
     {
 
-        $sql = 'SELECT 
+        $mysql = 'SELECT 
             u.id,           
             CONCAT(u.firstName, " ", u.lastName) as fullName,
             u.email,    
@@ -1022,7 +1022,7 @@ class Users extends Component
             AND rc.fieldId = 128
             AND u.id IN(' . implode(',', $userIds) . ')';
 
-        $rows = craft()->db->createCommand($sql)->query();
+        $rows = Craft::$app->db->createCommand($mysql)->query();
         $return = [];
         $format = 'd-m-Y';
         foreach ($rows as $user) {
@@ -1255,7 +1255,7 @@ class Users extends Component
      */
     public function getIndividualCompany()
     {
-        return Lantra::$app->setting->getSetting('individualCompany');
+        return Lantra::$app->getSetting('individualCompany');
     }
 
     /** Get emails

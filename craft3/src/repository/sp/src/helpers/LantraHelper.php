@@ -8,8 +8,7 @@
 
 namespace lantra\sp\helpers;
 
-use lantra\sp\Plugin;
-use craft\helpers\FileHelper;
+use lantra\sp\Plugin as Lantra;
 
 class LantraHelper
 {
@@ -24,21 +23,11 @@ class LantraHelper
     }
 
     /**
-     *
-     * @return string
-     */
-    public static function getSettings()
-    {
-        return Plugin::getInstance()->getSettings();
-    }
-
-    /**
      * @param string $key
      * @return mixed|null
      */
     public static function setting($key = '')
     {
-        $settings = Plugin::getInstance()->getSettings();
-        return isset($settings[$key]) ? $settings[$key] : null;
+        return Lantra::$app->getSetting($key);
     }
 }
