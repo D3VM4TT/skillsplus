@@ -31,7 +31,7 @@ class Lantra_AssetsController extends Lantra_BaseController
     public function actionUploadEvidence()
     {
         $this->requireAjaxRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
 
         if (empty($_FILES) || ! isset($_FILES['assets-upload']) || ! isset($_FILES['assets-upload']['name']) || ! isset($_FILES['assets-upload']['tmp_name'])) {
             $data = [

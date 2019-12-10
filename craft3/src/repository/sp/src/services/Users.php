@@ -506,7 +506,7 @@ class Users extends Component
      */
     public function getCompanyMembers($companyId, $count = false)
     {
-        $company = craft()->entries->getEntryById($companyId);
+        $company = Craft::$app->entries->getEntryById($companyId);
         $companyManagerIds = $company ? $this->getCompanyManagerIds($company) : [];
         if (!count($companyManagerIds)) {
             return $this->getCompanyUsers($companyId, $count);
@@ -545,7 +545,7 @@ class Users extends Component
      */
     public function getTeamMembers($teamId, $count = false)
     {
-        $team = craft()->entries->getEntryById($teamId);
+        $team = Craft::$app->entries->getEntryById($teamId);
         $teamManagerIds = $team ? $this->getTeamManagerIds($team) : [];
         if (!count($teamManagerIds)) {
             return $this->getTeamUsers($teamId, $count);
@@ -807,7 +807,7 @@ class Users extends Component
             'companySecondaryManagers' => $secondaryManagerIds
         ]);
 
-        craft()->entries->saveEntry($company);
+        Craft::$app->entries->saveEntry($company);
     }
 
     /**
@@ -1281,7 +1281,7 @@ class Users extends Component
      */
     public function getUsersByEntryId($entryId)
     {
-        $entry = craft()->entries->getEntryById($entryId);
+        $entry = Craft::$app->entries->getEntryById($entryId);
         if (!$entry || ($entry->sectionId != 3 && $entry->sectionId != 5)) {
             return (object)[];
         }
@@ -1377,7 +1377,7 @@ class Users extends Component
         // remove from existing
         foreach ($this->getCompanyManagerCompanyIds($user, $type) as $companyId) {
             if (!in_array($companyId, $companyIds)) {
-                $company = craft()->entries->getEntryById($companyId);
+                $company = Craft::$app->entries->getEntryById($companyId);
                 if ($type == 'primary') {
                     $primaryManagerIds = $company->companyPrimaryManagers->ids();
                     // remove userId from array
@@ -1399,7 +1399,7 @@ class Users extends Component
         }
         // add to new
         foreach ($companyIds as $companyId) {
-            $company = craft()->entries->getEntryById($companyId);
+            $company = Craft::$app->entries->getEntryById($companyId);
             $primaryManagerIds = $company->companyPrimaryManagers->total() ? $company->companyPrimaryManagers->ids() : [];
             $secondaryManagerIds = $company->companySecondaryManagers->total() ? $company->companySecondaryManagers->ids() : [];
             if ($type == 'primary' && !in_array($user->id, $primaryManagerIds)) {

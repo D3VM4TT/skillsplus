@@ -28,7 +28,7 @@ class Licences extends Component
         $companyEntry->setContentFromPost([
             'companyRemainingLicences' => $companyEntry->companyRemainingLicences - 1
         ]);
-        if ( ! craft()->entries->saveEntry($companyEntry)) {
+        if ( ! Craft::$app->entries->saveEntry($companyEntry)) {
             return false;
         }
         return true;
@@ -69,7 +69,7 @@ class Licences extends Component
      */
     function updateCompanyLicences($companyEntry) {
         // check existing company entry
-        $oldEntry = craft()->entries->getEntryById($companyEntry->id);
+        $oldEntry = Craft::$app->entries->getEntryById($companyEntry->id);
         $existingCompanyLicences = ($oldEntry) ? $oldEntry->companyRemainingLicences : 0;
         // look for change
         if ($existingCompanyLicences != $companyEntry->companyRemainingLicences) {

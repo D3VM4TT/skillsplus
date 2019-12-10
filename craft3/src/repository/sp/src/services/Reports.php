@@ -118,7 +118,7 @@ class Reports extends Component
      */
     public function saveCustomReport($author, $title = '', $fields = [], $entryId = null) {
         if ($entryId) {
-            $reportEntry = craft()->entries->getEntryById($entryId);
+            $reportEntry = Craft::$app->entries->getEntryById($entryId);
         }
         else {
             $reportEntry = new EntryModel();
@@ -129,7 +129,7 @@ class Reports extends Component
         }
         $reportEntry->getContent()->title = $title;
         $reportEntry->setContentFromPost($fields);
-        craft()->entries->saveEntry($reportEntry);
+        Craft::$app->entries->saveEntry($reportEntry);
         return $reportEntry;
     }
 
@@ -259,7 +259,7 @@ class Reports extends Component
         $fileId = $response->getDataItem('fileId');
         // append asset to report entry
         $reportEntry->setContentFromPost(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
-        craft()->entries->saveEntry($reportEntry);
+        Craft::$app->entries->saveEntry($reportEntry);
         // send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
             $asset = craft()->assets->getFileById($fileId);
@@ -282,7 +282,7 @@ class Reports extends Component
             $message = craft()->templates->renderString($template, $variables);
             craft()->lantra_notify->notify($emails, $subject, $message, [$attachment]);
             $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
-            craft()->entries->saveEntry($reportEntry);
+            Craft::$app->entries->saveEntry($reportEntry);
         }
         // delete the temp file
         unlink($filePath . $fileName);

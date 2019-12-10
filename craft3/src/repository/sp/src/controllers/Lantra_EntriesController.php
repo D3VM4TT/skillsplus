@@ -19,7 +19,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
      */
     public function actionPendingResult() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted id, ref and userId
         $id =  Craft::$app->request->getPost('id');
         $ref =  Craft::$app->request->getPost('ref');
@@ -32,7 +32,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
         // loop entries and update status
         foreach ($results as $resultEntry) {
             $resultEntry->setContentFromPost(['resultStatus' => 'pending']);
-            craft()->entries->saveEntry($resultEntry);
+            Craft::$app->entries->saveEntry($resultEntry);
             $count ++;
         }
         $this->_returnMessage('Endorsement requested for ' . $count . ' result(s).', true);
@@ -45,10 +45,10 @@ class Lantra_EntriesController extends Lantra_BaseController {
      */
     public function actionResetResult() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted entryId
         $entryId = Craft::$app->request->getPost('entryId');
-        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+        if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         Lantra::$app->results->unblockResult($entry);
@@ -62,11 +62,11 @@ class Lantra_EntriesController extends Lantra_BaseController {
      */
     public function actionDeleteEntry() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
         // get the posted entryId
         $entryId = Craft::$app->request->getPost('entryId');
-        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+        if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         // if removing a company, disable teams and children
@@ -90,7 +90,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
      */
     public function actionEndorseEvidence() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
         // get all the posted entryId(s)
         if (false != $entryId = Craft::$app->request->getPost('entryId')) {
@@ -103,13 +103,13 @@ class Lantra_EntriesController extends Lantra_BaseController {
         $userId = craft()->userSession->getId();
         // loop entries and update status
         foreach ($results as $result) {
-            if (isset($result['entryId']) && FALSE != $entry = craft()->entries->getEntryById($result['entryId'])) {
+            if (isset($result['entryId']) && FALSE != $entry = Craft::$app->entries->getEntryById($result['entryId'])) {
                 $entry->setContentFromPost([
                     'resultStatus' => 'endorsed',
                     'resultEndorsedDate' => DateTimeHelper::currentTimeForDb(),
                     'resultEndorsedUser' => [$userId]
                     ]);
-                craft()->entries->saveEntry($entry);
+                Craft::$app->entries->saveEntry($entry);
                 $count ++;
             }
         }
@@ -139,7 +139,7 @@ class Lantra_EntriesController extends Lantra_BaseController {
             $entry->setContentFromPost(['companyRemainingLicences' => 0]);
         }
         $entry->enabled = false;
-        craft()->entries->saveEntry($entry);
+        Craft::$app->entries->saveEntry($entry);
     }
 
     /**

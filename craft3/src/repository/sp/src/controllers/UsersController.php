@@ -1,22 +1,20 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_UsersController extends Lantra_BaseController {
+use Craft;
 
-    public $allowAnonymous = array('actionHierarchy', 'actionRefreshHierarchy', 'actionSaveUser', 'actionSuspendUser', 'actionRestoreUser', 'actionDeleteUser');
+use lantra\sp\Plugin as Lantra;
 
-    /**
-     * Clear hierarchy cache for logged in user
-     *
-     * @throws Exception
-     */
-    public function actionRefreshHierarchy() {
-        craft()->userSession->requireLogin();
-        $user = Craft::$app->getUser();
-        Lantra::$app->structure->clearHierarchyCache($user->id);
-        return $this->_returnMessage('Hierarchy cache deleted.', true, '/management/hierarchy');
-    }
+class UsersController extends BaseController {
+
+    protected $allowAnonymous = true;
 
     /**
      * Get company users for hierarchy
@@ -24,16 +22,15 @@ class Lantra_UsersController extends Lantra_BaseController {
      * @throws mixed
      */
     public function actionHierarchy() {
-        craft()->userSession->requireLogin();
-        // get the posted nodeId
+        $this->requireLogin();
         $companyId = Craft::$app->request->getParam('companyId');
         $type = Craft::$app->request->getParam('type');
-        $user = Craft::$app->getUser();
-        // look in cache
+        $user = Craft::$app->getUser()->getIdentity();
+        ## look in cache
         $name = 'lantraHierarchy' . $user->id;
-        if (false == $cache = craft()->cache->get($name)){
+        if (false == $cache = Craft::$app->cache->get($name)){
             $cache = [];
-            craft()->cache->set($name, $cache);
+            Craft::$app->cache->set($name, $cache);
         }
         $key = (!$companyId ? 'root' : $companyId . $type);
         if (isset($cache[$key])) {
@@ -41,18 +38,28 @@ class Lantra_UsersController extends Lantra_BaseController {
         }
         else {
             $node = Lantra::$app->structure->getHierarchy($companyId, $type);
-            // set cache
+            ## set cache
             $cache[$key] = $node;
-            craft()->cache->set($name, $cache, 86400);
+            Craft::$app->cache->set($name, $cache, 86400);
         }
-        return craft()->controller->returnJson($node);
+        return $this->asJson($node);
+    }
+
+    /**
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionRefreshHierarchy() {
+        $this->requireLogin();
+        $user = Craft::$app->getUser()->getIdentity();
+        Lantra::$app->structure->clearHierarchyCache($user->id);
+        return $this->_returnMessage('Hierarchy cache deleted.', true, '/management/hierarchy');
     }
 
     /**
      * return key value managers for report option js
      */
     public function actionCompanyManagers() {
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         $companyIds = Craft::$app->request->getParam('companyIds');
         $return = [];
         if (count($companyIds)) {
@@ -64,7 +71,7 @@ class Lantra_UsersController extends Lantra_BaseController {
                 sort($managers);
             }
         }
-        return craft()->controller->returnJson($return);
+        return $this->asJson($return);
     }
 
     /**
@@ -74,8 +81,8 @@ class Lantra_UsersController extends Lantra_BaseController {
      */
     public function actionSaveUser() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
-        craft()->userSession->requirePermission('editUsers');
+        $this->requireLogin();
+        $this->requirePermission('editUsers');
         // get the posted userId
         $userId = Craft::$app->request->getPost('editUserId');
         $redirect = Craft::$app->request->getPost('redirect') ? Craft::$app->request->getPost('redirect') : '/management/users';
@@ -89,7 +96,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         }
         // create new user
         else {
-            craft()->userSession->requirePermission('registerUsers');
+            $this->requirePermission('registerUsers');
             $user = new UserModel();
         }
         // set basic account fields
@@ -165,7 +172,7 @@ class Lantra_UsersController extends Lantra_BaseController {
      */
     public function actionDeleteUser() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted userId
         $userId = Craft::$app->request->getPost('userId');
         if (false == $user = craft()->users->getUserById($userId)) {
@@ -184,7 +191,7 @@ class Lantra_UsersController extends Lantra_BaseController {
      */
     public function actionSuspendUser() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted userId
         $userId = Craft::$app->request->getPost('userId');
         if (false == $user = craft()->users->getUserById($userId)) {
@@ -205,7 +212,7 @@ class Lantra_UsersController extends Lantra_BaseController {
     public function actionRestoreUser()
     {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted userId
         $userId = Craft::$app->request->getPost('userId');
         if (false == $user = craft()->users->getUserById($userId)) {

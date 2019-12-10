@@ -374,7 +374,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 $companyEntry->setContentFromPost([
                     'companyPrimaryManagers' => array_merge($companyEntry->companyPrimaryManagers->ids(), [$companyManager->id])
                 ]);
-                craft()->entries->saveEntry($companyEntry);
+                Craft::$app->entries->saveEntry($companyEntry);
                 // make sure user is in company manager group
                 craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
                 $companyManager->setContentFromPost([
@@ -644,7 +644,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 'legacyId' => $legacyId,
                 'legacyParentId' => $legacyParentId
             ]);
-            if (craft()->entries->saveEntry($entryModel)) {
+            if (Craft::$app->entries->saveEntry($entryModel)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
@@ -818,7 +818,7 @@ class Lantra_ImportController extends Lantra_BaseController
                 'legacyResultFiles' => $legacyResultFiles
 
             ]);
-            if (craft()->entries->saveEntry($entryModel)) {
+            if (Craft::$app->entries->saveEntry($entryModel)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {

@@ -44,7 +44,7 @@ class Lantra_ReportsController extends Lantra_BaseController
      */
     public function actionSave()
     {
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         $manager = Craft::$app->getUser();
         $fields = $this->getFields();
         if (! $fields['reportAllCompanies'] && ! count($fields['reportCompanies'])) {
@@ -82,11 +82,11 @@ class Lantra_ReportsController extends Lantra_BaseController
     public function actionDelete()
     {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         $manager = Craft::$app->getUser();
         // get the posted entryId
         $entryId = Craft::$app->request->getPost('entryId');
-        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+        if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         if ($manager->id != $entry->getAuthor()->id) {
@@ -96,7 +96,7 @@ class Lantra_ReportsController extends Lantra_BaseController
         if ($entry->reportData) {
             craft()->assets->deleteFiles($entry->reportData->ids());
         }
-        craft()->entries->deleteEntryById($entryId);
+        Craft::$app->entries->deleteEntryById($entryId);
         $this->_returnMessage( 'Report has been deleted.', true);
     }
 
@@ -107,10 +107,10 @@ class Lantra_ReportsController extends Lantra_BaseController
      */
     public function actionRun() {
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted entryId
         $entryId = Craft::$app->request->getPost('entryId');
-        if (false == $entry = craft()->entries->getEntryById($entryId)) {
+        if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         $total = Lantra::$app->reports->runCustomReport($entry);

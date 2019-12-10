@@ -13,7 +13,7 @@ class Lantra_CategoriesController extends Lantra_BaseController {
      */
     public function actionDeleteCategory(){
         $this->requirePostRequest();
-        craft()->userSession->requireLogin();
+        $this->requireLogin();
         // get the posted categoryId
         $categoryId = Craft::$app->request->getPost('categoryId');
         if (false == $category = craft()->categories->getCategoryById($categoryId)) {

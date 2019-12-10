@@ -13,8 +13,10 @@ use craft\base\Plugin as BasePlugin;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
+use craft\web\UrlManager;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
@@ -56,6 +58,22 @@ class Plugin extends BasePlugin
         ]);
 
         $this::$app = $this->get('app');
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules = array_merge($event->rules, $this->getCpUrlRules());
+            }
+        );
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules = array_merge($event->rules, $this->getSiteUrlRules());
+            }
+        );
 
         Event::on(
             CraftVariable::class,
@@ -178,6 +196,10 @@ class Plugin extends BasePlugin
      */
     private function getSiteUrlRules()
     {
+        return [
+            'sp/users/hierarchy' => 'sp/users/hierarchy',
+            'sp/users/refresh-hierarchy' => 'sp/users/refresh-hierarchy',
+        ];
     }
 }
 

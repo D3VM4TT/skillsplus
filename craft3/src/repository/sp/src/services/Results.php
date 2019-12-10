@@ -37,13 +37,13 @@ class Results extends Component
         $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
         // set result title
         if ($entry->type == 'userResult' && $resultUnitId) {
-            $unitEntry = craft()->entries->getEntryById($resultUnitId);
+            $unitEntry = Craft::$app->entries->getEntryById($resultUnitId);
             if ($unitEntry) {
                 $entry->getContent()->title = $unitEntry->title;
             }
         }
         // check endorsed change
-        $oldEntry = craft()->entries->getEntryById($entry->id);
+        $oldEntry = Craft::$app->entries->getEntryById($entry->id);
         $currentUser = Craft::$app->getUser();
         // Auto endorse
         if (! Craft::$app->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
@@ -228,7 +228,7 @@ class Results extends Component
      * @throws Mixed
      */
     function saveAttemptResult($attemptEntry) {
-        $attemptEntry = craft()->entries->getEntryById($attemptEntry->id);
+        $attemptEntry = Craft::$app->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
         // author sent from form
         $authorId = Craft::$app->request->getPost('authorId');
@@ -283,7 +283,7 @@ class Results extends Component
             ]);
         }
         // @todo error reporting?
-        if ( ! craft()->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
             return;
         }
         return;
@@ -338,7 +338,7 @@ class Results extends Component
             }
         }
         if ($saveContent) {
-            craft()->entries->saveEntry($resultEntry, false);
+            Craft::$app->entries->saveEntry($resultEntry, false);
         }
     }
 
@@ -422,7 +422,7 @@ class Results extends Component
             'resultScore' => 0
         ]);
         $this->setResultStatus($resultEntry,'active');
-        craft()->entries->saveEntry($resultEntry);
+        Craft::$app->entries->saveEntry($resultEntry);
     }
 
     /**
@@ -543,7 +543,7 @@ class Results extends Component
         $resultEntry->authorId = $userId;
         $resultEntry->setContentFromPost(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
         // @todo error reporting?
-        if ( ! craft()->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
             return;
         }
         return;
@@ -568,7 +568,7 @@ class Results extends Component
         $resultEntry->expiryDate = $expiryDate;
         $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
         // @todo error reporting?
-        if ( ! craft()->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
             return;
         }
         return;
@@ -1143,9 +1143,9 @@ class Results extends Component
             'resultEvidence' => $assetIds,
             'legacyResultFiles' => implode(',', $updatedLegacyResultFiles)
         ]);
-        craft()->entries->saveEntry($resultEntry);
+        Craft::$app->entries->saveEntry($resultEntry);
         ## get entry again to force refresh on data
-        $resultEntry = craft()->entries->getEntryById($resultEntry->id);
+        $resultEntry = Craft::$app->entries->getEntryById($resultEntry->id);
         return $resultEntry;
     }
 

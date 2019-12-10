@@ -691,7 +691,7 @@ class LantraVariable
      * @return mixed
      */
     public function getReportData($entryId) {
-        $reportEntry = craft()->entries->getEntryById($entryId);
+        $reportEntry = Craft::$app->entries->getEntryById($entryId);
         return ($reportEntry) ? Lantra::$app->reports->getReportData($reportEntry) : null;
     }
 

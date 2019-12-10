@@ -14,7 +14,7 @@
             <div id="jstree">
             </div>
             <div style="margin-top:30px;">
-                <a href="/actions/lantra/users/refreshHierarchy">Refresh Hierarchy</a>
+                <a href="/sp/users/refresh-hierarchy">Refresh Hierarchy</a>
             </div>
         </div>
     </section>
@@ -32,9 +32,9 @@
                 'data': {
                     'url': function (node) {
                         if (node.id == '#') {
-                            return "/actions/lantra/users/hierarchy";
+                            return "/sp/users/hierarchy";
                         }
-                        return "/actions/lantra/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
+                        return "/sp/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
                     }
                 }
             }

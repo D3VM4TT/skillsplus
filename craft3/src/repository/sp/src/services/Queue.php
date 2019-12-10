@@ -100,7 +100,7 @@ class Queue extends Component
      * @param $elementId
      */
      public function run($elementId) {
-        if (null == $entry = craft()->entries->getEntryById($elementId)) {
+        if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
             return;
         }
         // only works with reports

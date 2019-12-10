@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-class Lantra_UsersController extends Lantra_BaseController {
+class UsersController extends Lantra_BaseController {
 
     public $allowAnonymous = array('actionHierarchy', 'actionRefreshHierarchy', 'actionSaveUser', 'actionSuspendUser', 'actionRestoreUser', 'actionDeleteUser');
 
