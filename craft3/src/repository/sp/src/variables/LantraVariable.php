@@ -9,6 +9,7 @@
 namespace lantra\sp\variables;
 
 use Craft;
+use craft\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -398,17 +399,12 @@ class LantraVariable
     }
 
     /**
-     * Return total number of company licences
-     *
-     * @return int
-     * @throws Exception
+     * @return false|null|string
+     * @throws \yii\db\Exception
      */
     public function totalCompanyLicences() {
-        $result = Craft::$app->db->createCommand()
-            ->from('{{content}}')
-            ->select("SUM(field_companyRemainingLicences) as total")
-            ->queryRow();
-        return $result['total'];
+        $query = (new Query())->from('{{%content}}');
+        return $query->sum('field_companyRemainingLicences');
     }
 
     /**
