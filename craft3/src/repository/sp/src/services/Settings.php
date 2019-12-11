@@ -76,17 +76,6 @@ class Settings extends Component
     }
 
     /**
-     * @param $key
-     * @param null $default
-     * @return null
-     */
-    public function getConfig($key, $default = null)
-    {
-        $config = Craft::$app->config->general['environmentVariables'];
-        return isset($config[$key]) ? $config[$key] : $default;
-    }
-
-    /**
      * @return mixed
      */
     public function getJsDateFormat()
@@ -245,7 +234,7 @@ class Settings extends Component
                         ## copy value from globals to settings
                         $global = $globalsTheme->$name;
                         if ($name == 'schemeLogo' && $globalsTheme->schemeLogo) {
-                            Lantra::$app->settings->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->first()->id]);
+                            Lantra::$app->settings->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->one()->id]);
                         } elseif ($name == 'themeNavigationPublic' && $globalsTheme->themeNavigationPublic) {
                             Lantra::$app->settings->saveSetting('themeNavigationPublic', $globalsTheme->themeNavigationPublic->ids());
                         } elseif ($name == 'themeNavigationPrivate' && $globalsTheme->themeNavigationPrivate) {

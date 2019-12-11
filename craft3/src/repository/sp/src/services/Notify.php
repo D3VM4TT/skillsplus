@@ -28,7 +28,7 @@ class Notify extends Component
         $variables = ['expiryDate' => $expiryDate];
         $template = $this->getNotifySetting('userExpiry', "Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.");
         $message = craft()->templates->renderString($template, $variables);
-        foreach ($criteria->find() as $manager) {
+        foreach ($criteria->all() as $manager) {
             $this->notify($manager->email, $subject, $message);
         }
     }
@@ -42,7 +42,7 @@ class Notify extends Component
        $criteria = Lantra::$app->users->getExpiringUsers($expiryDate);
        if ($criteria->total()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
-           foreach ($criteria->find() as $user) {
+           foreach ($criteria->all() as $user) {
                $variables = ['user' => $user];
                $template = $this->getNotifySetting('userExpiry', "Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.");
                $message = craft()->templates->renderString($template, $variables);
@@ -62,7 +62,7 @@ class Notify extends Component
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectLicencesRemaining', 'Licences Remaining');
-        foreach ($criteria->find() as $manager) {
+        foreach ($criteria->all() as $manager) {
             $remainingLicences = Lantra::$app->licences->getSchemeLicences();
             if ($remainingLicences <= 10) {
                 $variables = ['title' =>  craft()->getSiteName(), 'licences' => Lantra::$app->licences->getSchemeLicences()];
@@ -75,7 +75,7 @@ class Notify extends Component
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
-        foreach ($criteria->find() as $company) {
+        foreach ($criteria->all() as $company) {
             $remainingLicences = $company->companyRemainingLicences;
             if ($remainingLicences <= 10 && $company->companyPrimaryManagers->total()) {
                 $emails = [];
@@ -94,7 +94,7 @@ class Notify extends Component
      * @param EntryModel $entry
      */
     function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
-        $user = craft()->users->getUserById($userId);
+        $user = Craft::$app->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
         $template = $this->getNotifySetting('comment', "{{ entry.title }} - {{ user.fullName}}: {{ comment }}");
@@ -121,7 +121,7 @@ class Notify extends Component
         if (Craft::$app->request->isCpRequest()){
             return;
         }
-        $moduleEntry = $entry->resultModule->first();
+        $moduleEntry = $entry->resultModule->one();
         $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
         $variables = ['entry' => $moduleEntry, 'user' => $user];
@@ -139,7 +139,7 @@ class Notify extends Component
      * @throws Exception
      */
     function sendManagerBlockedResult(EntryModel $resultEntry) {
-        $unitEntry = $resultEntry->resultUnit->first();
+        $unitEntry = $resultEntry->resultUnit->one();
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
         $variables = ['entry' => $unitEntry, 'user' => $user];
@@ -190,10 +190,10 @@ class Notify extends Component
         $criteria = Lantra::$app->results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
-            foreach ($criteria->find() as $result) {
-                $moduleEntry = $result->resultModule->first();
+            foreach ($criteria->all() as $result) {
+                $moduleEntry = $result->resultModule->one();
                 $message .= "User: " . $result->author->getFullName() . "\n\n";
-                $message .= "Team: " . $result->author->userTeam->first()->title . "\n\n";
+                $message .= "Team: " . $result->author->userTeam->one()->title . "\n\n";
                 $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~'). "\n\n";
                 $message .= "Expires: " . $result->expiryDate . "\n\n";
                 $message .= "\n##########################\n\n";
@@ -206,10 +206,10 @@ class Notify extends Component
         $criteria = Lantra::$app->results->getManagerModuleCompletedResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
             $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
-            foreach ($criteria->find() as $result) {
-                $moduleEntry = $result->resultModule->first();
+            foreach ($criteria->all() as $result) {
+                $moduleEntry = $result->resultModule->one();
                 $message .= "User: " . $result->author->getFullName() . "\n\n";
-                $message .= "Team: " . ($result->author->userTeam->count() ? $result->author->userTeam->first()->title : '~') . "\n\n";
+                $message .= "Team: " . ($result->author->userTeam->count() ? $result->author->userTeam->one()->title : '~') . "\n\n";
                 $message .= "Module: " . ($moduleEntry ? $moduleEntry->title : '~') . "\n\n";
                 $message .= "Expires: " . $result->expiryDate . "\n\n";
                 $message .= "\n##########################\n\n";
@@ -265,7 +265,7 @@ class Notify extends Component
             $toEmail = [$toEmail];
         }
         // all notifications sent to test email address
-        $server = Lantra::$app->setting->getConfig('server', 'dev');
+        $server = Lantra::$app->settings->getConfig('server', 'dev');
         if ($server != 'prod') {
             $subject = '[' . $server . '] ' . $subject;
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);

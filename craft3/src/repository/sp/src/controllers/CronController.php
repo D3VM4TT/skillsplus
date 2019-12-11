@@ -55,7 +55,7 @@ class CronController extends BaseController {
         $criteria = User::find();
         $criteria->limit = null;
         $criteria->groupId = array(2, 3);
-        $managers = $criteria->find();
+        $managers = $criteria->all();
         // loop managers and send notifications
         foreach($managers as $manager) {
             craft()->lantra_notify->sendManagerSummary($manager);

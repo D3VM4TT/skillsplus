@@ -1,6 +1,6 @@
     {% import "_macros" as ui %}
     {% if unitEntry is defined %}
-        {{ ui.errorList(unitEntry.getAllErrors()) }}
+        {{ ui.errorList(unitEntry.getFirstErrors()) }}
     {% endif %}
     {% if unitEntry.testQuestions|length %}
     <div class="col-pd-top">

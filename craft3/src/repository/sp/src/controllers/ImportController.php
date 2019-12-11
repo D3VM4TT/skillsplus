@@ -385,18 +385,18 @@ class ImportController extends BaseController
             $managerReadOnly = isset($manager[2]) && $manager[2] == '1';
 
             if ($companyEntry && $companyManager) {
-                $companyEntry->setContentFromPost([
+                $companyEntry->setAttributes([
                     'companyPrimaryManagers' => array_merge($companyEntry->companyPrimaryManagers->ids(), [$companyManager->id])
                 ]);
                 Craft::$app->entries->saveEntry($companyEntry);
                 // make sure user is in company manager group
-                craft()->userGroups->assignUserToGroups($companyManager->id, [4, 2]);
-                $companyManager->setContentFromPost([
+                Craft::$app->users->assignUserToGroups($companyManager->id, [4, 2]);
+                $companyManager->setAttributes([
                     // add manager to company
                     'userCompany' => [$companyEntry->id],
                     'managerReadOnly' => $managerReadOnly
                 ]);
-                craft()->elements->saveElement($companyManager, false);
+                Craft::$app->elements->saveElement($companyManager, false);
                 $this->success++;
             }
             $this->setProcessed($id);
@@ -420,10 +420,10 @@ class ImportController extends BaseController
                 // skip if manager
                 $managerIds = (array)$companyEntry->companySecondaryManagers->ids();
                 if (!in_array($companyUser->id, $managerIds)) {
-                    $companyUser->setContentFromPost([
+                    $companyUser->setAttributes([
                         'userCompany' => [$companyEntry->id]
                     ]);
-                    craft()->elements->saveElement($companyUser, false);
+                    Craft::$app->elements->saveElement($companyUser, false);
                     $this->success++;
                 }
             }
@@ -445,7 +445,7 @@ class ImportController extends BaseController
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
-        $allCompanies = $criteria->find();
+        $allCompanies = $criteria->all();
         foreach ($allCompanies as $company) {
             $this->companyTemp[$company->legacyId] = $company->id;
         }
@@ -456,7 +456,7 @@ class ImportController extends BaseController
         $criteria->section = 'companies';
         $criteria->limit = $this->limit;
         $criteria->dataCleanCompanyParent = 0;
-        $companies = $criteria->find();
+        $companies = $criteria->all();
         $total = count($companies);
         // build array of legacyId => id
         $this->tempCompanyLegacyIds();
@@ -466,8 +466,8 @@ class ImportController extends BaseController
             if ($parentId) {
                 $data['companyParent'] = [$parentId];
             }
-            $company->setContentFromPost($data);
-            craft()->elements->saveElement($company, false);
+            $company->setAttributes($data);
+            Craft::$app->elements->saveElement($company, false);
 
         }
         craft()->userSession->setNotice('Company hierarchy created for ' . $total . ' companies.');
@@ -485,7 +485,7 @@ class ImportController extends BaseController
         $criteria = User::find();
         $criteria->limit = $this->limit;
         $criteria->dataCleanJobRole = 0;
-        $users = $criteria->find();
+        $users = $criteria->all();
         $total = count($users);
         foreach ($users as $user) {
             $roleId = $user->legacyJobRoleId ? $this->getRoleId($user->legacyJobRoleId) : null;
@@ -493,8 +493,8 @@ class ImportController extends BaseController
             if ($roleId) {
                 $data['userRole'] = [$roleId];
             }
-            $user->setContentFromPost($data);
-            craft()->elements->saveElement($user, false);
+            $user->setAttributes($data);
+            Craft::$app->elements->saveElement($user, false);
         }
         craft()->userSession->setNotice('Job roles assigned to ' . $total . ' users.');
         $this->complete();
@@ -506,7 +506,7 @@ class ImportController extends BaseController
         $criteria->admin = false;
         $criteria->limit = $this->limit;
         $criteria->dataCleanUsername = 0;
-        $users = $criteria->find();
+        $users = $criteria->all();
         foreach ($users as $user) {
             $username = strtolower(str_replace('.', '', $user->firstName));
             if ($user->lastName) {
@@ -517,7 +517,7 @@ class ImportController extends BaseController
             $username = rtrim($username, '.');
             $user->username = $username;
             $user->getContent()->dataCleanUsername = 1;
-            if (craft()->users->saveUser($user)) {
+            if (Craft::$app->elements->saveElement($user)) {
                 $this->success++;
             }
             else {
@@ -534,11 +534,11 @@ class ImportController extends BaseController
         $criteria->admin = false;
         $criteria->limit = $this->limit;
         $criteria->dataCleanPassword = 0;
-        $users = $criteria->find();
+        $users = $criteria->all();
         foreach ($users as $user) {
             $user->newPassword = empty($user->userDateOfBirth) ? '010101' : $user->userDateOfBirth->format('dmy');
             $user->getContent()->dataCleanPassword = 1;
-            if (craft()->users->saveUser($user)) {
+            if (Craft::$app->elements->saveElement($user)) {
                 $this->success++;
             }
             else {
@@ -630,13 +630,13 @@ class ImportController extends BaseController
     private function switchManagers() {
         $criteria = Entry::find();
         $criteria->section = 'companies';
-        foreach($criteria->find() as $company) {
+        foreach($criteria->all() as $company) {
             $managers = $company->companySecondaryManagers->ids();
-            $company->setContentFromPost([
+            $company->setAttributes([
                 'companyPrimaryManagers' => $managers,
                 'companySecondaryManagers' => []
             ]);
-            craft()->elements->saveElement($company, false);
+            Craft::$app->elements->saveElement($company, false);
         }
     }
 
@@ -653,7 +653,7 @@ class ImportController extends BaseController
             $entryModel->typeId = $this->typeIdCompany;
             $entryModel->enabled = true;
             $entryModel->getContent()->title = $title;
-            $entryModel->setContentFromPost([
+            $entryModel->setAttributes([
                 'dataImported' => true,
                 'legacyId' => $legacyId,
                 'legacyParentId' => $legacyParentId
@@ -678,7 +678,7 @@ class ImportController extends BaseController
             $categoryModel = new CategoryModel();
             $categoryModel->groupId = $this->categoryGroupIdJobRoles;
             $categoryModel->getContent()->title = $title;
-            $categoryModel->setContentFromPost([
+            $categoryModel->setAttributes([
                 'dataImported' => true,
                 'legacyId' => $legacyId
             ]);
@@ -722,7 +722,7 @@ class ImportController extends BaseController
             }
 
             // generate an email address
-            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail) || craft()->users->getUserByUsernameOrEmail($legacyEmail)) {
+            if (is_null($legacyEmail) || trim($legacyEmail) == '' || @in_array($legacyEmail, $this->emails) || !$this->validEmail($legacyEmail) || Craft::$app->users->getUserByUsernameOrEmail($legacyEmail)) {
                 $emailAddress = Lantra::$app->users->generateEmail($names[0], $names[1], $username);
                 $userDummyEmail = 1;
             } else {
@@ -760,7 +760,7 @@ class ImportController extends BaseController
                 $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
             }
             $groups = [4];
-            if (craft()->users->saveUser($userModel) && craft()->userGroups->assignUserToGroups($userModel->id, $groups)) {
+            if (Craft::$app->elements->saveElement($userModel) && Craft::$app->users->assignUserToGroups($userModel->id, $groups)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
@@ -811,14 +811,14 @@ class ImportController extends BaseController
             }
 
             if ($resultType == 'unitResult') {
-                $entryModel->setContentFromPost([
+                $entryModel->setAttributes([
                     'resultUnit' => [$unitEntry->id]
                 ]);
                 $entryModel->getContent()->title = $unitEntry->title;
             } else {
                 $entryModel->getContent()->title = utf8_encode($title);
             }
-            $entryModel->setContentFromPost([
+            $entryModel->setAttributes([
                 'dataImported' => true,
                 'resultOwner' => [$author->id],
                 'resultStatus' => $resultStatus,
@@ -898,8 +898,8 @@ class ImportController extends BaseController
         if (!$company->companyParent->count()) {
             return $parents;
         }
-        $parents[] = $company->companyParent->first();
-        return $this->getParents($company->companyParent->first(), $parents);
+        $parents[] = $company->companyParent->one();
+        return $this->getParents($company->companyParent->one(), $parents);
     }
 
     private function getNames($fullName)
@@ -927,7 +927,7 @@ class ImportController extends BaseController
         $criteria = User::find();
         $criteria->legacyId = $legacyId;
         $criteria->status = null;
-        return $criteria->first();
+        return $criteria->one();
     }
 
     private function getEntryByLegacyId($legacyId)
@@ -937,7 +937,7 @@ class ImportController extends BaseController
         }
         $criteria = Entry::find();
         $criteria->legacyId = $legacyId;
-        return $criteria->first();
+        return $criteria->one();
     }
 
     private function getCompanyByLegacyId($legacyId)
@@ -948,7 +948,7 @@ class ImportController extends BaseController
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->legacyId = $legacyId;
-        return $criteria->first();
+        return $criteria->one();
     }
 
     private function getCompanyId($legacyId)

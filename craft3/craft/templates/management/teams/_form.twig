@@ -35,7 +35,7 @@
         {% endif %}
     </div>
     {% if entry is defined %}
-        {{ ui.errorList(entry.getAllErrors()) }}
+        {{ ui.errorList(entry.getFirstErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
         {{ getCsrfInput() }}

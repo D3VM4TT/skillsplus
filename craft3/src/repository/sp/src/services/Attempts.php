@@ -15,7 +15,7 @@ class Attempts extends Component
 {
     public function onBeforeSaveAttempt(Entry $entry, Event $event) {
         if ($event->params['isNewEntry']) {
-            $unitEntry = $entry->attemptUnit->first();
+            $unitEntry = $entry->attemptUnit->one();
             if (!is_object($unitEntry) || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
                 $event->performAction = false;
                 Craft::$app->request->redirect('/unit/' . $unitEntry->id);
@@ -32,7 +32,7 @@ class Attempts extends Component
         foreach ($attemptEntry->attemptAnswers as $answerBlock) {
             $questionBlock = craft()->matrix->getBlockById($answerBlock->questionId);
             $correct = $this->markQuestion($questionBlock, $answerBlock->answer);
-            $answerBlock->setContentFromPost(array(
+            $answerBlock->setAttributes(array(
                 'question' => $questionBlock->question,
                 'correct' => $correct
             ));

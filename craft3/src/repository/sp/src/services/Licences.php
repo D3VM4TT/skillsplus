@@ -61,7 +61,7 @@ class Licences extends Component
      */
     function getTeamCompanyLicences($teamEntry)
     {
-        return (int) $teamEntry->teamCompany->first()->companyRemainingLicences;
+        return (int) $teamEntry->teamCompany->one()->companyRemainingLicences;
     }
 
     /**

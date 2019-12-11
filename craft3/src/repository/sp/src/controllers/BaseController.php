@@ -15,10 +15,10 @@ class BaseController extends Controller {
 
     /**
      * @param $message
-     * @throws \yii\web\BadRequestHttpException
      */
-    public function _returnError($message) {
-        $this->_returnMessage($message, FALSE);
+    public function _returnError($message)
+    {
+        $this->_returnMessage($message, false);
     }
 
     /**
@@ -28,7 +28,8 @@ class BaseController extends Controller {
      * @return \yii\web\Response
      * @throws \yii\web\BadRequestHttpException
      */
-    public function _returnMessage($message, $success = TRUE, $redirect = FALSE) {
+    public function _returnMessage($message, $success = true, $redirect = false)
+    {
          if (Craft::$app->getRequest()->getIsAjax()) {
             return $this->asJson(['success' => $success, 'message' => $message, 'redirect' => $redirect]);
         }
@@ -38,10 +39,6 @@ class BaseController extends Controller {
         }
         else {
             Craft::$app->session->setError($message);
-        }
-
-        if ($redirect) {
-            return $this->redirect($redirect);
         }
 
         $this->redirectToPostedUrl();

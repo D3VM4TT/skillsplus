@@ -116,7 +116,7 @@ class SettingsController extends BaseController
             $criteria = Entry::find();
             $criteria->section = 'units';
             $criteria->limit = null;
-            foreach($criteria->find() as $unit) {
+            foreach($criteria->all() as $unit) {
                 Craft::$app->entries->saveEntry($unit);
             }
             craft()->userSession->setNotice(Craft::t('All units saved.'));
@@ -125,7 +125,7 @@ class SettingsController extends BaseController
         if ($tool == 'saveUsers') {
             $users = $this->getUsers();
             foreach($users as $user) {
-                craft()->users->saveUser($user);
+                Craft::$app->elements->saveElement($user);
             }
             craft()->userSession->setNotice(Craft::t('All users saved.'));
             $this->redirectToPostedUrl();
@@ -135,7 +135,7 @@ class SettingsController extends BaseController
             foreach($users as $user) {
                 $user->username = str_replace('..','.', $user->username);
                 $user->username = rtrim($user->username, '.');
-                craft()->users->saveUser($user);
+                Craft::$app->elements->saveElement($user);
             }
             craft()->userSession->setNotice(Craft::t('All usernames cleaned.'));
             $this->redirectToPostedUrl();
@@ -147,7 +147,7 @@ class SettingsController extends BaseController
                     $names = $this->getNames($user->firstName);
                     $user->firstName = $names[0];
                     $user->lastName = $names[1];
-                    craft()->users->saveUser($user);
+                    Craft::$app->elements->saveElement($user);
                 }
             }
             craft()->userSession->setNotice(Craft::t('All users with empty last names updated.'));
@@ -157,10 +157,10 @@ class SettingsController extends BaseController
             $managers = $this->getManagers();
             $message = '';
             foreach($managers as $user) {
-                $user->setContentFromPost([
+                $user->setAttributes([
                     'managerReadOnly' => 1
                 ]);
-                if ( ! craft()->users->saveUser($user)) {
+                if ( ! Craft::$app->elements->saveElement($user)) {
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
@@ -171,17 +171,17 @@ class SettingsController extends BaseController
             $managers = $this->getManagers(100, 'ManagersChildren', false);
             $message = '';
             foreach($managers as $user) {
-                $user->setContentFromPost([
+                $user->setAttributes([
                     'dataCleanManagersChildren' => 1
                 ]);
-                craft()->elements->saveElement($user, false);
+                Craft::$app->elements->saveElement($user, false);
                 $companies = Lantra::$app->users->getManagerCompanies($user, true);
                 $companyIds = [];
                 foreach($companies as $company) {
                     $companyIds[] = $company->id;
                 }
                 foreach($companies as $company) {
-                    if ($company->companyParent->first() && in_array($company->companyParent->first()->id, $companyIds)) {
+                    if ($company->companyParent->one() && in_array($company->companyParent->one()->id, $companyIds)) {
                         Lantra::$app->users->removeCompanyManager($company, $user);
                     }
                 }
@@ -190,7 +190,7 @@ class SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersChildren') {
-            Lantra::$app->setting->resetDataClean('ManagersChildren');
+            Lantra::$app->settings->resetDataClean('ManagersChildren');
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -198,10 +198,10 @@ class SettingsController extends BaseController
             $managers = $this->getManagers(100, 'ManagersUserCompany', false);
             $message = '';
             foreach($managers as $manager) {
-                $manager->setContentFromPost([
+                $manager->setAttributes([
                     'dataCleanManagersUserCompany' => 1
                 ]);
-                craft()->elements->saveElement($manager, false);
+                Craft::$app->elements->saveElement($manager, false);
                 $companies = Lantra::$app->users->getManagerCompanies($manager, true);
                 if (! $companies) {
                     continue;
@@ -211,10 +211,10 @@ class SettingsController extends BaseController
                     $companyId = $company->id;
                 }
                 if ($companyId) {
-                    $manager->setContentFromPost([
+                    $manager->setAttributes([
                         'userCompany' => [$companyId]
                     ]);
-                    if ( ! craft()->elements->saveElement($manager, false)) {
+                    if ( ! Craft::$app->elements->saveElement($manager, false)) {
                         $message .= ' ' . $manager->fullName . ' not updated.';
                     };
                 }
@@ -223,7 +223,7 @@ class SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersUserCompany') {
-            Lantra::$app->setting->resetDataClean('ManagersUserCompany');
+            Lantra::$app->settings->resetDataClean('ManagersUserCompany');
             craft()->userSession->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -235,19 +235,19 @@ class SettingsController extends BaseController
                 if ($results->count()) {
                     Lantra::$app->results->saveUserResultCache($user->id, $results->find());
                 }
-                $user->setContentFromPost([
+                $user->setAttributes([
                     'dataCleanResultCache' => 1,
                     // update userType here
                     'userType' => Lantra::$app->users->canManage($user) ? 'manager' : 'member'
                 ]);
-                if ( ! craft()->elements->saveElement($user, false)) {
+                if ( ! Craft::$app->elements->saveElement($user, false)) {
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
             craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
         }
         if ($tool == 'dataResetResultCache') {
-            Lantra::$app->setting->resetDataClean('ResultCache');
+            Lantra::$app->settings->resetDataClean('ResultCache');
             craft()->userSession->setNotice('All users have been reset.');
             $this->redirectToPostedUrl();
         }
@@ -257,9 +257,9 @@ class SettingsController extends BaseController
             $criteria->section = 'reports';
             $criteria->limit = null;
             $criteria->status = null;
-            foreach($criteria->find() as $report) {
-                $report->setContentFromPost(['reportIncludeRequired' => 1]);
-                craft()->elements->saveElement($report, false);
+            foreach($criteria->all() as $report) {
+                $report->setAttributes(['reportIncludeRequired' => 1]);
+                Craft::$app->elements->saveElement($report, false);
             };
             craft()->userSession->setNotice($criteria->count() . ' reports updated.');
             $this->redirectToPostedUrl();
@@ -271,7 +271,7 @@ class SettingsController extends BaseController
             $criteria->type = ['unitResult', 'userResult'];
             $criteria->resultNotes = ':notempty:';
             $criteria->status = null;
-            foreach($criteria->find() as $result) {
+            foreach($criteria->all() as $result) {
                 $comments['new1'] = array(
                     'type' => 3,
                     'enabled' => true,
@@ -282,11 +282,11 @@ class SettingsController extends BaseController
                         'read' => 1
                     ]
                 );
-                $result->setContentFromPost([
+                $result->setAttributes([
                     'resultNotes' => '',
                     'resultComments' => $comments
                 ]);
-                craft()->elements->saveElement($result, false);
+                Craft::$app->elements->saveElement($result, false);
             }
             if ($criteria->count()) {
                 craft()->userSession->setNotice($criteria->count() . ' result updated. ');
@@ -350,7 +350,7 @@ class SettingsController extends BaseController
             $this->redirectToPostedUrl();
         } else {
             craft()->userSession->setError(Craft::t('Settings not saved.'));
-            craft()->urlManager->setRouteVariables(array('settings' => $settings));
+            Craft::$app->urlManager->setRouteParams(array('settings' => $settings));
         }
     }
 

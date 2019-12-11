@@ -17,12 +17,3 @@
  * your config/ folder, alongside this one.
  */
 
-return [
-    'components' => [
-        'mutex' => function() {
-            $config = craft\helpers\App::mutexConfig();
-            $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
-            return Craft::createObject($config);
-        },
-    ],
-];

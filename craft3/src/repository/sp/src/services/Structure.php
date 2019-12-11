@@ -171,7 +171,7 @@ class Structure extends Component
             // does this user manage teams?
             if ($managerTeams && count($managerTeams)) {
                 foreach ($managerTeams as $team) {
-                    $company = $team->teamCompany->first();
+                    $company = $team->teamCompany->one();
                     $nodeId = $company->id.'t'.$team->id;
                     $children[] = $this->createNode($team->id, 'teams', $nodeId, $team->title, 'group', true);
                 }
@@ -233,7 +233,7 @@ class Structure extends Component
             $nodeId = (isset($entry) ? $entry->id : '') . 'm' . $manager->id;
             $title = $manager->fullname;
             if ($manager->userRole->total()) {
-                $title .= ' (' . $manager->userRole->first()->title . ')';
+                $title .= ' (' . $manager->userRole->one()->title . ')';
             }
             $return[] = $this->createNode($manager->id, 'user', $nodeId, $title, 'person');
         }
@@ -264,7 +264,7 @@ class Structure extends Component
             $nodeId = $entryId.'u'.$user->id;
             $title = $user->fullname;
             if ($user->userRole->total()) {
-                $title .= ' (' . $user->userRole->first()->title . ')';
+                $title .= ' (' . $user->userRole->one()->title . ')';
             }
             $return[] = $this->createNode($user->id, 'user', $nodeId, $title, 'person');
         }
@@ -326,7 +326,7 @@ class Structure extends Component
     private $_companyAncestors = [];
 
     public function getCompanyParent($company) {
-        return $company->companyParent->count() ? $company->companyParent->first() : null;
+        return $company->companyParent->count() ? $company->companyParent->one() : null;
     }
 
     public function getCompanyAncestors($companyId = null) {
@@ -409,7 +409,7 @@ class Structure extends Component
 
         if ($company->companyParent->total())
         {
-            $parent = $company->companyParent->first();
+            $parent = $company->companyParent->one();
             $label = $parent->title . ' > ' . $label;
             $label = $this->prependCompanyParent($parent, $label);
         }
@@ -425,7 +425,7 @@ class Structure extends Component
         if ( ! $team) {
             return '';
         }
-        $teamCompany = $team->teamCompany->first();
+        $teamCompany = $team->teamCompany->one();
         $label = $team->title;
         if ( ! $teamCompany){
             return $label;

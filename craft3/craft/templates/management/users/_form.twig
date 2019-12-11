@@ -4,8 +4,6 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
-
-
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Users" %}
@@ -21,7 +19,7 @@
 {% set hierarchyTeam = craft.app.request.getParam('team') %}
 
 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('companyLabel') %}
-{% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getPost('companyManagers') %}
+{% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getParam('companyManagers') %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -40,18 +38,18 @@
         {% endif %}
     </div>
     {% if account is defined %}
-        {{ ui.errorList(account.getAllErrors()) }}
+        {{ ui.errorList(account.getFirstErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8" autocomplete="off">
-        {{ getCsrfInput() }}
-        <input type="hidden" name="action" value="lantra/users/saveUser">
+        {{ csrfInput() }}
+        {{ actionInput('sp/users/save-user') }}
+        {% if hierarchyNode %}
+            {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
+        {% else %}
+            {{ redirectInput('management/users') }}
+        {% endif %}
         <input type="hidden" name="fields[userDummyEmail]" value="{{ account.userDummyEmail|default(0) }}">
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
-        {% if hierarchyNode %}
-            <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
-        {% else %}
-            <input type="hidden" name="redirect" value="/management/users">
-        {% endif %}
 
         {% if account is defined and account.id %}
             <div id="name-fields">
@@ -129,7 +127,7 @@
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                     <option value="{{ roleCategory.id }}"
-                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -210,7 +208,7 @@
                 </div>
                 <div class="col-6">
                     <input type="checkbox" id="teamManagers" name="teamManagers" value="1"
-                           {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                           {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getParam('teamManagers') %}checked="checked"{% endif %}>
                          <span>Make Team manager</span>
                     {% endif %}
                     {% if craft.lantra.setting('schemeTeams', false) %}

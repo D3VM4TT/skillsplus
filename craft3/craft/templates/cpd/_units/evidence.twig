@@ -4,7 +4,7 @@
 {% endif %}
 {% import "_macros" as ui %}
 {% if entry is defined %}
-    {{ ui.errorList(entry.getAllErrors()) }}
+    {{ ui.errorList(entry.getFirstErrors()) }}
 {% endif %}
 {# result is locked when a result entry is pending or endorsed #}
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}

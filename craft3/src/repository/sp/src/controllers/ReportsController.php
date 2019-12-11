@@ -76,7 +76,7 @@ class ReportsController extends BaseController
         }
         $reportEntry = Lantra::$app->reports->saveCustomReport($manager, $title, $fields, $entryId);
         if ($reportEntry->hasErrors()) {
-            return craft()->urlManager->setRouteVariables(array('entry' => $reportEntry));
+            return Craft::$app->urlManager->setRouteParams(array('entry' => $reportEntry));
         }
         // add to queue
         if (!$automated) {

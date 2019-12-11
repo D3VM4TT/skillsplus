@@ -28,7 +28,7 @@ class PaypalController extends BaseController
         $paymentAmount = Craft::$app->request->getParam('mc_gross');
         $transactionId = Craft::$app->request->getParam('txn_id');
         // get the user object
-        $user = craft()->users->getUserById($userId);
+        $user = Craft::$app->users->getUserById($userId);
         if ( ! $user) {
             Craft::log('Invalid user ID sent from PayPal.',LogLevel::Error, true, 'paypal', 'lantra');
             die();

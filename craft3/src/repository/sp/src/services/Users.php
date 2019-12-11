@@ -93,12 +93,16 @@ class Users extends Component
     private $hierarchyFilter = [];
 
     /**
-     * @param $search
+     * @param string $search
      * @param string $userStatus
+     * @param bool $companyId
+     * @param int $limit
+     * @param string $order
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery
      */
     public function userCriteria($search = '', $userStatus = 'all', $companyId = false, $limit = 25, $order = 'username')
     {
-        $user = Craft::$app->getUser();
+        $user = Craft::$app->getUser()->getIdentity();
         $criteria = User::find();
         $excludeIds = [$user->id];
         if ($userStatus == 'orphaned') {
@@ -118,7 +122,7 @@ class Users extends Component
             $criteria->id = 'and, not ' . implode(', not ', $excludeIds);
         }
 
-        $criteria->admin = 'not 1';
+        $criteria->admin = false;
         $criteria->limit = $limit;
         $criteria->order = $order;
 
@@ -132,7 +136,6 @@ class Users extends Component
         if ($companyId) {
             $criteria->relatedTo = ['targetElement' => [$companyId], 'field' => 'userCompany'];
         }
-
         return $criteria;
     }
 
@@ -304,7 +307,7 @@ class Users extends Component
                 $return['children']['users'] = $teamUsersNode;
             }
         } elseif ($type == 'users') {
-            $jobRole = $element->userRole->first();
+            $jobRole = $element->userRole->one();
             $return['title'] = $prefix . $element->getFullName() . ($jobRole ? ' (' . $jobRole->title . ')' : '');
             $return['icon'] = 'person';
         }
@@ -328,7 +331,7 @@ class Users extends Component
         } else {
             $criteria->relatedTo = ['targetElement' => $companyParentId, 'field' => 'companyParent'];
         }
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -344,7 +347,7 @@ class Users extends Component
         $criteria->section = 'companies';
         $criteria->order = 'title';
         $criteria->id = $companyIds;
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -381,7 +384,7 @@ class Users extends Component
     public function isManager($subordinateId = null, $manager = null, $includeHierarchy = true)
     {
         if (is_null($manager)) {
-            $manager = Craft::$app->getUser();
+            $manager = Craft::$app->getUser()->getIdentity();
         }
         // admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
@@ -432,7 +435,7 @@ class Users extends Component
         if (is_null($manager)) {
             $manager = Craft::$app->getUser();
         }
-        return $this->isCompanyManager($company->companyParent->first(), $manager);
+        return $this->isCompanyManager($company->companyParent->one(), $manager);
     }
 
     /**
@@ -451,17 +454,17 @@ class Users extends Component
             return null;
         }
         // if user belongs to a company directly
-        $userCompany = $user->userCompany->first();
+        $userCompany = $user->userCompany->one();
         if ($userCompany) {
             return $userCompany;
         }
         // check team company
-        $team = $user->userTeam->first();
+        $team = $user->userTeam->one();
         if (!$team) {
             return null;
         }
         $teamCompany = $team->teamCompany;
-        return $teamCompany ? $teamCompany->first() : null;
+        return $teamCompany ? $teamCompany->one() : null;
     }
 
     /** Get all company users
@@ -612,7 +615,7 @@ class Users extends Component
         $criteria->order = 'title';
         $criteria->id = $ancestorIds;
         $managers = [];
-        foreach ($criteria->find() as $company) {
+        foreach ($criteria->all() as $company) {
             foreach ($this->getCompanyManagers($company) as $manager) {
                 // avoid duplicates
                 if (!isset($managers[$manager->id])) {
@@ -720,7 +723,7 @@ class Users extends Component
         $criteria->section = 'teams';
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
         $criteria->order = 'title';
-        return $count ? $criteria->count() : $criteria->find();
+        return $count ? $criteria->count() : $criteria->all();
     }
 
     /**
@@ -802,7 +805,7 @@ class Users extends Component
             unset($secondaryManagerIds[$key]);
         }
 
-        $company->setContentFromPost([
+        $company->setAttributes([
             'companyPrimaryManagers' => $primaryManagerIds,
             'companySecondaryManagers' => $secondaryManagerIds
         ]);
@@ -837,7 +840,7 @@ class Users extends Component
         $criteria->limit = null;
         $criteria->id = $companyIds;
         $criteria->order = $order;
-        return $ids ? $criteria->ids() : $criteria->find();
+        return $ids ? $criteria->ids() : $criteria->all();
     }
 
     /**
@@ -911,7 +914,7 @@ class Users extends Component
         $criteria->limit = null;
         $criteria->id = $teamIds;
         $criteria->fixedOrder = true;
-        return $ids ? $criteria->ids() : $criteria->find();
+        return $ids ? $criteria->ids() : $criteria->all();
     }
 
     /**
@@ -988,15 +991,13 @@ class Users extends Component
         $criteria->limit = null;
         $criteria->id = $subordinateIds;
         $criteria->order = 'lastName asc';
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
-     * streamlined version of get users for big reports
-     *
      * @param $userIds
      * @return array
-     * @throws \CException
+     * @throws \yii\db\Exception
      */
     public function getReportUsers($userIds)
     {
@@ -1052,25 +1053,25 @@ class Users extends Component
     public function getManagerUsers($userId = null, $limit = 10, $search = '', $relatedTo = null)
     {
         if (!is_null($userId)) {
-            $manager = craft()->users->getUserById($userId);
+            $manager = Craft::$app->users->getUserById($userId);
         } else {
-            $manager = Craft::$app->getUser();
+            $manager = Craft::$app->getUser()->getIdentity();
         }
         if (!$manager) {
             return null;
         }
-        // build the criteria model
+        ## build the criteria model
         $criteria = User::find();
         $criteria->limit = $limit;
         $criteria->order = 'lastName asc';
-        $criteria->admin = 'not 1';
+        $criteria->admin = false;
         if ($search) {
             $criteria->search = $search;
         }
         if ($relatedTo) {
             $criteria->relatedTo = $relatedTo;
         }
-        // get the subordinate ids if not admin or scheme manager
+        ## get the subordinate ids if not admin or scheme manager
         if (!$manager->admin && !$manager->isInGroup('schemeManagers')) {
             $subordinateIds = $this->getManagerSubordinateIds($manager, true);
             if (!count($subordinateIds)) {
@@ -1092,14 +1093,13 @@ class Users extends Component
         $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
-        return $first ? $criteria->first() : $criteria->find();
+        return $first ? $criteria->one() : $criteria->all();
     }
 
     /**
-     * Get the user manager for specific level
-     *
-     * @return User
-     * @throws Exception
+     * @param User $user
+     * @param int $level
+     * @return array|mixed
      */
     function getUserManagerByLevel(User $user, $level = 1)
     {
@@ -1110,7 +1110,7 @@ class Users extends Component
                 return $manager;
             }
         }
-        // default to first scheme manager
+        ## default to first scheme manager
         return $this->getSchemeManagers(true);
     }
 
@@ -1125,7 +1125,7 @@ class Users extends Component
     function getUserMangers(User $user, $includeHierarchy = false)
     {
         $return = [];
-        $company = $user->userCompany->first();
+        $company = $user->userCompany->one();
         if ($company) {
             foreach ($company->companyPrimaryManagers as $primaryManager) {
                 $return[$primaryManager->id] = $primaryManager;
@@ -1134,26 +1134,26 @@ class Users extends Component
                 $return[$secondaryManager->id] = $secondaryManager;
             }
         } else {
-            $team = $user->userTeam->first();
+            $team = $user->userTeam->one();
             if (!$team) {
-                // default to scheme managers
+                ## default to scheme managers
                 return $this->getSchemeManagers();
             }
-            $company = $team->teamCompany->first();
-            $primaryManager = $team->teamPrimaryManager->first();
+            $company = $team->teamCompany->one();
+            $primaryManager = $team->teamPrimaryManager->one();
             $return[$primaryManager->id] = $primaryManager;
             foreach ($team->teamSecondaryManagers as $secondaryManager) {
                 $return[$secondaryManager->id] = $secondaryManager;
             }
         }
-        // loop up the company parents and add primary managers
-        $companyParent = $company->companyParent->first();
+        ## loop up the company parents and add primary managers
+        $companyParent = $company->companyParent->one();
         if ($includeHierarchy && $companyParent) {
             while ($company != null) {
                 foreach ($company->companyPrimaryManagers as $primaryManager) {
                     $return[$primaryManager->id] = $primaryManager;
                 }
-                $company = $company->companyParent->first();
+                $company = $company->companyParent->one();
             }
         }
         return $return;
@@ -1181,35 +1181,34 @@ class Users extends Component
     }
 
     /**
-     * Add user to Lantra individual company
-     *
-     * @param $user
-     * @throws \Exception
+     * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function addUserToIndividualCompany(User $user)
     {
-        // get the individualCompany
+        ## get the individualCompany
         $company = $this->getIndividualCompany();
         if ($company) {
-            $user->setContentFromPost(['userCompany' => array($company->id)]);
-            craft()->users->saveUser($user);
+            $user->userCompany = [$company->id];
+            Craft::$app->elements->saveElement($user);
         }
     }
 
     /**
-     * Add user to Lantra default job role
-     *
-     * @param $user
-     * @throws \Exception
+     * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function addUserToIndividualJobRole(User $user)
     {
-        // get the jobRole
+        ## get the jobRole
         $jobRole = $this->getIndividualJobRole();
-        // @todo error reporting?
         if ($jobRole) {
-            $user->setContentFromPost(['userRole' => array($jobRole->id)]);
-            craft()->users->saveUser($user);
+            $user->userRole = [$jobRole->id];
+            Craft::$app->elements->saveElement($user);
         }
     }
 
@@ -1221,7 +1220,7 @@ class Users extends Component
      */
     public function activateIndividualUser(User $user)
     {
-        craft()->userGroups->assignUserToGroups($user->id, array(4, 5));
+        Craft::$app->users->assignUserToGroups($user->id, [4, 5]);
     }
 
     /**
@@ -1232,21 +1231,21 @@ class Users extends Component
      */
     public function deactivateIndividualUser(User $user)
     {
-        craft()->userGroups->assignUserToGroups($user->id, array(5));
+        Craft::$app->users->assignUserToGroups($user->id, [5]);
     }
 
     /**
-     * Set user expiry days
-     *
-     * @param $user
+     * @param User $user
      * @param $days
-     * @throws \Exception
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function setUserExpiryDate(User $user, $days)
     {
-        // set date in future
-        $user->setContentFromPost(['userExpiryDate' => strtotime('+' . $days . ' days')]);
-        craft()->users->saveUser($user);
+        ## set date in future
+        $user->userExpiryDate = strtotime('+' . $days . ' days');
+        Craft::$app->elements->saveElement($user);
     }
 
     /** Get individual company
@@ -1285,11 +1284,11 @@ class Users extends Component
         if (!$entry || ($entry->sectionId != 3 && $entry->sectionId != 5)) {
             return (object)[];
         }
-        // get company users
+        ## get company users
         if ($entry->sectionId == 3) {
             return $this->getCompanyUsers($entryId, false, true);
         }
-        // get team users
+        ## get team users
         return $this->getTeamUsers($entryId, false, true);
     }
 
@@ -1336,12 +1335,15 @@ class Users extends Component
      */
     public function generateEmail($firstName = null, $lastName = null, $handle = null)
     {
-        $domain = Lantra::$app->setting->getConfig('schemeEmailDomain', 'lantra.co.uk');
+        $domain = Lantra::$app->settings->getSetting('schemeEmailDomain', 'lantra.co.uk');
         $email = mt_rand(1000000, 9999999) . '@' . $domain;
-        return craft()->users->getUserByUsernameOrEmail($email) ? $this->generateEmail($firstName, $lastName, $handle) : $email;
+        return Craft::$app->users->getUserByUsernameOrEmail($email) ? $this->generateEmail($firstName, $lastName, $handle) : $email;
     }
 
     /**
+     * Generate a dummy username for user
+     *
+     * @param $username
      * @param null $firstName
      * @param null $lastName
      * @return string
@@ -1349,9 +1351,9 @@ class Users extends Component
     public function generateUsername($username, $firstName = null, $lastName = null)
     {
         if ($username) {
-            // remove all characters except A-Z, a-z, 0-9, dots, @, hyphens and spaces, replace spaces with dots
+            ## remove all characters except A-Z, a-z, 0-9, dots, @, hyphens and spaces, replace spaces with dots
             $username = preg_replace('/\s+/', '.', preg_replace('/[^A-Za-z0-9@\. -]/', '', strtolower($username)));
-            if (!$username || craft()->users->getUserByUsernameOrEmail($username)) {
+            if (!$username || Craft::$app->users->getUserByUsernameOrEmail($username)) {
                 $username = $username . mt_rand(100000, 999999);
             }
         } elseif ($firstName && $lastName) {
@@ -1369,48 +1371,54 @@ class Users extends Component
     /**
      * @param $companyIds
      * @param $user
-     * @param $type
-     * @throws Exception
+     * @param string $type
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function setManager($companyIds, $user, $type = 'primary')
     {
-        // remove from existing
+        ## remove from existing
         foreach ($this->getCompanyManagerCompanyIds($user, $type) as $companyId) {
             if (!in_array($companyId, $companyIds)) {
-                $company = Craft::$app->entries->getEntryById($companyId);
+                if (null == $company = Craft::$app->entries->getEntryById($companyId)) {
+                    continue;
+                }
                 if ($type == 'primary') {
                     $primaryManagerIds = $company->companyPrimaryManagers->ids();
-                    // remove userId from array
+                    ## remove userId from array
                     if (($key = array_search($user->id, $primaryManagerIds)) !== false) {
                         unset($primaryManagerIds[$key]);
                     }
-                    $company->setContentFromPost(['companyPrimaryManagers' => $primaryManagerIds]);
-                    craft()->elements->saveElement($company);
+                    $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
+                    Craft::$app->elements->saveElement($company, false);
                 } else {
                     $secondaryManagerIds = $company->companySecondaryManagers->ids();
-                    // remove userId from array
+                    ## remove userId from array
                     if (($key = array_search($user->id, $secondaryManagerIds)) !== false) {
                         unset($secondaryManagerIds[$key]);
                     }
-                    $company->setContentFromPost(['companySecondaryManagers' => $secondaryManagerIds]);
-                    craft()->elements->saveElement($company);
+                    $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                    Craft::$app->elements->saveElement($company, false);
                 }
             }
         }
-        // add to new
+        ## add to new
         foreach ($companyIds as $companyId) {
-            $company = Craft::$app->entries->getEntryById($companyId);
-            $primaryManagerIds = $company->companyPrimaryManagers->total() ? $company->companyPrimaryManagers->ids() : [];
-            $secondaryManagerIds = $company->companySecondaryManagers->total() ? $company->companySecondaryManagers->ids() : [];
+            if (null == $company = Craft::$app->entries->getEntryById($companyId)) {
+                continue;
+            }
+            $primaryManagerIds = $company->companyPrimaryManagers->count() ? $company->companyPrimaryManagers->ids() : [];
+            $secondaryManagerIds = $company->companySecondaryManagers->count() ? $company->companySecondaryManagers->ids() : [];
             if ($type == 'primary' && !in_array($user->id, $primaryManagerIds)) {
                 $primaryManagerIds[] = $user->id;
-                $company->setContentFromPost(['companyPrimaryManagers' => $primaryManagerIds]);
-                craft()->elements->saveElement($company);
+                $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
+                Craft::$app->elements->saveElement($company, false);
             }
             if ($type == 'secondary' && !in_array($user->id, $secondaryManagerIds)) {
                 $secondaryManagerIds[] = $user->id;
-                $company->setContentFromPost(['companySecondaryManagers' => $secondaryManagerIds]);
-                craft()->elements->saveElement($company);
+                $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                Craft::$app->elements->saveElement($company, false);
             }
         }
     }

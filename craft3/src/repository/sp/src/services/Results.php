@@ -26,7 +26,7 @@ class Results extends Component
         if ($comment) {
             unset($_POST['comment']);
             $resultComments = Lantra::$app->results->addComment($entry, $comment);
-            $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
+            $event->params['entry']->setAttributes(array('resultComments' => $resultComments));
         }
         // set custom author
         $authorId = Craft::$app->request->getParam('authorId');
@@ -47,18 +47,18 @@ class Results extends Component
         $currentUser = Craft::$app->getUser();
         // Auto endorse
         if (! Craft::$app->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
-            $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+            $entry->setAttributes(['resultStatus' => 'endorsed']);
             if (!$oldEntry) {
-                $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
-                $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+                $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
             }
         }
         // force clear endorsed date if pending
         if ($entry->resultStatus == 'pending') {
-            $entry->setContentFromPost(['resultEndorsedDate' => null]);
+            $entry->setAttributes(['resultEndorsedDate' => null]);
         } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-            $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
-            $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+            $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+            $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
         }
         // check change from draft to pending
         if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
@@ -74,13 +74,13 @@ class Results extends Component
         if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
             $userStartDate = $date->getTimestamp();
         }
-        $entry->setContentFromPost(['resultStartDate' => $userStartDate]);
+        $entry->setAttributes(['resultStartDate' => $userStartDate]);
         // set a user finish date
         $userFinishDate = Craft::$app->request->getParam('userFinishDate');
         if ($userFinishDate && false != $date = DateTime::createFromFormat($dateFormat, $userFinishDate)) {
             $userFinishDate = $date->getTimestamp();
         }
-        $entry->setContentFromPost(['resultFinishDate' => $userFinishDate]);
+        $entry->setAttributes(['resultFinishDate' => $userFinishDate]);
         // validate dates
         $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
         if ($userExpiryDate && false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
@@ -100,7 +100,7 @@ class Results extends Component
             $event->performAction = false;
         }
         if ($event->performAction == false) {
-            craft()->urlManager->setRouteVariables(array(
+            Craft::$app->urlManager->setRouteParams(array(
                 'resultEntry'    => $entry
             ));
         }
@@ -133,7 +133,7 @@ class Results extends Component
                 'type' => $blockType->id,
                 'enabled' => true,
                 'fields' => [
-                    'user' => [$row->user->first()->id],
+                    'user' => [$row->user->one()->id],
                     'date' => $row->date->getTimestamp(),
                     'comment' => $row->comment,
                     'read' => $row->read
@@ -162,7 +162,7 @@ class Results extends Component
     function readComment($comment, $userId) {
         // userId of result
         $resultAuthorId = $comment->getOwner()->author->id;
-        $commentAuthorId = $comment->user->first()->id;
+        $commentAuthorId = $comment->user->one()->id;
         if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
             $comment->setContent(['read' => true]);
             craft()->content->saveContent($comment, false);
@@ -176,7 +176,7 @@ class Results extends Component
     function unreadComments($result, $userId) {
         $unread = 0;
         foreach($result->resultComments as $comment) {
-            $commentAuthorId = $comment->user->first()->id;
+            $commentAuthorId = $comment->user->one()->id;
             if ($commentAuthorId != $userId && ! $comment->read) {
                 $unread++;
             }
@@ -199,7 +199,7 @@ class Results extends Component
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
-        return $criteria->first();
+        return $criteria->one();
     }
 
     /**
@@ -217,7 +217,7 @@ class Results extends Component
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
-        return $criteria->first();
+        return $criteria->one();
     }
 
     /**
@@ -229,10 +229,10 @@ class Results extends Component
      */
     function saveAttemptResult($attemptEntry) {
         $attemptEntry = Craft::$app->entries->getEntryById($attemptEntry->id);
-        $unitEntry = $attemptEntry->attemptUnit->first();
+        $unitEntry = $attemptEntry->attemptUnit->one();
         // author sent from form
         $authorId = Craft::$app->request->getParam('authorId');
-        if ($authorId && false != $user = craft()->users->getUserById($authorId)) {
+        if ($authorId && false != $user = Craft::$app->users->getUserById($authorId)) {
             $attemptEntry->authorId = $user->id;
             $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
             craft()->content->saveContent($attemptEntry, false);
@@ -271,14 +271,14 @@ class Results extends Component
                 $resultScore = $score;
             }
         }
-        $resultEntry->setContentFromPost([
+        $resultEntry->setAttributes([
             'resultUnit' => array($unitEntry->id),
             'resultStatus' => $resultStatus,
             'resultAttempts' => $resultAttempts,
             'resultScore' => $resultScore
         ]);
         if ($passed) {
-            $resultEntry->setContentFromPost([
+            $resultEntry->setAttributes([
                 'resultEndorsedDate' => time()
             ]);
         }
@@ -298,31 +298,31 @@ class Results extends Component
      */
     function saveNewResult($resultEntry) {
         $saveContent = false;
-        $unitEntry = $resultEntry->resultUnit->first();
+        $unitEntry = $resultEntry->resultUnit->one();
         $userId = Craft::$app->getUser()->id;;
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
             if ( ! $resultEntry->resultOwner) {
-                $resultEntry->setContentFromPost(['resultOwner' => [$userId]]);
+                $resultEntry->setAttributes(['resultOwner' => [$userId]]);
                 $saveContent = true;
             }
             // copy manager endorsement level from unit for submitted evidence
             if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
-                $resultEntry->setContentFromPost(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
+                $resultEntry->setAttributes(['unitEndorsementManagerLevel' => $unitEntry->unitEndorsementManagerLevel]);
                 $saveContent = true;
             }
             // set author
             $author = null;
             $authorId = Craft::$app->request->getParam('author');
             if (is_array($authorId)) {
-                $author = craft()->users->getUserById($authorId[0]);
+                $author = Craft::$app->users->getUserById($authorId[0]);
             }
             //  (manager submitting on behalf of user)
             if ($author && $author->id != $userId) {
                 // auto endorse
                 if ($resultEntry->resultStatus == 'endorsed' && (
                     $resultEntry->type == 'userResult' || ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult'))) {
-                    $resultEntry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
-                    $resultEntry->setContentFromPost(['resultEndorsedUser' => [$userId]]);
+                    $resultEntry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                    $resultEntry->setAttributes(['resultEndorsedUser' => [$userId]]);
                     $saveContent = true;
                 }
             }
@@ -369,7 +369,7 @@ class Results extends Component
      * @throws null
      */
     function checkRemainingAttempts($resultEntry) {
-        $resultUnitEntry = $resultEntry->resultUnit->first();
+        $resultUnitEntry = $resultEntry->resultUnit->one();
         $totalAttempts = $resultEntry->resultAttempts->total();
         if ($resultUnitEntry->resultStatus != 'endorsed' && $resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
             $this->blockResult($resultEntry);
@@ -389,7 +389,7 @@ class Results extends Component
         if ($resultEntry->resultStatus == $resultStatus) {
             return;
         }
-        $resultEntry->setContentFromPost(['resultStatus' => $resultStatus]);
+        $resultEntry->setAttributes(['resultStatus' => $resultStatus]);
         // bypass save entry to stop callback loop
         if ( ! craft()->content->saveContent($resultEntry, false)) {
             return;
@@ -417,7 +417,7 @@ class Results extends Component
      * @throws null
      */
     function unblockResult($resultEntry) {
-        $resultEntry->setContentFromPost([
+        $resultEntry->setAttributes([
             'resultAttempts' => [],
             'resultScore' => 0
         ]);
@@ -434,7 +434,7 @@ class Results extends Component
      */
     function checkUserResult($resultEntry) {
         // the related module id
-        $resultModuleEntry = $resultEntry->resultModule->first();
+        $resultModuleEntry = $resultEntry->resultModule->one();
         if ( ! $resultModuleEntry || ! $resultEntry->resultValue) {
             return;
         }
@@ -452,7 +452,7 @@ class Results extends Component
      */
     function checkUnitResult($resultEntry) {
         // the related unit id
-        $resultUnitEntry = $resultEntry->resultUnit->first();
+        $resultUnitEntry = $resultEntry->resultUnit->one();
         if ( ! $resultUnitEntry) {
             return;
         };
@@ -467,7 +467,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoles, 'field' => 'moduleRoles'];
-        $moduleEntries = $criteria->find();
+        $moduleEntries = $criteria->all();
         // search for the relevant module (this unit may be part of multiple modules)
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
@@ -507,7 +507,7 @@ class Results extends Component
             if ($resultEntry->resultStatus == 'endorsed') {
                 // unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
-                    $unitEntry = $resultEntry->resultUnit->first();
+                    $unitEntry = $resultEntry->resultUnit->one();
                     $points += $unitEntry->unitValue;
                 }
                 // user result value is custom
@@ -541,7 +541,7 @@ class Results extends Component
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
-        $resultEntry->setContentFromPost(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
+        $resultEntry->setAttributes(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
         // @todo error reporting?
         if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
             return;
@@ -566,7 +566,7 @@ class Results extends Component
         }
         // either no expiry, default module expiry or set by result
         $resultEntry->expiryDate = $expiryDate;
-        $resultEntry->setContentFromPost(['resultStatus' => 'complete']);
+        $resultEntry->setAttributes(['resultStatus' => 'complete']);
         // @todo error reporting?
         if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
             return;
@@ -584,7 +584,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoleIds, 'field' => 'moduleRoles'];
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -645,7 +645,7 @@ class Results extends Component
         if ($resultValue) {
             $criteria->resultValue = '> 0';
         }
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -664,10 +664,10 @@ class Results extends Component
         $criteria->authorId = $userId;
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
-        $resultEntries = $criteria->find();
+        $resultEntries = $criteria->all();
         $return = [];
         foreach ($resultEntries as $resultEntry) {
-            $unitId = $resultEntry->resultUnit->first()->id;
+            $unitId = $resultEntry->resultUnit->one()->id;
             $return[$unitId] = $resultEntry;
         }
         return $return;
@@ -841,7 +841,7 @@ class Results extends Component
      */
     private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
         if ( ! is_null($userId)) {
-            $manager = craft()->users->getUserById($userId);
+            $manager = Craft::$app->users->getUserById($userId);
         }
         else {
             $manager = Craft::$app->getUser();
@@ -1139,7 +1139,7 @@ class Results extends Component
         }
 
         $resultEntry->getContent()->title = $resultEntry->title;
-        $resultEntry->setContentFromPost([
+        $resultEntry->setAttributes([
             'resultEvidence' => $assetIds,
             'legacyResultFiles' => implode(',', $updatedLegacyResultFiles)
         ]);
@@ -1241,7 +1241,7 @@ class Results extends Component
                     }
                     $title = $result->title;
                     if ($result->type == 'unitResult' && $unitEntry = $result->resultUnit->count()) {
-                        $title = $result->resultUnit->first()->title;
+                        $title = $result->resultUnit->one()->title;
                     }
                     ## hack to remove duplicate results with same title
                     if (in_array($title, $headerUnits)) {
@@ -1319,7 +1319,7 @@ class Results extends Component
         if ($resultFilter['relatedTo']) {
             $criteria->relatedTo = $resultFilter['relatedTo'];
         }
-        $results = $criteria->find();
+        $results = $criteria->all();
 
         // arrange as useful array [userId][id] = [result]
         $data = [];
@@ -1327,7 +1327,7 @@ class Results extends Component
             if ( ! isset ($data[$result->authorId])){
                 $data[$result->authorId] = [];
             }
-            $id = $result->type == 'unitResult' && $result->resultUnit->count() ? $result->resultUnit->first()->id : $result->id;
+            $id = $result->type == 'unitResult' && $result->resultUnit->count() ? $result->resultUnit->one()->id : $result->id;
             $data[$result->authorId][$id] = $result;
         }
         return $data;
@@ -1380,11 +1380,11 @@ class Results extends Component
                 $resultIds[] = $result->id;
                 $user = $result->author;
                 $company = Lantra::$app->users->userCompany($user);
-                $role = $user->userRole->first();
+                $role = $user->userRole->one();
                 $userUnits = $this->roleUnits($role->id);
                 $title = $result->title;
                 if ($result->type == 'unitResult') {
-                    $resultUnit = $result->resultUnit->first();
+                    $resultUnit = $result->resultUnit->one();
                     // skip non-mandatory unitResults (i.e. from previous job role)
                     if ($resultFilter['resultType'] == 'unitResult' && !isset($userUnits[$resultUnit->id])) {
                        continue;
@@ -1464,10 +1464,10 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->status = 'expired';
         $criteria->authorId = $user->id;
-        $results = $criteria->find();
+        $results = $criteria->all();
         foreach ($results as $result) {
             $company = Lantra::$app->users->userCompany($user);
-            $role = $user->userRole->first();
+            $role = $user->userRole->one();
             $row = [
                 $user->id,
                 $user->fullName,
@@ -1497,7 +1497,7 @@ class Results extends Component
             $result = $this->unitResult($user, $unit->id);
             if ( ! $result || ($includeExpired && $result->status == 'expired')) {
                 $company = Lantra::$app->users->userCompany($user);
-                $role = $user->userRole->first();
+                $role = $user->userRole->one();
                 $row = [
                     $user->id,
                     $user->fullName,
@@ -1522,7 +1522,7 @@ class Results extends Component
             $criteria = craft()->elements->getCriteria(ElementType::Category);
             $criteria->group = 'roles';
             $criteria->limit = null;
-            foreach($criteria->find() as $role) {
+            foreach($criteria->all() as $role) {
                 $this->roles[$role->id] = $role;
             }
         }
@@ -1566,7 +1566,7 @@ class Results extends Component
             $criteria = craft()->elements->getCriteria(ElementType::Category);
             $criteria->group = 'roles';
             $criteria->limit = null;
-            foreach ($criteria->find() as $role) {
+            foreach ($criteria->all() as $role) {
                 $modules = $this->roleModules($role);
                 $units = [];
                 foreach ($modules as $module) {
@@ -1618,7 +1618,7 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         $criteria->status = ['live', 'expired'];
         $criteria->authorId = $user->id;
-        return $criteria->first();
+        return $criteria->one();
     }
 
     /**
@@ -1636,7 +1636,7 @@ class Results extends Component
             $criteria->limit = null;
             $this->roleModules[$role->id] = $criteria;
         }
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -1665,7 +1665,7 @@ class Results extends Component
         $criteria->section = 'units';
         $criteria->limit = null;
         $units = [];
-        foreach($criteria->find() as $unit) {
+        foreach($criteria->all() as $unit) {
             $units[$unit->id] = $unit;
         }
         return $units;
@@ -1686,7 +1686,7 @@ class Results extends Component
      */
     private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '') {
         if ( ! is_null($userId)) {
-            $manager = craft()->users->getUserById($userId);
+            $manager = Craft::$app->users->getUserById($userId);
         }
         else {
             $manager = Craft::$app->getUser();
@@ -1738,7 +1738,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
-        return $criteria->total() ? $criteria->find() : [];
+        return $criteria->total() ? $criteria->all() : [];
     }
 
     /**
@@ -1783,7 +1783,7 @@ class Results extends Component
                 $resultEntries = [$resultEntries];
             }
             foreach ($resultEntries as $resultEntry) {
-                $unit = $resultEntry->resultUnit->first();
+                $unit = $resultEntry->resultUnit->one();
                 if ($unit) {
                     $updateColumns['unit' . $unit->id] = $this->setResultValue($resultEntry);
                 }
@@ -1800,7 +1800,7 @@ class Results extends Component
             return;
         }
         $userId = $resultEntry->getAuthor()->id;
-        $unitId = $resultEntry->resultUnit->first()->id;
+        $unitId = $resultEntry->resultUnit->one()->id;
         if ($userId && $unitId) {
             Craft::$app->db->createCommand()->update('lantra_result_cache', ['unit' . $unitId => ""], ['userId' => $userId]);
         }

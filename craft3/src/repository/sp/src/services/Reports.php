@@ -128,7 +128,7 @@ class Reports extends Component
             $reportEntry->authorId = $author->id;
         }
         $reportEntry->getContent()->title = $title;
-        $reportEntry->setContentFromPost($fields);
+        $reportEntry->setAttributes($fields);
         Craft::$app->entries->saveEntry($reportEntry);
         return $reportEntry;
     }
@@ -258,7 +258,7 @@ class Reports extends Component
         $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
         $fileId = $response->getDataItem('fileId');
         // append asset to report entry
-        $reportEntry->setContentFromPost(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
+        $reportEntry->setAttributes(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
         Craft::$app->entries->saveEntry($reportEntry);
         // send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
@@ -281,7 +281,7 @@ class Reports extends Component
             $template = craft()->lantra_notify->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
             $message = craft()->templates->renderString($template, $variables);
             craft()->lantra_notify->notify($emails, $subject, $message, [$attachment]);
-            $reportEntry->setContentFromPost(['reportLastSentDate' => time()]);
+            $reportEntry->setAttributes(['reportLastSentDate' => time()]);
             Craft::$app->entries->saveEntry($reportEntry);
         }
         // delete the temp file
@@ -330,7 +330,7 @@ class Reports extends Component
             foreach ($user->userRole as $role) {
                 $roles[] = $role->title;
             }
-            $team = $user->userTeam->count() ? $user->userTeam->first()->title : '~';
+            $team = $user->userTeam->count() ? $user->userTeam->one()->title : '~';
             $record = [
                 $user->fullName,
                 $user->email,
@@ -347,7 +347,7 @@ class Reports extends Component
             }
             // add the result fields
             if ($type == 'result') {
-                $record = array_merge($record, [$row->resultModule->first()->title, $row->expiryDate->timestamp()]);
+                $record = array_merge($record, [$row->resultModule->one()->title, $row->expiryDate->timestamp()]);
             }
             $return[] = $record;
         }
@@ -370,7 +370,7 @@ class Reports extends Component
             $days = 'all';
         }
         $criteria = Lantra::$app->results->getModuleResults($days, null, $expiring, 'complete', null, $userIds);
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -428,7 +428,7 @@ class Reports extends Component
         $criteria = Entry::find();
         $criteria->section = 'reports';
         $criteria->limit = null;
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**
@@ -445,7 +445,7 @@ class Reports extends Component
         $criteria->section = 'reports';
         $criteria->reportAutomated = 1;
         $criteria->limit = null;
-        return $criteria->find();
+        return $criteria->all();
     }
 
     /**

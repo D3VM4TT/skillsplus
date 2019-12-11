@@ -20,7 +20,7 @@
         <p><a href="/management/roles">&laquo; back to roles</a></p>
     </div>
     {% if category is defined %}
-        {{ ui.errorList(category.getAllErrors()) }}
+        {{ ui.errorList(category.getFirstErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
         {{ getCsrfInput() }}
