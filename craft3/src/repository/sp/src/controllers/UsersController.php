@@ -84,9 +84,9 @@ class UsersController extends BaseController {
         $this->requireLogin();
         $this->requirePermission('editUsers');
         // get the posted userId
-        $userId = Craft::$app->request->getPost('editUserId');
-        $redirect = Craft::$app->request->getPost('redirect') ? Craft::$app->request->getPost('redirect') : '/management/users';
-        $fields = Craft::$app->request->getPost('fields');
+        $userId = Craft::$app->request->getParam('editUserId');
+        $redirect = Craft::$app->request->getParam('redirect') ? Craft::$app->request->getParam('redirect') : '/management/users';
+        $fields = Craft::$app->request->getParam('fields');
 
         // existing user
         if ($userId) {
@@ -100,18 +100,18 @@ class UsersController extends BaseController {
             $user = new UserModel();
         }
         // set basic account fields
-        $user->firstName = Craft::$app->request->getPost('firstName');
-        $user->lastName = Craft::$app->request->getPost('lastName');
+        $user->firstName = Craft::$app->request->getParam('firstName');
+        $user->lastName = Craft::$app->request->getParam('lastName');
         if ($fields['userDummyEmail']) {
             $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
         }
         else {
-            $user->email = Craft::$app->request->getPost('email');
+            $user->email = Craft::$app->request->getParam('email');
         }
         // set custom fields
         $user->setContentFromPost('fields');
         // username is email
-        if (false != $username = Craft::$app->request->getPost('username')) {
+        if (false != $username = Craft::$app->request->getParam('username')) {
             $user->username = $username;
         }
         else {
@@ -121,7 +121,7 @@ class UsersController extends BaseController {
         // assign user to groups (always in 'user' group from front end)
         $groupIds = array(4);
         $userCompanyId = isset($fields['userCompany']) ? $fields['userCompany'] : null;
-        if (Craft::$app->request->getPost('companyManagers')) {
+        if (Craft::$app->request->getParam('companyManagers')) {
             $groupIds[] = 2;
             $companyManager = true;
         }
@@ -131,7 +131,7 @@ class UsersController extends BaseController {
                 Lantra::$app->users->removeCompanyManager($company, $user);
             }
         }
-        if (Craft::$app->request->getPost('teamManagers')) {
+        if (Craft::$app->request->getParam('teamManagers')) {
             $groupIds[] = 3;
         }
         // save scheme manager
@@ -141,8 +141,8 @@ class UsersController extends BaseController {
         // mimic cp form for onSaveUser event
         $_POST['groups'] = $groupIds;
         // set new password (if present)
-        $user->newPassword = (Craft::$app->request->getPost('newPassword') ?: null);
-        $confirmPassword = (Craft::$app->request->getPost('confirmPassword') ?: null);
+        $user->newPassword = (Craft::$app->request->getParam('newPassword') ?: null);
+        $confirmPassword = (Craft::$app->request->getParam('confirmPassword') ?: null);
         if ($user->newPassword && ($user->newPassword != $confirmPassword))
         {
             $user->addErrors(array('confirmPassword' => Craft::t('Passwords do not match')));
@@ -156,7 +156,7 @@ class UsersController extends BaseController {
                 if ($userCompanyId) {
                     Lantra::$app->users->setManager([$userCompanyId], $user, 'primary');
                 }
-                $secondaryManagerCompanyIds = Craft::$app->request->getPost('userSecondaryManagerCompanies', []);
+                $secondaryManagerCompanyIds = Craft::$app->request->getParam('userSecondaryManagerCompanies', []);
                 Lantra::$app->users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
             }
             $this->_returnMessage('User has been saved.', true, $redirect);
@@ -174,7 +174,7 @@ class UsersController extends BaseController {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted userId
-        $userId = Craft::$app->request->getPost('userId');
+        $userId = Craft::$app->request->getParam('userId');
         if (false == $user = craft()->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
@@ -193,7 +193,7 @@ class UsersController extends BaseController {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted userId
-        $userId = Craft::$app->request->getPost('userId');
+        $userId = Craft::$app->request->getParam('userId');
         if (false == $user = craft()->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
@@ -214,7 +214,7 @@ class UsersController extends BaseController {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted userId
-        $userId = Craft::$app->request->getPost('userId');
+        $userId = Craft::$app->request->getParam('userId');
         if (false == $user = craft()->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }

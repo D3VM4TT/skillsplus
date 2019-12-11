@@ -183,68 +183,68 @@ $(document).ready(function(){
             row = $(this).closest('.item'),
             deleteRow = false,
             reload = false;
-        if (action == 'lantra/entries/resetResult') {
+        if (action == 'entries/reset-result') {
             if ( ! confirm('Are you sure you want to unlink all attempts?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
-        if (action == 'lantra/entries/deleteEntry') {
+        if (action == 'entries/delete-entry') {
             if ( ! confirm('Are you sure you want to delete this entry?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
             deleteRow = true;
         }
-        if (action == 'lantra/entries/endorseEvidence') {
+        if (action == 'entries/endorse-evidence') {
             if ( ! confirm('Are you sure you want to endorse this result?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
         }
-        if (action == 'lantra/categories/deleteCategory') {
+        if (action == 'categories/delete-category') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
                 return false;
             }
             var data = {categoryId: $(this).data('id')};
             deleteRow = true;
         }
-        if (action == 'lantra/users/suspendUser') {
+        if (action == 'users/suspend-user') {
             if ( ! confirm('Are you sure you want to suspend this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'lantra/users/deleteUser') {
+        if (action == 'users/delete-user') {
             if ( ! confirm('Are you sure you want to delete this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'lantra/users/restoreUser') {
+        if (action == 'users/restore-user') {
             if ( ! confirm('Are you sure you want to restore this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'lantra/reports/delete') {
+        if (action == 'reports/delete-report') {
             if ( ! confirm('Are you sure you want to delete this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'lantra/reports/run') {
+        if (action == 'reports/run-report') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
         }
-        if (action == 'lantra/entries/pendingResult') {
+        if (action == 'entries/pending-result') {
             if ( ! confirm('Are you sure you want to request endorsement?')) {
                 return false;
             }
@@ -252,7 +252,7 @@ $(document).ready(function(){
         }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');
-        $.post("/actions/" + action, data, function(response) {
+        $.post("/sp/" + action, data, function(response) {
             if (response.redirect) {
                 window.location.replace(response.redirect);
             }
@@ -288,7 +288,7 @@ $(document).ready(function(){
         var data = {companyIds: $(this).val()};
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('#reportRecipientsLabel span').show();
-        $.post("/actions/lantra/users/companyManagers", data, function(response) {
+        $.post("/sp/users/company-managers", data, function(response) {
             $('#reportRecipientsLabel span').hide();
             var selectedIds = $("select#reportRecipients").val();
             // first get rid of non selected

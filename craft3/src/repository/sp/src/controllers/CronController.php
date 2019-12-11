@@ -1,8 +1,18 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_CronController extends Lantra_BaseController {
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+class CronController extends BaseController {
 
     public $allowAnonymous = array('actionRun');
 

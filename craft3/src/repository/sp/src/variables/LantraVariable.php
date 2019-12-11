@@ -207,7 +207,7 @@ class LantraVariable
     {
         $js = [
             'icon'  => '/assets/img/tree-root.png',
-            'text'  => Lantra::$app->setting->getSetting('schemeName'),
+            'text'  => Lantra::$app->settings->getSetting('schemeName'),
             'state' => ['opened' => true],
         ];
 

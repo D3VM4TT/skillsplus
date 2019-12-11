@@ -11,6 +11,9 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 
+use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
+
 class Licences extends Component
 {
     /**
@@ -20,15 +23,14 @@ class Licences extends Component
      * @return bool
      * @throws mixed
      */
-    function assignCompanyLicence($user, $companyEntry) {
-        // return false if none remaining
-        if ( ! $companyEntry || ! $companyEntry->companyRemainingLicences) {
+    function assignCompanyLicence($user, $companyEntry)
+    {
+        ## return false if none remaining
+        if (!$companyEntry || !$companyEntry->companyRemainingLicences) {
             return false;
         }
-        $companyEntry->setContentFromPost([
-            'companyRemainingLicences' => $companyEntry->companyRemainingLicences - 1
-        ]);
-        if ( ! Craft::$app->entries->saveEntry($companyEntry)) {
+        $companyEntry->companyRemainingLicences = ($companyEntry->companyRemainingLicences - 1);
+        if (!Craft::$app->entries->saveEntry($companyEntry)) {
             return false;
         }
         return true;
@@ -40,9 +42,10 @@ class Licences extends Component
      * @return bool
      * @throws mixed
      */
-    function assignSchemeLicence() {
-        // return false if none remaining
-        if ( ! $this->getSchemeLicences()) {
+    function assignSchemeLicence()
+    {
+        ## return false if none remaining
+        if (!$this->getSchemeLicences()) {
             return false;
         }
         $this->subtractSchemeLicences();
@@ -56,7 +59,8 @@ class Licences extends Component
      * @return int
      * @throws mixed
      */
-    function getTeamCompanyLicences($teamEntry) {
+    function getTeamCompanyLicences($teamEntry)
+    {
         return (int) $teamEntry->teamCompany->first()->companyRemainingLicences;
     }
 
@@ -99,24 +103,24 @@ class Licences extends Component
      * Add scheme licences
      *
      * @param $number
-     * @throws mixed
-     * @return mixed
+     * @return bool
      */
-    function addSchemeLicences($number = 1) {
-        $schemeRemainingLicences = (int) Lantra::$app->setting->getSetting('schemeRemainingLicences', 0);
-        return Lantra::$app->setting->saveSetting('schemeRemainingLicences', $schemeRemainingLicences + (int) $number);
+    function addSchemeLicences($number = 1)
+    {
+        $schemeRemainingLicences = (int) Lantra::$app->settings->getSetting('schemeRemainingLicences', 0);
+        return Lantra::$app->settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences + (int) $number);
     }
 
     /**
      * Subtract scheme licences
      *
      * @param $number
-     * @throws mixed
-     * @return mixed
+     * @return bool
      */
-    function subtractSchemeLicences($number = 1) {
-        $schemeRemainingLicences = (int) Lantra::$app->setting->getSetting('schemeRemainingLicences', 0);
-        return Lantra::$app->setting->saveSetting('schemeRemainingLicences', $schemeRemainingLicences - (int) $number);
+    function subtractSchemeLicences($number = 1)
+    {
+        $schemeRemainingLicences = (int) Lantra::$app->settings->getSetting('schemeRemainingLicences', 0);
+        return Lantra::$app->settings->saveSetting('schemeRemainingLicences', $schemeRemainingLicences - (int) $number);
     }
 
     /**
@@ -124,25 +128,27 @@ class Licences extends Component
      *
      * @return DateTime $schemeExpiryDate
      */
-    function getSchemeExpiryDate() {
-        return Lantra::$app->setting->getSetting('schemeExpiryDate');
+    function getSchemeExpiryDate()
+    {
+        return Lantra::$app->settings->getSetting('schemeExpiryDate');
     }
 
     /**
      * Get scheme licences
      *
-     * @return int $number
+     * @return int $schemeRemainingLicences
      */
-    function getSchemeLicences() {
-        return Lantra::$app->setting->getSetting('schemeRemainingLicences');
+    function getSchemeLicences()
+    {
+        return Lantra::$app->settings->getSetting('schemeRemainingLicences');
     }
 
     /** Get individual days till expiry
      *
-     * @param null $user
-     * @return null
+     * @return int $individualLicenceDays
      */
-    public function getIndividualLicenceDays() {
-        return Lantra::$app->setting->getSetting('individualLicenceDays');
+    public function getIndividualLicenceDays()
+    {
+        return Lantra::$app->settings->getSetting('individualLicenceDays');
     }
 }

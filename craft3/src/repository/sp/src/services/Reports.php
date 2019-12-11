@@ -27,7 +27,7 @@ class Reports extends Component
      */
     public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false) {
         $user = Craft::$app->getUser();
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'reports';
         $criteria->limit = $limit;
         $criteria->order = $order;
@@ -51,11 +51,11 @@ class Reports extends Component
     /** more efficient way to search companies */
     private function searchReportIds($search = '') {
         if (intval($search)) {
-            $mysql = 'SELECT c.elementId as id FROM {{content}} c                
+            $mysql = 'SELECT c.elementId as id FROM {{%content}} c                
                 WHERE c.elementId = "' . $search . '"';
         }
         else {
-            $mysql = 'SELECT c.elementId as id FROM {{content}} c               
+            $mysql = 'SELECT c.elementId as id FROM {{%content}} c               
                 WHERE c.title LIKE "%' . $search . '%"';
         }
 
@@ -425,7 +425,7 @@ class Reports extends Component
      */
     private function getReports()
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'reports';
         $criteria->limit = null;
         return $criteria->find();
@@ -441,7 +441,7 @@ class Reports extends Component
      */
     private function getAutomatedReports()
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'reports';
         $criteria->reportAutomated = 1;
         $criteria->limit = null;

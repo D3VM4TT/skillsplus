@@ -10,6 +10,8 @@ namespace lantra\sp\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\services\Routes as RoutesService;
+
 
 class Install extends Migration
 {
@@ -26,6 +28,13 @@ class Install extends Migration
             $settings = '{"options":[{"label":"Draft","value":"draft","default":"1"},{"label":"Pending","value":"pending","default":""},{"label":"Endorsed","value":"endorsed","default":""},{"label":"Failed","value":"failed","default":""},{"label":"Blocked","value":"blocked","default":""},{"label":"Active","value":"active","default":""},{"label":"Complete","value":"complete","default":""}]}';
             $query->update('{{%fields}}', ['type' => 'craft\fields\Dropdown', 'settings' => $settings], ['handle' => 'resultStatus'])->execute();
         }
+
+        ## delete routes
+        $results = Craft::$app->getProjectConfig()->get(RoutesService::CONFIG_ROUTES_KEY) ?? [];
+        foreach ($results as $routeUid => $route) {
+            Craft::$app->routes->deleteRouteByUid($routeUid);
+        }
+
         return true;
     }
 

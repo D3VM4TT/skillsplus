@@ -198,8 +198,52 @@ class Plugin extends BasePlugin
     private function getSiteUrlRules()
     {
         return [
-            'sp/users/hierarchy' => 'sp/users/hierarchy',
-            'sp/users/refresh-hierarchy' => 'sp/users/refresh-hierarchy',
+            ## public routes
+            'public/certificate/<userId>/<resultId>'    => ['template' => 'public/certificate'],
+            'public/passport/<userId>'                  => ['template' => 'public/passport'],
+            'public/licence/thanks'                     => ['template' => 'public/licence'],
+
+            ## cpd routes
+            'profile'                                   => ['template' => 'profile/index'],
+            'cpd/<userId>'                              => ['template' => 'cpd/index'],
+            'cpd/<userId>/archive'                      => ['template' => 'cpd/index'],
+            'cpd/<userId>/print'                        => ['template' => 'cpd/index'],
+            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'cpd/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'cpd/unit'],
+            'cpd/<userId>/achievement'                  => ['template' => 'cpd/achievement'],
+            'cpd/<userId>/achievement/<resultId>'       => ['template' => 'cpd/achievement'],
+            'cpd/<userId>/result/<resultId>'            => ['template' => 'cpd/achievement'],
+            'result/<resultId>'                         => ['template' => 'result/_form'],
+
+            ## management routes
+            'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
+            'management/<section>/new'                  => ['template' => 'management/index'],
+            'management/users/company/<companyId>'      => ['template' => 'management/users'],
+
+            ## reporting routes
+            'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],
+            'reporting/custom/new'                      => ['template' => 'reporting/custom/_form'],
+            'reporting/user/<userId>'                   => ['template' => 'reporting/user'],
+            'reporting/standard/<reportSlug>/csv'       => ['template' => 'reporting/standard'],
+            'reporting/standard/<reportSlug>'           => ['template' => 'reporting/standard'],
+
+            ## action routes
+            'sp/users/hierarchy'                        => 'sp/users/hierarchy',
+            'sp/users/refresh-hierarchy'                => 'sp/users/refresh-hierarchy',
+            'sp/users/suspend-user'                     => 'sp/users/suspend-user',
+            'sp/users/delete-user'                      => 'sp/users/delete-user',
+            'sp/users/restore-user'                     => 'sp/users/restore-user',
+            'sp/users/company-managers'                 => 'sp/users/company-managers',
+
+            'sp/entries/reset-result'                   => 'sp/entries/reset-result',
+            'sp/entries/delete-entry'                   => 'sp/entries/delete-entry',
+            'sp/entries/endorse-evidence'               => 'sp/entries/endorse-evidence',
+            'sp/entries/pending-result'                 => 'sp/entries/pending-result',
+
+            'sp/categories/delete-category'             => 'sp/categories/delete-category',
+
+            'sp/reports/delete-report'                  => 'sp/reports/delete-report',
+            'sp/reports/run-report'                     => 'sp/reports/run-report',
         ];
     }
 

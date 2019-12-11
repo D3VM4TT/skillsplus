@@ -1,10 +1,6 @@
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% extends "_layout" %}
 
-{% set userId = craft.app.request.segment(2) %}
-{% set moduleId = craft.app.request.segment(3) %}
-{% set unitId = craft.app.request.segment(4) %}
-
 {% if userId != currentUser.id %}
     {% set account = craft.users.id(userId).first %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}

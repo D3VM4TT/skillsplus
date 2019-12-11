@@ -88,7 +88,7 @@
                         {% endif %}
                         {% if not currentUser.managerReadOnly %}
                             <a class="icon" href="/management/companies/edit/{{ company.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
-                            <a class="icon action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
+                            <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ company.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
                         {% endif %}
                     </td>
                 </tr>

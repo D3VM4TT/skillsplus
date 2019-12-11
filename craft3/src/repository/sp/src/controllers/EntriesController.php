@@ -1,35 +1,40 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_EntriesController extends Lantra_BaseController {
+use Craft;
 
-    public $allowAnonymous = array(
-        'actionDeleteEntry',
-        'actionEndorseEvidence',
-        'actionResetResult',
-        'actionPendingResult',
-        'actionRunReport'
-    );
+use craft\elements\Entry;
+
+use lantra\sp\Plugin as Lantra;
+
+class EntriesController extends BaseController {
 
     /**
      * Sets all results to pending
      *
      * @throws mixed
      */
-    public function actionPendingResult() {
+    public function actionPendingResult()
+    {
         $this->requirePostRequest();
         $this->requireLogin();
-        // get the posted id, ref and userId
-        $id =  Craft::$app->request->getPost('id');
-        $ref =  Craft::$app->request->getPost('ref');
-        $userId =  Craft::$app->request->getPost('userId');
+        ## get the posted id, ref and userId
+        $id =  Craft::$app->request->getParam('id');
+        $ref =  Craft::$app->request->getParam('ref');
+        $userId =  Craft::$app->request->getParam('userId');
         $results = [];
         if ($ref == 'jobRole') {
             $results = Lantra::$app->results->getJobRoleUserResults($id, $userId);
         }
         $count = 0;
-        // loop entries and update status
+        ## loop entries and update status
         foreach ($results as $resultEntry) {
             $resultEntry->setContentFromPost(['resultStatus' => 'pending']);
             Craft::$app->entries->saveEntry($resultEntry);
@@ -43,16 +48,16 @@ class Lantra_EntriesController extends Lantra_BaseController {
      *
      * @throws mixed
      */
-    public function actionResetResult() {
+    public function actionResetResult()
+    {
         $this->requirePostRequest();
-        $this->requireLogin();
-        // get the posted entryId
-        $entryId = Craft::$app->request->getPost('entryId');
+        ## get the posted entryId
+        $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         Lantra::$app->results->unblockResult($entry);
-        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, Craft::$app->request->getUrlReferrer());
+        $this->_returnMessage( 'Result attempts unlinked and result unblocked.', true, Craft::$app->request->getReferrer());
     }
 
     /**
@@ -60,25 +65,25 @@ class Lantra_EntriesController extends Lantra_BaseController {
      *
      * @throws mixed
      */
-    public function actionDeleteEntry() {
+    public function actionDeleteEntry()
+    {
         $this->requirePostRequest();
-        $this->requireLogin();
-        $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
-        // get the posted entryId
-        $entryId = Craft::$app->request->getPost('entryId');
+          $return = $this->_returnRef(Craft::$app->request->getReferrer());
+        ## get the posted entryId
+        $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        // if removing a company, disable teams and children
+        ## if removing a company, disable teams and children
         if ($entry->section->id == 3) {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
-        // if a result update cache
+        ## if a result update cache
         if ($entry->section->id == 10 && $entry->type == 'unitResult') {
             Lantra::$app->results->deleteUserResultCache($entry);
         }
-        // save disabled entry
+        ## save disabled entry
         $this->_disableEntry($entry);
         $this->_returnMessage('Entry has been removed.', true, $return);
     }
@@ -88,28 +93,28 @@ class Lantra_EntriesController extends Lantra_BaseController {
      *
      * @throws mixed
      */
-    public function actionEndorseEvidence() {
+    public function actionEndorseEvidence()
+    {
         $this->requirePostRequest();
-        $this->requireLogin();
-        $return = $this->_returnRef(Craft::$app->request->getUrlReferrer());
-        // get all the posted entryId(s)
-        if (false != $entryId = Craft::$app->request->getPost('entryId')) {
+        $return = $this->_returnRef(Craft::$app->request->getReferrer());
+        ## get all the posted entryId(s)
+        if (false != $entryId = Craft::$app->request->getParam('entryId')) {
             $results = [['entryId' => $entryId]];
         }
         else {
-            $results = Craft::$app->request->getPost('results');
+            $results = Craft::$app->request->getParam('results');
         }
         $count = 0;
-        $userId = craft()->userSession->getId();
-        // loop entries and update status
+        $userId = Craft::$app->getUser()->id;;
+        ## loop entries and update status
         foreach ($results as $result) {
-            if (isset($result['entryId']) && FALSE != $entry = Craft::$app->entries->getEntryById($result['entryId'])) {
-                $entry->setContentFromPost([
+            if (isset($result['entryId']) && false != $entry = Craft::$app->entries->getEntryById($result['entryId'])) {
+                $entry->setAttributes([
                     'resultStatus' => 'endorsed',
                     'resultEndorsedDate' => DateTimeHelper::currentTimeForDb(),
                     'resultEndorsedUser' => [$userId]
                     ]);
-                Craft::$app->entries->saveEntry($entry);
+                Craft::$app->elements->saveElement($entry);
                 $count ++;
             }
         }
@@ -117,12 +122,14 @@ class Lantra_EntriesController extends Lantra_BaseController {
     }
 
     /**
+     * Append the ref back onto the return url
+     *
      * @param $url
      * @return string
      */
-    private function _returnRef($url) {
-        $ref = Craft::$app->request->getPost('ref');
-        if ($ref) {
+    private function _returnRef($url)
+    {
+        if (false != $ref = Craft::$app->request->getParam('ref')) {
             $refString = '?ref=' . $ref;
             $url = str_replace($refString, '', $url) . $refString;
         }
@@ -132,43 +139,44 @@ class Lantra_EntriesController extends Lantra_BaseController {
      * @param $entry
      * @throws mixed
      */
-    private function _disableEntry ($entry) {
-        // return company licences back to scheme
+    private function _disableEntry($entry)
+    {
+        ## return company licences back to scheme
         if ($entry->section->id == 3) {
             Lantra::$app->licences->addSchemeLicences($entry->companyRemainingLicences);
-            $entry->setContentFromPost(['companyRemainingLicences' => 0]);
+            $entry->companyRemainingLicences = 0;
         }
         $entry->enabled = false;
-        Craft::$app->entries->saveEntry($entry);
+        Craft::$app->elements->saveElement($entry);
     }
 
     /**
+     * Disable teams related to a company
+     *
      * @param $company
-     * @throws Exception
+     * @throws mixed
      */
-    private function _disableTeams($company) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->relatedTo = array(
-            'targetElement' => $company,
-            'field' => 'teamCompany'
-        );
-        $teams = craft()->elements->findElements($criteria);
+    private function _disableTeams($company)
+    {
+        $teams = Entry::find()
+            ->relatedTo (['targetElement' => $company, 'field' => 'teamCompany'])
+            ->all();
         foreach ($teams as $team) {
             $this->_disableEntry($team);
         }
     }
 
     /**
+     * Disable children of a company
+     *
      * @param $company
-     * @throws Exception
+     * @throws mixed
      */
-    private function _disableChildren($company) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->relatedTo = array(
-            'targetElement' => $company,
-            'field' => 'companyParent'
-        );
-        $children = craft()->elements->findElements($criteria);
+    private function _disableChildren($company)
+    {
+        $children = Entry::find()
+            ->relatedTo(['targetElement' => $company, 'field' => 'companyParent'])
+            ->all();
         foreach ($children as $child) {
             $this->_disableTeams($child);
             $this->_disableChildren($child);

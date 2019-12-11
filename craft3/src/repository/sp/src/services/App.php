@@ -48,9 +48,10 @@ class App extends Component
 
     /**
      * @param $key
+     * @param $default
      * @return mixed|null
      */
-    public function getSetting($key) {
-        return isset($this->settings->$key) ? $this->settings->$key : null;
+    public function getSetting($key, $default = null) {
+        return isset($this->settings->$key) ? $this->settings->$key : $default;
     }
 }

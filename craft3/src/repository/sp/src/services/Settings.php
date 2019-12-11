@@ -10,17 +10,27 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\helpers\Json as JsonHelper;
 
+use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
 
 class Settings extends Component
 {
+    /**
+     * @param $settings
+     * @return bool
+     */
     public function saveSettings($settings)
     {
         $settings = JsonHelper::encode($settings);
-        $affectedRows = Craft::$app->db->createCommand()->update('plugins', array('settings' => $settings), array('class' => 'Lantra'));
+        $affectedRows = Craft::$app->db->createCommand()->update('plugins', ['settings' => $settings], ['class' => 'Lantra']);
         return (bool)$affectedRows;
     }
 
+    /**
+     * @return array
+     */
     public function getDbSettings()
     {
         $result = Craft::$app->db->createCommand()
@@ -31,12 +41,19 @@ class Settings extends Component
         return $result ? JsonHelper::decode($result['settings']) : [];
     }
 
+    /**
+     * @return mixed
+     */
     public function getSettings()
     {
-        $plugin = craft()->plugins->getPlugin('lantra');
-        return $plugin->getSettings();
+        return Lantra::getInstance()->getSettings();
     }
 
+    /**
+     * @param $key
+     * @param null $value
+     * @return bool
+     */
     public function saveSetting($key, $value = null)
     {
         $settings = $this->getSettings();
@@ -44,21 +61,34 @@ class Settings extends Component
         return $this->saveSettings($settings);
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     * @return mixed|null
+     */
     public function getSetting($key, $default = null)
     {
         if ($key == 'jsDateFormat') {
             return $this->getJsDateFormat();
         }
-        $setting = $this->getSettings()->getAttribute($key);
-        return $setting ? $setting : $default;
+        $settings = $this->getSettings();
+        return isset($settings[$key]) ? $settings[$key] : $default;
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     * @return null
+     */
     public function getConfig($key, $default = null)
     {
-        $config = craft()->config->get('environmentVariables');
+        $config = Craft::$app->config->general['environmentVariables'];
         return isset($config[$key]) ? $config[$key] : $default;
     }
 
+    /**
+     * @return mixed
+     */
     public function getJsDateFormat()
     {
         $dateFormat = $this->getSetting('themeDateFormat', 'd-m-Y');
@@ -96,7 +126,7 @@ class Settings extends Component
                     if (isset($globalsScheme->$name)) {
                         ## copy value from globals to settings
                         $global = $globalsScheme->$name;
-                        Lantra::$app->setting->saveSetting($name, $global);
+                        Lantra::$app->settings->saveSetting($name, $global);
                         ## delete field
                         $field = craft()->fields->getFieldByHandle($name);
                         if ($field) {
@@ -114,8 +144,8 @@ class Settings extends Component
             $field = craft()->fields->getFieldByHandle('dateFormat');
             if ($field) {
                 ## set defaults
-                Lantra::$app->setting->saveSetting('themeDateFormat', 'd-m-Y');
-                Lantra::$app->setting->saveSetting('themeDefaultLimit', 10);
+                Lantra::$app->settings->saveSetting('themeDateFormat', 'd-m-Y');
+                Lantra::$app->settings->saveSetting('themeDefaultLimit', 10);
                 $fields = [
                     'dateFormat',
                     'defaultLimit'
@@ -152,7 +182,7 @@ class Settings extends Component
                     if (isset($globalsUserProfile->$name)) {
                         ## copy value from globals to settings
                         $global = $globalsUserProfile->$name;
-                        Lantra::$app->setting->saveSetting($name, $global);
+                        Lantra::$app->settings->saveSetting($name, $global);
                         ## delete field
                         $field = craft()->fields->getFieldByHandle($name);
                         if ($field) {
@@ -182,7 +212,7 @@ class Settings extends Component
                         if ($name != 'individualCompany') {
                             ## copy value from globals to settings
                             $global = $globalsScheme->$name;
-                            Lantra::$app->setting->saveSetting($name, $global);
+                            Lantra::$app->settings->saveSetting($name, $global);
                         }
                         ## delete field
                         $field = craft()->fields->getFieldByHandle($name);
@@ -215,13 +245,13 @@ class Settings extends Component
                         ## copy value from globals to settings
                         $global = $globalsTheme->$name;
                         if ($name == 'schemeLogo' && $globalsTheme->schemeLogo) {
-                            Lantra::$app->setting->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->first()->id]);
+                            Lantra::$app->settings->saveSetting('schemeLogo', [$globalsTheme->schemeLogo->first()->id]);
                         } elseif ($name == 'themeNavigationPublic' && $globalsTheme->themeNavigationPublic) {
-                            Lantra::$app->setting->saveSetting('themeNavigationPublic', $globalsTheme->themeNavigationPublic->ids());
+                            Lantra::$app->settings->saveSetting('themeNavigationPublic', $globalsTheme->themeNavigationPublic->ids());
                         } elseif ($name == 'themeNavigationPrivate' && $globalsTheme->themeNavigationPrivate) {
-                            Lantra::$app->setting->saveSetting('themeNavigationPrivate', $globalsTheme->themeNavigationPrivate->ids());
+                            Lantra::$app->settings->saveSetting('themeNavigationPrivate', $globalsTheme->themeNavigationPrivate->ids());
                         } else {
-                            Lantra::$app->setting->saveSetting($name, $global);
+                            Lantra::$app->settings->saveSetting($name, $global);
                         }
                         ## delete field
                         $field = craft()->fields->getFieldByHandle($name);

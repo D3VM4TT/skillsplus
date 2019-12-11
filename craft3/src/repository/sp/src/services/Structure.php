@@ -25,7 +25,7 @@ class Structure extends Component
     public function onBeforeSaveCompany($event, $entry)
     {
         ## check licences
-        if (!Lantra::$app->getSetting('lantraDisableLicences') && !Lantra::$app->licences->updateCompanyLicences($entry)){
+        if (!Lantra::$app->settings->getSetting('lantraDisableLicences') && !Lantra::$app->licences->updateCompanyLicences($entry)){
             $entry->addError('companyRemainingLicences', 'There are insufficient company licences.');
             $event->performAction = false;
         }
@@ -88,12 +88,12 @@ class Structure extends Component
     /** more efficient way to search companies */
     private function searchCompanyIds($search = '') {
         if (intval($search)) {
-            $mysql = 'SELECT c.elementId as id FROM {{content}} c                
+            $mysql = 'SELECT c.elementId as id FROM {{%content}} c                
                 WHERE c.elementId = "' . $search . '"
                 OR c.field_legacyId = "' . $search . '"';
         }
         else {
-            $mysql = 'SELECT c.elementId as id FROM {{content}} c               
+            $mysql = 'SELECT c.elementId as id FROM {{%content}} c               
                 WHERE c.title LIKE "%' . $search . '%"
                 OR c.field_companyLabel LIKE "%' . $search . '%"';
         }

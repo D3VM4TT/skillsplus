@@ -72,7 +72,7 @@ class Notify extends Component
             }
         }
         // send company managers remaining company licences
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
         foreach ($criteria->find() as $company) {
@@ -162,7 +162,7 @@ class Notify extends Component
             return;
         }
         // endorsement notify is disabled
-        if (Lantra::$app->setting->getSetting('disableEndorsementNotify', false)) {
+        if (Lantra::$app->settings->getSetting('disableEndorsementNotify', false)) {
             return;
         }
         $user = $resultEntry->getAuthor();
@@ -246,7 +246,7 @@ class Notify extends Component
      * @return string
      */
     public function getNotifySetting($key, $default = '') {
-        return Lantra::$app->setting->getSetting('notify'.ucwords($key), $default);
+        return Lantra::$app->settings->getSetting('notify'.ucwords($key), $default);
     }
 
     /**
@@ -269,7 +269,7 @@ class Notify extends Component
         if ($server != 'prod') {
             $subject = '[' . $server . '] ' . $subject;
             $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
-            $schemeTestEmails = explode(',', Lantra::$app->setting->getSetting('schemeTestEmailAddress'));
+            $schemeTestEmails = explode(',', Lantra::$app->settings->getSetting('schemeTestEmailAddress'));
             $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [craft()->systemSettings->getSetting('email', 'emailAddress')];
         }
         // add notification footer

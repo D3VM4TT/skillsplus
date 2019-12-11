@@ -1,4 +1,4 @@
-{% if craft.app.request.getSegment(1) != "actions" and craft.app.request.getSegment(1) != "public" %}
+{% if craft.app.request.getSegment(1) != "sp" and craft.app.request.getSegment(1) != "public" %}
     {% if currentUser and craft.app.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
         {% redirect "public/licence" %}
     {% else %}
@@ -168,7 +168,7 @@
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
-            window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+            window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";
             window.csrfTokenValue = "{{ craft.app.request.csrfToken|e('js') }}";
         </script>
         <script src="/assets/js/lantra.js?{{ random(10000, 99999) }}" async defer></script>

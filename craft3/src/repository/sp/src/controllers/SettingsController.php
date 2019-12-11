@@ -1,8 +1,19 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_SettingsController extends BaseController
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+
+class SettingsController extends BaseController
 {
     /**
      * @throws HttpException
@@ -60,7 +71,7 @@ class Lantra_SettingsController extends BaseController
     }
 
     private function getUserUnitResults($userId) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
@@ -102,7 +113,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUnits') {
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = Entry::find();
             $criteria->section = 'units';
             $criteria->limit = null;
             foreach($criteria->find() as $unit) {
@@ -242,7 +253,7 @@ class Lantra_SettingsController extends BaseController
         }
         if ($tool == 'setReportIncludeRequired') {
             // update existing reports
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = Entry::find();
             $criteria->section = 'reports';
             $criteria->limit = null;
             $criteria->status = null;
@@ -254,7 +265,7 @@ class Lantra_SettingsController extends BaseController
             $this->redirectToPostedUrl();
         }
         if ($tool == 'copyNotes') {
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = Entry::find();
             $criteria->section = 'results';
             $criteria->limit = 1000;
             $criteria->type = ['unitResult', 'userResult'];
@@ -309,7 +320,7 @@ class Lantra_SettingsController extends BaseController
         }
 
         ## count results with notes
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->limit = null;
         $criteria->type = ['unitResult', 'userResult'];
@@ -332,9 +343,9 @@ class Lantra_SettingsController extends BaseController
     public function actionSaveSettings()
     {
         $this->requirePostRequest();
-        $settings = Craft::$app->request->getPost('settings');
+        $settings = Craft::$app->request->getParam('settings');
 
-        if (Lantra::$app->setting->saveSettings($settings)) {
+        if (Lantra::$app->settings->saveSettings($settings)) {
             craft()->userSession->setNotice(Craft::t('Settings saved.'));
             $this->redirectToPostedUrl();
         } else {

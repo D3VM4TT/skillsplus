@@ -28,6 +28,6 @@ class LantraHelper
      */
     public static function setting($key = '')
     {
-        return Lantra::$app->getSetting($key);
+        return Lantra::$app->settings->getSetting($key);
     }
 }

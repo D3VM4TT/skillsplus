@@ -1,8 +1,18 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_CategoriesController extends Lantra_BaseController {
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+class CategoriesController extends BaseController {
 
     public $allowAnonymous = array('actionDeleteCategory');
 
@@ -15,7 +25,7 @@ class Lantra_CategoriesController extends Lantra_BaseController {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted categoryId
-        $categoryId = Craft::$app->request->getPost('categoryId');
+        $categoryId = Craft::$app->request->getParam('categoryId');
         if (false == $category = craft()->categories->getCategoryById($categoryId)) {
             $this->_returnError('Invalid category ID.');
         }

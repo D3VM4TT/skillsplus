@@ -22,18 +22,18 @@ class Results extends Component
      */
     public function onBeforeSaveResult(Entry $entry) {
         // set comment
-        $comment = Craft::$app->request->getPost('comment');
+        $comment = Craft::$app->request->getParam('comment');
         if ($comment) {
             unset($_POST['comment']);
             $resultComments = Lantra::$app->results->addComment($entry, $comment);
             $event->params['entry']->setContentFromPost(array('resultComments' => $resultComments));
         }
         // set custom author
-        $authorId = Craft::$app->request->getPost('authorId');
+        $authorId = Craft::$app->request->getParam('authorId');
         if ($entry->type == 'userResult' && $authorId) {
             $entry->authorId = $authorId;
         }
-        $fields = Craft::$app->request->getPost('fields');
+        $fields = Craft::$app->request->getParam('fields');
         $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
         // set result title
         if ($entry->type == 'userResult' && $resultUnitId) {
@@ -70,19 +70,19 @@ class Results extends Component
 
         $dateFormat = 'Y-m-d H:i:s';
         // set a user start date
-        $userStartDate = Craft::$app->request->getPost('userStartDate');
+        $userStartDate = Craft::$app->request->getParam('userStartDate');
         if ($userStartDate && false != $date = DateTime::createFromFormat($dateFormat, $userStartDate)) {
             $userStartDate = $date->getTimestamp();
         }
         $entry->setContentFromPost(['resultStartDate' => $userStartDate]);
         // set a user finish date
-        $userFinishDate = Craft::$app->request->getPost('userFinishDate');
+        $userFinishDate = Craft::$app->request->getParam('userFinishDate');
         if ($userFinishDate && false != $date = DateTime::createFromFormat($dateFormat, $userFinishDate)) {
             $userFinishDate = $date->getTimestamp();
         }
         $entry->setContentFromPost(['resultFinishDate' => $userFinishDate]);
         // validate dates
-        $userExpiryDate = Craft::$app->request->getPost('userExpiryDate');
+        $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
         if ($userExpiryDate && false != $date = DateTime::createFromFormat($dateFormat, $userExpiryDate)) {
             $userExpiryDate = $date->getTimestamp();
             $entry->expiryDate = $date->getTimestamp();
@@ -193,7 +193,7 @@ class Results extends Component
      * @throws Mixed
      */
     function getUnitResult($userId, $unitId) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->limit = 1;
@@ -211,7 +211,7 @@ class Results extends Component
      * @throws Mixed
      */
     function getModuleResult($userId, $moduleId) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
@@ -231,7 +231,7 @@ class Results extends Component
         $attemptEntry = Craft::$app->entries->getEntryById($attemptEntry->id);
         $unitEntry = $attemptEntry->attemptUnit->first();
         // author sent from form
-        $authorId = Craft::$app->request->getPost('authorId');
+        $authorId = Craft::$app->request->getParam('authorId');
         if ($authorId && false != $user = craft()->users->getUserById($authorId)) {
             $attemptEntry->authorId = $user->id;
             $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
@@ -299,7 +299,7 @@ class Results extends Component
     function saveNewResult($resultEntry) {
         $saveContent = false;
         $unitEntry = $resultEntry->resultUnit->first();
-        $userId = craft()->userSession->getId();
+        $userId = Craft::$app->getUser()->id;;
         if ($resultEntry->type == 'unitResult' || $resultEntry->type == 'userResult') {
             if ( ! $resultEntry->resultOwner) {
                 $resultEntry->setContentFromPost(['resultOwner' => [$userId]]);
@@ -312,7 +312,7 @@ class Results extends Component
             }
             // set author
             $author = null;
-            $authorId = Craft::$app->request->getPost('author');
+            $authorId = Craft::$app->request->getParam('author');
             if (is_array($authorId)) {
                 $author = craft()->users->getUserById($authorId[0]);
             }
@@ -463,7 +463,7 @@ class Results extends Component
             return;
         }
         // get all modules related to their job roles
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoles, 'field' => 'moduleRoles'];
@@ -580,7 +580,7 @@ class Results extends Component
      * @return mixed
      */
     public function jobRoleModules($jobRoleIds = []) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoleIds, 'field' => 'moduleRoles'];
@@ -636,7 +636,7 @@ class Results extends Component
      * @throws Exception
      */
     function getModuleUserResults($moduleEntry, $userId, $resultValue = true) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'userResult';
         $criteria->authorId = $userId;
@@ -658,7 +658,7 @@ class Results extends Component
      */
     function getModuleUnitResults($moduleEntry, $userId) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
@@ -683,7 +683,7 @@ class Results extends Component
      * @throws mixed
      */
     public function getManagerEndorsementResults($manager, $limit = null,  $count = false) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = ['userResult', 'unitResult'];
         $criteria->resultStatus = 'pending';
@@ -757,7 +757,7 @@ class Results extends Component
 
         $mysql .= "
             FROM {{entries}} e
-            JOIN {{content}} c ON c.elementId = e.id
+            JOIN {{%content}} c ON c.elementId = e.id
             JOIN {{elements}} el ON el.id = e.id
             WHERE e.sectionId = 10 
             AND c.field_resultStatus = 'pending'
@@ -871,7 +871,7 @@ class Results extends Component
      * @throws mixed
      */
     public function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->resultStatus = $status;
@@ -1293,7 +1293,7 @@ class Results extends Component
      * @throws Exception
      */
     private function getSubordinateResults($subordinateIds, $resultFilter = []) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->limit = null;
         if ($resultFilter['resultType']) {
@@ -1459,7 +1459,7 @@ class Results extends Component
      */
     private function userExpiredRows($user, $resultFilter)  {
         $rows = [];
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->type = 'userResult';
         $criteria->section = 'results';
         $criteria->status = 'expired';
@@ -1614,7 +1614,7 @@ class Results extends Component
      * @throws Exception
      */
     private function unitResult($user, $unitId)  {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         $criteria->status = ['live', 'expired'];
         $criteria->authorId = $user->id;
@@ -1631,7 +1631,7 @@ class Results extends Component
             $criteria = $this->roleModules[$role->id];
         }
         else {
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = Entry::find();
             $criteria->relatedTo = ['targetElement' => $role->id, 'field' => 'moduleRoles'];
             $criteria->limit = null;
             $this->roleModules[$role->id] = $criteria;
@@ -1661,7 +1661,7 @@ class Results extends Component
      * @throws Exception
      */
     private function allUnits() {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'units';
         $criteria->limit = null;
         $units = [];
@@ -1694,7 +1694,7 @@ class Results extends Component
         if ( ! $manager) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->limit = $limit;
@@ -1734,7 +1734,7 @@ class Results extends Component
      * @throws Exception
      */
     private function getRoleModules($roleId) {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
@@ -1796,7 +1796,7 @@ class Results extends Component
      * @param $resultEntry
      */
     public function deleteUserResultCache($resultEntry) {
-        if (Lantra::$app->setting->getSetting('disableResultCache')) {
+        if (Lantra::$app->settings->getSetting('disableResultCache')) {
             return;
         }
         $userId = $resultEntry->getAuthor()->id;

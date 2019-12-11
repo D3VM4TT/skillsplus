@@ -141,14 +141,14 @@ class Users extends Component
     {
         if (intval($search)) {
             $mysql = 'SELECT u.id FROM {{users}} u 
-                JOIN {{content}} AS c ON u.id = c.elementId
+                JOIN {{%content}} AS c ON u.id = c.elementId
                 WHERE u.id = "' . $search . '"
                 OR c.field_legacyId = "' . $search . '"';
         } else {
             $mysql = 'SELECT u.id FROM {{users}} u 
                 JOIN {{relations}} AS r ON r.sourceId = u.id
-                JOIN {{content}} AS c ON u.id = c.elementId
-                JOIN {{content}} AS rc ON r.targetId = rc.elementId
+                JOIN {{%content}} AS c ON u.id = c.elementId
+                JOIN {{%content}} AS rc ON r.targetId = rc.elementId
                 WHERE u.username LIKE "%' . $search . '%"
                 OR u.firstName LIKE "%' . $search . '%"
                 OR u.lastName LIKE "%' . $search . '%"
@@ -320,7 +320,7 @@ class Users extends Component
      */
     function getCompaniesByParentId($companyParentId)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->order = 'title';
         if ($companyParentId === false) {
@@ -340,7 +340,7 @@ class Users extends Component
      */
     function getCompaniesByIds($companyIds)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->order = 'title';
         $criteria->id = $companyIds;
@@ -607,7 +607,7 @@ class Users extends Component
             $ancestorIds[] = $companyId;
             $ancestorIds = array_merge($ancestorIds, Lantra::$app->structure->getCompanyAncestors($companyId));
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->order = 'title';
         $criteria->id = $ancestorIds;
@@ -675,7 +675,7 @@ class Users extends Component
     function getCompanyChildrenIds($entryId)
     {
         $return = [];
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->order = 'title';
         $criteria->relatedTo = ['targetElement' => $entryId, 'field' => 'companyParent'];
@@ -701,7 +701,7 @@ class Users extends Component
      */
     function getSchemeTeamIds()
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'teams';
         $criteria->order = 'title';
         return $criteria->ids();
@@ -716,7 +716,7 @@ class Users extends Component
      */
     function getCompanyTeams($companyId, $count = false)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'teams';
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
         $criteria->order = 'title';
@@ -732,7 +732,7 @@ class Users extends Component
      */
     function getCompanyTeamIds($companyId)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'teams';
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'teamCompany'];
         $criteria->order = 'title';
@@ -752,7 +752,7 @@ class Users extends Component
         if (is_null($user)) {
             $user = Craft::$app->getUser();
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         if ($type == 'primary') {
             $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'companyPrimaryManagers'];
@@ -832,7 +832,7 @@ class Users extends Component
         if (!count($companyIds)) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
         $criteria->id = $companyIds;
@@ -852,7 +852,7 @@ class Users extends Component
         if (is_null($user)) {
             $user = Craft::$app->getUser();
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'teams';
         $criteria->relatedTo = ['or', ['targetElement' => $user, 'field' => 'teamPrimaryManager'], ['targetElement' => $user, 'field' => 'teamSecondaryManagers']];
         return $criteria->ids();
@@ -906,7 +906,7 @@ class Users extends Component
         if (!count($teamIds)) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'teams';
         $criteria->limit = null;
         $criteria->id = $teamIds;
@@ -1255,7 +1255,7 @@ class Users extends Component
      */
     public function getIndividualCompany()
     {
-        return Lantra::$app->getSetting('individualCompany');
+        return Lantra::$app->settings->getSetting('individualCompany');
     }
 
     /** Get emails
@@ -1299,7 +1299,7 @@ class Users extends Component
      */
     public function getIndividualJobRole()
     {
-        return Lantra::$app->setting->getSetting('individualJobRole');
+        return Lantra::$app->settings->getSetting('individualJobRole');
     }
 
     /** Get expired users

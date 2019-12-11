@@ -41,7 +41,21 @@ class Lantra_ImportModel extends BaseModel
     }
 }
 
-class Lantra_ImportController extends Lantra_BaseController
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
+
+namespace lantra\sp\controllers;
+
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+
+class ImportController extends BaseController
 {
     public $allowAnonymous = ['actionIndex', 'actionUpload', 'actionImport', 'actionUsers'];
 
@@ -177,7 +191,7 @@ class Lantra_ImportController extends Lantra_BaseController
             $userIds = $ids;
         }
         elseif ($refId == 'legacyId' && count($ids)) {
-            $mysql = "SELECT elementId from {{content}} WHERE field_legacyId IN (" . implode(',', $ids) . ");";
+            $mysql = "SELECT elementId from {{%content}} WHERE field_legacyId IN (" . implode(',', $ids) . ");";
             $result = craft()->db->createCommand($mysql)->queryAll();
             foreach($result as $row){
                 $userIds[] = $row['elementId'];
@@ -209,7 +223,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     private function batchManagerReadOnlyUsers($ids, $value = 1) {
-        $mysql = "UPDATE {{content}} SET field_managerReadOnly = '" . $value . "' WHERE elementId IN (" . implode(',', $ids) . ")";
+        $mysql = "UPDATE {{%content}} SET field_managerReadOnly = '" . $value . "' WHERE elementId IN (" . implode(',', $ids) . ")";
         $result = craft()->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
@@ -428,7 +442,7 @@ class Lantra_ImportController extends Lantra_BaseController
 
     private function tempCompanyLegacyIds() {
         // build array of legacyId => id
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
         $allCompanies = $criteria->find();
@@ -438,7 +452,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     public function buildHierarchy() {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = $this->limit;
         $criteria->dataCleanCompanyParent = 0;
@@ -551,9 +565,9 @@ class Lantra_ImportController extends Lantra_BaseController
 
     public function deleteRoles() {
         $mysql = "DELETE {{categories}} FROM {{categories}}
-          JOIN {{content}} ON {{content}}.elementId = {{categories}}.id
+          JOIN {{%content}} ON {{%content}}.elementId = {{categories}}.id
           WHERE {{categories}}.groupId = 1
-          AND {{content}}.field_dataImported = 1";
+          AND {{%content}}.field_dataImported = 1";
         craft()->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All imported roles deleted.');
         $this->complete();
@@ -561,9 +575,9 @@ class Lantra_ImportController extends Lantra_BaseController
 
     public function deleteUsers() {
         $mysql = "DELETE {{users}} FROM {{users}} 
-          JOIN {{content}} ON {{content}}.elementId = {{users}}.id
+          JOIN {{%content}} ON {{%content}}.elementId = {{users}}.id
           WHERE {{users}}.admin = 0
-          AND {{content}}.field_dataImported = 1";
+          AND {{%content}}.field_dataImported = 1";
         craft()->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All imported users deleted.');
         $this->complete();
@@ -580,9 +594,9 @@ class Lantra_ImportController extends Lantra_BaseController
             WHERE {{elements}}.id IN (
               SELECT {{entries}}.id 
               FROM {{entries}} 
-              JOIN {{content}} ON {{content}}.elementId = {{entries}}.id
+              JOIN {{%content}} ON {{%content}}.elementId = {{entries}}.id
               WHERE {{entries}}.sectionId = '" . $sectionId. "'
-              AND {{content}}.field_dataImported = 1
+              AND {{%content}}.field_dataImported = 1
           );";
         craft()->db->createCommand($mysql)->query();
     }
@@ -614,7 +628,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     private function switchManagers() {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         foreach($criteria->find() as $company) {
             $managers = $company->companySecondaryManagers->ids();
@@ -831,7 +845,7 @@ class Lantra_ImportController extends Lantra_BaseController
 
     private function dataCleanTotal($dataCleanKey, $dataCleanValue = false, $type = 'companies') {
         if ($type == 'companies') {
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = Entry::find();
             $criteria->section = 'companies';
         }
         if ($type == 'users') {
@@ -921,7 +935,7 @@ class Lantra_ImportController extends Lantra_BaseController
         if (!$legacyId) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->legacyId = $legacyId;
         return $criteria->first();
     }
@@ -931,7 +945,7 @@ class Lantra_ImportController extends Lantra_BaseController
         if (!$legacyId) {
             return null;
         }
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->legacyId = $legacyId;
         return $criteria->first();

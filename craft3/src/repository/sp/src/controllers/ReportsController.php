@@ -1,8 +1,19 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_ReportsController extends Lantra_BaseController
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+
+class ReportsController extends BaseController
 {
     /**
      * @return array
@@ -79,13 +90,13 @@ class Lantra_ReportsController extends Lantra_BaseController
      * @throws Exception
      * @throws \CException
      */
-    public function actionDelete()
+    public function actionDeleteReport()
     {
         $this->requirePostRequest();
         $this->requireLogin();
         $manager = Craft::$app->getUser();
         // get the posted entryId
-        $entryId = Craft::$app->request->getPost('entryId');
+        $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
@@ -105,11 +116,11 @@ class Lantra_ReportsController extends Lantra_BaseController
      *
      * @throws mixed
      */
-    public function actionRun() {
+    public function actionRunReport() {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted entryId
-        $entryId = Craft::$app->request->getPost('entryId');
+        $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }

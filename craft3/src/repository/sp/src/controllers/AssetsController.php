@@ -1,8 +1,18 @@
 <?php
+/**
+ * Lantra Skills Plus for Craft CMS 3.x
+ *
+ * @link      https://coffeebean.design
+ * @copyright Copyright (c) 2020 Coffee Bean Design
+ */
 
-namespace Craft;
+namespace lantra\sp\controllers;
 
-class Lantra_AssetsController extends Lantra_BaseController
+use Craft;
+
+use lantra\sp\Plugin as Lantra;
+
+class AssetsController extends BaseController
 {
 
     public $allowAnonymous = array(
@@ -18,7 +28,7 @@ class Lantra_AssetsController extends Lantra_BaseController
     public function actionDeleteEvidence()
     {
         $this->requireAjaxRequest();
-        $fileId = Craft::$app->request->getPost('fileId');
+        $fileId = Craft::$app->request->getParam('fileId');
         $response = craft()->assets->deleteFiles([$fileId]);
         $this->returnJson($response->getResponseData());
     }
@@ -45,7 +55,7 @@ class Lantra_AssetsController extends Lantra_BaseController
         $fileName = $_FILES['assets-upload']['name'];
         $tmpName = $_FILES['assets-upload']['tmp_name'];
 
-        $folderId = Craft::$app->request->getPost('folderId');
+        $folderId = Craft::$app->request->getParam('folderId');
         $fileLocation = AssetsHelper::getTempFilePath(pathinfo($fileName, PATHINFO_EXTENSION));
         move_uploaded_file($tmpName, $fileLocation);
         $response = craft()->assets->insertFileByLocalPath($fileLocation, $fileName, $folderId, AssetConflictResolution::KeepBoth);
