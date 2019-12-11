@@ -250,6 +250,9 @@ $(document).ready(function(){
             }
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
         }
+        if (!action) {
+            alert('Invalid action');
+        }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');
         $.post("/sp/" + action, data, function(response) {

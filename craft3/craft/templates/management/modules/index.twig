@@ -13,9 +13,9 @@
 {% block content %}
 
 <section class="page">
-<div class="page-subHeader primary-bg">
-{% include '_includes/topNavigation' %}
-</div>
+    <div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+    </div>
     <div class="page-header secondary-bg">
         <h2>Roles / Modules</h2>
         <p>Job roles and Modules within your scheme</p>
@@ -55,7 +55,7 @@
     {% else %}
         <div class="page-content">
             <h3>There are no modules to display.</h3>
+        </div>
     {% endif %}
-    </div>
 </section>
 {% endblock %}
