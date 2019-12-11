@@ -151,7 +151,7 @@ class Plugin extends BasePlugin
         Event::on(
             Entry::class,
             Entry::EVENT_AFTER_DELETE,
-            function (ModelEvent $event) {
+            function (Event $event) {
                 $entry = $event->sender;
                 if ($entry->sectionId == $this->sectionIdUnits) {
                     Lantra::$app->structure->onDeleteUnit($event, $entry);
@@ -243,6 +243,7 @@ class Plugin extends BasePlugin
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
+            'sp/reports/save-report'                    => 'sp/reports/save-report',
             'sp/reports/delete-report'                  => 'sp/reports/delete-report',
             'sp/reports/run-report'                     => 'sp/reports/run-report',
         ];

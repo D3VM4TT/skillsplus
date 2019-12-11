@@ -810,7 +810,7 @@ class Users extends Component
             'companySecondaryManagers' => $secondaryManagerIds
         ]);
 
-        Craft::$app->entries->saveEntry($company);
+        Craft::$app->elements->saveElement($company);
     }
 
     /**

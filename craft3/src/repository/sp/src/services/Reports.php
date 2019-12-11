@@ -10,6 +10,7 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\elements\Entry;
 
 use League\Csv\Writer;
 
@@ -25,7 +26,8 @@ class Reports extends Component
      * @param $automated
      * @return array
      */
-    public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false) {
+    public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false)
+    {
         $user = Craft::$app->getUser();
         $criteria = Entry::find();
         $criteria->section = 'reports';
@@ -48,8 +50,13 @@ class Reports extends Component
         return $criteria;
     }
 
-    /** more efficient way to search companies */
-    private function searchReportIds($search = '') {
+    /**
+     * @param string $search
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    private function searchReportIds($search = '')
+    {
         if (intval($search)) {
             $mysql = 'SELECT c.elementId as id FROM {{%content}} c                
                 WHERE c.elementId = "' . $search . '"';
@@ -59,7 +66,7 @@ class Reports extends Component
                 WHERE c.title LIKE "%' . $search . '%"';
         }
 
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         $ids = [];
         foreach ($result as $row) {
             $ids [] = $row['id'];
@@ -91,7 +98,8 @@ class Reports extends Component
      * @param $data
      * @throws HttpException
      */
-    public function downloadReport($reportType, $data) {
+    public function downloadReport($reportType, $data)
+    {
         ob_start();
         $export = fopen('php://output', 'w');
         if ( ! count($data)) {
@@ -113,23 +121,26 @@ class Reports extends Component
      * @param string $title
      * @param array $fields
      * @param null $entryId
-     * @return EntryModel|null
-     * @throws \Exception
+     * @return Entry|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    public function saveCustomReport($author, $title = '', $fields = [], $entryId = null) {
+    public function saveCustomReport($author, $title = '', $fields = [], $entryId = null)
+    {
         if ($entryId) {
             $reportEntry = Craft::$app->entries->getEntryById($entryId);
         }
         else {
-            $reportEntry = new EntryModel();
+            $reportEntry = new Entry();
             $reportEntry->sectionId = $this->sectionIdReports;
             $reportEntry->typeId = $this->typeIdReport;
             $reportEntry->enabled = true;
             $reportEntry->authorId = $author->id;
         }
-        $reportEntry->getContent()->title = $title;
+        $reportEntry->title = $title;
         $reportEntry->setAttributes($fields);
-        Craft::$app->entries->saveEntry($reportEntry);
+        Craft::$app->elements->saveElement($reportEntry);
         return $reportEntry;
     }
 
@@ -137,13 +148,13 @@ class Reports extends Component
      * @param $reportEntry
      * @return array
      */
-    public function getCustomReportFilter($reportEntry) {
-
+    public function getCustomReportFilter($reportEntry)
+    {
         $filter = [
             'reportResultType'          => $reportEntry->reportResultType->value,
             'reportDisplayField'        => $reportEntry->reportDisplayField->value,
             'reportResultExpiry'        => $reportEntry->reportResultExpiry->value,
-            // 'reportNoDates'             => $reportEntry->reportNoDates,
+            ## 'reportNoDates'             => $reportEntry->reportNoDates,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
             'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
@@ -165,13 +176,14 @@ class Reports extends Component
      * @param array $filter
      * @return mixed
      */
-    public function getCustomReportData($manager, $type, $filter = []) {
+    public function getCustomReportData($manager, $type, $filter = [])
+    {
         $userFilter = [];
         $resultFilter = [];
         if ($filter['reportResultType'] != 'all') {
             $resultFilter['resultType'] = $filter['reportResultType'];
         }
-        // clear report units if non mandatory
+        ## clear report units if non mandatory
         if ($filter['reportResultType'] != 'unitResult') {
             $filter['reportUnits'] = [];
         }
@@ -257,10 +269,10 @@ class Reports extends Component
         ));
         $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
         $fileId = $response->getDataItem('fileId');
-        // append asset to report entry
+        ## append asset to report entry
         $reportEntry->setAttributes(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
-        Craft::$app->entries->saveEntry($reportEntry);
-        // send notification if applicable
+        Craft::$app->elements->saveElement($reportEntry);
+        ## send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
             $asset = craft()->assets->getFileById($fileId);
             $attachment = [
@@ -282,11 +294,11 @@ class Reports extends Component
             $message = craft()->templates->renderString($template, $variables);
             craft()->lantra_notify->notify($emails, $subject, $message, [$attachment]);
             $reportEntry->setAttributes(['reportLastSentDate' => time()]);
-            Craft::$app->entries->saveEntry($reportEntry);
+            Craft::$app->elements->saveElement($reportEntry);
         }
-        // delete the temp file
+        ## delete the temp file
         unlink($filePath . $fileName);
-        // delete from queue
+        ## delete from queue
         Lantra::$app->queue->delete($reportEntry->id);
         return $total;
     }
@@ -323,7 +335,7 @@ class Reports extends Component
     {
         $return = [];
         foreach($data as $row) {
-            // user fields go in all reports
+            ## user fields go in all reports
             $user = ($type == 'result') ? $row->author : $row;
             $company = Lantra::$app->users->userCompany($user);
             $roles = [];
@@ -345,7 +357,7 @@ class Reports extends Component
             foreach ($user->userCustomFields as $block) {
                 $record = array_merge($record, [$block->customValue]);
             }
-            // add the result fields
+            ## add the result fields
             if ($type == 'result') {
                 $record = array_merge($record, [$row->resultModule->one()->title, $row->expiryDate->timestamp()]);
             }

@@ -10,6 +10,8 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\db\Query;
+use DateTime;
 
 use lantra\sp\records\Queue as QueueRecord;
 
@@ -23,19 +25,22 @@ class Queue extends Component
     public function __construct()
     {
         parent::__construct();
-        $this->queue = QueueRecord::find()->orderBy('priority', 'dateCreated')->all();
+        $this->queue = QueueRecord::find()
+            ->orderBy('priority', 'dateCreated')
+            ->all();
     }
 
     /**
      *
      */
-    public function get() {
+    public function get()
+    {
         foreach ($this->queue as $key => $job) {
-            // only set elements once...!
+            ## only set elements once...!
             if (isset($job['element'])) {
                 break;
             }
-            $element = craft()->elements->getElementById($job['elementId']);
+            $element = Craft::$app->elements->getElementById($job['elementId']);
             $this->queue[$key]['element'] = $element;
         }
         return $this->queue;
@@ -45,47 +50,47 @@ class Queue extends Component
      * @param $elementId
      * @param $priority
      */
-    public function add($elementId, $priority = 1) {
-        // only one job per element
+    public function add($elementId, $priority = 1)
+    {
+        ## only one job per element
         if ($this->job($elementId) != null) {
             return;
         }
-        $job = [
-            'elementId' => $elementId,
-            'status' => 'pending',
-            'priority' => $priority,
-            'dateCreated' => DateTimeHelper::currentTimeForDb()
-        ];
-        Craft::$app->db->createCommand()->insert('lantra_queue', $job);
+        $job = new QueueRecord([
+            'elementId'     => $elementId,
+            'status'        => 'pending',
+            'priority'      => $priority,
+        ]);
+        $job->save();
     }
 
     /**
      * @param $elementId
-     * @return bool
+     * @return QueueRecord|null
      */
-    public function job($elementId) {
-        return Craft::$app->db->createCommand()
-            ->select()
-            ->from('lantra_queue')
-            ->where(['elementId' => $elementId])
-            ->queryRow();
+    public function job($elementId)
+    {
+        return QueueRecord::findOne(['elementId' => $elementId]);
     }
 
     /**
      * @param $elementId
      * @param string $status
      */
-    public function status($elementId, $status = 'running') {
-        Craft::$app->db->createCommand()
-            ->update('lantra_queue', ['status' => $status], ['elementId' => $elementId]);
+    public function status($elementId, $status = 'running')
+    {
+        $job = $this->job($elementId);
+        $job->status = $status;
+        $job->save();
     }
 
     /**
      * called by cron job every minute
      */
-    public function next() {
+    public function next()
+    {
         $job = array_shift($this->queue);
-        // expire jobs four hours old
+        ## expire jobs four hours old
         $expired = $job['dateCreated'] < (time() - 14400);
         if ($job['status'] == 'running' && $expired) {
             $this->delete($job['elementId']);
@@ -99,11 +104,12 @@ class Queue extends Component
     /**
      * @param $elementId
      */
-     public function run($elementId) {
+     public function run($elementId)
+     {
         if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
             return;
         }
-        // only works with reports
+        ## only works with reports
         if ($entry->sectionId == 13) {
             Lantra::$app->reports->runCustomReport($entry);
         }
@@ -111,15 +117,20 @@ class Queue extends Component
 
     /**
      * @param $elementId
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
-    public function delete($elementId) {
-        Craft::$app->db->createCommand()->delete('lantra_queue', ['elementId' => $elementId]);
+    public function delete($elementId)
+    {
+        $job = $this->job($elementId);
+        $job->delete();
     }
 
     /**
      *
      */
-    public function clear() {
+    public function clear()
+    {
         Craft::$app->db->createCommand()->truncateTable('lantra_queue');
     }
 }

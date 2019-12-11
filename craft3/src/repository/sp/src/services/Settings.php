@@ -265,6 +265,6 @@ class Settings extends Component
     {
         $key = 'field_dataClean' . $key;
         $mysql = "UPDATE craft_content SET `" . $key . "` = '0' WHERE `" . $key . "` = '1'";
-        craft()->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->query();
     }
 }

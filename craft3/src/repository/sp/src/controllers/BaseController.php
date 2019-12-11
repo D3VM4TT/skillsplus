@@ -26,6 +26,8 @@ class BaseController extends Controller {
      * @param bool $success
      * @param bool $redirect
      * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     public function _returnMessage($message, $success = true, $redirect = false)
@@ -41,6 +43,10 @@ class BaseController extends Controller {
             Craft::$app->session->setError($message);
         }
 
+        if ($redirect)
+        {
+            return $this->redirect($redirect);
+        }
         $this->redirectToPostedUrl();
     }
 }

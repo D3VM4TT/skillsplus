@@ -192,7 +192,7 @@ class ImportController extends BaseController
         }
         elseif ($refId == 'legacyId' && count($ids)) {
             $mysql = "SELECT elementId from {{%content}} WHERE field_legacyId IN (" . implode(',', $ids) . ");";
-            $result = craft()->db->createCommand($mysql)->queryAll();
+            $result = Craft::$app->db->createCommand($mysql)->queryAll();
             foreach($result as $row){
                 $userIds[] = $row['elementId'];
             }
@@ -212,25 +212,25 @@ class ImportController extends BaseController
 
     private function batchSuspendUsers($ids) {
         $mysql = "UPDATE {{users}} SET suspended = '1' WHERE id IN (" . implode(',', $ids) . ")";
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
 
     private function batchRestoreUsers($ids) {
         $mysql = "UPDATE {{users}} SET suspended = '0' WHERE id IN (" . implode(',', $ids) . ")";
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
 
     private function batchManagerReadOnlyUsers($ids, $value = 1) {
         $mysql = "UPDATE {{%content}} SET field_managerReadOnly = '" . $value . "' WHERE elementId IN (" . implode(',', $ids) . ")";
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
 
     private function batchDeleteUsers($ids) {
         $mysql = "DELETE FROM {{users}} WHERE id IN (" . implode(',', $ids) . ")";
-        $result = craft()->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->query();
         return $result->getRowCount();
     }
 
@@ -388,7 +388,7 @@ class ImportController extends BaseController
                 $companyEntry->setAttributes([
                     'companyPrimaryManagers' => array_merge($companyEntry->companyPrimaryManagers->ids(), [$companyManager->id])
                 ]);
-                Craft::$app->entries->saveEntry($companyEntry);
+                Craft::$app->elements->saveElement($companyEntry);
                 // make sure user is in company manager group
                 Craft::$app->users->assignUserToGroups($companyManager->id, [4, 2]);
                 $companyManager->setAttributes([
@@ -568,7 +568,7 @@ class ImportController extends BaseController
           JOIN {{%content}} ON {{%content}}.elementId = {{categories}}.id
           WHERE {{categories}}.groupId = 1
           AND {{%content}}.field_dataImported = 1";
-        craft()->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All imported roles deleted.');
         $this->complete();
     }
@@ -578,7 +578,7 @@ class ImportController extends BaseController
           JOIN {{%content}} ON {{%content}}.elementId = {{users}}.id
           WHERE {{users}}.admin = 0
           AND {{%content}}.field_dataImported = 1";
-        craft()->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->query();
         craft()->userSession->setNotice('All imported users deleted.');
         $this->complete();
     }
@@ -598,7 +598,7 @@ class ImportController extends BaseController
               WHERE {{entries}}.sectionId = '" . $sectionId. "'
               AND {{%content}}.field_dataImported = 1
           );";
-        craft()->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->query();
     }
 
     private function getDataByType($type, $limit = null, $processed = 0) {
@@ -624,7 +624,7 @@ class ImportController extends BaseController
 
     private function resetDataByType($type) {
         $mysql = "UPDATE {{lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
-        return craft()->db->createCommand($mysql)->query();
+        return Craft::$app->db->createCommand($mysql)->query();
     }
 
     private function switchManagers() {
@@ -658,7 +658,7 @@ class ImportController extends BaseController
                 'legacyId' => $legacyId,
                 'legacyParentId' => $legacyParentId
             ]);
-            if (Craft::$app->entries->saveEntry($entryModel)) {
+            if (Craft::$app->elements->saveElement($entryModel)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
@@ -832,7 +832,7 @@ class ImportController extends BaseController
                 'legacyResultFiles' => $legacyResultFiles
 
             ]);
-            if (Craft::$app->entries->saveEntry($entryModel)) {
+            if (Craft::$app->elements->saveElement($entryModel)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
@@ -980,6 +980,6 @@ class ImportController extends BaseController
             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB AUTO_INCREMENT=28465 DEFAULT CHARSET=latin1;";
 
-        craft()->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->query();
     }
 }

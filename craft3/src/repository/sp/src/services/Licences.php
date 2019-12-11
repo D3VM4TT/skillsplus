@@ -30,7 +30,7 @@ class Licences extends Component
             return false;
         }
         $companyEntry->companyRemainingLicences = ($companyEntry->companyRemainingLicences - 1);
-        if (!Craft::$app->entries->saveEntry($companyEntry)) {
+        if (!Craft::$app->elements->saveElement($companyEntry)) {
             return false;
         }
         return true;

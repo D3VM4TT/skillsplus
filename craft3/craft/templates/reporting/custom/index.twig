@@ -47,7 +47,7 @@
                             <td>{{ report.id }}</td>
                             <td>{{ report.title }}</td>
                             <td>{{ report.reportType|title }}</td>
-                            <td>{{ report.postDate|format(dateFormat) }}</td>
+                            <td>{{ report.postDate|date(dateFormat) }}</td>
                             <td>
                                 {% if complete %}
                                     {% set asset = report.reportData.first %}
@@ -59,7 +59,8 @@
                                 {% endif %}
                             </td>
                             <td style="text-align: right;">
-                                <a class="action" href="#" data-action="lantra/reports/delete" data-id="{{ report.id }}" href="">delete</a>
+                                <a class="icon action" href="#" data-action="reports/delete-report" data-id="{{ report.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

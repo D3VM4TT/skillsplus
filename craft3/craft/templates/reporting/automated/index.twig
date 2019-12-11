@@ -58,9 +58,9 @@
                                 {% endif %}
                                 </td>
                             <td style="text-align: right;">
-                                <a class="action" href="#" data-action="lantra/reports/run" data-id="{{ report.id }}">run</a> |
+                                <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}">run</a> |
                                 <a href="/reporting/custom/edit/{{ report.id }}">edit</a> |
-                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ report.id }}">delete</a>
+                                <a class="action" href="#" data-action="entries/delete-entry" data-id="{{ report.id }}">delete</a>
                             </td>
                         </tr>
                     {% endfor %}

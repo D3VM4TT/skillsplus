@@ -106,7 +106,7 @@ class SettingsController extends BaseController
             $topCompanies = Lantra::$app->structure->getCompanyChildren(null, false, null);
             if ($topCompanies){
                 foreach($topCompanies as $company) {
-                    Craft::$app->entries->saveEntry($company);
+                    Craft::$app->elements->saveElement($company);
                 }
             }
             craft()->userSession->setNotice(Craft::t('All companies saved.'));
@@ -117,7 +117,7 @@ class SettingsController extends BaseController
             $criteria->section = 'units';
             $criteria->limit = null;
             foreach($criteria->all() as $unit) {
-                Craft::$app->entries->saveEntry($unit);
+                Craft::$app->elements->saveElement($unit);
             }
             craft()->userSession->setNotice(Craft::t('All units saved.'));
             $this->redirectToPostedUrl();

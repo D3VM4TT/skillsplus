@@ -190,68 +190,68 @@ $(document).ready(function(){
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
-        if (action == 'entries/delete-entry') {
+        else if (action == 'entries/delete-entry') {
             if ( ! confirm('Are you sure you want to delete this entry?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
             deleteRow = true;
         }
-        if (action == 'entries/endorse-evidence') {
+        else if (action == 'entries/endorse-evidence') {
             if ( ! confirm('Are you sure you want to endorse this result?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
         }
-        if (action == 'categories/delete-category') {
+        else if (action == 'categories/delete-category') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
                 return false;
             }
             var data = {categoryId: $(this).data('id')};
             deleteRow = true;
         }
-        if (action == 'users/suspend-user') {
+        else if (action == 'users/suspend-user') {
             if ( ! confirm('Are you sure you want to suspend this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'users/delete-user') {
+        else if (action == 'users/delete-user') {
             if ( ! confirm('Are you sure you want to delete this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
-            reload = true;
+            deleteRow = true;
         }
-        if (action == 'users/restore-user') {
+        else if (action == 'users/restore-user') {
             if ( ! confirm('Are you sure you want to restore this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        if (action == 'reports/delete-report') {
+        else if (action == 'reports/delete-report') {
             if ( ! confirm('Are you sure you want to delete this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
-            reload = true;
+            deleteRow = true;
         }
-        if (action == 'reports/run-report') {
+        else if (action == 'reports/run-report') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
         }
-        if (action == 'entries/pending-result') {
+        else if (action == 'entries/pending-result') {
             if ( ! confirm('Are you sure you want to request endorsement?')) {
                 return false;
             }
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
         }
-        if (!action) {
-            alert('Invalid action');
+        else {
+            alert('Invalid action ' + action);
         }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');

@@ -283,7 +283,7 @@ class Results extends Component
             ]);
         }
         // @todo error reporting?
-        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
         return;
@@ -338,7 +338,7 @@ class Results extends Component
             }
         }
         if ($saveContent) {
-            Craft::$app->entries->saveEntry($resultEntry, false);
+            Craft::$app->elements->saveElement($resultEntry, false);
         }
     }
 
@@ -422,7 +422,7 @@ class Results extends Component
             'resultScore' => 0
         ]);
         $this->setResultStatus($resultEntry,'active');
-        Craft::$app->entries->saveEntry($resultEntry);
+        Craft::$app->elements->saveElement($resultEntry);
     }
 
     /**
@@ -543,7 +543,7 @@ class Results extends Component
         $resultEntry->authorId = $userId;
         $resultEntry->setAttributes(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
         // @todo error reporting?
-        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
         return;
@@ -568,7 +568,7 @@ class Results extends Component
         $resultEntry->expiryDate = $expiryDate;
         $resultEntry->setAttributes(['resultStatus' => 'complete']);
         // @todo error reporting?
-        if ( ! Craft::$app->entries->saveEntry($resultEntry)) {
+        if ( ! Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
         return;
@@ -1143,7 +1143,7 @@ class Results extends Component
             'resultEvidence' => $assetIds,
             'legacyResultFiles' => implode(',', $updatedLegacyResultFiles)
         ]);
-        Craft::$app->entries->saveEntry($resultEntry);
+        Craft::$app->elements->saveElement($resultEntry);
         ## get entry again to force refresh on data
         $resultEntry = Craft::$app->entries->getEntryById($resultEntry->id);
         return $resultEntry;

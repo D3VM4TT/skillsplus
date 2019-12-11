@@ -37,7 +37,7 @@ class EntriesController extends BaseController {
         ## loop entries and update status
         foreach ($results as $resultEntry) {
             $resultEntry->setAttributes(['resultStatus' => 'pending']);
-            Craft::$app->entries->saveEntry($resultEntry);
+            Craft::$app->elements->saveElement($resultEntry);
             $count ++;
         }
         $this->_returnMessage('Endorsement requested for ' . $count . ' result(s).', true);

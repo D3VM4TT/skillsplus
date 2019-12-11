@@ -34,8 +34,9 @@
 {% endif %}
 
 <form id="reports" class="page-form no-loading" method="post" role="form" accept-charset="UTF-8">
-    {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="lantra/reports/save">
+    {{ csrfInput() }}
+    {{ actionInput('sp/reports/save-report') }}
+    {{ redirectInput('reporting/custom') }}
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
     <div class="field--wrapper">
         <label for="reportTitle" class="">Report title:</label>
@@ -149,7 +150,7 @@
                 <span style="display:none;color:#000">loading</span></label>
             <input type="hidden" name="fields[reportRecipients]" value="" />
             <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
-                {% if entry is defined and entry.reportRecipients.length %}
+                {% if entry is defined and entry.reportRecipients.count %}
                     {% for manager in entry.reportRecipients %}
                         <option selected="selected" value="{{ manager.id }}"> {{ manager.fullName }}</option>
                     {% endfor %}
