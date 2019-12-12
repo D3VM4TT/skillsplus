@@ -14,8 +14,7 @@ use lantra\sp\Plugin as Lantra;
 
 class CronController extends BaseController {
 
-    public $allowAnonymous = array('actionRun');
-
+    public $allowAnonymous = ['actionRun'];
     /**
      * Run all cron jobs
      *
@@ -63,18 +62,16 @@ class CronController extends BaseController {
     }
 
     /**
-     * Loop though all the scheme and company managers and send notifications about remaining licences
-     *
-     * @throws Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     function notifyLicencesRemaining() {
         Lantra::$app->notify->sendLicencesRemaining();
     }
 
     /**
-     * Notify scheme managers of scheme expiry
-     *
-     * @throws Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     function notifySchemeExpiry() {
         $expiryDate = Lantra::$app->licences->getSchemeExpiryDate();
@@ -85,9 +82,7 @@ class CronController extends BaseController {
     }
 
     /**
-     * Remove expired users from Users group
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     function expireIndividualUsers() {
         $users = Lantra::$app->users->getExpiredUsers();
