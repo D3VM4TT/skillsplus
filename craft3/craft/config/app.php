@@ -40,6 +40,18 @@ return [
                 $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
                 return Craft::createObject($config);
             },
+            'dbCleansed' => [
+                'class' => craft\db\Connection::class,
+                'driver' => getenv('DB_DRIVER'),
+                'schema' => getenv('DB_SCHEMA'),
+                'tablePrefix' => getenv('DB_TABLE_PREFIX'),
+                'port' => getenv('DB_PORT'),
+                'server' => getenv('DB_CLEANSED_SERVER'),
+                'username' => getenv('DB_CLEANSED_USER'),
+                'password' => getenv('DB_CLEANSED_PASSWORD'),
+                'database' => getenv('DB_CLEANSED_DATABASE')
+            ],
+
         ]
     ],
 ];
