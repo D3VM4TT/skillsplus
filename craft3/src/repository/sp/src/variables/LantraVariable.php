@@ -13,6 +13,7 @@ use craft\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use verbb\supertable\records\SuperTableBlockRecord;
 
 class LantraVariable
 {
@@ -44,7 +45,7 @@ class LantraVariable
     public function resultCustom($resultEntryId, $customKey, $id = false)
     {
         $field = Craft::$app->fields->getFieldByHandle('resultCustom');
-        $criteria = craft()->elements->getCriteria('SuperTable_Block');
+        $criteria = SuperTableBlockRecord::find();
         $criteria->ownerId = $resultEntryId;
         $criteria->fieldId = $field->id;
         $blocks = $criteria->all();
@@ -117,22 +118,14 @@ class LantraVariable
 
     /**
      * @param $accountId
-     * @return mixed
-     * @throws Exception
-     * @throws \CException
+     * @return int|null
+     * @throws \craft\errors\AssetConflictException
+     * @throws \craft\errors\VolumeObjectExistsException
      */
     public function evidenceFolderId($accountId)
     {
-        $folder = craft()->assets->findFolder(array(
-            'sourceId' => 1,
-            'name' => (string) $accountId
-        ));
-        if ( ! $folder) {
-            // create folder if it doesn't exist
-            $source = craft()->assetSources->getSourceTypeById(1);
-            $parent = craft()->assets->getRootFolderBySourceId(1);
-            $folder = $source->createFolder($parent, $accountId);
-        }
+        $user = Craft::$app->users->getUserById($accountId);
+        $folder = LantraHelper::userEvidenceFolder($user);
         return $folder && isset($folder->id) ? $folder->id : null;
     }
 
