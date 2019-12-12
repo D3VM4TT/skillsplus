@@ -9,7 +9,6 @@
 namespace lantra\sp\services;
 
 use Craft;
-use craft\helpers\App;
 use craft\base\Component;
 
 class Deploy extends Component

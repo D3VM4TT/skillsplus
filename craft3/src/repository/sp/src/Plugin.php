@@ -17,6 +17,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\ElementHelper;
+use craft\log\FileTarget;
 use craft\web\UrlManager;
 use yii\base\Event;
 use \DateTime;
@@ -61,11 +62,8 @@ class Plugin extends BasePlugin
 
         $this::$app = $this->get('app');
 
-        $fileTarget = new \craft\log\FileTarget([
-            'logFile' => '@storage/logs/lantra.log',
-            'categories' => ['lantra\sp\*']
-        ]);
-        ## Add the new target file target to the dispatcher
+        ## add the lantra log file
+        $fileTarget = new FileTarget(['logFile' => '@storage/logs/lantra.log', 'categories' => ['lantra\sp\*']]);
         Craft::getLogger()->dispatcher->targets[] = $fileTarget;
 
         Event::on(
