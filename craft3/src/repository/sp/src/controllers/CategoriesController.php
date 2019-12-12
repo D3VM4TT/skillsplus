@@ -14,8 +14,6 @@ use lantra\sp\Plugin as Lantra;
 
 class CategoriesController extends BaseController {
 
-    public $allowAnonymous = array('actionDeleteCategory');
-
     /**
      * Deletes categories from the front end
      *
@@ -23,15 +21,14 @@ class CategoriesController extends BaseController {
      */
     public function actionDeleteCategory(){
         $this->requirePostRequest();
-        $this->requireLogin();
-        // get the posted categoryId
+        ## get the posted categoryId
         $categoryId = Craft::$app->request->getParam('categoryId');
-        if (false == $category = craft()->categories->getCategoryById($categoryId)) {
+        if (false == $category = Craft::$app->categories->getCategoryById($categoryId)) {
             $this->_returnError('Invalid category ID.');
         }
         $category->enabled = false;
-        // save disabled category
-        if ( ! craft()->categories->saveCategory($category)) {
+        ## save disabled category
+        if (!Craft::$app->elements->saveElement($category)) {
             $this->_returnError('Error removing category.');
         }
         $this->_returnMessage('Category has been removed.');
