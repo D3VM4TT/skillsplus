@@ -13,8 +13,12 @@ use craft\base\Component;
 
 class Attempts extends Component
 {
-    public function onBeforeSaveAttempt(Entry $entry, Event $event) {
-        if ($event->params['isNewEntry']) {
+    /**
+     * @param Entry $entry
+     * @param Event $event
+     */
+    public function onBeforeSaveAttempt(Event $event, Entry $entry) {
+        if ($entry->isNew) {
             $unitEntry = $entry->attemptUnit->one();
             if (!is_object($unitEntry) || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
                 $event->performAction = false;
@@ -22,6 +26,76 @@ class Attempts extends Component
             }
         }
     }
+
+    /**
+     * Save a test attempt
+     *
+     * @param $attemptEntry
+     * @return null
+     * @throws Mixed
+     */
+    function onSaveAttempt(Event $event, Entry $entry) {
+        $attemptEntry = Craft::$app->entries->getEntryById($entry->id);
+        $unitEntry = $attemptEntry->attemptUnit->one();
+        ## author sent from form
+        $authorId = Craft::$app->request->getParam('authorId');
+        if ($authorId && false != $user = Craft::$app->users->getUserById($authorId)) {
+            $attemptEntry->authorId = $user->id;
+            $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
+            Craft::$app->elements->saveElement($attemptEntry, false);
+        }
+        $total = count($attemptEntry->attemptAnswers);
+        $correct = 0;
+        ## loop through answers and count correct
+        foreach ($attemptEntry->attemptAnswers as $answerBlock) {
+            if ($answerBlock->correct) {
+                $correct++;
+            }
+        }
+        // calculate percentage
+        $score = round($correct / $total * 100);
+        // passed if greater than unit setting
+        $passed = $score >= $unitEntry->getContent()->testPassPercent;
+        $resultScore = $score;
+        // does a result exist?
+        if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {
+            $resultEntry = new EntryModel();
+            $resultEntry->sectionId = $this->sectionIdResults;
+            $resultEntry->typeId = $this->typeIdUnitResult;
+            $resultEntry->enabled = true;
+            $resultEntry->authorId = $attemptEntry->authorId;
+            $resultAttempts = array($attemptEntry->id);
+            $resultStatus = $passed ? 'endorsed' : 'active';
+        }
+        else {
+            // append new result attempt
+            $resultAttempts = array_merge($resultEntry->resultAttempts->ids(), array($attemptEntry->id));
+            // only change if better than previous
+            $resultStatus = $resultEntry->resultStatus;
+            $resultScore = $resultEntry->resultScore;
+            if ($score > $resultEntry->resultScore) {
+                $resultStatus = $passed ? 'endorsed' : 'active';
+                $resultScore = $score;
+            }
+        }
+        $resultEntry->setAttributes([
+            'resultUnit' => array($unitEntry->id),
+            'resultStatus' => $resultStatus,
+            'resultAttempts' => $resultAttempts,
+            'resultScore' => $resultScore
+        ]);
+        if ($passed) {
+            $resultEntry->setAttributes([
+                'resultEndorsedDate' => time()
+            ]);
+        }
+        // @todo error reporting?
+        if ( ! Craft::$app->elements->saveElement($resultEntry)) {
+            return;
+        }
+        return;
+    }
+
     /**
      * Mark an attempt entry
      *

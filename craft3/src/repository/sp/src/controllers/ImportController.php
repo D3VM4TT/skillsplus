@@ -476,7 +476,7 @@ class ImportController extends BaseController
 
     public function assignJobRoles()  {
         // build array of legacyJobRoleId => id
-        $criteria = craft()->elements->getCriteria(ElementType::Category);
+        $criteria = Category::find();
         $criteria->group = 'roles';
         $criteria->limit = null;
         foreach ($criteria as $jobRole) {
@@ -697,7 +697,7 @@ class ImportController extends BaseController
         $users = $this->getDataByType('users', $limit);
 
         // build array of roles legacyJobRoleId => id
-        $criteria = craft()->elements->getCriteria(ElementType::Category);
+        $criteria = Category::find();
         $criteria->group = 'roles';
         $criteria->limit = null;
         foreach ($criteria as $jobRole) {

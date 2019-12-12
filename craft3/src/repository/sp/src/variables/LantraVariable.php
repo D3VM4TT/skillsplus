@@ -43,7 +43,7 @@ class LantraVariable
      */
     public function resultCustom($resultEntryId, $customKey, $id = false)
     {
-        $field = craft()->fields->getFieldByHandle('resultCustom');
+        $field = Craft::$app->fields->getFieldByHandle('resultCustom');
         $criteria = craft()->elements->getCriteria('SuperTable_Block');
         $criteria->ownerId = $resultEntryId;
         $criteria->fieldId = $field->id;
@@ -138,8 +138,8 @@ class LantraVariable
 
     /**
      * @param $comment
-     * @param $userId
-     * @return mixed
+     * @param null $userId
+     * @throws \Exception
      */
     public function readComment($comment, $userId = null)
     {

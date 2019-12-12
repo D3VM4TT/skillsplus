@@ -167,7 +167,7 @@ class Notify extends Component
      */
     function sendManagerEndorsementResult(Entry $resultEntry, $level = 1) {
         ## ignore endorsement notifications in CP
-        if (Craft::$app->request->isCpRequest()){
+        if (Craft::$app->request->isCpRequest){
             return;
         }
         ## endorsement notify is disabled

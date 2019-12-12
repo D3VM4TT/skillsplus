@@ -117,7 +117,7 @@ class Settings extends Component
                         $global = $globalsScheme->$name;
                         Lantra::$app->settings->saveSetting($name, $global);
                         ## delete field
-                        $field = craft()->fields->getFieldByHandle($name);
+                        $field = Craft::$app->fields->getFieldByHandle($name);
                         if ($field) {
                             craft()->fields->deleteFieldById($field->id);
                         }
@@ -130,7 +130,7 @@ class Settings extends Component
         ## VERSION 2 - migrate system globals 08/05/19
         if ($dbVersion < 2) {
             // make sure fields still exist as globals
-            $field = craft()->fields->getFieldByHandle('dateFormat');
+            $field = Craft::$app->fields->getFieldByHandle('dateFormat');
             if ($field) {
                 ## set defaults
                 Lantra::$app->settings->saveSetting('themeDateFormat', 'd-m-Y');
@@ -141,7 +141,7 @@ class Settings extends Component
                 ];
                 foreach ($fields as $name) {
                     ## delete fields
-                    $field = craft()->fields->getFieldByHandle($name);
+                    $field = Craft::$app->fields->getFieldByHandle($name);
                     if ($field) {
                         craft()->fields->deleteFieldById($field->id);
                     }
@@ -173,7 +173,7 @@ class Settings extends Component
                         $global = $globalsUserProfile->$name;
                         Lantra::$app->settings->saveSetting($name, $global);
                         ## delete field
-                        $field = craft()->fields->getFieldByHandle($name);
+                        $field = Craft::$app->fields->getFieldByHandle($name);
                         if ($field) {
                             craft()->fields->deleteFieldById($field->id);
                         }
@@ -204,7 +204,7 @@ class Settings extends Component
                             Lantra::$app->settings->saveSetting($name, $global);
                         }
                         ## delete field
-                        $field = craft()->fields->getFieldByHandle($name);
+                        $field = Craft::$app->fields->getFieldByHandle($name);
                         if ($field) {
                             craft()->fields->deleteFieldById($field->id);
                         }
@@ -243,7 +243,7 @@ class Settings extends Component
                             Lantra::$app->settings->saveSetting($name, $global);
                         }
                         ## delete field
-                        $field = craft()->fields->getFieldByHandle($name);
+                        $field = Craft::$app->fields->getFieldByHandle($name);
                         if ($field) {
                             craft()->fields->deleteFieldById($field->id);
                         }

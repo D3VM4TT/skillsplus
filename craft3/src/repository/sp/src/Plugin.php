@@ -16,6 +16,7 @@ use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
+use craft\helpers\ElementHelper;
 use craft\web\UrlManager;
 use yii\base\Event;
 use \DateTime;
@@ -127,7 +128,7 @@ class Plugin extends BasePlugin
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
                 }
-                elseif($entry->sectionId == $this->sectionIdAttempts) {
+                elseif($entry->id && $entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->attempts->onBeforeSaveAttempt($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdCompanies) {
@@ -142,6 +143,10 @@ class Plugin extends BasePlugin
             function (ModelEvent $event) {
                 $this->resetUploads();
                 $entry = $event->sender;
+                ## ignore drafts and revisions
+                if (ElementHelper::isDraftOrRevision($entry)) {
+                    return;
+                }
                 if ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onSaveCompany($event, $entry);
                 }
@@ -149,7 +154,7 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->onSaveResult($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdAttempts) {
-                    Lantra::$app->attempts->onSaveResult($event, $entry);
+                    Lantra::$app->attempts->onSaveAttempt($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdUnits) {
                     Lantra::$app->structure->onSaveUnit($event, $entry);

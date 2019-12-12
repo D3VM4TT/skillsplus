@@ -85,7 +85,7 @@ class Users extends Component
     public function onBeforeDeleteUser($event)
     {
         $user = Craft::$app->getUser();
-        if (!Craft::$app->request->isCpRequest() && !$user->isInGroup('schemeManagers') && !$user->admin){
+        if (!Craft::$app->request->isCpRequest && !$user->isInGroup('schemeManagers') && !$user->admin){
             $event->performAction = false;
         }
     }
