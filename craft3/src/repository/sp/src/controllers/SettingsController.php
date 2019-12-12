@@ -9,8 +9,11 @@
 namespace lantra\sp\controllers;
 
 use Craft;
+use craft\helpers\Json as JsonHelper;
+use craft\elements\Entry;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\models\Settings as SettingsModel;
 
 
 class SettingsController extends BaseController
@@ -20,7 +23,7 @@ class SettingsController extends BaseController
      */
     public function actionIndex()
     {
-        $settingsModel = new _SettingsModel;
+        $settingsModel = new SettingsModel;
 
         $settings = Craft::$app->db->createCommand()
             ->select('settings')
@@ -31,11 +34,12 @@ class SettingsController extends BaseController
         $settings = JsonHelper::decode($settings);
         $settingsModel->setAttributes($settings);
         $variables['settings'] = $settingsModel;
-        $variables['version'] = craft()->plugins->getPlugin('lantra')->getVersion();
+        $variables['version'] = Lantra::getInstance()->getVersion();
 
         ## config for logo asset
-        $themeFolder = craft()->assets->getRootFolderBySourceId(4)->id;
-        $variables['themeFolder'] = ['folder:'.$themeFolder.':single'];
+        $volume = Craft::$app->volumes->getVolumeByHandle('theme');
+        $themeFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
+        $variables['themeFolder'] = ['folder:'.$themeFolder->id.':single'];
 
         ## config for navigation entries
         $variables['pagesSection'] = ['section:14'];
@@ -96,7 +100,12 @@ class SettingsController extends BaseController
     }
 
     /**
-     * @throws HttpException
+     * @throws \CException
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionTools()
     {
@@ -292,13 +301,12 @@ class SettingsController extends BaseController
                 Craft::$app->session->setNotice($criteria->count() . ' result updated. ');
             }
             else {
-                craft()->userSession->seError('No results to update. ');
+                Craft::$app->session->setError('No results to update. ');
             }
             $this->redirectToPostedUrl();
         }
         if ($tool == 'copyDatabase' || $tool == 'copyDatabaseProd') {
-            $environmentVariables = craft()->config->get('environmentVariables');
-            $server = $environmentVariables['server'];
+            $server = Craft::getAlias('server');
             if ($tool == 'copyDatabaseProd') {
                 $target = 'prod';
             }
@@ -308,8 +316,8 @@ class SettingsController extends BaseController
             else {
                 $target = 'dev';
             }
-            $result = craft()->lantra_deploy->copyDatabase($target);
-            $message = craft()->lantra_deploy->message;
+            $result = Lantra::$app->deploy->copyDatabase($target);
+            $message = Lantra::$app->deploy->message;
             if ($result) {
                 Craft::$app->session->setNotice($message);
             }
