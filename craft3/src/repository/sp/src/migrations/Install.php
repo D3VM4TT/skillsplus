@@ -21,6 +21,11 @@ class Install extends Migration
      */
     public function safeUp()
     {
+        ## @todo create fields
+        ## @todo create sections
+        ## @todo create volumes
+        ## @todo create user groups
+
         ## update status field to dropdown
         $resultStatus = get_class(Craft::$app->fields->getFieldByHandle('resultStatus'));
         if ($resultStatus != 'craft\fields\Dropdown') {
@@ -35,6 +40,41 @@ class Install extends Migration
             Craft::$app->routes->deleteRouteByUid($routeUid);
         }
 
+        ## update tables
+        if (!$this->db->tableExists('{{%lantra_import}}')) {
+            $this->createTable('{{%lantra_import}}', [
+                'id' => $this->primaryKey(),
+                'type' => $this->string(),
+                'data' => $this->string(),
+                'processed' => $this->boolean(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid()
+            ]);
+        }
+        if (!$this->db->tableExists('{{%lantra_queue}}')) {
+            $this->createTable('{{%lantra_queue}}', [
+                'id' => $this->primaryKey(),
+                'elementId' => $this->integer(),
+                'status' => $this->string(),
+                'processed' => $this->boolean(),
+                'priority' => $this->integer(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid()
+            ]);
+        }
+        if (!$this->db->tableExists('{{%lantra_result_cache}}')) {
+            $this->createTable('{{%lantra_result_cache}}', [
+                'userId' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid()
+            ]);
+            $this->addForeignKey(
+                $this->db->getForeignKeyName('{{%lantra_result_cache}}', 'userId'),
+                '{{%lantra_result_cache}}', 'userId', '{{%users}}', 'id', 'CASCADE', null);
+        }
         return true;
     }
 
