@@ -12,6 +12,8 @@ use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
 
+use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
 use League\Csv\Writer;
 
 class Reports extends Component
@@ -255,49 +257,47 @@ class Reports extends Component
         $filter = $this->getCustomReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
         $total = count($values) - 1;
-        if (! $total) {
+        if (!$total) {
             return 0;
         }
-        // create csv file in temp folder
-        $filePath = craft()->path->getTempUploadsPath();
+        ## create csv file in temp folder
+        $tempFolder = Craft::$app->path->tempPath;
         $fileName = $reportEntry->slug . '-' . time() . '.csv';
-        $this->reportCsv($values, $filePath.$fileName);
-        $sourceId = 3;
-        $source = craft()->assetSources->getSourceTypeById($sourceId);
-        $folder = craft()->assets->findFolder(array(
-            'sourceId' => $sourceId,
-        ));
-        $response = $source->insertFileByPath($filePath . $fileName, $folder, $fileName, true);
-        $fileId = $response->getDataItem('fileId');
+        $tempPath = $tempFolder . $fileName;
+        $this->reportCsv($values, $tempPath);
+        $response = LantraHelper::addAsset($tempPath, $fileName, 'data');
+        if (!$response['asset']) {
+            return 0;
+        }
+        $asset = $response['asset'];
         ## append asset to report entry
-        $reportEntry->setAttributes(['reportData' => array_merge($reportEntry->reportData->ids(), [$fileId])]);
+        $reportEntry->setAttributes(['reportData' => array_merge($reportEntry->reportData->ids(), [$asset->fileId])]);
         Craft::$app->elements->saveElement($reportEntry);
         ## send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
-            $asset = craft()->assets->getFileById($fileId);
             $attachment = [
-                'path' => $filePath . $fileName,
+                'path' => $tempPath,
                 'filename' => $fileName,
-                'mimeType' => $asset->getMimeType()
+                'mimeType' => $asset->mimeType
             ];
             $emails = [];
             foreach($reportEntry->reportRecipients as $user) {
                 $emails[] = $user->email;
             }
-            // add on custom report emails
+            ## add on custom report emails
             if ($reportEntry->reportEmails) {
                 $emails = array_merge($emails, explode(',', $reportEntry->reportEmails));
             }
-            $subject = craft()->lantra_notify->getNotifySetting('subjectCustomReport', $reportEntry->title);
+            $subject = Lantra::$app->notify->getNotifySetting('subjectCustomReport', $reportEntry->title);
             $variables = ['entry' => $reportEntry];
-            $template = craft()->lantra_notify->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
-            $message = craft()->templates->renderString($template, $variables);
-            craft()->lantra_notify->notify($emails, $subject, $message, [$attachment]);
-            $reportEntry->setAttributes(['reportLastSentDate' => time()]);
+            $template = Lantra::$app->notify->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
+            $message = Craft::$app->view->renderString($template, $variables);
+            Lantra::$app->notify->notify($emails, $subject, $message, [$attachment]);
+            $reportEntry->reportLastSentDate = time();
             Craft::$app->elements->saveElement($reportEntry);
         }
         ## delete the temp file
-        unlink($filePath . $fileName);
+        unlink($tempPath);
         ## delete from queue
         Lantra::$app->queue->delete($reportEntry->id);
         return $total;

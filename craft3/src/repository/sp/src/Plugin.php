@@ -18,6 +18,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\web\UrlManager;
 use yii\base\Event;
+use \DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\services\App;
@@ -58,6 +59,13 @@ class Plugin extends BasePlugin
         ]);
 
         $this::$app = $this->get('app');
+
+        $fileTarget = new \craft\log\FileTarget([
+            'logFile' => '@storage/logs/lantra.log',
+            'categories' => ['lantra\sp\*']
+        ]);
+        ## Add the new target file target to the dispatcher
+        Craft::getLogger()->dispatcher->targets[] = $fileTarget;
 
         Event::on(
             UrlManager::class,

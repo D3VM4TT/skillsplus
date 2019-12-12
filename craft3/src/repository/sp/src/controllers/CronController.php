@@ -58,7 +58,7 @@ class CronController extends BaseController {
         $managers = $criteria->all();
         // loop managers and send notifications
         foreach($managers as $manager) {
-            craft()->lantra_notify->sendManagerSummary($manager);
+            Lantra::$app->notify->sendManagerSummary($manager);
         }
     }
 
@@ -68,7 +68,7 @@ class CronController extends BaseController {
      * @throws Exception
      */
     function notifyLicencesRemaining() {
-        craft()->lantra_notify->sendLicencesRemaining();
+        Lantra::$app->notify->sendLicencesRemaining();
     }
 
     /**
@@ -80,7 +80,7 @@ class CronController extends BaseController {
         $expiryDate = Lantra::$app->licences->getSchemeExpiryDate();
         $warningDate = strtotime("+4 weeks");
         if ($expiryDate && $expiryDate->getTimestamp() < $warningDate) {
-            craft()->lantra_notify->sendSchemeExpiry($expiryDate);
+            Lantra::$app->notify->sendSchemeExpiry($expiryDate);
         }
     }
 
@@ -104,6 +104,6 @@ class CronController extends BaseController {
      */
     function notifyUserExpiry() {
         $warningDate = strtotime("+4 weeks");
-        craft()->lantra_notify->sendUserExpiry($warningDate);
+        Lantra::$app->notify->sendUserExpiry($warningDate);
     }
 }

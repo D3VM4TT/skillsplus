@@ -17,12 +17,29 @@
  * your config/ folder, alongside this one.
  */
 
+use craft\helpers\App;
+
 return [
-    'components' => [
-        'mutex' => function() {
-            $config = craft\helpers\App::mutexConfig();
-            $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
-            return Craft::createObject($config);
-        },
+    '*' => [
+
+    ],
+    'local' => [
+        'components' => [
+            'mailer' => function() {
+                $settings = App::mailSettings();
+                $settings->transportType = \craft\mail\transportadapters\Gmail::class;
+                $settings->transportSettings = [
+                    'username'  => getenv('SMTP_USERNAME'),
+                    'password'  => getenv('SMTP_PASSWORD')
+                ];
+                $config = App::mailerConfig($settings);
+                return Craft::createObject($config);
+            },
+            'mutex' => function() {
+                $config = craft\helpers\App::mutexConfig();
+                $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
+                return Craft::createObject($config);
+            },
+        ]
     ],
 ];

@@ -13,6 +13,7 @@ use craft\base\Component;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\elements\db\UserQuery;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -1314,10 +1315,10 @@ class Users extends Component
     /** Get expiring users
      *
      * @param $expiryDate
-     * @return object
+     * @return UserQuery
      * @throws Exception
      */
-    public function getExpiringUsers($expiryDate)
+    public function getExpiringUsers($expiryDate) : UserQuery
     {
         $criteria = User::find();
         $criteria->userExpiryDate = '< ' . $expiryDate;

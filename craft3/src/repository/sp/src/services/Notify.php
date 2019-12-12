@@ -10,24 +10,29 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\elements\User;
+use craft\elements\Entry;
+use craft\mail\Message;
+use craft\web\View;
+
+use lantra\sp\Plugin as Lantra;
 
 class Notify extends Component
 {
     /**
-     * Notify scheme managers of scheme expiry
-     *
      * @param $expiryDate
-     * @throws Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     function sendSchemeExpiry($expiryDate) {
-        // send scheme managers remaining scheme licences
+        ## send scheme managers remaining scheme licences
         $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
         $variables = ['expiryDate' => $expiryDate];
-        $template = $this->getNotifySetting('userExpiry', "Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.");
-        $message = craft()->templates->renderString($template, $variables);
+        $template = $this->getNotifySetting('userExpiry', "Your scheme expires on  {{ expiryDate|date('d-m-Y') }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
         foreach ($criteria->all() as $manager) {
             $this->notify($manager->email, $subject, $message);
         }
@@ -40,24 +45,23 @@ class Notify extends Component
      */
     function sendUserExpiry($expiryDate) {
        $criteria = Lantra::$app->users->getExpiringUsers($expiryDate);
-       if ($criteria->total()) {
+       if ($criteria->count()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
            foreach ($criteria->all() as $user) {
                $variables = ['user' => $user];
-               $template = $this->getNotifySetting('userExpiry', "Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.");
-               $message = craft()->templates->renderString($template, $variables);
+               $template = $this->getNotifySetting('userExpiry', "Your individual licence expires on {{ user.userExpiryDate|date('d-m-Y') }}.");
+               $message = Craft::$app->view->renderString($template, $variables);
                $this->notify($user->email, $subject, $message);
            }
        }
     }
 
     /**
-     * Notify managers of licences remaining
-     *
-     * @throws Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     function sendLicencesRemaining() {
-        // send scheme managers remaining scheme licences
+        ## send scheme managers remaining scheme licences
         $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
@@ -65,13 +69,13 @@ class Notify extends Component
         foreach ($criteria->all() as $manager) {
             $remainingLicences = Lantra::$app->licences->getSchemeLicences();
             if ($remainingLicences <= 10) {
-                $variables = ['title' =>  craft()->getSiteName(), 'licences' => Lantra::$app->licences->getSchemeLicences()];
+                $variables = ['title' =>  Craft::$app->config->general->siteName, 'licences' => Lantra::$app->licences->getSchemeLicences()];
                 $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
-                $message = craft()->templates->renderString($template, $variables);
+                $message = Craft::$app->view->renderString($template, $variables);
                 $this->notify($manager->email, $subject, $message);
             }
         }
-        // send company managers remaining company licences
+        ## send company managers remaining company licences
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
@@ -84,7 +88,7 @@ class Notify extends Component
                 }
                 $variables = ['title' =>  $company->title, 'licences' => $remainingLicences];
                 $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
-                $message = craft()->templates->renderString($template, $variables);
+                $message = Craft::$app->view->renderString($template, $variables);
                 $this->notify($emails, $subject, $message);
             }
         }
@@ -92,18 +96,22 @@ class Notify extends Component
 
     /**
      * @param EntryModel $entry
+     * @param $comment
+     * @param $userId
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
         $user = Craft::$app->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
         $template = $this->getNotifySetting('comment', "{{ entry.title }} - {{ user.fullName}}: {{ comment }}");
-        $message = craft()->templates->renderString($template, $variables);
-        // manager commenting - notify user
+        $message = Craft::$app->view->renderString($template, $variables);
+        ## manager commenting - notify user
         if ($userId != $entry->authorId) {
             $this->notify($entry->getAuthor()->email, $subject, $message);
         }
-        // user commenting - notify managers
+        ## user commenting - notify managers
         else {
             $this->notifyManagers($entry->getAuthor(), $subject, $message);
         }
@@ -116,9 +124,9 @@ class Notify extends Component
     * @return null
     * @throws mixed
     */
-    function sendModuleResult(EntryModel $entry) {
-        // ignore endorsement notifications in CP
-        if (Craft::$app->request->isCpRequest()){
+    function sendModuleResult(Entry $entry) {
+        ## ignore endorsement notifications in CP
+        if (Craft::$app->request->isCpRequest){
             return;
         }
         $moduleEntry = $entry->resultModule->one();
@@ -126,42 +134,43 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
         $variables = ['entry' => $moduleEntry, 'user' => $user];
         $template = $this->getNotifySetting('moduleResult', "{{ user.fullName}} has completed {{ entry.title }}.");
-        $message = craft()->templates->renderString($template, $variables);
+        $message = Craft::$app->view->renderString($template, $variables);
 
-        // send the emails to managers
+        ## send the emails to managers
         $this->notify($user->email, $subject, $message);
         $this->notifyManagers($user, $subject, $message);
     }
 
     /**
-     * Notify managers of no attempts remaining (blocked result)
-     *
-     * @throws Exception
+     * @param Entry $resultEntry
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
      */
-    function sendManagerBlockedResult(EntryModel $resultEntry) {
+    function sendManagerBlockedResult(Entry $resultEntry) {
         $unitEntry = $resultEntry->resultUnit->one();
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
         $variables = ['entry' => $unitEntry, 'user' => $user];
         $template = $this->getNotifySetting('blockedResult', "{{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.");
-        $message = craft()->templates->renderString($template, $variables);
-        // send the emails to managers
+        $message = Craft::$app->view->renderString($template, $variables);
+        ## send the emails to managers
         $this->notifyManagers($user, $subject, $message);
     }
 
     /**
-     * Notify manager of result requiring endorsement
-     *
-     * @param EntryModel
-     * @param int
-     * @throws Exception
+     * @param Entry $resultEntry
+     * @param int $level
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
      */
-    function sendManagerEndorsementResult(EntryModel $resultEntry, $level = 1) {
-        // ignore endorsement notifications in CP
+    function sendManagerEndorsementResult(Entry $resultEntry, $level = 1) {
+        ## ignore endorsement notifications in CP
         if (Craft::$app->request->isCpRequest()){
             return;
         }
-        // endorsement notify is disabled
+        ## endorsement notify is disabled
         if (Lantra::$app->settings->getSetting('disableEndorsementNotify', false)) {
             return;
         }
@@ -169,8 +178,8 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
         $variables = ['entry' => $resultEntry, 'user' => $user];
         $template = $this->getNotifySetting('endorsementResult', "{{ user.fullName}} has submitted a result {{ entry.title }}.");
-        $message = craft()->templates->renderString($template, $variables);
-        // send the emails to managers
+        $message = Craft::$app->view->renderString($template, $variables);
+        ## send the emails to managers
         $manager = Lantra::$app->users->getUserManagerByLevel($user, $level);
         if ($manager) {
             $this->notify($manager->email, $subject, $message);
@@ -185,7 +194,7 @@ class Notify extends Component
      * @return null
      * @throws mixed
      */
-    function sendManagerSummary(UserModel $manager, $days = 7) {
+    function sendManagerSummary(User $manager, $days = 7) {
         $subject = $this->getNotifySetting('subjectManagerSummary', 'Manager Summary');
         $criteria = Lantra::$app->results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->total()) {
@@ -218,19 +227,19 @@ class Notify extends Component
         else {
             $message = "There are no expiring results in the next " . $days . " days:\n\n";
         }
-        // send the emails to managers
+        ## send the emails to managers
         $this->notify($manager->email, $subject, $message);
     }
 
     /**
-     * Send a message to a user's team managers
+     * Send a message to a user's managers
      *
      * @param $user
      * @param $subject
      * @param $message
      * @throws mixed
      */
-    function notifyManagers($user, $subject, $message) {
+    function notifyManagers(User $user, $subject, $message) {
         $managers = Lantra::$app->users->getUserMangers($user);
         if ($managers && count($managers)) {
             foreach ($managers as $manager) {
@@ -239,14 +248,16 @@ class Notify extends Component
         }
     }
 
-    /** Get notification global
+    /** Get notification global (return default if empty)
      *
      * @param string
      * @param string
      * @return string
      */
-    public function getNotifySetting($key, $default = '') {
-        return Lantra::$app->settings->getSetting('notify'.ucwords($key), $default);
+    public function getNotifySetting($key, $default = '')
+    {
+        $setting = Lantra::$app->settings->getSetting('notify'.ucwords($key));
+        return $setting ? $setting : $default;
     }
 
     /**
@@ -254,66 +265,69 @@ class Notify extends Component
      *
      * @param $toEmail
      * @param $subject
-     * @param $message
+     * @param $body
      * @param $attachments
      * @return mixed
      * @throws mixed
      */
-    function notify($toEmail, $subject, $message, $attachments = [])
+    function notify($toEmail, $subject, $body, $attachments = [])
     {
-        if ( ! is_array($toEmail)) {
+        if (!is_array($toEmail)) {
             $toEmail = [$toEmail];
         }
-        // all notifications sent to test email address
-        $server = Lantra::$app->settings->getConfig('server', 'dev');
+        ## all notifications sent to test email address
+        $server = getenv('ENVIRONMENT');
         if ($server != 'prod') {
             $subject = '[' . $server . '] ' . $subject;
-            $message .= "\n\n\nNotification for: " . implode(', ', $toEmail);
+            $body .= "\n\n\nNotification for: " . implode(', ', $toEmail);
             $schemeTestEmails = explode(',', Lantra::$app->settings->getSetting('schemeTestEmailAddress'));
-            $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [craft()->systemSettings->getSetting('email', 'emailAddress')];
+            $siteEmailAddress = Craft::$app->getProjectConfig()->get('email', 'emailAddress');
+            $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [$siteEmailAddress];
         }
-        // add notification footer
-        $message .= $this->getNotifySetting('footer');
-        $message = craft()->templates->render('lantra/emails/default', ['message' => $message]);
+        ## add notification footer
+        $body .= $this->getNotifySetting('footer');
+        $body = $this->renderTemplate('sp/emails/default', ['message' => $body]);
 
-        // build the email
-        $email = new EmailModel();
-        $email->subject = $subject;
-        $email->body = $message;
-        $return = true;
+        $message = (new Message())
+            ->setSubject($subject)
+            ->setTextBody($body);
+
         foreach($toEmail as $address) {
-            $email->toEmail = $address;
+            $message->setTo($address);
             try {
                 if (count($attachments)) {
                     foreach($attachments as $attachment) {
-                        $this->addAttachment($email, $attachment);
+                        $message->attach($attachment['path'], [
+                            'fileName'      => $attachment['filename'],
+                            'contentType'   => 'base64',
+                        ]);
                     }
                 }
-                if (craft()->email->sendEmail($email)) {
-                    Craft::log('notify(' . $address . ')', LogLevel::Info, true, 'notify', 'lantra');
-                }
-                else {
-                    Craft::log('notify(' .  $address. ') ' . implode(', ', $email->getAllErrors()),LogLevel::Error, true, 'notify', 'lantra');
-                    $return = false;
+                if (!$message->send()) {
+                    Craft::error('notify(' . $address . ')', __METHOD__);
                 }
             } catch (\Exception $e) {
-                Craft::log('notify(' .  $address. ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
-                $return = false;
+                Craft::error('notify(' .  $address. ') ' . $e->getMessage(),__METHOD__);
+                return false;
             }
         }
-        return $return;
+        return true;
     }
 
     /**
-     * @param $email
-     * @param $attachment
+     * @param $template
+     * @param $variables
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
-    function addAttachment(EmailModel $email, $attachment) {
-        try {
-            $email->addAttachment($attachment['path'], $attachment['filename'], 'base64');
-        }
-        catch (\Exception $e) {
-            Craft::log('notify(' .  $email->toEmail. ') ' . $e->getMessage(),LogLevel::Error, true, 'notify', 'lantra');
-        }
+    private function renderTemplate($template, $variables) {
+        $oldMode = Craft::$app->view->getTemplateMode();
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = Craft::$app->view->renderTemplate($template, $variables);
+        Craft::$app->view->setTemplateMode($oldMode);
+        return $html;
     }
 }

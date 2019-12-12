@@ -19,7 +19,7 @@ class Settings extends Model
     public $schemeTeams                         = false;
     public $schemeUserReadOnly                  = false;
     public $schemeEmailDomain                   = 'skills-plus.co.uk';
-    public $schemeTestEmailAddress              = 'portia@skills-plus.co.uk';
+    public $schemeTestEmailAddress              = 'robin@coffeebean.design';
     public $jobRoleEndorse                      = false;
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;

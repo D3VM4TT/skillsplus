@@ -19,6 +19,7 @@ return [
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
         'devMode' => false,
+        'allowAdminChanges' => false,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
@@ -29,43 +30,28 @@ return [
         'autoLoginAfterAccountActivation' => true,
         'phpMaxMemoryLimit' => '4096M',
         'maxUploadFileSize' => '2147483648',
-        'environmentVariables' => array(
-            'basePath' => '/datadisk/sites/' . $site . '/',
-            'assetsPath' => '/datadisk/azureshare/' . $site . '/',
-            'server' => 'prod',
-            'site' => $site,
-        ),
+        'aliases' => [
+            '@basePath' => '/datadisk/sites/' . $site . '/',
+            '@assetsPath' => '/datadisk/azureshare/' . $site . '/',
+            '@server' => getenv('ENVIRONMENT'),
+            '@site' => $site,
+        ],
     ],
     'local' => [
         'siteUrl' => 'http://craft3.skills-plus.local',
         'devMode' => true,
-        'environmentVariables' => array(
-            'basePath' => '/websites/skills-plus.net/craft3',
-            'assetsPath' => '/websites/skills-plus.net/craft3/',
-            'server' => 'local',
-        ),
+        'allowAdminChanges' => true,
+        'aliases' => [
+            '@basePath' => '/websites/skills-plus.net/',
+            '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
+        ],
     ],
     'dev' => [
         'devMode' => true,
-        'environmentVariables' => array(
-            'server' => 'dev',
-            'site' => $site
-        ),
+        'allowAdminChanges' => true,
     ],
     'uat' => [
-        'devMode' => true,
-        'environmentVariables' => array(
-            'server' => 'uat',
-            'site' => $site
-        ),
-        'allowAdminChanges' => false,
     ],
     'prod' => [
-        'devMode' => true,
-        'environmentVariables' => array(
-            'server' => 'uat',
-            'site' => $site
-        ),
-        'allowAdminChanges' => false,
     ],
 ];

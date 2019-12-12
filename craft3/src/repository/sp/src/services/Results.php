@@ -64,7 +64,7 @@ class Results extends Component
         if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
             // send notification
             if (Lantra::$app->results->notifyManagerEndorsementResult($entry)) {
-                craft()->lantra_notify->sendManagerEndorsementResult($entry);
+                Lantra::$app->notify->sendManagerEndorsementResult($entry);
             }
         }
 
@@ -150,7 +150,7 @@ class Results extends Component
                 'read' => false
             ]
         ];
-        craft()->lantra_notify->sendCommentUpdate($entry, $comment, $userId);
+        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId);
         return $tableData;
     }
 
@@ -334,7 +334,7 @@ class Results extends Component
             }
             // send notification
             if ($this->notifyManagerEndorsementResult($resultEntry)){
-                craft()->lantra_notify->sendManagerEndorsementResult($resultEntry);
+                Lantra::$app->notify->sendManagerEndorsementResult($resultEntry);
             }
         }
         if ($saveContent) {
@@ -406,7 +406,7 @@ class Results extends Component
      */
     function blockResult($resultEntry) {
         $this->setResultStatus($resultEntry,'blocked');
-        craft()->lantra_notify->sendManagerBlockedResult($resultEntry);
+        Lantra::$app->notify->sendManagerBlockedResult($resultEntry);
     }
 
     /**
