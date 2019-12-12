@@ -9,6 +9,7 @@
 namespace lantra\sp\services;
 
 use Craft;
+use craft\helpers\App;
 use craft\base\Component;
 
 class Deploy extends Component
@@ -18,16 +19,21 @@ class Deploy extends Component
     public $password;
     public $message;
 
-    public function copyDatabase($target = 'dev') {
-
-        $this->server = craft()->config->get('server', ConfigFile::Db);
-        $this->user = craft()->config->get('user', ConfigFile::Db);
-        $this->password = craft()->config->get('password', ConfigFile::Db);
+    /**
+     * @param string $target
+     * @return bool
+     */
+    public function copyDatabase($target = 'dev')
+    {
+        $dbConfig = Craft::$app->getConfig()->getDb();
+        $this->server = $dbConfig->server;
+        $this->user = $dbConfig->user;
+        $this->password = $dbConfig->password;
 
         $parts = explode('.', $_SERVER['HTTP_HOST']);
         $site = array_shift($parts);
 
-        $currentDatabase = craft()->config->get('database', ConfigFile::Db);
+        $currentDatabase = $dbConfig->database;
         $targetDatabase = $target . '-' . $site;
 
         $filename = '/tmp/' . date('ymd') . '.' . $site . '.sql';
@@ -44,12 +50,22 @@ class Deploy extends Component
         return true;
     }
 
+    /**
+     * @param $database
+     * @param $filename
+     * @return bool
+     */
     public function export($database, $filename) {
         $command = "mysqldump --opt -h " . $this->server . " -u " . $this->user . " -p'". $this->password . "' " . $database . " > " . $filename;
         exec($command, $output, $return);
         return $return != 0;
     }
 
+    /**
+     * @param $database
+     * @param $filename
+     * @return bool
+     */
     public function import($database, $filename) {
         $command = "mysql -h " . $this->server . " -u " . $this->user . " -p'" . $this->password . "' " . $database . " < " . $filename;
         exec($command, $output, $return);
