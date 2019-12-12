@@ -152,10 +152,10 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->onSaveResult($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdAttempts) {
-                    Lantra::$app->attempts->onSaveAttempt($event, $entry);
+                    Lantra::$app->results->onSaveAttempt($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdUnits) {
-                    Lantra::$app->structure->onSaveUnit($event, $entry);
+                    Lantra::$app->results->onSaveUnit($event, $entry);
                 }
         });
 
