@@ -517,12 +517,9 @@ class Results extends Component
     }
 
     /**
-     * Check whether to award the module result
-     *
      * @param $moduleEntry
      * @param $userId
-     * @return null
-     * @throws Exception
+     * @throws \Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
         $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
@@ -566,12 +563,11 @@ class Results extends Component
     }
 
     /**
-     * Create a module result
-     *
-     * @param $moduleEntryId
      * @param $userId
-     * @return null
-     * @throws \Exception
+     * @param $moduleEntryId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     function createModuleResult($userId, $moduleEntryId) {
         $resultEntry = new EntryModel();
@@ -765,10 +761,11 @@ class Results extends Component
     }
 
     /**
-     * @param UserModel $manager
+     * @param $manager
      * @param bool $directSubordinates
      * @param bool $count
      * @return array|int
+     * @throws \yii\db\Exception
      */
     public function getManagerEndorsementUserIds($manager, $directSubordinates = false, $count = false) {
         $onlySubordinates = false;
@@ -1012,7 +1009,7 @@ class Results extends Component
      * @param array $userFilter
      * @param array $resultFilter
      * @return array
-     * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = []) {
         $userFilter = $this->formatUserFilter($userFilter);

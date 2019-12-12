@@ -46,6 +46,9 @@ class UsersController extends BaseController {
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionRefreshHierarchy()
     {
@@ -56,6 +59,7 @@ class UsersController extends BaseController {
 
     /**
      * @return \yii\web\Response
+     * @throws \CException
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionCompanyManagers()
@@ -185,13 +189,12 @@ class UsersController extends BaseController {
      */
     public function actionDeleteUser() {
         $this->requirePostRequest();
-        $this->requireLogin();
-        // get the posted userId
+        ## get the posted userId
         $userId = Craft::$app->request->getParam('userId');
         if (false == $user = Craft::$app->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
-        if ( ! craft()->users->deleteUser($user)) {
+        if (!Craft::$app->elements->deleteElement($user)) {
             $this->_returnError('Error deleting user.');
         }
         $this->_returnMessage('User has been deleted.');
