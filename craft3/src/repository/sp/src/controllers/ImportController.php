@@ -1,46 +1,4 @@
 <?php
-
-namespace Craft;
-
-class Lantra_ImportRecord extends BaseRecord
-{
-    /**
-     * Return table name.
-     *
-     * @return string
-     */
-    public function getTableName()
-    {
-        return 'lantra_import';
-    }
-
-    /**
-     * Return table attributes.
-     *
-     * @return array
-     */
-    protected function defineAttributes()
-    {
-        return [
-            'type' => AttributeType::String,
-            'data' => AttributeType::String,
-            'processed' => AttributeType::Bool
-        ];
-    }
-}
-
-class Lantra_ImportModel extends BaseModel
-{
-    protected function defineAttributes()
-    {
-        return [
-            'type' => AttributeType::String,
-            'data' => AttributeType::String,
-            'processed' => AttributeType::Bool
-        ];
-    }
-}
-
 /**
  * Lantra Skills Plus for Craft CMS 3.x
  *
@@ -51,9 +9,12 @@ class Lantra_ImportModel extends BaseModel
 namespace lantra\sp\controllers;
 
 use Craft;
+use craft\elements\Entry;
+use craft\elements\Category;
 
 use lantra\sp\Plugin as Lantra;
-
+use lantra\sp\records\Import as ImportRecord;
+use lantra\sp\models\Import as ImportModel;
 
 class ImportController extends BaseController
 {
@@ -69,7 +30,7 @@ class ImportController extends BaseController
 
     private $emails;
 
-    // temp array legacyId => id
+    ## temp array legacyId => id
     private $companyTemp = [];
     private $jobRoleTemp = [];
 
@@ -77,11 +38,9 @@ class ImportController extends BaseController
 
     public function __construct($id, $module = null)
     {
-        craft()->userSession->requireAdmin();
+        $this->log  = Craft::$app->session->getFlash('importLog', []);
 
-        $this->log  = craft()->userSession->getFlash('importLog', []);
-
-        // this might take some time...
+        ## this might take some time...
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', 0);
         set_time_limit(0);
@@ -106,20 +65,18 @@ class ImportController extends BaseController
     }
 
     /**
-     * @throws Exception
-     * @throws HttpException
-     * @throws \CException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionUpload() {
-        $type = Craft::$app->request->getRequiredPost('type');
+        $type = Craft::$app->request->getRequiredParam('type');
         $file = \CUploadedFile::getInstanceByName('data');
 
         if (is_null($file)) {
-            craft()->userSession->setError(Craft::t('No file to upload!'));
+            Craft::$app->session->setError('No file to upload!');
             $this->loadTemplate();
         }
 
-        $filePath = AssetsHelper::getTempFilePath($file->extensionName);
+        $filePath = $tempFolder = Craft::$app->path->tempPath;
         $file->saveAs($filePath);
         $csv = array_map('str_getcsv', file($filePath));
         $total = 0;
@@ -133,35 +90,38 @@ class ImportController extends BaseController
                 $this->log[] = 'Invalid row length row number ' . $number;
                 continue;
             }
-            $record = new Lantra_ImportRecord();
+            $record = new ImportRecord();
             $record->type = $type;
             $record->data = json_encode($row);
             $record->save();
             $total++;
         }
         @unlink($filePath);
-        craft()->userSession->setNotice($type . ' file uploaded, ' . $total . ' added for processing.');
+        Craft::$app->session->setNotice($type . ' file uploaded, ' . $total . ' added for processing.');
         $this->loadTemplate();
     }
 
     /**
      * @return mixed
-     * @throws HttpException
-     * @throws \CException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionImport() {
-        $type = Craft::$app->request->getRequiredPost('type');
-        $this->limit = Craft::$app->request->getRequiredPost('limit', 250);
+        $type = Craft::$app->request->getRequiredParam('type');
+        $this->limit = Craft::$app->request->getParam('limit', 250);
         $method = 'import' . strtoupper($type);
         if (method_exists($this, $method)) {
             return $this->$method();
         }
     }
 
+    /**
+     * @return \yii\web\Response
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionUsers() {
-        $refId = Craft::$app->request->getRequiredPost('refId', 'legacyId');
-        $ids = Craft::$app->request->getRequiredPost('ids');
-        $action = Craft::$app->request->getRequiredPost('userAction', 'suspend');
+        $ids = Craft::$app->request->getRequiredParam('ids');
+        $refId = Craft::$app->request->getParam('refId', 'legacyId');
+        $action = Craft::$app->request->getParam('userAction', 'suspend');
         $userIds = $this->getUserIdsByRef($ids, $refId);
         if ($action == 'suspend'){
             $success = $this->batchSuspendUsers($userIds);
@@ -178,7 +138,7 @@ class ImportController extends BaseController
         elseif ($action == 'delete'){
             $success = $this->batchDeleteUsers($userIds);
         }
-        craft()->userSession->setNotice($success . ' users updated.');
+        Craft::$app->session->setNotice($success . ' users updated.');
         return $this->complete();
     }
 
@@ -192,7 +152,7 @@ class ImportController extends BaseController
         }
         elseif ($refId == 'legacyId' && count($ids)) {
             $mysql = "SELECT elementId from {{%content}} WHERE field_legacyId IN (" . implode(',', $ids) . ");";
-            $result = Craft::$app->db->createCommand($mysql)->queryAll();
+            $result = Craft::$app->db->createCommand($mysql)->execute();
             foreach($result as $row){
                 $userIds[] = $row['elementId'];
             }
@@ -212,26 +172,23 @@ class ImportController extends BaseController
 
     private function batchSuspendUsers($ids) {
         $mysql = "UPDATE {{users}} SET suspended = '1' WHERE id IN (" . implode(',', $ids) . ")";
-        $result = Craft::$app->db->createCommand($mysql)->query();
-        return $result->getRowCount();
+        return Craft::$app->db->createCommand($mysql)->execute();
     }
 
     private function batchRestoreUsers($ids) {
         $mysql = "UPDATE {{users}} SET suspended = '0' WHERE id IN (" . implode(',', $ids) . ")";
-        $result = Craft::$app->db->createCommand($mysql)->query();
-        return $result->getRowCount();
+        return Craft::$app->db->createCommand($mysql)->execute();
     }
 
     private function batchManagerReadOnlyUsers($ids, $value = 1) {
         $mysql = "UPDATE {{%content}} SET field_managerReadOnly = '" . $value . "' WHERE elementId IN (" . implode(',', $ids) . ")";
-        $result = Craft::$app->db->createCommand($mysql)->query();
+        $result = Craft::$app->db->createCommand($mysql)->execute();
         return $result->getRowCount();
     }
 
     private function batchDeleteUsers($ids) {
         $mysql = "DELETE FROM {{users}} WHERE id IN (" . implode(',', $ids) . ")";
-        $result = Craft::$app->db->createCommand($mysql)->query();
-        return $result->getRowCount();
+        return Craft::$app->db->createCommand($mysql)->execute();
     }
 
     private function isHeaderRow($row) {
@@ -260,86 +217,86 @@ class ImportController extends BaseController
     ## DATA FUNCTIONS ##
 
     public function removeData() {
-        Lantra_ImportRecord::model()->deleteAll();
-        craft()->userSession->setNotice(Craft::t('All raw import data removed.'));
+        ImportRecord::deleteAll();
+        Craft::$app->session->setNotice(Craft::t('All raw import data removed.'));
         return $this->complete();
     }
 
     public function resetData() {
-        Lantra_ImportRecord::model()->updateAll(['processed' => 0]);
-        craft()->userSession->setNotice(Craft::t('All data reset.'));
+        ImportRecord::updateAll(['processed' => 0]);
+        Craft::$app->session->setNotice(Craft::t('All data reset.'));
         return $this->complete();
     }
 
     public function removeCompanies() {
         $this->deleteDataByType('companies');
-        craft()->userSession->setNotice(Craft::t('All companies import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All companies import data removed.'));
         return $this->complete();
     }
 
     public function resetCompanies() {
         $this->resetDataByType('companies');
-        craft()->userSession->setNotice(Craft::t('All companies import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All companies import data reset.'));
         return $this->complete();
     }
 
     public function removeRoles() {
         $this->deleteDataByType('roles');
-        craft()->userSession->setNotice(Craft::t('All roles import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All roles import data removed.'));
         return $this->complete();
     }
 
     public function resetRoles() {
         $this->resetDataByType('roles');
-        craft()->userSession->setNotice(Craft::t('All roles import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All roles import data reset.'));
         return $this->complete();
     }
 
     public function removeUsers() {
         $this->deleteDataByType('users');
-        craft()->userSession->setNotice(Craft::t('All users import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All users import data removed.'));
         return $this->complete();
     }
 
     public function resetUsers() {
         $this->resetDataByType('users');
-        craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All users import data reset.'));
         return $this->complete();
     }
 
     public function removeResults() {
         $this->deleteDataByType('results');
-        craft()->userSession->setNotice(Craft::t('All results import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All results import data removed.'));
         return $this->complete();
     }
 
     public function resetResults() {
         $this->resetDataByType('results');
-        craft()->userSession->setNotice(Craft::t('All users import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All users import data reset.'));
         return $this->complete();
     }
 
     public function removeCompanyUsers() {
         $this->deleteDataByType('companyUsers');
-        craft()->userSession->setNotice(Craft::t('All company users import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All company users import data removed.'));
         return $this->complete();
     }
 
     public function resetCompanyUsers() {
         $this->resetDataByType('companyUsers');
-        craft()->userSession->setNotice(Craft::t('All company users import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All company users import data reset.'));
         return $this->complete();
     }
 
     public function removeCompanyManagers() {
         $this->deleteDataByType('companyManagers');
-        craft()->userSession->setNotice(Craft::t('All company managers import data removed.'));
+        Craft::$app->session->setNotice(Craft::t('All company managers import data removed.'));
         return $this->complete();
     }
 
     public function resetCompanyManagers() {
         $this->resetDataByType('companyManagers');
-        craft()->userSession->setNotice(Craft::t('All company managers import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('All company managers import data reset.'));
         return $this->complete();
     }
 
@@ -348,35 +305,42 @@ class ImportController extends BaseController
     public function importCompanies() {
         $this->createCompanies($this->limit);
         $unprocessed = $this->countDataByType('companies');
-        craft()->userSession->setNotice($this->success  . ' companies imported. ' . $unprocessed . ' remaining.');
+        Craft::$app->session->setNotice($this->success  . ' companies imported. ' . $unprocessed . ' remaining.');
         return $this->complete();
     }
 
     public function importRoles() {
         $this->createRoles($this->limit);
         $unprocessed = $this->countDataByType('roles');
-        craft()->userSession->setNotice($this->success  . ' roles imported. ' . $unprocessed . ' remaining.');
+        Craft::$app->session->setNotice($this->success  . ' roles imported. ' . $unprocessed . ' remaining.');
         return $this->complete();
     }
 
     public function importUsers() {
         $this->createUsers($this->limit);
         $unprocessed = $this->countDataByType('users');
-        craft()->userSession->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
+        Craft::$app->session->setNotice($this->success  . ' users imported. ' . $unprocessed . ' remaining.');
         return $this->complete();
     }
 
     public function importResults() {
         $this->createResults($this->limit);
         $unprocessed = $this->countDataByType('results');
-        craft()->userSession->setNotice($this->success  . ' results imported. ' . $unprocessed . ' remaining.');
+        Craft::$app->session->setNotice($this->success  . ' results imported. ' . $unprocessed . ' remaining.');
         return $this->complete();
     }
 
+    /**
+     * @return void|\yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function importCompanyManagers() {
         $companyManagers = $this->getDataByType('companyManagers', $this->limit);
         if (! $companyManagers) {
-            return craft()->userSession->setNotice('No company managers to process.');
+            return Craft::$app->session->setNotice('No company managers to process.');
         }
         foreach ($companyManagers as $id => $manager) {
             // legacyId, legacyCompanyId
@@ -401,14 +365,21 @@ class ImportController extends BaseController
             }
             $this->setProcessed($id);
         }
-        craft()->userSession->setNotice($this->success . ' managers assigned.');
+        Craft::$app->session->setNotice($this->success . ' managers assigned.');
         return $this->complete();
     }
 
+    /**
+     * @return void|\yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function importCompanyUsers() {
         $companyUsers = $this->getDataByType('companyUsers', $this->limit);
         if (! $companyUsers) {
-            return craft()->userSession->setNotice('No company users to process.');
+            return Craft::$app->session->setNotice('No company users to process.');
         }
         foreach ($companyUsers as $id => $user) {
             $legacyUserId = trim($user[0]);
@@ -429,19 +400,23 @@ class ImportController extends BaseController
             }
             $this->setProcessed($id);
         }
-        craft()->userSession->setNotice($this->success . ' users assigned.');
+        Craft::$app->session->setNotice($this->success . ' users assigned.');
         return $this->complete();
     }
 
-   private function complete() {
-       craft()->userSession->setFlash('importLog', $this->log);
-       return $this->redirectToPostedUrl();
-   }
+    /**
+     * @return \yii\web\Response
+     * @throws \yii\web\BadRequestHttpException
+     */
+       private function complete() {
+           Craft::$app->session->setFlash('importLog', $this->log);
+           return $this->redirectToPostedUrl();
+       }
 
     ## PROCESS METHODS ##
 
     private function tempCompanyLegacyIds() {
-        // build array of legacyId => id
+        ## build array of legacyId => id
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
@@ -470,7 +445,7 @@ class ImportController extends BaseController
             Craft::$app->elements->saveElement($company, false);
 
         }
-        craft()->userSession->setNotice('Company hierarchy created for ' . $total . ' companies.');
+        Craft::$app->session->setNotice('Company hierarchy created for ' . $total . ' companies.');
         $this->complete();
     }
 
@@ -496,7 +471,7 @@ class ImportController extends BaseController
             $user->setAttributes($data);
             Craft::$app->elements->saveElement($user, false);
         }
-        craft()->userSession->setNotice('Job roles assigned to ' . $total . ' users.');
+        Craft::$app->session->setNotice('Job roles assigned to ' . $total . ' users.');
         $this->complete();
     }
 
@@ -524,7 +499,7 @@ class ImportController extends BaseController
                 $this->log[] = 'Could not save user [' . $user->id . '] ' . json_encode($user->getAllErrors());
             }
         }
-        craft()->userSession->setNotice('Username updated for ' . $this->success . ' users.');
+        Craft::$app->session->setNotice('Username updated for ' . $this->success . ' users.');
         $this->complete();
     }
 
@@ -545,7 +520,7 @@ class ImportController extends BaseController
                 $this->log[] = 'Could not save user [' . $user->id . '] ' . json_encode($user->getAllErrors());
             }
         }
-        craft()->userSession->setNotice('Password updated for ' . $this->success . ' users.');
+        Craft::$app->session->setNotice('Password updated for ' . $this->success . ' users.');
         $this->complete();
     }
 
@@ -553,13 +528,13 @@ class ImportController extends BaseController
 
     public function deleteCompanies() {
         $this->deleteEntriesBySectionId(3);
-        craft()->userSession->setNotice('All imported companies deleted.');
+        Craft::$app->session->setNotice('All imported companies deleted.');
         $this->complete();
     }
 
     public function deleteResults() {
         $this->deleteEntriesBySectionId(10);
-        craft()->userSession->setNotice('All imported results deleted.');
+        Craft::$app->session->setNotice('All imported results deleted.');
         $this->complete();
     }
 
@@ -569,7 +544,7 @@ class ImportController extends BaseController
           WHERE {{categories}}.groupId = 1
           AND {{%content}}.field_dataImported = 1";
         Craft::$app->db->createCommand($mysql)->query();
-        craft()->userSession->setNotice('All imported roles deleted.');
+        Craft::$app->session->setNotice('All imported roles deleted.');
         $this->complete();
     }
 
@@ -579,14 +554,16 @@ class ImportController extends BaseController
           WHERE {{users}}.admin = 0
           AND {{%content}}.field_dataImported = 1";
         Craft::$app->db->createCommand($mysql)->query();
-        craft()->userSession->setNotice('All imported users deleted.');
+        Craft::$app->session->setNotice('All imported users deleted.');
         $this->complete();
     }
 
     ## PRIVATE METHODS ##
 
     private function setProcessed($id) {
-        return Lantra_ImportRecord::model()->updateByPk($id, ['processed' => 1]);
+        $record = ImportRecord::findOne($id);
+        $record->processed = 1;
+        return $record->update();
     }
 
     private function deleteEntriesBySectionId ($sectionId) {
@@ -598,15 +575,21 @@ class ImportController extends BaseController
               WHERE {{entries}}.sectionId = '" . $sectionId. "'
               AND {{%content}}.field_dataImported = 1
           );";
-        Craft::$app->db->createCommand($mysql)->query();
+        Craft::$app->db->createCommand($mysql)->execute();
     }
 
+    /**
+     * @param $type
+     * @param null $limit
+     * @param int $processed
+     * @return array
+     */
     private function getDataByType($type, $limit = null, $processed = 0) {
         $criteria = new \CDbCriteria();
         $criteria->condition = 'type = :type AND processed = :processed';
         $criteria->params = array(':type' => $type, ':processed' => $processed);
         $criteria->limit = $limit;
-        $rows = Lantra_ImportRecord::model()->findAll($criteria);
+        $rows = ImportRecord::findAll($criteria);
         $return = [];
         foreach($rows as $row) {
             $return[$row['id']] = json_decode($row['data']);
@@ -615,11 +598,11 @@ class ImportController extends BaseController
     }
 
     private function countDataByType($type, $processed = 0) {
-        return Lantra_ImportRecord::model()->countByAttributes(['type' => $type, 'processed' => $processed]);
+        return ImportRecord::countByAttributes(['type' => $type, 'processed' => $processed]);
     }
 
     private function deleteDataByType($type) {
-        return Lantra_ImportRecord::model()->deleteAllByAttributes(['type' => $type]);
+        return ImportRecord::deleteAllByAttributes(['type' => $type]);
     }
 
     private function resetDataByType($type) {
@@ -648,7 +631,7 @@ class ImportController extends BaseController
             $legacyId = (int)trim($company[1]);
             $legacyParentId = (int)trim($company[2]);
 
-            $entryModel = new EntryModel();
+            $entryModel = new Entry();
             $entryModel->sectionId = $this->sectionIdCompanies;
             $entryModel->typeId = $this->typeIdCompany;
             $entryModel->enabled = true;
@@ -662,7 +645,7 @@ class ImportController extends BaseController
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: Company: " . json_encode($entryModel->getAllErrors()),LogLevel::Error, true, 'import', 'lantra');
+                Craft::error("Lantra Import: Company: " . json_encode($entryModel->getFirstErrors()),__METHOD__);
                 $this->log[] = 'Could not save company [' . $legacyId . '] ' . json_encode($entryModel->getAllErrors());
             }
         }
@@ -675,7 +658,7 @@ class ImportController extends BaseController
             $title = trim($jobRole[0]);
             $legacyId = (int)trim($jobRole[1]);
 
-            $categoryModel = new CategoryModel();
+            $categoryModel = new Category();
             $categoryModel->groupId = $this->categoryGroupIdJobRoles;
             $categoryModel->getContent()->title = $title;
             $categoryModel->setAttributes([
@@ -683,7 +666,7 @@ class ImportController extends BaseController
                 'legacyId' => $legacyId
             ]);
 
-            if (craft()->categories->saveCategory($categoryModel)) {
+            if ($categoryModel->save()) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {

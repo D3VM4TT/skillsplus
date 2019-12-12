@@ -91,7 +91,7 @@ class SettingsController extends BaseController
         else {
             Lantra::$app->queue->delete($elementId);
         }
-        craft()->userSession->setNotice(Craft::t('Queue updated.'));
+        Craft::$app->session->setNotice(Craft::t('Queue updated.'));
         $this->redirect('lantra/settings/queue');
     }
 
@@ -109,7 +109,7 @@ class SettingsController extends BaseController
                     Craft::$app->elements->saveElement($company);
                 }
             }
-            craft()->userSession->setNotice(Craft::t('All companies saved.'));
+            Craft::$app->session->setNotice(Craft::t('All companies saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUnits') {
@@ -119,7 +119,7 @@ class SettingsController extends BaseController
             foreach($criteria->all() as $unit) {
                 Craft::$app->elements->saveElement($unit);
             }
-            craft()->userSession->setNotice(Craft::t('All units saved.'));
+            Craft::$app->session->setNotice(Craft::t('All units saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUsers') {
@@ -127,7 +127,7 @@ class SettingsController extends BaseController
             foreach($users as $user) {
                 Craft::$app->elements->saveElement($user);
             }
-            craft()->userSession->setNotice(Craft::t('All users saved.'));
+            Craft::$app->session->setNotice(Craft::t('All users saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'cleanUsernames') {
@@ -137,7 +137,7 @@ class SettingsController extends BaseController
                 $user->username = rtrim($user->username, '.');
                 Craft::$app->elements->saveElement($user);
             }
-            craft()->userSession->setNotice(Craft::t('All usernames cleaned.'));
+            Craft::$app->session->setNotice(Craft::t('All usernames cleaned.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'fixLastNames') {
@@ -150,7 +150,7 @@ class SettingsController extends BaseController
                     Craft::$app->elements->saveElement($user);
                 }
             }
-            craft()->userSession->setNotice(Craft::t('All users with empty last names updated.'));
+            Craft::$app->session->setNotice(Craft::t('All users with empty last names updated.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setManagerReadOnly') {
@@ -164,7 +164,7 @@ class SettingsController extends BaseController
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
-            craft()->userSession->setNotice(Craft::t('Managers updated.' . $message));
+            Craft::$app->session->setNotice(Craft::t('Managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'removeManagersChildren') {
@@ -186,12 +186,12 @@ class SettingsController extends BaseController
                     }
                 }
             }
-            craft()->userSession->setNotice(Craft::t(count($managers) . ' managers updated.' . $message));
+            Craft::$app->session->setNotice(Craft::t(count($managers) . ' managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersChildren') {
             Lantra::$app->settings->resetDataClean('ManagersChildren');
-            craft()->userSession->setNotice('All managers have been reset.');
+            Craft::$app->session->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setManagerUserCompany') {
@@ -219,12 +219,12 @@ class SettingsController extends BaseController
                     };
                 }
             }
-            craft()->userSession->setNotice(Craft::t(count($managers) . ' managers user company updated'));
+            Craft::$app->session->setNotice(Craft::t(count($managers) . ' managers user company updated'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersUserCompany') {
             Lantra::$app->settings->resetDataClean('ManagersUserCompany');
-            craft()->userSession->setNotice('All managers have been reset.');
+            Craft::$app->session->setNotice('All managers have been reset.');
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setResultCache') {
@@ -244,11 +244,11 @@ class SettingsController extends BaseController
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
-            craft()->userSession->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
+            Craft::$app->session->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
         }
         if ($tool == 'dataResetResultCache') {
             Lantra::$app->settings->resetDataClean('ResultCache');
-            craft()->userSession->setNotice('All users have been reset.');
+            Craft::$app->session->setNotice('All users have been reset.');
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setReportIncludeRequired') {
@@ -261,7 +261,7 @@ class SettingsController extends BaseController
                 $report->setAttributes(['reportIncludeRequired' => 1]);
                 Craft::$app->elements->saveElement($report, false);
             };
-            craft()->userSession->setNotice($criteria->count() . ' reports updated.');
+            Craft::$app->session->setNotice($criteria->count() . ' reports updated.');
             $this->redirectToPostedUrl();
         }
         if ($tool == 'copyNotes') {
@@ -289,7 +289,7 @@ class SettingsController extends BaseController
                 Craft::$app->elements->saveElement($result, false);
             }
             if ($criteria->count()) {
-                craft()->userSession->setNotice($criteria->count() . ' result updated. ');
+                Craft::$app->session->setNotice($criteria->count() . ' result updated. ');
             }
             else {
                 craft()->userSession->seError('No results to update. ');
@@ -311,10 +311,10 @@ class SettingsController extends BaseController
             $result = craft()->lantra_deploy->copyDatabase($target);
             $message = craft()->lantra_deploy->message;
             if ($result) {
-                craft()->userSession->setNotice($message);
+                Craft::$app->session->setNotice($message);
             }
             else {
-                craft()->userSession->setError($message);
+                Craft::$app->session->setError($message);
             }
             $this->redirectToPostedUrl();
         }
@@ -346,10 +346,10 @@ class SettingsController extends BaseController
         $settings = Craft::$app->request->getParam('settings');
 
         if (Lantra::$app->settings->saveSettings($settings)) {
-            craft()->userSession->setNotice(Craft::t('Settings saved.'));
+            Craft::$app->session->setNotice(Craft::t('Settings saved.'));
             $this->redirectToPostedUrl();
         } else {
-            craft()->userSession->setError(Craft::t('Settings not saved.'));
+            Craft::$app->session->setError(Craft::t('Settings not saved.'));
             Craft::$app->urlManager->setRouteParams(array('settings' => $settings));
         }
     }
