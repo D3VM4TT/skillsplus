@@ -183,6 +183,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeData()
@@ -194,6 +195,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function resetData()
@@ -205,6 +207,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeCompanies()
@@ -216,6 +219,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
@@ -228,6 +232,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeRoles()
@@ -239,6 +244,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
@@ -251,6 +257,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeUsers()
@@ -262,6 +269,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
@@ -274,6 +282,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeResults()
@@ -285,6 +294,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
@@ -297,6 +307,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeCompanyUsers()
@@ -308,6 +319,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
@@ -320,6 +332,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
     private function removeCompanyManagers()
@@ -331,6 +344,7 @@ class ImportController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
