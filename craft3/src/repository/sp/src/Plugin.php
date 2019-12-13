@@ -16,11 +16,11 @@ use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
+use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
 use yii\base\Event;
-use \DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\services\App;
@@ -176,7 +176,15 @@ class Plugin extends BasePlugin
     public function getCpNavItem(): array
     {
         $ret = parent::getCpNavItem();
+        $ret['url'] = 'sp/settings';
         $ret['label'] = 'Lantra Skills Plus';
+        $ret['subnav'] = [
+            'settings' => ['label' => 'Settings', 'url' => 'sp/settings'],
+            'import' => ['label' => 'Import', 'url' => 'sp/import'],
+            'tools' => ['label' => 'Tools', 'url' => 'sp/tools'],
+            'queue' => ['label' => 'Queue', 'url' => 'sp/queue'],
+            'cache' => ['label' => 'Result Cache', 'url' => 'sp/cache'],
+        ];
         return $ret;
     }
 
@@ -193,6 +201,7 @@ class Plugin extends BasePlugin
      */
     public function getSettingsResponse()
     {
+        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('sp/settings'));
     }
 
     /**
@@ -200,7 +209,13 @@ class Plugin extends BasePlugin
      */
     private function getCpUrlRules()
     {
-        return [];
+        return [
+            'sp/settings'   => 'sp/settings/index',
+            'sp/tools'      => 'sp/settings/tools',
+            'sp/queue'      => 'sp/settings/queue',
+            'sp/cache'      => 'sp/settings/cache',
+            'sp/import'     => 'sp/import/index',
+        ];
     }
 
     /**

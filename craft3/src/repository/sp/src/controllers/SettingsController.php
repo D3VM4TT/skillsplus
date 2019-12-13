@@ -9,8 +9,9 @@
 namespace lantra\sp\controllers;
 
 use Craft;
-use craft\helpers\Json as JsonHelper;
 use craft\elements\Entry;
+use craft\elements\Asset;
+use craft\elements\Category;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\Settings as SettingsModel;
@@ -24,79 +25,41 @@ class SettingsController extends BaseController
     public function actionIndex()
     {
         $settingsModel = new SettingsModel;
-
-        $settings = Craft::$app->db->createCommand()
-            ->select('settings')
-            ->from('plugins')
-            ->where('class=:class', array(':class' => 'Lantra'))
-            ->queryScalar();
-
-        $settings = JsonHelper::decode($settings);
-        $settingsModel->setAttributes($settings);
+        $settingsModel->setAttributes(Lantra::getInstance()->getSettings());
         $variables['settings'] = $settingsModel;
-        $variables['version'] = Lantra::getInstance()->getVersion();
+        $config['version'] = Lantra::getInstance()->getVersion();
 
         ## config for logo asset
         $volume = Craft::$app->volumes->getVolumeByHandle('theme');
         $themeFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
-        $variables['themeFolder'] = ['folder:'.$themeFolder->id.':single'];
+        $config['themeFolder'] = ['folder:'.$themeFolder->id.':single'];
 
         ## config for navigation entries
-        $variables['pagesSection'] = ['section:14'];
-        $variables['companiesSection'] = ['section:3'];
-        $variables['jobRoleCategoryGroup'] = ['group:1'];
+        $config['pagesSection'] = ['section:14'];
+        $config['companiesSection'] = ['section:3'];
+        $config['jobRoleCategoryGroup'] = ['group:1'];
+        $config['assetsElementType'] = Asset::class;
+        $config['entryElementType'] = Entry::class;
+        $config['categoryElementType'] = Category::class;
+        $variables['config'] = $config;
 
-        $this->renderTemplate('lantra/settings', $variables);
-    }
-
-    private function getUsers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
-        $criteria = User::find();
-        $criteria->groupId = [2,3,4];
-        $criteria->admin = false;
-        $criteria->limit = $limit;
-        $criteria->order = 'id';
-        if ($dataCleanKey) {
-            $fieldName = 'dataClean' . $dataCleanKey;
-            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
-        }
-        return $count ? $criteria->count() : $criteria;
-    }
-
-    private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
-        $criteria = User::find();
-        $criteria->groupId = [2,3];
-        $criteria->admin = false;
-        $criteria->limit = $limit;
-        if ($dataCleanKey) {
-            $fieldName = 'dataClean' . $dataCleanKey;
-            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
-        }
-        return $count ? $criteria->count() : $criteria;
-    }
-
-    private function getUserUnitResults($userId) {
-        $criteria = Entry::find();
-        $criteria->section = 'results';
-        $criteria->type = 'unitResult';
-        $criteria->authorId = $userId;
-        $criteria->status = null;
-        return $criteria;
+        $this->renderTemplate('sp/cp/settings/index', $variables);
     }
 
     /**
-     *
+     * @throws HttpException
      */
-    public function actionDeleteJob()
+    public function actionQueue()
     {
-        $elementId = Craft::$app->request->getParam('elementId');
-        if ($elementId == 'all') {
-            Lantra::$app->queue->clear();
-        }
-        else {
-            Lantra::$app->queue->delete($elementId);
-        }
-        Craft::$app->session->setNotice(Craft::t('Queue updated.'));
-        $this->redirect('lantra/settings/queue');
+        $this->renderTemplate('sp/cp/settings/queue');
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function actionCache()
+    {
+        $this->renderTemplate('sp/cp/settings/cache');
     }
 
     /**
@@ -346,7 +309,7 @@ class SettingsController extends BaseController
     }
 
     /**
-     * @throws HttpException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveSettings()
     {
@@ -354,12 +317,81 @@ class SettingsController extends BaseController
         $settings = Craft::$app->request->getParam('settings');
 
         if (Lantra::$app->settings->saveSettings($settings)) {
-            Craft::$app->session->setNotice(Craft::t('Settings saved.'));
+            Craft::$app->session->setNotice('Settings saved.');
             $this->redirectToPostedUrl();
         } else {
-            Craft::$app->session->setError(Craft::t('Settings not saved.'));
+            Craft::$app->session->setError('Settings not saved.');
             Craft::$app->urlManager->setRouteParams(array('settings' => $settings));
         }
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeleteJob()
+    {
+        $elementId = Craft::$app->request->getParam('elementId');
+        if ($elementId == 'all') {
+            Lantra::$app->queue->clear();
+        }
+        else {
+            Lantra::$app->queue->delete($elementId);
+        }
+        Craft::$app->session->setNotice('Queue updated.');
+        $this->redirect('lantra/settings/queue');
+    }
+
+    /**
+     * @param null $limit
+     * @param null $dataCleanKey
+     * @param bool $dataCleanValue
+     * @param bool $count
+     * @return mixed
+     */
+    private function getUsers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
+        $criteria = User::find();
+        $criteria->groupId = [2,3,4];
+        $criteria->admin = false;
+        $criteria->limit = $limit;
+        $criteria->order = 'id';
+        if ($dataCleanKey) {
+            $fieldName = 'dataClean' . $dataCleanKey;
+            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
+        }
+        return $count ? $criteria->count() : $criteria;
+    }
+
+    /**
+     * @param null $limit
+     * @param null $dataCleanKey
+     * @param bool $dataCleanValue
+     * @param bool $count
+     * @return mixed
+     */
+    private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
+        $criteria = User::find();
+        $criteria->groupId = [2,3];
+        $criteria->admin = false;
+        $criteria->limit = $limit;
+        if ($dataCleanKey) {
+            $fieldName = 'dataClean' . $dataCleanKey;
+            $criteria->$fieldName = $dataCleanValue ? 1 : 0;
+        }
+        return $count ? $criteria->count() : $criteria;
+    }
+
+    /**
+     * @param $userId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    private function getUserUnitResults($userId) {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        $criteria->status = null;
+        return $criteria;
     }
 
     /**
