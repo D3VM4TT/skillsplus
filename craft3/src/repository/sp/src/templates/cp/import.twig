@@ -14,14 +14,14 @@
 } %}
 
 {% block content %}
+    {% if log %}
+        <h3>Process Log</h3>
+        {% for l in log %}
+            <p style="color:#FF0000">{{ l }}</p>
+        {% endfor %}
+        <hr />
+    {% endif %}
     <div id="tab-import-upload">
-        {% if log %}
-            <h3>Process Log</h3>
-            {% for l in log %}
-                <p style="color:#FF0000">{{ l }}</p>
-            {% endfor %}
-            <hr />
-        {% endif %}
         <h3>Upload Import Data</h3>
         <p>Column order <strong>MUST</strong> be accurate or the process will fail.</p>
         <form method="post" action="" enctype="multipart/form-data">
@@ -91,8 +91,8 @@
                     <option value="roles">Create Roles</option>
                     <option value="users">Create Users</option>
                     <option value="results">Create Results</option>
-                    <option value="companyManagers">Assign Company Managers</option>
                     <option value="companyUsers">Assign Company Users</option>
+                    <option value="companyManagers">Assign Company Managers</option>
                 </select>
                 <label>Limit:</label>
                 <select name="limit">
@@ -145,7 +145,7 @@
             </p>
         </form>
     </div>
-    <div id="tab-import-tools" class="hidden">
+    <div id="tab-import-process" class="hidden">
         <h3>Build Hierarchy ({{ limit }} each request)</h3>
         <p><a href="{{ url('sp/import/?method=buildHierarchy') }}" class="btn btn-small">Update Company Parent</a></p>
         {% set totalCompanies = craft.entries.section('companies').count() %}

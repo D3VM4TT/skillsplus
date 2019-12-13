@@ -144,7 +144,7 @@ class Results extends Component
                 $saveContent = true;
             }
             ## copy manager endorsement level from unit for submitted evidence
-            if ($entry->resultEvidence && $entry->type == 'unitResult') {
+            if ($entry->resultEvidence && $entry->type == 'unitResult' && $unitEntry) {
                 $entry->unitEndorsementManagerLevel = $unitEntry->unitEndorsementManagerLevel;
                 $saveContent = true;
             }
@@ -166,7 +166,7 @@ class Results extends Component
                 }
             }
             ## make sure title is correct
-            if ($author && $entry->type == 'unitResult' && $entry->resultEvidence)
+            if ($author && $entry->type == 'unitResult' && $entry->resultEvidence && $unitEntry)
             {
                 $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 $saveContent = true;
@@ -215,7 +215,7 @@ class Results extends Component
         $authorId = Craft::$app->request->getParam('authorId');
         if ($authorId && false != $user = Craft::$app->users->getUserById($authorId)) {
             $attemptEntry->authorId = $user->id;
-            $attemptEntry->getContent()->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
+            $attemptEntry->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
             Craft::$app->elements->saveElement($attemptEntry, false);
         }
         $total = count($attemptEntry->attemptAnswers);
@@ -229,7 +229,7 @@ class Results extends Component
         ## calculate percentage
         $score = round($correct / $total * 100);
         ## passed if greater than unit setting
-        $passed = $score >= $unitEntry->getContent()->testPassPercent;
+        $passed = $score >= $unitEntry->testPassPercent;
         $resultScore = $score;
         ## does a result exist?
         if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {

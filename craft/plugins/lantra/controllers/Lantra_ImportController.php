@@ -609,7 +609,7 @@ class Lantra_ImportController extends Lantra_BaseController
     }
 
     private function resetDataByType($type) {
-        $mysql = "UPDATE {{lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
+        $mysql = "UPDATE {{%lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
         return craft()->db->createCommand($mysql)->query();
     }
 

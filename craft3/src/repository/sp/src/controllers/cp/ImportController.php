@@ -12,11 +12,13 @@ use Craft;
 use craft\elements\Entry;
 use craft\elements\Category;
 use craft\elements\User;
-use craft\helpers\StringHelper;
 use craft\web\Controller;
+use craft\web\UploadedFile;
+use DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\records\Import as ImportRecord;
+use lantra\sp\records\Import;
 
 class ImportController extends Controller
 {
@@ -72,17 +74,14 @@ class ImportController extends Controller
     /**
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionUpload() {
-        $type = Craft::$app->request->getRequiredParam('type');
-        $file = \CUploadedFile::getInstanceByName('data');
-
-        if (is_null($file)) {
+    public function actionUpload()
+    {
+        if (null == $file = UploadedFile::getInstanceByName('data')) {
             Craft::$app->session->setError('No file to upload!');
-            $this->loadTemplate();
+            return $this->redirectToPostedUrl();
         }
-
-        $filePath = $tempFolder = Craft::$app->path->tempPath;
-        $file->saveAs($filePath);
+        $type = Craft::$app->request->getRequiredParam('type');
+        $filePath = $file->saveAsTempFile();
         $csv = array_map('str_getcsv', file($filePath));
         $total = 0;
         $number = 0;
@@ -91,7 +90,7 @@ class ImportController extends Controller
             if ($this->isHeaderRow($row)) {
                 continue;
             }
-            if (! $this->validateRowLength($row, $type)) {
+            if (!$this->validateRowLength($row, $type)) {
                 $this->log[] = 'Invalid row length row number ' . $number;
                 continue;
             }
@@ -103,7 +102,7 @@ class ImportController extends Controller
         }
         @unlink($filePath);
         Craft::$app->session->setNotice($type . ' file uploaded, ' . $total . ' added for processing.');
-        $this->loadTemplate();
+        return $this->loadTemplate();
     }
 
     /**
@@ -179,7 +178,7 @@ class ImportController extends Controller
             'limit' => $this->limit
         ];
 
-        $this->renderTemplate('sp/cp/import', $variables);
+        return $this->renderTemplate('sp/cp/import', $variables);
     }
 
     /**
@@ -292,7 +291,7 @@ class ImportController extends Controller
     private function resetResults()
     {
         $this->resetDataByType('results');
-        Craft::$app->session->setNotice(Craft::t('sp', 'All users import data reset.'));
+        Craft::$app->session->setNotice(Craft::t('sp', 'All result import data reset.'));
         return $this->complete();
     }
 
@@ -451,7 +450,7 @@ class ImportController extends Controller
     private function importCompanyUsers()
     {
         $companyUsers = $this->getDataByType('companyUsers', $this->limit);
-        if (! $companyUsers) {
+        if (!$companyUsers) {
             return Craft::$app->session->setNotice('No company users to process.');
         }
         foreach ($companyUsers as $id => $user) {
@@ -753,11 +752,10 @@ class ImportController extends Controller
      */
     private function getDataByType($type, $limit = null, $processed = 0)
     {
-        $criteria = new \CDbCriteria();
-        $criteria->condition = 'type = :type AND processed = :processed';
-        $criteria->params = array(':type' => $type, ':processed' => $processed);
-        $criteria->limit = $limit;
-        $rows = ImportRecord::findAll($criteria);
+        $rows = ImportRecord::find()
+            ->where(['type' => $type, 'processed' => $processed])
+            ->limit($limit)
+            ->all();
         $return = [];
         foreach($rows as $row) {
             $return[$row['id']] = json_decode($row['data']);
@@ -791,7 +789,7 @@ class ImportController extends Controller
      */
     private function resetDataByType($type)
     {
-        $mysql = "UPDATE {{lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
+        $mysql = "UPDATE {{%lantra_import}} SET `processed` = 0 WHERE `type` = '" . $type . "';";
         return Craft::$app->db->createCommand($mysql)->query();
     }
 
@@ -829,22 +827,22 @@ class ImportController extends Controller
             $legacyId = (int)trim($company[1]);
             $legacyParentId = (int)trim($company[2]);
 
-            $entryModel = new Entry();
-            $entryModel->sectionId = $this->sectionIdCompanies;
-            $entryModel->typeId = $this->typeIdCompany;
-            $entryModel->enabled = true;
-            $entryModel->getContent()->title = $title;
-            $entryModel->setAttributes([
+            $entry = new Entry();
+            $entry->sectionId = $this->sectionIdCompanies;
+            $entry->typeId = $this->typeIdCompany;
+            $entry->enabled = true;
+            $entry->title = $title;
+            $entry->setAttributes([
                 'dataImported' => true,
                 'legacyId' => $legacyId,
                 'legacyParentId' => $legacyParentId
             ]);
-            if (Craft::$app->elements->saveElement($entryModel)) {
+            if (Craft::$app->elements->saveElement($entry)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::error("Lantra Import: Company: " . json_encode($entryModel->getFirstErrors()),__METHOD__);
-                $this->log[] = 'Could not save company [' . $legacyId . '] ' . json_encode($entryModel->getFirstErrors());
+                Craft::error("Lantra Import: Company: " . json_encode($entry->getFirstErrors()),__METHOD__);
+                $this->log[] = 'Could not save company [' . $legacyId . '] ' . json_encode($entry->getFirstErrors());
             }
         }
     }
@@ -862,20 +860,20 @@ class ImportController extends Controller
             $title = trim($jobRole[0]);
             $legacyId = (int)trim($jobRole[1]);
 
-            $categoryModel = new Category();
-            $categoryModel->groupId = $this->categoryGroupIdJobRoles;
-            $categoryModel->getContent()->title = $title;
-            $categoryModel->setAttributes([
+            $category = new Category();
+            $category->groupId = $this->categoryGroupIdJobRoles;
+            $category->title = $title;
+            $category->setAttributes([
                 'dataImported' => true,
                 'legacyId' => $legacyId
             ]);
 
-            if ($categoryModel->save()) {
+            if (Craft::$app->elements->saveElement($category)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: Role: " . json_encode($categoryModel->getFirstErrors()),LogLevel::Error, true, 'import', 'lantra');
-                $this->log[] = 'Could not save role [' . $legacyId . ']' . json_encode($categoryModel->getFirstErrors());
+                Craft::error("Lantra Import: Role: " . json_encode($category->getFirstErrors()),__METHOD__);
+                $this->log[] = 'Could not save role [' . $legacyId . ']' . json_encode($category->getFirstErrors());
             }
         }
     }
@@ -899,7 +897,7 @@ class ImportController extends Controller
         }
 
         foreach ($users as $id => $user) {
-            ## username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress
+            ## username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress, userMembershipNumber
             $username = $user[0];
             $names = $this->getNames($user[1]);
             $legacyEmail = $user[2];
@@ -925,12 +923,12 @@ class ImportController extends Controller
 
             ## make sure same email not given twice this loop
             $this->emails[] = $legacyEmail;
-            $userModel = new UserModel();
-            $userModel->username = str_replace(' ', '', $username);
-            $userModel->email = $emailAddress;
-            $userModel->firstName = $names[0];
-            $userModel->lastName = $names[1];
-            $userModel->getContent()->setAttributes([
+            $user = new User();
+            $user->username = str_replace(' ', '', $username);
+            $user->email = $emailAddress;
+            $user->firstName = $names[0];
+            $user->lastName = $names[1];
+            $user->setAttributes([
                 'dataImported' => true,
                 'legacyId' => $legacyId,
                 'legacyEmail' => $legacyEmail,
@@ -940,26 +938,26 @@ class ImportController extends Controller
                 'userDummyEmail' => $userDummyEmail
             ]);
             if (strlen($userDateOfBirth) == 10) {
-                $userModel->getContent()->setAttributes([
+                $user->setAttributes([
                     'userDateOfBirth' => DateTime::createFromFormat('d/m/Y', $userDateOfBirth)
                 ]);
             }
             if (strlen($userStartDate) == 10) {
-                $userModel->getContent()->setAttributes([
+                $user->setAttributes([
                     'userStartDate' => DateTime::createFromFormat('d/m/Y', $userStartDate)
                 ]);
             }
             $roleId = $this->getRoleId($legacyJobRoleId);
             if ($roleId) {
-                $userModel->getContent()->setAttributes(['userRole' => [$roleId]]);
+                $user->setAttributes(['userRole' => [$roleId]]);
             }
             $groups = [4];
-            if (Craft::$app->elements->saveElement($userModel) && Craft::$app->users->assignUserToGroups($userModel->id, $groups)) {
+            if (Craft::$app->elements->saveElement($user) && Craft::$app->users->assignUserToGroups($user->id, $groups)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: User: [" . $legacyId . '] ' . json_encode($userModel->getFirstErrors()),LogLevel::Error, true, 'import', 'lantra');
-                $this->log[] = 'Could not save user [' . $legacyId . '] ' . json_encode($userModel->getFirstErrors());
+                Craft::error("Lantra Import: User: [" . $legacyId . '] ' . json_encode($user->getFirstErrors()),__METHOD__);
+                $this->log[] = 'Could not save user [' . $legacyId . '] ' . json_encode($user->getFirstErrors());
             }
         }
     }
@@ -1000,26 +998,26 @@ class ImportController extends Controller
             $unitEntry = $legacyUnitId ? $this->getEntryByLegacyId($legacyUnitId) : null;
             $resultType = $unitEntry ? 'unitResult' : 'userResult';
 
-            $entryModel = new EntryModel();
-            $entryModel->sectionId = $this->sectionIdResults;
-            $entryModel->typeId = $resultType == 'unitResult' ? 10 : 17;
-            $entryModel->enabled = true;
-            $entryModel->authorId = $author->id;
-            $entryModel->postDate = DateTime::createFromFormat('d/m/Y', $postDate);
+            $entry = new Entry();
+            $entry->sectionId = $this->sectionIdResults;
+            $entry->typeId = $resultType == 'unitResult' ? 10 : 17;
+            $entry->enabled = true;
+            $entry->authorId = $author->id;
+            $entry->postDate = DateTime::createFromFormat('d/m/Y', $postDate);
 
             if (!empty(trim($result[7]))) {
-                $entryModel->expiryDate = DateTime::createFromFormat('d/m/Y', $expiryDate);
+                $entry->expiryDate = DateTime::createFromFormat('d/m/Y', $expiryDate);
             }
 
-            if ($resultType == 'unitResult') {
-                $entryModel->setAttributes([
+            if ($resultType == 'unitResult' && $unitEntry) {
+                $entry->setAttributes([
                     'resultUnit' => [$unitEntry->id]
                 ]);
-                $entryModel->getContent()->title = $unitEntry->title;
+                $entry->title = $unitEntry->title;
             } else {
-                $entryModel->getContent()->title = utf8_encode($title);
+                $entry->title = utf8_encode($title);
             }
-            $entryModel->setAttributes([
+            $entry->setAttributes([
                 'dataImported' => true,
                 'resultOwner' => [$author->id],
                 'resultStatus' => $resultStatus,
@@ -1033,13 +1031,13 @@ class ImportController extends Controller
                 'legacyResultFiles' => $legacyResultFiles
 
             ]);
-            if (Craft::$app->elements->saveElement($entryModel)) {
+            if (Craft::$app->elements->saveElement($entry)) {
                 $this->success++;
                 $this->setProcessed($id);
             } else {
-                Craft::log("Lantra Import: Result: [". $id . "] " . json_encode($entryModel->getFirstErrors()),LogLevel::Error, true, 'import', 'lantra');
+                Craft::error("Lantra Import: Result: [". $id . "] " . json_encode($entry->getFirstErrors()),__METHOD__);
                 $this->log[] = 'Could not save result legacyUserId [' . $legacyUserId . '] legacyUnitId [' . $legacyUnitId . '] title [' . $title . '] ' .
-                    json_encode($entryModel->getFirstErrors());
+                    json_encode($entry->getFirstErrors());
             }
         }
     }
