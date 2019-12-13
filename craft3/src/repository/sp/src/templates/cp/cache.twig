@@ -3,11 +3,8 @@
 {% set title = 'Skills Plus Result Cache' %}
 {% set selectedSubnavItem = 'cache' %}
 
-{% set fullPageForm = false %}
-{% set saveButton = null %}
-
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set criteria = craft.users.admin('not 1').limit(100).order('id') %}
+{% set criteria = craft.users.admin(false).limit(100).order('id') %}
 {% if criteria %}{% paginate criteria as pageInfo, users %}{% endif %}
 
 {% block content %}

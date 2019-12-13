@@ -1760,7 +1760,7 @@ class Results extends Component
      * @throws \yii\base\NotSupportedException
      */
     public function addUnitColumn($id) {
-        if (!Craft::$app->db->columnExists('lantra_result_cache', 'unit' . $id)) {
+        if (!Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
             Craft::$app->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
         }
     }
@@ -1770,7 +1770,7 @@ class Results extends Component
      * @throws \yii\base\NotSupportedException
      */
     public function removeUnitColumn($id) {
-        if (Craft::$app->db->columnExists('lantra_result_cache', 'unit' . $id)) {
+        if (Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
             Craft::$app->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
         }
     }
@@ -1801,7 +1801,7 @@ class Results extends Component
                 }
             }
         }
-        Craft::$app->db->createCommand()->upsert('lantra_result_cache', $keyColumns, $updateColumns);
+        Craft::$app->db->createCommand()->upsert('{{%lantra_result_cache}}', $keyColumns, $updateColumns);
     }
 
     /**
@@ -1814,7 +1814,7 @@ class Results extends Component
         $userId = $resultEntry->getAuthor()->id;
         $unitId = $resultEntry->resultUnit->one()->id;
         if ($userId && $unitId) {
-            Craft::$app->db->createCommand()->update('lantra_result_cache', ['unit' . $unitId => ""], ['userId' => $userId]);
+            Craft::$app->db->createCommand()->update('{{%lantra_result_cache}}', ['unit' . $unitId => ""], ['userId' => $userId]);
         }
     }
 
@@ -1834,7 +1834,7 @@ class Results extends Component
             $where = ['IN', 'userId', $userIds];
         }
         $result = (new Query())
-            ->from('lantra_result_cache')
+            ->from('{{%lantra_result_cache}}')
             ->where($where)
             ->all();
 
