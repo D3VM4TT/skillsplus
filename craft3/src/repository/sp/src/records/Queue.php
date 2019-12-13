@@ -16,6 +16,8 @@ use craft\db\ActiveRecord;
  */
 class Queue extends ActiveRecord
 {
+    public $element;
+
     /**
      *
      * @return string

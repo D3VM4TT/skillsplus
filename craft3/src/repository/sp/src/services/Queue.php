@@ -10,8 +10,6 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
-use craft\db\Query;
-use DateTime;
 
 use lantra\sp\records\Queue as QueueRecord;
 
@@ -26,7 +24,7 @@ class Queue extends Component
     {
         parent::__construct();
         $this->queue = QueueRecord::find()
-            ->orderBy('priority', 'dateCreated')
+            ->orderBy('priority, dateCreated')
             ->all();
     }
 
@@ -41,7 +39,7 @@ class Queue extends Component
                 break;
             }
             $element = Craft::$app->elements->getElementById($job['elementId']);
-            $this->queue[$key]['element'] = $element;
+            $this->queue[$key]->element = $element;
         }
         return $this->queue;
     }
