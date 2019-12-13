@@ -788,9 +788,9 @@ class Results extends Component
         }
 
         $mysql .= "
-            FROM {{entries}} e
+            FROM {{%entries}} e
             JOIN {{%content}} c ON c.elementId = e.id
-            JOIN {{elements}} el ON el.id = e.id
+            JOIN {{%elements}}el ON el.id = e.id
             WHERE e.sectionId = 10 
             AND c.field_resultStatus = 'pending'
             AND e.typeId = 10

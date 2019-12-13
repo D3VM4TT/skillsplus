@@ -1,12 +1,12 @@
 {% extends "sp/cp/_layout" %}
 {% import "_includes/forms" as forms %}
 {% set title = 'Skills Plus Tools' %}
-{% set selectedSubnavItem = 'cache' %}
+{% set selectedSubnavItem = 'tools' %}
 
 {% set fullPageForm = false %}
 {% set saveButton = null %}
 
-<div id="settings-cp">
+{% block content %}
 
     <h3>Re-Save Elements</h3>
 
@@ -46,7 +46,7 @@
 
     <h3>Remove Manager Duplicates</h3>
 
-    {% set totalManagers = craft.users.status(null).group('companyManagers').total() %}
+    {% set totalManagers = craft.users.status(null).group('companyManagers').count() %}
 
     <p><a href="/admin/lantra/settings/tools?tool=removeManagersChildren" class="btn btn-small">Remove company manager duplicates from hierarchy (100)</a></p>
 
@@ -70,7 +70,7 @@
 
     <h3>Set User Result Cache</h3>
 
-    {% set totalUsers = craft.users.admin('not 1').total() %}
+    {% set totalUsers = craft.users.admin('not 1').count() %}
 
     <p><a href="/admin/lantra/settings/tools?tool=setResultCache" class="btn btn-small">Set users result cache (500)</a></p>
 
@@ -99,6 +99,5 @@
         <p><a href="/admin/lantra/settings/tools?tool=copyDatabaseProd" class="btn btn-small">Copy DB to PROD</a></p>
     {% endif %}
 
-</div>
 
 {% endblock %}

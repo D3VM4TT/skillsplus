@@ -176,7 +176,7 @@ class Plugin extends BasePlugin
     public function getCpNavItem(): array
     {
         $ret = parent::getCpNavItem();
-        $ret['url'] = 'sp/settings';
+        $ret['url'] = 'sp';
         $ret['label'] = 'Lantra Skills Plus';
         $ret['subnav'] = [
             'settings' => ['label' => 'Settings', 'url' => 'sp/settings'],
@@ -210,11 +210,13 @@ class Plugin extends BasePlugin
     private function getCpUrlRules()
     {
         return [
-            'sp/settings'   => 'sp/settings/index',
-            'sp/tools'      => 'sp/settings/tools',
-            'sp/queue'      => 'sp/settings/queue',
-            'sp/cache'      => 'sp/settings/cache',
-            'sp/import'     => 'sp/import/index',
+            'sp'                                => 'sp/cp/settings/index',
+            'sp/settings'                       => 'sp/cp/settings/index',
+            'sp/tools'                          => 'sp/cp/settings/tools',
+            'sp/queue'                          => 'sp/cp/settings/queue',
+            'sp/cache'                          => 'sp/cp/settings/cache',
+            'sp/import'                         => 'sp/cp/import/index',
+            'sp/import/process/<method>'        => 'sp/cp/import/process',
         ];
     }
 

@@ -6,24 +6,28 @@
  * @copyright Copyright (c) 2020 Coffee Bean Design
  */
 
-namespace lantra\sp\controllers;
+namespace lantra\sp\controllers\cp;
 
 use Craft;
 use craft\elements\Entry;
 use craft\elements\Asset;
 use craft\elements\Category;
+use craft\elements\User;
+use craft\web\Controller;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\Settings as SettingsModel;
 
 
-class SettingsController extends BaseController
+class SettingsController extends Controller
 {
     /**
      * @throws HttpException
      */
     public function actionIndex()
     {
+        $this->requireAdmin(false);
+
         $settingsModel = new SettingsModel;
         $settingsModel->setAttributes(Lantra::getInstance()->getSettings());
         $variables['settings'] = $settingsModel;
@@ -51,7 +55,8 @@ class SettingsController extends BaseController
      */
     public function actionQueue()
     {
-        $this->renderTemplate('sp/cp/settings/queue');
+        $this->requireAdmin(false);
+        $this->renderTemplate('sp/cp/queue');
     }
 
     /**
@@ -59,7 +64,8 @@ class SettingsController extends BaseController
      */
     public function actionCache()
     {
-        $this->renderTemplate('sp/cp/settings/cache');
+        $this->requireAdmin(false);
+        $this->renderTemplate('sp/cp/cache');
     }
 
     /**
@@ -72,7 +78,9 @@ class SettingsController extends BaseController
      */
     public function actionTools()
     {
-        Craft::$app->db->createCommand()->truncateTable('searchindex');
+        $this->requireAdmin(false);
+        ## Craft::$app->db->createCommand()->truncateTable('searchindex');
+
         $tool = Craft::$app->request->getParam('tool');
         if ($tool == 'saveCompanies') {
             $topCompanies = Lantra::$app->structure->getCompanyChildren(null, false, null);
@@ -81,7 +89,7 @@ class SettingsController extends BaseController
                     Craft::$app->elements->saveElement($company);
                 }
             }
-            Craft::$app->session->setNotice(Craft::t('All companies saved.'));
+            Craft::$app->session->setNotice(Craft::t('sp', 'All companies saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUnits') {
@@ -91,7 +99,7 @@ class SettingsController extends BaseController
             foreach($criteria->all() as $unit) {
                 Craft::$app->elements->saveElement($unit);
             }
-            Craft::$app->session->setNotice(Craft::t('All units saved.'));
+            Craft::$app->session->setNotice(Craft::t('sp', 'All units saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'saveUsers') {
@@ -99,7 +107,7 @@ class SettingsController extends BaseController
             foreach($users as $user) {
                 Craft::$app->elements->saveElement($user);
             }
-            Craft::$app->session->setNotice(Craft::t('All users saved.'));
+            Craft::$app->session->setNotice(Craft::t('sp', 'All users saved.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'cleanUsernames') {
@@ -109,7 +117,7 @@ class SettingsController extends BaseController
                 $user->username = rtrim($user->username, '.');
                 Craft::$app->elements->saveElement($user);
             }
-            Craft::$app->session->setNotice(Craft::t('All usernames cleaned.'));
+            Craft::$app->session->setNotice(Craft::t('sp', 'All usernames cleaned.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'fixLastNames') {
@@ -122,7 +130,7 @@ class SettingsController extends BaseController
                     Craft::$app->elements->saveElement($user);
                 }
             }
-            Craft::$app->session->setNotice(Craft::t('All users with empty last names updated.'));
+            Craft::$app->session->setNotice(Craft::t('sp', 'All users with empty last names updated.'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'setManagerReadOnly') {
@@ -136,7 +144,7 @@ class SettingsController extends BaseController
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
-            Craft::$app->session->setNotice(Craft::t('Managers updated.' . $message));
+            Craft::$app->session->setNotice(Craft::t('sp', 'Managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'removeManagersChildren') {
@@ -158,7 +166,7 @@ class SettingsController extends BaseController
                     }
                 }
             }
-            Craft::$app->session->setNotice(Craft::t(count($managers) . ' managers updated.' . $message));
+            Craft::$app->session->setNotice(Craft::t('sp', count($managers) . ' managers updated.' . $message));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersChildren') {
@@ -191,7 +199,7 @@ class SettingsController extends BaseController
                     };
                 }
             }
-            Craft::$app->session->setNotice(Craft::t(count($managers) . ' managers user company updated'));
+            Craft::$app->session->setNotice(Craft::t('sp', count($managers) . ' managers user company updated'));
             $this->redirectToPostedUrl();
         }
         if ($tool == 'dataResetManagersUserCompany') {
@@ -216,7 +224,7 @@ class SettingsController extends BaseController
                     $message .= ' ' . $user->fullName . ' not updated.';
                 };
             }
-            Craft::$app->session->setNotice(Craft::t(count($users) . ' users results cached. ' . $message));
+            Craft::$app->session->setNotice(Craft::t('sp', count($users) . ' users results cached. ' . $message));
         }
         if ($tool == 'dataResetResultCache') {
             Lantra::$app->settings->resetDataClean('ResultCache');
@@ -305,7 +313,7 @@ class SettingsController extends BaseController
             'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
             'dataCleanResultCacheTotal' => $this->getUsers(null, 'ResultCache', 1, true),
         ];
-        $this->renderTemplate('lantra/settings/tools', $variables);
+        $this->renderTemplate('sp/cp/tools', $variables);
     }
 
     /**

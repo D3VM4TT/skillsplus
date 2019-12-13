@@ -10,6 +10,10 @@ namespace lantra\sp\records;
 
 use craft\db\ActiveRecord;
 
+/**
+ * Class Import record.
+ *
+ */
 class Import extends ActiveRecord
 {
     /**

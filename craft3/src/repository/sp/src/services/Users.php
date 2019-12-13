@@ -144,12 +144,12 @@ class Users extends Component
     private function searchUserIds($search = '')
     {
         if (intval($search)) {
-            $mysql = 'SELECT u.id FROM {{users}} u 
+            $mysql = 'SELECT u.id FROM {{%users}} u 
                 JOIN {{%content}} AS c ON u.id = c.elementId
                 WHERE u.id = "' . $search . '"
                 OR c.field_legacyId = "' . $search . '"';
         } else {
-            $mysql = 'SELECT u.id FROM {{users}} u 
+            $mysql = 'SELECT u.id FROM {{%users}} u 
                 JOIN {{relations}} AS r ON r.sourceId = u.id
                 JOIN {{%content}} AS c ON u.id = c.elementId
                 JOIN {{%content}} AS rc ON r.targetId = rc.elementId
