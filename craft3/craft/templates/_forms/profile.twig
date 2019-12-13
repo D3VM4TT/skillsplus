@@ -72,7 +72,7 @@
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                     <option value="{{ roleCategory.id }}"
-                      {% if roleCategory.id in formUser.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                      {% if roleCategory.id in formUser.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title }}</option>
                 {% endfor %}
             </select>
         </div>
