@@ -155,7 +155,8 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->onSaveAttempt($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdUnits) {
-                    Lantra::$app->results->onSaveUnit($event, $entry);
+                    ## add result cache unit column (if enabled)
+                    Lantra::$app->results->addUnitColumn($entry->id);
                 }
         });
 
@@ -165,7 +166,8 @@ class Plugin extends BasePlugin
             function (Event $event) {
                 $entry = $event->sender;
                 if ($entry->sectionId == $this->sectionIdUnits) {
-                    Lantra::$app->structure->onDeleteUnit($event, $entry);
+                    ## delete result cache unit column (if enabled)
+                    Lantra::$app->results->removeUnitColumn($entry->id);
                 }
             });
     }
@@ -212,11 +214,10 @@ class Plugin extends BasePlugin
         return [
             'sp'                                => 'sp/cp/settings/index',
             'sp/settings'                       => 'sp/cp/settings/index',
-            'sp/tools'                          => 'sp/cp/settings/tools',
             'sp/queue'                          => 'sp/cp/settings/queue',
             'sp/cache'                          => 'sp/cp/settings/cache',
+            'sp/tools'                          => 'sp/cp/tools',
             'sp/import'                         => 'sp/cp/import/index',
-            'sp/import/process/<method>'        => 'sp/cp/import/process',
         ];
     }
 

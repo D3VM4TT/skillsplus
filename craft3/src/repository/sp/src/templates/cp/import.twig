@@ -65,20 +65,20 @@
                 <td>{{ unprocessed.companyManagers }}</td>
             </tr>
             <tr>
-                <td><a href="/admin/lantra/import?process=removeCompanies" class="btn btn-small">Delete Companies</a></td>
-                <td><a href="/admin/lantra/import?process=removeRoles" class="btn btn-small">Delete Roles</a></td>
-                <td><a href="/admin/lantra/import?process=removeUsers" class="btn btn-small">Delete Users</a></td>
-                <td><a href="/admin/lantra/import?process=removeResults" class="btn btn-small">Delete Results</a></td>
-                <td><a href="/admin/lantra/import?process=removeCompanyUsers" class="btn btn-small">Delete Company Users</a></td>
-                <td><a href="/admin/lantra/import?process=removeCompanyManagers" class="btn btn-small">Delete Company Managers</a></td>
+                <td><a href="{{ url('sp/import?method=removeCompanies') }}" class="btn btn-small">Delete Companies</a></td>
+                <td><a href="{{ url('sp/import?method=removeRoles') }}" class="btn btn-small">Delete Roles</a></td>
+                <td><a href="{{ url('sp/import?method=removeUsers') }}" class="btn btn-small">Delete Users</a></td>
+                <td><a href="{{ url('sp/import?method=removeResults') }}" class="btn btn-small">Delete Results</a></td>
+                <td><a href="{{ url('sp/import?method=removeCompanyUsers') }}" class="btn btn-small">Delete Company Users</a></td>
+                <td><a href="{{ url('sp/import?method=removeCompanyManagers') }}" class="btn btn-small">Delete Company Managers</a></td>
             </tr>
             <tr>
-                <td><a href="/admin/lantra/import?process=resetCompanies" class="btn btn-small">Reset Companies</a></td>
-                <td><a href="/admin/lantra/import?process=resetRoles" class="btn btn-small">Reset Roles</a></td>
-                <td><a href="/admin/lantra/import?process=resetUsers" class="btn btn-small">Reset Users</a></td>
-                <td><a href="/admin/lantra/import?process=resetResults" class="btn btn-small">Reset Results</a></td>
-                <td><a href="/admin/lantra/import?process=resetCompanyUsers" class="btn btn-small">Reset Company Users</a></td>
-                <td><a href="/admin/lantra/import?process=resetCompanyManagers" class="btn btn-small">Reset Company Managers</a></td>
+                <td><a href="{{ url('sp/import?method=resetCompanies') }}" class="btn btn-small">Reset Companies</a></td>
+                <td><a href="{{ url('sp/import?method=resetRoles') }}" class="btn btn-small">Reset Roles</a></td>
+                <td><a href="{{ url('sp/import?method=resetUsers') }}" class="btn btn-small">Reset Users</a></td>
+                <td><a href="{{ url('sp/import?method=resetResults') }}" class="btn btn-small">Reset Results</a></td>
+                <td><a href="{{ url('sp/import?method=resetCompanyUsers') }}" class="btn btn-small">Reset Company Users</a></td>
+                <td><a href="{{ url('sp/import?method=resetCompanyManagers') }}" class="btn btn-small">Reset Company Managers</a></td>
             </tr>
         </table>
         <h3>Import Data To Craft</h3>
@@ -147,29 +147,29 @@
     </div>
     <div id="tab-import-tools" class="hidden">
         <h3>Build Hierarchy ({{ limit }} each request)</h3>
-        <p><a href="{{ url('sp/import/?process=build-hierarchy') }}" class="btn btn-small">Update Company Parent</a></p>
+        <p><a href="{{ url('sp/import/?method=buildHierarchy') }}" class="btn btn-small">Update Company Parent</a></p>
         {% set totalCompanies = craft.entries.section('companies').count() %}
         <p>{{ dataClean.companies }}/{{ totalCompanies }} processed</p>
         <hr />
         <h3>Assign Job Roles ({{ limit }} each request)</h3>
-        <p><a href="{{ url('sp/import//?process=assign-job-roles') }}" class="btn btn-small">Assign Job Roles</a></p>
+        <p><a href="{{ url('sp/import//?method=assignJobRoles') }}" class="btn btn-small">Assign Job Roles</a></p>
         {% set totalUsers = craft.users.admin(false).count() %}
         <p>{{ dataClean.users }}/{{ totalUsers }} processed</p>
         <hr />
         <h3>Set Usernames firstname.lastname ({{ limit }} each request)</h3>
-        <p><a href="{{ url('sp/import/?process=set-usernames') }}" class="btn btn-small">Set Usernames</a></p>
+        <p><a href="{{ url('sp/import/?method=setUsernames') }}" class="btn btn-small">Set Usernames</a></p>
         <p>{{ dataClean.usernames }}/{{ totalUsers }} processed</p>
         <hr />
         <h3>Set Passwords DOB ({{ limit }} each request)</h3>
-        <p><a href="{{ url('sp/import/?process=set-passwords') }}" class="btn btn-small">Set Passwords</a></p>
+        <p><a href="{{ url('sp/import/?method=setPasswords') }}" class="btn btn-small">Set Passwords</a></p>
         <p>{{ dataClean.passwords }}/{{ totalUsers }} processed</p>
         <p>If DOB empty password will be set to 010101.</p>
     </div >
     <div id="tab-import-delete" class="hidden">
         <h3>Dangerous Stuff - Delete Craft Data (imported only)</h3>
-        <p><a href="{{ url('sp/import/?process=delete-companies') }}" class="btn btn-small">Delete Companies</a></p>
-        <p><a href="{{ url('sp/import/?process=delete-results') }}" class="btn btn-small">Delete Results</a></p>
-        <p><a href="{{ url('sp/import/?process=delete-users') }}" class="btn btn-small">Delete Users</a></p>
-        <p><a href="{{ url('sp/import/?process=delete-roles') }}" class="btn btn-small">Delete Roles</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteCompanies') }}" class="btn btn-small">Delete Companies</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteResults') }}" class="btn btn-small">Delete Results</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteUsers') }}" class="btn btn-small">Delete Users</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteRoles') }}" class="btn btn-small">Delete Roles</a></p>
     </div>
 {% endblock %}

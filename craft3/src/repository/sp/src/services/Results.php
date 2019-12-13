@@ -176,6 +176,10 @@ class Results extends Component
                 Lantra::$app->notify->sendManagerEndorsementResult($entry);
             }
         }
+        ## save unit result in user result cache (if enabled)
+        if ($entry->enabled && $entry->type == 'unitResult') {
+            $this->saveUserResultCache($entry->authorId, $entry);
+        }
         if ($saveContent) {
             Craft::$app->elements->saveElement($entry, false);
         }
@@ -1760,6 +1764,9 @@ class Results extends Component
      * @throws \yii\base\NotSupportedException
      */
     public function addUnitColumn($id) {
+        if (LantraHelper::setting('disableResultCache')) {
+            return;
+        }
         if (!Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
             Craft::$app->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
         }
@@ -1770,6 +1777,9 @@ class Results extends Component
      * @throws \yii\base\NotSupportedException
      */
     public function removeUnitColumn($id) {
+        if (LantraHelper::setting('disableResultCache')) {
+            return;
+        }
         if (Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
             Craft::$app->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
         }

@@ -20,8 +20,6 @@ use lantra\sp\records\Import as ImportRecord;
 
 class ImportController extends Controller
 {
-    public $allowAnonymous = ['actionIndex', 'actionUpload', 'actionImport', 'actionUsers'];
-
     private $success = 0;
     private $log = [];
 
@@ -62,8 +60,10 @@ class ImportController extends Controller
      */
     public function actionIndex()
     {
-        if (false != $process = Craft::$app->request->getParam('process')) {
-            $method = StringHelper::camelCase($process);
+        if (false != $method = Craft::$app->request->getParam('method')) {
+            if (!method_exists($this, $method)){
+                Craft::$app->session->setError('Method ' . $method . ' does not exist!');
+            }
             return $this->$method();
         }
         $this->loadTemplate();
@@ -820,7 +820,8 @@ class ImportController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function createCompanies($limit = 250) {
+    private function createCompanies($limit = 250)
+    {
         $companies = $this->getDataByType('companies', $limit);
         foreach ($companies as $id => $company) {
             ## title, legacyId, legacyParentId
@@ -853,7 +854,8 @@ class ImportController extends Controller
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    private function createRoles($limit) {
+    private function createRoles($limit)
+    {
         $roles = $this->getDataByType('roles', $limit);
         foreach ($roles as $id => $jobRole) {
             ## title, legacyId
@@ -884,7 +886,8 @@ class ImportController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function createUsers($limit) {
+    private function createUsers($limit)
+    {
         $users = $this->getDataByType('users', $limit);
 
         ## build array of roles legacyJobRoleId => id
@@ -967,7 +970,8 @@ class ImportController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function createResults($limit) {
+    private function createResults($limit)
+    {
         $results = $this->getDataByType('results', $limit);
         foreach ($results as $id => $result) {
             ## type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultValue, resultEndorsedDate, resultStatus, resultNotes, resultEvidence
