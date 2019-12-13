@@ -12,6 +12,7 @@ use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
 use craft\db\Query;
+use craft\models\Section;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -433,4 +434,27 @@ class Structure extends Component
         return $this->prependCompanyParent($teamCompany, $label);
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\SectionNotFoundException
+     */
+    private function structureCompanies()
+    {
+        $companySection = Craft::$app->getSections()->getSectionById(3);
+        $companySection->type = 'structure';
+        Craft::$app->getSections()->saveSection($companySection);
+
+        $criteria = Entry::find();
+        $criteria->section = 'companies';
+        $criteria->limit = null;
+        $companies = $criteria->all();
+
+        foreach ($companies as $company) {
+            if ($company->companyParent->count()) {
+                $parent = $company->companyParent->one();
+                $company->newParentId = $parent->id;
+                Craft::$app->elements->saveElement($company);
+            }
+        }
+    }
 }
