@@ -11,6 +11,8 @@ namespace lantra\sp\helpers;
 use Craft;
 use craft\elements\Asset;
 use craft\models\VolumeFolder;
+use craft\helpers\Assets as AssetsHelper;
+use yii\web\UploadedFile;
 
 use lantra\sp\Plugin as Lantra;
 
@@ -33,6 +35,21 @@ class LantraHelper
     public static function setting($key = '')
     {
         return Lantra::$app->settings->getSetting($key);
+    }
+
+    /**
+     * @param $name
+     * @return string
+     * @throws \yii\base\Exception
+     */
+    public static function tempFilePath($name)
+    {
+        if ($file = UploadedFile::getInstanceByName($name)) {
+            $destination = AssetsHelper::tempFilePath($file->getExtension());
+            move_uploaded_file($file->tempName, $destination);
+            return $destination;
+        }
+        return false;
     }
 
     /**

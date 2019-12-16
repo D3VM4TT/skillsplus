@@ -3,10 +3,10 @@
 
 {% set formUser = user is defined ? user : currentUser  %}
 
-<form class="public" id="form-photo" method="post" enctype="multipart/form-data" autocomplete="off">
+<form id="profile" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ csrfInput() }}
     {{ actionInput('users/save-user') }}
-    {{ redirectInput('') }}
+    {{ redirectInput('profile') }}
     {{ hiddenInput('userId', currentUser.id) }}
 
     {% if formUser.hasErrors() %}
@@ -93,7 +93,7 @@
     {%  endfor %}
     {% if craft.lantra.setting('userEditPhoto') %}
     <p class="profile">Change profile picture:</p>
-    <input type="file" name="userPhoto" />
+        <input id="photo" type="file" name="photo">
     {% endif %}
     <div class="container-btn">
         <button class="button no-shadow primary-bg" style="margin:0px;"><span>Save Profile</span></button>

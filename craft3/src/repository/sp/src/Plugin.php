@@ -283,7 +283,7 @@ class Plugin extends BasePlugin
      */
     private function resetUploads()
     {
-        unset($_FILES);
+        ## unset($_FILES);
         ## UploadedFile::reset();
     }
 }

@@ -11,6 +11,7 @@ namespace lantra\sp\controllers;
 use Craft;
 use craft\elements\User;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class UsersController extends BaseController {
@@ -159,6 +160,11 @@ class UsersController extends BaseController {
         ## set new password (if present)
         $user->newPassword = (Craft::$app->request->getParam('newPassword') ?: null);
         $confirmPassword = (Craft::$app->request->getParam('confirmPassword') ?: null);
+
+        ## did they upload a photo
+        if ($tempFilePath = LantraHelper::tempFilePath('photo')) {
+            Craft::$app->users->saveUserPhoto($tempFilePath, $user);
+        }
 
         if ($user->newPassword && ($user->newPassword != $confirmPassword)) {
             $user->addErrors(['confirmPassword' => 'Passwords do not match']);

@@ -10,7 +10,7 @@
         {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="/profile"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl() : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <a href="/profile"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {#
             {{ currentUserCompany|default('') }}
             #}
