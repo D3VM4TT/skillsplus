@@ -8,9 +8,6 @@
  * @see \craft\config\GeneralConfig
  */
 
-$parts = explode('.', $_SERVER['HTTP_HOST']);
-$site = array_shift($parts);
-
 return [
     '*' => [
         'elevatedSessionDuration' => 0,
@@ -31,10 +28,10 @@ return [
         'phpMaxMemoryLimit' => '4096M',
         'maxUploadFileSize' => '2147483648',
         'aliases' => [
-            '@basePath' => '/datadisk/sites/' . $site . '/',
-            '@assetsPath' => '/datadisk/azureshare/' . $site . '/',
+            '@basePath' => '/datadisk/sites/' . getenv('SITE') . '/',
+            '@assetsPath' => '/datadisk/azureshare/' . getenv('SITE') . '/',
             '@server' => getenv('ENVIRONMENT'),
-            '@site' => $site,
+            '@site' => getenv('SITE'),
         ],
     ],
     'local' => [
