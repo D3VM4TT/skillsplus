@@ -58,7 +58,7 @@
         {% else %}
             {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('companyLabel').limit(null) %}
         {% endif %}
-        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
+        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.one().id|default(hierarchyParent) }}" id="companyParent">
             <option value="">~ none ~</option>
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}

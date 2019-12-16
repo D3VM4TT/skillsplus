@@ -12,13 +12,13 @@
     {% set isManager = false %}
 {% endif %}
 
-{% set moduleEntry = craft.entries.id(moduleId).first() %}
+{% set moduleEntry = craft.entries.id(moduleId).one() %}
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
-{% set unitEntry = craft.entries.id(unitId).first() %}
+{% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.first %}
-{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').first() %}
+{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}

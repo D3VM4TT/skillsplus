@@ -67,7 +67,7 @@
                             {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
                             {% for module in modules %}
                                 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
+                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .one() %}
                                 <li>
                                     <a href="#module{{ moduleElementId }}" class="module-status">
                                         {% if moduleResultEntry %}
@@ -89,7 +89,7 @@
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
                     {% for module in modules %}
                         {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
+                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .one() %}
                         <div id="module{{ moduleElementId }}" class="module open">
                             {% set totalPoints = 0 %}
                             <div class="header" data-target="#m{{ role.id ~ module.id }}">
@@ -121,7 +121,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for unitEntry in unitGroupEntries %}
-                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
+                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').one() %}
                                                     {# if no result set jobRoleComplete to false #}
                                                     {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}

@@ -2,7 +2,7 @@
 /**
  * Lantra Skills Plus for Craft CMS 3.x
  *
- * @link      https://coffeebean.design
+ * @link      https:##coffeebean.design
  * @copyright Copyright (c) 2020 Coffee Bean Design
  */
 
@@ -201,18 +201,18 @@ class Users extends Component
         $managerTeams = $this->getManagerTeams($user);
         $managerCompanies = $this->getManagerCompanies($user);
         $type = 'companies';
-        // filter individuals company id
+        ## filter individuals company id
         $individualCompany = $this->getIndividualCompany();
         if ($individualCompany) {
             $this->hierarchyFilter[] = $individualCompany->id;
         }
-        // admins and scheme managers start with all top level parents
+        ## admins and scheme managers start with all top level parents
         if ($user->admin or $user->isInGroup('schemeManagers')) {
             $array = $this->getCompaniesByParentId(false);
-        } // does this user manage companies?
+        } ## does this user manage companies?
         elseif (count($managerCompanies)) {
             $array = $managerCompanies;
-        } // does this user manage teams?
+        } ## does this user manage teams?
         elseif (count($managerTeams)) {
             $array = $managerTeams;
             $type = 'teams';
@@ -254,7 +254,7 @@ class Users extends Component
         if ($type == 'companies') {
             $return['title'] = $element->title;
             $return['icon'] = 'group';
-            // add the company managers
+            ## add the company managers
             $companyManagers = $this->getCompanyMangers($element);
             if (false != $companyManagerCount = count($companyManagers)) {
                 $label = (object)['id' => 0, 'title' => 'Company Managers (' . $companyManagerCount . ')'];
@@ -264,7 +264,7 @@ class Users extends Component
                 }
                 $return['children']['managers'] = $companyManagersNode;
             }
-            // add the company users
+            ## add the company users
             $companyUsers = $this->getCompanyUsers($element->id);
             if (false != $companyUsersCount = count($companyUsers)) {
                 $label = (object)['id' => 0, 'title' => 'Company Users (' . $companyUsersCount . ')'];
@@ -274,12 +274,12 @@ class Users extends Component
                 }
                 $return['children']['users'] = $companyUsersNode;
             }
-            // add the company teams
+            ## add the company teams
             $companyTeams = $this->getCompanyTeams($element->id);
             foreach ($companyTeams as $team) {
                 $return['children'][$team->id] = $this->addHierarchyNode($team, 'teams');
             }
-            // add the child companies
+            ## add the child companies
             $childCompanies = $this->getCompaniesByParentId($element->id);
             foreach ($childCompanies as $childCompany) {
                 $return['children'][$childCompany->id] = $this->addHierarchyNode($childCompany, 'companies');
@@ -287,7 +287,7 @@ class Users extends Component
         } elseif ($type == 'teams') {
             $return['title'] = 'Team: ' . $element->title;
             $return['icon'] = 'group';
-            // Add the team managers
+            ## Add the team managers
             $teamManagers = $this->getTeamManagers($element);
             if (false != $teamManagersCount = count($teamManagers)) {
                 $label = (object)['id' => 0, 'title' => 'Team Managers (' . $teamManagersCount . ')'];
@@ -297,7 +297,7 @@ class Users extends Component
                 }
                 $return['children']['managers'] = $teamManagersNode;
             }
-            // add the team users
+            ## add the team users
             $teamUsers = $this->getTeamUsers($element->id);
             if (false != $teamUsersCount = count($teamUsers)) {
                 $label = (object)['id' => 0, 'title' => 'Team Users (' . $teamUsersCount . ')'];
@@ -387,7 +387,7 @@ class Users extends Component
         if (is_null($manager)) {
             $manager = Craft::$app->getUser()->getIdentity();
         }
-        // admins and scheme managers can manage everyone
+        ## admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
             return true;
         }
@@ -409,7 +409,7 @@ class Users extends Component
         if (is_null($manager)) {
             $manager = Craft::$app->getUser();
         }
-        // admins and scheme managers can manage everyone
+        ## admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
             return true;
         }
@@ -454,12 +454,12 @@ class Users extends Component
         if (!$user) {
             return null;
         }
-        // if user belongs to a company directly
+        ## if user belongs to a company directly
         $userCompany = $user->userCompany->one();
         if ($userCompany) {
             return $userCompany;
         }
-        // check team company
+        ## check team company
         $team = $user->userTeam->one();
         if (!$team) {
             return null;
@@ -571,12 +571,14 @@ class Users extends Component
     {
         $return = [];
         $primaryManagerIds = [];
-        foreach ($entry->companyPrimaryManagers->order('lastName') as $manager) {
+        $primaryManagers = $entry->companyPrimaryManagers->orderBy('lastName')->all();
+        foreach ($primaryManagers as $manager) {
             $return[] = $manager;
             $primaryManagerIds[] = $manager->id;
         }
-        foreach ($entry->companySecondaryManagers->order('lastName') as $manager) {
-            // avoid duplicates from primary
+        $secondaryManagers = $entry->companySecondaryManagers->orderBy('lastName')->all();
+        foreach ($secondaryManagers as $manager) {
+            ## avoid duplicates from primary
             if (!in_array($manager->id, $primaryManagerIds)) {
                 $return[] = $manager;
             }
@@ -618,7 +620,7 @@ class Users extends Component
         $managers = [];
         foreach ($criteria->all() as $company) {
             foreach ($this->getCompanyManagers($company) as $manager) {
-                // avoid duplicates
+                ## avoid duplicates
                 if (!isset($managers[$manager->id])) {
                     $managers[$manager->id] = $manager;
                 }
@@ -687,7 +689,7 @@ class Users extends Component
         if (count($ids)) {
             foreach ($ids as $id) {
                 $return[] = $id;
-                // add children companies recursively
+                ## add children companies recursively
                 $childrenIds = $this->getCompanyChildrenIds($id);
                 if (count($childrenIds)) {
                     $return = array_merge($return, $childrenIds);
@@ -875,16 +877,16 @@ class Users extends Component
         if (is_null($user)) {
             $user = Craft::$app->getUser();
         }
-        // add the scheme manager teams (all of them)
+        ## add the scheme manager teams (all of them)
         if ($includeHierarchy && $user->isInGroup('schemeManagers')) {
             return $this->getSchemeTeamIds();
         }
         $return = [];
-        // add the direct teamPrimaryManager and teamSecondaryManager teams
+        ## add the direct teamPrimaryManager and teamSecondaryManager teams
         if (FALSE != $teamManagerTeamIds = $this->getTeamManagerTeamIds($user)) {
             $return = array_merge($return, $teamManagerTeamIds);
         }
-        // add the company teams
+        ## add the company teams
         if ($includeHierarchy && $user->isInGroup('companyManagers')) {
             $companyIds = $this->getCompanyManagerCompanyIds($user);
             foreach ($companyIds as $companyId) {
@@ -957,7 +959,7 @@ class Users extends Component
         if (!$this->canManage($user)) {
             return $return;
         }
-        // get companies that this user manages
+        ## get companies that this user manages
         $companyIds = $this->getCompanyManagerCompanyIds($user);
         if ($includeHierarchy) {
             $companyChildrenIds = [];
@@ -967,7 +969,7 @@ class Users extends Component
             $companyIds = array_merge($companyIds, $companyChildrenIds);
         }
         $teamIds = $this->getManagerTeamIds($user, $includeHierarchy);
-        // get all users who belong to any of the manager's companies or teams
+        ## get all users who belong to any of the manager's companies or teams
         $criteria = User::find();
         $criteria->limit = null;
         $criteria->relatedTo = ['or', ['targetElement' => $companyIds, 'field' => 'userCompany'], ['targetElement' => $teamIds, 'field' => 'userTeam']];
@@ -1172,7 +1174,7 @@ class Users extends Component
         if ($user->managerReadOnly) {
             return false;
         }
-        // check there are scheme licences available
+        ## check there are scheme licences available
         if ($user->admin or $user->isInGroup('SchemeManager')) {
             return (bool)Lantra::$app->licences->getSchemeLicences();
         } else {

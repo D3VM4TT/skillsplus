@@ -233,7 +233,7 @@ class Structure extends Component
         foreach($managers as $manager) {
             $nodeId = (isset($entry) ? $entry->id : '') . 'm' . $manager->id;
             $title = $manager->fullname;
-            if ($manager->userRole->total()) {
+            if ($manager->userRole->count()) {
                 $title .= ' (' . $manager->userRole->one()->title . ')';
             }
             $return[] = $this->createNode($manager->id, 'user', $nodeId, $title, 'person');
@@ -264,7 +264,7 @@ class Structure extends Component
         foreach($members as $user) {
             $nodeId = $entryId.'u'.$user->id;
             $title = $user->fullname;
-            if ($user->userRole->total()) {
+            if ($user->userRole->count()) {
                 $title .= ' (' . $user->userRole->one()->title . ')';
             }
             $return[] = $this->createNode($user->id, 'user', $nodeId, $title, 'person');
@@ -301,7 +301,7 @@ class Structure extends Component
         else {
             $criteria->id = $this->getTopCompanyIds();
         }
-        return $count ? $criteria->total() : $criteria->all();
+        return $count ? $criteria->count() : $criteria->all();
 
     }
 
@@ -408,7 +408,7 @@ class Structure extends Component
      */
     private function prependCompanyParent($company, $label) {
 
-        if ($company->companyParent->total())
+        if ($company->companyParent->count())
         {
             $parent = $company->companyParent->one();
             $label = $parent->title . ' > ' . $label;

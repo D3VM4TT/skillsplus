@@ -163,10 +163,10 @@ class Reports extends Component
             'reportUnits'               => []
         ];
 
-        if ($reportEntry->reportCompanies->total()) {
+        if ($reportEntry->reportCompanies->count()) {
             $filter['reportCompanies'] = $reportEntry->reportCompanies->ids();
         }
-        if ($reportEntry->reportUnits->total()) {
+        if ($reportEntry->reportUnits->count()) {
             $filter['reportUnits'] = $reportEntry->reportUnits->ids();
         }
         return $filter;
@@ -321,7 +321,7 @@ class Reports extends Component
         elseif ($reportEntry->reportType == 'results') {
             $data = $this->getReportDataResults($users->ids(), $reportEntry);
         }
-        return $count ? $data->total() : $this->formatReportValues($data, $reportEntry->type);
+        return $count ? $data->count() : $this->formatReportValues($data, $reportEntry->type);
     }
 
     /**

@@ -59,7 +59,7 @@
             {% else %}
                 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
             {% endif %}
-            <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default(hierarchyCompany) }}" id="teamCompany" >
+            <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.one().id|default(hierarchyCompany) }}" id="teamCompany" >
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endfor %}
@@ -68,7 +68,7 @@
         <div class="field--wrapper">
             <label for="teamPrimaryManager">Team primary manager:</label>
             {% set usersTeamManagers = craft.users.group('teamManagers') %}
-            <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
+            <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.one().id|default('') }}">
                 {% for userEntry in usersCompanyManagers %}
                     <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
                 {% endfor %}

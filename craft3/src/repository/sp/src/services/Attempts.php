@@ -61,7 +61,7 @@ class Attempts extends Component
             return 'unlimited';
         }
         if ($resultEntry) {
-            return max((int)($unitEntry->testMaxAttempts - $resultEntry->resultAttempts->total()), 0);
+            return max((int)($unitEntry->testMaxAttempts - $resultEntry->resultAttempts->count()), 0);
         }
         return (int)$unitEntry->testMaxAttempts;
     }

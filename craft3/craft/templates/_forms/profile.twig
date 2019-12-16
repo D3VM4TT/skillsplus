@@ -67,7 +67,7 @@
     {% if craft.lantra.setting('userEditRole') %}
         <div class="field--wrapper">
             <label for="telephone" class="no-float">Role:</label>
-            {% set roleCategories = craft.categories.group('roles') %}
+            {% set roleCategories = craft.categories.group('roles').all() %}
             <input type="hidden" name="fields[userRole]" value="" />
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
@@ -82,7 +82,7 @@
         {% if block.userEdit %}
         <div class="field--wrapper">
             <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
-            {% set userCustomBlock = formUser.userCustomFields.customName('='~block.name).first() %}
+            {% set userCustomBlock = formUser.userCustomFields.customName('='~block.name).one() %}
             {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">

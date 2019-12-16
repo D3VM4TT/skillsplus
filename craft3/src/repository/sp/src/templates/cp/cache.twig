@@ -4,7 +4,7 @@
 {% set selectedSubnavItem = 'cache' %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set criteria = craft.users.admin(false).limit(100).order('id') %}
+{% set criteria = craft.users.admin(false).limit(100).orderBy('id') %}
 {% if criteria %}{% paginate criteria as pageInfo, users %}{% endif %}
 
 {% block content %}
@@ -15,7 +15,7 @@
             {% set userIds = userIds|merge([user.id]) %}
         {% endfor %}
         {% set userResultCache = craft.lantra.userResultCache(userIds) %}
-        {% set units = craft.entries.section('units').find() %}
+        {% set units = craft.entries.section('units').all() %}
     <div class="tablecontent">
         <table class="data fullwidth">
             <thead>

@@ -413,7 +413,7 @@ class Results extends Component
      */
     function checkRemainingAttempts($resultEntry) {
         $resultUnitEntry = $resultEntry->resultUnit->one();
-        $totalAttempts = $resultEntry->resultAttempts->total();
+        $totalAttempts = $resultEntry->resultAttempts->count();
         if ($resultUnitEntry->resultStatus != 'endorsed' && $resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
             $this->blockResult($resultEntry);
         }
@@ -502,7 +502,7 @@ class Results extends Component
         // get the user job roles
         $user = $resultEntry->author;
         $jobRoles = $user->userRole;
-        if ( ! $jobRoles->total()) {
+        if ( ! $jobRoles->count()) {
             return;
         }
         // get all modules related to their job roles
@@ -1758,7 +1758,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
-        return $criteria->total() ? $criteria->all() : [];
+        return $criteria->count() ? $criteria->all() : [];
     }
 
     /**

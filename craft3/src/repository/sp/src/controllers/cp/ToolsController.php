@@ -65,7 +65,7 @@ class ToolsController extends Controller
             $fieldName = 'dataClean' . $dataCleanKey;
             $criteria->$fieldName = $dataCleanValue ? 1 : 0;
         }
-        return $count ? $criteria->count() : $criteria;
+        return $count ? $criteria->count() : $criteria->all();
     }
 
     /**
@@ -118,7 +118,7 @@ class ToolsController extends Controller
             $fieldName = 'dataClean' . $dataCleanKey;
             $criteria->$fieldName = $dataCleanValue ? 1 : 0;
         }
-        return $count ? $criteria->count() : $criteria;
+        return $count ? $criteria->count() : $criteria->all();
     }
 
 

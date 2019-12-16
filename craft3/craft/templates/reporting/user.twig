@@ -1,4 +1,4 @@
-{% set subordinate = craft.users.id(craft.app.request.segment(3)).first() %}
+{% set subordinate = craft.users.id(craft.app.request.segment(3)).one() %}
 {% if not subordinate or not craft.lantra.isManager(subordinate.id) %}{% redirect 'reporting/users' %}{% endif %}
 
 {% extends "_layout" %}

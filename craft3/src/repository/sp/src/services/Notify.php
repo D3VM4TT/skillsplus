@@ -81,7 +81,7 @@ class Notify extends Component
         $criteria->limit = null;
         foreach ($criteria->all() as $company) {
             $remainingLicences = $company->companyRemainingLicences;
-            if ($remainingLicences <= 10 && $company->companyPrimaryManagers->total()) {
+            if ($remainingLicences <= 10 && $company->companyPrimaryManagers->count()) {
                 $emails = [];
                 foreach($company->companyPrimaryManagers as $primaryManager) {
                     $emails[] = $primaryManager->email;
@@ -197,7 +197,7 @@ class Notify extends Component
     function sendManagerSummary(User $manager, $days = 7) {
         $subject = $this->getNotifySetting('subjectManagerSummary', 'Manager Summary');
         $criteria = Lantra::$app->results->getManagerModuleExpiringResults($manager->id, $days, null);
-        if ($criteria && $criteria->total()) {
+        if ($criteria && $criteria->count()) {
             $message = "The following user results expire in the next " . $days . " days:\n\n";
             foreach ($criteria->all() as $result) {
                 $moduleEntry = $result->resultModule->one();
@@ -213,7 +213,7 @@ class Notify extends Component
         }
 
         $criteria = Lantra::$app->results->getManagerModuleCompletedResults($manager->id, $days, null);
-        if ($criteria && $criteria->total()) {
+        if ($criteria && $criteria->count()) {
             $message .= "The following modules have been completed in the past " . $days . " days:\n\n";
             foreach ($criteria->all() as $result) {
                 $moduleEntry = $result->resultModule->one();

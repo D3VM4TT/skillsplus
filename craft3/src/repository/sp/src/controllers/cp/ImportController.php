@@ -586,7 +586,8 @@ class ImportController extends Controller
         $criteria = Category::find();
         $criteria->group = 'roles';
         $criteria->limit = null;
-        foreach ($criteria as $jobRole) {
+        $jobRoles = $criteria->all();
+        foreach ($jobRoles as $jobRole) {
             $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
         }
         $criteria = User::find();
