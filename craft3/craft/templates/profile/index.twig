@@ -87,7 +87,7 @@
         {% if not craft.lantra.setting('userEditRole') %}
             <div class="field--wrapper">
                 <label class="no-float primary-color">Job Role:</label>
-                {% if currentUser.userRole.total %}
+                {% if currentUser.userRole.count %}
                     {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
                 {% else %}
                 ~

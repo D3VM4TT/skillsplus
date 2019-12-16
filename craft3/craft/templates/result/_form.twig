@@ -4,7 +4,7 @@
 
 {% set entryId = craft.app.request.getSegment(2) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).status('live, expired').first %}
+    {% set entry = craft.entries.id(entryId).status('live, expired').one %}
 {% endif %}
 
 {% if currentUser.id == entry.authorId %}

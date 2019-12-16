@@ -2,7 +2,7 @@
 {% extends "_layout" %}
 
 {% if userId != currentUser.id %}
-    {% set account = craft.users.id(userId).first %}
+    {% set account = craft.users.id(userId).one %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
     {%  set dashboardUri = '/cpd/' ~ userId %}
     {% set isManager = true %}
@@ -17,7 +17,7 @@
 {% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
-{% set moduleGroup = moduleEntry.moduleGroup.first %}
+{% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
@@ -47,7 +47,7 @@
                 <h2>This is an assessment unit</h2>
                 <div class="col-12">
                     {% if unitEntry.unitImage|length %}
-                        {% set unitImage = unitEntry.unitImage.first %}
+                        {% set unitImage = unitEntry.unitImage.one %}
                         <div class="col-6 col-pd-btm">
                             <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                         </div>
@@ -116,7 +116,7 @@
                 <h2>This is an evidence based unit</h2>
                 {% if unitEntry.unitImage|length %}
                     <div class="col-pd-btm">
-                        {% set unitImage = unitEntry.unitImage.first %}
+                        {% set unitImage = unitEntry.unitImage.one %}
                         <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                     </div>
                 {% endif %}

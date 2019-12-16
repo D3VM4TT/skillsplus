@@ -50,7 +50,7 @@
                             <td>{{ report.postDate|date(dateFormat) }}</td>
                             <td>
                                 {% if complete %}
-                                    {% set asset = report.reportData.first %}
+                                    {% set asset = report.reportData.one %}
                                     <a href="/internal/{{ asset.id }}" rel="external">download</a>
                                 {% elseif job %}
                                     {{ job.status }}

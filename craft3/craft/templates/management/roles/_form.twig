@@ -7,7 +7,7 @@
 
 {% set categoryId = craft.app.request.getSegment(4) %}
 {% if categoryId and category is not defined %}
-    {% set category = craft.categories.id(categoryId).first %}
+    {% set category = craft.categories.id(categoryId).one %}
 {% endif %}
 
 {% block content %}

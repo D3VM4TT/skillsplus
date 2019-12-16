@@ -6,7 +6,7 @@
 
 {% set entryId = craft.app.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).first %}
+    {% set entry = craft.entries.id(entryId).one %}
 {% endif %}
 
 {% set hierarchyNode = craft.app.request.getParam('node') %}

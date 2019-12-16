@@ -6,7 +6,7 @@
 
 {% set entryId = craft.app.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).first %}
+    {% set entry = craft.entries.id(entryId).one %}
 {% endif %}
 
 {% block content %}
@@ -76,7 +76,7 @@
             <div class="checkboxes" style="border:1px solid #CCC;height:200px;padding:10px;overflow-y:scroll;">
                 {% set teamEntries = craft.entries.section('teams') %}
                 {% for teamEntry in teamEntries %}
-                    <label class="company-{{ teamEntry.teamCompany.first.id }}" for="team-{{ teamEntry.id }}" style="display: block;">
+                    <label class="company-{{ teamEntry.teamCompany.one.id }}" for="team-{{ teamEntry.id }}" style="display: block;">
                         <input
                             name="fields[reportTeams][]"
                             {% if entry is defined and teamEntry.id in entry.reportTeams.ids() %} checked{% endif %}

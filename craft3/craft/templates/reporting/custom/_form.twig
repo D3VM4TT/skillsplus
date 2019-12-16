@@ -4,16 +4,16 @@
 
 {% set entryId = craft.app.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).first %}
+    {% set entry = craft.entries.id(entryId).one %}
 {% endif %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-    {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('companyLabel') %}
+    {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel') %}
 {% else %}
     {% set companyEntries = craft.lantra.managerCompanies(currentUser.id, true) %}
 {% endif %}
-{% set unitEntries = craft.entries.section('units').limit(null).order('title') %}
-{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').order('firstName').limit(null) %}
+{% set unitEntries = craft.entries.section('units').limit(null).orderBy('title') %}
+{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').orderBy('firstName').limit(null) %}
 
 {% set dateFormat = 'd-m-y H:i' %}
 
@@ -220,7 +220,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for report in entry.reportData.order('id desc') %}
+            {% for report in entry.reportData.orderBy('id desc') %}
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.filename }}</td>

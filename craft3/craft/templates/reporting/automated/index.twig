@@ -53,7 +53,7 @@
                             <td>
                                 {{ report.reportData|length }}
                                 {% if report.reportData|length %}
-                                    {% set asset = report.reportData.order('id desc').one() %}
+                                    {% set asset = report.reportData.orderBy('id desc').one() %}
                                     <a href="/internal/{{ asset.id }}" rel="external">download latest</a>
                                 {% endif %}
                                 </td>

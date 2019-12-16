@@ -12,7 +12,7 @@
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
-{% if not cpdUser.userRole.total %}
+{% if not cpdUser.userRole.count %}
     <h2>Job Role</h2>
     <div class="col-pd-btm col-flex">
     <img src="/assets/img/delete.svg" class="test-icon" alt="">
@@ -40,7 +40,7 @@
             </div>
         </div>
     <div id="j{{ role.id }}" {% if jobRoleEndorse %}class="closed"{% endif %}>
-        {% set allModules = craft.entries.section('modules').relatedTo(role).order('title') %}
+        {% set allModules = craft.entries.section('modules').relatedTo(role).orderBy('title') %}
         {% if not allModules|length %}
             <p>No modules have been assigned to this role.</p>
         {% else %}
@@ -124,7 +124,7 @@
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').one() %}
                                                     {# if no result set jobRoleComplete to false #}
                                                     {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}
-                                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
+                                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                                     {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                                     {% if unitResultEntry %}
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
@@ -148,7 +148,7 @@
                                                                     <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
                                                                 </a>
                                                                 {% if not readOnly and unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                    {% set managerDelete = unitResultEntry.resultOwner.total and unitResultEntry.resultOwner.first.id == currentUser.id %}
+                                                                    {% set managerDelete = unitResultEntry.resultOwner.count and unitResultEntry.resultOwner.one.id == currentUser.id %}
                                                                     {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
                                                                         <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
                                                                             data-tooltip title="Delete this result">
@@ -209,7 +209,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for userResultEntry in moduleUserResults %}
-                                                    {% set totalComments = userResultEntry.resultComments.total %}
+                                                    {% set totalComments = userResultEntry.resultComments.count %}
                                                     {% set unreadComments = craft.lantra.unreadComments(userResultEntry) %}
                                                     <tr>
                                                         <td>
@@ -222,7 +222,7 @@
                                                             {% endif %}
                                                             <div class="cpd-icons">
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                {% set managerDelete = userResultEntry.resultOwner.total and userResultEntry.resultOwner.first.id == currentUser.id %}
+                                                                {% set managerDelete = userResultEntry.resultOwner.count and userResultEntry.resultOwner.one.id == currentUser.id %}
                                                                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
                                                                     <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
                                                                         data-tooltip title="Delete this result">

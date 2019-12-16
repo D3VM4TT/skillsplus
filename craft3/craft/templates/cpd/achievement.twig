@@ -4,7 +4,7 @@
 {% set entryId = craft.app.request.segment(4) %}
 
 {% if userId != currentUser.id %}
-    {% set account = craft.users.id(userId).first %}
+    {% set account = craft.users.id(userId).one %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
     {% set isManager = true %}
 {% else %}
@@ -25,26 +25,26 @@
 
 {% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
 {% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
-{% set optionalUnits = craft.entries.section('units').id(excludeString).order('title') %}
+{% set optionalUnits = craft.entries.section('units').id(excludeString).orderBy('title') %}
 
 {# module id in URL #}
 {% if craft.app.request.segment(3) == 'achievement' and entryId %}
-    {% set moduleEntry = craft.entries.id(entryId).first %}
+    {% set moduleEntry = craft.entries.id(entryId).one %}
     {% if not moduleEntry %}{% exit 404 %}{% endif %}
     {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
 {% elseif not resultEntry and craft.app.request.segment(3) == 'result' and entryId %}
-    {% set resultEntry = craft.entries.id(entryId).status('live, expired').first %}
+    {% set resultEntry = craft.entries.id(entryId).status('live, expired').one %}
     {% if not resultEntry %}{% exit 404 %}{% endif %}
-    {% set moduleEntry = resultEntry.resultModule.first %}
+    {% set moduleEntry = resultEntry.resultModule.one %}
 {% endif %}
 
 {% if moduleEntry %}
-    {% set moduleGroup = moduleEntry.moduleGroup.first %}
+    {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% endif %}
 
 {% set userModules = [] %}
 {% for role in account.userRole %}
-    {% for roleModule in craft.entries.relatedTo(role).order('title') %}
+    {% for roleModule in craft.entries.relatedTo(role).orderBy('title') %}
         {% set userModules = userModules|merge([roleModule]) %}
     {% endfor %}
 {% endfor %}
@@ -110,7 +110,7 @@
                 {% if optionalUnits|length %}
                 <div class="field--wrapper">
                     <label for="resultUnit" class="">Result unit</label>
-                    <select data-relation="fields[resultUnit]" data-value="{{ resultEntry and resultEntry.resultUnit.total ? resultEntry.resultUnit.first.id }}" id="resultUnit">
+                    <select data-relation="fields[resultUnit]" data-value="{{ resultEntry and resultEntry.resultUnit.count ? resultEntry.resultUnit.one.id }}" id="resultUnit">
                         <option value="">Not applicable</option>
                         {% for unit in optionalUnits %}
                             <option value="{{ unit.id }}">{{ unit.title }}</option>

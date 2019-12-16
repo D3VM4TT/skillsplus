@@ -30,8 +30,8 @@
         {% elseif row.fieldType == 'resultEndorsedUser'  %}
             <td class="resultEndorsedUser">
                 <p class="td-title-responsive">Endorsed Manager: </p>
-                {% if resultEntry and resultEntry.resultEndorsedUser.total %}
-                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.first %}
+                {% if resultEntry and resultEntry.resultEndorsedUser.count %}
+                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.one %}
                     {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
                 {% elseif resultEntry %}
                     unknown

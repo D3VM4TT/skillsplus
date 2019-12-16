@@ -21,7 +21,7 @@
             {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
             {% if cpdUser.userCompany|length %}
                 <h5 class="primary-color">User Company:</h5>
-                <p class="link-bold">{{ craft.lantra.companyLabel(cpdUser.userCompany.first) }}</p>
+                <p class="link-bold">{{ craft.lantra.companyLabel(cpdUser.userCompany.one) }}</p>
             {% endif %}
         {% endif %}
         {% if accountSettings.managerCompanies is defined and accountSettings.managerCompanies %}
