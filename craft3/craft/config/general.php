@@ -39,7 +39,7 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/websites/skills-plus.net/',
+            '@basePath' => '/websites/skills-plus.net/craft3',
             '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
         ],
     ],
