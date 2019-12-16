@@ -595,7 +595,6 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return 10000;
         return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
     }
 

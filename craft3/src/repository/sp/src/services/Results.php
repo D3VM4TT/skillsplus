@@ -13,6 +13,7 @@ use craft\base\Component;
 use craft\db\Query;
 use craft\elements\Category;
 use craft\elements\Entry;
+use craft\elements\User;
 use craft\helpers\DateTimeHelper;
 use craft\events\ModelEvent;
 use craft\DateTime;
@@ -756,11 +757,12 @@ class Results extends Component
     }
 
     /**
-     * @param UserModel $manager
+     * @param $manager
      * @param bool $directSubordinates
-     * @return int
+     * @return array|int
+     * @throws \yii\db\Exception
      */
-    public function countManagerEndorsementUsers($manager, $directSubordinates = false) {
+    public function countManagerEndorsementUsers(User $manager, $directSubordinates = false) {
         return $this->getManagerEndorsementUserIds($manager, $directSubordinates, true);
     }
 
@@ -771,7 +773,7 @@ class Results extends Component
      * @return array|int
      * @throws \yii\db\Exception
      */
-    public function getManagerEndorsementUserIds($manager, $directSubordinates = false, $count = false) {
+    public function getManagerEndorsementUserIds(User $manager, $directSubordinates = false, $count = false) {
         $onlySubordinates = false;
         # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
@@ -808,7 +810,7 @@ class Results extends Component
         }
 
         if ($count) {
-            return Craft::$app->db->createCommand($mysql)->queryRow()['total'];
+            return Craft::$app->db->createCommand($mysql)->queryScalar();
         }
 
         # return array or authorIds of users that have pending results

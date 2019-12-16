@@ -17,11 +17,10 @@ class UsersController extends BaseController {
 
     /**
      * @return \yii\web\Response
-     * @throws \yii\web\BadRequestHttpException
      */
     public function actionHierarchy()
     {
-        $this->requirePostRequest();
+        $this->requireLogin();
         $companyId = Craft::$app->request->getParam('companyId');
         $type = Craft::$app->request->getParam('type');
         $user = Craft::$app->getUser()->getIdentity();
