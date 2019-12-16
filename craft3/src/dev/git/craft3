@@ -1,0 +1,8 @@
+#!/bin/bash
+
+TMP_DIR="/git/tmp/craft3"
+mkdir -p $TMP_DIR
+git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f craft3
+rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/craft/templates git@10.1.4.4:/datadisk/sites/demo3/craft/
+rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/craft3/src/repository git@10.1.4.4:/datadisk/sites/demo3/src/
+rm -rf "$TMP_DIR"

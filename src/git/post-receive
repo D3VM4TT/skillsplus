@@ -12,6 +12,9 @@ BRANCH="${REF[2]}"
 if [ "$BRANCH" == "develop" ]; then
   lantra dev tag
   lantra dev all
+# see special craft3 -> demo3 script
+elif [ "$BRANCH" == "craft3" ]; then
+  craft3
 elif [ "$BRANCH" == "uat" ]; then
   lantra uat tag
   lantra uat all
