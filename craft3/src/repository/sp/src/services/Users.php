@@ -19,6 +19,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
 use DateTime;
+use yii\db\Query;
 
 class Users extends Component
 {
@@ -143,31 +144,34 @@ class Users extends Component
     /** more efficient way to search users */
     private function searchUserIds($search = '')
     {
+        $query = (new Query())
+            ->select('u.id')
+            ->from('{{%users}} u')
+            ->leftJoin('{{%content}} AS c', 'c.elementId = u.id');
+
         if (intval($search)) {
-            $mysql = 'SELECT u.id FROM {{%users}} u 
-                JOIN {{%content}} AS c ON u.id = c.elementId
-                WHERE u.id = "' . $search . '"
-                OR c.field_legacyId = "' . $search . '"';
+            $where = [
+                'or',
+                'u.id = "' . $search . '"',
+                'c.field_legacyId = "' . $search . '"'
+            ];
+            $query->where($where);
         } else {
-            $mysql = 'SELECT u.id FROM {{%users}} u 
-                JOIN {{relations}} AS r ON r.sourceId = u.id
-                JOIN {{%content}} AS c ON u.id = c.elementId
-                JOIN {{%content}} AS rc ON r.targetId = rc.elementId
-                WHERE u.username LIKE "%' . $search . '%"
-                OR u.firstName LIKE "%' . $search . '%"
-                OR u.lastName LIKE "%' . $search . '%"
-                OR rc.title LIKE "%' . $search . '%"
-                OR rc.field_companyLabel LIKE "%' . $search . '%"
-                OR UPPER(CONCAT_WS(" ", u.firstName, u.lastName)) LIKE UPPER("%' . $search . '%")
-                OR c.field_userCompanyName LIKE "%' . $search . '%"';
+            $where = [
+                'or',
+                'u.username LIKE "%' . $search . '%"',
+                'rc.title LIKE "%' . $search . '%"',
+                'rc.title LIKE "%' . $search . '%"',
+                'rc.field_companyLabel LIKE "%' . $search . '%"',
+                'c.field_userCompanyName LIKE "%' . $search . '%"',
+                'UPPER(CONCAT_WS(" ", u.firstName, u.lastName)) LIKE UPPER("%' . $search . '%")'
+            ];
+            $query->leftJoin('{{%relations}} AS r', 'r.sourceId = u.id')
+                ->leftJoin('{{%content}} AS rc', 'rc.elementId = r.targetId')
+                ->where($where);
         }
 
-        $result = Craft::$app->db->createCommand($mysql)->query();
-        $ids = [];
-        foreach ($result as $row) {
-            $ids [] = $row['id'];
-        }
-        return $ids;
+        return $query->column();
     }
 
     /**
