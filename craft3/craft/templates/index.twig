@@ -1,7 +1,7 @@
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% extends "_layout" %}
 
-{% set currentUserPhoto = currentUser.getPhoto() %}
+{% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 
 
 {% block content %}

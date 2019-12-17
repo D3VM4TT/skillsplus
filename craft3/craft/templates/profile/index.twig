@@ -8,7 +8,7 @@
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (currentUser['userReadOnly'] is defined and currentUser.userReadOnly)) %}
 
-{% set currentUserPhoto = currentUser.getPhoto() %}
+{% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 
 {% extends "_layout" %}
 
