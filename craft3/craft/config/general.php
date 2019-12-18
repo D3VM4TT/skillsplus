@@ -22,7 +22,7 @@ return [
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
         'securityKey' => getenv('SECURITY_KEY'),
-        'useProjectConfigFile' => false,
+        'useProjectConfigFile' => true,
         'backupOnUpdate' => false,
         'autoLoginAfterAccountActivation' => true,
         'phpMaxMemoryLimit' => '4096M',
