@@ -91,8 +91,10 @@ else
 
         # set folder permissions
         ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/storage
-        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/craft/config/.release
-        ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft/config/.release
+
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/html/assets/theme
+        ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/html/assets/uploads
 
         ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/theme
         ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/html/assets/uploads

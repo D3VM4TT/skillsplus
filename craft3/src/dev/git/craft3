@@ -1,8 +1,46 @@
 #!/bin/bash
 
+REMOTE_IP="10.1.4.4"
+REMOTE_FOLDER="/datadisk/sites/demo3"
+
+# set temp directory
 TMP_DIR="/git/tmp/craft3"
 mkdir -p $TMP_DIR
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f craft3
-rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/craft/templates git@10.1.4.4:/datadisk/sites/demo3/craft/
-rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/craft3/src/repository git@10.1.4.4:/datadisk/sites/demo3/src/
+
+# install composer
+cd $TMP_DIR/craft3/craft
+composer install
+
+# switch directory ownership back to git
+ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/craft
+ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/html
+ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER/src
+
+# copy files
+rsync -acvz --no-perms --no-owner --no-group --no-times --exclude '.env' $TMP_DIR/craft3/craft git@$REMOTE_IP:$REMOTE_FOLDER
+rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/html git@$REMOTE_IP:$REMOTE_FOLDER
+# copy skills-plus repo
+rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/src/repository git@$REMOTE_IP:$REMOTE_FOLDER/src/
+
+# switch directory ownership back to apache
+ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/craft
+ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/html
+ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER/src
+
+# set file and folder permissions
+ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
+ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
+ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
+ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
+ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/storage
+ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
+ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
+
+# update craft
+ssh git@$REMOTE_IP chmod a+x $REMOTE_FOLDER/craft/craft
+
+ssh git@$REMOTE_IP $REMOTE_FOLDER/craft/.craft project-config/sync
+ssh git@$REMOTE_IP $REMOTE_FOLDER/craft/.craft migrate/all
+
 rm -rf "$TMP_DIR"
