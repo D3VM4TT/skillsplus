@@ -22,7 +22,7 @@ categoryGroups:
                 required: false
                 sortOrder: 3
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         hasUrls: false
         uriFormat: null
         template: null
@@ -46,20 +46,20 @@ categoryGroups:
                 required: false
                 sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1576684761
+dateModified: 1576687300
 email:
   fromEmail: NoReply@skills-plus.net
-  fromName: $SYSTEM_NAME
+  fromName: 'Skills+ (BCSA)'
   template: ''
   transportType: craft\mail\transportadapters\Smtp
   transportSettings:
     host: smtp.sendgrid.net
     port: '587'
-    useAuthentication: '1'
+    useAuthentication: 1
     username: azure_9bf9918bbe6b1e7398be600e09f92204@azure.com
     password: EB7M4bm1pPOEJ0O
     encryptionMethod: tls
@@ -272,7 +272,7 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type:  aelvan\preparsefield\fields\PreparseFieldType
     settings:
       fieldTwig: "{% if entry.type == 'unitResult' %}{{ entry.resultUnit.first.title|raw }}{% else %}{{ entry.resultModule.first.title|raw }}{% endif %} \r\n{{ entry.author.userTeam.first.title|raw }} {{ entry.au"
       columnType: text
@@ -1430,7 +1430,7 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type: aelvan\preparsefield\fields\PreparseFieldType
     settings:
       fieldTwig: '{{ user.userTeam.first.title|raw  }} {{ user.userTeam.first.teamCompany.first.title|raw }}'
       columnType: text
@@ -1764,9 +1764,9 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type: aelvan\preparsefield\fields\PreparseFieldType
     settings:
-      fieldTwig: '{{ user.userCompany | length ? user.userCompany.first().title }}'
+      fieldTwig: '{{ user.userCompany | length ? user.userCompany.one().title }}'
       columnType: text
       decimals: '0'
       parseBeforeSave: ''
@@ -2767,8 +2767,8 @@ plugins:
       schemeTeams: ''
       schemeUserReadOnly: ''
       schemeEmailDomain: ''
-      schemeTestEmailAddress: portia.hartley@skills-plus.co.uk
-      schemeName: '@schemeName'
+      schemeTestEmailAddress: margaret.murray@lantra.co.uk
+      schemeName: BCSA
       schemeDescription: ''
       schemeLogo:
         - '3887'
@@ -2877,14 +2877,14 @@ plugins:
     licenseKey: null
     enabled: '1'
     schemaVersion: 1.0.0
-  sp:
-    edition: standard
-    enabled: true
-    schemaVersion: 0.0.1
   redactor:
     edition: standard
     enabled: true
     schemaVersion: 2.3.0
+  sp:
+    edition: standard
+    enabled: true
+    schemaVersion: 0.0.1
 sections:
   090b3c24-a9ac-4935-a919-c4fc8a3099b0:
     name: Units
@@ -2951,7 +2951,7 @@ sections:
                     required: false
                     sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: false
         uriFormat: null
@@ -3068,7 +3068,7 @@ sections:
                     required: false
                     sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: true
         uriFormat: 'reporting/custom/{id}'
@@ -3101,7 +3101,7 @@ sections:
                     required: false
                     sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: false
         uriFormat: null
@@ -3163,7 +3163,7 @@ sections:
                     required: false
                     sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: false
         uriFormat: null
@@ -3199,7 +3199,7 @@ sections:
                     required: false
                     sortOrder: 2
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: true
         uriFormat: 'public/{slug}'
@@ -3242,7 +3242,7 @@ sections:
                     required: false
                     sortOrder: 2
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: false
         uriFormat: null
@@ -3350,7 +3350,7 @@ sections:
         handle: moduleResult
         hasTitleField: false
         titleLabel: null
-        titleFormat: '[module {resultModule.first().id}] {author.firstName} {author.lastName} '
+        titleFormat: '[module {resultModule.one().id}] {author.firstName} {author.lastName} '
         sortOrder: 2
         fieldLayouts:
           66416d34-f84b-410f-a6d8-7d7115df874c:
@@ -3457,7 +3457,7 @@ sections:
                     required: false
                     sortOrder: 2
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: false
         uriFormat: null
@@ -3512,25 +3512,25 @@ sections:
                     required: false
                     sortOrder: 1
     siteSettings:
-      e438376b-47e2-4411-a3d5-d81cd0072b13:
+      6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
         enabledByDefault: true
         hasUrls: true
         uriFormat: 'module/{id}'
         template: module/_entry
     propagationMethod: all
 siteGroups:
-  f9acaee2-52e7-48d6-95e7-641eb8339735:
-    name: default
+  1b0c5dd0-f223-4c29-9798-11360c25c2dc:
+    name: 'Default (en-GB)'
 sites:
-  e438376b-47e2-4411-a3d5-d81cd0072b13:
-    name: 'Skills+ (en-GB)'
+  6f3c93e1-8b8b-4da2-ba10-d67571191c2a:
+    siteGroup: 1b0c5dd0-f223-4c29-9798-11360c25c2dc
+    name: 'Default (en-GB)'
     handle: en_gb
     language: en-GB
     hasUrls: true
     baseUrl: /
     sortOrder: 1
     primary: true
-    siteGroup: f9acaee2-52e7-48d6-95e7-641eb8339735
 superTableBlockTypes:
   922f36f2-d6ec-4530-be00-d8784974eb73:
     field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
@@ -3830,7 +3830,7 @@ superTableBlockTypes:
 system:
   edition: pro
   live: true
-  name: $SYSTEM_NAME
+  name: BCSA
   timeZone: UTC
   schemaVersion: 3.3.3
 tagGroups:
@@ -3841,7 +3841,7 @@ users:
   requireEmailVerification: 0
   allowPublicRegistration: 1
   defaultGroup: 32ed3edf-a621-4c98-8c9f-785e45ed329f
-  photoVolumeUid: 53434fa2-6eb2-4404-8229-4bfc3ecdf117
+  photoVolumeUid: eca14e61-190c-47d1-979e-da6022045ee6
   photoSubpath: ''
   fieldLayouts:
     3961793a-d58a-4447-b554-f30507a4c9c6:
@@ -4165,15 +4165,6 @@ users:
         - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
         - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
 volumes:
-  53434fa2-6eb2-4404-8229-4bfc3ecdf117:
-    name: 'User Photos'
-    handle: userPhotos
-    type: craft\volumes\Local
-    hasUrls: false
-    url: null
-    settings:
-      path: '@assetsPath/users'
-    sortOrder: 5
   a6dafdf7-e4c0-4943-aff3-e481bbdf23fc:
     name: Evidence
     handle: evidence
@@ -4194,6 +4185,15 @@ volumes:
       path: '@assetsPath/data'
       url: ''
     sortOrder: 3
+  eca14e61-190c-47d1-979e-da6022045ee6:
+    name: Users
+    handle: users
+    type: craft\volumes\Local
+    hasUrls: true
+    url: /assets/users
+    settings:
+      path: '@basePath/html/assets/users'
+    sortOrder: 5
   f2ee622f-5058-4e7d-a3d0-1d003dc32c29:
     name: Theme
     handle: theme
