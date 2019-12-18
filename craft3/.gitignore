@@ -1,4 +1,5 @@
 # Craft 3  #
 ###################
+local/*
 html/assets/uploads/*
 src/dev/*
