@@ -121,7 +121,9 @@ class Settings extends Model
             if ($this->$key && is_array($this->$key)) {
                 $files = [];
                 foreach($this->$key as $fileId) {
-                    $files[] = Craft::$app->assets->getAssetById($fileId);
+                    if (false != $file = Craft::$app->assets->getAssetById($fileId)) {
+                        $files[] = $file;
+                    }
                 }
                 $this->$key = $files;
             }
@@ -131,7 +133,9 @@ class Settings extends Model
             if ($this->$key && is_array($this->$key)) {
                 $entries = [];
                 foreach($this->$key as $entryId) {
-                    $entries[] = Craft::$app->entries->getEntryById($entryId);
+                    if (false != $entry = Craft::$app->entries->getEntryById($entryId)) {
+                        $entries[] = $entry;
+                    }
                 }
                 $this->$key = $entries;
             }
@@ -141,7 +145,9 @@ class Settings extends Model
             if ($this->$key && is_array($this->$key)) {
                 $categories = [];
                 foreach($this->$key as $categoryId) {
-                    $categories[] = Craft::$app->categories->getCategoryById($categoryId);
+                    if (false != $category = Craft::$app->categories->categories($categoryId)) {
+                        $categories[] = $category;
+                    }
                 }
                 $this->$key = $categories;
             }
