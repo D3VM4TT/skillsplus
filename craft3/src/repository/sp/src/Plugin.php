@@ -126,8 +126,8 @@ class Plugin extends BasePlugin
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
                 }
-                elseif($entry->id && $entry->sectionId == $this->sectionIdAttempts) {
-                    Lantra::$app->attempts->onBeforeSaveAttempt($event, $entry);
+                elseif($entry->sectionId == $this->sectionIdAttempts) {
+                    Lantra::$app->results->onBeforeSaveAttempt($event, $entry);
                 }
                 elseif ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onBeforeSaveCompany($event, $entry);

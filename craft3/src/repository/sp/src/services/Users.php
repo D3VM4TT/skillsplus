@@ -48,11 +48,11 @@ class Users extends Component
         ## validate dates
         if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
             $user->addError('userStartDate', 'Start date cannot be later than expiry date.');
-            $event->performAction = false;
+            $event->isValid = false;
         }
         if ($userExpiryDate && $userExpiryDate > $userExpiryDate) {
             $user->addError('userExpiryDate', 'Expiry date cannot be later than expiry date.');
-            $event->performAction = false;
+            $event->isValid = false;
         }
 
         ## set licence source
@@ -63,15 +63,15 @@ class Users extends Component
             if ($user->userCompany->count() || $user->userTeam->count()) {
                 $companyEntry = Lantra::$app->users->userCompany($user);
                 if (false == Lantra::$app->licences->assignCompanyLicence($user, $companyEntry)) {
-                    $event->performAction = false;
                     $user->addError('userCompany', 'There are insufficient company licences.');
+                    $event->isValid = false;
                 } else {
                     $licenceSource = 'Company #' . $companyEntry->id;
                 }
             }
             ## assign scheme licence
             elseif (false == Lantra::$app->licences->assignSchemeLicence()) {
-                $event->performAction = false;
+                $event->isValid = false;
                 $user->addError('userCompany', 'There are insufficient scheme licences.');
             } else {
                 $licenceSource = 'Scheme';

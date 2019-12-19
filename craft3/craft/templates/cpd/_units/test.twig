@@ -4,10 +4,10 @@
     {% endif %}
     {% if unitEntry.testQuestions|length %}
     <div class="col-pd-top">
-        <form method="post" role="form" accept-charset="UTF-8">
-            {{ getCsrfInput() }}
-            <input type="hidden" name="action" value="entries/saveEntry">
-            <input type="hidden" name="redirect" value="/cpd/{{ userId }}/{{ moduleEntry.id }}/{{ unitEntry.id }}/test">
+        <form class="test" method="post" role="form" accept-charset="UTF-8">
+            {{ csrfInput() }}
+            {{ actionInput('entries/save-entry') }}
+            {{ redirectInput('/cpd/' ~ userId ~ '/' ~ moduleEntry.id ~ '/' ~ unitEntry.id ~ '/test') }}
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
             {% if userId != currentUser.id %}
@@ -23,14 +23,17 @@
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
                     {% if question.type == "trueFalse" %}
-                    <ul class="choices">
+                    <ul class="trueFalse">
                         <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"> True</li>
                         <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"> False</li>
                     </ul>
                     {% elseif question.type == "choices" %}
-                    <ul>
+                    <ul class="choices">
+                        <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][answer]">
                         {% for choice in question.answers %}
-                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="{{ choice.answer }}"> {{ choice.answer }}</li>
+                        <li>
+                            <input type="checkbox" value="{{ choice.answer }}"> {{ choice.answer }}
+                        </li>
                         {% endfor %}
                     </ul>
                     {% else %}

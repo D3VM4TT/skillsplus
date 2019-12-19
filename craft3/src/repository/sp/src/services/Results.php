@@ -26,6 +26,10 @@ use verbb\supertable\records\SuperTableBlockRecord;
 
 class Results extends Component
 {
+    private $sectionIdResults = 10;
+    private $typeIdUnitResult = 10;
+    private $typeIdModuleResult = 14;
+
     /**
      * @param $event
      * @param Entry $entry
@@ -33,94 +37,139 @@ class Results extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    public function onBeforeSaveResult(ModelEvent $event, Entry $entry) {
-        if (!$entry->id) {
-            return;
+    public function onBeforeSaveResult(ModelEvent $event, Entry $entry)
+    {
+        $userId = Craft::$app->getUser()->id;
+        $unitEntry = $entry->resultUnit->one();
+        if ($entry->type == 'unitResult' && !$unitEntry) {
+            $event->isValid = false;
+            $entry->addError('resultUnit', 'You must select a Result Unit for Unit Results');
         }
-        ## set comment
-        $comment = Craft::$app->request->getParam('comment');
-        $currentDateTime = DateTimeHelper::currentUTCDateTime();
-        if ($comment) {
-            unset($_POST['comment']);
-            $resultComments = Lantra::$app->results->addComment($entry, $comment);
-            $entry->resultComments = $resultComments;
+        if ($entry->type == 'moduleResult') {
+
         }
-        ## set custom author
-        $authorId = Craft::$app->request->getParam('authorId');
-        if ($entry->type == 'userResult' && $authorId) {
-            $entry->authorId = $authorId;
+        if ($entry->type == 'userResult') {
+
         }
-        $fields = Craft::$app->request->getParam('fields');
-        $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
-        // set result title
-        if ($entry->type == 'userResult' && $resultUnitId) {
-            $unitEntry = Craft::$app->entries->getEntryById($resultUnitId);
-            if ($unitEntry) {
-                $entry->title = $unitEntry->title;
+        if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
+            ## set result owner as user
+            if (!$entry->resultOwner) {
+                $entry->resultOwner = [$userId];
             }
-        }
-        ## check endorsed change
-        $oldEntry = $entry->id ? Craft::$app->entries->getEntryById($entry->id) : null;
-        $currentUser = Craft::$app->getUser();
-        ## auto endorse
-        if (!Craft::$app->request->isCpRequest && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
-            $entry->setAttributes(['resultStatus' => 'endorsed']);
-            if (!$oldEntry) {
+            ## copy manager endorsement level from unit for submitted evidence
+            if ($entry->resultEvidence && $entry->type == 'unitResult' && $unitEntry) {
+                $entry->unitEndorsementManagerLevel = $unitEntry->unitEndorsementManagerLevel;
+            }
+            ## set author
+            $author = null;
+            $authorId = Craft::$app->request->getParam('author');
+            if (is_array($authorId)) {
+                $author = Craft::$app->users->getUserById($authorId[0]);
+            }
+            ## make sure title is correct
+            if ($author && $entry->type == 'unitResult' && $entry->resultEvidence && $unitEntry) {
+                $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
+            }
+            ## set comment
+            $comment = Craft::$app->request->getParam('comment');
+            $currentDateTime = DateTimeHelper::currentUTCDateTime();
+            if ($comment) {
+                unset($_POST['comment']);
+                $resultComments = $this->addComment($entry, $comment);
+                $entry->resultComments = $resultComments;
+            }
+            $fields = Craft::$app->request->getParam('fields');
+            $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
+            ## set result title
+            if ($entry->type == 'userResult' && $resultUnitId) {
+                $unitEntry = Craft::$app->entries->getEntryById($resultUnitId);
+                if ($unitEntry) {
+                    $entry->title = $unitEntry->title;
+                }
+            }
+            ## check endorsed change
+            $oldEntry = $entry->id ? Craft::$app->entries->getEntryById($entry->id) : null;
+            $currentUser = Craft::$app->getUser();
+            ## auto endorse
+            if (!Craft::$app->request->isCpRequest && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
+                $entry->setAttributes(['resultStatus' => 'endorsed']);
+                if (!$oldEntry) {
+                    $entry->setAttributes(['resultEndorsedDate' => $currentDateTime]);
+                    $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
+                }
+            }
+            ## force clear endorsed date if pending
+            if ($entry->resultStatus == 'pending') {
+                $entry->setAttributes(['resultEndorsedDate' => null]);
+            } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
                 $entry->setAttributes(['resultEndorsedDate' => $currentDateTime]);
                 $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
             }
-        }
-        ## force clear endorsed date if pending
-        if ($entry->resultStatus == 'pending') {
-            $entry->setAttributes(['resultEndorsedDate' => null]);
-        } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-            $entry->setAttributes(['resultEndorsedDate' => $currentDateTime]);
-            $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
-        }
-        ## check change from draft to pending
-        if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
-            // send notification
-            if (Lantra::$app->results->notifyManagerEndorsementResult($entry)) {
-                Lantra::$app->notify->sendManagerEndorsementResult($entry);
+            ## check change from draft to pending
+            if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
+                // send notification
+                if (Lantra::$app->results->notifyManagerEndorsementResult($entry)) {
+                    Lantra::$app->notify->sendManagerEndorsementResult($entry);
+                }
+            }
+            $dateFormat = 'Y-m-d H:i:s';
+            $dateTime = new \DateTime();
+            ## set a result start date
+            $userStartDate = Craft::$app->request->getParam('userStartDate');
+            if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
+                $userStartDate = $date->getTimestamp();
+            }
+            $entry->resultStartDate = $userStartDate;
+            ## set a result finish date
+            $userFinishDate = Craft::$app->request->getParam('userFinishDate');
+            if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
+                $userFinishDate = $date->getTimestamp();
+            }
+            $entry->resultFinishDate = $userFinishDate;
+            $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+            if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
+                $userExpiryDate = $date->getTimestamp();
+                $entry->expiryDate = $date->getTimestamp();
+            }
+            ## validate dates
+            if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
+                $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
+                $event->isValid = false;
+            }
+            if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
+                $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
+                $event->isValid = false;
+            }
+            if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
+                $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
+                $event->isValid = false;
             }
         }
+        if (!$event->isValid) {
+            Craft::$app->urlManager->setRouteParams(['resultEntry' => $entry]);
+        }
+    }
 
-        $dateFormat = 'Y-m-d H:i:s';
-        $dateTime = new DateTime();
-        ## set a result start date
-        $userStartDate = Craft::$app->request->getParam('userStartDate');
-        if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
-            $userStartDate = $date->getTimestamp();
+    /**
+     * @param ModelEvent $event
+     * @param Entry $entry
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
+     */
+    function onSaveResult(ModelEvent $event, Entry $entry)
+    {
+        $userId = Craft::$app->getUser()->id;;
+        if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
+            $unitEntry = $entry->resultUnit->one();
+            ## send notification
+            if ($this->notifyManagerEndorsementResult($entry)){
+                ## Lantra::$app->notify->sendManagerEndorsementResult($entry);
+            }
         }
-        $entry->resultStartDate = $userStartDate;
-        ## set a result finish date
-        $userFinishDate = Craft::$app->request->getParam('userFinishDate');
-        if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
-            $userFinishDate = $date->getTimestamp();
-        }
-        $entry->resultFinishDate = $userFinishDate;
-        $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
-        if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
-            $userExpiryDate = $date->getTimestamp();
-            $entry->expiryDate = $date->getTimestamp();
-        }
-        ## validate dates
-        if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
-            $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
-            $event->performAction = false;
-        }
-        if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
-            $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
-            $event->performAction = false;
-        }
-        if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
-            $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
-            $event->performAction = false;
-        }
-        if ($event->performAction == false) {
-            Craft::$app->urlManager->setRouteParams(array(
-                'resultEntry'    => $entry
-            ));
+        ## save unit result in user result cache (if enabled)
+        if ($entry->enabled && $entry->type == 'unitResult') {
+            ## $this->saveUserResultCache($entry->authorId, $entry);
         }
     }
 
@@ -128,75 +177,34 @@ class Results extends Component
      * @param ModelEvent $event
      * @param Entry $entry
      * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     */
-    function onSaveResult(ModelEvent $event, Entry $entry)
-    {
-        $unitEntry = $entry->resultUnit->one();
-        $saveContent = false;
-        $userId = Craft::$app->getUser()->id;;
-        if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
-            if ( ! $entry->resultOwner) {
-                $entry->resultOwner = [$userId];
-                $saveContent = true;
-            }
-            ## copy manager endorsement level from unit for submitted evidence
-            if ($entry->resultEvidence && $entry->type == 'unitResult' && $unitEntry) {
-                $entry->unitEndorsementManagerLevel = $unitEntry->unitEndorsementManagerLevel;
-                $saveContent = true;
-            }
-            ## set author
-            $author = null;
-
-            $authorId = Craft::$app->request->getParam('author');
-            if (is_array($authorId)) {
-                $author = Craft::$app->users->getUserById($authorId[0]);
-            }
-            ##  (manager submitting on behalf of user)
-            if ($author && $author->id != $userId) {
-                // auto endorse
-                if ($entry->resultStatus == 'endorsed' && (
-                        $entry->type == 'userResult' || ($entry->resultEvidence && $entry->type == 'unitResult'))) {
-                    $entry->resultEndorsedDate = DateTimeHelper::currentUTCDateTime();
-                    $entry->resultEndorsedUser = [$userId];
-                    $saveContent = true;
-                }
-            }
-            ## make sure title is correct
-            if ($author && $entry->type == 'unitResult' && $entry->resultEvidence && $unitEntry)
-            {
-                $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
-                $saveContent = true;
-            }
-            ## send notification
-            if ($this->notifyManagerEndorsementResult($entry)){
-                Lantra::$app->notify->sendManagerEndorsementResult($entry);
-            }
-        }
-        ## save unit result in user result cache (if enabled)
-        if ($entry->enabled && $entry->type == 'unitResult') {
-            $this->saveUserResultCache($entry->authorId, $entry);
-        }
-        if ($saveContent) {
-            Craft::$app->elements->saveElement($entry, false);
-        }
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @param Entry $entry
      */
     public function onBeforeSaveAttempt(ModelEvent $event, Entry $entry)
     {
-        if ($entry->isNew) {
+        if ($event->isNew) {
             $unitEntry = $entry->attemptUnit->one();
-            if (!is_object($unitEntry) || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
-                $event->performAction = false;
-                Craft::$app->request->redirect('/unit/' . $unitEntry->id);
+            if (!$unitEntry) {
+                $event->isValid = false;
+                $entry->addError('attemptUnit', 'You must select an attempt unit for attempt results.');
+            }
+            if (!is_object($unitEntry) || !$unitEntry || !Lantra::$app->attempts->canAttempt($entry->authorId, $unitEntry)) {
+                $event->isValid = false;
+                $entry->addError('resultUnit', 'You have no remaining attempts.');
+            }
+            ## create result entry
+            if (false == $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
+                $resultEntry = new Entry();
+                $resultEntry->sectionId = $this->sectionIdResults;
+                $resultEntry->typeId = $this->typeIdUnitResult;
+                $resultEntry->enabled = true;
+                $resultEntry->authorId = $entry->authorId;
+                $resultEntry->resultUnit = [$unitEntry->id];
+                $resultEntry->resultStatus = 'active';
+                if (!Craft::$app->elements->saveElement($resultEntry)) {
+                    $event->isValid = false;
+                    $entry->addError('attemptUnit', 'Could not save result entry.');
+                }
             }
         }
     }
@@ -210,19 +218,19 @@ class Results extends Component
      */
     function onSaveAttempt(ModelEvent $event, Entry $entry)
     {
-        $attemptEntry = Craft::$app->entries->getEntryById($entry->id);
-        $unitEntry = $attemptEntry->attemptUnit->one();
+        $unitEntry = $entry->attemptUnit->one();
         ## author sent from form
         $authorId = Craft::$app->request->getParam('authorId');
         if ($authorId && false != $user = Craft::$app->users->getUserById($authorId)) {
-            $attemptEntry->authorId = $user->id;
-            $attemptEntry->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
-            Craft::$app->elements->saveElement($attemptEntry, false);
+            $entry->authorId = $user->id;
+            $entry->title = '[unit ' . $unitEntry->id . '] ' . $user->getFullName();
         }
-        $total = count($attemptEntry->attemptAnswers);
+        ## mark attempt
+        Lantra::$app->attempts->markAttempt($entry);
+        $total = count($entry->attemptAnswers);
         $correct = 0;
         ## loop through answers and count correct
-        foreach ($attemptEntry->attemptAnswers as $answerBlock) {
+        foreach ($entry->attemptAnswers as $answerBlock) {
             if ($answerBlock->correct) {
                 $correct++;
             }
@@ -231,49 +239,20 @@ class Results extends Component
         $score = round($correct / $total * 100);
         ## passed if greater than unit setting
         $passed = $score >= $unitEntry->testPassPercent;
-        $resultScore = $score;
-        ## does a result exist?
-        if (false == $resultEntry = $this->getUnitResult($attemptEntry->authorId, $unitEntry->id)) {
-            $resultEntry = new Entry();
-            $resultEntry->sectionId = $this->sectionIdResults;
-            $resultEntry->typeId = $this->typeIdUnitResult;
-            $resultEntry->enabled = true;
-            $resultEntry->authorId = $attemptEntry->authorId;
-            $resultAttempts = array($attemptEntry->id);
-            $resultStatus = $passed ? 'endorsed' : 'active';
-        } else {
-            ## append new result attempt
-            $resultAttempts = array_merge($resultEntry->resultAttempts->ids(), array($attemptEntry->id));
-            ## only change if better than previous
-            $resultStatus = $resultEntry->resultStatus;
-            $resultScore = $resultEntry->resultScore;
+        ## update result
+        if (false != $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
+            $resultAttempts = $resultEntry->resultAttempts ? array_merge($resultEntry->resultAttempts->ids(), [$entry->id]) : [$entry->id];
+            $resultEntry->setFieldValue('resultAttempts', $resultAttempts);
             if ($score > $resultEntry->resultScore) {
-                $resultStatus = $passed ? 'endorsed' : 'active';
-                $resultScore = $score;
+                $resultEntry->resultStatus = $passed ? 'endorsed' : 'active';
+                $resultEntry->resultScore = $score;
             }
+            if ($passed) {
+                $resultEntry->resultEndorsedDate = time();
+            }
+            Craft::$app->elements->saveElement($resultEntry, false);
         }
-        $resultEntry->setAttributes([
-            'resultUnit' => array($unitEntry->id),
-            'resultStatus' => $resultStatus,
-            'resultAttempts' => $resultAttempts,
-            'resultScore' => $resultScore
-        ]);
-        if ($passed) {
-            $resultEntry->setAttributes([
-                'resultEndorsedDate' => time()
-            ]);
-        }
-        ## @todo error reporting?
-        if (!Craft::$app->elements->saveElement($resultEntry)) {
-            return;
-        }
-        return;
     }
-
-    // @todo move ids to config?
-    private $sectionIdResults = 10;
-    private $typeIdUnitResult = 10;
-    private $typeIdModuleResult = 14;
 
     /**
      * @param $entry

@@ -461,12 +461,12 @@ class LantraVariable
     /**
      * Display remaining attempts
      *
-     * @param EntryModel $unitEntry
-     * @param EntryModel $resultEntry
+     * @param Entry $unitEntry
+     * @param Entry $resultEntry
      * @param null $userId
      * @return int|string
      */
-    public function remainingAttempts(EntryModel $unitEntry, $resultEntry = null, $userId = null)
+    public function remainingAttempts($unitEntry, $resultEntry = null, $userId = null)
     {
         if (false == $user = $this->getUser($userId)) {
             return 0;

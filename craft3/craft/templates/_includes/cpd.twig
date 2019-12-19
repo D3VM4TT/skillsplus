@@ -64,10 +64,17 @@
                     <div class="module-tabs">
                         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
                             <div class="tabs-group">
-                            {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
+                            {% set modules = craft.entries.relatedTo(
+                                ['and',
+                                    { targetElement: role, field: 'moduleRoles' },
+                                    { targetElement: moduleGroup, field: 'moduleGroup' }
+                                ]) %}
+                            {% if not modules.count %}
+                                No modules have been added to this module group.
+                            {% endif %}
                             {% for module in modules %}
                                 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .one() %}
+                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                                 <li>
                                     <a href="#module{{ moduleElementId }}" class="module-status">
                                         {% if moduleResultEntry %}

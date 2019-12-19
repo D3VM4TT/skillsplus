@@ -11,6 +11,8 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 
+use lantra\sp\Plugin as Lantra;
+
 class Attempts extends Component
 {
     /**
@@ -24,11 +26,10 @@ class Attempts extends Component
         foreach ($attemptEntry->attemptAnswers as $answerBlock) {
             $questionBlock = Craft::$app->matrix->getBlockById($answerBlock->questionId);
             $correct = $this->markQuestion($questionBlock, $answerBlock->answer);
-            $answerBlock->setAttributes([
+            $answerBlock->setFieldValues([
                 'question' => $questionBlock->question,
                 'correct' => $correct
             ]);
-            $answerBlock->save();
         }
     }
 
@@ -36,13 +37,13 @@ class Attempts extends Component
      * Check a user can attempt
      *
      * @param $userId
-     * @param $unitId
+     * @param $unitEntry
      * @return bool
      */
     public function canAttempt($userId, $unitEntry)
     {
         ## result does not exist for user
-        if (!is_object($unitEntry) || false == $resultEntry = Lantra::$app->results->getUnitResult($userId, $unitEntry->id)) {
+        if (false == $resultEntry = Lantra::$app->results->getUnitResult($userId, $unitEntry->id)) {
             return true;
         }
         return (bool)$this->remainingAttempts($unitEntry, $resultEntry);
@@ -78,12 +79,27 @@ class Attempts extends Component
         if ($questionBlock->type == 'trueFalse') {
             return ($questionBlock->answer == 0 && $answer == 'false') || ($questionBlock->answer == 1 && $answer == 'true');
         } elseif ($questionBlock->type == 'choices') {
-            foreach ($questionBlock->answers as $row) {
-                if ($row['answer'] == $answer) {
-                    return $row['correct'] == 1;
-                }
-            }
+            ## answer joined by javascript
+            return $this->getQuestionBlockAnswer($questionBlock) == $answer;
         }
         return !empty(trim($answer));
+    }
+
+    /**
+     * @param $questionBlock
+     * @return string
+     */
+    private function getQuestionBlockAnswer($questionBlock)
+    {
+        if (is_array($questionBlock->answers)) {
+            $answers = [];
+            foreach ($questionBlock->answers as $row) {
+                if ($row['correct']) {
+                    $answers[] = $row['answer'];
+                }
+            }
+            return implode(',', $answers);
+        }
+        return '';
     }
 }

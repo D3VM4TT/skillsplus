@@ -502,4 +502,14 @@ $(document).ready(function(){
         }
         $('div#team-fields').addClass('hide');
     });
+
+    // add choices select
+    $("form.test").find("ul.choices").each(function(){
+      var ul = $(this),
+          choices = ul.find('input[type=checkbox]'),
+          input = ul.find('input[type=hidden]').eq(0);
+        choices.change(function(){
+            input.val(ul.find('input[type=checkbox]:checked').map(function(){return $(this).val()}).get().join());
+        });
+    })
 });
