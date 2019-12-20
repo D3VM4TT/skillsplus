@@ -73,29 +73,11 @@ class Results extends Component
             $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
-            $currentDateTime = DateTimeHelper::currentUTCDateTime();
             if ($comment) {
-                unset($_POST['comment']);
-
-                $field = Craft::$app->getFields()->getFieldByHandle('resultComments');
-                $blockTypes = SuperTable::$plugin->getService()->getBlockTypesByFieldId($field->id);
-                $blockType = $blockTypes[0];
-
-                $superTableData['new1'] = [
-                    'type' => $blockType->id,
-                    'enabled' => true,
-                    'fields' => [
-                        'user' => [$userId],
-                        'date' => $dateTime->format(DATE_ATOM),
-                        'comment' => $comment,
-                        'read' => false
-                    ]
-                ];
-
-                $entry->setFieldValues(['resultComments' => $superTableData]);
+                $this->addComment($entry, $comment);
             }
             $fields = Craft::$app->request->getParam('fields');
-            $resultUnitId = isset($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
+            $resultUnitId = isset($fields['resultUnit']) && is_array($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
             ## set result title
             if ($entry->type == 'userResult' && $resultUnitId) {
                 $unitEntry = Craft::$app->entries->getEntryById($resultUnitId);
@@ -110,7 +92,7 @@ class Results extends Component
             if (!Craft::$app->request->isCpRequest && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
                 $entry->setAttributes(['resultStatus' => 'endorsed']);
                 if (!$oldEntry) {
-                    $entry->setAttributes(['resultEndorsedDate' => $currentDateTime]);
+                    $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentUTCDateTime()]);
                     $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
                 }
             }
@@ -118,7 +100,7 @@ class Results extends Component
             if ($entry->resultStatus == 'pending') {
                 $entry->setAttributes(['resultEndorsedDate' => null]);
             } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-                $entry->setAttributes(['resultEndorsedDate' => $currentDateTime]);
+                $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentUTCDateTime()]);
                 $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
             }
             ## check change from draft to pending
@@ -180,12 +162,12 @@ class Results extends Component
             $unitEntry = $entry->resultUnit->one();
             ## send notification
             if ($this->notifyManagerEndorsementResult($entry)){
-                ## Lantra::$app->notify->sendManagerEndorsementResult($entry);
+                Lantra::$app->notify->sendManagerEndorsementResult($entry);
             }
         }
         ## save unit result in user result cache (if enabled)
         if ($entry->enabled && $entry->type == 'unitResult') {
-            ## $this->saveUserResultCache($entry->authorId, $entry);
+            $this->saveUserResultCache($entry->authorId, $entry);
         }
     }
 
@@ -271,22 +253,43 @@ class Results extends Component
     }
 
     /**
+     * @param Entry $entry
+     * @param null $userId
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    function endorseResult(Entry $entry, $userId = null)
+    {
+        if (is_null($userId)) {
+            $userId = Craft::$app->getUser()->id;
+        }
+        $entry->setFieldValues([
+            'resultStatus' => 'endorsed',
+            'resultEndorsedDate' => DateTimeHelper::currentUTCDateTime(),
+            'resultEndorsedUser' => [$userId]
+        ]);
+        return Craft::$app->elements->saveElement($entry, false);
+    }
+    /**
      * @param $entry
      * @param $comment
      * @param null $userId
-     * @return array
+     * @return mixed
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
      */
     function addComment($entry, $comment, $userId = null)
     {
         if (is_null($userId)) {
             $userId = Craft::$app->getUser()->id;
         }
-        $field = Craft::$app->fields->getFieldByHandle('resultComments');
+        $field = Craft::$app->getFields()->getFieldByHandle('resultComments');
         $blockTypes = SuperTable::$plugin->getService()->getBlockTypesByFieldId($field->id);
         $blockType = $blockTypes[0];
-        ## not sure why we have to run this loop...
+        ## not sure why we have to run this loop and resave the previous data
         $tableData = [];
         foreach($entry->resultComments->all() as $key => $row) {
             $tableData[$key] =  [
@@ -294,7 +297,7 @@ class Results extends Component
                 'enabled' => true,
                 'fields' => [
                     'user' => [$row->user->one()->id],
-                    'date' => $row->date->getTimestamp(),
+                    'date' => DateTimeHelper::currentUTCDateTime(),
                     'comment' => $row->comment,
                     'read' => $row->read
                 ]
@@ -305,13 +308,13 @@ class Results extends Component
             'enabled' => true,
             'fields' => [
                 'user' => [$userId],
-                'date' => time(),
+                'date' => DateTimeHelper::currentUTCDateTime(),
                 'comment' => $comment,
                 'read' => false
             ]
         ];
+        $entry->setFieldValues(['resultComments' => $tableData]);
         Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId);
-        return $tableData;
     }
 
     /**
@@ -793,10 +796,13 @@ class Results extends Component
 
         $mysql .= "
             FROM {{%entries}} e
-            JOIN {{%content}} c ON c.elementId = e.id
-            JOIN {{%elements}}el ON el.id = e.id
+            LEFT JOIN {{%content}} c ON c.elementId = e.id
+            LEFT JOIN {{%elements}}el ON el.id = e.id
             WHERE e.sectionId = 10 
             AND c.field_resultStatus = 'pending'
+            AND el.enabled = 1
+            AND el.revisionId IS NULL
+            AND el.draftId IS NULL
             AND e.typeId = 10
             AND e.typeId = 10";
 

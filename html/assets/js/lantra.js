@@ -476,12 +476,15 @@ $(document).ready(function(){
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             jobRoleLink = moduleGroupLink.closest('div.job-role').find('a.jobroleEndorseExpand');
-        jobRoleLink.click();
-        moduleGroupLink.click();
-        moduleLink.click();
-        $('html, body').animate({
-            scrollTop: jobRoleLink.offset().top - 200
-        }, 500, function(){});
+        if (jobRoleLink) {
+            jobRoleLink.click();
+            moduleGroupLink.click();
+            moduleLink.click();
+            $('html, body').animate({
+                scrollTop: jobRoleLink.offset().top - 200
+            }, 500, function () {
+            });
+        }
     }
 
     $('.module-group-tabs').show();

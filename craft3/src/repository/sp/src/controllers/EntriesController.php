@@ -11,6 +11,7 @@ namespace lantra\sp\controllers;
 use Craft;
 
 use craft\elements\Entry;
+use craft\helpers\DateTimeHelper;
 
 use lantra\sp\Plugin as Lantra;
 
@@ -105,17 +106,12 @@ class EntriesController extends BaseController {
             $results = Craft::$app->request->getParam('results');
         }
         $count = 0;
-        $userId = Craft::$app->getUser()->id;;
         ## loop entries and update status
         foreach ($results as $result) {
             if (isset($result['entryId']) && false != $entry = Craft::$app->entries->getEntryById($result['entryId'])) {
-                $entry->setAttributes([
-                    'resultStatus' => 'endorsed',
-                    'resultEndorsedDate' => DateTimeHelper::currentTimeForDb(),
-                    'resultEndorsedUser' => [$userId]
-                    ]);
-                Craft::$app->elements->saveElement($entry);
-                $count ++;
+                if (Lantra::$app->results->endorseResult($entry)) {
+                    $count ++;
+                }
             }
         }
         $this->_returnMessage($count . ' results endorsed.', true, $return);

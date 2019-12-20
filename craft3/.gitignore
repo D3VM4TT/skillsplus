@@ -2,4 +2,5 @@
 ###################
 local/*
 html/assets/uploads/*
+html/assets/users/*
 src/dev/*

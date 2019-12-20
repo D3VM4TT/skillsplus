@@ -584,11 +584,10 @@ class LantraVariable
     }
 
     /**
-     * Return count of users requiring endorsement for a manager
-     *
      * @param null $userId
      * @param bool $directSubordinates
-     * @return mixed
+     * @return array|int|null
+     * @throws \yii\db\Exception
      */
     public function managerCountEndorsementUsers($userId = null, $directSubordinates = false)
     {

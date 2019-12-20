@@ -406,7 +406,7 @@ class Users extends Component
      * @param $company
      * @param null $manager
      * @return bool
-     * @throws Exception
+     * @throws \CException
      */
     public function isCompanyManager($company, $manager = null)
     {
@@ -430,7 +430,7 @@ class Users extends Component
      * @param $company
      * @param null $manager
      * @return bool
-     * @throws Exception
+     * @throws \CException
      */
     public function isParentCompanyManager($company, $manager = null)
     {
