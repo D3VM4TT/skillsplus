@@ -14,7 +14,7 @@
                 <input type="hidden" name="author[]" value="{{ userId }}">
             {% endif %}
             <input type="hidden" name="fields[attemptUnit][]" value="{{ unitEntry.id }}">
-            {% for question in unitEntry.testQuestions %}
+            {% for question in unitEntry.testQuestions.all() %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
                 <div class="field--wrapper test">

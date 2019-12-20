@@ -23,7 +23,7 @@ class Attempts extends Component
      */
     public function markAttempt($attemptEntry)
     {
-        foreach ($attemptEntry->attemptAnswers as $answerBlock) {
+        foreach ($attemptEntry->attemptAnswers->all() as $answerBlock) {
             $questionBlock = Craft::$app->matrix->getBlockById($answerBlock->questionId);
             $correct = $this->markQuestion($questionBlock, $answerBlock->answer);
             $answerBlock->setFieldValues([

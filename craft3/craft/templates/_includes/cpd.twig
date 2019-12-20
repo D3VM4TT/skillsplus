@@ -25,7 +25,7 @@
     </p>
     </div>
 {% else %}
-    {% for role in cpdUser.userRole %}
+    {% for role in cpdUser.userRole.all() %}
         <div class="job-role" style="position: relative;">
         {# number of results to complete - line 123 #}
         {% set jobRoleNoResult = 0 %}
@@ -47,7 +47,7 @@
             <div class="module-group-tabs">
                 <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ role.id }}">
                 {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
-                {% for moduleGroup in moduleGroups %}
+                {% for moduleGroup in moduleGroups.all() %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
@@ -58,7 +58,7 @@
                 </ul>
             </div>
             <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
-                {% for moduleGroup in moduleGroups %}
+                {% for moduleGroup in moduleGroups.all() %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                 <div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
                     <div class="module-tabs">
@@ -72,7 +72,7 @@
                             {% if not modules.count %}
                                 No modules have been added to this module group.
                             {% endif %}
-                            {% for module in modules %}
+                            {% for module in modules.all() %}
                                 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
                                 {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                                 <li>
@@ -94,7 +94,7 @@
                         </ul>
                     </div>
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
-                    {% for module in modules %}
+                    {% for module in modules.all() %}
                         {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
                         {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .one() %}
                         <div id="module{{ moduleElementId }}" class="module open">
@@ -108,7 +108,7 @@
                                 -->
                             </div>
                             <div id="m{{ role.id ~ module.id }}" class="unit-groups">
-                                {% for unitGroup in module.moduleUnitGroups %}
+                                {% for unitGroup in module.moduleUnitGroups.all() %}
                                     {% set unitGroupEntries = unitGroup.unitEntries %}
                                     <div class="unit-group">
                                         <div class="header primary-bg" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
@@ -127,7 +127,7 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% for unitEntry in unitGroupEntries %}
+                                                {% for unitEntry in unitGroupEntries.all() %}
                                                     {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').one() %}
                                                     {# if no result set jobRoleComplete to false #}
                                                     {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}

@@ -230,7 +230,7 @@ class Results extends Component
         $total = count($entry->attemptAnswers);
         $correct = 0;
         ## loop through answers and count correct
-        foreach ($entry->attemptAnswers as $answerBlock) {
+        foreach ($entry->attemptAnswers->all() as $answerBlock) {
             if ($answerBlock->correct) {
                 $correct++;
             }
@@ -272,7 +272,7 @@ class Results extends Component
         $blockType = $blockTypes[0];
         ## not sure why we have to run this loop...
         $tableData = [];
-        foreach($entry->resultComments as $key => $row) {
+        foreach($entry->resultComments->all() as $key => $row) {
             $tableData[$key] =  [
                 'type' => $blockType->id,
                 'enabled' => true,
@@ -319,7 +319,8 @@ class Results extends Component
      */
     function unreadComments($result, $userId) {
         $unread = 0;
-        foreach($result->resultComments as $comment) {
+        $comments = $result->resultComments->all();
+        foreach($comments as $comment) {
             $commentAuthorId = $comment->user->one()->id;
             if ($commentAuthorId != $userId && ! $comment->read) {
                 $unread++;

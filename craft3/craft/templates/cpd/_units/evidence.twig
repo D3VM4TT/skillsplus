@@ -11,7 +11,7 @@
 {# undo result locked #}
 {% set resultLocked = false %}
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
-    {{ getCsrfInput() }}
+    {{ csrfInput() }}
     {% if resultEntry is defined and resultEntry %}
         <div id="name-fields">
             <div class="col-6 field--wrapper">

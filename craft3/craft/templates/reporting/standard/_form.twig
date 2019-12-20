@@ -26,7 +26,7 @@
     {{ ui.errorList(entry.getFirstErrors()) }}
 {% endif %}
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-    {{ getCsrfInput() }}
+    {{ csrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
     <input type="hidden" name="redirect" value="reporting/custom">
     <input type="hidden" name="sectionId" value="13">

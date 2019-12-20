@@ -24,6 +24,8 @@
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
+{% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
@@ -33,9 +35,9 @@
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
-                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% else %}
-                    <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/users"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
@@ -84,7 +86,7 @@
                         {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
                         <p>You have made <span class="link-bold">{{ totalAttempts }}</span> attempts and you have {{ remainingAttempts }} attempts remaining.</p>
                         <p>Your best result is <span class="link-bold">{{ resultEntry.resultScore }}%</span></p>
-                        {% set attempts = resultEntry.resultAttempts %}
+                        {% set attempts = resultEntry.resultAttempts.all() %}
                         {% for attempt in attempts %}
                             {% set meta = craft.lantra.getAttemptMeta(attempt) %}
                             <p>On <span class="link-bold">{{ attempt.postDate|date('d/m/y') }}</span> you scored <span class="link-bold">{{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</span></p>

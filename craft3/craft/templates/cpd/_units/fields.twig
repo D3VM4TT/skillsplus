@@ -6,7 +6,7 @@
 {% if moduleGroup is defined %}
     {% set columnLayout = moduleGroup.columnLayout %}
 {% endif %}
-{% for row in columnLayout %}
+{% for row in columnLayout.all() %}
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitValue' %}

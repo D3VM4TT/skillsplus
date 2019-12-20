@@ -1,11 +1,11 @@
 {% if header is defined %}
-    {% for row in columnLayout %}
+    {% for row in columnLayout.all() %}
         {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
             <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
         {% endif %}
     {% endfor %}
 {% else %}
-    {% for row in columnLayout %}
+    {% for row in columnLayout.all() %}
         {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
