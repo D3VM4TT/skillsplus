@@ -13,7 +13,7 @@ use craft\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
-use verbb\supertable\records\SuperTableBlockRecord;
+use verbb\supertable\elements\SuperTableBlockElement;
 
 class LantraVariable
 {
@@ -45,7 +45,7 @@ class LantraVariable
     public function resultCustom($resultEntryId, $customKey, $id = false)
     {
         $field = Craft::$app->fields->getFieldByHandle('resultCustom');
-        $criteria = SuperTableBlockRecord::find();
+        $criteria = SuperTableBlockElement::find();
         $criteria->ownerId = $resultEntryId;
         $criteria->fieldId = $field->id;
         $blocks = $criteria->all();

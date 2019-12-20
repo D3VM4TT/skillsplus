@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1576692714
+dateModified: 1576861104
 email:
   fromEmail: NoReply@skills-plus.net
   fromName: 'Skills+ (BCSA)'
@@ -2835,7 +2835,7 @@ plugins:
   internal-assets:
     settings: null
     licenseKey: null
-    enabled: '1'
+    enabled: false
     schemaVersion: 2.0.0
   sprout-reports:
     settings: null
@@ -4169,11 +4169,10 @@ volumes:
     name: Evidence
     handle: evidence
     type: craft\volumes\Local
-    hasUrls: false
-    url: null
+    hasUrls: true
+    url: /evidence
     settings:
       path: '@assetsPath/evidence'
-      url: ''
     sortOrder: 1
   e1099881-d76d-4c4c-9b8b-607658d27413:
     name: Data

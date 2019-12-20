@@ -10,6 +10,7 @@ namespace lantra\sp\controllers;
 
 use Craft;
 use craft\errors\AssetException;
+use yii\web\HttpException;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -89,5 +90,25 @@ class AssetsController extends BaseController
             $response['success'] = true;
         }
         $this->asJson($response);
+    }
+
+    /**
+     * @param $assetId
+     * @throws HttpException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionInternal($assetId)
+    {
+        $this->requireLogin();
+        if (false == $asset = Craft::$app->assets->getAssetById($assetId)) {
+            throw new HttpException(404, "Sorry. File not found or permission denied.");
+            return;
+        }
+
+        $volumePath = rtrim($asset->getVolume()->settings['path'], '/') . '/';
+        $folderPath =  rtrim($asset->getFolder()->path, '/') . '/';
+        $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $asset->filename;
+
+        Craft::$app->response->sendFile($assetFilePath);
     }
 }

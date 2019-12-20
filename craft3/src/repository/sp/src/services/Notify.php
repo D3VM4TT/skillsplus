@@ -95,13 +95,14 @@ class Notify extends Component
     }
 
     /**
-     * @param EntryModel $entry
+     * @param Entry $entry
      * @param $comment
      * @param $userId
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
      */
-    function sendCommentUpdate(EntryModel $entry, $comment, $userId) {
+    function sendCommentUpdate(Entry $entry, $comment, $userId) {
         $user = Craft::$app->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');

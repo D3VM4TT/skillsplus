@@ -113,7 +113,7 @@
 {% endfor %}
 <div class="field--wrapper">
     <label for="resultComment" style="" class="">Comments</label>
-    {% if resultExists and resultEntry.resultComments|length %}
+    {% if resultExists and resultEntry.resultComments.count is defined and resultEntry.resultComments.count %}
         {% for comment in resultEntry.resultComments %}
             <p>
                 <span style="font-weight:700;">{{ comment.date|date('d/m/y') }}</span> {{ comment.user.one.fullName }}

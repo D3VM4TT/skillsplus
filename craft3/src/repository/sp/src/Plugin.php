@@ -232,9 +232,12 @@ class Plugin extends BasePlugin
             'public/passport/<userId>'                  => ['template' => 'public/passport'],
             'public/licence/thanks'                     => ['template' => 'public/licence'],
 
+            ## internal assets
+            'internal/<assetId>'                        => 'sp/assets/internal',
+
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
-            'cpd/<userId>/achievement/<entryId>'       => ['template' => 'cpd/achievement'],
+            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'cpd/achievement'],
             'cpd/<userId>/result/<entryId>'             => ['template' => 'cpd/achievement'],
             'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'cpd/unit'],
             'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'cpd/unit'],

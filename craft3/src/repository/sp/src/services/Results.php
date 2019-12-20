@@ -22,7 +22,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
 use verbb\supertable\SuperTable;
-use verbb\supertable\records\SuperTableBlockRecord;
+use verbb\supertable\elements\SuperTableBlockElement;
 
 class Results extends Component
 {
@@ -70,16 +70,32 @@ class Results extends Component
             if ($author && $entry->type == 'unitResult' && $entry->resultEvidence && $unitEntry) {
                 $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
             }
+            $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
             $currentDateTime = DateTimeHelper::currentUTCDateTime();
             if ($comment) {
                 unset($_POST['comment']);
-                $resultComments = $this->addComment($entry, $comment);
-                $entry->resultComments = $resultComments;
+
+                $field = Craft::$app->getFields()->getFieldByHandle('resultComments');
+                $blockTypes = SuperTable::$plugin->getService()->getBlockTypesByFieldId($field->id);
+                $blockType = $blockTypes[0];
+
+                $superTableData['new1'] = [
+                    'type' => $blockType->id,
+                    'enabled' => true,
+                    'fields' => [
+                        'user' => [$userId],
+                        'date' => $dateTime->format(DATE_ATOM),
+                        'comment' => $comment,
+                        'read' => false
+                    ]
+                ];
+
+                $entry->setFieldValues(['resultComments' => $superTableData]);
             }
             $fields = Craft::$app->request->getParam('fields');
-            $resultUnitId = isset($fields['resultUnit']) && $fields['resultUnit'] ? $fields['resultUnit'] : null;
+            $resultUnitId = isset($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
             ## set result title
             if ($entry->type == 'userResult' && $resultUnitId) {
                 $unitEntry = Craft::$app->entries->getEntryById($resultUnitId);
@@ -113,23 +129,23 @@ class Results extends Component
                 }
             }
             $dateFormat = 'Y-m-d H:i:s';
-            $dateTime = new \DateTime();
+
             ## set a result start date
             $userStartDate = Craft::$app->request->getParam('userStartDate');
             if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
-                $userStartDate = $date->getTimestamp();
+                $userStartDate = $date->format(DATE_ATOM);
             }
             $entry->resultStartDate = $userStartDate;
             ## set a result finish date
             $userFinishDate = Craft::$app->request->getParam('userFinishDate');
             if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
-                $userFinishDate = $date->getTimestamp();
+                $userFinishDate = $date->format(DATE_ATOM);
             }
             $entry->resultFinishDate = $userFinishDate;
             $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
             if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
                 $userExpiryDate = $date->getTimestamp();
-                $entry->expiryDate = $date->getTimestamp();
+                $entry->expiryDate = $date->format(DATE_ATOM);
             }
             ## validate dates
             if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
@@ -299,17 +315,19 @@ class Results extends Component
     }
 
     /**
-     * @param $comment
+     * @param SuperTableBlockElement $comment
      * @param $userId
-     * @throws \Exception
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    function readComment(SuperTableBlockRecord $comment, $userId) {
+    function readComment(SuperTableBlockElement $comment, $userId) {
         ## userId of result
         $resultAuthorId = $comment->getOwner()->author->id;
         $commentAuthorId = $comment->user->one()->id;
         if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
             $comment->read = true;
-            $comment->save();
+            Craft::$app->elements->saveElement($comment);
         }
     }
 
