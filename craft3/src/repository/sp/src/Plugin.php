@@ -234,14 +234,13 @@ class Plugin extends BasePlugin
 
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
-            'cpd/<userId>'                              => ['template' => 'cpd/index'],
-            'cpd/<userId>/archive'                      => ['template' => 'cpd/index'],
-            'cpd/<userId>/print'                        => ['template' => 'cpd/index'],
+            'cpd/<userId>/achievement/<entryId>'       => ['template' => 'cpd/achievement'],
+            'cpd/<userId>/result/<entryId>'             => ['template' => 'cpd/achievement'],
             'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'cpd/unit'],
             'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'cpd/unit'],
-            'cpd/<userId>/achievement'                  => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/achievement/<resultId>'       => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/result/<resultId>'            => ['template' => 'cpd/achievement'],
+            'cpd/<userId>/archive'                      => ['template' => 'cpd/index'],
+            'cpd/<userId>/print'                        => ['template' => 'cpd/index'],
+            'cpd/<userId>'                              => ['template' => 'cpd/index'],
             'result/<resultId>'                         => ['template' => 'result/_form'],
 
             ## management routes
@@ -275,6 +274,9 @@ class Plugin extends BasePlugin
             'sp/reports/save-report'                    => 'sp/reports/save-report',
             'sp/reports/delete-report'                  => 'sp/reports/delete-report',
             'sp/reports/run-report'                     => 'sp/reports/run-report',
+
+            'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
+            'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
         ];
     }
 

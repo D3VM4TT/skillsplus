@@ -1,8 +1,5 @@
 {% extends "_layout" %}
 
-{% set userId = craft.app.request.segment(2) %}
-{% set entryId = craft.app.request.segment(4) %}
-
 {% if userId != currentUser.id %}
     {% set account = craft.users.id(userId).one %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
@@ -18,7 +15,7 @@
     {% set resultEntry = entry %}
 {% endif %}
 
-{%  if resultEntry is not defined %}
+{% if resultEntry is not defined %}
     {% set moduleEntry = false %}
     {% set resultEntry = false %}
 {% endif %}

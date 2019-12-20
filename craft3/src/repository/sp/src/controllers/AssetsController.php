@@ -9,7 +9,7 @@
 namespace lantra\sp\controllers;
 
 use Craft;
-use craft\errors\VolumeException;
+use craft\errors\AssetException;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -29,17 +29,23 @@ class AssetsController extends BaseController
      */
     public function actionDeleteEvidence()
     {
-        $this->requireAcceptsJson();
         $fileId = Craft::$app->request->getParam('fileId');
         $asset = Craft::$app->assets->getAssetById($fileId);
-        $volume = $asset->getVolume();
+        if(!$asset) {
+            $response = [
+                'success' => false,
+                'message' => 'Invalid asset [' . $fileId . ']'
+            ];
+            return $this->asJson($response);
+        }
         $response = ['success' => true, 'message' => ''];
         try {
-            $volume->deleteFile($asset->folderPath . $asset->filename);
-        } catch(VolumeException $exception) {
-            $response['success'] = false;
-            $response['message'] = $exception->getMessage();
-
+            Craft::$app->getElements()->deleteElement($asset);
+        } catch (AssetException $exception) {
+            $response = [
+                'success' => false,
+                'message' => $exception->getMessage()
+            ];
         }
         $this->asJson($response);
     }
@@ -64,16 +70,23 @@ class AssetsController extends BaseController
         ## get folder
         $folderId = Craft::$app->request->getParam('folderId');
         $folder = Craft::$app->assets->getFolderById($folderId);
+        if (!$folder) {
+            $response = [
+                'success' => false,
+                'message' => 'Invalid folder, contact support.'
+            ];
+            return $this->asJson($response);
+        }
         ## upload file
-        $tempFolder = Craft::$app->path->tempPath;
+        $tempFolder = rtrim(Craft::$app->path->tempPath, '/') . '/';
         $tempPath = $tempFolder . $fileName;
         move_uploaded_file($tmpName, $tempPath);
         ## create asset
         $response = LantraHelper::addAsset($tempPath, $fileName, 'evidence', $folder->name);
         ## delete the temp file
-        unlink($tempPath);
-        if ($response['asset']) {
-            $response['file'] = $response['asset']->id;
+        @unlink($tempPath);
+        if (is_object($response['asset'])) {
+            $response['success'] = true;
         }
         $this->asJson($response);
     }

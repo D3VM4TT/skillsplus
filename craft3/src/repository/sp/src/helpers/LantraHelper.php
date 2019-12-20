@@ -67,24 +67,29 @@ class LantraHelper
             $response['message'] = 'Volume not found.';
             return $response;
         }
-        $folder = $folderName ? Craft::$app->assets->findFolder(['handle' => $folderName]) : Craft::$app->assets->getRootFolderByVolumeId($volume->id);
-        if (!$folder) {
-            $response['message'] = 'Folder not found.';
-            return $response;
+        if ($folderName) {
+            $folder = Craft::$app->assets->findFolder(['volumeId' => $volume->id, 'name' => $folderName]);
+            if (!$folder) {
+                $response['message'] = 'Folder not found.';
+                return $response;
+            }
+        }
+        else {
+            $folder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
         }
         try {
             $asset = new Asset();
-            $asset->avoidFilenameConflicts = true;
-            $asset->setScenario(Asset::SCENARIO_CREATE);
             $asset->tempFilePath = $filePath;
             $asset->filename = $fileName;
             $asset->newFolderId = $folder->id;
             $asset->volumeId = $folder->volumeId;
-
-            $response['asset'] = Craft::$app->getElements()->saveElement($asset);
-
+            $asset->avoidFilenameConflicts = true;
+            $asset->setScenario(Asset::SCENARIO_CREATE);
+            if (Craft::$app->getElements()->saveElement($asset)) {
+                $response['asset'] = $asset;
+            }
         } catch (\Throwable $exception) {
-            $response['message'] = $exception->getMessage();
+            $response['message'] = 'Asset exception: ' . $exception->getMessage();
         }
         return $response;
     }
@@ -99,11 +104,13 @@ class LantraHelper
     {
         $volume = Craft::$app->volumes->getVolumeByHandle('evidence');
         $parentFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
-        $folder = Craft::$app->assets->findFolder(['parent' => $parentFolder, 'name' => $user->id]);
+        $folder = Craft::$app->assets->findFolder(['parentId' => $parentFolder->id, 'name' => $user->id]);
         if (!$folder) {
             $folder = new VolumeFolder();
             $folder->name = $user->id;
+            $folder->volumeId = $volume->id;
             $folder->parentId = $parentFolder->id;
+            $folder->path = rtrim($folder->name, '/') . '/';
             Craft::$app->assets->createFolder($folder, true);
         }
         return $folder;

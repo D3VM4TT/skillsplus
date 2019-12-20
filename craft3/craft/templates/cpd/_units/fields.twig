@@ -67,7 +67,7 @@
                     <p>{{ resultEntry.legacyResultFiles  }}</p>
                 {% endif %}
                 {% if resultEvidence %}
-                    {% for resultAsset in resultEntry.resultEvidence %}
+                    {% for resultAsset in resultEntry.resultEvidence.all %}
                     <p>
                         <input type="hidden" name="fields[resultEvidence][]" value="{{ resultAsset.id }}" />
                         [<a href="#" class="delete-file" data-id="{{ resultAsset.id }}" style="color:#FF0000">x</a>]
