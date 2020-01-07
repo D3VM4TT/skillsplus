@@ -23,9 +23,11 @@ class Queue extends Component
     public function __construct()
     {
         parent::__construct();
-        $this->queue = QueueRecord::find()
-            ->orderBy('priority, dateCreated')
-            ->all();
+        if (Craft::$app->db->tableExists('{{%lantra_queue}}')) {
+            $this->queue = QueueRecord::find()
+                ->orderBy('priority, dateCreated')
+                ->all();
+        }
     }
 
     /**
