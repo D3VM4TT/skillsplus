@@ -3085,7 +3085,7 @@ sections:
         handle: attempt
         hasTitleField: false
         titleLabel: null
-        titleFormat: '[unit {attemptUnit.first.id}] {author.firstName} {author.lastName}'
+        titleFormat: '[unit {attemptUnit.one.id}] {author.firstName} {author.lastName}'
         sortOrder: 1
         fieldLayouts:
           46202269-1d4b-4803-aef3-1a626eaf5054:
@@ -3216,7 +3216,7 @@ sections:
         handle: team
         hasTitleField: false
         titleLabel: null
-        titleFormat: '{teamCompany.first.title} - {teamName}'
+        titleFormat: '{teamCompany.one.title} - {teamName}'
         sortOrder: 1
         fieldLayouts:
           bcaf5920-c460-4465-a5db-e7f4bad29958:
