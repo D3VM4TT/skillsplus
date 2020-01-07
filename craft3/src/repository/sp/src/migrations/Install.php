@@ -26,6 +26,13 @@ class Install extends Migration
         ## @todo create volumes
         ## @todo create user groups
 
+        ## fix sections settings
+        $query = $this->db->createCommand();
+        $query->update('{{%entrytypes}}', ['titleFormat' => '{teamCompany.one.title} - {teamName}'], ['handle' => 'team'])->execute();
+        $query->update('{{%entrytypes}}', ['titleFormat' => '[unit {resultUnit.one.id}] {author.firstName} {author.lastName}'], ['handle' => 'unitResult'])->execute();
+        $query->update('{{%entrytypes}}', ['titleFormat' => '[unit {attemptUnit.one.id}] {author.firstName} {author.lastName}'], ['handle' => 'attempt'])->execute();
+        $query->update('{{%entrytypes}}', ['titleFormat' => '[module {resultModule.one.id}] {author.firstName} {author.lastName} '], ['handle' => 'moduleResult'])->execute();
+
         ## update status field to dropdown
         $resultStatus = get_class(Craft::$app->fields->getFieldByHandle('resultStatus'));
         if ($resultStatus != 'craft\fields\Dropdown') {
