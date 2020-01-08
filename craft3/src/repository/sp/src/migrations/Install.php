@@ -11,7 +11,7 @@ namespace lantra\sp\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\services\Routes as RoutesService;
-
+use lantra\sp\Plugin as Lantra;
 
 class Install extends Migration
 {
@@ -82,6 +82,30 @@ class Install extends Migration
                 $this->db->getForeignKeyName('{{%lantra_result_cache}}', 'userId'),
                 '{{%lantra_result_cache}}', 'userId', '{{%users}}', 'id', 'CASCADE', null);
         }
+        if (!$this->db->tableExists('{{%lantra_settings}}')) {
+                $this->createTable('{{%lantra_settings}}', [
+                'key' => $this->string(),
+                'value' => $this->text(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid()
+            ]);
+            $this->createIndex('key', '{{%lantra_settings}}', 'key', true);
+            # copy lantra settings to sp
+            $settings = Craft::$app->getProjectConfig()->get('plugins.lantra.settings');
+            Lantra::$app->settings->saveSettings($settings);
+            Craft::$app->getProjectConfig()->remove('plugins.lantra');
+        }
+        $this->delete('{{%supertableblocktypes}}', ['fieldLayoutId' => '']);
+        Craft::$app->plugins->installPlugin('redactor');
+        Craft::$app->getProjectConfig()->remove('plugins.status');
+        Craft::$app->getProjectConfig()->remove('plugins.internal-assets');
+        Craft::$app->getProjectConfig()->remove('plugins.sprout-reports');
+        Craft::$app->getProjectConfig()->remove('plugins.export');
+        Craft::$app->getProjectConfig()->remove('plugins.import');
+        Craft::$app->getProjectConfig()->remove('plugins.printmaker');
+        Craft::$app->getProjectConfig()->remove('plugins.mailer');
+        Craft::$app->getProjectConfig()->remove('plugins.migration-manager');
         return true;
     }
 
@@ -90,6 +114,10 @@ class Install extends Migration
      */
     public function safeDown()
     {
+        $this->dropTableIfExists('{{%lantra_import}}');
+        $this->dropTableIfExists('{{%lantra_queue}}');
+        $this->dropTableIfExists('{{%lantra_result_cache}}');
+        $this->dropTableIfExists('{{%lantra_settings}}');
         return true;
     }
 }

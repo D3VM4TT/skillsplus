@@ -14,6 +14,7 @@ use craft\helpers\Json as JsonHelper;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\records\Settings as SettingsRecord;
 
 class Settings extends Component
 {
@@ -23,22 +24,13 @@ class Settings extends Component
      */
     public function saveSettings($settings)
     {
-        $settings = JsonHelper::encode($settings);
-        $affectedRows = Craft::$app->db->createCommand()->update('plugins', ['settings' => $settings], ['class' => 'Lantra']);
-        return (bool)$affectedRows;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDbSettings()
-    {
-        $result = Craft::$app->db->createCommand()
-            ->select('settings')
-            ->from('plugins')
-            ->where(['class' => 'Lantra'])
-            ->queryRow();
-        return $result ? JsonHelper::decode($result['settings']) : [];
+        $count = 0;
+        foreach ($settings as $key => $value) {
+            if ($this->saveSetting($key, $value)) {
+                $count++;
+            }
+        }
+        return $count;
     }
 
     /**
@@ -47,18 +39,31 @@ class Settings extends Component
     public function getSettings()
     {
         return Lantra::getInstance()->getSettings();
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getDbSettings()
+    {
+        $settings = [];
+        foreach(SettingsRecord::find()->all() as $row) {
+            $settings[$row->key] = JsonHelper::decodeIfJson($row->value);
+        }
+        return $settings;
     }
 
     /**
      * @param $key
      * @param null $value
-     * @return bool
+     * @return \yii\db\DataReader
+     * @throws \yii\db\Exception
      */
     public function saveSetting($key, $value = null)
     {
-        $settings = $this->getSettings();
-        $settings[$key] = $value;
-        return $this->saveSettings($settings);
+        $value = is_array($value) ? JsonHelper::encode($value) : $value;
+        return Craft::$app->db->createCommand()->upsert('{{%lantra_settings}}', ['value' => $value, 'key' => $key], ['value' => $value])->query();
     }
 
     /**

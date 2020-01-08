@@ -11,6 +11,8 @@ namespace lantra\sp\models;
 use Craft;
 use craft\base\Model;
 
+use lantra\sp\Plugin as Lantra;
+
 class Settings extends Model
 {
     public $schemeName                          = 'Skills Plus';
@@ -117,6 +119,8 @@ class Settings extends Model
     {
         parent::init();
 
+        $this->_populateModel(Lantra::$app->settings->getDbSettings());
+
         foreach ($this->assetFields as $key) {
             if ($this->$key && is_array($this->$key)) {
                 $files = [];
@@ -165,5 +169,17 @@ class Settings extends Model
         $rules[] = [$this->numberFields, 'number', 'integerOnly' => true];
 
         return $rules;
+    }
+
+    /**
+     * @param $settings
+     */
+    private function _populateModel($settings)
+    {
+        foreach ($settings as $key => $value) {
+            if (isset($this->{$key})) {
+                $this->{$key} = $value;
+            }
+        }
     }
 }

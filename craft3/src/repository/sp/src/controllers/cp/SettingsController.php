@@ -75,14 +75,13 @@ class SettingsController extends Controller
     {
         $this->requirePostRequest();
         $settings = Craft::$app->request->getParam('settings');
-
-        if (Lantra::$app->settings->saveSettings($settings)) {
-            Craft::$app->session->setNotice('Settings saved.');
-            $this->redirectToPostedUrl();
-        } else {
+        if (!Lantra::$app->settings->saveSettings($settings)) {
             Craft::$app->session->setError('Settings not saved.');
             Craft::$app->urlManager->setRouteParams(array('settings' => $settings));
+            return $this->redirectToPostedUrl();
         }
+        Craft::$app->session->setNotice('Settings saved.');
+        return $this->redirectToPostedUrl();
     }
 
     /**
