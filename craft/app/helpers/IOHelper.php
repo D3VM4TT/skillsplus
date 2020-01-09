@@ -741,7 +741,7 @@ class IOHelper
 	 * @return Folder|bool The newly created folder as a {@link Folder} object or false if we don't have write
 	 *                     permissions.
 	 */
-	public static function createFolder($path, $permissions = null, $suppressErrors = false)
+	public static function createFolder($path, $permissions = null, $suppressErrors = true)
 	{
 		if ($permissions == null)
 		{
