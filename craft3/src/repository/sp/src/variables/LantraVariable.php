@@ -344,6 +344,23 @@ class LantraVariable
     }
 
     /**
+     * @param $resultEntry
+     * @param null $managerId
+     * @return mixed
+     */
+    public function canEndorse($resultEntry, $managerId = null) {
+        if (false == $manager = $this->getUser($managerId)) {
+            return false;
+        }
+        ## you can't mark your own homework...!
+        $owner = $resultEntry->resultOwner->total() ? $resultEntry->resultOwner->one() : $resultEntry->author;
+        if ($manager->id == $owner->id) {
+            return false;
+        }
+        return $this->isManager($owner->id, $manager);
+    }
+
+    /**
      * @param null $entry
      * @return null
      */
