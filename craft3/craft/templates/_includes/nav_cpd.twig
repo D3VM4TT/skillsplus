@@ -97,6 +97,7 @@
                 -->
             </ul>
         </li>
+        {% if alias('@site') != 'poultrypassport' %}
         {% set pendingEndorsementCount = craft.lantra.managerCountEndorsementUsers() %}
         {% if not currentUser.managerReadOnly %}
             <li class="{% if craft.app.request.getSegment(2) == 'endorsements' %}nav-open{% else %}nav-closed{% endif %}">
@@ -110,6 +111,7 @@
                     </li>
                 </ul>
             </li>
+        {% endif %}
         {% endif %}
     </ul>
     {% endif %}
