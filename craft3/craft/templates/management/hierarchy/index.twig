@@ -11,10 +11,10 @@
             <p>Add / Edit Companies, Teams and Users within your Scheme Hierarchy.</p>
         </div>
         <div class="page-content">
-            <div id="jstree">
-            </div>
-            <div style="margin-top:30px;">
-                <a href="/sp/users/refresh-hierarchy">Refresh Hierarchy</a>
+            <div style="margin-bottom:20px;">
+                <a class="button no-shadow primary-bg" href="/actions/lantra/users/refreshHierarchy" style="margin-left:0;">
+                    <span>Refresh Hierarchy</span>
+                </a>
             </div>
         </div>
     </section>
@@ -141,8 +141,6 @@
         {%  endif %}
     });
 
-    console.log("Done");
-    
     </script>
 {% endblock %}
 
