@@ -1,6 +1,9 @@
 {% set d = value ? value|date('d') : '-' %}
 {% set m = value ? value|date('m') : '-' %}
 {% set y = value ? value|date('Y') : '-' %}
+
+{% set ys = ys ? ys : 1930 %}
+{% set ys = ys ? ys : 2050 %}
 <div class="date-selector">
     <input class="date" type="hidden" name="{{ name }}" value="{{ value ? value|date('Y-m-d H:i:s') : '' }}" />
     <label for="date" class="">{{ label }}</label>
@@ -18,7 +21,7 @@
     </select>
     <select class="year">
         <option{% if not value %} selected="selected"{% endif %}>-</option>
-        {% for i in 1930..2050 %}
+        {% for i in ys..ye %}
             <option{% if i == y %} selected="selected"{% endif %}>{{ i }}</option>
         {% endfor %}
     </select>
