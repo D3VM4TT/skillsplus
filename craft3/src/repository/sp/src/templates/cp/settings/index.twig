@@ -1,0 +1,62 @@
+{% extends "sp/cp/_layout" %}
+{% import "_includes/forms" as forms %}
+{% set selectedSubnavItem = 'settings' %}
+
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = 'sp/settings' %}
+
+{% set tabs = {
+    scheme: {label: 'Scheme', url: '#settings-tab-scheme' },
+    theme: {label: 'Theme', url: '#settings-tab-theme' },
+    licences: {label: 'Licences', url: '#settings-tab-licences' },
+    notifications: {label: 'Theme', url: '#settings-tab-notifications' },
+    users: {label: 'Users', url: '#settings-tab-users' },
+    config: {label: 'Config', url: '#settings-tab-config' }
+} %}
+
+{% set saveButton %}
+    <div class="buttons">
+        <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
+    </div>
+{% endset %}
+
+{% block content %}
+
+    <input type="hidden" name="action" value="sp/cp/settings/save-settings">
+
+    {% namespace 'settings' %}
+    <div id="tab-scheme">
+        <div id="fields">
+        {% include 'sp/cp/settings/_scheme.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-theme" class="hidden">
+        <div id="fields">
+        {% include 'sp/cp/settings/_theme.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-licences" class="hidden">
+        <div id="fields">
+        {% include 'sp/cp/settings/_licences.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-notifications" class="hidden">
+        <div id="fields">
+        {% include 'sp/cp/settings/_notifications.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-users" class="hidden">
+        <div id="fields">
+        {% include 'sp/cp/settings/_users.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-config" class="hidden">
+        <div id="fields">
+        {% include 'sp/cp/settings/_config.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    {% endnamespace %}
+
+    <p class="small">Version: {{ config.version }}</p>
+
+{% endblock %}

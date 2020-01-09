@@ -18,7 +18,7 @@
 {% set companyId = false %}
 {% if craft.app.request.segment(3) == 'company' and craft.app.request.segment(4) %}
     {% set companyId = craft.app.request.segment(4) %}
-    {% set company = craft.entries.id(companyId).first() %}
+    {% set company = craft.entries.id(companyId).one() %}
     {% set pageTitle = company.title %}
 {% endif %}
 
@@ -84,7 +84,7 @@
                     <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                     <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
-                        {% set team = user.userTeam.first() %}
+                        {% set team = user.userTeam.one() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
                     <td><p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}</td>

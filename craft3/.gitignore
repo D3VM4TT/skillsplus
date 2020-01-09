@@ -1,0 +1,6 @@
+# Craft 3  #
+###################
+local/.env
+html/assets/uploads/*
+html/assets/users/*
+src/dev/*

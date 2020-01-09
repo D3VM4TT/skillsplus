@@ -1,0 +1,145 @@
+{% import "_includes/forms" as forms %}
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
+    label:			"Message Blocked Result",
+    id:				"notifyBlockedResult",
+    name:			"notifyBlockedResult",
+    value:		    settings.notifyBlockedResult
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Endorsement Result",
+    id:				"notifySubjectEndorsementResult",
+    name:			"notifySubjectEndorsementResult",
+    value:		    settings.notifySubjectEndorsementResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has submitted a result {{ entry.title }}.",
+    label:			"Message Endorsement Result",
+    id:				"notifyEndorsementResult",
+    name:			"notifyEndorsementResult",
+    value:		    settings.notifyEndorsementResult
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Licences Remaining",
+    id:				"notifySubjectLicencesRemaining",
+    name:			"notifySubjectLicencesRemaining",
+    value:		    settings.notifySubjectLicencesRemaining
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ title }} has {{ licences}} remaining.",
+    label:			"Message Licences Remaining",
+    id:				"notifyLicencesRemaining",
+    name:			"notifyLicencesRemaining",
+    value:		    settings.notifyLicencesRemaining
+}) }}
+
+{#
+
+{{ forms.textField ({
+    label:			"Subject Manager Summary",
+    id:				"notifySubjectManagerSummary",
+    name:			"notifySubjectManagerSummary",
+    value:		    settings.notifySubjectManagerSummary
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Message Manager Summary",
+    id:				"notifyManagerSummary",
+    name:			"notifyManagerSummary",
+    value:		    settings.notifyManagerSummary
+}) }}
+
+#}
+
+{{ forms.textField ({
+    label:			"Subject Module Result",
+    id:				"notifySubjectModuleResult",
+    name:			"notifySubjectModuleResult",
+    value:		    settings.notifySubjectModuleResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has completed {{ entry.title }}.",
+    label:			"Message Module Result",
+    id:				"notifyModuleResult",
+    name:			"notifyModuleResult",
+    value:		    settings.notifyModuleResult
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Scheme Expiry",
+    id:				"notifySubjectSchemeExpiry",
+    name:			"notifySubjectSchemeExpiry",
+    value:		    settings.notifySubjectSchemeExpiry
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
+    label:			"Message Scheme Expiry",
+    id:				"notifySchemeExpiry",
+    name:			"notifySchemeExpiry",
+    value:		    settings.notifySchemeExpiry
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject User Expiry",
+    id:				"notifySubjectUserExpiry",
+    name:			"notifySubjectUserExpiry",
+    value:		    settings.notifySubjectUserExpiry
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.",
+    label:			"Message User Expiry",
+    id:				"notifyUserExpiry",
+    name:			"notifyUserExpiry",
+    value:		    settings.notifyUserExpiry
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Comment",
+    id:				"notifySubjectComment",
+    name:			"notifySubjectComment",
+    value:		    settings.notifySubjectComment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ entry.title }} - {{ user.fullName}}: {{ comment }}",
+    label:			"Message Comment",
+    id:				"notifyComment",
+    name:			"notifyComment",
+    value:		    settings.notifyComment
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Custom Report",
+    id:				"notifySubjectCustomReport",
+    name:			"notifySubjectCustomReport",
+    value:		    settings.notifySubjectCustomReport
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Custom report: {{ entry.title }}.",
+    label:			"Message Custom Report",
+    id:				"notifyCustomReport",
+    name:			"notifyCustomReport",
+    value:		    settings.notifyCustomReport
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Notify Footer",
+    id:				"notifyFooter",
+    name:			"notifyFooter",
+    value:		    settings.notifyFooter
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Disable Endorsement Notification?",
+    id:				"disableEndorsementNotify",
+    name:			"disableEndorsementNotify",
+    on:		        settings.disableEndorsementNotify == 1
+}) }}

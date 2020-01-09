@@ -53,7 +53,7 @@
             {% for team in teamEntries %}
                 <tr>
                     <td>{{ team.id }}</td>
-                    <td>{{ team.teamCompany.first.title }}</td>
+                    <td>{{ team.teamCompany.one.title }}</td>
                     <td>{{ team.title }}</td>
                     <td>{{ craft.lantra.userCount(team.id) }}</td>
                     <td>

@@ -17,7 +17,7 @@
     {% endif %}
     <span class="label">Legacy User ID:</span>{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}<br />
     <span class="label">Job Role:</span>
-    {% if currentUser.userRole.total %}
+    {% if currentUser.userRole.count %}
         {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
     {% else %}
         ~

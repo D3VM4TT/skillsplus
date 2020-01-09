@@ -2,7 +2,7 @@
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
@@ -10,7 +10,7 @@
 
 {% set userId = craft.app.request.getSegment(4) %}
 {% if account is not defined and userId %}
-    {% set account = craft.users.id(userId).status(null).first %}
+    {% set account = craft.users.id(userId).status(null).one %}
     {% if not account %}{% exit 404 %}{% endif %}
 {% endif %}
 
@@ -18,8 +18,8 @@
 {% set hierarchyCompany = craft.app.request.getParam('company') %}
 {% set hierarchyTeam = craft.app.request.getParam('team') %}
 
-{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).order('companyLabel') %}
-{% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getPost('companyManagers') %}
+{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel').all() %}
+{% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getParam('companyManagers') %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -38,18 +38,18 @@
         {% endif %}
     </div>
     {% if account is defined %}
-        {{ ui.errorList(account.getAllErrors()) }}
+        {{ ui.errorList(account.getFirstErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8" autocomplete="off">
-        {{ getCsrfInput() }}
-        <input type="hidden" name="action" value="lantra/users/saveUser">
+        {{ csrfInput() }}
+        {{ actionInput('sp/users/save-user') }}
+        {% if hierarchyNode %}
+            {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
+        {% else %}
+            {{ redirectInput('management/users') }}
+        {% endif %}
         <input type="hidden" name="fields[userDummyEmail]" value="{{ account.userDummyEmail|default(0) }}">
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
-        {% if hierarchyNode %}
-            <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
-        {% else %}
-            <input type="hidden" name="redirect" value="/management/users">
-        {% endif %}
 
         {% if account is defined and account.id %}
             <div id="name-fields">
@@ -103,7 +103,7 @@
         {%  for block in userCustomFields %}
             <div class="field--wrapper">
                 <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
-                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).first() : null %}
+                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).one() : null %}
                 {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
@@ -127,13 +127,13 @@
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                     <option value="{{ roleCategory.id }}"
-                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title() }}</option>
+                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="field--wrapper">
             <label for="userCompany">Primary Location: For Hierarchy and Reporting</label>
-            <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.first().id|default(hierarchyCompany) }}" id="userCompany" >
+            <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.one().id|default(hierarchyCompany) }}" id="userCompany" >
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
                 {% endfor %}
@@ -208,7 +208,7 @@
                 </div>
                 <div class="col-6">
                     <input type="checkbox" id="teamManagers" name="teamManagers" value="1"
-                           {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getPost('teamManagers') %}checked="checked"{% endif %}>
+                           {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getParam('teamManagers') %}checked="checked"{% endif %}>
                          <span>Make Team manager</span>
                     {% endif %}
                     {% if craft.lantra.setting('schemeTeams', false) %}
@@ -217,7 +217,7 @@
                                 {#<label for="userCompany">User team:</label>#}
                                 {% set teamEntries = craft.entries.section('teams').limit(null) %}
                                 <select data-relation="fields[userTeam]"
-                                        data-value="{{ account.userTeam.first().id|default(hierarchyTeam) }}" id="userTeam">
+                                        data-value="{{ account.userTeam.one().id|default(hierarchyTeam) }}" id="userTeam">
                                     <option value="">Select User Team</option>
                                     {% for teamEntry in teamEntries %}
                                         <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>

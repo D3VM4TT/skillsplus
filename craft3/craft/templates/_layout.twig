@@ -1,4 +1,4 @@
-{% if craft.app.request.getSegment(1) != "actions" and craft.app.request.getSegment(1) != "public" %}
+{% if craft.app.request.getSegment(1) != "sp" and craft.app.request.getSegment(1) != "public" %}
     {% if currentUser and craft.app.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
         {% redirect "public/licence" %}
     {% else %}
@@ -168,7 +168,7 @@
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
-            window.csrfTokenName = "{{ craft.config.csrfTokenName|e('js') }}";
+            window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";
             window.csrfTokenValue = "{{ craft.app.request.csrfToken|e('js') }}";
         </script>
         <script src="/assets/js/lantra.js?{{ random(10000, 99999) }}" async defer></script>
@@ -210,14 +210,21 @@
                 $('#files').on('click', 'a.delete-file', function(e){
                     e.preventDefault();
                     var a = $(this),
-                        url = '{{ url('actions/lantra/assets/deleteEvidence') }}',
+                        url = '{{ url('sp/assets/delete-evidence') }}',
                         p = a.closest('p');
                     $.post(url, {fileId: a.data('id')}, function(data) {
-                        p.fadeOut(function(){p.remove();})
+                        if(data.success) {
+                            p.fadeOut(function () {
+                                p.remove();
+                            })
+                        }
+                        else {
+                            alert('Could not delete this file. ' + data.message);
+                        }
                     });
                 });
 
-                var url = '{{ url('actions/lantra/assets/uploadEvidence') }}';
+                var url = '{{ url('sp/assets/upload-evidence') }}';
                 $('#fileupload').fileupload({
                     url: url,
                     dataType: 'json',
@@ -225,8 +232,8 @@
                     formData: [{name: 'folderId', value: $('#fileupload').data('folderid')}],
                     done: function (e, data) {
                         if(data.result.success) {
-                            var fileId = data.result.file.id,
-                                fileName = data.result.file.filename,
+                            var fileId = data.result.asset.id,
+                                fileName = data.result.asset.filename,
                                 node = $('<p/>')
                                     .append('<input type="hidden" name="fields[resultEvidence][]" value="' + fileId + '" />')
                                     .append('[<a href="#" class="delete-file" data-id="' + fileId + '" style="color:#FF0000">delete</a>] ')

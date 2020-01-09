@@ -6,7 +6,7 @@
 {% if not userId or userId == currentUser.id %}
     {% set account = currentUser %}
 {% else %}
-    {% set account = craft.users.id(userId).status(null).first %}
+    {% set account = craft.users.id(userId).status(null).one %}
     {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% endif %}
 

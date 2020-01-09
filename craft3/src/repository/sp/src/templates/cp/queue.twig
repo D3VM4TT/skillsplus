@@ -1,0 +1,95 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Lantra Queue' %}
+{% set selectedSubnavItem = 'queue' %}
+{% set queue = craft.lantra.queue() %}
+
+{% block content %}
+
+    <div class="tableview">
+        {% if queue is iterable and queue|length %}
+            <div class="tablecontent">
+                <table class="data fullwidth">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="first"><h3>Element</h3></div>
+                        </th>
+                        <th>
+                            <div><h3>Section</h3></div>
+                        </th>
+                        <th>
+                            <div><h3>Automated</h3></div>
+                        </th>
+                        <th>
+                            <div><h3>Date Created</h3></div>
+                        </th>
+                        <th>
+                            <div><h3>Priority</h3></div>
+                        </th>
+                        <th>
+                            <div><h3>Status</h3></div>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in queue %}
+                        {% set element = job.element %}
+                        {% set section = element ? element.section : null %}
+                        <tr class="table_row">
+                            <td>
+                                <div class="item_content">
+                                    {% if element %}
+                                        <a href="{{ element.getCpEditUrl() }}">{{ element.title }}</a>
+                                    {% else %}
+                                        unknown element
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    {{ section ? section.name : 'unknown' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    <div class="status{% if element and element.reportAutomated %} enabled{% endif %}"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    {{ job.dateCreated }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    {{ job.priority }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    {{ job.status }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item_content">
+                                    <a href="{{ actionUrl('lantra/settings/deleteJob', {elementId: job.elementId}) }}"
+                                       class="btn small">{{ "Remove"|t }}</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: right">
+                <a href="{{ actionUrl('lantra/settings/deleteJob', {elementId: 'all'}) }}"
+                   class="btn submit export-btn">Clear Queue (remove all jobs)</a>
+            </p>
+        {% else %}
+            <p>{{ "The queue is empty."|t }}</p>
+        {% endif %}
+    </div>
+    </div>
+
+{% endblock %}

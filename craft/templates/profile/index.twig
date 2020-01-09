@@ -1,5 +1,5 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% set currentUserManagers = craft.lantra.userManagers(currentUser, 0 , false) %}

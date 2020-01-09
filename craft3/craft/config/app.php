@@ -17,9 +17,41 @@
  * your config/ folder, alongside this one.
  */
 
+use craft\helpers\App;
+
 return [
-    'modules' => [
-        'my-module' => \modules\Module::class,
+    '*' => [
+
     ],
-    //'bootstrap' => ['my-module'],
+    'local' => [
+        'components' => [
+            'mailer' => function() {
+                $settings = App::mailSettings();
+                $settings->transportType = \craft\mail\transportadapters\Gmail::class;
+                $settings->transportSettings = [
+                    'username'  => getenv('SMTP_USERNAME'),
+                    'password'  => getenv('SMTP_PASSWORD')
+                ];
+                $config = App::mailerConfig($settings);
+                return Craft::createObject($config);
+            },
+            'mutex' => function() {
+                $config = craft\helpers\App::mutexConfig();
+                $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
+                return Craft::createObject($config);
+            },
+            'dbCleansed' => [
+                'class' => craft\db\Connection::class,
+                'driver' => getenv('DB_DRIVER'),
+                'schema' => getenv('DB_SCHEMA'),
+                'tablePrefix' => getenv('DB_TABLE_PREFIX'),
+                'port' => getenv('DB_PORT'),
+                'server' => getenv('DB_CLEANSED_SERVER'),
+                'username' => getenv('DB_CLEANSED_USER'),
+                'password' => getenv('DB_CLEANSED_PASSWORD'),
+                'database' => getenv('DB_CLEANSED_DATABASE')
+            ],
+
+        ]
+    ],
 ];

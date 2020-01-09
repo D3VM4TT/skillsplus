@@ -1,5 +1,5 @@
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% set currentUserManagers = craft.lantra.userManagers(currentUser, 0 , false) %}
@@ -7,6 +7,8 @@
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (currentUser['userReadOnly'] is defined and currentUser.userReadOnly)) %}
+
+{% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 
 {% extends "_layout" %}
 
@@ -16,7 +18,7 @@
         {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <a href="../"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {{ currentUserCompany|default('') }}
             <h2>My profile</h2>
             <p>A snapshot of your personal information, Companies and Job roles.</p>
@@ -85,7 +87,7 @@
         {% if not craft.lantra.setting('userEditRole') %}
             <div class="field--wrapper">
                 <label class="no-float primary-color">Job Role:</label>
-                {% if currentUser.userRole.total %}
+                {% if currentUser.userRole.count %}
                     {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
                 {% else %}
                 ~
@@ -93,7 +95,7 @@
                 <br/>
             {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
             {% for block in userCustomFields %}
-                {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).first() %}
+                {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).one() %}
                 <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
             {% endfor %}
             </div>

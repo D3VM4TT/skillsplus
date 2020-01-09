@@ -2,7 +2,7 @@
 {% set resultExists = resultEntry is defined and resultEntry %}
 {% set customNew = 1 %}
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
-{% set dateFormat = craft.lantra.setting('dateFormat', 'd-m-Y') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% if moduleGroup is defined %}
     {% set columnLayout = moduleGroup.columnLayout %}
 {% endif %}
