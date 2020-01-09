@@ -17,15 +17,15 @@
         </div>
     {% elseif row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper">
-        {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null} %}
+        {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper">
-        {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null} %}
+        {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper">
-        {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null} %}
+        {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper">
