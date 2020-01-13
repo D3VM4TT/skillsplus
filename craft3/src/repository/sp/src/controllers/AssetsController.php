@@ -101,14 +101,19 @@ class AssetsController extends BaseController
     {
         $this->requireLogin();
         if (false == $asset = Craft::$app->assets->getAssetById($assetId)) {
-            throw new HttpException(404, "Sorry. File not found or permission denied.");
+            throw new HttpException(404, "Asset not found or permission denied.");
             return;
         }
 
         $volumePath = rtrim($asset->getVolume()->settings['path'], '/') . '/';
-        $folderPath =  rtrim($asset->getFolder()->path, '/') . '/';
+        $folderPath = rtrim($asset->getFolder()->path, '/') . '/';
         $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $asset->filename;
 
+        if (!is_file($assetFilePath)) {
+            throw new HttpException(404, "Asset file does not exist.");
+            return;
+        }
         Craft::$app->response->sendFile($assetFilePath);
     }
+
 }
