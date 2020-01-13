@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
+use craft\helpers\DateTimeHelper;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -79,12 +80,14 @@ class Reports extends Component
     /**
      * Run all reports for today
      *
+     * @param $weekValue
+     * @param $monthValue
      * @throws Mixed
-     */
-    public function sendDailyReports()
+    */
+    public function sendDailyReports($weekValue = null, $monthValue = null)
     {
-        $weekDay = (int) date('N');
-        $monthDay = (int) date('j');
+        $weekDay = $weekValue ? $weekValue : (int) date('N');
+        $monthDay = $monthValue ? $monthValue : (int) date('j');
         $reportEntries = $this->getAutomatedReports();
         foreach ($reportEntries as $reportEntry) {
             $reportSendValue = (int) $reportEntry->reportSendValue;
@@ -294,11 +297,11 @@ class Reports extends Component
             $template = Lantra::$app->notify->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
             $message = Craft::$app->view->renderString($template, $variables);
             Lantra::$app->notify->notify($emails, $subject, $message, [$attachment]);
-            $reportEntry->reportLastSentDate = time();
+            $reportEntry->reportLastSentDate = DateTimeHelper::currentUTCDateTime();
             Craft::$app->elements->saveElement($reportEntry);
         }
         ## delete from queue
-        Lantra::$app->queue->delete($reportEntry->id);
+        Lantra::$app->queue->success($reportEntry->id);
         return $total;
     }
 

@@ -41,6 +41,7 @@ class Settings extends Model
     public $individualLicenceDays               = 365;
     public $individualLicencePaypalButton       = '';
     public $individualJobRole                   = null;
+    public $notifyAdminEmail                    = 'admin@skills-plus.co.uk';
     public $notifyFooter                        = '';
     public $notifySubjectBlockedResult          = '';
     public $notifySubjectEndorsementResult      = '';

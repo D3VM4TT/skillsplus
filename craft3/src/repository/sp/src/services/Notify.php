@@ -262,6 +262,18 @@ class Notify extends Component
     }
 
     /**
+     * @param $subject
+     * @param $body
+     * @param array $attachments
+     * @return mixed
+     */
+    function notifyAdmin($subject, $body, $attachments = [])
+    {
+        $adminEmail = $this->getNotifySetting('adminEmail');
+        return $this->notify($adminEmail, $subject, $body, $attachments);
+    }
+
+    /**
      * Send a message to a user
      *
      * @param $toEmail
