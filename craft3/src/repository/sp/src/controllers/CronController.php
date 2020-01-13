@@ -32,7 +32,7 @@ class CronController extends BaseController {
             Lantra::$app->queue->next();
         }
         if ($frequency == 'daily') {
-            Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
+            Craft::info("Daily Cron", __METHOD__);
             # stop all notifications but user generated automatic report
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
@@ -40,7 +40,7 @@ class CronController extends BaseController {
 
         }
         if ($frequency == 'weekly') {
-            Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
+            Craft::info("Weekly Cron", __METHOD__);
             # stop all notifications but user generated automatic report
             # $this->notifyManagerSummary();
             # $this->notifyLicencesRemaining();
