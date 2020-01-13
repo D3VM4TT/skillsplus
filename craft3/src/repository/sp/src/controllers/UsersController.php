@@ -168,11 +168,11 @@ class UsersController extends BaseController {
 
         if ($user->newPassword && ($user->newPassword != $confirmPassword)) {
             $user->addErrors(['confirmPassword' => 'Passwords do not match']);
-            Craft::$app->urlManager->setRouteParams(array('account' => $user));
+            return Craft::$app->urlManager->setRouteParams(array('account' => $user));
         }
         ## save user
         elseif (!Craft::$app->elements->saveElement($user)) {
-            Craft::$app->urlManager->setRouteParams(['account' => $user, 'saveUserError' => true]);
+            return Craft::$app->urlManager->setRouteParams(['account' => $user, 'saveUserError' => true]);
         }
 
         Craft::$app->users->assignUserToGroups($user->id, $groupIds);
