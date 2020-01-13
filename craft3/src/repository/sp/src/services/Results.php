@@ -1889,7 +1889,7 @@ class Results extends Component
      */
     private function setResultValue($resultEntry) {
         return json_encode([
-            'expiryDate' => $resultEntry->expiryDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->expiryDate)->getTimestamp() : null,
+            'expiryDate' => $resultEntry->expiryDate ? $resultEntry->expiryDate->getTimestamp() : null,
             'startDate' => $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null,
             'finishDate' => $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null
         ]);
