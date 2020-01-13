@@ -184,6 +184,10 @@ class UsersController extends BaseController {
             $secondaryManagerCompanyIds = Craft::$app->request->getParam('userSecondaryManagerCompanies', []);
             Lantra::$app->users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
         }
+
+        ## delete hierarchy cache
+        Lantra::$app->structure->clearHierarchyCache();
+
         $this->_returnMessage('User has been saved.', true, $redirect);
     }
 

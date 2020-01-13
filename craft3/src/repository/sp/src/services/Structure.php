@@ -47,8 +47,11 @@ class Structure extends Component
     /**
      * @param $userId
      */
-    public function clearHierarchyCache($userId)
+    public function clearHierarchyCache($userId = null)
     {
+        if (is_null($userId)) {
+            $userId = Craft::$app->getUser()->getIdentity()->id;
+        }
         Craft::$app->cache->delete('lantraHierarchy' . $userId);
     }
 

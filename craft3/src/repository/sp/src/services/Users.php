@@ -1397,7 +1397,7 @@ class Users extends Component
                     if (($key = array_search($user->id, $primaryManagerIds)) !== false) {
                         unset($primaryManagerIds[$key]);
                     }
-                    $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
+                    $company->setFieldValue('companyPrimaryManagers', $primaryManagerIds);
                     Craft::$app->elements->saveElement($company, false);
                 } else {
                     $secondaryManagerIds = $company->companySecondaryManagers->ids();
@@ -1405,7 +1405,7 @@ class Users extends Component
                     if (($key = array_search($user->id, $secondaryManagerIds)) !== false) {
                         unset($secondaryManagerIds[$key]);
                     }
-                    $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                    $company->setFieldValue('companySecondaryManagers', $secondaryManagerIds);
                     Craft::$app->elements->saveElement($company, false);
                 }
             }
@@ -1419,12 +1419,12 @@ class Users extends Component
             $secondaryManagerIds = $company->companySecondaryManagers->count() ? $company->companySecondaryManagers->ids() : [];
             if ($type == 'primary' && !in_array($user->id, $primaryManagerIds)) {
                 $primaryManagerIds[] = $user->id;
-                $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
-                Craft::$app->elements->saveElement($company, false);
+                $company->setFieldValue('companyPrimaryManagers', $primaryManagerIds);
+                Craft::$app->elements->saveElement($company);
             }
             if ($type == 'secondary' && !in_array($user->id, $secondaryManagerIds)) {
                 $secondaryManagerIds[] = $user->id;
-                $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                $company->setFieldValue('companySecondaryManagers', $secondaryManagerIds);
                 Craft::$app->elements->saveElement($company, false);
             }
         }
