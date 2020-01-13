@@ -82,7 +82,7 @@
         <div id="date-fields">
         <div class="col-6 field--wrapper">
             {% set startDateValue = account is defined ? account.userStartDate : now %}
-            {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value:startDateValue, ys: now.year - 15, ye: now.year - 100} %}
+            {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value:startDateValue, ys: now.year + 5, ye: now.year - 50} %}
         </div>
         <div class="col-6 field--wrapper">
             {% set dateOfBirthValue = account is defined ? account.userDateOfBirth : false %}

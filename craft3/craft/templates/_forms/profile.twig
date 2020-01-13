@@ -46,7 +46,7 @@
 
     {% if craft.lantra.setting('userEditDob') %}
     <div class="field--wrapper">
-        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: formUser.userDateOfBirth, ys: now.year + 5, ye: now.year - 50} %}
+        {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value: formUser.userDateOfBirth, ys: now.year - 15, ye: now.year - 100} %}
     </div>
     {% endif %}
 
