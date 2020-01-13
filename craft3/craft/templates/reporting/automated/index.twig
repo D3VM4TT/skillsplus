@@ -49,7 +49,7 @@
                             <td>{{ report.author.fullName }}</td>
                             <td>{{ report.reportType|title }}</td>
                             <td>{{ report.reportSendFrequency|title }}</td>
-                            <td>{{ report.reportLastSentDate|format(dateFormat)|default('Never') }}</td>
+                            <td>{{ report.reportLastSentDate ? report.reportLastSentDate|date(dateFormat) : 'Never' }}</td>
                             <td>
                                 {{ report.reportData|length }}
                                 {% if report.reportData|length %}
