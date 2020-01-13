@@ -224,7 +224,7 @@
                 <tr>
                     <td>{{ report.id }}</td>
                     <td>{{ report.filename }}</td>
-                    <td>{{ report.dateCreated|format(dateFormat) }}</td>
+                    <td>{{ report.dateCreated|date(dateFormat) }}</td>
                     <td>{{ report.size|filesize }}</td>
                     <td style="text-align: right;"><a href="/internal/{{ report.id }}" rel="external">download</a></td>
                 </tr>

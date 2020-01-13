@@ -16,7 +16,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\helpers\DateTimeHelper;
 use craft\events\ModelEvent;
-use craft\DateTime;
+use DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;

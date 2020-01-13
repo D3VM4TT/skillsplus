@@ -14,6 +14,8 @@ use craft\models\VolumeFolder;
 use craft\helpers\Assets as AssetsHelper;
 use yii\web\UploadedFile;
 
+use Yii;
+
 use lantra\sp\Plugin as Lantra;
 
 class LantraHelper
@@ -92,6 +94,18 @@ class LantraHelper
             $response['message'] = 'Asset exception: ' . $exception->getMessage();
         }
         return $response;
+    }
+
+    /**
+     * @param Asset $asset
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function assetPath(Asset $asset)
+    {
+        $volumePath = $asset->getVolume()->settings['path'];
+        $folderPath = $asset->getFolder()->path;
+        return Yii::getAlias($volumePath) . $folderPath . $asset->filename;
     }
 
     /**

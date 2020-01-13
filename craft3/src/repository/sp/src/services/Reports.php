@@ -252,7 +252,7 @@ class Reports extends Component
      * @return null
      * @throws Mixed
      */
-    public function runCustomReport(EntryModel $reportEntry)
+    public function runCustomReport(Entry $reportEntry)
     {
         $filter = $this->getCustomReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
@@ -271,13 +271,14 @@ class Reports extends Component
         }
         $asset = $response['asset'];
         ## append asset to report entry
-        $reportEntry->setAttributes(['reportData' => array_merge($reportEntry->reportData->ids(), [$asset->fileId])]);
+        $reportData = array_merge($reportEntry->reportData->ids(), [$asset->id]);
+        $reportEntry->setFieldValue('reportData', $reportData);
         Craft::$app->elements->saveElement($reportEntry);
         ## send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never') {
             $attachment = [
-                'path' => $tempPath,
-                'filename' => $fileName,
+                'path' => LantraHelper::assetPath($asset),
+                'filename' => $asset->fileName,
                 'mimeType' => $asset->mimeType
             ];
             $emails = [];
@@ -296,8 +297,6 @@ class Reports extends Component
             $reportEntry->reportLastSentDate = time();
             Craft::$app->elements->saveElement($reportEntry);
         }
-        ## delete the temp file
-        unlink($tempPath);
         ## delete from queue
         Lantra::$app->queue->delete($reportEntry->id);
         return $total;

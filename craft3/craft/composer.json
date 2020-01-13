@@ -5,7 +5,8 @@
     "craftcms/redactor": "^2.4.0",
     "lantra/sp": "^2.0.0",
     "verbb/super-table": "^2.3.1",
-    "vlucas/phpdotenv": "^3.4.0"
+    "vlucas/phpdotenv": "^3.4.0",
+    "league/csv": "^9.4.1"
   },
   "autoload": {
     "psr-4": {

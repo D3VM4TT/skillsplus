@@ -14,6 +14,7 @@ use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\elements\db\UserQuery;
+use craft\helpers\DateTimeHelper;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -1035,11 +1036,11 @@ class Users extends Component
         $format = 'd-m-Y';
         foreach ($rows as $user) {
             if ($user['userDateOfBirth']) {
-                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userDateOfBirth']);
+                $dateObject = DateTimeHelper::toDateTime($user['userDateOfBirth']);
                 $user['userDateOfBirth'] = $dateObject->format($format);
             }
             if ($user['userStartDate']) {
-                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userStartDate']);
+                $dateObject = DateTimeHelper::toDateTime($user['userStartDate']);
                 $user['userStartDate'] = $dateObject->format($format);
             }
             $return[$user['id']] = (object)$user;

@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 
+use lantra\sp\Plugin as Lantra;
 use lantra\sp\records\Queue as QueueRecord;
 
 class Queue extends Component
@@ -122,8 +123,9 @@ class Queue extends Component
      */
     public function delete($elementId)
     {
-        $job = $this->job($elementId);
-        $job->delete();
+        if (false != $job = $this->job($elementId)) {
+            $job->delete();
+        }
     }
 
     /**
