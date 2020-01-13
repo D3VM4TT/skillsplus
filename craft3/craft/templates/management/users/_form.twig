@@ -147,12 +147,12 @@
             {% endif %}
             <div>
                 <label style="display:inline-block">
-                    <input type="radio" id="userMember" name="companyManagers" value="0" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member
+                    <input type="radio" id="userMember" name="fields[userType]" value="member" {% if not isCompanyManager %}checked="checked"{% endif %} /> Member
                 </label>
             </div>
             <div>
                 <label style="display:inline-block">
-                    <input type="radio" id="userManager" name="companyManagers" value="1" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager
+                    <input type="radio" id="userManager" name="fields[userType]" value="manager" {% if isCompanyManager %}checked="checked"{% endif %} /> Manager
                 </label>
             </div>
         </div>

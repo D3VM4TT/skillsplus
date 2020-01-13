@@ -489,7 +489,7 @@ $(document).ready(function(){
 
     $('.module-group-tabs').show();
 
-    $('input[name=companyManagers]').change(function(){
+    $('input[name="fields[userType]"]').change(function(){
         if ($(this).attr('id') == 'userManager' && $(this).is(':checked')){
             return $('div#manager-fields').removeClass('hide');
         }

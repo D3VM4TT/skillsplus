@@ -136,7 +136,7 @@ class UsersController extends BaseController {
         ## assign user to groups (always in 'user' group from front end)
         $groupIds = [4];
         $userCompany = isset($fields['userCompany']) ? $fields['userCompany'] : null;
-        if (Craft::$app->request->getParam('companyManagers')) {
+        if ($fields['userType'] == 'manager') {
             $groupIds[] = 2;
             $companyManager = true;
         }

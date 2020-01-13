@@ -41,7 +41,7 @@ class Users extends Component
     public function onBeforeSaveUser(ModelEvent $event, User $user)
     {
         ## automatically set userType for reports
-        $user->userType = Lantra::$app->users->canManage($user) ? 'manager' : 'member';
+        ## $user->setFieldValue('userType', Lantra::$app->users->canManage($user) ? 'manager' : 'member');
 
         $userStartDate = $user->userStartDate ? $user->userStartDate->getTimestamp() : false;
         $userExpiryDate = $user->userExpiryDate ? $user->userStartDate->getTimestamp() : false;
