@@ -24,8 +24,8 @@ class CronController extends BaseController {
     function actionRun() {
         $frequency = Craft::$app->request->getParam('frequency');
         # mock the week 1-7 or month 1-31
-        $weekValue = craft()->request->getParam('week');
-        $monthValue = craft()->request->getParam('month');
+        $weekValue = Craft::$app->request->getParam('week');
+        $monthValue = Craft::$app->request->getParam('month');
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
             Lantra::$app->queue->next();
