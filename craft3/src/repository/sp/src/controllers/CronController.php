@@ -22,7 +22,7 @@ class CronController extends BaseController {
      * @throws Exception
      */
     function actionRun() {
-        $frequency = Craft::$app->request->getParam('frequency');
+        $frequency = Craft::$app->request->getParam('frequency', 'none');
         # mock the week 1-7 or month 1-31
         $weekValue = Craft::$app->request->getParam('week');
         $monthValue = Craft::$app->request->getParam('month');
@@ -46,7 +46,7 @@ class CronController extends BaseController {
             # $this->notifyLicencesRemaining();
             # $this->notifySchemeExpiry();
         }
-        $this->returnJson(['cron'=> $frequency]);
+        return $this->asJson(['cron'=> $frequency]);
     }
 
     /**
