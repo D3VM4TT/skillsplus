@@ -26,6 +26,8 @@ class Queue extends Component
         parent::__construct();
         if (Craft::$app->db->tableExists('{{%lantra_queue}}')) {
             $this->queue = QueueRecord::find()
+                ->where(['status' => 'pending'])
+                ->orWhere(['status' => 'running'])
                 ->orderBy('priority, dateCreated')
                 ->all();
         }
@@ -94,7 +96,7 @@ class Queue extends Component
         ## expire jobs four hours old
         $expired = $job['dateCreated'] < (time() - 14400);
         if ($job['status'] == 'running' && $expired) {
-            $this->delete($job['elementId']);
+            $this->failed($job['elementId']);
         }
         if ($job['status'] == 'pending') {
             $this->status($job['elementId'], 'running');
@@ -114,6 +116,20 @@ class Queue extends Component
         if ($entry->sectionId == 13) {
             Lantra::$app->reports->runCustomReport($entry);
         }
+    }
+
+    public function failed($elementId) {
+        $entry = Craft::$app->entries->getEntryById($elementId);
+        $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to complete.';
+        Lantra::$app->notify->notifyAdmin('Failed Job', $message);
+        $this->status($elementId, 'failed');
+    }
+
+    /**
+     * @param $elementId
+     */
+    public function success($elementId) {
+        $this->status($elementId, 'success');
     }
 
     /**
