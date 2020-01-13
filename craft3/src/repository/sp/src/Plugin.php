@@ -218,6 +218,7 @@ class Plugin extends BasePlugin
             'sp/cache'                          => 'sp/cp/settings/cache',
             'sp/tools'                          => 'sp/cp/tools',
             'sp/import'                         => 'sp/cp/import/index',
+            'sp/queue/delete-job'               => 'sp/cp/settings/delete-job',
         ];
     }
 

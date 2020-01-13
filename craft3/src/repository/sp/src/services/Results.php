@@ -16,7 +16,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\helpers\DateTimeHelper;
 use craft\events\ModelEvent;
-use craft\DateTime;
+use DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -29,6 +29,7 @@ class Results extends Component
     private $sectionIdResults = 10;
     private $typeIdUnitResult = 10;
     private $typeIdModuleResult = 14;
+    private $dateFormat = 'd/m/y';
 
     /**
      * @param $event
@@ -1076,8 +1077,8 @@ class Results extends Component
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
-                $user->userDateOfBirth,
-                $user->userStartDate,
+                $user->userDateOfBirth->format($this->dateFormat),
+                $user->userStartDate->format($this->dateFormat),
                 $user->userAddress
             ];
             $userUnits = $this->roleUnits($user->roleId);
@@ -1422,7 +1423,7 @@ class Results extends Component
                     $company ? $company->companyLabel : 'unknown',
                     $role ? $role->title : 'unknown',
                     $title,
-                    $result->expiryDate,
+                    $result->expiryDate->format($this->dateFormat),
                     $result->status == 'expired' ? 'expired' : 'expiring'
                 ];
                 $rows[] = $row;
@@ -1499,7 +1500,7 @@ class Results extends Component
                 $company ? $company->companyLabel : 'unknown',
                 $role ? $role->title : 'unknown',
                 $result->title,
-                $result->expiryDate,
+                $result->expiryDate->format($this->dateFormat),
                 'expired'
             ];
             $rows[] = $row;
@@ -1529,7 +1530,7 @@ class Results extends Component
                     $company ? $company->companyLabel : 'unknown',
                     $role ? $role->title : 'unknown',
                     $unit->title,
-                    $result ? $result->expiryDate : null,
+                    $result ? $result->expiryDate->format($this->dateFormat) : null,
                     $result ? 'expired' : 'required'
                 ];
                 $rows[] = $row;
@@ -1890,8 +1891,8 @@ class Results extends Component
     private function setResultValue($resultEntry) {
         return json_encode([
             'expiryDate' => $resultEntry->expiryDate ? $resultEntry->expiryDate->getTimestamp() : null,
-            'startDate' => $resultEntry->resultStartDate ? $resultEntry->resultStartDate->getTimestamp() : null,
-            'finishDate' => $resultEntry->resultFinishDate ? $resultEntry->resultFinishDate->getTimestamp() : null
+            'startDate' => $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null,
+            'finishDate' => $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null
         ]);
     }
 }

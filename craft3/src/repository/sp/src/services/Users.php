@@ -14,6 +14,7 @@ use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\elements\db\UserQuery;
+use craft\helpers\DateTimeHelper;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -40,7 +41,7 @@ class Users extends Component
     public function onBeforeSaveUser(ModelEvent $event, User $user)
     {
         ## automatically set userType for reports
-        $user->userType = Lantra::$app->users->canManage($user) ? 'manager' : 'member';
+        ## $user->setFieldValue('userType', Lantra::$app->users->canManage($user) ? 'manager' : 'member');
 
         $userStartDate = $user->userStartDate ? $user->userStartDate->getTimestamp() : false;
         $userExpiryDate = $user->userExpiryDate ? $user->userStartDate->getTimestamp() : false;
@@ -1035,11 +1036,11 @@ class Users extends Component
         $format = 'd-m-Y';
         foreach ($rows as $user) {
             if ($user['userDateOfBirth']) {
-                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userDateOfBirth']);
+                $dateObject = DateTimeHelper::toDateTime($user['userDateOfBirth']);
                 $user['userDateOfBirth'] = $dateObject->format($format);
             }
             if ($user['userStartDate']) {
-                $dateObject = DateTime::createFromFormat(DateTime::MYSQL_DATETIME, $user['userStartDate']);
+                $dateObject = DateTimeHelper::toDateTime($user['userStartDate']);
                 $user['userStartDate'] = $dateObject->format($format);
             }
             $return[$user['id']] = (object)$user;
@@ -1397,7 +1398,7 @@ class Users extends Component
                     if (($key = array_search($user->id, $primaryManagerIds)) !== false) {
                         unset($primaryManagerIds[$key]);
                     }
-                    $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
+                    $company->setFieldValue('companyPrimaryManagers', $primaryManagerIds);
                     Craft::$app->elements->saveElement($company, false);
                 } else {
                     $secondaryManagerIds = $company->companySecondaryManagers->ids();
@@ -1405,7 +1406,7 @@ class Users extends Component
                     if (($key = array_search($user->id, $secondaryManagerIds)) !== false) {
                         unset($secondaryManagerIds[$key]);
                     }
-                    $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                    $company->setFieldValue('companySecondaryManagers', $secondaryManagerIds);
                     Craft::$app->elements->saveElement($company, false);
                 }
             }
@@ -1419,12 +1420,12 @@ class Users extends Component
             $secondaryManagerIds = $company->companySecondaryManagers->count() ? $company->companySecondaryManagers->ids() : [];
             if ($type == 'primary' && !in_array($user->id, $primaryManagerIds)) {
                 $primaryManagerIds[] = $user->id;
-                $company->setAttributes('companyPrimaryManagers', $primaryManagerIds);
-                Craft::$app->elements->saveElement($company, false);
+                $company->setFieldValue('companyPrimaryManagers', $primaryManagerIds);
+                Craft::$app->elements->saveElement($company);
             }
             if ($type == 'secondary' && !in_array($user->id, $secondaryManagerIds)) {
                 $secondaryManagerIds[] = $user->id;
-                $company->setAttributes('companySecondaryManagers', $secondaryManagerIds);
+                $company->setFieldValue('companySecondaryManagers', $secondaryManagerIds);
                 Craft::$app->elements->saveElement($company, false);
             }
         }

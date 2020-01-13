@@ -1,4 +1,12 @@
 {% import "_includes/forms" as forms %}
+{{ forms.textField ({
+    instructions:   "Default: admin@skills-plus.co.uk",
+    label:			"Notify Admin Email",
+    id:				"notifyAdminEmail",
+    name:			"notifyAdminEmail",
+    value:		    settings.notifyAdminEmail
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
     label:			"Message Blocked Result",

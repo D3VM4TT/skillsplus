@@ -22,27 +22,31 @@ class CronController extends BaseController {
      * @throws Exception
      */
     function actionRun() {
-        $frequency = Craft::$app->request->getParam('frequency');
+        $frequency = Craft::$app->request->getParam('frequency', 'none');
+        # mock the week 1-7 or month 1-31
+        $weekValue = Craft::$app->request->getParam('week');
+        $monthValue = Craft::$app->request->getParam('month');
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
             Lantra::$app->queue->next();
             Lantra::$app->queue->next();
         }
         if ($frequency == 'daily') {
-            Craft::log("Daily Cron",LogLevel::Info, true, 'cron', 'lantra');
+            Craft::info("Daily Cron", __METHOD__);
             # stop all notifications but user generated automatic report
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
-            Lantra::$app->reports->sendDailyReports();
+            Lantra::$app->reports->sendDailyReports($weekValue, $monthValue);
+
         }
         if ($frequency == 'weekly') {
-            Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
+            Craft::info("Weekly Cron", __METHOD__);
             # stop all notifications but user generated automatic report
             # $this->notifyManagerSummary();
             # $this->notifyLicencesRemaining();
             # $this->notifySchemeExpiry();
         }
-        $this->returnJson(['cron'=> $frequency]);
+        return $this->asJson(['cron'=> $frequency]);
     }
 
     /**

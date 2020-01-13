@@ -98,6 +98,6 @@ class SettingsController extends Controller
             Lantra::$app->queue->delete($elementId);
         }
         Craft::$app->session->setNotice('Queue updated.');
-        $this->redirect('lantra/settings/queue');
+        $this->redirect('sp/queue');
     }
 }

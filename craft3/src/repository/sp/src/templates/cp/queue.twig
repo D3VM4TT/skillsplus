@@ -1,12 +1,11 @@
 {% extends "_layouts/cp" %}
 {% set title = 'Lantra Queue' %}
 {% set selectedSubnavItem = 'queue' %}
-{% set queue = craft.lantra.queue() %}
+{% set lantraQueue = craft.lantra.queue() %}
 
 {% block content %}
-
     <div class="tableview">
-        {% if queue is iterable and queue|length %}
+        {% if lantraQueue is iterable and lantraQueue|length %}
             <div class="tablecontent">
                 <table class="data fullwidth">
                     <thead>
@@ -33,7 +32,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for job in queue %}
+                    {% for job in lantraQueue %}
                         {% set element = job.element %}
                         {% set section = element ? element.section : null %}
                         <tr class="table_row">
@@ -73,7 +72,7 @@
                             </td>
                             <td>
                                 <div class="item_content">
-                                    <a href="{{ actionUrl('lantra/settings/deleteJob', {elementId: job.elementId}) }}"
+                                    <a href="{{ url('sp/queue/delete-job&elementId=' ~ job.elementId) }}"
                                        class="btn small">{{ "Remove"|t }}</a>
                                 </div>
                             </td>
@@ -83,7 +82,7 @@
                 </table>
             </div>
             <p style="text-align: right">
-                <a href="{{ actionUrl('lantra/settings/deleteJob', {elementId: 'all'}) }}"
+                <a href="{{ url('sp/queue/delete-job&elementId=all') }}"
                    class="btn submit export-btn">Clear Queue (remove all jobs)</a>
             </p>
         {% else %}

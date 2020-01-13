@@ -262,6 +262,18 @@ class Notify extends Component
     }
 
     /**
+     * @param $subject
+     * @param $body
+     * @param array $attachments
+     * @return mixed
+     */
+    function notifyAdmin($subject, $body, $attachments = [])
+    {
+        $adminEmail = $this->getNotifySetting('adminEmail');
+        return $this->notify($adminEmail, $subject, $body, $attachments);
+    }
+
+    /**
      * Send a message to a user
      *
      * @param $toEmail
@@ -305,9 +317,10 @@ class Notify extends Component
                     }
                 }
                 if (!$message->send()) {
-                    Craft::error('notify(' . $address . ')', __METHOD__);
+                    Craft::error('notify(' . $address . ') not sent!' , __METHOD__);
                 }
             } catch (\Exception $e) {
+                $this->notifyAdmin('Notify error (' . $address. ')', $e->getMessage());
                 Craft::error('notify(' .  $address. ') ' . $e->getMessage(),__METHOD__);
                 return false;
             }

@@ -136,7 +136,7 @@ class UsersController extends BaseController {
         ## assign user to groups (always in 'user' group from front end)
         $groupIds = [4];
         $userCompany = isset($fields['userCompany']) ? $fields['userCompany'] : null;
-        if (Craft::$app->request->getParam('companyManagers')) {
+        if ($fields['userType'] == 'manager') {
             $groupIds[] = 2;
             $companyManager = true;
         }
@@ -168,11 +168,11 @@ class UsersController extends BaseController {
 
         if ($user->newPassword && ($user->newPassword != $confirmPassword)) {
             $user->addErrors(['confirmPassword' => 'Passwords do not match']);
-            Craft::$app->urlManager->setRouteParams(array('account' => $user));
+            return Craft::$app->urlManager->setRouteParams(array('account' => $user));
         }
         ## save user
         elseif (!Craft::$app->elements->saveElement($user)) {
-            Craft::$app->urlManager->setRouteParams(['account' => $user, 'saveUserError' => true]);
+            return Craft::$app->urlManager->setRouteParams(['account' => $user, 'saveUserError' => true]);
         }
 
         Craft::$app->users->assignUserToGroups($user->id, $groupIds);
@@ -184,6 +184,10 @@ class UsersController extends BaseController {
             $secondaryManagerCompanyIds = Craft::$app->request->getParam('userSecondaryManagerCompanies', []);
             Lantra::$app->users->setManager($secondaryManagerCompanyIds, $user, 'secondary');
         }
+
+        ## delete hierarchy cache
+        Lantra::$app->structure->clearHierarchyCache();
+
         $this->_returnMessage('User has been saved.', true, $redirect);
     }
 
