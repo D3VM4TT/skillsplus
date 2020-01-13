@@ -70,12 +70,14 @@ class Lantra_ReportsService extends BaseApplicationComponent
     /**
      * Run all reports for today
      *
+     * @param $weekValue
+     * @param $monthValue
      * @throws Mixed
      */
-    public function sendDailyReports()
+    public function sendDailyReports($weekValue = null, $monthValue = null)
     {
-        $weekDay = (int) date('N');
-        $monthDay = (int) date('j');
+        $weekDay = $weekValue ? $weekValue : (int) date('N');
+        $monthDay = $monthValue ? $monthValue : (int) date('j');
         $reportEntries = $this->getAutomatedReports();
         foreach ($reportEntries as $reportEntry) {
             $reportSendValue = (int) $reportEntry->reportSendValue;

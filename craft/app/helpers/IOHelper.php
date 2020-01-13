@@ -1050,7 +1050,7 @@ class IOHelper
 	 *
 	 * @return bool 'true' if successful, 'false' if not or the path does not exist.
 	 */
-	public static function changePermissions($path, $permissions, $suppressErrors = false)
+	public static function changePermissions($path, $permissions, $suppressErrors = true)
 	{
 		$path = static::normalizePathSeparators($path);
 

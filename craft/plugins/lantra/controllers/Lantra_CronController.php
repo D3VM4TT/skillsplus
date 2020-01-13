@@ -14,6 +14,9 @@ class Lantra_CronController extends Lantra_BaseController {
      */
     function actionRun() {
         $frequency = craft()->request->getParam('frequency');
+        # mock the week 1-7 or month 1-31
+        $weekValue = craft()->request->getParam('week');
+        $monthValue = craft()->request->getParam('month');
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
             craft()->lantra_queue->next();
@@ -24,7 +27,7 @@ class Lantra_CronController extends Lantra_BaseController {
             # stop all notifications but user generated automatic report
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
-            craft()->lantra_reports->sendDailyReports();
+            craft()->lantra_reports->sendDailyReports($weekValue, $monthValue);
         }
         if ($frequency == 'weekly') {
             Craft::log("Weekly Cron",LogLevel::Info, true, 'cron', 'lantra');
