@@ -42,6 +42,8 @@ class Structure extends Component
     public function onSaveCompany($event, $entry)
     {
         $this->saveCompanyChildren($entry);
+        ## delete hierarchy cache
+        Lantra::$app->structure->clearHierarchyCache();
     }
 
     /**
