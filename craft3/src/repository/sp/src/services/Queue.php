@@ -96,7 +96,7 @@ class Queue extends Component
         ## expire jobs twelve hours old
         $expired = $job['dateCreated'] < (time() - 43200);
         if ($job['status'] == 'running' && $expired) {
-            $this->failed($job['elementId']);
+            $this->expired($job['elementId']);
         }
         if ($job['status'] == 'pending') {
             $this->status($job['elementId'], 'running');
@@ -112,23 +112,36 @@ class Queue extends Component
         if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
             return;
         }
-        ## only works with reports
-        if ($entry->sectionId == 13) {
-            Lantra::$app->reports->runCustomReport($entry);
+        try {
+            ## only works with reports
+            if ($entry->sectionId == 13) {
+                Lantra::$app->reports->runCustomReport($entry);
+            }
+        }
+        catch(\Exception $e) {
+            $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to run. ' . $e->getMessage();
+            Lantra::$app->notify->notifyAdmin('Failed Job', $message);
         }
     }
 
-    public function failed($elementId) {
+    /**
+     * @param $elementId
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function expired($elementId)
+    {
         $entry = Craft::$app->entries->getEntryById($elementId);
         $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to complete in 12 hours.';
-        Lantra::$app->notify->notifyAdmin('Failed Job', $message);
+        Lantra::$app->notify->notifyAdmin('Expired Job', $message);
         $this->delete($elementId);
     }
 
     /**
      * @param $elementId
      */
-    public function success($elementId) {
+    public function success($elementId)
+    {
         $this->status($elementId, 'success');
     }
 
