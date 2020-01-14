@@ -91,7 +91,7 @@ class LantraHelper
                 $response['asset'] = $asset;
             }
         } catch (\Throwable $exception) {
-            $response['message'] = 'Asset exception: ' . $exception->getMessage();
+            $response['message'] = 'LantraHelper::addAsset() exception: ' . $exception->getMessage();
         }
         return $response;
     }
