@@ -82,9 +82,10 @@ class Queue extends Component
      */
     public function status($elementId, $status = 'running')
     {
-        $job = $this->job($elementId);
-        $job->status = $status;
-        $job->save();
+        if (false != $job = $this->job($elementId)) {
+            $job->status = $status;
+            $job->save();
+        }
     }
 
     /**
