@@ -14,6 +14,8 @@ use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
+use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
@@ -169,6 +171,19 @@ class Plugin extends BasePlugin
                     ## delete result cache unit column (if enabled)
                     Lantra::$app->results->removeUnitColumn($entry->id);
                 }
+            });
+
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function(RegisterUserPermissionsEvent $event) {
+                $event->permissions['Lantra Skills Plus'] = [
+                    'manageCompanies' => ['label' => 'Manage Companies'],
+                    'manageTeams' => ['label' => 'Manage Teams'],
+                    'manageJobRoles' => ['label' => 'Manage Job Roles'],
+                    'manageModules' => ['label' => 'Manage Modules'],
+                    'accessReports' => ['label' => 'Access Reports'],
+                ];
             });
     }
 
