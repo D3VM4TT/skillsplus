@@ -258,6 +258,7 @@ class Reports extends Component
     public function runCustomReport(Entry $reportEntry)
     {
         $response = [
+            'success'   => false,
             'total'     => 0,
             'message'   => ''
         ];
@@ -308,6 +309,7 @@ class Reports extends Component
         }
         ## delete from queue (if it came from the queue)
         Lantra::$app->queue->success($reportEntry->id);
+        $response['success'] = true;
         return $response;
     }
 

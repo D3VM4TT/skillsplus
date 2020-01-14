@@ -89,7 +89,7 @@ class ReportsController extends BaseController
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         $response = Lantra::$app->reports->runCustomReport($entry);
-        if ($response['total']) {
+        if ($response['success']) {
             return $this->_returnMessage( $entry->title . ' has been successfully run (' . $response['total'] . ' rows).', true);
 
         }
