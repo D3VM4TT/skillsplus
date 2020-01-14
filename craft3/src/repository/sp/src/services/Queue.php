@@ -93,8 +93,8 @@ class Queue extends Component
     public function next()
     {
         $job = array_shift($this->queue);
-        ## expire jobs four hours old
-        $expired = $job['dateCreated'] < (time() - 14400);
+        ## expire jobs twelve hours old
+        $expired = $job['dateCreated'] < (time() - 43200);
         if ($job['status'] == 'running' && $expired) {
             $this->failed($job['elementId']);
         }
@@ -120,9 +120,9 @@ class Queue extends Component
 
     public function failed($elementId) {
         $entry = Craft::$app->entries->getEntryById($elementId);
-        $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to complete.';
+        $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to complete in 12 hours.';
         Lantra::$app->notify->notifyAdmin('Failed Job', $message);
-        $this->status($elementId, 'failed');
+        $this->delete($elementId);
     }
 
     /**
@@ -145,10 +145,10 @@ class Queue extends Component
     }
 
     /**
-     *
+     * @throws \yii\db\Exception
      */
     public function clear()
     {
-        Craft::$app->db->createCommand()->truncateTable('lantra_queue');
+        Craft::$app->db->createCommand()->truncateTable('{{%lantra_queue}}')->execute();
     }
 }
