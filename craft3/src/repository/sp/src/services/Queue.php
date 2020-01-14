@@ -116,7 +116,7 @@ class Queue extends Component
         try {
             ## only works with reports
             if ($entry->sectionId == 13) {
-                Lantra::$app->reports->runCustomReport($entry);
+                $response = Lantra::$app->reports->runCustomReport($entry);
             }
         }
         catch(\Exception $e) {

@@ -88,12 +88,12 @@ class ReportsController extends BaseController
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        $total = Lantra::$app->reports->runCustomReport($entry);
-        if ($total) {
-            return $this->_returnMessage( $entry->title . ' has been successfully run (' . $total . ' rows).', true);
+        $response = Lantra::$app->reports->runCustomReport($entry);
+        if ($response['total']) {
+            return $this->_returnMessage( $entry->title . ' has been successfully run (' . $response['total'] . ' rows).', true);
 
         }
-        $this->_returnMessage( $entry->title . ' currently has no data.', false);
+        $this->_returnMessage($response['message'],false);
     }
 
     /**
