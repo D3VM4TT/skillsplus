@@ -55,7 +55,7 @@
                                 {% elseif job %}
                                     {{ job.status }}
                                 {% else %}
-                                    unknown
+                                    <a class="action" href="#" data-action="reports/run" data-id="{{ report.id }}" href="">run report now</a>
                                 {% endif %}
                             </td>
                             <td style="text-align: right;">
