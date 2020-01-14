@@ -1076,8 +1076,8 @@ class Results extends Component
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
-                $user->userDateOfBirth->format($this->dateFormat),
-                $user->userStartDate->format($this->dateFormat),
+                $user->userDateOfBirth,
+                $user->userStartDate,
                 $user->userAddress
             ];
             $userUnits = $this->roleUnits($user->roleId);
