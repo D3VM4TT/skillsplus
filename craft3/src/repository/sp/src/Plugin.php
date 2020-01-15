@@ -15,6 +15,8 @@ use craft\elements\Entry;
 use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\events\TemplateEvent;
+use craft\web\View;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
@@ -22,6 +24,7 @@ use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
+use lantra\sp\assetbundles\SpCpAsset;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
@@ -67,6 +70,26 @@ class Plugin extends BasePlugin
         ## add the lantra log file
         $fileTarget = new FileTarget(['logFile' => '@storage/logs/lantra.log', 'categories' => ['lantra\sp\*']]);
         Craft::getLogger()->dispatcher->targets[] = $fileTarget;
+
+        Event::on(
+            View::class,
+            View::EVENT_BEFORE_RENDER_TEMPLATE,
+            function (TemplateEvent $event) {
+                $request = Craft::$app->getRequest();
+                if ($request->getIsConsoleRequest()) {
+                    return;
+                }
+                if ($request->getUrl() == '/actions/update/updateDatabase') {
+                    return;
+                }
+                if ($request->isCpRequest) {
+                    $view = Craft::$app->getView();
+                    $view->registerAssetBundle(SpCpAsset::class);
+                    $js = "Craft.schemeName='" . Lantra::$app->settings->getSetting('schemeName') ."'";
+                    $view->registerJs($js, View::POS_END);
+                }
+            }
+        );
 
         Event::on(
             UrlManager::class,
