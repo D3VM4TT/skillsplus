@@ -7,13 +7,15 @@
 // Set path constants
 define('CRAFT_BASE_PATH', __DIR__);
 define('CRAFT_VENDOR_PATH', CRAFT_BASE_PATH.'/vendor');
+define('CRAFT_LOCAL_PATH', '../local');
+define('CRAFT_STORAGE_PATH', CRAFT_LOCAL_PATH.'/storage');
 
 // Load Composer's autoloader
 require_once CRAFT_VENDOR_PATH.'/autoload.php';
 
 // Load dotenv?
-if (class_exists('Dotenv\Dotenv') && file_exists(CRAFT_BASE_PATH.'/.env')) {
-    Dotenv\Dotenv::create(CRAFT_BASE_PATH)->load();
+if (class_exists('Dotenv\Dotenv') && file_exists(CRAFT_LOCAL_PATH.'/.env')) {
+    Dotenv\Dotenv::create(CRAFT_LOCAL_PATH)->load();
 }
 
 // Load and run Craft
