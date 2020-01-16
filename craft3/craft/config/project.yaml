@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1579103764
+dateModified: 1579178472
 email:
   fromEmail: No-Reply@skills-plus.net
   fromName: 'Skills Plus'
@@ -2767,7 +2767,7 @@ plugins:
   sp:
     edition: standard
     enabled: true
-    schemaVersion: 0.0.1  
+    schemaVersion: 0.0.1
 sections:
   090b3c24-a9ac-4935-a919-c4fc8a3099b0:
     name: Units
