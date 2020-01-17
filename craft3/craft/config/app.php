@@ -18,6 +18,7 @@
  */
 
 use craft\helpers\App;
+use lantra\sp\helpers\LantraHelper;
 
 return [
     '*' => [
@@ -27,6 +28,8 @@ return [
         'components' => [
             'mailer' => function() {
                 $settings = App::mailSettings();
+                $settings->fromEmail = LantraHelper::setting('notifyFromEmail', 'No-Reply@skills-plus.net');
+                $settings->fromName = LantraHelper::setting('notifyFromName', 'Skills Plus');
                 $settings->transportType = \craft\mail\transportadapters\Gmail::class;
                 $settings->transportSettings = [
                     'username'  => getenv('SMTP_USERNAME'),

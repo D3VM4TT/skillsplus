@@ -1,4 +1,4 @@
-{% requirePermission 'editEntries:13' %}
+{% requirePermission 'editEntries:1d590683-b16e-4955-be62-315accb3e628' %}
 
 {% extends "_layout" %}
 
@@ -55,7 +55,7 @@
                                 {% elseif job %}
                                     {{ job.status }}
                                 {% else %}
-                                    unknown
+                                    <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}" href="">run report now</a>
                                 {% endif %}
                             </td>
                             <td style="text-align: right;">

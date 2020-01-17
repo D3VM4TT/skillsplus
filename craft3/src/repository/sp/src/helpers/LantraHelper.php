@@ -32,11 +32,12 @@ class LantraHelper
 
     /**
      * @param string $key
+     * @param string $default
      * @return mixed|null
      */
-    public static function setting($key = '')
+    public static function setting($key = '', $default = null)
     {
-        return Lantra::$app->settings->getSetting($key);
+        return Lantra::$app->settings->getSetting($key, $default);
     }
 
     /**
@@ -91,7 +92,7 @@ class LantraHelper
                 $response['asset'] = $asset;
             }
         } catch (\Throwable $exception) {
-            $response['message'] = 'Asset exception: ' . $exception->getMessage();
+            $response['message'] = 'LantraHelper::addAsset() exception: ' . $exception->getMessage();
         }
         return $response;
     }

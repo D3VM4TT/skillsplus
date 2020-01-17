@@ -36,7 +36,7 @@ class SettingsController extends Controller
         ## config for logo asset
         $volume = Craft::$app->volumes->getVolumeByHandle('theme');
         $themeFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
-        $config['themeFolder'] = ['folder:'.$themeFolder->id.':single'];
+        $config['themeFolder'] = ['folder:'.$themeFolder->uid];
 
         ## config for navigation entries
         $config['pagesSection'] = ['section:14'];

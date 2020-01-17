@@ -37,7 +37,7 @@ class EntriesController extends BaseController {
         $count = 0;
         ## loop entries and update status
         foreach ($results as $resultEntry) {
-            $resultEntry->setAttributes(['resultStatus' => 'pending']);
+            $resultEntry->setFieldValue('resultStatus', 'pending');
             Craft::$app->elements->saveElement($resultEntry);
             $count ++;
         }

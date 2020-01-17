@@ -16,18 +16,20 @@ TMP_DIR="/git/tmp/craft3"
 mkdir -p $TMP_DIR
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f craft3
 
-# install composer
-cd $TMP_DIR/craft3/craft
-composer install --no-suggest
+if [[ "$2" == "" ]] ; then
+    # install composer
+    cd $TMP_DIR/craft3/craft
+    composer install --no-suggest
+fi
 
-# copy .env to local
-cp /git/config/.env $TMP_DIR/craft3/local
+# copy .env to project
+cp /git/config/.env $TMP_DIR/craft3/craft
 
 ## START COPY ##
 
 # set .env properties
-echo "ENVIRONMENT='dev'" >> $TMP_DIR/craft3/local/.env
-echo "SITE='${SITE}'" >> $TMP_DIR/craft3/local/.env
+echo "ENVIRONMENT='dev'" >> $TMP_DIR/craft3/craft/.env
+echo "SITE='${SITE}'" >> $TMP_DIR/craft3/craft/.env
 
 # switch directory ownership back to git
 ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER
@@ -35,8 +37,6 @@ ssh git@$REMOTE_IP sudo chown -R git:apache $REMOTE_FOLDER
 # copy files
 rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/craft git@$REMOTE_IP:$REMOTE_FOLDER
 rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/html git@$REMOTE_IP:$REMOTE_FOLDER
-rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/local git@$REMOTE_IP:$REMOTE_FOLDER
-rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/cli git@$REMOTE_IP:$REMOTE_FOLDER
 
 # copy skills-plus repo
 rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/src/repository git@$REMOTE_IP:$REMOTE_FOLDER/src/
@@ -44,22 +44,19 @@ rsync -acvz --no-perms --no-owner --no-group --no-times $TMP_DIR/craft3/src/repo
 # switch directory ownership back to apache
 ssh git@$REMOTE_IP sudo chown -R apache:apache $REMOTE_FOLDER
 
-# update craft via cli
-# ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/cli/craft
-# ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/cli/./craft project-config/sync
-# ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/cli/./craft migrate/all
-
 # set file and folder permissions
-ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/local/.env
-ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/local/storage
-
+ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
+ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/storage
 ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
 ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
 ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
 ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
-
 ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
 
+# update craft via cli
+ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/craft/craft
+ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
+ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
 
 ## END COPY ##
 

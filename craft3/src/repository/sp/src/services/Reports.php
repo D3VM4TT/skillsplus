@@ -257,22 +257,29 @@ class Reports extends Component
      */
     public function runCustomReport(Entry $reportEntry)
     {
+        $response = [
+            'success'   => false,
+            'total'     => 0,
+            'message'   => ''
+        ];
         $filter = $this->getCustomReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
-        $total = count($values) - 1;
-        if (!$total) {
-            return 0;
+        $response['total'] = count($values) - 1;
+        if (!$response['total']) {
+            $response['message'] = $reportEntry->title . ' returns no data.';
+            return $response;
         }
         ## create csv file in temp folder
         $tempFolder = Craft::$app->path->tempPath;
         $fileName = $reportEntry->slug . '-' . time() . '.csv';
         $tempPath = $tempFolder . $fileName;
         $this->reportCsv($values, $tempPath);
-        $response = LantraHelper::addAsset($tempPath, $fileName, 'data');
-        if (!$response['asset']) {
-            return 0;
+        $assetResponse = LantraHelper::addAsset($tempPath, $fileName, 'data');
+        if (!$assetResponse['asset']) {
+            $response['message'] = $assetResponse['message'];
+            return $response;
         }
-        $asset = $response['asset'];
+        $asset = $assetResponse['asset'];
         ## append asset to report entry
         $reportData = array_merge($reportEntry->reportData->ids(), [$asset->id]);
         $reportEntry->setFieldValue('reportData', $reportData);
@@ -300,9 +307,10 @@ class Reports extends Component
             $reportEntry->reportLastSentDate = DateTimeHelper::currentUTCDateTime();
             Craft::$app->elements->saveElement($reportEntry);
         }
-        ## delete from queue
+        ## delete from queue (if it came from the queue)
         Lantra::$app->queue->success($reportEntry->id);
-        return $total;
+        $response['success'] = true;
+        return $response;
     }
 
     /**

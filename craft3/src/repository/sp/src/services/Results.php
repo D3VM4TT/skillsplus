@@ -91,18 +91,18 @@ class Results extends Component
             $currentUser = Craft::$app->getUser();
             ## auto endorse
             if (!Craft::$app->request->isCpRequest && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
-                $entry->setAttributes(['resultStatus' => 'endorsed']);
+                $entry->setFieldValue('resultStatus', 'endorsed');
                 if (!$oldEntry) {
-                    $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentUTCDateTime()]);
-                    $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
+                    $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentUTCDateTime());
+                    $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
                 }
             }
             ## force clear endorsed date if pending
             if ($entry->resultStatus == 'pending') {
-                $entry->setAttributes(['resultEndorsedDate' => null]);
+                $entry->setFieldValue('resultEndorsedDate', null);
             } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-                $entry->setAttributes(['resultEndorsedDate' => DateTimeHelper::currentUTCDateTime()]);
-                $entry->setAttributes(['resultEndorsedUser' => [$currentUser->id]]);
+                $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentUTCDateTime());
+                $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
             }
             ## check change from draft to pending
             if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
@@ -462,10 +462,8 @@ class Results extends Component
      * @throws null
      */
     function unblockResult($resultEntry) {
-        $resultEntry->setAttributes([
-            'resultAttempts' => [],
-            'resultScore' => 0
-        ]);
+        $resultEntry->setFieldValue('resultAttempts', []);
+        $resultEntry->setFieldValue('resultScore', 0);
         $this->setResultStatus($resultEntry,'active');
         Craft::$app->elements->saveElement($resultEntry);
     }
@@ -582,7 +580,8 @@ class Results extends Component
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
-        $resultEntry->setAttributes(['resultModule' => array($moduleEntryId), 'resultStatus' => 'active']);
+        $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
+        $resultEntry->setFieldValue('resultStatus',  'active');
         // @todo error reporting?
         if ( ! Craft::$app->elements->saveElement($resultEntry)) {
             return;
@@ -1077,8 +1076,8 @@ class Results extends Component
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
-                $user->userDateOfBirth->format($this->dateFormat),
-                $user->userStartDate->format($this->dateFormat),
+                $user->userDateOfBirth,
+                $user->userStartDate,
                 $user->userAddress
             ];
             $userUnits = $this->roleUnits($user->roleId);
@@ -1163,10 +1162,8 @@ class Results extends Component
             return $resultEntry;
         }
 
-        $resultEntry->setAttributes([
-            'resultEvidence' => $assetIds,
-            'legacyResultFiles' => implode(',', $updatedLegacyResultFiles)
-        ]);
+        $resultEntry->setFieldValue('resultEvidence', $assetIds);
+        $resultEntry->setFieldValue('legacyResultFiles', implode(',', $updatedLegacyResultFiles));
         Craft::$app->elements->saveElement($resultEntry);
 
         ## get entry again to force refresh on data
