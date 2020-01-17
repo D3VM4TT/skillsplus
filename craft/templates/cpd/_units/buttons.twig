@@ -1,9 +1,8 @@
 {% if isManager %}
-    {% if resultEntry and resultEntry.resultStatus == 'endorsed' %}
-        <div class="container-btn">
-            <button class="button primary-bg status" data-status="pending" type="button">Save as pending</button>
-        </div>
-    {% elseif account.id != currentUser.id %}
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="pending" type="button">Save as pending</button>
+    </div>
+    {% if account.id != currentUser.id %}
         <div class="container-btn">
             <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
         </div>
