@@ -134,30 +134,7 @@
                 {% if moduleEntry %}
                     {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
                 {% endif %}
-                {% if not resultLocked %}
-                    <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
-                    <div class="container-btn">
-                        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
-                    </div>
-                {% endif %}
-                {% if isManager %}
-                    <div class="container-btn">
-                        {% if resultEntry and resultEntry.resultStatus == 'draft' %}
-                            <button class="button primary-bg status" data-status="pending" type="button">Save and endorse</button>
-                        {% else %}
-                            <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update result' : 'Save and endorse' }}</button>
-                        {% endif %}
-                    </div>
-                {% elseif not craft.lantra.setting('jobRoleEndorse', false) %}
-                    <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
-                    <div class="container-btn">
-                        {% if resultEntry and (resultEntry.resultStatus == 'draft' or resultEntry.resultStatus == 'endorsed') %}
-                            <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
-                        {% else %}
-                            <button class="button primary-bg" type="submit">{{ resultEntry ? 'Update result' : 'Request endorsement' }}</button>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                {% include 'cpd/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
             </form>
         </div>
     </section>

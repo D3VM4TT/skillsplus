@@ -122,20 +122,22 @@ class LantraPlugin extends BasePlugin
                 // check endorsed change
                 $oldEntry = craft()->entries->getEntryById($entry->id);
                 $currentUser = craft()->userSession->getUser();
-                // Auto endorse
-                if (! craft()->request->isCpRequest() && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
-                    $entry->setContentFromPost(['resultStatus' => 'endorsed']);
-                    if (!$oldEntry) {
-                        $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
-                        $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+                if (!craft()->request->isCpRequest() && $entry->resultStatus == 'endorsed') {
+                    if ($entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
+                        $entry->setContentFromPost(['resultStatus' => 'endorsed']);
+                        if (!$oldEntry or !$oldEntry->resultEndorsedDate) {
+                            $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
+                            $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+                        }
+                    }
+                    else {
+                        $entry->setContentFromPost(['resultStatus' => $oldEntry ? $oldEntry->resultStatus : 'pending']);
                     }
                 }
                 // force clear endorsed date if pending
-                if ($entry->resultStatus == 'pending') {
-                    $entry->setContentFromPost(['resultEndorsedDate' => null]);
-                } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-                    $entry->setContentFromPost(['resultEndorsedDate' => DateTimeHelper::currentTimeForDb()]);
-                    $entry->setContentFromPost(['resultEndorsedUser' => [$currentUser->id]]);
+                if ($entry->resultStatus != 'endorsed') {
+                    $entry->setContentFromPost(['resultEndorsedDate' => '']);
+                    $entry->setContentFromPost(['resultEndorsedUser' => []]);
                 }
                 // check change from draft to pending
                 if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
