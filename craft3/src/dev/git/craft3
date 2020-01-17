@@ -16,9 +16,11 @@ TMP_DIR="/git/tmp/craft3"
 mkdir -p $TMP_DIR
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f craft3
 
-# install composer
-cd $TMP_DIR/craft3/craft
-composer install --no-suggest
+if [[ "$2" == "" ]] ; then
+    # install composer
+    cd $TMP_DIR/craft3/craft
+    composer install --no-suggest
+fi
 
 # copy .env to project
 cp /git/config/.env $TMP_DIR/craft3/craft
