@@ -89,20 +89,22 @@ class Results extends Component
             ## check endorsed change
             $oldEntry = $entry->id ? Craft::$app->entries->getEntryById($entry->id) : null;
             $currentUser = Craft::$app->getUser();
-            ## auto endorse
-            if (!Craft::$app->request->isCpRequest && $entry->resultStatus != 'draft' && $entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
-                $entry->setFieldValue('resultStatus', 'endorsed');
-                if (!$oldEntry) {
-                    $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentUTCDateTime());
-                    $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
+            if (!Craft::$app->request->isCpRequest && $entry->resultStatus == 'endorsed') {
+                if ($entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
+                    $entry->setFieldValue('resultStatus', 'endorsed');
+                    if (!$oldEntry || !$oldEntry->resultEndorsedDate) {
+                        $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentTimeForDb());
+                        $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
+                    }
+                }
+                else {
+                    $entry->setFieldValue('resultStatus',$oldEntry ? $oldEntry->resultStatus : 'pending');
                 }
             }
             ## force clear endorsed date if pending
-            if ($entry->resultStatus == 'pending') {
+            if ($entry->resultStatus != 'endorsed') {
                 $entry->setFieldValue('resultEndorsedDate', null);
-            } elseif ($oldEntry && $oldEntry->resultStatus == 'pending' && $entry->resultStatus == 'endorsed') {
-                $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentUTCDateTime());
-                $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
+                $entry->setFieldValue('resultEndorsedUser', []);
             }
             ## check change from draft to pending
             if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {

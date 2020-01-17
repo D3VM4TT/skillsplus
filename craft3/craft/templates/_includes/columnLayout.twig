@@ -25,7 +25,13 @@
         {% elseif row.fieldType == 'resultEndorsedDate' %}
             <td class="resultEndorsedDate">
                 <p class="td-title-responsive">Endorsed Date: </p>
-                {{ resultEntry and resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate|date(dateFormat) : '-' }}
+                {% if resultEntry and resultEntry.resultStatus == 'endorsed' %}
+                    {# fix bug when resultEndorsedDate wasn't saving, default to post date #}
+                    {% set endorsedDate = resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate : resultEntry.postDate %}
+                    {{ endorsedDate|date(dateFormat) }}
+                {% else %}
+                    -
+                {% endif %}
             </td>
         {% elseif row.fieldType == 'resultEndorsedUser'  %}
             <td class="resultEndorsedUser">
