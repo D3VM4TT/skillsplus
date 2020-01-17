@@ -669,6 +669,9 @@ class Lantra_ResultsService extends BaseApplicationComponent
             AND authorId IN(" . implode(',', $subordinateIds) . ")";
         }
 
+        $mysql .= "
+            AND authorId != " . $manager->id;
+
         if ($count) {
             return craft()->db->createCommand($mysql)->queryRow()['total'];
         }
