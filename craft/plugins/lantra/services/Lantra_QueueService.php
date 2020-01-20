@@ -78,7 +78,7 @@ class Lantra_QueueService extends BaseApplicationComponent
         // expire jobs four hours old
         $expired = $job['dateCreated'] < (time() - 14400);
         if ($job['status'] == 'running' && $expired) {
-            $this->failed($job['elementId']);
+            ## $this->failed($job['elementId']);
         }
         if ($job['status'] == 'pending') {
             $this->status($job['elementId'], 'running');
@@ -91,7 +91,7 @@ class Lantra_QueueService extends BaseApplicationComponent
      */
      public function run($elementId) {
         if (null == $entry = craft()->entries->getEntryById($elementId)) {
-            return;
+            $this->delete($elementId);
         }
         // only works with reports
         if ($entry->sectionId == 13) {
