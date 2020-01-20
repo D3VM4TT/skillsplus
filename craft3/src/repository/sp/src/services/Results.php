@@ -90,7 +90,7 @@ class Results extends Component
             $oldEntry = $entry->id ? Craft::$app->entries->getEntryById($entry->id) : null;
             $currentUser = Craft::$app->getUser();
             if (!Craft::$app->request->isCpRequest && $entry->resultStatus == 'endorsed') {
-                if ($entry->authorId != $currentUser->id && craft()->lantra_users->isManager($entry->authorId)) {
+                if ($entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
                     $entry->setFieldValue('resultStatus', 'endorsed');
                     if (!$oldEntry || !$oldEntry->resultEndorsedDate) {
                         $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentTimeForDb());
