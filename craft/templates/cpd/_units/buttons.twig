@@ -9,14 +9,14 @@
         </div>
     {% endif %}
 {% elseif not craft.lantra.setting('jobRoleEndorse', false) %}
-    {% if not resultEntry or resultEntry.resultStatus != 'endorsed' %}
-        <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
-        <div class="container-btn">
-            <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
-        </div>
-    {% endif %}
      <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
      <div class="container-btn">
         <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
      </div>
+{% endif %}
+{% if not resultEntry or resultEntry.resultStatus != 'endorsed' %}
+    <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
+    </div>
 {% endif %}
