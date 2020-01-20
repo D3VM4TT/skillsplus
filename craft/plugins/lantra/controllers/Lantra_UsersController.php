@@ -55,7 +55,7 @@ class Lantra_UsersController extends Lantra_BaseController {
         craft()->userSession->requireLogin();
         $companyIds = craft()->request->getParam('companyIds');
         $return = [];
-        if (count($companyIds)) {
+        if ($companyIds && count($companyIds)) {
             $managers = craft()->lantra_users->getMultipleCompanyManagers($companyIds);
             if (count($managers)) {
                 foreach ($managers as $manager) {
