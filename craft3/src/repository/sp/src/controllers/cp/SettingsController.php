@@ -39,9 +39,12 @@ class SettingsController extends Controller
         $config['themeFolder'] = ['folder:'.$themeFolder->uid];
 
         ## config for navigation entries
-        $config['pagesSection'] = ['section:14'];
-        $config['companiesSection'] = ['section:3'];
-        $config['jobRoleCategoryGroup'] = ['group:1'];
+        $pagesSection = Craft::$app->sections->getSectionByHandle('pages');
+        $config['pagesSection'] = ['section:'.$pagesSection->uid];
+        $companiesSection = Craft::$app->sections->getSectionByHandle('companies');
+        $config['companiesSection'] = ['section:'.$companiesSection->uid];
+        $jobRolesCategoryGroup = Craft::$app->categories->getGroupByHandle('roles');
+        $config['jobRoleCategoryGroup'] = ['group:'.$jobRolesCategoryGroup->uid];
         $config['assetsElementType'] = Asset::class;
         $config['entryElementType'] = Entry::class;
         $config['categoryElementType'] = Category::class;
@@ -77,7 +80,7 @@ class SettingsController extends Controller
         $settings = Craft::$app->request->getParam('settings');
         if (!Lantra::$app->settings->saveSettings($settings)) {
             Craft::$app->session->setError('Settings not saved.');
-            Craft::$app->urlManager->setRouteParams(array('settings' => $settings));
+            Craft::$app->urlManager->setRouteParams(['settings' => $settings]);
             return $this->redirectToPostedUrl();
         }
         Craft::$app->session->setNotice('Settings saved.');

@@ -10,11 +10,13 @@ namespace lantra\sp\models;
 
 use Craft;
 use craft\base\Model;
+use craft\helpers\DateTimeHelper;
 
 use lantra\sp\Plugin as Lantra;
 
 class Settings extends Model
 {
+    public $settingsVersion                     = '1.0.0';
     public $schemeName                          = 'Skills Plus';
     public $schemeDescription                   = '';
     public $schemeLogo                          = null;
@@ -98,6 +100,10 @@ class Settings extends Model
         'individualJobRole',
     ];
 
+    private $dateFields = [
+        'schemeExpiryDate'
+    ];
+
     /*
      * rules
      */
@@ -114,7 +120,7 @@ class Settings extends Model
     ];
 
     /**
-     *
+     * @throws \Exception
      */
     public function init ()
     {
@@ -122,8 +128,14 @@ class Settings extends Model
 
         $this->_populateModel(Lantra::$app->settings->getDbSettings());
 
+        foreach ($this->dateFields as $key) {
+            if (is_array($this->$key)) {
+                $this->$key = DateTimeHelper::toDateTime($this->$key);
+            }
+        }
+
         foreach ($this->assetFields as $key) {
-            if ($this->$key && is_array($this->$key)) {
+            if (is_array($this->$key)) {
                 $files = [];
                 foreach($this->$key as $fileId) {
                     if (false != $file = Craft::$app->assets->getAssetById($fileId)) {
@@ -135,7 +147,7 @@ class Settings extends Model
         }
 
         foreach ($this->entryFields as $key) {
-            if ($this->$key && is_array($this->$key)) {
+            if (is_array($this->$key)) {
                 $entries = [];
                 foreach($this->$key as $entryId) {
                     if (false != $entry = Craft::$app->entries->getEntryById($entryId)) {
@@ -147,10 +159,10 @@ class Settings extends Model
         }
 
         foreach ($this->categoryFields as $key) {
-            if ($this->$key && is_array($this->$key)) {
+            if (is_array($this->$key)) {
                 $categories = [];
                 foreach($this->$key as $categoryId) {
-                    if (false != $category = Craft::$app->categories->categories($categoryId)) {
+                    if (false != $category = Craft::$app->categories->getCategoryById($categoryId)) {
                         $categories[] = $category;
                     }
                 }
@@ -178,9 +190,7 @@ class Settings extends Model
     private function _populateModel($settings)
     {
         foreach ($settings as $key => $value) {
-            if (isset($this->{$key})) {
-                $this->{$key} = $value;
-            }
+            $this->{$key} = $value;
         }
     }
 }

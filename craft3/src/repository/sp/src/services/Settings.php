@@ -77,6 +77,9 @@ class Settings extends Component
             return $this->getJsDateFormat();
         }
         $settings = $this->getSettings();
+        if ($key == 'schemeLogo') {
+            return $settings['schemeLogo'] ? $settings['schemeLogo'][0] : null;
+        }
         return isset($settings[$key]) ? $settings[$key] : $default;
     }
 
