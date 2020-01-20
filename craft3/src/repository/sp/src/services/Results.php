@@ -93,7 +93,7 @@ class Results extends Component
                 if ($entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
                     $entry->setFieldValue('resultStatus', 'endorsed');
                     if (!$oldEntry || !$oldEntry->resultEndorsedDate) {
-                        $entry->setFieldValue('resultEndorsedDate', DateTimeHelper::currentTimeForDb());
+                        $entry->setFieldValue('resultEndorsedDate', $dateTime);
                         $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
                     }
                 }
