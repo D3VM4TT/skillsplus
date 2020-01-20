@@ -1,9 +1,9 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
-{% if currentUser.can('editEntries:86faf121-d218-4348-8ab8-de457b46aa63') or currentUser.can('editEntries:bcf0ea1d-9495-423e-ac83-ef089790460c') or currentUser.can('editUsers') %}
+{% if craft.lantra.can('editCompanies') or craft.lantra.can('editTeams') or craft.lantra.can('editUsers') %}
     <section class="row text-center admin">
-        {% if currentUser.can('editEntries:86faf121-d218-4348-8ab8-de457b46aa63') %}
+        {% if craft.lantra.can('editCompanies') %}
         <div class="col-2">
             <img src="/assets/img/tool-company-management.svg" width="150" height="150" class="" alt="">
             <h3>Company Management</h3>
@@ -12,7 +12,7 @@
             </div>
         </div>
         {% endif %}
-        {% if craft.lantra.setting('schemeTeams', false) and currentUser.can('editEntries:bcf0ea1d-9495-423e-ac83-ef089790460c') %}
+        {% if craft.lantra.setting('schemeTeams', false) and craft.lantra.can('editTeams') %}
         <div class="col-2">
             <img src="/assets/img/tool-team-management.svg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>
@@ -21,7 +21,7 @@
             </div>
         </div>
         {% endif %}
-        {% if currentUser.can('editUsers') %}
+        {% if craft.lantra.can('editUsers') %}
         <div class="col-2">
             <img src="/assets/img/tool-hierarchy-management.svg" width="150" height="150" class="" alt="">
             <h3>Hierarchy Management</h3>
@@ -30,9 +30,9 @@
             </div>
         </div>
         {% endif %}
-        {% if currentUser.can('editCategories:d83da856-af9d-458e-8b34-08ff74c012b5') or currentUser.can('editEntries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a') or currentUser.can('editEntries:090b3c24-a9ac-4935-a919-c4fc8a3099b0') %}
+        {% if craft.lantra.can('editRoles') or craft.lantra.can('editRoles') or craft.lantra.can('editReports') %}
 
-    {% if currentUser.can('editCategories(1)') %}
+    {% if craft.lantra.can('editRoles') %}
     <div class="col-2">
         <img src="/assets/img/tool-job-role-management.svg" width="150" height="150" class="" alt="">
         <h3>Job Role Management</h3>
@@ -41,7 +41,7 @@
         </div>
     </div>
     {% endif %}
-    {% if currentUser.can('editEntries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a') %}
+    {% if craft.lantra.can('editModules') %}
     <div class="col-2">
         <img src="/assets/img/tool-modules-management.svg" width="150" height="150" class="" alt="">
         <h3>Modules Management</h3>
