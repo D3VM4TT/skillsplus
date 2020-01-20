@@ -85,6 +85,17 @@ class Lantra_SettingsController extends BaseController
     }
 
     /**
+     *
+     */
+    public function actionRunJob()
+    {
+        $elementId = craft()->request->getParam('elementId');
+        craft()->lantra_queue->run($elementId);
+        craft()->userSession->setNotice(Craft::t('Queue job ran.'));
+        $this->redirect('lantra/settings/queue');
+    }
+
+    /**
      * @throws HttpException
      */
     public function actionTools()
