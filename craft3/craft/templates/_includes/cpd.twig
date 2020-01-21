@@ -231,7 +231,7 @@
                                                             <div class="cpd-icons">
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 {% set managerDelete = userResultEntry.resultOwner.count and userResultEntry.resultOwner.one.id == currentUser.id %}
-                                                                {% set managerEndorse = craft.lantra.canEndorse(unitResultEntry) %}
+                                                                {% set managerEndorse = craft.lantra.canEndorse(userResultEntry) %}
                                                                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
                                                                     <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/delete-entry" data-id="{{ userResultEntry.id }}"
                                                                         data-tooltip title="Delete this result">
