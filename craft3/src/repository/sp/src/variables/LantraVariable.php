@@ -315,6 +315,18 @@ class LantraVariable
     }
 
     /**
+     * @param $task
+     * @param null $userId
+     * @throws ForbiddenHttpException
+     */
+    public function requirePermission($task, $userId = null)
+    {
+        if (!$this->can($task, $userId)) {
+            throw new ForbiddenHttpException('User is not permitted to ' . $task . '.');
+        }
+    }
+
+    /**
      * @param null $task
      * @param null $userId
      * @return bool
