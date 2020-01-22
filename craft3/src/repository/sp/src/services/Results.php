@@ -113,37 +113,38 @@ class Results extends Component
                     Lantra::$app->notify->sendManagerEndorsementResult($entry);
                 }
             }
-            $dateFormat = 'Y-m-d H:i:s';
 
-            ## set a result start date
-            $userStartDate = Craft::$app->request->getParam('userStartDate');
-            if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
-                $userStartDate = $date->format(DATE_ATOM);
-            }
-            $entry->resultStartDate = $userStartDate;
-            ## set a result finish date
-            $userFinishDate = Craft::$app->request->getParam('userFinishDate');
-            if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
-                $userFinishDate = $date->format(DATE_ATOM);
-            }
-            $entry->resultFinishDate = $userFinishDate;
-            $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
-            if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
-                $userExpiryDate = $date->getTimestamp();
-                $entry->expiryDate = $date->format(DATE_ATOM);
-            }
-            ## validate dates
-            if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
-                $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
-                $event->isValid = false;
-            }
-            if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
-                $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
-                $event->isValid = false;
-            }
-            if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
-                $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
-                $event->isValid = false;
+            $request = Craft::$app->getRequest();
+            if (!$request->isCpRequest) {
+                $userStartDate = Craft::$app->request->getParam('userStartDate');
+                $userFinishDate = Craft::$app->request->getParam('userFinishDate');
+                $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+                $dateFormat = 'Y-m-d H:i:s';
+                if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
+                    $userStartDate = $date->format(DATE_ATOM);
+                }
+                $entry->resultStartDate = $userStartDate;
+                if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
+                    $userFinishDate = $date->format(DATE_ATOM);
+                }
+                $entry->resultFinishDate = $userFinishDate;
+                if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
+                    $userExpiryDate = $date->getTimestamp();
+                    $entry->expiryDate = $date->format(DATE_ATOM);
+                }
+                ## validate dates
+                if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
+                    $entry->addError('resultStartDate', 'Start date cannot be later than finish date.');
+                    $event->isValid = false;
+                }
+                if ($userStartDate && $userExpiryDate && $userStartDate > $userExpiryDate) {
+                    $entry->addError('resultStartDate', 'Start date cannot be later than expiry date.');
+                    $event->isValid = false;
+                }
+                if ($userFinishDate && $userExpiryDate && $userFinishDate > $userExpiryDate) {
+                    $entry->addError('resultFinishDate', 'Finish date cannot be later than expiry date.');
+                    $event->isValid = false;
+                }
             }
         }
         if (!$event->isValid) {
