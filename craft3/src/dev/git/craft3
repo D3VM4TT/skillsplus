@@ -78,7 +78,6 @@ COMMIT=$(git --git-dir="/git/cpd.git" rev-parse --short HEAD)
 
 # add release tag
 if [[ "$SITES" == "tag" ]] ; then
-
     if [[ "$RELEASE_TAG" == "" ]] ; then
         NOW=$(date +"%Y%m%d_%H%M")
         TAG="release_$NOW"
@@ -99,10 +98,11 @@ else
     fi
     # write release tag
     echo "$RELEASE_TAG" > $CRAFT_DIR/config/.release
+
     # loop through domains and copy to server
     for SITE in $SITES;
     do
-	REMOTE_FOLDER="/datadisk/sites/$SITE"
+	    REMOTE_FOLDER="/datadisk/sites/$SITE"
 
         echo "starting deployment of $SITE to $SERVER [$REMOTE_IP]"
 
@@ -114,37 +114,43 @@ else
         # switch directory ownership to git
         ssh git@$REMOTE_IP sudo chown git:apache -R $REMOTE_FOLDER
 
-        echo "syncing files from $CRAFT_DIR to $REMOTE_FOLDER"
+	    # copy files
+	    echo "syncing files from $CRAFT_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times $CRAFT_DIR git@$REMOTE_IP:$REMOTE_FOLDER
-        echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
+	    echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR git@$REMOTE_IP:$REMOTE_FOLDER
-        echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
+	    echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times $REPO_DIR git@$REMOTE_IP:$REMOTE_FOLDER/src/
 
         # switch directory ownership back to apache
         ssh git@$REMOTE_IP sudo chown apache:apache -R $REMOTE_FOLDER
-        echo "setting file and folder permissions on $REMOTE_FOLDER"
 
-        # set file and folder permissions
-        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
+	    echo "setting file and folder permissions on $REMOTE_FOLDER"
         ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage
+        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
         ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
-        ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
 
         # update craft via cli
         ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/craft/craft
         # ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
-        # ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+	    # this runs twice to upgrade plugins
+	    ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+	    ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+	    ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
+
+	    echo "setting file and folder permissions on $REMOTE_FOLDER"
+	    ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage/logs
+        ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
+
         # write deployment to database
         SQL_QUERY="INSERT INTO \`admin\`.\`deployments\` (\`server\`, \`site\`, \`release\`) VALUES ('$SERVER', '$SITE', '$RELEASE_TAG');"
         mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
 
         echo "finished deployment of $SITE to $SERVER [$REMOTE_IP]"
     done
-
     # send notification
     if [[ "$EMAIL" != "" ]] ; then
         echo "$SITES" | mail -s "Lantra Deploy [$SERVER] $RELEASE_TAG" -r "Skills Plus REPO<noreply@skills-plus.net>" $EMAIL
