@@ -768,6 +768,73 @@ class LantraVariable
     }
 
     /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function currentModuleResult($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getModuleResult($user->id, $moduleId, true);
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function allModuleResults($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getUserModuleResults($moduleId, $user->id);
+    }
+
+    /**
+     * @param $resultEntry
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    public function currentCycle($resultEntry)
+    {
+        return LantraHelper::getResultCycle($resultEntry, true);
+    }
+
+    /**
+     * @param $resultEntry
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    public function resultCycle($resultEntry)
+    {
+        return LantraHelper::getResultCycle($resultEntry);
+    }
+
+    /**
+     * @param $moduleEntry
+     * @return array
+     */
+    public function allCycles($moduleEntry)
+    {
+        return LantraHelper::getModuleCycles($moduleEntry);
+    }
+
+    /**
+     * @param $cycle
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function cycleResult($cycle, $moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->cycles->getCycleResult($cycle, $moduleId, $user->id);
+    }
+
+    /**
      * Get report data
      *
      * @param $entryId

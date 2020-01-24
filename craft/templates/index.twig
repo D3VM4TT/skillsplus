@@ -21,7 +21,7 @@
             {% if craft.lantra.canManage() %}
                 {% include '_includes/scheme' %}
             {% endif %}
-            {% include '_includes/cpd' with{cpdUser:currentUser} %}
+            {% include 'record/_modules' with{cpdUser:currentUser} %}
              {% if craft.lantra.canManage() %}
                 {% set pendingEntryCount = craft.lantra.managerCountEndorsementUsers() %}
                 {% if not currentUser.managerReadOnly and pendingEntryCount %}

@@ -1,0 +1,122 @@
+{% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+{% set moduleResultEntry = craft.lantra.currentModuleResult(module.id) %}
+<div id="module{{ moduleElementId }}" class="module open">
+    {% set totalPoints = 0 %}
+    <div class="header" data-target="#m{{ role.id ~ module.id }}">
+        {% if module.type == 'cpd' %}
+            {% set cycle = craft.lantra.currentCycle(moduleResultEntry) %}
+            {% set remainingPoints = module.targetPoints - moduleResultEntry.resultValue %}
+            <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
+            {% if moduleResultEntry.resultStatus == 'complete' %}
+                <p><span class="status-complete"></span>Congratulations, this module is complete!</p>
+            {% else %}
+                <p><span class="status-inprogress"></span>You need {{ remainingPoints }} more points to complete this module.</p>
+            {% endif %}
+        {% else %}
+            <h4>{{ module.title }}</h4>
+        {% endif %}
+    </div>
+    <div id="m{{ role.id ~ module.id }}" class="unit-groups">
+        {% for unitGroup in module.moduleUnitGroups.all() %}
+            {% set addResult = unitGroup.enableSubmissions %}
+            {% set unitGroupEntries = unitGroup.unitEntries %}
+            <div class="unit-group">
+                <div class="header primary-bg" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
+                    <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
+                    <div class="status">
+                        View status and Endorsements
+                        <img src="/assets/img/img-arrow-down-white-trans.png">
+                    </div>
+                </div>
+                <div id="u{{ role.id ~ module.id ~ unitGroup.id }}" class="units">
+                    <table class="data">
+                        <thead>
+                        <tr>
+                            <th>Unit title</th>
+                            {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager:isManager} %}
+                            {% if addResult %}
+                                <th></th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for unitEntry in unitGroupEntries.all() %}
+                            {% set resultEntry = null %}
+                            {% set totalComments = 0 %}
+                            {% set unitType = unitEntry.unitType %}
+                            {% set unitValue = unitEntry.unitValue %}
+                            {# get either one or mutliple results for this unit #}
+                            {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').limit(addResult ? null : 1) %}
+
+                            {# if no result set jobRoleComplete to false #}
+                            {% if not resultQuery.count() %}
+                                {% set jobRoleNoResult = jobRoleNoResult + 1 %}
+                                {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
+                                {% set rowUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/?ref=module' ~ moduleElementId %}
+                                {% set rowLink = readOnly ? rowName : '<a href="' ~ rowUrl ~ '">' ~ rowName ~ '</a>' %}
+                                {% include 'record/_modules/row' with{rowLink: rowLink} %}
+                            {% endif %}
+                            {# add additional rows if applicaple #}
+                            {% for unitResultEntry in resultQuery.all() %}
+
+                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
+                                {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
+                                {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
+
+                                {% if unitResultEntry.resultStatus == 'endorsed' %}
+                                    {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                {% endif %}
+
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, addResult: addResult} %}
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+        {# get user results related to module #}
+        {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
+        {% if moduleUserResults|length %}
+            {% set existingResultIds = existingResultIds|merge(moduleUserResults.ids()) %}
+            <div class="unit-group">
+                <div class="header" data-target="#u{{ role.id ~ module.id }}-user">
+                    <h5>My Achievements</h5>
+                    <div class="status">
+                        View status and Endorsements
+                        <img src="/assets/img/img-arrow-down-trans.png">
+                    </div>
+                </div>
+                <div id="u{{ role.id ~ module.id }}-user" class="units">
+                    <table class="data">
+                        <thead>
+                        <tr>
+                            <th>Result title</th>
+                            {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager: isManager} %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for userResultEntry in moduleUserResults %}
+                            {% set totalComments = userResultEntry.resultComments.count %}
+                            {% set unreadComments = craft.lantra.unreadComments(userResultEntry) %}
+                            {% set rowTitle = userResultEntry.title %}
+                            {% set rowUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
+                            {% set unitType = 'evidence' %}
+                            {% set unitValue = userResultEntry.unitValue %}
+                            {% include 'record/_modules/row' with{resultEntry: userResultEntry} %}
+                            {% if (userResultEntry.resultStatus == 'endorsed') %}
+                                {% set totalPoints = totalPoints + userResultEntry.resultValue %}
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if moduleGroup.addAchievement and not module.addAchievementHide and not readOnly %}
+            <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}">
+                <span>Add</span>
+            </a>
+        {% endif %}
+    </div>
+</div>

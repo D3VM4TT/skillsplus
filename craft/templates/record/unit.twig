@@ -65,7 +65,7 @@
                     {% endif %}
                 </div>
                 <div class="col-12">
-                    {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                    {% include 'record/_units/files' with{unitEntry:unitEntry} %}
                 </div>
                 <div class="col-12 col-pd-btm">
                     <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
@@ -95,7 +95,7 @@
                         <h5>You have no remaining attempts, contact your team manager.</h5>
                     {% endif %}
                     {% if not resultPassed and remainingAttempts and craft.app.request.getSegment(5) == 'test' %}
-                        {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
+                        {% include 'record/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
                     {% endif %}
                 </div>
             </div>
@@ -122,7 +122,7 @@
                         <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                     </div>
                 {% endif %}
-                {% include 'cpd/_units/files' with{unitEntry:unitEntry} %}
+                {% include 'record/_units/files' with{unitEntry:unitEntry} %}
                 {% if not resultEntry %}
                     <div class="col-pd-btm">
                         <h5>Complete the form below and attach files to submit evidence for endorsement.</h5>
@@ -131,7 +131,7 @@
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 {% endif %}
-                {% include 'cpd/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager} %}
+                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager} %}
             </div>
         </section>
     {% endif %}

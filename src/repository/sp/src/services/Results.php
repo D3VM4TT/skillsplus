@@ -20,6 +20,8 @@ use DateTime;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\helpers\CycleHelper;
+use lantra\sp\models\Cycle;
 
 use verbb\supertable\SuperTable;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -41,16 +43,21 @@ class Results extends Component
     public function onBeforeSaveResult(ModelEvent $event, Entry $entry)
     {
         $userId = Craft::$app->getUser()->id;
-        $unitEntry = $entry->resultUnit->one();
+        $unitEntry = $entry->resultUnit ? $entry->resultUnit->one() : null;
         if ($entry->type == 'unitResult' && !$unitEntry) {
             $event->isValid = false;
             $entry->addError('resultUnit', 'You must select a Result Unit for Unit Results');
         }
-        if ($entry->type == 'moduleResult') {
-
-        }
-        if ($entry->type == 'userResult') {
-
+        if ($entry->type == 'moduleResult' && $entry->resultModule) {
+            $moduleEntry = $entry->resultModule->one();
+            if ($moduleEntry->type == 'cpd') {
+                if (!$entry->cycleName) {
+                    $cycle = LantraHelper::getModuleCurrentCycle($moduleEntry);
+                    $entry->cycleName = $cycle->name;
+                    $entry->cycleStartDate = $cycle->startDate;
+                    $entry->cycleFinishDate = $cycle->finishDate;
+                }
+            }
         }
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
             ## set result owner as user
@@ -108,7 +115,7 @@ class Results extends Component
             }
             ## check change from draft to pending
             if ($oldEntry && $oldEntry->resultStatus == 'draft' && $entry->resultStatus == 'pending') {
-                // send notification
+                ## send notification
                 if (Lantra::$app->results->notifyManagerEndorsementResult($entry)) {
                     Lantra::$app->notify->sendManagerEndorsementResult($entry);
                 }
@@ -167,6 +174,12 @@ class Results extends Component
             ## send notification
             if ($this->notifyManagerEndorsementResult($entry)){
                 Lantra::$app->notify->sendManagerEndorsementResult($entry);
+            }
+            if ($entry->type == 'userResult') {
+                $this->checkUserResult($entry);
+            }
+            if ($entry->type == 'unitResult') {
+                $this->checkUnitResult($entry);
             }
         }
         ## save unit result in user result cache (if enabled)
@@ -377,17 +390,22 @@ class Results extends Component
      *
      * @param $userId
      * @param $moduleId
+     * @param $create
      * @return null
      * @throws Mixed
      */
-    function getModuleResult($userId, $moduleId) {
+    function getModuleResult($userId, $moduleId, $create = false) {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
-        return $criteria->one();
+        $existing = $criteria->one();
+        if (!$existing && $create) {
+            return $this->createModuleResult($userId, $moduleId);
+        }
+        return $existing;
     }
 
     /**
@@ -479,12 +497,12 @@ class Results extends Component
      * @throws null
      */
     function checkUserResult($resultEntry) {
-        // the related module id
+        ## the related module id
         $resultModuleEntry = $resultEntry->resultModule->one();
-        if ( ! $resultModuleEntry || ! $resultEntry->resultValue) {
+        if (!$resultModuleEntry || !$resultEntry->resultValue) {
             return;
         }
-        // check the moduleResult
+        ## check the moduleResult
         $user = $resultEntry->author;
         $this->checkModuleResult($resultModuleEntry, $user->id);
     }
@@ -497,24 +515,24 @@ class Results extends Component
      * @throws null
      */
     function checkUnitResult($resultEntry) {
-        // the related unit id
+        ## the related unit id
         $resultUnitEntry = $resultEntry->resultUnit->one();
         if ( ! $resultUnitEntry) {
             return;
         };
-        // get the user job roles
+        ## get the user job roles
         $user = $resultEntry->author;
         $jobRoles = $user->userRole;
         if ( ! $jobRoles->count()) {
             return;
         }
-        // get all modules related to their job roles
+        ## get all modules related to their job roles
         $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoles, 'field' => 'moduleRoles'];
         $moduleEntries = $criteria->all();
-        // search for the relevant module (this unit may be part of multiple modules)
+        ## search for the relevant module (this unit may be part of multiple modules)
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
             if (in_array($resultUnitEntry->id, $unitIds)) {
@@ -527,45 +545,56 @@ class Results extends Component
     /**
      * @param $moduleEntry
      * @param $userId
-     * @throws \Exception
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     function checkModuleResult($moduleEntry, $userId) {
         $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
         $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
         $resultEntries = array_merge($unitResultEntries, $userResultEntries);
-        if ( ! count($resultEntries)) {
+        if (!count($resultEntries)) {
             return;
         }
-        // create module result
-        if ( ! $this->getModuleResult($userId, $moduleEntry->id)) {
-            $this->createModuleResult($userId, $moduleEntry->id);
-        }
-        $moduleResultExpiryTime = null;
-        // set default module result expiry
-        if ($moduleEntry->moduleExpiryDays) {
-            $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+        ## create module result if it doesn't already exist
+        $moduleResult = $this->getModuleResult($userId, $moduleEntry->id, true);
+        if ($moduleEntry->type == 'qualification') {
+            $moduleResultExpiryTime = null;
+            ## set default module result expiry
+            if ($moduleEntry->moduleExpiryDays) {
+                $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
+            }
         }
         $points = 0;
         foreach ($resultEntries as $resultEntry) {
             if ($resultEntry->resultStatus == 'endorsed') {
-                // unit results value is unit value
+                ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
+                    ## @todo get unit value - might be set by module/unit group
                     $unitEntry = $resultEntry->resultUnit->one();
                     $points += $unitEntry->unitValue;
                 }
-                // user result value is custom
+                ## user result value is custom
                 elseif ($resultEntry->type == 'userResult') {
                     $points += $resultEntry->resultValue;
                 }
-                // check if result expiry is before default module expiry)
+                ## check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
                     $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
                 }
             }
         }
-        // @todo error reporting?
-        if ($points >= $moduleEntry->moduleCompletedValue) {
-            $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
+        $moduleResult->setFieldValue('resultValue', $points);
+        Craft::$app->getElements()->saveElement($moduleResult);
+        if ($moduleEntry->type == 'cpd') {
+            if ($points >= $moduleEntry->targetPoints) {
+                $this->completeModuleResult($moduleEntry, $userId);
+            }
+        }
+        else {
+            if ($points >= $moduleEntry->moduleCompletedValue) {
+                $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
+            }
         }
         return;
     }
@@ -573,23 +602,23 @@ class Results extends Component
     /**
      * @param $userId
      * @param $moduleEntryId
+     * @return EntryModel|void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
     function createModuleResult($userId, $moduleEntryId) {
-        $resultEntry = new EntryModel();
+        $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
         $resultEntry->setFieldValue('resultStatus',  'active');
-        // @todo error reporting?
-        if ( ! Craft::$app->elements->saveElement($resultEntry)) {
+        if (!Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
-        return;
+        return $resultEntry;
     }
 
     /**
@@ -604,12 +633,12 @@ class Results extends Component
     function completeModuleResult($moduleEntry, $userId, $expiryDate = null) {
         $resultEntry = $this->getModuleResult($userId, $moduleEntry->id);
         ## @todo error reporting
-        if ( ! $resultEntry) {
+        if (!$resultEntry) {
             return;
         }
         ## either no expiry, default module expiry or set by result
         $resultEntry->expiryDate = $expiryDate;
-        $resultEntry->resultStatus = complete;
+        $resultEntry->resultStatus = 'complete';
         ## @todo error reporting?
         Craft::$app->elements->saveElement($resultEntry);
     }
@@ -939,6 +968,24 @@ class Results extends Component
         }
         $criteria->limit = $limit;
         return $criteria;
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $authorId
+     * @return array|\craft\base\ElementInterface[]|Entry[]
+     */
+    public function getUserModuleResults($moduleId, $authorId = null)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        if ($authorId) {
+            $criteria->authorId = $authorId;
+        }
+        $criteria->limit = null;
+        return $criteria->all();
     }
 
     /**

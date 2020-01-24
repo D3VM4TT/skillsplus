@@ -280,13 +280,13 @@ class Plugin extends BasePlugin
 
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
-            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/result/<entryId>'             => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'cpd/unit'],
-            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'cpd/unit'],
-            'cpd/<userId>/archive'                      => ['template' => 'cpd/index'],
-            'cpd/<userId>/print'                        => ['template' => 'cpd/index'],
-            'cpd/<userId>'                              => ['template' => 'cpd/index'],
+            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
+            'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
+            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'record/unit'],
+            'cpd/<userId>/archive'                      => ['template' => 'record/index'],
+            'cpd/<userId>/print'                        => ['template' => 'record/index'],
+            'cpd/<userId>'                              => ['template' => 'record/index'],
             'result/<resultId>'                         => ['template' => 'result/_form'],
 
             ## management routes

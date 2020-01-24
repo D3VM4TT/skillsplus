@@ -130,9 +130,9 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
+                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
                 {% endif %}
-                {% include 'cpd/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
+                {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
             </form>
         </div>
     </section>

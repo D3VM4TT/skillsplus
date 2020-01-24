@@ -16,6 +16,8 @@ use lantra\sp\helpers\MigrationHelper;
 class m200120_163920_update_modules extends Migration
 {
 
+    private $_fieldIds;
+
     /**
      * @return bool|void
      * @throws \Throwable
@@ -24,8 +26,8 @@ class m200120_163920_update_modules extends Migration
     public function safeUp()
     {
         $this->_updateModuleType();
-        $this->_updateCpdType();
         $this->_updateModuleResult();
+        $this->_updateCpdType();
         $this->_updateUnitGroup();
         $this->_updateModule();
         $this->_addUnitHeading();
@@ -66,13 +68,43 @@ class m200120_163920_update_modules extends Migration
             6
         );
 
+        $resultHours = MigrationHelper::createField (
+            'craft\fields\Number',
+            'Result Hours',
+            'resultHours',
+            4,
+            [
+                'defaultValue' => 1,
+                'min' => 1,
+                'max' => ''
+            ]
+        );
+
+        $resultValue = MigrationHelper::createField (
+            'craft\fields\Number',
+            'Result Value',
+            'resultValue',
+            4,
+            [
+                'defaultValue' => 1,
+                'min' => 1,
+                'max' => ''
+            ]
+        );
+
         $fieldsService = Craft::$app->getFields();
 
         $entryType = MigrationHelper::getEntryTypeByHandle('moduleResult');
         $fieldIds = $entryType->getFieldLayout()->getFieldIds();
         if (!in_array($resultLocked->id, $fieldIds)) {
             $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
-            $fieldLayoutArray['Result'] = [67, 29, (int)$resultLocked->id];
+            $fieldLayoutArray['Result'] = [
+                $this->_fieldId('resultModule'),
+                $this->_fieldId('resultStatus'),
+                (int)$resultLocked->id,
+                (int)$resultHours->id,
+                (int)$resultValue->id
+            ];
             $fieldLayoutArray['Cycle'] = [$cycleName->id, $cycleStartDate->id, $cycleFinishDate->id];
             $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
             $fieldLayout->id = $entryType->getFieldLayoutId();
@@ -101,12 +133,37 @@ class m200120_163920_update_modules extends Migration
         $fieldIds = $entryType->getFieldLayout()->getFieldIds();
         if (!in_array($unitTooltip->id, $fieldIds)) {
             $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
-            $fieldLayoutArray['Unit'] = [16, (int)$unitTooltip->id, 18, 39, 130, 37, 74, 192, 194];
+            $fieldLayoutArray['Unit'] = [
+                $this->_fieldId('unitType'),
+                (int)$unitTooltip->id,
+                $this->_fieldId('unitUrl'),
+                $this->_fieldId('unitValue'),
+                $this->_fieldId('unitEndorsementManagerLevel'),
+                $this->_fieldId('unitDescription'),
+                $this->_fieldId('unitImage'),
+                $this->_fieldId('unitFiles'),
+                $this->_fieldId('unitHeading')
+            ];
             $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
             $fieldLayout->id = $entryType->getFieldLayoutId();
             $fieldLayout->type = 'craft\elements\Entry';
             $fieldsService->saveLayout($fieldLayout);
         }
+    }
+
+    /**
+     * @param $fieldHandle
+     * @return null
+     */
+    private function _fieldId($fieldHandle)
+    {
+        if (is_null($this->_fieldIds)) {
+            $fieldsService = Craft::$app->getFields();
+            foreach ($fieldsService->getAllFields() as $field) {
+                $this->_fieldIds[$field->handle] = $field->id;
+            }
+        }
+        return isset($this->_fields[$fieldHandle]) ? $this->_fields[$fieldHandle] : null;
     }
 
     /**
@@ -132,7 +189,15 @@ class m200120_163920_update_modules extends Migration
         );
 
         $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($columnLayout);
-        $fieldLayoutArray['Content'] = [168, 169, 196, 197, 198, 199, $fieldRequired->id];
+        $fieldLayoutArray['Content'] = [
+            $this->_fieldId('fieldType'),
+            $this->_fieldId('fieldLabel'),
+            $this->_fieldId('fieldCustomKey'),
+            $this->_fieldId('fieldCustomType'),
+            $this->_fieldId('fieldCustomOptions'),
+            $fieldRequired->id,
+            $this->_fieldId('fieldManagerOnly')
+        ];
         $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
         $fieldLayout->id = $columnLayout->getFieldLayout()->id;
         $fieldLayout->type = 'verbb\supertable\elements\SuperTableBlockElement';
@@ -189,7 +254,12 @@ class m200120_163920_update_modules extends Migration
 
         $unitGroup = $matrixService->getBlockTypeById(1);
         $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($unitGroup);
-        $fieldLayoutArray['Content'] = [20, 25, (int) $enableSubmissions->id, (int) $unitGroupUnitValue->id];
+        $fieldLayoutArray['Content'] = [
+            $this->_fieldId('groupName'),
+            $this->_fieldId('unitEntries'),
+            (int) $enableSubmissions->id,
+            (int) $unitGroupUnitValue->id
+        ];
         $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
         $fieldLayout->id = $unitGroup->getFieldLayout()->id;
         $fieldLayout->type = 'craft\elements\MatrixBlock';
@@ -215,27 +285,17 @@ class m200120_163920_update_modules extends Migration
      */
     private function _updateCpdType()
     {
-        $cycleStartMonth = MigrationHelper::createField(
-            'craft\fields\DropDown',
-            'Cycle Start Month',
-            'cycleStartMonth',
+        # remove fields if they were created already and might have changed in development
+        MigrationHelper::deleteFields(['cycleStartMonth', 'cycleDurationValue', 'cycleDurationType', 'cycleDurationLength', 'cycleGrace', 'targetHours', 'targetPoints']);
+        $cycleStartDate =  Craft::$app->getFields()->getFieldByHandle('cycleStartDate');
+
+        $cycleUserStartDate = MigrationHelper::createField(
+            'craft\fields\LightSwitch',
+            'Cycle User Start Date',
+            'cycleUserStartDate',
             4,
-            [
-                'options' => [
-                    ["label" => "January", "value"  => "1", "default" => "1"],
-                    ["label" => "February", "value"  => "2"],
-                    ["label" => "March", "value"  => "3"],
-                    ["label" => "April", "value"  => "4"],
-                    ["label" => "May", "value"  => "5"],
-                    ["label" => "June", "value"  => "6"],
-                    ["label" => "July", "value"  => "7"],
-                    ["label" => "August", "value"  => "8"],
-                    ["label" => "September", "value"  => "9"],
-                    ["label" => "October", "value"  => "10"],
-                    ["label" => "November", "value"  => "11"],
-                    ["label" => "December", "value"  => "12"],
-                ]
-            ]
+            ['default' => ''],
+            'Select if cycles should begin at user start date.'
         );
 
         $cycleDurationType = MigrationHelper::createField(
@@ -245,38 +305,42 @@ class m200120_163920_update_modules extends Migration
             4,
             [
                 'options' => [
-                    ["label" => "Month", "value"  => "month", "default" => "1"],
+                    ["label" => "Year", "value"  => "year", "default" => "1"],
                     ["label" => "Quarter", "value"  => "quarter"],
-                    ["label" => "Year", "value"  => "year"]
+                    ["label" => "Month", "value"  => "month", ],
+                    ["label" => "Open", "value"  => "open", ]
                 ]
-            ]
+            ],
+            'Select Open if the CPD cycle is on-going.'
         );
 
-        $cycleDurationValue = MigrationHelper::createField(
+        $cycleDurationValue = MigrationHelper::createField (
             'craft\fields\Number',
-            'Cycle Duration Value',
-            'cycleDurationValue',
+            'Cycle Duration Length',
+            'cycleDurationLength',
             4,
             [
                 'defaultValue' => 1,
                 'min' => 1,
                 'max' => ''
-            ]
+            ],
+            'Enter the cycle length i.e. 2 years, 4 months etc.'
         );
 
-        $cycleGrace = MigrationHelper::createField(
+        $cycleGrace = MigrationHelper::createField (
             'craft\fields\Number',
-            'Cycle Grace',
+            'Cycle Grace Days',
             'cycleGrace',
             4,
             [
                 'defaultValue' => 0,
                 'min' => 0,
                 'max' => ''
-            ]
+            ],
+            'Enter the number of days after the end of the cycle that results will be accepted.'
         );
 
-        $targetHours = MigrationHelper::createField(
+        $targetHours = MigrationHelper::createField (
             'craft\fields\Number',
             'Target Hours',
             'targetHours',
@@ -288,7 +352,7 @@ class m200120_163920_update_modules extends Migration
             ]
         );
 
-        $targetPoints = MigrationHelper::createField(
+        $targetPoints = MigrationHelper::createField (
             'craft\fields\Number',
             'Target Points',
             'targetPoints',
@@ -301,12 +365,19 @@ class m200120_163920_update_modules extends Migration
         );
 
         $postedFieldLayout = [
-            'Module' => [166,2,38,181,19],
-            'Cycle' => [$cycleStartMonth->id, $cycleStartMonth->id, $cycleDurationType->id, $cycleDurationValue->id, $cycleGrace->id, $targetPoints->id, $targetHours->id],
-            'Job Roles' => [28]
+            'Module' => [
+                $this->_fieldId('moduleGroup'),
+                $this->_fieldId('pageHeading'),
+                $this->_fieldId('addAchievementHide'),
+                $this->_fieldId('moduleUnitGroups')
+            ],
+            'Job Roles' => [
+                $this->_fieldId('moduleRoles')
+            ],
+            'Cycle' => [$cycleUserStartDate->id, $cycleStartDate->id, $cycleDurationType->id, $cycleDurationValue->id, $cycleGrace->id, $targetPoints->id, $targetHours->id]
         ];
 
-        $requiredFields = [166];
+        $requiredFields = [$this->_fieldId('moduleGroup'), $cycleStartDate->id, $cycleDurationValue->id];
 
         if (false == $cpdEntryType = MigrationHelper::getEntryTypeByHandle('cpd')) {
             $cpdEntryType = new EntryType();
@@ -314,8 +385,11 @@ class m200120_163920_update_modules extends Migration
             $cpdEntryType->name = 'CPD';
             $cpdEntryType->handle = 'cpd';
         }
+
+        ## rebuild field layout
         $cpdFieldLayout = Craft::$app->getFields()->assembleLayout($postedFieldLayout, $requiredFields);
         $cpdFieldLayout->type = Entry::class;
+        Craft::$app->getFields()->saveLayout($cpdFieldLayout);
         $cpdEntryType->setFieldLayout($cpdFieldLayout);
         Craft::$app->getSections()->saveEntryType($cpdEntryType);
     }

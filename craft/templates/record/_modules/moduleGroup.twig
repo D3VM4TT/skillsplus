@@ -1,0 +1,41 @@
+{% set moduleGroupElementId = role.id ~ moduleGroup.id %}
+<div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
+    <div class="module-tabs">
+        <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
+            <div class="tabs-group">
+                {% set modules = craft.entries.relatedTo(
+                    ['and',
+                        { targetElement: role, field: 'moduleRoles' },
+                        { targetElement: moduleGroup, field: 'moduleGroup' }
+                    ]) %}
+                {% if not modules.count %}
+                    No modules have been added to this module group.
+                {% endif %}
+                {% for module in modules.all() %}
+                {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
+                <li>
+                    <a href="#module{{ moduleElementId }}" class="module-status">
+                        {% if moduleResultEntry %}
+                            <span class="status-complete"></span>
+                        {% else %}
+                            <span class="status-inprogress"></span>
+                        {% endif %}
+                        {{ module.title }}
+                    </a>
+                </li>
+                {% if not loop.last and loop.index is divisible by(4) %}
+            </div>
+            <div class="tabs-group">
+                {% endif %}
+                {% endfor %}
+            </div>
+        </ul>
+    </div>
+    <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
+        {% for module in modules.all() %}
+            {% set columnLayout = module.columnLayout ?  module.columnLayout : moduleGroup.columnLayout %}
+            {% include 'record/_modules/module' %}
+        {% endfor %}
+    </div>
+</div>
