@@ -1,10 +1,12 @@
-{% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
+{% set userId = craft.request.segment(3) %}
+{% set resultId = craft.request.segment(4) %}
+{% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).first %}
 {% if not moduleResultEntry %}{% exit 404 %}{% endif %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% set vars = {
-    moduleTitle: moduleResultEntry.resultModule.one.title,
+    moduleTitle: moduleResultEntry.resultModule.first.title,
     resultDate: moduleResultEntry.postDate|date(dateFormat),
     resultUserFullName: moduleResultEntry.author.fullName,
 } %}

@@ -1,0 +1,38 @@
+{% set hierarchyNode = craft.app.request.getParam('node') %}
+{% set userId = craft.app.request.getSegment(2) %}
+{% extends "_layout" %}
+
+{% set userId = craft.app.request.getSegment(2) %}
+{% if not userId or userId == currentUser.id %}
+    {% set account = currentUser %}
+{% else %}
+    {% set account = craft.users.id(userId).status(null).one %}
+    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+{% endif %}
+
+{% set metaTitle = 'CPD > ' ~ account.fullname %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
+    <a class="back-link" href="/management/users">&laquo; back to Users</a>
+{% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        {% if hierarchyNode %}
+        <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+    {% else %}
+        <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+    {% endif %}
+
+        <h2>{{ account.fullname }}'s Dashboard</h2>
+    </div>
+        {% if userId %}
+        {% include '_includes/account' with{cpdUser:account} %}
+        {% endif %}
+    <div class="page-content">
+        {% include '_includes/cpd' with{cpdUser:account} %}
+    </div>
+</section>
+{% endblock %}

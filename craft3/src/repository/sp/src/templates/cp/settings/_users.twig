@@ -1,0 +1,101 @@
+{% import "_includes/forms" as forms %}
+{{ forms.lightswitchField ({
+    label:			"Edit Name?",
+    id:				"userEditName",
+    name:			"userEditName",
+    on:		        settings.userEditName == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Email?",
+    id:				"userEditEmail",
+    name:			"userEditEmail",
+    on:		        settings.userEditEmail == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Address?",
+    id:				"userEditAddress",
+    name:			"userEditAddress",
+    on:		        settings.userEditAddress == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Telephone?",
+    id:				"userEditTelephone",
+    name:			"userEditTelephone",
+    on:		        settings.userEditTelephone == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Date of Birth?",
+    id:				"userEditDob",
+    name:			"userEditDob",
+    on:		        settings.userEditDob == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Date of Start Date?",
+    id:				"userEditStartDate",
+    name:			"userEditStartDate",
+    on:		        settings.userEditStartDate == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Role?",
+    id:				"userEditRole",
+    name:			"userEditRole",
+    on:		        settings.userEditRole == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Edit Photo?",
+    id:				"userEditPhoto",
+    name:			"userEditPhoto",
+    on:		        settings.userEditPhoto == 1,
+}) }}
+
+{{ forms.editableTableField ({
+    label:			"User Custom Fields",
+    instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom user field.",
+    id:				"userEditCustomFields",
+    name:			"userEditCustomFields",
+    addRowLabel:    "Add a custom field",
+    cols:
+    {
+        name:       {heading: "Name", type: "singleline"},
+        label:      {heading: "Label", type: "singleline"},
+        userEdit:   {heading: "User Edit", type: "checkbox"}
+    },
+    rows:           settings.userEditCustomFields
+}) }}
+
+<h3>Account Information</h3>
+
+{{ forms.lightswitchField ({
+    label:			"User ID",
+    id:				"userAccountInformationId",
+    name:			"userAccountInformation[userId]",
+    on:		        settings.userAccountInformation.userId is defined and settings.userAccountInformation.userId == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Start Date",
+    id:				"userAccountInformationIdUserStartDate",
+    name:			"userAccountInformation[userStartDate]",
+    on:		        settings.userAccountInformation.userStartDate is defined and settings.userAccountInformation.userStartDate == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"User Company",
+    id:				"userAccountInformationUserCompany",
+    name:			"userAccountInformation[userCompany]",
+    on:		        settings.userAccountInformation.userCompany is defined and settings.userAccountInformation.userCompany == 1,
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Manager Companies",
+    id:				"userAccountInformationManagerCompanies",
+    name:			"userAccountInformation[managerCompanies]",
+    on:		        settings.userAccountInformation.managerCompanies is defined and settings.userAccountInformation.managerCompanies == 1,
+}) }}

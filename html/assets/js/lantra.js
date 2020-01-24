@@ -183,79 +183,76 @@ $(document).ready(function(){
             row = $(this).closest('.item'),
             deleteRow = false,
             reload = false;
-        if (action == 'entries/reset-result') {
+        if (action == 'lantra/entries/resetResult') {
             if ( ! confirm('Are you sure you want to unlink all attempts?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
-        else if (action == 'entries/delete-entry') {
+        if (action == 'lantra/entries/deleteEntry') {
             if ( ! confirm('Are you sure you want to delete this entry?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
             deleteRow = true;
         }
-        else if (action == 'entries/endorse-evidence') {
+        if (action == 'lantra/entries/endorseEvidence') {
             if ( ! confirm('Are you sure you want to endorse this result?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
         }
-        else if (action == 'categories/delete-category') {
+        if (action == 'lantra/categories/deleteCategory') {
             if ( ! confirm('Are you sure you want to delete this category?')) {
                 return false;
             }
             var data = {categoryId: $(this).data('id')};
             deleteRow = true;
         }
-        else if (action == 'users/suspend-user') {
+        if (action == 'lantra/users/suspendUser') {
             if ( ! confirm('Are you sure you want to suspend this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        else if (action == 'users/delete-user') {
+        if (action == 'lantra/users/deleteUser') {
             if ( ! confirm('Are you sure you want to delete this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
-            deleteRow = true;
+            reload = true;
         }
-        else if (action == 'users/restore-user') {
+        if (action == 'lantra/users/restoreUser') {
             if ( ! confirm('Are you sure you want to restore this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
-        else if (action == 'reports/delete-report') {
+        if (action == 'lantra/reports/delete') {
             if ( ! confirm('Are you sure you want to delete this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
-            deleteRow = true;
+            reload = true;
         }
-        else if (action == 'reports/run-report') {
+        if (action == 'lantra/reports/run') {
             if ( ! confirm('Are you sure you want to run this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
         }
-        else if (action == 'entries/pending-result') {
+        if (action == 'lantra/entries/pendingResult') {
             if ( ! confirm('Are you sure you want to request endorsement?')) {
                 return false;
             }
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
         }
-        else {
-            alert('Invalid action ' + action);
-        }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');
-        $.post("/sp/" + action, data, function(response) {
+        $.post("/actions/" + action, data, function(response) {
             if (response.redirect) {
                 window.location.replace(response.redirect);
             }
@@ -291,7 +288,7 @@ $(document).ready(function(){
         var data = {companyIds: $(this).val()};
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('#reportRecipientsLabel span').show();
-        $.post("/sp/users/company-managers", data, function(response) {
+        $.post("/actions/lantra/users/companyManagers", data, function(response) {
             $('#reportRecipientsLabel span').hide();
             var selectedIds = $("select#reportRecipients").val();
             // first get rid of non selected
@@ -479,17 +476,20 @@ $(document).ready(function(){
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             jobRoleLink = moduleGroupLink.closest('div.job-role').find('a.jobroleEndorseExpand');
-        jobRoleLink.click();
-        moduleGroupLink.click();
-        moduleLink.click();
-        $('html, body').animate({
-            scrollTop: jobRoleLink.offset().top - 200
-        }, 500, function(){});
+        if (jobRoleLink) {
+            jobRoleLink.click();
+            moduleGroupLink.click();
+            moduleLink.click();
+            $('html, body').animate({
+                scrollTop: jobRoleLink.offset().top - 200
+            }, 500, function () {
+            });
+        }
     }
 
     $('.module-group-tabs').show();
 
-    $('input[name="fields[userType]"]').change(function(){
+    $('input[name=companyManagers]').change(function(){
         if ($(this).attr('id') == 'userManager' && $(this).is(':checked')){
             return $('div#manager-fields').removeClass('hide');
         }
@@ -502,14 +502,4 @@ $(document).ready(function(){
         }
         $('div#team-fields').addClass('hide');
     });
-
-    // add choices select
-    $("form.test").find("ul.choices").each(function(){
-      var ul = $(this),
-          choices = ul.find('input[type=checkbox]'),
-          input = ul.find('input[type=hidden]').eq(0);
-        choices.change(function(){
-            input.val(ul.find('input[type=checkbox]:checked').map(function(){return $(this).val()}).get().join());
-        });
-    })
 });

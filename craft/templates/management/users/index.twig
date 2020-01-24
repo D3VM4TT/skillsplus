@@ -6,19 +6,19 @@
 {% set pageTitle = "Users" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.app.request.getParam('search')|default('') %}
-{% set filterUserStatus = craft.app.request.getParam('status')|default('all') %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterUserStatus = craft.request.getParam('status')|default('all') %}
 {% set userStatus = filterUserStatus == 'suspended' ? 'suspended' : null %}
-{% set sortParam = craft.app.request.getParam('sort') %}
+{% set sortParam = craft.request.getParam('sort') %}
 {% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'lastName' %}
-{% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
+{% set order = craft.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
 {# company users #}
 {% set companyId = false %}
-{% if craft.app.request.segment(3) == 'company' and craft.app.request.segment(4) %}
-    {% set companyId = craft.app.request.segment(4) %}
-    {% set company = craft.entries.id(companyId).one() %}
+{% if craft.request.segment(3) == 'company' and craft.request.segment(4) %}
+    {% set companyId = craft.request.segment(4) %}
+    {% set company = craft.entries.id(companyId).first() %}
     {% set pageTitle = company.title %}
 {% endif %}
 
@@ -28,8 +28,8 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
-    {% if companyId and craft.app.request.urlReferrer %}
-        <a class="back-link" href="{{ craft.app.request.urlReferrer }}">&laquo; back to Companies</a>
+    {% if companyId and craft.request.urlReferrer %}
+        <a class="back-link" href="{{ craft.request.urlReferrer }}">&laquo; back to Companies</a>
     {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
@@ -84,7 +84,7 @@
                     <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                     <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
-                        {% set team = user.userTeam.one() %}
+                        {% set team = user.userTeam.first() %}
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
                     <td><p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}</td>

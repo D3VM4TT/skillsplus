@@ -1,0 +1,38 @@
+{
+    "name": "lantra/sp",
+    "description": "Lantra Skills Plus",
+    "type": "craft-plugin",
+    "version": "2.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Coffee Bean Design",
+            "homepage": "https://coffeebean.design"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0",
+        "league/csv": "^9.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+          "lantra\\sp\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Skills Plus",
+        "handle": "sp",
+        "hasCpSettings": true,
+        "hasCpSection": true,
+        "class": "lantra\\sp\\Plugin",
+        "components": {
+            "app": "lantra\\sp\\services\\App"
+        }
+    }
+}

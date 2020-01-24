@@ -1,3 +1,4 @@
+{% set section = craft.request.segment(2) %}
 {% if section and craft.lantra.canManage() %}
     {% include 'management/' ~ section ~ '/_form' %}
 {% else %}

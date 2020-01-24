@@ -1,12 +1,12 @@
-{% requirePermission 'editEntries:1d590683-b16e-4955-be62-315accb3e628' %}
+{% requirePermission 'editEntries:13' %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Reporting > Custom Reports" %}
 
-{% set entryId = craft.app.request.getSegment(4) %}
+{% set entryId = craft.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).one %}
+    {% set entry = craft.entries.id(entryId).first %}
 {% endif %}
 
 {% block content %}
@@ -23,10 +23,10 @@
     {% endif %}
 </div>
 {% if entry is defined %}
-    {{ ui.errorList(entry.getFirstErrors()) }}
+    {{ ui.errorList(entry.getAllErrors()) }}
 {% endif %}
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-    {{ csrfInput() }}
+    {{ getCsrfInput() }}
     <input type="hidden" name="action" value="entries/saveEntry">
     <input type="hidden" name="redirect" value="reporting/custom">
     <input type="hidden" name="sectionId" value="13">
@@ -76,7 +76,7 @@
             <div class="checkboxes" style="border:1px solid #CCC;height:200px;padding:10px;overflow-y:scroll;">
                 {% set teamEntries = craft.entries.section('teams') %}
                 {% for teamEntry in teamEntries %}
-                    <label class="company-{{ teamEntry.teamCompany.one.id }}" for="team-{{ teamEntry.id }}" style="display: block;">
+                    <label class="company-{{ teamEntry.teamCompany.first.id }}" for="team-{{ teamEntry.id }}" style="display: block;">
                         <input
                             name="fields[reportTeams][]"
                             {% if entry is defined and teamEntry.id in entry.reportTeams.ids() %} checked{% endif %}

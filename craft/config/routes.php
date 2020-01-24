@@ -1,23 +1,25 @@
 <?php
+
 /**
- * Site URL Rules
+ * Dynamic Site Routes
  *
- * You can define custom site URL rules here, which Craft will check in addition
- * to any routes you’ve defined in Settings → Routes.
+ * If you’d prefer to set up your site routes in a file as opposed to Settings > Routes in the CP,
+ * you can define them here.  Craft will check both places for dynamic site routes.
  *
- * See http://www.yiiframework.com/doc-2.0/guide-runtime-routing.html for more
- * info about URL rules.
+ * Each route will take up one element in the array returned by this file.
+ * The array keys are your URL patterns, and the values are the templates that should get loaded.
  *
- * In addition to Yii’s supported syntaxes, Craft supports a shortcut syntax for
- * defining template routes:
+ * The URL patterns are regular expressions. If you want to capture portions of the URL and
+ * make them available to your template, use named subpatterns. For example:
  *
- *     'blog/archive/<year:\d{4}>' => ['template' => 'blog/_archive'],
+ *     'blog/archive/(?P<year>\d{4})' => 'blog/_archive',
  *
- * That example would match URIs such as `/blog/archive/2012`, and pass the
- * request along to the `blog/_archive` template, providing it a `year` variable
- * set to the value `2012`.
+ * That example would match URIs such as "blog/archive/2012", and pass the request along to
+ * the blog/_archive template, providing it a ‘year’ variable set to the value “2012”.
  */
 
-return [
-
-];
+return array(
+    'reporting/results/(?P<reportType>[^\/]+)' => 'reporting/results',
+    'reporting/results/(?P<reportType>[^\/]+)/(?P<filterDays>[^\/]+)' => 'reporting/results',
+    'reporting/results/(?P<reportType>[^\/]+)/(?P<filterDays>[^\/]+)/csv' => 'reporting/results'
+);

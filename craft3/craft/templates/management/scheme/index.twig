@@ -1,0 +1,33 @@
+{% set usersAll = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).count() %}
+{% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').count() %}
+{% set licencesCompany = craft.lantra.totalCompanyLicences() %}
+{% set licencesScheme = craft.lantra.setting('schemeRemainingLicences', 0) %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
+{% set schemeExpiryDate = craft.lantra.setting('schemeExpiryDate')  %}
+{% extends "_layout" %}
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Scheme Profile</h2>
+            <p>An overview of your Scheme{% if lantraLicences %} and licence allocations{% endif %}.</p>
+        </div>
+        <div class="page-content">
+            <p class="scheme-profile">
+                <span class="label">Scheme Name:</span> {{ craft.lantra.setting('schemeName', 'unknown') }}<br />
+                <span class="label">Scheme Renewal Date:</span> {{ schemeExpiryDate ? schemeExpiryDate|date(dateFormat) : 'Never' }}<br />
+                <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
+                <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
+                {% if lantraLicences %}
+                    <span class="label">Total licences issued:</span> {{ licencesScheme + licencesCompany + usersAll }}<br />
+                    <span class="label">Licences available to Scheme Manager:</span>{{ licencesScheme }}<br />
+                    <span class="label">Licences available to Company Managers :</span> {{ licencesCompany }}<br />
+                    <span class="label">Total currently available:</span> {{ licencesScheme + licencesCompany }}<br />
+                {% endif %}
+            </p>
+        </div>
+    </section>
+{% endblock %}
