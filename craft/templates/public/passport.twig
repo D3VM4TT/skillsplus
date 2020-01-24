@@ -1,5 +1,5 @@
-{% set userId = craft.request.getSegment(3) %}
-{% set userProfile = craft.users.id(userId).first %}
+{% set userId = craft.app.request.getSegment(3) %}
+{% set userProfile = craft.users.id(userId).one %}
 {% if not userProfile %}{% exit 404 %}{% endif %}
 {% extends "_layout" %}
 
@@ -24,7 +24,7 @@
             </thead>
             <tbody>
             {% for entry in moduleResults %}
-            {% set moduleEntry = entry.resultModule.first %}
+            {% set moduleEntry = entry.resultModule.one %}
             <tr>
                 <td>{{ moduleEntry.title|default('') }}</td>
                 <td>{{ entry.postDate|date(dateFormat) }}</td>
