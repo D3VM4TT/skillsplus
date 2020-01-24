@@ -28,8 +28,8 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
-    {% if companyId and craft.app.request.urlReferrer %}
-        <a class="back-link" href="{{ craft.app.request.urlReferrer }}">&laquo; back to Companies</a>
+    {% if companyId and craft.app.request.referrer %}
+        <a class="back-link" href="{{ craft.app.request.referrer }}">&laquo; back to Companies</a>
     {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
@@ -93,13 +93,13 @@
                         {% if not currentUser.managerReadOnly %}
                            | <a href="/management/users/edit/{{ user.id }}">edit</a>
                             {% if user.status == 'active' %}
-                                 | <a class="action" href="#" data-action="lantra/users/suspendUser" data-id="{{ user.id }}">suspend</a>
+                                 | <a class="action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}">suspend</a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                                | <a class="action" href="#" data-action="lantra/users/restoreUser" data-id="{{ user.id }}">restore</a>
+                                | <a class="action" href="#" data-action="users/restore-user" data-id="{{ user.id }}">restore</a>
                             {% endif %}
                             {#
                             {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                                | <a class="action" href="#" data-action="lantra/users/deleteUser" data-id="{{ user.id }}">delete</a>
+                                | <a class="action" href="#" data-action="users/delete-user" data-id="{{ user.id }}">delete</a>
                             {% endif %}
                             #}
                         {% endif %}

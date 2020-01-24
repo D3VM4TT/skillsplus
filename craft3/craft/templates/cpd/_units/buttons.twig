@@ -13,6 +13,10 @@
     <div class="container-btn">
         <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
     </div>
+{% elseif craft.lantra.setting('jobRoleEndorse', false) and resultEntry and resultEntry.resultStatus != 'draft' %}
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="pending" type="button">Update result</button>
+    </div>
 {% endif %}
 {% if not resultEntry or resultEntry.resultStatus != 'endorsed' %}
     <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>

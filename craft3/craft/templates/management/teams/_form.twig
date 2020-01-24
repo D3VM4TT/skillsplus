@@ -1,5 +1,4 @@
-{% requirePermission 'editEntries:bcf0ea1d-9495-423e-ac83-ef089790460c' %}
-
+{% do craft.lantra.requirePermission('editTeams') %}
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Teams" %}

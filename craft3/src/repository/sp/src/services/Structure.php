@@ -73,7 +73,7 @@ class Structure extends Component
         $excludeIds = [];
         if ( ! $user->isInGroup('schemeManagers')) {
             $individualCompany = Lantra::$app->users->getIndividualCompany();
-            if ($individualCompany) {
+            if ($individualCompany && is_object($individualCompany)) {
                 $excludeIds[] = $individualCompany->id;
             }
         }
