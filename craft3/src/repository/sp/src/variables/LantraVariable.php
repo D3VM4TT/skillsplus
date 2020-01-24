@@ -315,6 +315,55 @@ class LantraVariable
     }
 
     /**
+     * @param $task
+     * @param null $userId
+     * @throws ForbiddenHttpException
+     */
+    public function requirePermission($task, $userId = null)
+    {
+        if (!$this->can($task, $userId)) {
+            throw new ForbiddenHttpException('User is not permitted to ' . $task . '.');
+        }
+    }
+
+    /**
+     * @param null $task
+     * @param null $userId
+     * @return bool
+     */
+    public function can($task = null, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        $permission = false;
+        if ($task == 'editCompanies') {
+            $section = Craft::$app->sections->getSectionByHandle('companies');
+            $permission = 'editEntries:'.$section->uid;
+        }
+        if ($task == 'editTeams') {
+            $section = Craft::$app->sections->getSectionByHandle('teams');
+            $permission = 'editEntries:'.$section->uid;
+        }
+        if ($task == 'editModules') {
+            $section = Craft::$app->sections->getSectionByHandle('modules');
+            $permission = 'editEntries:'.$section->uid;
+        }
+        if ($task == 'editReports') {
+            $section = Craft::$app->sections->getSectionByHandle('reports');
+            $permission = 'editEntries:'.$section->uid;
+        }
+        if ($task == 'editRoles') {
+            $category = Craft::$app->categories->getGroupByHandle('roles');
+            $permission = 'editCategories:'.$category->uid;
+        }
+        if ($task == 'editUsers') {
+            $permission = 'editUsers';
+        }
+        return $permission ? $user->can($permission) : false;
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId

@@ -306,7 +306,7 @@ class Notify extends Component
             ->setTextBody($body);
 
         foreach($toEmail as $address) {
-            $message->setTo($address);
+            $message->setTo(trim($address));
             try {
                 if (count($attachments)) {
                     foreach($attachments as $attachment) {

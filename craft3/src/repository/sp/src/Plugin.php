@@ -148,6 +148,10 @@ class Plugin extends BasePlugin
             Entry::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
                 $entry = $event->sender;
+                ## ignore drafts and revisions
+                if (ElementHelper::isDraftOrRevision($entry)) {
+                    return;
+                }
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
                 }

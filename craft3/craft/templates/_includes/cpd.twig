@@ -231,7 +231,7 @@
                                                             <div class="cpd-icons">
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
                                                                 {% set managerDelete = userResultEntry.resultOwner.count and userResultEntry.resultOwner.one.id == currentUser.id %}
-                                                                {% set managerEndorse = craft.lantra.canEndorse(unitResultEntry) %}
+                                                                {% set managerEndorse = craft.lantra.canEndorse(userResultEntry) %}
                                                                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
                                                                     <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/delete-entry" data-id="{{ userResultEntry.id }}"
                                                                         data-tooltip title="Delete this result">
@@ -305,7 +305,7 @@
             <p class="jobroleEndorse">
             {% if jobRoleNoResult == 0 %}
                 <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
-                   data-userid="{{ cpdUser.id }}" data-action="lantra/entries/pendingResult">Submit for Endorsement</a>
+                   data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Submit for Endorsement</a>
             {% else %}
                 Complete {{ jobRoleNoResult }} more unit(s) and then submit for endorsement.
             {% endif %}

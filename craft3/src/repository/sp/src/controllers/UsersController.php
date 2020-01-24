@@ -222,8 +222,7 @@ class UsersController extends BaseController {
         if (false == $user = Craft::$app->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
-        $user->suspended = true;
-        if ( ! Craft::$app->elements->saveElement($user)) {
+        if (! Craft::$app->users->suspendUser($user)) {
             $this->_returnError('Error suspending user.');
         }
         $this->_returnMessage('User has been suspended.');
@@ -243,8 +242,7 @@ class UsersController extends BaseController {
         if (false == $user = Craft::$app->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
-        $user->suspended = false;
-        if ( ! Craft::$app->elements->saveElement($user)) {
+        if (! Craft::$app->users->unsuspendUser($user)) {
             $this->_returnError('Error restoring user.');
         }
         $this->_returnMessage('User has been restored.');

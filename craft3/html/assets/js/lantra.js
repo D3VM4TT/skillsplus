@@ -249,6 +249,7 @@ $(document).ready(function(){
                 return false;
             }
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
+            reload = true;
         }
         else {
             alert('Invalid action ' + action);

@@ -1,5 +1,4 @@
-{% requirePermission 'editEntries:1d590683-b16e-4955-be62-315accb3e628' %}
-
+{% do craft.lantra.requirePermission('editReports') %}
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Reporting > Custom Reports" %}

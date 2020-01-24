@@ -98,7 +98,7 @@
 
 <body class="{% if currentUser %}logged-in{% endif %} {{ pageClass }}{% if lightbox %} lightbox{% endif %}">
 
-        {% set server = craft.config.environmentVariables.server|default('dev') %}
+        {% set server = alias('@server') %}
         {% if server != 'prod' %}
             <div id="server">server: {{ server }}</div>
         {% endif %}
