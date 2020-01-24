@@ -1,21 +1,20 @@
-{% requirePermission 'editEntries:6' %}
-
+{% do craft.lantra.requirePermission('editModules') %}
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Modules" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
-{% set criteria = craft.categories.group('roles').search(filterSearch).order('title').limit(pageLimit) %}
+{% set criteria = craft.categories.group('roles').search(filterSearch).orderBy('title').limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
 
 <section class="page">
-<div class="page-subHeader primary-bg">
-{% include '_includes/topNavigation' %}
-</div>
+    <div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+    </div>
     <div class="page-header secondary-bg">
         <h2>Roles / Modules</h2>
         <p>Job roles and Modules within your scheme</p>
@@ -32,7 +31,7 @@
             </thead>
             <tbody>
             {% for role in roleCategories %}
-                {% set modules = craft.entries.section('modules').order('title').relatedTo(role).limit(null) %}
+                {% set modules = craft.entries.section('modules').orderBy('title').relatedTo(role).limit(null).all() %}
                 <tr>
                     <td style="text-align: left">
                         <p class="td-title-responsive">
@@ -55,7 +54,7 @@
     {% else %}
         <div class="page-content">
             <h3>There are no modules to display.</h3>
+        </div>
     {% endif %}
-    </div>
 </section>
 {% endblock %}

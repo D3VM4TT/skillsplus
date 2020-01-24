@@ -1,7 +1,0 @@
-# Craft 3  #
-###################
-craft/.env
-craft/storage/*
-html/assets/uploads/*
-html/assets/users/*
-src/dev/*

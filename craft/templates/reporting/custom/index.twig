@@ -1,11 +1,10 @@
-{% requirePermission 'editEntries:13' %}
-
+{% do craft.lantra.requirePermission('editReports') %}
 {% extends "_layout" %}
 
 {% set metaTitle = "Reporting > Custom Reports" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
 {% set criteria = craft.lantra.reportCriteria(filterSearch, pageLimit, 'id desc') %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
@@ -47,19 +46,20 @@
                             <td>{{ report.id }}</td>
                             <td>{{ report.title }}</td>
                             <td>{{ report.reportType|title }}</td>
-                            <td>{{ report.postDate|format(dateFormat) }}</td>
+                            <td>{{ report.postDate|date(dateFormat) }}</td>
                             <td>
                                 {% if complete %}
-                                    {% set asset = report.reportData.first %}
+                                    {% set asset = report.reportData.one %}
                                     <a href="/internal/{{ asset.id }}" rel="external">download</a>
                                 {% elseif job %}
                                     {{ job.status }}
                                 {% else %}
-                                    <a class="action" href="#" data-action="lantra/reports/run" data-id="{{ report.id }}" href="">try again</a>
+                                    <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}" href="">run report now</a>
                                 {% endif %}
                             </td>
                             <td style="text-align: right;">
-                                <a class="action" href="#" data-action="lantra/reports/delete" data-id="{{ report.id }}" href="">delete</a>
+                                <a class="icon action" href="#" data-action="reports/delete-report" data-id="{{ report.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

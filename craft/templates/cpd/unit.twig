@@ -1,12 +1,8 @@
-{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyNode = craft.app.request.getParam('node') %}
 {% extends "_layout" %}
 
-{% set userId = craft.request.segment(2) %}
-{% set moduleId = craft.request.segment(3) %}
-{% set unitId = craft.request.segment(4) %}
-
 {% if userId != currentUser.id %}
-    {% set account = craft.users.id(userId).first %}
+    {% set account = craft.users.id(userId).one %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
     {%  set dashboardUri = '/cpd/' ~ userId %}
     {% set isManager = true %}
@@ -16,17 +12,19 @@
     {% set isManager = false %}
 {% endif %}
 
-{% set moduleEntry = craft.entries.id(moduleId).first() %}
+{% set moduleEntry = craft.entries.id(moduleId).one() %}
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
-{% set unitEntry = craft.entries.id(unitId).first() %}
+{% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
-{% set moduleGroup = moduleEntry.moduleGroup.first %}
-{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').first() %}
+{% set moduleGroup = moduleEntry.moduleGroup.one %}
+{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -37,9 +35,9 @@
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
-                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% else %}
-                    <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/users"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
@@ -51,7 +49,7 @@
                 <h2>This is an assessment unit</h2>
                 <div class="col-12">
                     {% if unitEntry.unitImage|length %}
-                        {% set unitImage = unitEntry.unitImage.first %}
+                        {% set unitImage = unitEntry.unitImage.one %}
                         <div class="col-6 col-pd-btm">
                             <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                         </div>
@@ -88,7 +86,7 @@
                         {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
                         <p>You have made <span class="link-bold">{{ totalAttempts }}</span> attempts and you have {{ remainingAttempts }} attempts remaining.</p>
                         <p>Your best result is <span class="link-bold">{{ resultEntry.resultScore }}%</span></p>
-                        {% set attempts = resultEntry.resultAttempts %}
+                        {% set attempts = resultEntry.resultAttempts.all() %}
                         {% for attempt in attempts %}
                             {% set meta = craft.lantra.getAttemptMeta(attempt) %}
                             <p>On <span class="link-bold">{{ attempt.postDate|date('d/m/y') }}</span> you scored <span class="link-bold">{{ meta.correct }}/{{ meta.total }} ({{ meta.percent }}%)</span></p>
@@ -96,7 +94,7 @@
                     {% elseif not remainingAttempts %}
                         <h5>You have no remaining attempts, contact your team manager.</h5>
                     {% endif %}
-                    {% if not resultPassed and remainingAttempts and craft.request.getSegment(5) == 'test' %}
+                    {% if not resultPassed and remainingAttempts and craft.app.request.getSegment(5) == 'test' %}
                         {% include 'cpd/_units/test' with{unitEntry:unitEntry, userId:userId, moduleEntry:moduleEntry} %}
                     {% endif %}
                 </div>
@@ -120,7 +118,7 @@
                 <h2>This is an evidence based unit</h2>
                 {% if unitEntry.unitImage|length %}
                     <div class="col-pd-btm">
-                        {% set unitImage = unitEntry.unitImage.first %}
+                        {% set unitImage = unitEntry.unitImage.one %}
                         <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
                     </div>
                 {% endif %}

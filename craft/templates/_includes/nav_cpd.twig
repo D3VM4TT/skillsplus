@@ -18,73 +18,73 @@
     </ul>
     {% if craft.lantra.canManage() %}
     <ul>
-        <li class="{% if craft.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
+        <li class="{% if craft.app.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Management</a>
             <ul>
                 {% if craft.lantra.canManage(null, true) %}
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'scheme' %}active{% endif %}" href="/management/scheme">Scheme</a>
+                    <a class="{% if craft.app.request.getSegment(2) == 'scheme' %}active{% endif %}" href="/management/scheme">Scheme</a>
                 </li>
                 {% endif %}
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'hierarchy' %}active{% endif %}" href="/management/hierarchy">Hierarchy</a>
+                    <a class="{% if craft.app.request.getSegment(2) == 'hierarchy' %}active{% endif %}" href="/management/hierarchy">Hierarchy</a>
                 </li>
-                {% if currentUser.can('editEntries:3') %}
+                {% if craft.lantra.can('editCompanies') %}
                     <li>
-                        <a class="{% if craft.request.getSegment(2) == 'companies' %}active{% endif %}" href="/management/companies">Companies</a>
+                        <a class="{% if craft.app.request.getSegment(2) == 'companies' %}active{% endif %}" href="/management/companies">Companies</a>
                     </li>
                 {%  endif %}
-                {% if craft.lantra.setting('schemeTeams', false) and currentUser.can('editEntries:5') %}
+                {% if craft.lantra.setting('schemeTeams', false) and craft.lantra.can('editTeams') %}
                     <li>
-                        <a class="{% if craft.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
+                        <a class="{% if craft.app.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
                     </li>
                 {%  endif %}
-                {% if currentUser.can('editUsers') %}
+                {% if craft.lantra.can('editUsers') %}
                 <li>
-                <a class="{% if craft.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
                 </li>
                 {%  endif %}
                 {#
-                {% if currentUser.can('editCategories:1') %}
+                {% if craft.lantra.can('editRoles') %}
                     <li>
-                        <a class="{% if craft.request.getSegment(2) == 'roles' %}active{% endif %}" href="/management/roles">Roles</a>
+                        <a class="{% if craft.app.request.getSegment(2) == 'roles' %}active{% endif %}" href="/management/roles">Roles</a>
                     </li>
                 {%  endif %}
                 #}
-                {% if currentUser.can('editEntries:6') %}
+                {% if craft.lantra.can('editModules') %}
                     <li>
-                        <a class="{% if craft.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
+                        <a class="{% if craft.app.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
                     </li>
                 {%  endif %}
             </ul>
         </li>
-        <li class="{% if craft.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
+        <li class="{% if craft.app.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
+                    <a class="{% if craft.app.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
                 </li>
                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
+                    <a class="{% if craft.app.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
                 </li>
                 {% endif %}
                 {% if currentUser.isInGroup('schemeManagers') %}
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
-                    {% if craft.request.getSegment(2) == 'standard' %}
+                    <a class="{% if craft.app.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
+                    {% if craft.app.request.getSegment(2) == 'standard' %}
                         <ul class="secondary">
                             <li>
-                                <a class="{% if craft.request.getSegment(3) == 'users' %}active{% endif %}" href="/reporting/standard/users">Scheme Users</a>
+                                <a class="{% if craft.app.request.getSegment(3) == 'users' %}active{% endif %}" href="/reporting/standard/users">Scheme Users</a>
                             </li>
                             <li>
-                                <a class="{% if craft.request.getSegment(3) == 'units-blocked' %}active{% endif %}" href="/reporting/standard/units-blocked">Units Blocked</a>
+                                <a class="{% if craft.app.request.getSegment(3) == 'units-blocked' %}active{% endif %}" href="/reporting/standard/units-blocked">Units Blocked</a>
                             </li>
                             <li>
-                                <a class="{% if craft.request.getSegment(3) == 'units-endorsed' %}active{% endif %}" href="/reporting/standard/units-endorsed">Units Endorsed</a>
+                                <a class="{% if craft.app.request.getSegment(3) == 'units-endorsed' %}active{% endif %}" href="/reporting/standard/units-endorsed">Units Endorsed</a>
                             </li>
                             <li>
-                                <a class="{% if craft.request.getSegment(3) == 'units-expiring' %}active{% endif %}" href="/reporting/standard/units-expiring">Units Expiring</a>
+                                <a class="{% if craft.app.request.getSegment(3) == 'units-expiring' %}active{% endif %}" href="/reporting/standard/units-expiring">Units Expiring</a>
                             </li>
                         </ul>
                     {% endif %}
@@ -92,15 +92,15 @@
                 {% endif %}
                 <!--
                 <li>
-                    <a class="{% if craft.request.getSegment(2) == 'dynamic' %}active{% endif %}" href="/reporting/dynamic">Dynamic Reports</a>
+                    <a class="{% if craft.app.request.getSegment(2) == 'dynamic' %}active{% endif %}" href="/reporting/dynamic">Dynamic Reports</a>
                 </li>
                 -->
             </ul>
         </li>
-        {% if craft.config.environmentVariables.site != 'poultrypassport' %}
+        {% if alias('@site') != 'poultrypassport' %}
         {% set pendingEndorsementCount = craft.lantra.managerCountEndorsementUsers() %}
         {% if not currentUser.managerReadOnly %}
-            <li class="{% if craft.request.getSegment(2) == 'endorsements' %}nav-open{% else %}nav-closed{% endif %}">
+            <li class="{% if craft.app.request.getSegment(2) == 'endorsements' %}nav-open{% else %}nav-closed{% endif %}">
                 <a class="secondary-bg-hover" href="#">Endorsements ({{ pendingEndorsementCount }})</a>
                 <ul>
                     <li>
@@ -116,7 +116,7 @@
     </ul>
     {% endif %}
     <ul>
-        <li class="{% if craft.request.getSegment(1) == 'public' %}nav-open{% else %}nav-closed{% endif %}">
+        <li class="{% if craft.app.request.getSegment(1) == 'public' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Informational Pages</a>
                 <ul>
                 {% for pageEntry in craft.lantra.setting('themeNavigationPrivate') %}

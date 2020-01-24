@@ -1,9 +1,9 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 <article class="administrator-tools">
 <h2>Administrator tools</h2>
-{% if currentUser.can('editEntries:3') or currentUser.can('editEntries:5') or currentUser.can('editUsers') %}
+{% if craft.lantra.can('editCompanies') or craft.lantra.can('editTeams') or craft.lantra.can('editUsers') %}
     <section class="row text-center admin">
-        {% if currentUser.can('editEntries:3') %}
+        {% if craft.lantra.can('editCompanies') %}
         <div class="col-2">
             <img src="/assets/img/tool-company-management.svg" width="150" height="150" class="" alt="">
             <h3>Company Management</h3>
@@ -12,7 +12,7 @@
             </div>
         </div>
         {% endif %}
-        {% if craft.lantra.setting('schemeTeams', false) and currentUser.can('editEntries:5') %}
+        {% if craft.lantra.setting('schemeTeams', false) and craft.lantra.can('editTeams') %}
         <div class="col-2">
             <img src="/assets/img/tool-team-management.svg" width="150" height="150" class="" alt="">
             <h3>Team Management</h3>
@@ -21,7 +21,7 @@
             </div>
         </div>
         {% endif %}
-        {% if currentUser.can('editUsers') %}
+        {% if craft.lantra.can('editUsers') %}
         <div class="col-2">
             <img src="/assets/img/tool-hierarchy-management.svg" width="150" height="150" class="" alt="">
             <h3>Hierarchy Management</h3>
@@ -30,9 +30,9 @@
             </div>
         </div>
         {% endif %}
-        {% if currentUser.can('editCategories:1') or currentUser.can('editEntries:6') or currentUser.can('editEntries:7') %}
+        {% if craft.lantra.can('editRoles') or craft.lantra.can('editRoles') or craft.lantra.can('editReports') %}
 
-    {% if currentUser.can('editCategories(1)') %}
+    {% if craft.lantra.can('editRoles') %}
     <div class="col-2">
         <img src="/assets/img/tool-job-role-management.svg" width="150" height="150" class="" alt="">
         <h3>Job Role Management</h3>
@@ -41,7 +41,7 @@
         </div>
     </div>
     {% endif %}
-    {% if currentUser.can('editEntries:6') %}
+    {% if craft.lantra.can('editModules') %}
     <div class="col-2">
         <img src="/assets/img/tool-modules-management.svg" width="150" height="150" class="" alt="">
         <h3>Modules Management</h3>

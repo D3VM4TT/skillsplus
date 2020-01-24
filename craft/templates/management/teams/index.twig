@@ -1,11 +1,10 @@
-{% requirePermission 'editEntries:5' %}
-
+{% do craft.lantra.requirePermission('editTeams') %}
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Teams" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
 {% if currentUser.isInGroup('schemeManagers') or currentUser.admin  %}
     {% set criteria = craft.entries.section('teams').search(filterSearch).limit(pageLimit) %}
@@ -53,7 +52,7 @@
             {% for team in teamEntries %}
                 <tr>
                     <td>{{ team.id }}</td>
-                    <td>{{ team.teamCompany.first.title }}</td>
+                    <td>{{ team.teamCompany.one.title }}</td>
                     <td>{{ team.title }}</td>
                     <td>{{ craft.lantra.userCount(team.id) }}</td>
                     <td>

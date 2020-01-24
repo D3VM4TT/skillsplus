@@ -1,4 +1,4 @@
-{% requirePermission 'editEntries:3' %}
+{% do craft.lantra.requirePermission('editCompanies') %}
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 {% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
 
@@ -6,13 +6,13 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Companies" %}
 
-{% set entryId = craft.request.getSegment(4) %}
+{% set entryId = craft.app.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).first %}
+    {% set entry = craft.entries.id(entryId).one %}
 {% endif %}
 
-{% set hierarchyNode = craft.request.getParam('node') %}
-{% set hierarchyParent = craft.request.getParam('parent') %}
+{% set hierarchyNode = craft.app.request.getParam('node') %}
+{% set hierarchyParent = craft.app.request.getParam('parent') %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
@@ -33,16 +33,16 @@
 </div>
 
 {% if entry is defined %}
-    {{ ui.errorList(entry.getAllErrors()) }}
+    {{ ui.errorList(entry.getFirstErrors()) }}
 {% endif %}
 
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-    {{ getCsrfInput() }}
-    <input type="hidden" name="action" value="entries/saveEntry">
+    {{ csrfInput() }}
+    {{ actionInput('entries/save-entry') }}
     {% if hierarchyNode %}
-       <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
+        {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
     {% else %}
-        <input type="hidden" name="redirect" value="management/companies">
+        {{ redirectInput('/management/companies') }}
     {% endif %}
     <input type="hidden" name="sectionId" value="3">
     <input type="hidden" name="enabled" value="1">
@@ -54,11 +54,11 @@
     <div class="field--wrapper">
         <label for="companyParent">Company Parent (if applicable):</label>
         {% if currentUser.isInGroup('schemeManagers') %}
-            {% set companyEntries = craft.entries.section('companies').order('companyLabel').limit(null) %}
+            {% set companyEntries = craft.entries.section('companies').orderBy('companyLabel').limit(null) %}
         {% else %}
-            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).order('companyLabel').limit(null) %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).orderBy('companyLabel').limit(null) %}
         {% endif %}
-        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.first().id|default(hierarchyParent) }}" id="companyParent">
+        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.one().id|default(hierarchyParent) }}" id="companyParent">
             <option value="">~ none ~</option>
             {% for companyEntry in companyEntries %}
                 {% if not entryId or ( companyEntry.id != entry.id ) %}

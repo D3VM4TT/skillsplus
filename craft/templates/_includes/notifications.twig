@@ -1,5 +1,5 @@
-{% set notice = craft.session.getFlash('notice') %}
-{% set error = craft.session.getFlash('error') %}
+{% set notice = craft.app.session.getFlash('notice') %}
+{% set error = craft.app.session.getFlash('error') %}
 <div id="notifications">
     {% if notice %}
         <div class="alert alert-success">

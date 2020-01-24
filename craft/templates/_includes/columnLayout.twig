@@ -1,11 +1,11 @@
 {% if header is defined %}
-    {% for row in columnLayout %}
+    {% for row in columnLayout.all() %}
         {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
             <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
         {% endif %}
     {% endfor %}
 {% else %}
-    {% for row in columnLayout %}
+    {% for row in columnLayout.all() %}
         {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
@@ -30,14 +30,14 @@
                     {% set endorsedDate = resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate : resultEntry.postDate %}
                     {{ endorsedDate|date(dateFormat) }}
                 {% else %}
-                     -
+                    -
                 {% endif %}
             </td>
         {% elseif row.fieldType == 'resultEndorsedUser'  %}
             <td class="resultEndorsedUser">
                 <p class="td-title-responsive">Endorsed Manager: </p>
-                {% if resultEntry and resultEntry.resultEndorsedUser.total %}
-                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.first %}
+                {% if resultEntry and resultEntry.resultEndorsedUser.count %}
+                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.one %}
                     {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
                 {% elseif resultEntry %}
                     unknown

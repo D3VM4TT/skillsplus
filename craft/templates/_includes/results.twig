@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         {% for moduleResultEntry in moduleResults %}
-            {%  set moduleEntry = moduleResultEntry.resultModule.first %}
+            {%  set moduleEntry = moduleResultEntry.resultModule.one %}
             <tr>
                 <td>{{ moduleEntry.title|default('~') }}</td>
                 <td>{{ moduleResultEntry.resultEndorsedDate|date(dateFormat) }}</td>

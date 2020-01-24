@@ -1,71 +1,54 @@
 <?php
+/**
+ * General Configuration
+ *
+ * All of your system's general configuration settings go in here. You can see a
+ * list of the available settings in vendor/craftcms/cms/src/config/GeneralConfig.php.
+ *
+ * @see \craft\config\GeneralConfig
+ */
 
-$parts = explode('.', $_SERVER['HTTP_HOST']);
-$site = array_shift($parts);
-
-return array(
-    /* all environments */
-    '*' => array(
-        'backupDbOnUpdate'  => false,
-        'defaultWeekStartDay' => 0,
+return [
+    '*' => [
+        'elevatedSessionDuration' => 0,
         'enableCsrfProtection' => false,
+        'defaultWeekStartDay' => 0,
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
         'devMode' => false,
+        'allowAdminChanges' => true,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
+        'securityKey' => getenv('SECURITY_KEY'),
+        'useProjectConfigFile' => false,
+        'backupOnUpdate' => false,
         'autoLoginAfterAccountActivation' => true,
         'phpMaxMemoryLimit' => '4096M',
         'maxUploadFileSize' => '2147483648',
-        'environmentVariables' => array(
-            'basePath' => '/datadisk/sites/' . $site . '/',
-            'assetsPath' => '/datadisk/azureshare/' . $site . '/',
-            'server' => 'prod',
-            'site' => $site,
-        ),
-    ),
-    /* local server */
-    'craft2.skills-plus.local' => array(
-        'siteUrl' => 'http://craft2.skills-plus.local',
+        'aliases' => [
+            '@basePath' => '/datadisk/sites/' . getenv('SITE') . '/',
+            '@assetsPath' => '/datadisk/azureshare/' . getenv('SITE') . '/',
+            '@server' => getenv('ENVIRONMENT'),
+            '@site' => getenv('SITE'),
+        ],
+    ],
+    'local' => [
+        'siteUrl' => 'http://craft3.skills-plus.local',
         'devMode' => true,
-        'environmentVariables' => array(
-            'basePath' => '/websites/skills-plus.net/',
-            'assetsPath' => '/websites/skills-plus.net/craft-assets/',
-            'server' => 'local',
-        ),
-    ),
-    /* demo server */
-    'splusdev.ukwest.cloudapp.azure.com' => array(
+        'allowAdminChanges' => true,
+        'aliases' => [
+            '@basePath' => '/websites/skills-plus.net/craft3',
+            '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
+        ],
+    ],
+    'dev' => [
         'devMode' => true,
-        'environmentVariables' => array(
-            'server' => 'demo',
-        ),
-    ),
-    /* dev server */
-    'newdev.skills-plus.net' => array(
-        'devMode' => true,
-        'environmentVariables' => array(
-            'server' => 'dev',
-        ),
-    ),
-    /* uat server */
-    'newuat.skills-plus.net' => array(
-        'environmentVariables' => array(
-            'server' => 'uat',
-        ),
-    ),
-    /* stg server */
-    'newstg.skills-plus.net' => array(
-        'environmentVariables' => array(
-            'server' => 'stg',
-        ),
-    ),
-    /* prod server */
-    'newprod.skills-plus.net' => array(
-        'environmentVariables' => array(
-            'server' => 'prod',
-        ),
-    ),
-);
+        'allowAdminChanges' => true,
+    ],
+    'uat' => [
+    ],
+    'prod' => [
+    ],
+];

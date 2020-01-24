@@ -1,11 +1,11 @@
-{% requirePermission 'editEntries:3' %}
+{% do craft.lantra.requirePermission('editCompanies') %}
 
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > companies" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 {% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
 
 {% set criteria = craft.lantra.companyCriteria(filterSearch, pageLimit, 'companyLabel') %}
@@ -50,14 +50,14 @@
                  </tr>
             <tbody>
             {% for company in companyEntries %}
-            {% set parent = company.companyParent.first %}
+            {% set parent = company.companyParent.one %}
             {% set userCount = craft.lantra.userCount(company.id, 'both') %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ company.id }}</td>
                     <td><p class="td-title-responsive">Name: </p>{{ company.title }}</td>
                     <td><p class="td-title-responsive">Location: </p>{{ company.companyLabel }}</td>
                     <td>
-                        {% if company.companyPrimaryManagers.total %}
+                        {% if company.companyPrimaryManagers.count %}
                             <p class="td-title-responsive">Primary Managers: </p>
                             {% for primaryManager in company.companyPrimaryManagers %}
                                 <a href="/management/users/edit/{{ primaryManager.id }}">{{ primaryManager.fullName }}</a>
@@ -88,7 +88,7 @@
                         {% endif %}
                         {% if not currentUser.managerReadOnly %}
                             <a class="icon" href="/management/companies/edit/{{ company.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
-                            <a class="icon action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ company.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
+                            <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ company.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
                         {% endif %}
                     </td>
                 </tr>

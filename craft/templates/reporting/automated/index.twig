@@ -1,11 +1,10 @@
-{% requirePermission 'editEntries:13' %}
-
+{% do craft.lantra.requirePermission('editReports') %}
 {% extends "_layout" %}
 
 {% set metaTitle = "Reporting > Automated Reports" %}
 {% set dateFormat = 'd-m-y H:i' %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
 {% set criteria = craft.lantra.reportCriteria(filterSearch, pageLimit, 'id desc', true) %}
 {% if criteria %}{% paginate criteria as pageInfo, reportEntries %}{% endif %}
@@ -49,18 +48,18 @@
                             <td>{{ report.author.fullName }}</td>
                             <td>{{ report.reportType|title }}</td>
                             <td>{{ report.reportSendFrequency|title }}</td>
-                            <td>{{ report.reportLastSentDate|format(dateFormat)|default('Never') }}</td>
+                            <td>{{ report.reportLastSentDate ? report.reportLastSentDate|date(dateFormat) : 'Never' }}</td>
                             <td>
                                 {{ report.reportData|length }}
                                 {% if report.reportData|length %}
-                                    {% set asset = report.reportData.order('id desc').first() %}
+                                    {% set asset = report.reportData.orderBy('id desc').one() %}
                                     <a href="/internal/{{ asset.id }}" rel="external">download latest</a>
                                 {% endif %}
                                 </td>
                             <td style="text-align: right;">
-                                <a class="action" href="#" data-action="lantra/reports/run" data-id="{{ report.id }}">run</a> |
+                                <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}">run</a> |
                                 <a href="/reporting/custom/edit/{{ report.id }}">edit</a> |
-                                <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ report.id }}">delete</a>
+                                <a class="action" href="#" data-action="entries/delete-entry" data-id="{{ report.id }}">delete</a>
                             </td>
                         </tr>
                     {% endfor %}

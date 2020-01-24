@@ -1,0 +1,48 @@
+{% set userId = craft.request.getSegment(3) %}
+{% set userProfile = craft.users.id(userId).first %}
+{% if not userProfile %}{% exit 404 %}{% endif %}
+{% extends "_layout" %}
+
+{% set metaTitle = userProfile.getFullName() ~ " Passport" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% block content %}
+    <section class="page">
+        <div class="page-header">
+            <h2>{{ userProfile.getFullName() }}</h2>
+            <p>See below for a summary of all your Qualifications and completed CPD.</p>
+        </div>
+        {% set moduleResults = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete') %}
+        {% if moduleResults|length %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>Module</th>
+                <th>Completed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entry in moduleResults %}
+            {% set moduleEntry = entry.resultModule.first %}
+            <tr>
+                <td>{{ moduleEntry.title|default('') }}</td>
+                <td>{{ entry.postDate|date(dateFormat) }}</td>
+                <td>
+                    {% if entry.expiryDate %}
+                        {{ entry.expiryDate|date(dateFormat) }}
+                    {% else %}
+                        ~
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="page-content">
+            <h3>There are no results available for {{ userProfile.getFullName() }}.</h3>
+        </div>
+        {% endif %}
+    </section>
+{% endblock %}
