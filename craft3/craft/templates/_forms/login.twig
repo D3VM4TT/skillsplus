@@ -1,0 +1,33 @@
+<form class="public" id="form-login" method="post" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('users/login') }}
+    {{ redirectInput('/') }}
+    <h2>User Login</h2>
+    {% set themeLoginMessage = craft.lantra.setting('themeLoginMessage')  %}
+    {% if themeLoginMessage %}
+        <p style="text-align:center;font-size:12px;margin-bottom:40px">{{ themeLoginMessage }}</p>
+    {% endif %}
+    <div class="field--wrapper" style="">
+        <label for="loginName" style="" class="float">Username or Email Address</label>
+        <input type="text" id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.session.rememberedUsername }}">
+    </div>
+    <div class="field--wrapper last" style="">
+        <label for="password" style="" class="float">Password</label>
+        <input type="password" name="password" id="password" class="float-label" placeholder="Password">
+        <span class="password-showhide">
+            <span class="trigger-password">Show</span>
+        </span>
+        <div class="sml-link right" id="remember-me">
+            <label class="primary-color">
+                <input type="checkbox" name="rememberMe" value="1">
+                <span class="remember-me-txt">Remember me</span>
+            </label>
+        </div>
+    </div>
+    <div class="container-sidebar-btn center">
+        <button class="button primary-bg"><span>Log in</span></button>
+    </div>
+    <div class="sml-link toggle">
+        <a href="/public/password/reset" class="reset">Forgotten your password?</a>
+    </div>
+</form>

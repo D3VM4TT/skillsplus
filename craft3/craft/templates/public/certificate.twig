@@ -1,0 +1,15 @@
+{% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
+{% if not moduleResultEntry %}{% exit 404 %}{% endif %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set vars = {
+    moduleTitle: moduleResultEntry.resultModule.one.title,
+    resultDate: moduleResultEntry.postDate|date(dateFormat),
+    resultUserFullName: moduleResultEntry.author.fullName,
+} %}
+{% set settings = {
+    orientation:'portrait',
+    filename:userId ~ '-' ~ resultId,
+} %}
+{{ craft.printmaker.pdfFromTemplate('_includes/certificate', vars, settings).download }}

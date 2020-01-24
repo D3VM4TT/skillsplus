@@ -1,30 +1,31 @@
-{% requirePermission 'editCategories:d83da856-af9d-458e-8b34-08ff74c012b5' %}
+{% requirePermission 'editCategories:1' %}
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Job Roles" %}
 
-{% set categoryId = craft.app.request.getSegment(4) %}
+{% set categoryId = craft.request.getSegment(4) %}
 {% if categoryId and category is not defined %}
-    {% set category = craft.categories.id(categoryId).one %}
+    {% set category = craft.categories.id(categoryId).first %}
 {% endif %}
 
 {% block content %}
-    <div class="page-subHeader primary-bg">
-        <a class="back-link" href="/management/roles">&laquo; back</a>
-        {% include '_includes/topNavigation' %}
+    <div class="page-header">
+        {% if category is defined and category.id %}
+            <h2>Edit job role</h2>
+        {% else %}
+            <h2>Create a new job role</h2>
+        {% endif %}
+        <p><a href="/management/roles">&laquo; back to roles</a></p>
     </div>
     {% if category is defined %}
-        {{ ui.errorList(category.getFirstErrors()) }}
-    {% endif %}
-    {% if category is defined %}
-        {{ ui.errorList(category.getFirstErrors()) }}
+        {{ ui.errorList(category.getAllErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-        {{ csrfInput() }}
-        {{ actionInput('categories/save-category') }}
-        {{ redirectInput('/management/roles') }}
+        {{ getCsrfInput() }}
+        <input type="hidden" name="action" value="categories/saveCategory">
+        <input type="hidden" name="redirect" value="management/roles">
         <input type="hidden" name="groupId" value="1">
         <input type="hidden" name="categoryId" value="{{ category.id|default('') }}">
         <div class="field--wrapper">

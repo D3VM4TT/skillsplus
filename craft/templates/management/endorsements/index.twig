@@ -6,7 +6,7 @@
 {% set metaTitle = "Management > Endorsements" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterDirect = craft.app.request.getParam('direct')|default(false) %}
+{% set filterDirect = craft.request.getParam('direct')|default(false) %}
 
 {% set criteria = craft.lantra.managerEndorsementUsers(null, pageLimit, false, filterDirect) %}
 {% if criteria %}{% paginate criteria as pageInfo, endorseUsers %}{% endif %}
@@ -28,7 +28,7 @@
     </div>
     <div class="page-content">
     {% if endorseUsers is defined and endorseUsers|length %}
-            {{ csrfInput() }}
+            {{ getCsrfInput() }}
             <table width="100%" class="data">
                 <thead>
                     <tr>

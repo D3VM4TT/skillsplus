@@ -1,0 +1,128 @@
+{% import "_includes/forms" as forms %}
+{{ forms.textField ({
+    label:			"Scheme Name",
+    id:				"schemeName",
+    name:			"schemeName",
+    value:		    settings.schemeName
+}) }}
+
+{{ forms.textField ({
+    label:			"Scheme Description",
+    id:				"schemeDescription",
+    name:			"schemeDescription",
+    value:		    settings.schemeDescription
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Scheme Logo",
+    id:				    "schemeLogo",
+    name:			    "schemeLogo",
+    elementType:        config.assetsElementType,
+    elements:           settings.schemeLogo ? settings.schemeLogo,
+    sources:            config.themeFolder,
+    limit:              1,
+    criteria:           {"kind":[],"localeEnabled":'null'},
+}) }}
+
+{{ forms.colorField ({
+    label:			"Theme Colour Primary",
+    id:				"themeColorPrimary",
+    name:			"themeColorPrimary",
+    value:		    settings.themeColorPrimary,
+}) }}
+
+{{ forms.colorField ({
+    label:			"Theme Colour Secondary",
+    id:				"themeColorSecondary",
+    name:			"themeColorSecondary",
+    value:		    settings.themeColorSecondary,
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Theme Navigation Public",
+    id:				    "themeNavigationPublic",
+    name:			    "themeNavigationPublic",
+    elementType:        config.entryElementType,
+    sources:             config.pagesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.themeNavigationPublic ? settings.themeNavigationPublic,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              ''
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Theme Navigation Private",
+    id:				    "themeNavigationPrivate",
+    name:			    "themeNavigationPrivate",
+    elementType:        config.entryElementType,
+    sources:             config.pagesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.themeNavigationPrivate ? settings.themeNavigationPrivate,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              ''
+}) }}
+
+{{ forms.textField ({
+    label:			"Theme Date Format (default d-m-Y)",
+    id:				"themeDateFormat",
+    name:			"themeDateFormat",
+    value:		    settings.themeDateFormat
+}) }}
+
+{{ forms.textField ({
+    label:			"Theme Row Limit (default 10)",
+    id:				"themeDefaultLimit",
+    name:			"themeDefaultLimit",
+    value:		    settings.themeDefaultLimit
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Theme Login Message",
+    id:				"themeLoginMessage",
+    name:			"themeLoginMessage",
+    value:		    settings.themeLoginMessage,
+    rows:           4,
+    cols:           50
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Result History",
+    label:			"Result History Title",
+    id:				"themeResultHistoryTitle",
+    name:			"themeResultHistoryTitle",
+    value:		    settings.themeResultHistoryTitle
+}) }}
+
+{{ forms.lightswitchField ({
+    instructions:   "If selected Results History will be hidden on CPD page.",
+    label:			"Result History Link",
+    id:				"themeResultHistoryLink",
+    name:			"themeResultHistoryLink",
+    on:		         settings.themeResultHistoryLink == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Disable Result History",
+    id:				"themeDisableResultHistory",
+    name:			"themeDisableResultHistory",
+    on:		        settings.themeDisableResultHistory == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Disable Certificates?",
+    id:				"themeDisableCertificates",
+    name:			"themeDisableCertificates",
+    on:		        settings.themeDisableCertificates == 1,
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Job Role",
+    label:			"Label Job Role",
+    id:				"labelJobRole",
+    name:			"labelJobRole",
+    value:		    settings.labelJobRole
+}) }}

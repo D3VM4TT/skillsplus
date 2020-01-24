@@ -11,7 +11,7 @@
     </div>
     {%  if entry.pageImage|length %}
     <div class="content-col right img-responsive">
-        <img src="{{ entry.pageImage.one().url }}">
+        <img src="{{ entry.pageImage.first().url }}">
     </div>
     {% endif %}
 </div>

@@ -1,20 +1,20 @@
 <form class="page-form" id="form-register" method="post" accept-charset="UTF-8">
-    {{ csrfInput() }}
-    {{ actionInput('users/save-user') }}
-    {{ redirectInput('') }}
-
+    {{ getCsrfInput() }}
+    <input type="hidden" name="action" value="users/saveUser">
+    <input type="hidden" name="redirect" value="/">
+    {# <input type="hidden" name="username" value=""> #}
     <div class="field--wrapper" style="">
         <label for="registerFirstName" class="no-float">First Name</label>
-        <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {% if user is defined %} value="{{ user.firstName }}"{% endif %}>
+        <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {%- if account is defined %} value="{{ account.firstName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
         <label for="registerLastName" class="no-float">Last Name</label>
         <input id="registerLastName" type="text" placeholder="Last Name"
-               name="lastName" {% if user is defined %} value="{{ user.lastName }}"{% endif %}>
+               name="lastName" {%- if account is defined %} value="{{ account.lastName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
         <label for="registerEmail" class="no-float">Email</label>
-        <input id="registerEmail" type="text" placeholder="Email" name="email" {% if user is defined %} value="{{ user.email }}"{% endif %}>
+        <input id="registerEmail" type="text" placeholder="Email" name="email" {%- if account is defined %} value="{{ account.email }}"{% endif %}>
     </div>
     <div class="field--wrapper">
         <label for="registerPassword" class="no-float">Password</label>

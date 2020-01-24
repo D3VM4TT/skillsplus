@@ -1,0 +1,38 @@
+<div class="page-header secondary-bg">
+    <h2>Modules Completed Report</h2>
+    {% include '_includes/filter' with{filterDays:filterDays, reportType:'modules-completed'} %}
+</div>
+{% if reportEntries|length %}
+<div class="page-content">
+    <table width="100%" class="data">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Team</th>
+                <th>Module</th>
+                <th>Completed Date</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in reportEntries %}
+        {% set userTeam = entry.author.userTeam.one() %}
+        {% set resultModule = entry.resultModule.one() %}
+        <tr>
+            <td>{{ entry.author.getFullName() }}</td>
+            <td>{{ userTeam.title|default('') }}</td>
+            <td>{{ resultModule.title|default('') }}</td>
+            <td>{{ entry.postDate|date(dateFormat) }}</td>
+            <td>
+                {% if entry.expiryDate %}
+                    {{ entry.expiryDate|date(dateFormat) }}
+                {% else %}
+                    ~
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

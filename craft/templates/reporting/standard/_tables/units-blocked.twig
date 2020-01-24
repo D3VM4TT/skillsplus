@@ -16,8 +16,8 @@
         </thead>
         <tbody>
         {% for entry in reportEntries %}
-        {% set userTeam = entry.author.userTeam.one() %}
-        {% set resultUnit = entry.resultUnit.one() %}
+        {% set userTeam = entry.author.userTeam.first() %}
+        {% set resultUnit = entry.resultUnit.first() %}
         <tr>
             <td>{{ entry.author.getFullName() }}</td>
             <td>{{ userTeam.title|default('') }}</td>

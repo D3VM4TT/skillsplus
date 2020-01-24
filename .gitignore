@@ -1,10 +1,10 @@
-# Craft 3  #
+# Craft 2  #
 ###################
-craft/.env
-craft/storage/*
 html/assets/uploads/*
-html/assets/users/*
 src/dev/*
+craft/storage/userphotos/*
+craft-assets/*
+craft/config/db.php
 
 # PHPStorm #
 ######################

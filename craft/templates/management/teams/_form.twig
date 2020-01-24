@@ -1,16 +1,16 @@
-{% requirePermission 'editEntries:bcf0ea1d-9495-423e-ac83-ef089790460c' %}
+{% requirePermission 'editEntries:5' %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Teams" %}
 
-{% set entryId = craft.app.request.getSegment(4) %}
+{% set entryId = craft.request.getSegment(4) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).one %}
+    {% set entry = craft.entries.id(entryId).first %}
 {% endif %}
 
-{% set hierarchyNode = craft.app.request.getParam('node') %}
-{% set hierarchyCompany = craft.app.request.getParam('company') %}
+{% set hierarchyNode = craft.request.getParam('node') %}
+{% set hierarchyCompany = craft.request.getParam('company') %}
 
     {% block content %}
 <div class="page-subHeader primary-bg">
@@ -35,10 +35,10 @@
         {% endif %}
     </div>
     {% if entry is defined %}
-        {{ ui.errorList(entry.getFirstErrors()) }}
+        {{ ui.errorList(entry.getAllErrors()) }}
     {% endif %}
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
-        {{ csrfInput() }}
+        {{ getCsrfInput() }}
         <input type="hidden" name="action" value="entries/saveEntry">
         {% if hierarchyNode %}
             <input type="hidden" name="redirect" value="/management/hierarchy?node={{ hierarchyNode }}">
@@ -59,7 +59,7 @@
             {% else %}
                 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()) %}
             {% endif %}
-            <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.one().id|default(hierarchyCompany) }}" id="teamCompany" >
+            <select data-relation="fields[teamCompany]" data-value="{{ entry.teamCompany.first().id|default(hierarchyCompany) }}" id="teamCompany" >
                 {% for companyEntry in companyEntries %}
                     <option value="{{ companyEntry.id }}">{{ companyEntry.title }}</option>
                 {% endfor %}
@@ -68,7 +68,7 @@
         <div class="field--wrapper">
             <label for="teamPrimaryManager">Team primary manager:</label>
             {% set usersTeamManagers = craft.users.group('teamManagers') %}
-            <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.one().id|default('') }}">
+            <select data-relation="fields[teamPrimaryManager]" id="teamPrimaryManager" data-value="{{ entry.teamPrimaryManager.first().id|default('') }}">
                 {% for userEntry in usersCompanyManagers %}
                     <option value="{{ userEntry.id }}">{{ userEntry.getFullName() }}</option>
                 {% endfor %}

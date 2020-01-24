@@ -1,0 +1,101 @@
+{% requirePermission 'editEntries:86faf121-d218-4348-8ab8-de457b46aa63' %}
+{% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
+{% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Companies" %}
+
+{% set entryId = craft.app.request.getSegment(4) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).one %}
+{% endif %}
+
+{% set hierarchyNode = craft.app.request.getParam('node') %}
+{% set hierarchyParent = craft.app.request.getParam('parent') %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% if hierarchyNode %}
+        <a class="back-link" href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a>
+    {% else %}
+        <a class="back-link" href="/management/companies"><strong>&laquo; back</a>
+    {% endif %}  
+    {% include '_includes/topNavigation' %}
+</div>
+<div class="page-header secondary-bg">
+    {% if entry is defined and entry.id %}
+        <h2>Edit company</h2>
+    {% else %}
+        <h2>Create a New Company</h2>
+        <p>Create a new company, assign a parent company and add Primarty and Secondary managers.</p>
+    {% endif %}
+</div>
+
+{% if entry is defined %}
+    {{ ui.errorList(entry.getFirstErrors()) }}
+{% endif %}
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('entries/save-entry') }}
+    {% if hierarchyNode %}
+        {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
+    {% else %}
+        {{ redirectInput('/management/companies') }}
+    {% endif %}
+    <input type="hidden" name="sectionId" value="3">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
+    <div class="field--wrapper">
+        <label for="title" class="">Company name:</label>
+        <input type="text" id="title" name="title" class="float-label" placeholder="Enter the company name" value="{{ entry.title|default('') }}">
+    </div>
+    <div class="field--wrapper">
+        <label for="companyParent">Company Parent (if applicable):</label>
+        {% if currentUser.isInGroup('schemeManagers') %}
+            {% set companyEntries = craft.entries.section('companies').orderBy('companyLabel').limit(null) %}
+        {% else %}
+            {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).orderBy('companyLabel').limit(null) %}
+        {% endif %}
+        <select data-relation="fields[companyParent]" data-value="{{ entry.companyParent.one().id|default(hierarchyParent) }}" id="companyParent">
+            <option value="">~ none ~</option>
+            {% for companyEntry in companyEntries %}
+                {% if not entryId or ( companyEntry.id != entry.id ) %}
+                    <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    {% set userCompanyManagers = craft.users.group('companyManagers').limit(null) %}
+    <div class="field--wrapper">
+        <label for="companySecondaryManagers">Company primary managers:</label>
+        <input type="hidden" name="fields[companyPrimaryManagers]" value="" />
+        <select multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
+            {% for userEntry in userCompanyManagers %}
+                <option value="{{ userEntry.id }}"
+                        {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper">
+        <label for="companySecondaryManagers">Company secondary managers:</label>
+        <input type="hidden" name="fields[companySecondaryManagers]" value="" />
+        <select multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+            {% for userEntry in userCompanyManagers %}
+                <option value="{{ userEntry.id }}"
+                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% if lantraLicences %}
+    <div class="field--wrapper">
+        <label for="companyRemainingLicences" class="no-float">Remaining Company licences:</label>
+        <input type="number" id="companyRemainingLicences" class="float-label" placeholder="Enter the remaining company licences"  name="fields[companyRemainingLicences]" value="{{ entry.companyRemainingLicences|default(0) }}">
+    </div>
+    {% endif %}
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save company</button>
+    </div>
+</form>
+{% endblock %}

@@ -2,9 +2,9 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Result > Edit" %}
 
-{% set entryId = craft.app.request.getSegment(2) %}
+{% set entryId = craft.request.getSegment(2) %}
 {% if entryId and entry is not defined %}
-    {% set entry = craft.entries.id(entryId).status('live, expired').one %}
+    {% set entry = craft.entries.id(entryId).status('live, expired').first %}
 {% endif %}
 
 {% if currentUser.id == entry.authorId %}
@@ -29,7 +29,7 @@
     </div>
 
     {% if entry is defined %}
-        {{ ui.errorList(entry.getFirstErrors()) }}
+        {{ ui.errorList(entry.getAllErrors()) }}
     {% endif %}
 
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
@@ -38,7 +38,7 @@
                 <h3>Result ID: {{ entry.id }}</h3>
             </div>
         </div>
-        {{ csrfInput() }}
+        {{ getCsrfInput() }}
         <input type="hidden" name="action" value="entries/saveEntry">
         <input type="hidden" name="sectionId" value="3">
         <input type="hidden" name="enabled" value="1">

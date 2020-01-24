@@ -1,21 +1,19 @@
 <?php
-/**
- * Craft web bootstrap file
- */
 
-// Set path constants
-define('CRAFT_BASE_PATH', __DIR__ . '/../craft');
-define('CRAFT_VENDOR_PATH', CRAFT_BASE_PATH.'/vendor');
+// Path to your craft/ folder
+$craftPath = '../craft';
 
-// Load Composer's autoloader
-require_once CRAFT_VENDOR_PATH.'/autoload.php';
+// Do not edit below this line
+$path = rtrim($craftPath, '/').'/app/index.php';
 
-// Load dotenv?
-if (class_exists('Dotenv\Dotenv') && file_exists(CRAFT_BASE_PATH.'/.env')) {
-    Dotenv\Dotenv::create(CRAFT_BASE_PATH)->load();
+if (!is_file($path))
+{
+	if (function_exists('http_response_code'))
+	{
+		http_response_code(503);
+	}
+
+	exit('Could not find your craft/ folder. Please ensure that <strong><code>$craftPath</code></strong> is set correctly in '.__FILE__);
 }
 
-// Load and run Craft
-define('CRAFT_ENVIRONMENT', getenv('ENVIRONMENT') ?: 'production');
-$app = require CRAFT_VENDOR_PATH.'/craftcms/cms/bootstrap/web.php';
-$app->run();
+require_once $path;

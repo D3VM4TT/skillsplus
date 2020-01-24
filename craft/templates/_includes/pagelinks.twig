@@ -1,11 +1,11 @@
 {% if pageInfo.totalPages > 1 %}
     <div class="links">
         {% for page, url in pageInfo.getPrevUrls(5) %}
-            <a href="{{ url }}">{{ page }}</a>
+            <a href="/{{ craft.request.path }}/p{{ page }}?{{ craft.request.getQueryStringWithoutPath }}">{{ page }}</a>
         {% endfor %}
         <span class="current">{{ pageInfo.currentPage }}</span>
         {% for page, url in pageInfo.getNextUrls(5) %}
-            <a href="{{ url }}">{{ page }}</a>
+            <a href="/{{ craft.request.path }}/p{{ page }}?{{ craft.request.getQueryStringWithoutPath }}">{{ page }}</a>
         {% endfor %}
     </div>
 {% endif %}

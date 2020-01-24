@@ -5,7 +5,7 @@
 </div>
     <section class="page">
     <div class="page-header secondary-bg">
-        {%  if craft.app.request.segment(3) == 'thanks' %}
+        {%  if craft.request.segment(3) == 'thanks' %}
             <h2>Thank You</h2>
             <p>You will be redirected to your dashboard...</p>
             <script>setTimeout(function () {window.location.href = "/";}, 3000);</script>

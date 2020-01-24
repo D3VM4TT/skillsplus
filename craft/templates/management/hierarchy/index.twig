@@ -1,4 +1,4 @@
-{% set hierarchyNode = craft.app.request.getParam('node') %}
+{% set hierarchyNode = craft.request.getParam('node') %}
 
 {% extends "_layout" %}
 {% block content %}
@@ -12,11 +12,12 @@
         </div>
         <div class="page-content">
             <div style="margin-bottom:20px;">
-                <a class="button no-shadow primary-bg" href="/sp/users/refresh-hierarchy" style="margin-left:0;">
+                <a class="button no-shadow primary-bg" href="/actions/lantra/users/refreshHierarchy" style="margin-left:0;">
                     <span>Refresh Hierarchy</span>
                 </a>
             </div>
-            <div id="jstree"></div>
+            <div id="jstree">
+            </div>
         </div>
     </section>
 {% endblock %}
@@ -33,9 +34,9 @@
                 'data': {
                     'url': function (node) {
                         if (node.id == '#') {
-                            return "/sp/users/hierarchy";
+                            return "/actions/lantra/users/hierarchy";
                         }
-                        return "/sp/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
+                        return "/actions/lantra/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
                     }
                 }
             }

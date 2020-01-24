@@ -1,0 +1,51 @@
+    {% import "_macros" as ui %}
+    {% if unitEntry is defined %}
+        {{ ui.errorList(unitEntry.getFirstErrors()) }}
+    {% endif %}
+    {% if unitEntry.testQuestions|length %}
+    <div class="col-pd-top">
+        <form class="test" method="post" role="form" accept-charset="UTF-8">
+            {{ csrfInput() }}
+            {{ actionInput('entries/save-entry') }}
+            {{ redirectInput('/cpd/' ~ userId ~ '/' ~ moduleEntry.id ~ '/' ~ unitEntry.id ~ '/test') }}
+            <input type="hidden" name="sectionId" value="12">
+            <input type="hidden" name="enabled" value="1">
+            {% if userId != currentUser.id %}
+                <input type="hidden" name="author[]" value="{{ userId }}">
+            {% endif %}
+            <input type="hidden" name="fields[attemptUnit][]" value="{{ unitEntry.id }}">
+            {% for question in unitEntry.testQuestions.all() %}
+                {% set questionNumber = loop.index  %}
+                {% set questionId = 'new_' ~ (questionNumber - 1)  %}
+                <div class="field--wrapper test">
+                    <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
+                    <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
+                    {% if question.type == "trueFalse" %}
+                    <ul class="trueFalse">
+                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"> True</li>
+                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"> False</li>
+                    </ul>
+                    {% elseif question.type == "choices" %}
+                    <ul class="choices">
+                        <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][answer]">
+                        {% for choice in question.answers %}
+                        <li>
+                            <input type="checkbox" value="{{ choice.answer }}"> {{ choice.answer }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="container-btn">
+                <button class="button primary-bg" type="submit">Submit answers</button>
+            </div>
+        </form>
+    </div>
+    {% else %}
+        <p>There are no questions in this test.</p>
+    {% endif %}

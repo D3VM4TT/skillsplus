@@ -17,7 +17,7 @@
         </thead>
         <tbody>
         {% for subordinate in reportEntries %}
-        {% set userTeam = subordinate.userTeam.one() %}
+        {% set userTeam = subordinate.userTeam.first() %}
         {% set userCompany = craft.lantra.userCompany(subordinate.id) %}
         <tr>
             <td>{{ subordinate.getFullName() }}</td>
