@@ -43,7 +43,7 @@ class Install extends Migration
         Craft::$app->plugins->installPlugin('redactor');
 
         ## update module types
-        $this->_updateModules();
+       // $this->_updateModules();
 
         return true;
     }
