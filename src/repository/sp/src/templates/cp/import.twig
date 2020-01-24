@@ -1,0 +1,175 @@
+{% extends "sp/cp/_layout" %}
+{% import "_includes/forms" as forms %}
+{% set title = 'Skills Plus Import' %}
+{% set selectedSubnavItem = 'import' %}
+
+{% set fullPageForm = false %}
+{% set saveButton = null %}
+
+{% set tabs = {
+    import: {label: 'Import', url: '#tab-import-upload' },
+    users: {label: 'Users', url: '#tab-import-users' },
+    tools: {label: 'Process', url: '#tab-import-process' },
+    delete: {label: 'Delete', url: '#tab-import-delete' }
+} %}
+
+{% block content %}
+    {% if log %}
+        <h3>Process Log</h3>
+        {% for l in log %}
+            <p style="color:#FF0000">{{ l }}</p>
+        {% endfor %}
+        <hr />
+    {% endif %}
+    <div id="tab-import-upload">
+        <h3>Upload Import Data</h3>
+        <p>Column order <strong>MUST</strong> be accurate or the process will fail.</p>
+        <form method="post" action="" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="sp/cp/import/upload">
+            {{ forms.fileField ({
+                id:				"data",
+                name:			"data"
+            }) }}
+            <div>
+                <label>Data Type:</label>
+                <select name="type">
+                    <option value="companies">Companies</option>
+                    <option value="roles">Roles</option>
+                    <option value="users">Users</option>
+                    <option value="results">Results</option>
+                    <option value="companyUsers">Company Users</option>
+                    <option value="companyManagers">Company Managers</option>
+                </select>
+            </div>
+            <p>
+                <input type="submit" class="btn submit" value="{{ 'Upload' }}">
+            </p>
+        </form>
+        <hr />
+        <h3>Unprocessed Data</h3>
+        <table class="data fullwidth">
+            <tr>
+                <th>Companies</th>
+                <th>Roles</th>
+                <th>Users</th>
+                <th>Results</th>
+                <th>Company Users</th>
+                <th>Company Managers</th>
+            </tr>
+            <tr>
+                <td>{{ unprocessed.companies }}</td>
+                <td>{{ unprocessed.roles }}</td>
+                <td>{{ unprocessed.users }}</td>
+                <td>{{ unprocessed.results }}</td>
+                <td>{{ unprocessed.companyUsers }}</td>
+                <td>{{ unprocessed.companyManagers }}</td>
+            </tr>
+            <tr>
+                <td><a href="{{ url('sp/import?method=removeCompanies') }}" class="btn btn-small">Delete Companies</a></td>
+                <td><a href="{{ url('sp/import?method=removeRoles') }}" class="btn btn-small">Delete Roles</a></td>
+                <td><a href="{{ url('sp/import?method=removeUsers') }}" class="btn btn-small">Delete Users</a></td>
+                <td><a href="{{ url('sp/import?method=removeResults') }}" class="btn btn-small">Delete Results</a></td>
+                <td><a href="{{ url('sp/import?method=removeCompanyUsers') }}" class="btn btn-small">Delete Company Users</a></td>
+                <td><a href="{{ url('sp/import?method=removeCompanyManagers') }}" class="btn btn-small">Delete Company Managers</a></td>
+            </tr>
+            <tr>
+                <td><a href="{{ url('sp/import?method=resetCompanies') }}" class="btn btn-small">Reset Companies</a></td>
+                <td><a href="{{ url('sp/import?method=resetRoles') }}" class="btn btn-small">Reset Roles</a></td>
+                <td><a href="{{ url('sp/import?method=resetUsers') }}" class="btn btn-small">Reset Users</a></td>
+                <td><a href="{{ url('sp/import?method=resetResults') }}" class="btn btn-small">Reset Results</a></td>
+                <td><a href="{{ url('sp/import?method=resetCompanyUsers') }}" class="btn btn-small">Reset Company Users</a></td>
+                <td><a href="{{ url('sp/import?method=resetCompanyManagers') }}" class="btn btn-small">Reset Company Managers</a></td>
+            </tr>
+        </table>
+        <h3>Import Data To Craft</h3>
+        <form method="post" action="" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="sp/cp/import/process">
+            <div>
+                <label>Data Type:</label>
+                <select name="type">
+                    <option value="companies">Create Companies</option>
+                    <option value="roles">Create Roles</option>
+                    <option value="users">Create Users</option>
+                    <option value="results">Create Results</option>
+                    <option value="companyUsers">Assign Company Users</option>
+                    <option value="companyManagers">Assign Company Managers</option>
+                </select>
+                <label>Limit:</label>
+                <select name="limit">
+                    <option>100</option>
+                    <option>250</option>
+                    <option>500</option>
+                    <option>1000</option>
+                    <option>2000</option>
+                    <option>5000</option>
+                </select>
+            </div>
+            <p>
+                <input type="submit" class="btn submit" value="{{ 'Import' }}">
+            </p>
+        </form>
+        <hr />
+        <h3>Column Order</h3>
+        <p>Companies<br />title, legacyId, legacyCompanyId</p>
+        <p>Company Managers<br />legacyId, legacyCompanyId</p>
+        <p>Company Users<br />legacyId, legacyCompanyId</p>
+        <p>Results<br />type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours, resultValue, resultEndorsedDate, resultStatus, resultNotes, legacyResultFiles</p>
+        <p>Roles<br />title, legacyId</p>
+        <p>Users<br />username, name, email, legacyId, legacyJobRoleId, userDateOfBirth, userStartDate, userAddress, userMembershipNumber</p>
+    </div>
+    <div id="tab-import-users" class="hidden">
+        <h3>Batch Update Users</h3>
+        <form method="post" action="" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="sp/cp/import/users">
+            <div>
+                <label>ID:</label>
+                <select name="refId">
+                    <option value="legacyId">legacyId</option>
+                    <option value="userId">userId</option>
+                </select>
+                <label>Action:</label>
+                <select name="userAction">
+                    <option value="suspend">Suspend</option>
+                    <option value="restore">Restore</option>
+                    <option value="setManagerReadOnly">Set Manager Read Only</option>
+                    <option value="unsetManagerReadOnly">Unset Manager Read Only</option>
+                    <option value="delete">Delete</option>
+                </select>
+            </div>
+            <div style="margin:20px 0 20px 0;">
+                <textarea rows="6" name="ids" class="fullwidth"></textarea>
+                <p>Copy comma separated list of legacyId or userId (i.e. Craft id) and select action.</p>
+            </div>
+            <p>
+                <input type="submit" class="btn submit" value="{{ 'Update' }}">
+            </p>
+        </form>
+    </div>
+    <div id="tab-import-process" class="hidden">
+        <h3>Build Hierarchy ({{ limit }} each request)</h3>
+        <p><a href="{{ url('sp/import/?method=buildHierarchy') }}" class="btn btn-small">Update Company Parent</a></p>
+        {% set totalCompanies = craft.entries.section('companies').count() %}
+        <p>{{ dataClean.companies }}/{{ totalCompanies }} processed</p>
+        <hr />
+        <h3>Assign Job Roles ({{ limit }} each request)</h3>
+        <p><a href="{{ url('sp/import//?method=assignJobRoles') }}" class="btn btn-small">Assign Job Roles</a></p>
+        {% set totalUsers = craft.users.admin(false).count() %}
+        <p>{{ dataClean.users }}/{{ totalUsers }} processed</p>
+        <hr />
+        <h3>Set Usernames firstname.lastname ({{ limit }} each request)</h3>
+        <p><a href="{{ url('sp/import/?method=setUsernames') }}" class="btn btn-small">Set Usernames</a></p>
+        <p>{{ dataClean.usernames }}/{{ totalUsers }} processed</p>
+        <hr />
+        <h3>Set Passwords DOB ({{ limit }} each request)</h3>
+        <p><a href="{{ url('sp/import/?method=setPasswords') }}" class="btn btn-small">Set Passwords</a></p>
+        <p>{{ dataClean.passwords }}/{{ totalUsers }} processed</p>
+        <p>If DOB empty password will be set to 010101.</p>
+    </div >
+    <div id="tab-import-delete" class="hidden">
+        <h3>Dangerous Stuff - Delete Craft Data (imported only)</h3>
+        <p><a href="{{ url('sp/import/?method=deleteCompanies') }}" class="btn btn-small">Delete Companies</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteResults') }}" class="btn btn-small">Delete Results</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteUsers') }}" class="btn btn-small">Delete Users</a></p>
+        <p><a href="{{ url('sp/import/?method=deleteRoles') }}" class="btn btn-small">Delete Roles</a></p>
+    </div>
+{% endblock %}

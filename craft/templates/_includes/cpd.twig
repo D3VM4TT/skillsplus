@@ -9,10 +9,10 @@
 
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}
 
-<article id="cpd-wrapper" class="cpd" data-ref="{{ craft.request.getParam('ref')|default('') }}">
+<article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
 {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
-{% if not cpdUser.userRole.total %}
+{% if not cpdUser.userRole.count %}
     <h2>Job Role</h2>
     <div class="col-pd-btm col-flex">
     <img src="/assets/img/delete.svg" class="test-icon" alt="">
@@ -25,7 +25,7 @@
     </p>
     </div>
 {% else %}
-    {% for role in cpdUser.userRole %}
+    {% for role in cpdUser.userRole.all() %}
         <div class="job-role" style="position: relative;">
         {# number of results to complete - line 123 #}
         {% set jobRoleNoResult = 0 %}
@@ -40,14 +40,14 @@
             </div>
         </div>
     <div id="j{{ role.id }}" {% if jobRoleEndorse %}class="closed"{% endif %}>
-        {% set allModules = craft.entries.section('modules').relatedTo(role).order('title') %}
+        {% set allModules = craft.entries.section('modules').relatedTo(role).orderBy('title') %}
         {% if not allModules|length %}
             <p>No modules have been assigned to this role.</p>
         {% else %}
             <div class="module-group-tabs">
                 <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ role.id }}">
                 {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
-                {% for moduleGroup in moduleGroups %}
+                {% for moduleGroup in moduleGroups.all() %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
@@ -58,16 +58,23 @@
                 </ul>
             </div>
             <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
-                {% for moduleGroup in moduleGroups %}
+                {% for moduleGroup in moduleGroups.all() %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                 <div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
                     <div class="module-tabs">
                         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
                             <div class="tabs-group">
-                            {% set modules = craft.entries.relatedTo('and', {targetElement: role, field: 'moduleRoles'}, {targetElement: moduleGroup, field: 'moduleGroup'}) %}
-                            {% for module in modules %}
+                            {% set modules = craft.entries.relatedTo(
+                                ['and',
+                                    { targetElement: role, field: 'moduleRoles' },
+                                    { targetElement: moduleGroup, field: 'moduleGroup' }
+                                ]) %}
+                            {% if not modules.count %}
+                                No modules have been added to this module group.
+                            {% endif %}
+                            {% for module in modules.all() %}
                                 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
+                                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                                 <li>
                                     <a href="#module{{ moduleElementId }}" class="module-status">
                                         {% if moduleResultEntry %}
@@ -87,9 +94,9 @@
                         </ul>
                     </div>
                     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
-                    {% for module in modules %}
+                    {% for module in modules.all() %}
                         {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .first() %}
+                        {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired') .one() %}
                         <div id="module{{ moduleElementId }}" class="module open">
                             {% set totalPoints = 0 %}
                             <div class="header" data-target="#m{{ role.id ~ module.id }}">
@@ -101,7 +108,7 @@
                                 -->
                             </div>
                             <div id="m{{ role.id ~ module.id }}" class="unit-groups">
-                                {% for unitGroup in module.moduleUnitGroups %}
+                                {% for unitGroup in module.moduleUnitGroups.all() %}
                                     {% set unitGroupEntries = unitGroup.unitEntries %}
                                     <div class="unit-group">
                                         <div class="header primary-bg" data-target="#u{{ role.id ~ module.id ~ unitGroup.id }}">
@@ -120,11 +127,11 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% for unitEntry in unitGroupEntries %}
-                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').first() %}
+                                                {% for unitEntry in unitGroupEntries.all() %}
+                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').one() %}
                                                     {# if no result set jobRoleComplete to false #}
                                                     {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}
-                                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.total : 0 %}
+                                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                                     {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                                     {% if unitResultEntry %}
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
@@ -148,16 +155,16 @@
                                                                     <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
                                                                 </a>
                                                                 {% if not readOnly and unitResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                    {% set managerDelete = unitResultEntry.resultOwner.total and unitResultEntry.resultOwner.first.id == currentUser.id %}
+                                                                    {% set managerDelete = unitResultEntry.resultOwner.count and unitResultEntry.resultOwner.one.id == currentUser.id %}
                                                                     {% set managerEndorse = craft.lantra.canEndorse(unitResultEntry) %}
                                                                     {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ unitResultEntry.id }}"
+                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/delete-entry" data-id="{{ unitResultEntry.id }}"
                                                                             data-tooltip title="Delete this result">
                                                                             <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
                                                                         </a>
                                                                     {% endif %}
                                                                     {% if managerEndorse and unitResultEntry.resultStatus == 'pending' %}
-                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/endorseEvidence" data-id="{{ unitResultEntry.id }}"
+                                                                        <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/endorse-evidence" data-id="{{ unitResultEntry.id }}"
                                                                         data-tooltip title="Endorse this result">
                                                                         <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                     {% endif %}
@@ -210,7 +217,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for userResultEntry in moduleUserResults %}
-                                                    {% set totalComments = userResultEntry.resultComments.total %}
+                                                    {% set totalComments = userResultEntry.resultComments.count %}
                                                     {% set unreadComments = craft.lantra.unreadComments(userResultEntry) %}
                                                     <tr>
                                                         <td>
@@ -223,16 +230,16 @@
                                                             {% endif %}
                                                             <div class="cpd-icons">
                                                             {% if not readOnly and userResultEntry and craft.lantra.isManager(cpdUser.id) %}
-                                                                {% set managerDelete = userResultEntry.resultOwner.total and userResultEntry.resultOwner.first.id == currentUser.id %}
-                                                                {% set managerEndorse = craft.lantra.canEndorse(userResultEntry) %}
+                                                                {% set managerDelete = userResultEntry.resultOwner.count and userResultEntry.resultOwner.one.id == currentUser.id %}
+                                                                {% set managerEndorse = craft.lantra.canEndorse(unitResultEntry) %}
                                                                 {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/deleteEntry" data-id="{{ userResultEntry.id }}"
+                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/delete-entry" data-id="{{ userResultEntry.id }}"
                                                                         data-tooltip title="Delete this result">
                                                                         <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
                                                                     </a>
                                                                 {% endif %}
                                                                 {% if managerEndorse and userResultEntry.resultStatus == 'pending' %}
-                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="lantra/entries/endorseEvidence" data-id="{{ userResultEntry.id }}"
+                                                                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/endorse-evidence" data-id="{{ userResultEntry.id }}"
                                                                     data-tooltip title="Endorse this result">
                                                                     <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
                                                                 {% endif %}

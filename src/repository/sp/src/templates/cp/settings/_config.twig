@@ -1,0 +1,14 @@
+{% import "_includes/forms" as forms %}
+{{ forms.lightswitchField ({
+    label:			"Job Role Endorse",
+    id:				"jobRoleEndorse",
+    name:			"jobRoleEndorse",
+    on:		        settings.jobRoleEndorse == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Disable Result Cache?",
+    id:				"disableResultCache",
+    name:			"disableResultCache",
+    on:		        settings.disableResultCache == 1,
+}) }}

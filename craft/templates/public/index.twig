@@ -18,8 +18,8 @@
     </div>
 </header>
 <section class="slides">
-    {% for slide in globalsTheme.homeSlider %}
-        <article class="slide{% if loop.index == 1 %} active{% endif %}"{% if slide.slideImage.count() %} style="background-image: url('{{ slide.slideImage.first().url }}');opacity: 1;"{% endif %}>
+    {% for slide in globalsTheme.homeSlider.all() %}
+        <article class="slide{% if loop.index == 1 %} active{% endif %}"{% if slide.slideImage.count() %} style="background-image: url('{{ slide.slideImage.one().url }}');opacity: 1;"{% endif %}>
             <div class="container secondary-bg">
                 <div class="caption">
                     <h2>{{ slide.slideTitle }}</h2>

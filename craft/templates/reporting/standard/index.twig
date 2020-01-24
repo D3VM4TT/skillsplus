@@ -1,9 +1,9 @@
  {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 
-{% set reportType = craft.request.segment(3)|default('users') %}
-{% set filterDays = craft.request.getParam('days')|default(28) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
-{% if craft.request.segment(4) == 'csv' %}{% do craft.lantra.exportReport(reportType, filterDays, filterSearch) %}{% endif %}
+{% set reportType = craft.app.request.segment(3)|default('users') %}
+{% set filterDays = craft.app.request.getParam('days')|default(28) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+{% if craft.app.request.segment(4) == 'csv' %}{% do craft.lantra.exportReport(reportType, filterDays, filterSearch) %}{% endif %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
@@ -28,7 +28,7 @@
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
 
             <div class="container-btn">
-                <a class="button primary-bg" href="/reporting/standard/{{ reportType }}/csv?{{ craft.request.getQueryStringWithoutPath }}">Download as CSV</a>
+                <a class="button primary-bg" href="/reporting/standard/{{ reportType }}/csv?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
             </div>
 
     {% else %}

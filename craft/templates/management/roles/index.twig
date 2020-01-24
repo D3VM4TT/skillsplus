@@ -1,24 +1,27 @@
-{% requirePermission 'editCategories:1' %}
+{% requirePermission 'editCategories:d83da856-af9d-458e-8b34-08ff74c012b5' %}
 
 {% extends "_layout" %}
 
 {% set metaTitle = "Management > Roles" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
-{% set criteria = craft.categories('roles').search(filterSearch).limit(pageLimit) %}
+{% set criteria = craft.categories.group('roles').search(filterSearch).orderBy('title').limit(pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
 
 {% block content %}
-<div class="page-subHeader primary-bg">
-{% include '_includes/topNavigation' %}
-</div>
+
 <section class="page">
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
     <div class="page-header secondary-bg">
-        <h2>Roles</h2>
+        <h2>Roles / Modules</h2>
+        <p>Job roles and Modules within your scheme</p>
         {% include '_includes/filter' with{filterDays:false} %}
     </div>
+    <div class="page-content">
     {% if roleCategories is defined and roleCategories|length %}
         <table class="data">
             <thead>
@@ -33,10 +36,10 @@
             <tr>
                 <td>{{ role.id }}</td>
                 <td>{{ role.title }}</td>
-                <td>
+                <td class="icons" style="width:140px;text-align:right">
                 {% if not currentUser.managerReadOnly %}
-                    <a href="/management/roles/edit/{{ role.id }}">edit</a> |
-                    <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
+                    <a class="icon" href="/management/roles/edit/{{ role.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
+                    <a class="icon action" href="#" data-action="categories/delete-category" data-id="{{ role.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
                 {% endif %}
                 </td>
             </tr>
@@ -45,16 +48,13 @@
         </table>
         {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
     {% else %}
-        <div class="page-content">
-            <h3>There are no roles to display.</h3>
-        </div>
+        <h3>There are no roles to display.</h3>
     {% endif %}
     {% if not currentUser.managerReadOnly %}
-        <div class="page-content">
-            <div class="container-btn">
-                <a class="button primary-bg" href="/management/roles/new">Create role</a>
-            </div>
+        <div class="container-btn">
+            <a class="button primary-bg" href="/management/roles/new">Create role</a>
         </div>
     {% endif %}
+    </div>
 </section>
 {% endblock %}

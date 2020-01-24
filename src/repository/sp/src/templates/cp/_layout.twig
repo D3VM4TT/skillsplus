@@ -1,0 +1,16 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Skills Plus' %}
+
+{% block content %}
+<div id="sidebar">
+    <nav>
+        <ul>
+            <li>
+                <a class="sel" href="{{ url('sp/settings') }}">Settings</a>
+                <a class="sel" href="{{ url('sp/import') }}">Import</a>
+                <a class="sel" href="{{ url('sp/tools') }}">Tools</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% set hierarchyNode = craft.request.getParam('node') %}
+
+{% extends "_layout" %}
+{% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Hierarchy</h2>
+            <p>Add / Edit Companies, Teams and Users within your Scheme Hierarchy.</p>
+        </div>
+        <div class="page-content">
+            <div style="margin-bottom:20px;">
+                <a class="button no-shadow primary-bg" href="/actions/lantra/users/refreshHierarchy" style="margin-left:0;">
+                    <span>Refresh Hierarchy</span>
+                </a>
+            </div>
+            <div id="jstree">
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="/assets/js/vendor/jqtree/jstree.min.js"></script>
+<script type="text/javascript" src="/assets/js/vendor/jqtree/jstree-actions.min.js"></script>
+<script>
+    $(function () {
+
+        $('body').addClass('loading');
+        $('#jstree').jstree({
+            'plugins' : ['actions', 'json_data'],
+            'core': {
+                'data': {
+                    'url': function (node) {
+                        if (node.id == '#') {
+                            return "/actions/lantra/users/hierarchy";
+                        }
+                        return "/actions/lantra/users/hierarchy?companyId=" + node.original.elementId +"&type=" + node.original.nodeType;
+                    }
+                }
+            }
+        }).bind('ready.jstree', function (event, data) {
+            $('body').removeClass('loading');
+            {% if hierarchyNode %}
+            {# opening node only works if we know the id #}
+            $("#jstree").jstree('select_node', 'node-{{ hierarchyNode }}');
+            $("#jstree").jstree('open_node', 'node-{{ hierarchyNode }}', function(e,d) {
+                for (var i = 0; i < e.parents.length; i++) {
+                    $("#jstree").jstree('open_node', e.parents[i]);
+                };
+            });
+            {%  endif %}
+        });
+
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_dashboard",
+            "class"     : "button-hierarchy button-dashboard pull-right",
+            "title"     : "Dashboard",
+            "text"      : "Dashboard",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeId      = node.original.nodeId,
+                    elementId   = node.original.elementId;
+                location.href="/cpd/" + elementId;
+            }
+        });
+
+        {% if not currentUser.managerReadOnly %}
+
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_edit",
+            "class"     : "button-hierarchy button-edit pull-right",
+            "title"     : "Edit",
+            "text"      : "Edit",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeType    = node.original.nodeType,
+                    nodeId      = node.original.nodeId,
+                    elementId   = node.original.elementId;
+                if (nodeType == 'company') {
+                    var page = 'companies';
+                }
+                if (nodeType == 'user') {
+                    var page = 'users';
+                }
+                if (nodeType == 'team') {
+                    var page = 'teams';
+                }
+                location.href="/management/" + page + "/edit/" + elementId + "?node=" + nodeId;
+            }
+        });
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_company",
+            "class"     : "button-hierarchy button-company pull-right",
+            "title"     : "Add Company",
+            "text"      : "Add Company",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeId      = node.original.nodeId,
+                    elementId      = node.original.elementId;
+                location.href="/management/companies/new/?node=" + nodeId + "&parent=" + elementId;
+            }
+        });
+        {% if craft.lantra.setting('schemeTeams', false) %}
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_team",
+            "class"     : "button-hierarchy button-team pull-right",
+            "title"     : "Add Team",
+            "text"      : "Add Team",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeId      = node.original.nodeId,
+                    elementId      = node.original.elementId;
+                location.href="/management/teams/new/?node=" + nodeId + "&company=" + elementId;
+            }
+        });
+        {%  endif %}
+        $('#jstree').jstree(true).add_action("all", {
+            "id"        : "action_user",
+            "class"     : "button-hierarchy button-user pull-right",
+            "title"     : "Add User",
+            "text"      : "Add User",
+            "after"     : true,
+            "selector"  : "a",
+            "event"     : "click",
+            "callback": function(node_id, node, action_id, action_el){
+                var nodeId      = node.original.nodeId,
+                    nodeType    = node.original.nodeType,
+                    elementId   = node.original.elementId;
+                location.href="/management/users/new/?node=" + nodeId + "&" + (nodeType == 'company' ? 'company' : 'team') + "=" + elementId;
+            }
+        });
+
+        {%  endif %}
+    });
+
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="/assets/js/vendor/jqtree/themes/default/style.min.css" />
+    <style>
+    .button-hierarchy {
+        background: #1C2B39;
+        padding:3px 5px 3px 3px;
+        display: inline-block;
+        border-radius: 3px;
+        font-size: 10px;
+        color:white;
+        cursor: pointer;
+        line-height: 10px;
+        text-align: center;
+        margin-right:5px;
+    }
+    #j1_1 > i.button-hierarchy,
+    .type-label > i.button-hierarchy,
+    .type-label > i.button-dashboard,
+    .type-users > i.button-hierarchy,
+    .type-teams > i.button-hierarchy,
+    .type-managers > i.button-hierarchy,
+    .type-children > i.button-hierarchy,
+    .type-company > i.button-dashboard,
+    .type-team > i.button-dashboard,
+    .type-user > i.button-user,
+    .type-user > i.button-company {
+        display:none !important;
+    }{
+        display:none !important;
+    }
+    .jstree-default .jstree-clicked {
+        background: #c3e2ff;
+        border-radius: 2px;
+        box-shadow: none;
+    }
+    </style>
+{% endblock %}

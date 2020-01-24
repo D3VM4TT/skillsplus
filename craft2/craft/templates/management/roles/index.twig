@@ -1,0 +1,60 @@
+{% requirePermission 'editCategories:1' %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Roles" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.request.getParam('search')|default('') %}
+
+{% set criteria = craft.categories('roles').search(filterSearch).limit(pageLimit) %}
+{% if criteria %}{% paginate criteria as pageInfo, roleCategories %}{% endif %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+{% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>Roles</h2>
+        {% include '_includes/filter' with{filterDays:false} %}
+    </div>
+    {% if roleCategories is defined and roleCategories|length %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th class="title">Name</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for role in roleCategories %}
+            <tr>
+                <td>{{ role.id }}</td>
+                <td>{{ role.title }}</td>
+                <td>
+                {% if not currentUser.managerReadOnly %}
+                    <a href="/management/roles/edit/{{ role.id }}">edit</a> |
+                    <a class="action" href="#" data-action="lantra/categories/deleteCategory" data-id="{{ role.id }}">delete</a>
+                {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <div class="page-content">
+            <h3>There are no roles to display.</h3>
+        </div>
+    {% endif %}
+    {% if not currentUser.managerReadOnly %}
+        <div class="page-content">
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/roles/new">Create role</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

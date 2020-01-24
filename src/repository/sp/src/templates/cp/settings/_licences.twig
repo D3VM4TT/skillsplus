@@ -1,0 +1,63 @@
+{% import "_includes/forms" as forms %}
+{{ forms.lightswitchField ({
+    label:			"Disable Lantra Licences?",
+    id:				"lantraDisableLicences",
+    name:			"lantraDisableLicences",
+    on:     		settings.lantraDisableLicences == 1,
+}) }}
+
+{{ forms.textField ({
+    label:			"Scheme Remaining Licences",
+    id:				"schemeRemainingLicences",
+    name:			"schemeRemainingLicences",
+    value:     		settings.schemeRemainingLicences,
+}) }}
+
+{{ forms.dateField ({
+    label:			"Scheme Expiry Date",
+    id:				"schemeExpiryDate",
+    name:			"schemeExpiryDate",
+    value:     		settings.schemeExpiryDate,
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Individual Company",
+    id:				    "individualCompany",
+    name:			    "individualCompany",
+    elementType:        config.entryElementType,
+    sources:            config.companiesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.individualCompany ? settings.individualCompany,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Individual Job Role",
+    id:				    "individualJobRole",
+    name:			    "individualJobRole",
+    elementType:        config.categoryElementType,
+    sources:            config.jobRoleCategoryGroup,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.individualJobRole ? settings.individualJobRole,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}
+
+{{ forms.textField ({
+    label:			"Individual Licence Days",
+    id:				"individualLicenceDays",
+    name:			"individualLicenceDays",
+    value:     		settings.individualLicenceDays,
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Individual Licence PayPal Button",
+    id:				"individualLicencePaypalButton",
+    name:			"individualLicencePaypalButton",
+    value:     		settings.individualLicencePaypalButton,
+}) }}

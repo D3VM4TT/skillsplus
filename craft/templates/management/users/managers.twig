@@ -3,7 +3,7 @@
 {% set metaTitle = "Management > User Mangers" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterSearch = craft.request.getParam('search')|default('') %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
 {% set criteria = craft.users.group('users').search(filterSearch).limit(pageLimit) %}
 

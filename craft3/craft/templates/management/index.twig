@@ -1,5 +1,0 @@
-{% if section and craft.lantra.canManage() %}
-    {% include 'management/' ~ section ~ '/_form' %}
-{% else %}
-    {% exit 404 %}
-{% endif %}

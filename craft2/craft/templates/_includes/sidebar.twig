@@ -1,0 +1,70 @@
+{# Commented out by JC - 8Jan19
+<div class="container-sidebar">
+    <div class="primary-bg menu-tab">
+        <div class="secondary-bg one"></div>
+        <div class="secondary-bg two"></div>
+        <div class="secondary-bg three"></div>
+    </div>
+    <div class="primary-bg menu-hide">
+        <div class="menu-intro">
+            <h1>{{ craft.lantra.setting('schemeName') }}</h1>
+            <p>{{ craft.lantra.setting('schemeDescription') }}</p>
+        </div>
+        <div class="container-menus">
+            {% if currentUser %}
+                {% include '_includes/nav_cpd' %}
+            {% endif %}
+            {% include '_includes/nav_public' %}
+        </div>
+
+        <div class="footer">
+            <div class="col-copyright">
+                <img src="/assets/img/lantra_footer_wht_logo.png">
+            </div>
+            <div class="col-terms">
+                <p>&copy; 2018 Lantra. <a href="/terms">Terms &amp; Privacy</a></p>
+            </div>
+        </div>
+    </div>
+#}
+{% set schemeLogo = craft.lantra.setting('schemeLogo') %}
+
+    {% if not currentUser %}
+        <div class="sidebar-form">
+        <div class="scheme-logo">
+        <a href="/">
+            {% if schemeLogo %}
+                <img src="{{ schemeLogo.url }}">
+            {% else %}
+                {{ craft.lantra.setting('schemeName') }}
+            {% endif %}
+        </a>
+        </div>
+        <div class="container-form-toggle center">
+            {% include '_forms/login_combined' %}
+            {#
+            <div class="container-create-account-btn center">
+                <div class="sml-link center">
+                    <p>Not registered?</p>
+                </div>
+                <button class="button hollow secondary-bg"><a href="/public/register">Create account</a></button>
+            </div>
+            #}
+        </div>
+        </div>
+    {% endif %}
+    {% if currentUser %}
+    <div class="sidebar-form">
+        <div class="scheme-logo">
+            <a href="/">
+                {% if schemeLogo %}
+                    <img src="{{ schemeLogo.url }}">
+                {% else %}
+                    {{ craft.lantra.setting('schemeName') }}
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    {% include '_includes/nav_cpd' %}
+    {% endif %}
+

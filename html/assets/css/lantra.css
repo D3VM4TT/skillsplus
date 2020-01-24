@@ -1375,6 +1375,7 @@ body.logged-in .alert {
 position: fixed;
 width: 100%;
     bottom:0;
+    left:0;
 }
 
 #toggle {

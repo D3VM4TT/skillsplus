@@ -1,0 +1,49 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Lantra Cache' %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set criteria = craft.users.admin('not 1').limit(100).order('id') %}
+{% if criteria %}{% paginate criteria as pageInfo, users %}{% endif %}
+
+{% block content %}
+<div class="tableview">
+    {% if users is iterable and users|length %}
+        {% set userIds = [] %}
+        {% for user in users %}
+            {% set userIds = userIds|merge([user.id]) %}
+        {% endfor %}
+        {% set userResultCache = craft.lantra.userResultCache(userIds) %}
+        {% set units = craft.entries.section('units').find() %}
+    <div class="tablecontent">
+        <table class="data fullwidth">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th class="title">Name</th>
+                {% for unit in units %}
+                    <th>Unit {{ unit.id }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.fullName }}</td>
+                    {% for unit in units %}
+                        <td>
+                            {% if userResultCache[user.id] is defined and userResultCache[user.id][unit.id] is defined  %}
+                                {% set cache = userResultCache[user.id][unit.id] %}
+                                {% if cache.startDate %}Start Date: {{  cache.startDate.format(dateFormat) }} {% endif %}
+                                {% if cache.finishDate %}Finish Date:{{  cache.finishDate.format(dateFormat) }} {% endif %}
+                                {% if cache.expiryDate %}Expiry Date:{{  cache.expiryDate.format(dateFormat) }} {% endif %}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+     </div>
+    {% endif %}
+</div>
+{% endblock %}

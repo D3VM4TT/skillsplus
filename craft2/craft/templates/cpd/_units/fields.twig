@@ -1,0 +1,131 @@
+{% set resultEndorsed = resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{% set resultExists = resultEntry is defined and resultEntry %}
+{% set customNew = 1 %}
+{% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% if moduleGroup is defined %}
+    {% set columnLayout = moduleGroup.columnLayout %}
+{% endif %}
+{% for row in columnLayout %}
+    {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
+    {% set label = row.fieldLabel|default(row.fieldType.label) %}
+    {% if row.fieldType == 'unitValue' %}
+        <div class="field--wrapper">
+            <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultValue]" type="number" placeholder="{{ label }}"
+                   value="{{ resultExists ? resultEntry.resultValue|default(1) }}" />
+        </div>
+    {% elseif row.fieldType == 'resultExpiryDate' %}
+        <div class="field--wrapper">
+        {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        </div>
+    {% elseif row.fieldType == 'resultStartDate' %}
+        <div class="field--wrapper">
+        {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        </div>
+    {% elseif row.fieldType == 'resultFinishDate' %}
+        <div class="field--wrapper">
+        {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        </div>
+    {% elseif row.fieldType == 'resultLocation' %}
+        <div class="field--wrapper">
+            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
+                   value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
+        </div>
+    {% elseif row.fieldType == 'resultHours' %}
+        <div class="field--wrapper">
+            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
+                   value="{{ resultExists ? resultEntry.resultHours|default('') }}">
+        </div>
+    {% elseif row.fieldType == 'resultEvidence' %}
+        {# try to move legacy result files #}
+        {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
+        {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
+        <div class="field--wrapper">
+            {% if not resultLocked and not fieldDisabled %}
+                {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
+                {% if evidenceFolderId %}
+                    <span class="btn btn-success fileinput-button primary-bg">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <input id="fileupload" type="file" name="assets-upload" multiple data-folderid="{{ evidenceFolderId }}">
+                    </span>
+                    <br>
+                    <br>
+                    <div id="progress" class="progress">
+                        <div class="progress-bar progress-bar-success"></div>
+                    </div>
+                {% else %}
+                    <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
+                {% endif %}
+            {% endif %}
+            <div id="files" class="files">
+                {% if resultExists and resultEntry.legacyResultFiles %}
+                    <p style="color:#FF0000;font-weight:700">ERROR: Could not copy legacy result files, contact technical support.</p>
+                    <p>{{ resultEntry.legacyResultFiles  }}</p>
+                {% endif %}
+                {% if resultEvidence %}
+                    {% for resultAsset in resultEntry.resultEvidence %}
+                    <p>
+                        <input type="hidden" name="fields[resultEvidence][]" value="{{ resultAsset.id }}" />
+                        [<a href="#" class="delete-file" data-id="{{ resultAsset.id }}" style="color:#FF0000">x</a>]
+                        <a target="_blank" href="/internal/{{ resultAsset.id }}">{{ resultAsset.filename }}</a>
+                        <br /><span style="font-size: small">Uploaded {{ resultAsset.dateCreated|date('d/m/Y') }}</span>
+                    </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    {% if row.fieldType == 'resultCustom' %}
+        <div class="field--wrapper">
+            {% set customBlockId = false %}
+            {% set customValue = '' %}
+            {% if resultExists %}
+                {% set customBlockId = craft.lantra.resultCustom(resultEntry.id, row.fieldCustomKey, true) %}
+                {% set customValue = craft.lantra.resultCustom(resultEntry.id, row.fieldCustomKey) %}
+            {% endif %}
+            {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
+
+            <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label }}</label>
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
+
+            {% if row.fieldCustomType == 'text' %}
+                <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
+            {% elseif row.fieldCustomType == 'dropdown' %}
+                {% set customOptions =  row.fieldCustomOptions|split(',') %}
+                <select {% if resultLocked  or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]">
+                    {% for opt in customOptions %}
+                        {% set optValue = opt|trim %}
+                        <option{% if optValue == customValue %} selected{% endif %}>{{ optValue }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            {# increment new1, new2 #}
+            {% set customNew = customNew + 1 %}
+        </div>
+    {% endif %}
+    {# force git push - delete comment #}
+{% endfor %}
+<div class="field--wrapper">
+    <label for="resultComment" style="" class="">Comments</label>
+    {% if resultExists and resultEntry.resultComments|length %}
+        {% for comment in resultEntry.resultComments %}
+            <p>
+                <span style="font-weight:700;">{{ comment.date|date('d/m/y') }}</span> {{ comment.user.first.fullName }}
+                : <em>{{ comment.comment }}</em>
+                {% if not comment.read %}
+                    <span style="color:#008800;">[new]</span>
+                    {{ craft.lantra.readComment(comment) }}
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% endif %}
+    {% if not resultLocked %}
+        <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
+    {% endif %}
+</div>

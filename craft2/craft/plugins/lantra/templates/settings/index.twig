@@ -1,0 +1,546 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+{% set title = 'Lantra Settings (v.' ~ version ~ ')' %}
+
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = 'lantra/settings' %}
+
+{% set saveButton %}
+    <div class="buttons">
+        <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
+    </div>
+{% endset %}
+
+{% block content %}
+
+    <a href="/admin/lantra/settings/queue" class="btn btn-small">Lantra Queue</a>
+    <a href="/admin/lantra/settings/tools" class="btn btn-small">Lantra Tools</a>
+    <a href="/admin/lantra/import" class="btn btn-small">Lantra Import</a>
+
+    <input type="hidden" name="action" value="lantra/settings/saveSettings">
+
+    <div id="settings-cp">
+
+        <input type="hidden" name="settings[settingsVersion]" value="{{ settings.settingsVersion ? settings.settingsVersion : 1 }}" />
+
+        {% namespace 'settings' %}
+
+            <h2>System Settings</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"Scheme Teams",
+                instructions:   "Enable teams for this scheme?",
+                id:				"schemeTeams",
+                name:			"schemeTeams",
+                on:		        settings.schemeTeams == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Scheme User Read Only",
+                instructions:   "Make all users read only on this scheme?",
+                id:				"schemeUserReadOnly",
+                name:			"schemeUserReadOnly",
+                on:		        settings.schemeUserReadOnly == 1
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Email Domain",
+                instructions:   "Used when importing users without a real email address i.e. lantra.co.uk",
+                id:				"schemeEmailDomain",
+                name:			"schemeEmailDomain",
+                value:		    settings.schemeEmailDomain
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Test Email Address",
+                instructions:   "For all servers other than <b>PRODUCTION</b>. Separate emails with commas.",
+                id:				"schemeTestEmailAddress",
+                name:			"schemeTestEmailAddress",
+                value:		    settings.schemeTestEmailAddress
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Job Role Endorse",
+                id:				"jobRoleEndorse",
+                name:			"jobRoleEndorse",
+                on:		        settings.jobRoleEndorse == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Result Cache?",
+                id:				"disableResultCache",
+                name:			"disableResultCache",
+                on:		        settings.disableResultCache == 1,
+            }) }}
+
+            <hr />
+
+            <h2>Theme Settings</h2>
+
+            {{ forms.textField ({
+                label:			"Scheme Name",
+                id:				"schemeName",
+                name:			"schemeName",
+                value:		    settings.schemeName
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Description",
+                id:				"schemeDescription",
+                name:			"schemeDescription",
+                value:		    settings.schemeDescription
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Scheme Logo",
+                id:				    "schemeLogo",
+                name:			    "schemeLogo",
+                elementType:        craft.elements.getElementType("Asset"),
+                elements:           settings.schemeLogo ? settings.schemeLogo,
+                sources:            themeFolder,
+                limit:              1,
+                criteria:           {"kind":[],"localeEnabled":'null'},
+            }) }}
+
+            {{ forms.colorField ({
+                label:			"Theme Colour Primary",
+                id:				"themeColorPrimary",
+                name:			"themeColorPrimary",
+                value:		    settings.themeColorPrimary,
+            }) }}
+
+            {{ forms.colorField ({
+                label:			"Theme Colour Secondary",
+                id:				"themeColorSecondary",
+                name:			"themeColorSecondary",
+                value:		    settings.themeColorSecondary,
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Theme Navigation Public",
+                id:				    "themeNavigationPublic",
+                name:			    "themeNavigationPublic",
+                elementType:        craft.elements.getElementType("Entry"),
+                source:             '',
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.themeNavigationPublic ? settings.themeNavigationPublic,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              ''
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Theme Navigation Private",
+                id:				    "themeNavigationPrivate",
+                name:			    "themeNavigationPrivate",
+                elementType:        craft.elements.getElementType("Entry"),
+                source:             pagesSection,
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.themeNavigationPrivate ? settings.themeNavigationPrivate,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              ''
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Theme Date Format (default d-m-Y)",
+                id:				"themeDateFormat",
+                name:			"themeDateFormat",
+                value:		    settings.themeDateFormat
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Theme Row Limit (default 10)",
+                id:				"themeDefaultLimit",
+                name:			"themeDefaultLimit",
+                value:		    settings.themeDefaultLimit
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Theme Login Message",
+                id:				"themeLoginMessage",
+                name:			"themeLoginMessage",
+                value:		    settings.themeLoginMessage,
+                rows:           4,
+                cols:           50
+            }) }}
+
+            {{ forms.textField ({
+                instructions:   "Default: Result History",
+                label:			"Result History Title",
+                id:				"themeResultHistoryTitle",
+                name:			"themeResultHistoryTitle",
+                value:		    settings.themeResultHistoryTitle
+            }) }}
+
+            {{ forms.lightswitchField ({
+                instructions:   "If selected Results History will be hidden on CPD page.",
+                label:			"Result History Link",
+                id:				"themeResultHistoryLink",
+                name:			"themeResultHistoryLink",
+                on:		         settings.themeResultHistoryLink == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Result History",
+                id:				"themeDisableResultHistory",
+                name:			"themeDisableResultHistory",
+                on:		        settings.themeDisableResultHistory == 1
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Certificates?",
+                id:				"themeDisableCertificates",
+                name:			"themeDisableCertificates",
+                on:		        settings.themeDisableCertificates == 1,
+            }) }}
+
+            <hr />
+
+            <h2>Labels</h2>
+
+            {{ forms.textField ({
+                instructions:   "Default: Job Role",
+                label:			"Label Job Role",
+                id:				"labelJobRole",
+                name:			"labelJobRole",
+                value:		    settings.labelJobRole
+            }) }}
+
+            <hr />
+
+            <h2>Licence Settings</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Lantra Licences?",
+                id:				"lantraDisableLicences",
+                name:			"lantraDisableLicences",
+                on:     		settings.lantraDisableLicences == 1,
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Scheme Remaining Licences",
+                id:				"schemeRemainingLicences",
+                name:			"schemeRemainingLicences",
+                value:     		settings.schemeRemainingLicences,
+            }) }}
+
+            {{ forms.dateField ({
+                label:			"Scheme Expiry Date",
+                id:				"schemeExpiryDate",
+                name:			"schemeExpiryDate",
+                value:     		settings.schemeExpiryDate,
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Individual Company",
+                id:				    "individualCompany",
+                name:			    "individualCompany",
+                elementType:        craft.elements.getElementType("Entry"),
+                sources:            companiesSection,
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.individualCompany ? settings.individualCompany,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              1
+            }) }}
+
+            {{ forms.elementSelectField ({
+                label:			    "Individual Job Role",
+                id:				    "individualJobRole",
+                name:			    "individualJobRole",
+                elementType:        craft.elements.getElementType("Category"),
+                sources:            jobRoleCategoryGroup,
+                criteria:           '',
+                sourceElementId:    '',
+                elements:           settings.individualJobRole ? settings.individualJobRole,
+                storageKey:         '',
+                viewMode:           'list',
+                limit:              1
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Individual Licence Days",
+                id:				"individualLicenceDays",
+                name:			"individualLicenceDays",
+                value:     		settings.individualLicenceDays,
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Individual Licence PayPal Button",
+                id:				"individualLicencePaypalButton",
+                name:			"individualLicencePaypalButton",
+                value:     		settings.individualLicencePaypalButton,
+            }) }}
+
+            <hr />
+
+            <h2>Notify Settings</h2>
+
+            {{ forms.textField ({
+                label:			"Subject Blocked Result",
+                id:				"notifySubjectBlockedResult",
+                name:			"notifySubjectBlockedResult",
+                value:		    settings.notifySubjectBlockedResult
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
+                label:			"Message Blocked Result",
+                id:				"notifyBlockedResult",
+                name:			"notifyBlockedResult",
+                value:		    settings.notifyBlockedResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Endorsement Result",
+                id:				"notifySubjectEndorsementResult",
+                name:			"notifySubjectEndorsementResult",
+                value:		    settings.notifySubjectEndorsementResult
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: {{ user.fullName}} has submitted a result {{ entry.title }}.",
+                label:			"Message Endorsement Result",
+                id:				"notifyEndorsementResult",
+                name:			"notifyEndorsementResult",
+                value:		    settings.notifyEndorsementResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Licences Remaining",
+                id:				"notifySubjectLicencesRemaining",
+                name:			"notifySubjectLicencesRemaining",
+                value:		    settings.notifySubjectLicencesRemaining
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: {{ title }} has {{ licences}} remaining.",
+                label:			"Message Licences Remaining",
+                id:				"notifyLicencesRemaining",
+                name:			"notifyLicencesRemaining",
+                value:		    settings.notifyLicencesRemaining
+            }) }}
+
+            {#
+
+            {{ forms.textField ({
+                label:			"Subject Manager Summary",
+                id:				"notifySubjectManagerSummary",
+                name:			"notifySubjectManagerSummary",
+                value:		    settings.notifySubjectManagerSummary
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Message Manager Summary",
+                id:				"notifyManagerSummary",
+                name:			"notifyManagerSummary",
+                value:		    settings.notifyManagerSummary
+            }) }}
+
+            #}
+
+            {{ forms.textField ({
+                label:			"Subject Module Result",
+                id:				"notifySubjectModuleResult",
+                name:			"notifySubjectModuleResult",
+                value:		    settings.notifySubjectModuleResult
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: {{ user.fullName}} has completed {{ entry.title }}.",
+                label:			"Message Module Result",
+                id:				"notifyModuleResult",
+                name:			"notifyModuleResult",
+                value:		    settings.notifyModuleResult
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Scheme Expiry",
+                id:				"notifySubjectSchemeExpiry",
+                name:			"notifySubjectSchemeExpiry",
+                value:		    settings.notifySubjectSchemeExpiry
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
+                label:			"Message Scheme Expiry",
+                id:				"notifySchemeExpiry",
+                name:			"notifySchemeExpiry",
+                value:		    settings.notifySchemeExpiry
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject User Expiry",
+                id:				"notifySubjectUserExpiry",
+                name:			"notifySubjectUserExpiry",
+                value:		    settings.notifySubjectUserExpiry
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.",
+                label:			"Message User Expiry",
+                id:				"notifyUserExpiry",
+                name:			"notifyUserExpiry",
+                value:		    settings.notifyUserExpiry
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Comment",
+                id:				"notifySubjectComment",
+                name:			"notifySubjectComment",
+                value:		    settings.notifySubjectComment
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: {{ entry.title }} - {{ user.fullName}}: {{ comment }}",
+                label:			"Message Comment",
+                id:				"notifyComment",
+                name:			"notifyComment",
+                value:		    settings.notifyComment
+            }) }}
+
+            {{ forms.textField ({
+                label:			"Subject Custom Report",
+                id:				"notifySubjectCustomReport",
+                name:			"notifySubjectCustomReport",
+                value:		    settings.notifySubjectCustomReport
+            }) }}
+
+            {{ forms.textareaField ({
+                instructions:   "Default: Custom report: {{ entry.title }}.",
+                label:			"Message Custom Report",
+                id:				"notifyCustomReport",
+                name:			"notifyCustomReport",
+                value:		    settings.notifyCustomReport
+            }) }}
+
+            {{ forms.textareaField ({
+                label:			"Notify Footer",
+                id:				"notifyFooter",
+                name:			"notifyFooter",
+                value:		    settings.notifyFooter
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Disable Endorsement Notification?",
+                id:				"disableEndorsementNotify",
+                name:			"disableEndorsementNotify",
+                on:		        settings.disableEndorsementNotify == 1
+            }) }}
+
+            <hr />
+
+            <h2>User Profile Settings</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Name?",
+                id:				"userEditName",
+                name:			"userEditName",
+                on:		        settings.userEditName == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Email?",
+                id:				"userEditEmail",
+                name:			"userEditEmail",
+                on:		        settings.userEditEmail == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Address?",
+                id:				"userEditAddress",
+                name:			"userEditAddress",
+                on:		        settings.userEditAddress == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Telephone?",
+                id:				"userEditTelephone",
+                name:			"userEditTelephone",
+                on:		        settings.userEditTelephone == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Date of Birth?",
+                id:				"userEditDob",
+                name:			"userEditDob",
+                on:		        settings.userEditDob == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Date of Start Date?",
+                id:				"userEditStartDate",
+                name:			"userEditStartDate",
+                on:		        settings.userEditStartDate == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Role?",
+                id:				"userEditRole",
+                name:			"userEditRole",
+                on:		        settings.userEditRole == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Edit Photo?",
+                id:				"userEditPhoto",
+                name:			"userEditPhoto",
+                on:		        settings.userEditPhoto == 1,
+            }) }}
+
+            {{ forms.editableTableField ({
+                label:			"User Custom Fields",
+                instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom user field.",
+                id:				"userEditCustomFields",
+                name:			"userEditCustomFields",
+                addRowLabel:    "Add a custom field",
+                cols:
+                {
+                    name:       {heading: "Name", type: "singleline"},
+                    label:      {heading: "Label", type: "singleline"},
+                    userEdit:   {heading: "User Edit", type: "checkbox"}
+                },
+                rows:           settings.userEditCustomFields
+            }) }}
+
+            <hr />
+
+            <h2>Account Information</h2>
+
+            {{ forms.lightswitchField ({
+                label:			"User ID",
+                id:				"userAccountInformationId",
+                name:			"userAccountInformation[userId]",
+                on:		        settings.userAccountInformation.userId is defined and settings.userAccountInformation.userId == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Start Date",
+                id:				"userAccountInformationIdUserStartDate",
+                name:			"userAccountInformation[userStartDate]",
+                on:		        settings.userAccountInformation.userStartDate is defined and settings.userAccountInformation.userStartDate == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"User Company",
+                id:				"userAccountInformationUserCompany",
+                name:			"userAccountInformation[userCompany]",
+                on:		        settings.userAccountInformation.userCompany is defined and settings.userAccountInformation.userCompany == 1,
+            }) }}
+
+            {{ forms.lightswitchField ({
+                label:			"Manager Companies",
+                id:				"userAccountInformationManagerCompanies",
+                name:			"userAccountInformation[managerCompanies]",
+                on:		        settings.userAccountInformation.managerCompanies is defined and settings.userAccountInformation.managerCompanies == 1,
+            }) }}
+
+        {% endnamespace %}
+
+    </div>
+
+{% endblock %}

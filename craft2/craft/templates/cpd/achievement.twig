@@ -1,0 +1,141 @@
+{% extends "_layout" %}
+
+{% set userId = craft.request.segment(2) %}
+{% set entryId = craft.request.segment(4) %}
+
+{% if userId != currentUser.id %}
+    {% set account = craft.users.id(userId).first %}
+    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+    {% set isManager = true %}
+{% else %}
+    {% set account = currentUser %}
+    {% set isManager = false %}
+{% endif %}
+
+{% set dashboardUri = '/cpd/' ~ account.id %}
+
+{%  if entry is defined %}
+    {% set resultEntry = entry %}
+{% endif %}
+
+{%  if resultEntry is not defined %}
+    {% set moduleEntry = false %}
+    {% set resultEntry = false %}
+{% endif %}
+
+{% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
+{% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
+{% set optionalUnits = craft.entries.section('units').id(excludeString).order('title') %}
+
+{# module id in URL #}
+{% if craft.request.segment(3) == 'achievement' and entryId %}
+    {% set moduleEntry = craft.entries.id(entryId).first %}
+    {% if not moduleEntry %}{% exit 404 %}{% endif %}
+    {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
+{% elseif not resultEntry and craft.request.segment(3) == 'result' and entryId %}
+    {% set resultEntry = craft.entries.id(entryId).status('live, expired').first %}
+    {% if not resultEntry %}{% exit 404 %}{% endif %}
+    {% set moduleEntry = resultEntry.resultModule.first %}
+{% endif %}
+
+{% if moduleEntry %}
+    {% set moduleGroup = moduleEntry.moduleGroup.first %}
+{% endif %}
+
+{% set userModules = [] %}
+{% for role in account.userRole %}
+    {% for roleModule in craft.entries.relatedTo(role).order('title') %}
+        {% set userModules = userModules|merge([roleModule]) %}
+    {% endfor %}
+{% endfor %}
+{# result is locked when a result entry is pending or endorsed #}
+{% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{# undo result locked #}
+{% set resultLocked = false %}
+{% set metaTitle = 'Achievements > ' ~ account.fullname %}
+
+{% block content %}
+    <section class="page">
+        <div class="page-subHeader primary-bg">
+            <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <h2>Achievement for {{ account.fullname }}</h2>
+            <p>{% if moduleEntry %}{{ moduleEntry.title }}{% endif %}</p>
+        </div>
+        <div class="page-form">
+            <div class="col-pd-btm">
+            {% if resultEntry and resultEntry.id %}
+                <h3>Edit Achievement</h3>
+            {% else %}
+                <h3>Create a new achievement</h3>
+            {% endif %}
+            </div>
+            {% if resultEntry and resultEntry.hasErrors %}
+                <div class="col-pd-btm">
+                    <ul class="errors">
+                        {% for error in resultEntry.allErrors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+
+                {% if resultEntry is defined and resultEntry %}
+                    <div id="name-fields">
+                        <div class="col-6 field--wrapper">
+                            <h3>Result ID: {{ resultEntry.id }}</h3>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {{ getCsrfInput() }}
+                <input type="hidden" name="action" value="entries/saveEntry">
+                <input type="hidden" name="redirect" value="{{ userId != currentUser.id ? 'cpd/' ~ account.id : '/' }}?ref={{ craft.request.getParam('ref') }}">
+                <input type="hidden" name="typeId" value="17">
+                <input type="hidden" name="sectionId" value="10">
+                <input type="hidden" name="enabled" value="1">
+                <input type="hidden" name="entryId" value="{{ resultEntry ? resultEntry.id : '' }}">
+                {% if userId %}
+                    <input type="hidden" name="author[]" value="{{ account.id }}">
+                {%  endif %}
+                <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry ? resultEntry.resultStatus : 'pending' }}">
+                <input type="hidden" name="fields[unitEndorsementManagerLevel]" value="1">
+                <div class="field--wrapper" id="resultTitle">
+                    <label for="title" class="float">Result Title</label>
+                    <input value="{{ resultEntry ? resultEntry.title }}" type="text" name="title" class="float-label" placeholder="Enter the result title" />
+                </div>
+                {% if optionalUnits|length %}
+                <div class="field--wrapper">
+                    <label for="resultUnit" class="">Result unit</label>
+                    <select data-relation="fields[resultUnit]" data-value="{{ resultEntry and resultEntry.resultUnit.total ? resultEntry.resultUnit.first.id }}" id="resultUnit">
+                        <option value="">Not applicable</option>
+                        {% for unit in optionalUnits %}
+                            <option value="{{ unit.id }}">{{ unit.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                {% if moduleEntry %}
+                    <input type="hidden" name="fields[resultModule][]" value="{{ moduleEntry.id }}">
+                {% elseif not resultEntry and userModules|length %}
+                    <div class="field--wrapper">
+                        <label for="resultModule" class="float">Result module</label>
+                        <select data-relation="fields[resultModule]"  id="resultModule">
+                            <option value="">Not applicable</option>
+                            {% for userModule in userModules %}
+                                <option value="{{ userModule.id }}">{{ userModule.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+                {% if moduleEntry %}
+                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
+                {% endif %}
+                {% include 'cpd/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
+            </form>
+        </div>
+    </section>
+{% endblock %}
