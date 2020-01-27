@@ -4,9 +4,11 @@
             {{ editLink|raw }}
         {% endif %}
         <div class="cpd-icons">
+            {% if unitEntry is defined %}
             <a href="#" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
                 <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
             </a>
+            {% endif %}
             {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) %}
                 {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
                 {% set managerEndorse = craft.lantra.canEndorse(resultEntry) %}
