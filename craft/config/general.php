@@ -35,11 +35,11 @@ return [
         ],
     ],
     'local' => [
-        'siteUrl' => 'http://craft3.skills-plus.local',
+        'siteUrl' => 'http://skills-plus.local',
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/websites/skills-plus.net/craft3',
+            '@basePath' => '/websites/skills-plus.net/',
             '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
         ],
     ],

@@ -1,8 +1,12 @@
+{# element id used in html/js passed as ref to find correct tab #}
 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+{# get the current module result entry - create if none exists #}
 {% set moduleResultEntry = craft.lantra.currentModuleResult(module.id) %}
 <div id="module{{ moduleElementId }}" class="module open">
+    {# dynamic total points for qualification module type @todo check whether still needed with CPD module type #}
     {% set totalPoints = 0 %}
     <div class="header" data-target="#m{{ role.id ~ module.id }}">
+        {# show CPD progress #}
         {% if module.type == 'cpd' %}
             {% set cycle = craft.lantra.currentCycle(moduleResultEntry) %}
             {% set remainingPoints = module.targetPoints - moduleResultEntry.resultValue %}
@@ -43,32 +47,40 @@
                         {% for unitEntry in unitGroupEntries.all() %}
                             {% set resultEntry = null %}
                             {% set totalComments = 0 %}
+
                             {% set unitType = unitEntry.unitType %}
                             {% set unitValue = unitEntry.unitValue %}
+
                             {# get either one or mutliple results for this unit #}
                             {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').limit(addResult ? null : 1) %}
+                            {% set hasResult = resultQuery.count() %}
 
-                            {# if no result set jobRoleComplete to false #}
-                            {% if not resultQuery.count() %}
+                            {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
+                            {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
+
+                            {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+                            {% set newLink = readOnly ? rowName : '<a href="' ~ editUrl ~ 'new?ref=' ~ moduleElementId ~ '">Add New</a>' %}
+
+                            {# if a single row (no multiple submissions or no results yet #}
+                            {% if not addResult or (addResult and not hasResult) %}
                                 {% set jobRoleNoResult = jobRoleNoResult + 1 %}
-                                {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
-                                {% set rowUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/?ref=module' ~ moduleElementId %}
-                                {% set rowLink = readOnly ? rowName : '<a href="' ~ rowUrl ~ '">' ~ rowName ~ '</a>' %}
-                                {% include 'record/_modules/row' with{rowLink: rowLink} %}
+                                {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry} %}
+                            {% else %}
+
+                                {% for unitResultEntry in resultQuery.all() %}
+
+                                    {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+
+                                    {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
+                                    {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
+                                    {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
+                                    {% if unitResultEntry.resultStatus == 'endorsed' %}
+                                        {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                    {% endif %}
+                                    {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink} %}
+                                {% endfor %}
                             {% endif %}
-                            {# add additional rows if applicaple #}
-                            {% for unitResultEntry in resultQuery.all() %}
-
-                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
-                                {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
-                                {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
-
-                                {% if unitResultEntry.resultStatus == 'endorsed' %}
-                                    {% set totalPoints = totalPoints + unitEntry.unitValue %}
-                                {% endif %}
-
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, addResult: addResult} %}
-                            {% endfor %}
                         {% endfor %}
                         </tbody>
                     </table>

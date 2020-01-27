@@ -1,7 +1,7 @@
 <tr>
     <td>
-        {% if rowLink is defined %}
-            {{ rowLink|raw }}
+        {% if editLink is defined %}
+            {{ editLink|raw }}
         {% endif %}
         <div class="cpd-icons">
             <a href="#" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
@@ -42,6 +42,6 @@
         isManager: isManager
     } %}
     {% if addResult is defined and addResult %}
-        <td>Add Result</td>
+        <td style="text-align: right">{{ newLink|raw }}</td>
     {% endif %}
 </tr>

@@ -16,9 +16,16 @@
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
 {% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
+
+{% set addNew = craft.app.request.getSegment(5) == 'new' %}
+{% set resultEntry = false %}
+
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
-{% set resultEntry = craft.entries.section('results').authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
+{% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}
+{% if not addNew %}
+    {% set resultEntry = craft.entries.section('results').id(resultId is defined ? resultId : null).authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
+{% endif %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
