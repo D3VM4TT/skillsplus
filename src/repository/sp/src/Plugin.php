@@ -218,10 +218,9 @@ class Plugin extends BasePlugin
     }
 
     /**
-     * Run migrations again in required (i.e. updating dev site)
+     * Run migrations again if required (i.e. updating dev site)
      *
      * @throws \Throwable
-     * @throws \craft\errors\EntryTypeNotFoundException
      */
     private function _checkMigrations()
     {

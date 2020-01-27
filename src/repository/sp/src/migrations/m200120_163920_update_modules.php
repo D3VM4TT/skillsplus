@@ -110,22 +110,19 @@ class m200120_163920_update_modules extends Migration
         $fieldsService = Craft::$app->getFields();
 
         $entryType = MigrationHelper::getEntryTypeByHandle('moduleResult');
-        $fieldIds = $entryType->getFieldLayout()->getFieldIds();
-        if (!in_array($resultLocked->id, $fieldIds)) {
-            $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
-            $fieldLayoutArray['Result'] = [
-                $this->_fieldId('resultModule'),
-                $this->_fieldId('resultStatus'),
-                (int)$resultLocked->id,
-                (int)$resultHours->id,
-                (int)$resultValue->id
-            ];
-            $fieldLayoutArray['Cycle'] = [$cycleName->id, $cycleStartDate->id, $cycleFinishDate->id];
-            $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
-            $fieldLayout->id = $entryType->getFieldLayoutId();
-            $fieldLayout->type = 'craft\elements\Entry';
-            $fieldsService->saveLayout($fieldLayout);
-        }
+        $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
+        $fieldLayoutArray['Result'] = [
+            $this->_fieldId('resultModule'),
+            $this->_fieldId('resultStatus'),
+            (int)$resultLocked->id,
+            (int)$resultHours->id,
+            (int)$resultValue->id
+        ];
+        $fieldLayoutArray['Cycle'] = [$cycleName->id, $cycleStartDate->id, $cycleFinishDate->id];
+        $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
+        $fieldLayout->id = $entryType->getFieldLayoutId();
+        $fieldLayout->type = 'craft\elements\Entry';
+        $fieldsService->saveLayout($fieldLayout);
     }
 
     /**
@@ -145,25 +142,22 @@ class m200120_163920_update_modules extends Migration
         $fieldsService = Craft::$app->getFields();
 
         $entryType = MigrationHelper::getEntryTypeByHandle('unit');
-        $fieldIds = $entryType->getFieldLayout()->getFieldIds();
-        if (!in_array($unitTooltip->id, $fieldIds)) {
-            $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
-            $fieldLayoutArray['Unit'] = [
-                $this->_fieldId('unitType'),
-                (int)$unitTooltip->id,
-                $this->_fieldId('unitUrl'),
-                $this->_fieldId('unitValue'),
-                $this->_fieldId('unitEndorsementManagerLevel'),
-                $this->_fieldId('unitDescription'),
-                $this->_fieldId('unitImage'),
-                $this->_fieldId('unitFiles'),
-                $this->_fieldId('unitHeading')
-            ];
-            $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
-            $fieldLayout->id = $entryType->getFieldLayoutId();
-            $fieldLayout->type = 'craft\elements\Entry';
-            $fieldsService->saveLayout($fieldLayout);
-        }
+        $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
+        $fieldLayoutArray['Unit'] = [
+            $this->_fieldId('unitType'),
+            (int)$unitTooltip->id,
+            $this->_fieldId('unitUrl'),
+            $this->_fieldId('unitValue'),
+            $this->_fieldId('unitEndorsementManagerLevel'),
+            $this->_fieldId('unitDescription'),
+            $this->_fieldId('unitImage'),
+            $this->_fieldId('unitFiles'),
+            $this->_fieldId('unitHeading')
+        ];
+        $fieldLayout = $fieldsService->assembleLayout($fieldLayoutArray);
+        $fieldLayout->id = $entryType->getFieldLayoutId();
+        $fieldLayout->type = 'craft\elements\Entry';
+        $fieldsService->saveLayout($fieldLayout);
     }
 
     /**
@@ -178,7 +172,27 @@ class m200120_163920_update_modules extends Migration
                 $this->_fieldIds[$field->handle] = $field->id;
             }
         }
-        return isset($this->_fields[$fieldHandle]) ? $this->_fields[$fieldHandle] : null;
+        return isset($this->_fieldIds[$fieldHandle]) ? $this->_fieldIds[$fieldHandle] : null;
+    }
+
+    /**
+     * @param $handle
+     * @return \verbb\supertable\models\SuperTableBlockTypeModel|void
+     */
+    private function _getBlockTypeByFieldHandle($handle)
+    {
+        $fieldsService = Craft::$app->getFields();
+        if (false == $field = $fieldsService->getFieldByHandle($handle)) {
+            return;
+        }
+        $supertableService = new SuperTableService();
+        $blockTypes = $supertableService->getAllBlockTypes();
+        foreach($blockTypes as $blockType) {
+            if ($blockType->fieldId == $field->id) {
+                return $blockType;
+            }
+        }
+        return;
     }
 
     /**
@@ -190,8 +204,9 @@ class m200120_163920_update_modules extends Migration
         ## add required field to column layout
         $supertableService = new SuperTableService();
         $fieldsService = Craft::$app->getFields();
-
-        $columnLayout = $supertableService->getBlockTypeById(2);
+        if (false == $columnLayout = $this->_getBlockTypeByFieldHandle('columnLayout')) {
+            return;
+        }
 
         $fieldRequired = MigrationHelper::createField(
             'craft\fields\Lightswitch',
@@ -387,8 +402,11 @@ class m200120_163920_update_modules extends Migration
         }
         else {
           ## delete layout previously made in development
-          $existingLayout = $cpdEntryType->getFieldLayout();
-          Craft::$app->getFields()->deleteLayout($existingLayout);
+          /* $existingLayout = $cpdEntryType->getFieldLayout();
+          if ($existingLayout && $existingLayout->id) {
+              Craft::$app->getFields()->deleteLayout($existingLayout);
+          }
+          */
         }
 
         ## get qualification field layout array
