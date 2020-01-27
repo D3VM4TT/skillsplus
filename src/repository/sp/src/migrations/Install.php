@@ -39,10 +39,7 @@ class Install extends Migration
         ## sort other plugins
         $this->_removePlugins();
         Craft::$app->plugins->installPlugin('redactor');
-
-        ## update module types
-        $this->_updateModules();
-
+        
         return true;
     }
 
