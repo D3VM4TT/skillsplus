@@ -31,6 +31,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
+use lantra\sp\migrations\m200120_163920_update_modules as ModuleMigration;
 
 /**
  * Class LantraPlugin
@@ -212,6 +213,24 @@ class Plugin extends BasePlugin
                     'accessReports' => ['label' => 'Access Reports'],
                 ];
             });
+
+        $this->_checkMigrations();
+    }
+
+    /**
+     * Run migrations again in required (i.e. updating dev site)
+     *
+     * @throws \Throwable
+     * @throws \craft\errors\EntryTypeNotFoundException
+     */
+    private function _checkMigrations()
+    {
+        ## check to see if the entry type has already been changed...
+        $entryType = Craft::$app->getSections()->getEntryTypeById(6);
+        if ($entryType != 'qualification') {
+            $migration = new ModuleMigration();
+            $migration->safeUp();
+        }
     }
 
     /**

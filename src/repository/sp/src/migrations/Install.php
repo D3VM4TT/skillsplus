@@ -11,9 +11,7 @@ namespace lantra\sp\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\services\Routes as RoutesService;
-use lantra\sp\helpers\MigrationHelper;
 use lantra\sp\Plugin as Lantra;
-use lantra\sp\migrations\m200120_163920_update_modules as ModuleMigration;
 
 class Install extends Migration
 {
@@ -47,21 +45,6 @@ class Install extends Migration
 
         return true;
     }
-
-    /**
-     * @throws \Throwable
-     * @throws \craft\errors\EntryTypeNotFoundException
-     */
-    private function _updateModules()
-    {
-        ## check to see if the entry type has already been changed...
-        $entryType = Craft::$app->getSections()->getEntryTypeById(6);
-        if ($entryType != 'qualification') {
-            $migration = new ModuleMigration();
-            $migration->safeUp();
-        }
-    }
-
 
     /**
      * make all lantra result cache columns blobs
