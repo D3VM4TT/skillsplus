@@ -31,6 +31,21 @@ class m200120_163920_update_modules extends Migration
         $this->_updateUnitGroup();
         $this->_updateModule();
         $this->_addUnitHeading();
+        $this->_fixModulesSection();
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\SectionNotFoundException
+     */
+    private function _fixModulesSection()
+    {
+        $sectionsService = Craft::$app->getSections();
+        if(false != $modules = $sectionsService->getSectionByHandle('modules')) {
+            $modules->type = 'structure';
+            $modules->structureId = null;
+            $sectionsService->saveSection($modules);
+        }
     }
 
     /**
@@ -159,7 +174,7 @@ class m200120_163920_update_modules extends Migration
     {
         if (is_null($this->_fieldIds)) {
             $fieldsService = Craft::$app->getFields();
-            foreach ($fieldsService->getAllFields() as $field) {
+            foreach ($fieldsService->getAllFields(false) as $field) {
                 $this->_fieldIds[$field->handle] = $field->id;
             }
         }

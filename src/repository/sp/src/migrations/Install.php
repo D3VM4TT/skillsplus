@@ -69,7 +69,7 @@ class Install extends Migration
     {
         $sectionsService = Craft::$app->getSections();
         if(false != $modules = $sectionsService->getSectionByHandle('modules')) {
-            $modules->type = 'channel';
+            $modules->type = 'structure';
             $modules->structureId = null;
             $sectionsService->saveSection($modules);
         }
