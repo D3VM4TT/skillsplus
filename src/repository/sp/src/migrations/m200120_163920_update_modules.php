@@ -364,32 +364,40 @@ class m200120_163920_update_modules extends Migration
             ]
         );
 
-        $postedFieldLayout = [
-            'Module' => [
-                $this->_fieldId('moduleGroup'),
-                $this->_fieldId('pageHeading'),
-                $this->_fieldId('addAchievementHide'),
-                $this->_fieldId('moduleUnitGroups')
-            ],
-            'Job Roles' => [
-                $this->_fieldId('moduleRoles')
-            ],
-            'Cycle' => [$cycleUserStartDate->id, $cycleStartDate->id, $cycleDurationType->id, $cycleDurationValue->id, $cycleGrace->id, $targetPoints->id, $targetHours->id]
-        ];
-
-        $requiredFields = [$this->_fieldId('moduleGroup'), $cycleStartDate->id, $cycleDurationValue->id];
-
         if (false == $cpdEntryType = MigrationHelper::getEntryTypeByHandle('cpd')) {
             $cpdEntryType = new EntryType();
             $cpdEntryType->sectionId = 6;
             $cpdEntryType->name = 'CPD';
             $cpdEntryType->handle = 'cpd';
         }
+        else {
+          ## delete layout previously made in development
+          $existingLayout = $cpdEntryType->getFieldLayout();
+          Craft::$app->getFields()->deleteLayout($existingLayout);
+        }
+
+        ## get qualification field layout array
+        $entryType = Craft::$app->getSections()->getEntryTypeById(6);
+        $fieldLayoutArray = MigrationHelper::getFieldLayoutArray($entryType);
+
+        $fieldLayoutArray['Cycle'] = [
+            $cycleUserStartDate->id,
+            $cycleStartDate->id,
+            $cycleDurationType->id,
+            $cycleDurationValue->id,
+            $cycleGrace->id,
+            $targetPoints->id,
+            $targetHours->id
+        ];
+
+        $requiredFields = [$this->_fieldId('moduleGroup'), $cycleStartDate->id, $cycleDurationValue->id];
 
         ## rebuild field layout
-        $cpdFieldLayout = Craft::$app->getFields()->assembleLayout($postedFieldLayout, $requiredFields);
+        $cpdFieldLayout = Craft::$app->getFields()->assembleLayout($fieldLayoutArray, $requiredFields);
         $cpdFieldLayout->type = Entry::class;
         Craft::$app->getFields()->saveLayout($cpdFieldLayout);
+
+        ## save the entry type
         $cpdEntryType->setFieldLayout($cpdFieldLayout);
         Craft::$app->getSections()->saveEntryType($cpdEntryType);
     }
