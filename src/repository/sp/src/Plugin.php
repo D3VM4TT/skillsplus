@@ -25,12 +25,14 @@ use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\assetbundles\SpCpAsset;
+use lantra\sp\migrations\m200128_160852_rename_unitValue;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
+use yii\db\Query;
 
 /**
  * Class LantraPlugin
@@ -212,6 +214,8 @@ class Plugin extends BasePlugin
                     'accessReports' => ['label' => 'Access Reports'],
                 ];
             });
+
+        $this->_runMigrations();
     }
 
     /**
@@ -331,10 +335,13 @@ class Plugin extends BasePlugin
     /**
      *
      */
-    private function resetUploads()
+    private function _runMigrations()
     {
-        ## unset($_FILES);
-        ## UploadedFile::reset();
+        $exists = (new Query())->from('{{%stc_columnlayout}}')->where(['field_fieldType' => 'unitValue'])->count();
+        if ($exists) {
+            $migration = new m200128_160852_rename_unitValue();
+            $migration->safeUp();
+        }
     }
 }
 
