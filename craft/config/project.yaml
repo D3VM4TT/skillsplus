@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580211389
+dateModified: 1580214626
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -359,7 +359,7 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type: aelvan\preparsefield\fields\PreparseFieldType
     settings:
       fieldTwig: "{% if entry.type == 'unitResult' %}{{ entry.resultUnit.first.title|raw }}{% else %}{{ entry.resultModule.first.title|raw }}{% endif %} \r\n{{ entry.author.userTeam.first.title|raw }} {{ entry.au"
       columnType: text
@@ -369,7 +369,7 @@ fields:
       showField: '1'
       allowSelect: ''
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
-    contentColumnType: string
+    contentColumnType: text
   240244e2-5e76-4832-8772-32468aee96f4:
     name: 'User Edit Start Date'
     handle: userEditStartDate
@@ -548,43 +548,36 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: Status
+    type: craft\fields\Dropdown
     settings:
-      statuses:
-        col1:
-          name: Pending
-          handle: pending
-          color: '#ffff00'
+      options:
+        -
+          label: Draft
+          value: draft
           default: '1'
-        1:
-          name: Failed
-          handle: failed
-          color: '#ff0000'
+        -
+          label: Pending
+          value: pending
           default: ''
-        0:
-          name: Endorsed
-          handle: endorsed
-          color: '#008000'
+        -
+          label: Endorsed
+          value: endorsed
           default: ''
-        2:
-          name: Active
-          handle: active
-          color: '#000000'
+        -
+          label: Failed
+          value: failed
           default: ''
-        3:
-          name: Complete
-          handle: complete
-          color: '#008000'
+        -
+          label: Blocked
+          value: blocked
           default: ''
-        4:
-          name: Blocked
-          handle: blocked
-          color: '#000000'
+        -
+          label: Active
+          value: active
           default: ''
-        5:
-          name: Draft
-          handle: draft
-          color: '#0080c0'
+        -
+          label: Complete
+          value: complete
           default: ''
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: string
@@ -828,19 +821,19 @@ fields:
     name: 'Result Comments'
     handle: resultComments
     instructions: ''
-    searchable: '1'
+    searchable: true
     translationMethod: none
     translationKeyFormat: null
     type: verbb\supertable\fields\SuperTableField
     settings:
       columns:
-        0c515fa0-cbdd-4bd9-8267-917a447e5702:
+        178:
           width: ''
-        3c50a00d-c61b-4018-bed4-f1685a215e01:
+        179:
           width: ''
-        974df618-fa82-42bd-9ad4-612f8f4a985c:
+        180:
           width: ''
-        cea55199-bbc5-4529-8451-c12a00ff1080:
+        191:
           width: ''
       fieldLayout: table
       staticField: null
@@ -1277,7 +1270,7 @@ fields:
     name: 'Result Custom'
     handle: resultCustom
     instructions: ''
-    searchable: '1'
+    searchable: true
     translationMethod: none
     translationKeyFormat: null
     type: verbb\supertable\fields\SuperTableField
@@ -1430,7 +1423,7 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type: aelvan\preparsefield\fields\PreparseFieldType
     settings:
       fieldTwig: '{{ user.userTeam.first.title|raw  }} {{ user.userTeam.first.teamCompany.first.title|raw }}'
       columnType: text
@@ -1440,7 +1433,7 @@ fields:
       showField: ''
       allowSelect: ''
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
-    contentColumnType: string
+    contentColumnType: text
   bebe1bc3-81ca-46c1-86ac-1ad88d0a0f92:
     name: 'Report Count'
     handle: reportCount
@@ -1459,23 +1452,23 @@ fields:
     name: 'Column Layout'
     handle: columnLayout
     instructions: 'In Globals this is the default layout as used on Result History.'
-    searchable: '1'
+    searchable: true
     translationMethod: none
     translationKeyFormat: null
     type: verbb\supertable\fields\SuperTableField
     settings:
       columns:
-        19794a8d-aa57-4cea-9297-7c4ccfb2d561:
+        168:
           width: ''
-        31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
+        169:
           width: ''
-        6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
+        195:
           width: ''
-        74329152-64bf-43a9-95b3-0458edd36e4f:
+        196:
           width: ''
-        8fec0242-3542-431e-8a9a-d2d86b3e3b06:
+        197:
           width: ''
-        a37728d1-3a88-46ca-b9d5-ec79b66ba635:
+        198:
           width: ''
       fieldLayout: table
       staticField: null
@@ -1688,7 +1681,7 @@ fields:
     searchable: true
     translationMethod: none
     translationKeyFormat: null
-    type: PreparseField_Preparse
+    type: aelvan\preparsefield\fields\PreparseFieldType
     settings:
       fieldTwig: '{{ user.userCompany | length ? user.userCompany.first().title }}'
       columnType: text
@@ -1698,7 +1691,7 @@ fields:
       showField: '1'
       allowSelect: ''
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
-    contentColumnType: string
+    contentColumnType: text
   d363cf24-3e53-4eea-b5f4-e9c72a3e9f65:
     name: 'Result Location'
     handle: resultLocation
@@ -1987,15 +1980,15 @@ fields:
     translationKeyFormat: null
     type: craft\redactor\Field
     settings:
-      configFile: Standard.json
       availableTransforms: '*'
       cleanupHtml: '1'
       purifyHtml: '1'
       purifierConfig: ''
       columnType: text
       availableVolumes: '*'
+      redactorConfig: Standard.json
     fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
-    contentColumnType: string
+    contentColumnType: text
   f2ab3047-5922-481b-a6bc-d1ced215dc10:
     name: 'Unit Heading'
     handle: unitHeading
@@ -2373,9 +2366,9 @@ matrixBlockTypes:
         settings:
           useSingleFolder: ''
           sources: 'folder:2'
-          defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+          defaultUploadLocationSource: 'folder:51799375-adaa-4f52-84d9-338008463d77'
           defaultUploadLocationSubpath: ''
-          singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+          singleUploadLocationSource: 'folder:5568e8dd-7d3e-4d8d-8ced-5afeddb60ba8'
           singleUploadLocationSubpath: ''
           restrictFiles: ''
           limit: ''
@@ -2653,9 +2646,9 @@ matrixBlockTypes:
         settings:
           useSingleFolder: ''
           sources: 'folder:2'
-          defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+          defaultUploadLocationSource: 'folder:51799375-adaa-4f52-84d9-338008463d77'
           defaultUploadLocationSubpath: ''
-          singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+          singleUploadLocationSource: 'folder:5568e8dd-7d3e-4d8d-8ced-5afeddb60ba8'
           singleUploadLocationSubpath: ''
           restrictFiles: ''
           limit: '1'
@@ -2771,15 +2764,15 @@ matrixBlockTypes:
         translationKeyFormat: null
         type: craft\redactor\Field
         settings:
-          configFile: Standard.json
           availableTransforms: '*'
           cleanupHtml: ''
           purifyHtml: ''
           purifierConfig: ''
           columnType: text
           availableVolumes: '*'
+          redactorConfig: Standard.json
         fieldGroup: null
-        contentColumnType: string
+        contentColumnType: text
 plugins:
   status:
     settings: null
@@ -2810,6 +2803,8 @@ sections:
     handle: units
     type: channel
     enableVersioning: false
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       6bbfb167-5ead-4bd3-971d-7f756a5b4c8b:
         name: Unit
@@ -2875,12 +2870,13 @@ sections:
         hasUrls: false
         uriFormat: null
         template: null
-    propagationMethod: all
   1d590683-b16e-4955-be62-315accb3e628:
     name: Reports
     handle: reports
     type: channel
     enableVersioning: false
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       6aaa6123-97b5-479c-8de3-488d8813933e:
         name: Reports
@@ -2992,19 +2988,20 @@ sections:
         hasUrls: true
         uriFormat: 'reporting/custom/{id}'
         template: reporting/custom/_entry
-    propagationMethod: all
   51a18e4b-1a36-4210-8769-a5b8f28f3a5f:
     name: Attempts
     handle: attempts
     type: channel
     enableVersioning: true
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       39d4cfb6-0d4f-496d-82ca-64d29f904a62:
         name: Attempt
         handle: attempt
         hasTitleField: false
         titleLabel: null
-        titleFormat: '[unit {attemptUnit.first.id}] {author.firstName} {author.lastName}'
+        titleFormat: '[unit {attemptUnit.one.id}] {author.firstName} {author.lastName}'
         sortOrder: 1
         fieldLayouts:
           46202269-1d4b-4803-aef3-1a626eaf5054:
@@ -3025,12 +3022,13 @@ sections:
         hasUrls: false
         uriFormat: null
         template: null
-    propagationMethod: all
   86faf121-d218-4348-8ab8-de457b46aa63:
     name: Companies
     handle: companies
     type: channel
     enableVersioning: false
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       2fbdc981-206f-44f9-9f39-fdb605cff8f2:
         name: Company
@@ -3087,12 +3085,13 @@ sections:
         hasUrls: false
         uriFormat: null
         template: null
-    propagationMethod: all
   8c1af673-0f01-4434-a6f0-86f01675d799:
     name: Pages
     handle: pages
     type: channel
     enableVersioning: true
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       006ef470-d860-40ff-a431-e2515805f2e8:
         name: Pages
@@ -3123,19 +3122,20 @@ sections:
         hasUrls: true
         uriFormat: 'public/{slug}'
         template: pages/_entry
-    propagationMethod: all
   bcf0ea1d-9495-423e-ac83-ef089790460c:
     name: Teams
     handle: teams
     type: channel
     enableVersioning: false
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       ed2a03c5-bea9-4bed-8fe2-2a9e97abb03e:
         name: Team
         handle: team
         hasTitleField: false
         titleLabel: null
-        titleFormat: '{teamCompany.first.title} - {teamName}'
+        titleFormat: '{teamCompany.one.title} - {teamName}'
         sortOrder: 1
         fieldLayouts:
           bcaf5920-c460-4465-a5db-e7f4bad29958:
@@ -3166,19 +3166,20 @@ sections:
         hasUrls: false
         uriFormat: null
         template: null
-    propagationMethod: all
   c0345752-9e56-4de1-a2d2-da641c3708e0:
     name: Results
     handle: results
     type: channel
     enableVersioning: true
+    propagationMethod: all
+    previewTargets: null
     entryTypes:
       3bf342f8-6a3e-465e-b665-d25d1860be54:
         name: 'Unit Result'
         handle: unitResult
         hasTitleField: false
         titleLabel: null
-        titleFormat: '[unit {resultUnit.first.id}] {author.firstName} {author.lastName}'
+        titleFormat: '[unit {resultUnit.one.id}] {author.firstName} {author.lastName}'
         sortOrder: 1
         fieldLayouts:
           0070d453-42a5-4800-b0a7-8bbdb55954c6:
@@ -3269,7 +3270,7 @@ sections:
         handle: moduleResult
         hasTitleField: false
         titleLabel: null
-        titleFormat: '[module {resultModule.first().id}] {author.firstName} {author.lastName} '
+        titleFormat: '[module {resultModule.one.id}] {author.firstName} {author.lastName} '
         sortOrder: 2
         fieldLayouts:
           e0343ee1-0f38-4a11-b963-83087a5fb1e1:
@@ -3381,19 +3382,13 @@ sections:
         hasUrls: false
         uriFormat: null
         template: null
-    propagationMethod: all
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     name: Modules
     handle: modules
     type: channel
     enableVersioning: false
     propagationMethod: all
-    siteSettings:
-      47b102e1-4aed-4206-8420-dfd6e6684f7c:
-        enabledByDefault: true
-        hasUrls: true
-        uriFormat: 'module/{id}'
-        template: module/_entry
+    previewTargets: null
     entryTypes:
       dbd7f9dd-1424-48cc-8aba-f0533bce83be:
         name: Module
@@ -3434,19 +3429,25 @@ sections:
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: true
+        uriFormat: 'module/{id}'
+        template: module/_entry
 siteGroups:
   c5e418fc-d028-4dae-86d0-52f2cb163583:
-    name: 'Lantra CPD (en-GB)'
+    name: 'Skills Plus (en-GB)'
 sites:
   47b102e1-4aed-4206-8420-dfd6e6684f7c:
-    siteGroup: c5e418fc-d028-4dae-86d0-52f2cb163583
-    name: 'Lantra CPD (en-GB)'
+    name: 'Skills Plus (en-GB)'
     handle: en_gb
     language: en-GB
     hasUrls: true
     baseUrl: /
     sortOrder: 1
     primary: true
+    siteGroup: c5e418fc-d028-4dae-86d0-52f2cb163583
 superTableBlockTypes:
   44e21cea-14c2-44e9-9bbf-8c104a4c7128:
     field: a75d2fa6-54eb-4155-9483-d7729fb83004
