@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580222322
+dateModified: 1580224554
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -4102,7 +4102,7 @@ superTableBlockTypes:
 system:
   edition: pro
   live: true
-  name: 'Lantra CPD'
+  name: 'Skills Plus'
   timeZone: UTC
   schemaVersion: 3.3.3
 tagGroups:
