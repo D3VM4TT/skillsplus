@@ -170,7 +170,6 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
-                $this->resetUploads();
                 $entry = $event->sender;
                 ## ignore drafts and revisions
                 if (ElementHelper::isDraftOrRevision($entry)) {
