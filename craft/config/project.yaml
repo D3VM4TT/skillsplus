@@ -1106,7 +1106,7 @@ fields:
     settings:
       minBlocks: ''
       maxBlocks: ''
-      contentTable: '{{%matrixcontent_moduleunitgroups_1}}'
+      contentTable: '{{%matrixcontent_moduleunitgroups}}'
       propagationMethod: all
     contentColumnType: string
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -1647,7 +1647,7 @@ fields:
     settings:
       minRows: ''
       maxRows: ''
-      contentTable: '{{%stc_columnlayout_1}}'
+      contentTable: '{{%stc_columnlayout}}'
       propagationMethod: all
       staticField: ''
       columns:
