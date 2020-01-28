@@ -39,8 +39,20 @@ class Install extends Migration
         ## sort other plugins
         $this->_removePlugins();
         Craft::$app->plugins->installPlugin('redactor');
+
+        $this->_fixConfig();
         
         return true;
+    }
+
+    /**
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
+     */
+    private function _fixConfig()
+    {
+        $migration = new m200110_105532_fix_config();
+        $migration->safeUp();
     }
 
     /**
