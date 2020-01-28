@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580224554
+dateModified: 1580225638
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -2608,15 +2608,10 @@ matrixBlockTypes:
         searchable: true
         translationMethod: none
         translationKeyFormat: null
-        type: craft\fields\PlainText
+        type: craft\fields\Lightswitch
         settings:
-          placeholder: ''
-          code: ''
-          multiline: ''
-          initialRows: '4'
-          charLimit: ''
-          columnType: text
-        contentColumnType: text
+          default: ''
+        contentColumnType: boolean
         fieldGroup: null
       45d289dd-249a-42e9-95ae-62ab979e8b02:
         name: Name
