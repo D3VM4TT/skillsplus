@@ -19,8 +19,8 @@ class m200128_145211_fix_content extends Migration
         $fieldsService = Craft::$app->getFields();
         foreach($fieldsService->getAllFields() as $field) {
             if ($field->hasContentColumn())
-            if (!$this->db->columnExists('{{%content}}', 'field_' . $field->name)) {
-                $this->addColumn('{{%content}}', 'field_' . $field->name, $field->getContentColumnType());
+            if (!$this->db->columnExists('{{%content}}', 'field_' . $field->handle)) {
+                $this->addColumn('{{%content}}', 'field_' . $field->handle, $field->getContentColumnType());
             }
         }
     }
