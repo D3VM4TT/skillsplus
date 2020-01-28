@@ -212,8 +212,6 @@ class Plugin extends BasePlugin
                     'accessReports' => ['label' => 'Access Reports'],
                 ];
             });
-
-        $this->_checkMigrations();
     }
 
     /**
