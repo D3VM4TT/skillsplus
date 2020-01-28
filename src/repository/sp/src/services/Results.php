@@ -558,21 +558,22 @@ class Results extends Component
         }
         ## create module result if it doesn't already exist
         $moduleResult = $this->getModuleResult($userId, $moduleEntry->id, true);
+        $moduleResultExpiryTime = null;
         if ($moduleEntry->type == 'qualification') {
-            $moduleResultExpiryTime = null;
             ## set default module result expiry
             if ($moduleEntry->moduleExpiryDays) {
                 $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
             }
         }
         $points = 0;
+        $hours = 0;
         foreach ($resultEntries as $resultEntry) {
             if ($resultEntry->resultStatus == 'endorsed') {
+                $hours += $resultEntry->resultHours;
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
-                    ## @todo get unit value - might be set by module/unit group
                     $unitEntry = $resultEntry->resultUnit->one();
-                    $points += $unitEntry->unitPoints;
+                    $points += $this->getUnitPoints($unitEntry, $moduleEntry);
                 }
                 ## user result value is custom
                 elseif ($resultEntry->type == 'userResult') {
@@ -584,19 +585,92 @@ class Results extends Component
                 }
             }
         }
+        $moduleResult->setFieldValue('resultHours', $hours);
         $moduleResult->setFieldValue('resultPoints', $points);
         Craft::$app->getElements()->saveElement($moduleResult);
-        if ($moduleEntry->type == 'cpd') {
-            if ($points >= $moduleEntry->targetPoints) {
-                $this->completeModuleResult($moduleEntry, $userId);
-            }
-        }
-        else {
-            if ($points >= $moduleEntry->moduleCompletedValue) {
-                $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
-            }
+        if ($this->isCompleteModuleResult($moduleResult)) {
+            $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
         }
         return;
+    }
+
+    /**
+     * @param Entry $unitEntry
+     * @param Entry|null $moduleEntry
+     * @return float|int|null
+     */
+    public function getUnitPoints(Entry $unitEntry, Entry $moduleEntry = null)
+    {
+        if ($moduleEntry) {
+            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
+                if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitGroup->unitEntries->ids())) {
+                   return $unitGroup->unitPointsOverride;
+                }
+            }
+        }
+        return $unitEntry->unitPoints;
+    }
+
+
+
+    /**
+     * @param $moduleResult
+     * @return bool
+     */
+    function isCompleteModuleResult($moduleResult)
+    {
+        if (!$moduleResult->resultModule) {
+            return false;
+        }
+        $moduleEntry = $moduleResult->resultModule->one();
+        if ($moduleEntry->type == 'cpd') {
+            if ($moduleEntry->targetType == 'hours') {
+                return $moduleResult->resultHours >= $moduleEntry->targetHours;
+            } elseif ($moduleEntry->targetType == 'points')
+                return $moduleResult->resultPoints >= $moduleResult->targetPoints;
+            } else {
+                $remainingPoints = ($moduleEntry->targetHours - $moduleResult->resultHours);
+                $remainingHours = ($moduleEntry->targetPoints - $moduleResult->resultPoints);
+                if ($moduleEntry->targetType == 'pointsAndHours') {
+                    return !$remainingPoints && !$remainingHours;
+                } elseif ($moduleEntry->targetType == 'pointsOrHours') {
+                    return !$remainingPoints || !$remainingHours;
+                }
+        }
+        if ($moduleEntry->type == 'qualification') {
+            $totalUnits = count($this->getModuleUnitIds($moduleEntry));
+            $totalResults = $this->getModuleUnitResults($moduleEntry, $moduleResult->getAuthor()->id, true);
+            return $totalResults >= $totalUnits;
+        }
+        return false;
+    }
+
+    /**
+     * @param $moduleResult
+     * @return string
+     */
+    public function remainingText($moduleResult)
+    {
+        if (!$moduleResult->resultModule) {
+            return 'unknown';
+        }
+        $moduleEntry = $moduleResult->resultModule->one();
+        if ($moduleEntry->targetType == 'hours') {
+            return $moduleEntry->targetHours - $moduleResult->resultHours . ' hours';
+        } elseif ($moduleEntry->targetType == 'points') {
+            return $moduleResult->targetPoints - $moduleResult->resultPoints . ' points';
+        } else {
+            $remainingPoints = ($moduleEntry->targetPoints - $moduleResult->resultPoints) . ' points';
+            $remainingHours = ($moduleEntry->targetHours - $moduleResult->resultHours) . ' hours';
+            if ($moduleEntry->targetType == 'pointsAndHours') {
+                if ($remainingPoints && $remainingHours) {
+                    return $remainingPoints . ' and ' . $remainingHours;
+                }
+                return $remainingPoints ? $remainingPoints : $remainingHours;
+            } elseif ($moduleEntry->targetType == 'pointsOrHours') {
+                return $remainingPoints . ' or ' . $remainingHours;
+            }
+        }
     }
 
     /**
@@ -725,7 +799,7 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    function getModuleUnitResults($moduleEntry, $userId) {
+    function getModuleUnitResults($moduleEntry, $userId, $count = false) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -733,6 +807,9 @@ class Results extends Component
         $criteria->authorId = $userId;
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        if ($count) {
+            return $criteria->count();
+        }
         $resultEntries = $criteria->all();
         $return = [];
         foreach ($resultEntries as $resultEntry) {
@@ -1936,10 +2013,23 @@ class Results extends Component
      * @return string
      */
     private function setResultValue($resultEntry) {
+
+        if (is_object($resultEntry->resultStartDate)) {
+            $startDate = $resultEntry->resultStartDate->getTimestamp();
+        }
+        else {
+            $startDate = $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null;
+        }
+        if (is_object($resultEntry->resultFinishDate)) {
+            $finishDate = $resultEntry->resultFinishDate->getTimestamp();
+        }
+        else {
+            $finishDate = $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null;
+        }
         return json_encode([
             'expiryDate' => $resultEntry->expiryDate ? $resultEntry->expiryDate->getTimestamp() : null,
-            'startDate' => $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null,
-            'finishDate' => $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null
+            'startDate' => $startDate,
+            'finishDate' => $finishDate
         ]);
     }
 }

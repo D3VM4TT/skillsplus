@@ -835,6 +835,26 @@ class LantraVariable
     }
 
     /**
+     * @param $moduleResult
+     * @return string
+     */
+    public function remainingText($moduleResult)
+    {
+        return Lantra::$app->results->remainingText($moduleResult);
+    }
+
+
+    /**
+     * @param $unitEntry
+     * @param null $moduleEntry
+     * @return float|int|null
+     */
+    public function unitPoints($unitEntry, $moduleEntry = null)
+    {
+        return Lantra::$app->results->getUnitPoints($unitEntry, $moduleEntry);
+    }
+
+    /**
      * Get report data
      *
      * @param $entryId

@@ -9,12 +9,12 @@
         {# show CPD progress #}
         {% if module.type == 'cpd' %}
             {% set cycle = craft.lantra.currentCycle(moduleResultEntry) %}
-            {% set remainingPoints = module.targetPoints - moduleResultEntry.resultPoints %}
             <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
             {% if moduleResultEntry.resultStatus == 'complete' %}
                 <p><span class="status-complete"></span>Congratulations, this module is complete!</p>
             {% else %}
-                <p><span class="status-inprogress"></span>You need {{ remainingPoints }} more points to complete this module.</p>
+                {% set remainingText = craft.lantra.remainingText(moduleResultEntry) %}
+                <p><span class="status-inprogress"></span>You need {{ remainingText }} to complete this module.</p>
             {% endif %}
         {% else %}
             <h4>{{ module.title }}</h4>
@@ -49,7 +49,7 @@
                             {% set totalComments = 0 %}
 
                             {% set unitType = unitEntry.unitType %}
-                            {% set unitPoints = unitEntry.unitPoints %}
+                            {% set unitPoints = craft.lantra.unitPoints(unitEntry, module) %}
 
                             {# get either one or mutliple results for this unit #}
                             {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').limit(addResult ? null : 1) %}
