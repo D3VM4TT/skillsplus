@@ -2786,118 +2786,16 @@ plugins:
     licenseKey: null
     enabled: '1'
     schemaVersion: 1.0.0
-  lantra:
-    settings:
-      settingsVersion: '5'
-      schemeTeams: ''
-      schemeUserReadOnly: ''
-      schemeEmailDomain: ''
-      schemeTestEmailAddress: portia.hartley@skills-plus.co.uk
-      jobRoleEndorse: '1'
-      schemeName: BICS
-      schemeDescription: ''
-      schemeLogo: ''
-      themeColorPrimary: '#00bfbf'
-      themeColorSecondary: '#1c2b39'
-      themeNavigationPublic:
-        - '1090'
-      themeNavigationPrivate:
-        - '1090'
-      themeDateFormat: d-m-Y
-      themeDefaultLimit: '25'
-      themeLoginMessage: ''
-      themeResultHistoryTitle: ''
-      themeResultHistoryLink: '1'
-      themeDisableResultHistory: ''
-      themeDisableCertificates: '1'
-      labelJobRole: Module
-      lantraDisableLicences: '1'
-      schemeRemainingLicences: '0'
-      schemeExpiryDate:
-        date: ''
-      individualCompany: ''
-      individualJobRole: ''
-      individualLicenceDays: '365'
-      individualLicencePaypalButton: "<form action=\"https://www.sandbox.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_top\">\r\n<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">\r\n<input type=\"hidden\" name=\"hosted_button_id\" value=\"RKVQSNXFXJK4G\">\r\n<input type=\"image\" src=\"https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_buynowCC_LG.gif\" border=\"0\" name=\"submit\" alt=\"PayPal – The safer, easier way to pay online!\">\r\n<img alt=\"\" border=\"0\" src=\"https://www.sandbox.paypal.com/en_GB/i/scr/pixel.gif\" width=\"1\" height=\"1\">\r\n<input type=\"hidden\" name=\"custom\" value=\"` currentUser`.`id `\">\r\n</form>\r\n"
-      notifySubjectBlockedResult: ''
-      notifyBlockedResult: ''
-      notifySubjectEndorsementResult: ''
-      notifyEndorsementResult: ''
-      notifySubjectLicencesRemaining: ''
-      notifyLicencesRemaining: ''
-      notifySubjectModuleResult: ''
-      notifyModuleResult: ''
-      notifySubjectSchemeExpiry: ''
-      notifySchemeExpiry: ''
-      notifySubjectUserExpiry: ''
-      notifyUserExpiry: ''
-      notifySubjectComment: ''
-      notifyComment: ''
-      notifySubjectCustomReport: ''
-      notifyCustomReport: ''
-      notifyFooter: ''
-      disableEndorsementNotify: ''
-      userEditName: ''
-      userEditEmail: '1'
-      userEditAddress: '1'
-      userEditTelephone: '1'
-      userEditDob: '1'
-      userEditStartDate: ''
-      userEditRole: ''
-      userEditPhoto: '1'
-      userAccountInformation:
-        userId: '1'
-        userStartDate: '1'
-        userCompany: '1'
-        managerCompanies: '1'
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 1.0.0
-  internal-assets:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 1.0.0
-  sprout-reports:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 0.9.1
-  export:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 1.0.0
-  import:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 1.0.0
-  printmaker:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 0.0.0.0
   preparse-field:
     settings: null
     licenseKey: null
     enabled: '1'
-    schemaVersion: 1.0.0
-  mailer:
-    settings: null
-    licenseKey: null
-    enabled: '0'
-    schemaVersion: 1.0.0
+    schemaVersion: 1.0.5
   super-table:
     settings: null
     licenseKey: null
     enabled: '1'
     schemaVersion: 2.2.1
-  migration-manager:
-    settings: null
-    licenseKey: null
-    enabled: '1'
-    schemaVersion: 1.0.0
   redactor:
     edition: standard
     enabled: true
