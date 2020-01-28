@@ -499,7 +499,7 @@ class Results extends Component
     function checkUserResult($resultEntry) {
         ## the related module id
         $resultModuleEntry = $resultEntry->resultModule->one();
-        if (!$resultModuleEntry || !$resultEntry->resultValue) {
+        if (!$resultModuleEntry || !$resultEntry->resultPoints) {
             return;
         }
         ## check the moduleResult
@@ -572,11 +572,11 @@ class Results extends Component
                 if ($resultEntry->type == 'unitResult') {
                     ## @todo get unit value - might be set by module/unit group
                     $unitEntry = $resultEntry->resultUnit->one();
-                    $points += $unitEntry->unitValue;
+                    $points += $unitEntry->unitPoints;
                 }
                 ## user result value is custom
                 elseif ($resultEntry->type == 'userResult') {
-                    $points += $resultEntry->resultValue;
+                    $points += $resultEntry->resultPoints;
                 }
                 ## check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
@@ -584,7 +584,7 @@ class Results extends Component
                 }
             }
         }
-        $moduleResult->setFieldValue('resultValue', $points);
+        $moduleResult->setFieldValue('resultPoints', $points);
         Craft::$app->getElements()->saveElement($moduleResult);
         if ($moduleEntry->type == 'cpd') {
             if ($points >= $moduleEntry->targetPoints) {
@@ -700,19 +700,19 @@ class Results extends Component
      *
      * @param $moduleEntry
      * @param $userId
-     * @param $resultValue
+     * @param $resultPoints
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntry, $userId, $resultValue = true) {
+    function getModuleUserResults($moduleEntry, $userId, $resultPoints = true) {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'userResult';
         $criteria->authorId = $userId;
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
-        if ($resultValue) {
-            $criteria->resultValue = '> 0';
+        if ($resultPoints) {
+            $criteria->resultPoints = '> 0';
         }
         return $criteria->all();
     }

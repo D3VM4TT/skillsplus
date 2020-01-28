@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580225638
+dateModified: 1580226209
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1415,19 +1415,23 @@ fields:
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
     contentColumnType: string
   a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
-    name: 'Result Value'
-    handle: resultValue
+    name: 'Result Points'
+    handle: resultPoints
     instructions: ''
     searchable: true
     translationMethod: none
     translationKeyFormat: null
     type: craft\fields\Number
     settings:
+      defaultValue: null
       min: '0'
-      max: ''
-      decimals: '0'
-    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
     contentColumnType: integer(10)
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
   a75d2fa6-54eb-4155-9483-d7729fb83004:
     name: 'Result Custom'
     handle: resultCustom
@@ -1659,6 +1663,8 @@ fields:
           width: ''
         74329152-64bf-43a9-95b3-0458edd36e4f:
           width: ''
+        7ed267ff-a262-4e68-81b8-be3bcaa5c178:
+          width: ''
         8fec0242-3542-431e-8a9a-d2d86b3e3b06:
           width: ''
         a37728d1-3a88-46ca-b9d5-ec79b66ba635:
@@ -1747,19 +1753,23 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: integer(10)
   c708fb49-2ead-4372-bb3f-c925d3ab9f41:
-    name: 'Unit Value'
-    handle: unitValue
+    name: 'Unit Points'
+    handle: unitPoints
     instructions: ''
     searchable: true
     translationMethod: none
     translationKeyFormat: null
     type: craft\fields\Number
     settings:
+      defaultValue: null
       min: '0'
-      max: ''
-      decimals: '0'
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
     contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
   c996fdb5-0318-4df3-87bd-b42b45db2cab:
     name: 'Report Send Value'
     handle: reportSendValue
@@ -3724,6 +3734,13 @@ sections:
                   d3594414-790c-479e-ada1-8e93cd99e906:
                     required: false
                     sortOrder: 1
+              -
+                name: 'Column Layout'
+                sortOrder: 4
+                fields:
+                  bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
+                    required: false
+                    sortOrder: 1
       dbd7f9dd-1424-48cc-8aba-f0533bce83be:
         name: Qualification
         handle: qualification
@@ -3758,6 +3775,13 @@ sections:
                 sortOrder: 2
                 fields:
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
+                    required: false
+                    sortOrder: 1
+              -
+                name: 'Column Layout'
+                sortOrder: 3
+                fields:
+                  bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
                     required: false
                     sortOrder: 1
 siteGroups:
@@ -3921,7 +3945,7 @@ superTableBlockTypes:
               default: ''
             -
               label: Value
-              value: unitValue
+              value: unitPoints
               default: ''
             -
               label: Status

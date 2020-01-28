@@ -25,7 +25,7 @@
                                     <td>{{ resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title }}</td>
                                     {% include '_includes/columnLayout' with {
                                         unitType:resultEntry.unitType,
-                                        unitValue:resultEntry.unitValue,
+                                        unitPoints:resultEntry.unitPoints,
                                         result:resultEntry,
                                         columnLayout:globalsTheme.columnLayout}
                                     %}

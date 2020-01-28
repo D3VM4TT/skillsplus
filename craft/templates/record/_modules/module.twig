@@ -9,7 +9,7 @@
         {# show CPD progress #}
         {% if module.type == 'cpd' %}
             {% set cycle = craft.lantra.currentCycle(moduleResultEntry) %}
-            {% set remainingPoints = module.targetPoints - moduleResultEntry.resultValue %}
+            {% set remainingPoints = module.targetPoints - moduleResultEntry.resultPoints %}
             <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
             {% if moduleResultEntry.resultStatus == 'complete' %}
                 <p><span class="status-complete"></span>Congratulations, this module is complete!</p>
@@ -49,7 +49,7 @@
                             {% set totalComments = 0 %}
 
                             {% set unitType = unitEntry.unitType %}
-                            {% set unitValue = unitEntry.unitValue %}
+                            {% set unitPoints = unitEntry.unitPoints %}
 
                             {# get either one or mutliple results for this unit #}
                             {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').limit(addResult ? null : 1) %}
@@ -76,7 +76,7 @@
                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                     {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
                                     {% if unitResultEntry.resultStatus == 'endorsed' %}
-                                        {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                        {% set totalPoints = totalPoints + unitEntry.unitPoints %}
                                     {% endif %}
                                     {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink} %}
                                 {% endfor %}
@@ -114,10 +114,10 @@
                             {% set rowTitle = userResultEntry.title %}
                             {% set rowUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
                             {% set unitType = 'evidence' %}
-                            {% set unitValue = userResultEntry.unitValue %}
+                            {% set unitPoints = userResultEntry.unitPoints %}
                             {% include 'record/_modules/row' with{resultEntry: userResultEntry} %}
                             {% if (userResultEntry.resultStatus == 'endorsed') %}
-                                {% set totalPoints = totalPoints + userResultEntry.resultValue %}
+                                {% set totalPoints = totalPoints + userResultEntry.resultPoints %}
                             {% endif %}
                         {% endfor %}
                         </tbody>

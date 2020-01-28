@@ -12,10 +12,10 @@
                 <p class="td-title-responsive">Unit type: </p>
                 {{ unitType == 'evidence' ? 'Evidence' : 'Assessment' }}
             </td>
-        {% elseif row.fieldType == 'unitValue'  %}
+        {% elseif row.fieldType == 'unitPoints'  %}
             <td class="unitValue">
-                <p class="td-title-responsive">Unit value: </p>
-                {{ unitValue }}
+                <p class="td-title-responsive">Unit Points: </p>
+                {{ unitPoints }}
             </td>
         {% elseif row.fieldType == 'resultStatus'  %}
             <td class="resultStatus">

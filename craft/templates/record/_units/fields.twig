@@ -9,11 +9,11 @@
 {% for row in columnLayout.all() %}
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
-    {% if row.fieldType == 'unitValue' %}
+    {% if row.fieldType == 'unitPoints' %}
         <div class="field--wrapper">
-            <label for="fields[resultValue]" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultValue]" type="number" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultValue|default(1) }}" />
+            <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
+                   value="{{ resultExists ? resultEntry.resultPoints|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper">
