@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580219363
+dateModified: 1580222322
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -85,6 +85,8 @@ fieldGroups:
     name: Structure
   f5eec841-a56b-474d-b01a-8ad8158d89b8:
     name: Legacy
+  fe9133b9-1ac4-4551-9989-99fd7865a70c:
+    name: Cycles
 fields:
   027f626e-2eaa-4fca-9665-c8812bce20a9:
     name: 'User Address'
@@ -352,6 +354,35 @@ fields:
       localizeRelations: false
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: string
+  1fb0d5d7-af10-4668-8a88-e918e5134c14:
+    name: 'Cycle Duration Type'
+    handle: cycleDurationType
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Dropdown
+    settings:
+      optgroups: true
+      options:
+        -
+          label: Year
+          value: year
+          default: '1'
+        -
+          label: Quarter
+          value: quarter
+          default: ''
+        -
+          label: Month
+          value: month
+          default: ''
+        -
+          label: Open
+          value: open
+          default: ''
+    contentColumnType: string
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   2078306f-b4b1-40bc-9837-4604f48a4939:
     name: 'Result Search'
     handle: resultSearch
@@ -470,6 +501,47 @@ fields:
       default: '1'
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: boolean
+  2d9dfe37-b05f-42a4-8342-9280cf9dba29:
+    name: 'Result Locked'
+    handle: resultLocked
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+  2f75994a-9452-4602-857a-c5f8eb169bf2:
+    name: 'Target Type'
+    handle: targetType
+    instructions: 'Select when the module will be completed.'
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Dropdown
+    settings:
+      optgroups: true
+      options:
+        -
+          label: Points
+          value: points
+          default: '1'
+        -
+          label: Hours
+          value: hours
+          default: ''
+        -
+          label: 'Points AND Hours'
+          value: pointsAndHours
+          default: ''
+        -
+          label: 'Points OR Hours'
+          value: pointsOrHours
+          default: ''
+    contentColumnType: string
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   2f940be6-d44c-47bf-95b6-392608ee2547:
     name: 'Report Roles'
     handle: reportRoles
@@ -485,6 +557,24 @@ fields:
       branchLimit: ''
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
     contentColumnType: string
+  30a277bf-ed0a-48fb-9a03-3e7d5a79b357:
+    name: 'Target Hours'
+    handle: targetHours
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Number
+    settings:
+      defaultValue: null
+      min: '0'
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
+    contentColumnType: integer(10)
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   3103beed-feb4-4eed-b71a-68cb81d67f7e:
     name: 'Result Unit'
     handle: resultUnit
@@ -650,6 +740,42 @@ fields:
       default: ''
     fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8
     contentColumnType: boolean
+  4505e42f-b7ae-43dd-ae25-694fc4e9b816:
+    name: 'Cycle Grace'
+    handle: cycleGrace
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Number
+    settings:
+      defaultValue: '0'
+      min: '0'
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
+    contentColumnType: integer(10)
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+  4967ee7c-a86e-49fd-89f6-a281f294c8a4:
+    name: 'Target Points'
+    handle: targetPoints
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Number
+    settings:
+      defaultValue: null
+      min: '0'
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
+    contentColumnType: integer(10)
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   4a4bc5cd-115e-4309-a51a-3e5095ceea90:
     name: 'Home Slider'
     handle: homeSlider
@@ -752,6 +878,24 @@ fields:
       localizeRelations: false
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
     contentColumnType: string
+  5a41c0e5-8a79-4db5-89f2-b87a6104ffca:
+    name: 'Cycle Duration Length'
+    handle: cycleDurationLength
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Number
+    settings:
+      defaultValue: '1'
+      min: '0'
+      max: null
+      decimals: 0
+      size: null
+      prefix: ''
+      suffix: ''
+    contentColumnType: integer(10)
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   5af516f7-8267-4333-b0d0-0ff4f5ee41bb:
     name: 'Result Score'
     handle: resultScore
@@ -956,15 +1100,33 @@ fields:
     handle: moduleUnitGroups
     instructions: ''
     searchable: true
-    translationMethod: none
+    translationMethod: site
     translationKeyFormat: null
     type: craft\fields\Matrix
     settings:
-      maxBlocks: null
+      minBlocks: ''
+      maxBlocks: ''
+      contentTable: '{{%matrixcontent_moduleunitgroups_1}}'
       propagationMethod: all
-      contentTable: '`craft_matrixcontent_moduleunitgroups`'
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+  73b12e48-7a9e-496f-b91e-01fad8e389d1:
+    name: 'Cycle Name'
+    handle: cycleName
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\PlainText
+    settings:
+      placeholder: ''
+      code: ''
+      multiline: ''
+      initialRows: '4'
+      charLimit: ''
+      columnType: text
+    contentColumnType: text
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   75ec7211-a9c5-4390-963a-9d63dfd0dbd4:
     name: 'Company Parent'
     handle: companyParent
@@ -1329,6 +1491,18 @@ fields:
       default: ''
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
     contentColumnType: boolean
+  ab5599bf-7e9b-4581-ab6d-6862127dd932:
+    name: 'Cycle User Start Date'
+    handle: cycleUserStartDate
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   abb92e86-cb1b-456e-a618-befafa8e8a28:
     name: 'Report Teams'
     handle: reportTeams
@@ -1344,6 +1518,20 @@ fields:
       localizeRelations: false
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
     contentColumnType: string
+  af241f00-e550-43b0-9800-e6ce4d85919e:
+    name: 'Cycle Finish Date'
+    handle: cycleFinishDate
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Date
+    settings:
+      showDate: true
+      showTime: false
+      minuteIncrement: '30'
+    contentColumnType: datetime
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   af392c27-30aa-4dde-a30c-fd69e3dd665e:
     name: 'Manager Level'
     handle: managerLevel
@@ -1453,32 +1641,32 @@ fields:
     handle: columnLayout
     instructions: 'In Globals this is the default layout as used on Result History.'
     searchable: true
-    translationMethod: none
+    translationMethod: site
     translationKeyFormat: null
     type: verbb\supertable\fields\SuperTableField
     settings:
+      minRows: ''
+      maxRows: ''
+      contentTable: '{{%stc_columnlayout_1}}'
+      propagationMethod: all
+      staticField: ''
       columns:
-        168:
+        19794a8d-aa57-4cea-9297-7c4ccfb2d561:
           width: ''
-        169:
+        31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
           width: ''
-        195:
+        6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
           width: ''
-        196:
+        74329152-64bf-43a9-95b3-0458edd36e4f:
           width: ''
-        197:
+        8fec0242-3542-431e-8a9a-d2d86b3e3b06:
           width: ''
-        198:
+        a37728d1-3a88-46ca-b9d5-ec79b66ba635:
           width: ''
       fieldLayout: table
-      staticField: null
       selectionLabel: 'Add a row'
-      maxRows: null
-      minRows: null
-      propagationMethod: all
-      contentTable: '`craft_stc_columnlayout`'
-    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
     contentColumnType: string
+    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
   c0866ad5-ca17-43d8-8a57-52ea3e84bbe2:
     name: 'Report Data'
     handle: reportData
@@ -1692,6 +1880,20 @@ fields:
       allowSelect: ''
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
     contentColumnType: text
+  d3594414-790c-479e-ada1-8e93cd99e906:
+    name: 'Cycle Start Date'
+    handle: cycleStartDate
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Date
+    settings:
+      showDate: true
+      showTime: false
+      minuteIncrement: '30'
+    contentColumnType: datetime
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   d363cf24-3e53-4eea-b5f4-e9c72a3e9f65:
     name: 'Result Location'
     handle: resultLocation
@@ -2394,24 +2596,28 @@ matrixBlockTypes:
         fieldGroup: null
         contentColumnType: text
   79541871-603b-4a9c-871d-c5668970f9e0:
+    field: 6f94bf9b-3168-437e-b8f2-7d082dcdd831
     name: 'Unit Group'
     handle: unitGroup
     sortOrder: 1
-    field: 6f94bf9b-3168-437e-b8f2-7d082dcdd831
-    fieldLayouts:
-      11bf57e1-f8b5-4045-9861-210b0d80c82b:
-        tabs:
-          -
-            name: Content
-            sortOrder: 1
-            fields:
-              45d289dd-249a-42e9-95ae-62ab979e8b02:
-                required: false
-                sortOrder: 1
-              a773e69f-0bf1-46fd-ae75-5182be37772c:
-                required: false
-                sortOrder: 2
     fields:
+      1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9:
+        name: 'Enable Multiple Results?'
+        handle: enableSubmissions
+        instructions: ''
+        searchable: true
+        translationMethod: none
+        translationKeyFormat: null
+        type: craft\fields\PlainText
+        settings:
+          placeholder: ''
+          code: ''
+          multiline: ''
+          initialRows: '4'
+          charLimit: ''
+          columnType: text
+        contentColumnType: text
+        fieldGroup: null
       45d289dd-249a-42e9-95ae-62ab979e8b02:
         name: Name
         handle: groupName
@@ -2422,28 +2628,70 @@ matrixBlockTypes:
         type: craft\fields\PlainText
         settings:
           placeholder: ''
+          code: ''
           multiline: ''
           initialRows: '4'
           charLimit: ''
           columnType: text
-        fieldGroup: null
         contentColumnType: text
+        fieldGroup: null
+      46656fa8-cf4d-4c7e-93d0-800132d01aa2:
+        name: 'Unit Points Override'
+        handle: unitPointsOverride
+        instructions: 'Set all units in this group to the same point value.'
+        searchable: true
+        translationMethod: none
+        translationKeyFormat: null
+        type: craft\fields\Number
+        settings:
+          defaultValue: null
+          min: '0'
+          max: null
+          decimals: 0
+          size: null
+          prefix: ''
+          suffix: ''
+        contentColumnType: integer(10)
+        fieldGroup: null
       a773e69f-0bf1-46fd-ae75-5182be37772c:
         name: 'Unit Entries'
         handle: unitEntries
         instructions: ''
         searchable: true
-        translationMethod: none
+        translationMethod: site
         translationKeyFormat: null
         type: craft\fields\Entries
         settings:
           sources:
             - 'section:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+          source: null
+          targetSiteId: null
+          viewMode: null
           limit: ''
           selectionLabel: ''
           localizeRelations: false
-        fieldGroup: null
+          validateRelatedElements: ''
         contentColumnType: string
+        fieldGroup: null
+    fieldLayouts:
+      11bf57e1-f8b5-4045-9861-210b0d80c82b:
+        tabs:
+          -
+            name: Content
+            sortOrder: 1
+            fields:
+              1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9:
+                required: false
+                sortOrder: 3
+              45d289dd-249a-42e9-95ae-62ab979e8b02:
+                required: false
+                sortOrder: 1
+              46656fa8-cf4d-4c7e-93d0-800132d01aa2:
+                required: false
+                sortOrder: 4
+              a773e69f-0bf1-46fd-ae75-5182be37772c:
+                required: false
+                sortOrder: 2
   a00978f4-c38c-4cb9-8379-855950bf682b:
     name: PayPal
     handle: paypal
@@ -3269,7 +3517,7 @@ sections:
         name: 'Module Result'
         handle: moduleResult
         hasTitleField: false
-        titleLabel: null
+        titleLabel: ''
         titleFormat: '[module {resultModule.one.id}] {author.firstName} {author.lastName} '
         sortOrder: 2
         fieldLayouts:
@@ -3292,6 +3540,25 @@ sections:
                   61e98c20-6536-4fb2-8420-7b21d34b4dd5:
                     required: false
                     sortOrder: 1
+              -
+                name: 'CPD Cycle'
+                sortOrder: 3
+                fields:
+                  06f9a436-94f4-4170-80ec-6e08d13115ee:
+                    required: false
+                    sortOrder: 4
+                  73b12e48-7a9e-496f-b91e-01fad8e389d1:
+                    required: false
+                    sortOrder: 1
+                  a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
+                    required: false
+                    sortOrder: 5
+                  af241f00-e550-43b0-9800-e6ce4d85919e:
+                    required: false
+                    sortOrder: 3
+                  d3594414-790c-479e-ada1-8e93cd99e906:
+                    required: false
+                    sortOrder: 2
       e34f85df-0855-47ca-a101-0519afac3c0a:
         name: 'User Result'
         handle: userResult
@@ -3385,17 +3652,89 @@ sections:
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     name: Modules
     handle: modules
-    type: channel
+    type: structure
     enableVersioning: false
     propagationMethod: all
-    previewTargets: null
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: true
+        uriFormat: 'module/{id}'
+        template: module/_entry
+    structure:
+      uid: 3c3c27d7-73ed-4f57-9c76-0e3192efe6fe
+      maxLevels: 1
     entryTypes:
-      dbd7f9dd-1424-48cc-8aba-f0533bce83be:
-        name: Module
-        handle: module
+      a6165775-faf3-4cc0-b6d6-069095d3ca39:
+        name: CPD
+        handle: cpd
         hasTitleField: true
         titleLabel: Title
-        titleFormat: null
+        titleFormat: ''
+        sortOrder: 2
+        fieldLayouts:
+          89a1da50-2312-48cf-8d06-5c4168438cb9:
+            tabs:
+              -
+                name: Module
+                sortOrder: 1
+                fields:
+                  3bfea235-c57e-4998-b079-8c15a1ebbf0e:
+                    required: false
+                    sortOrder: 4
+                  646454e2-66f9-4f03-bac7-b94a89aba17a:
+                    required: false
+                    sortOrder: 3
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 2
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 5
+                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
+                    required: false
+                    sortOrder: 1
+              -
+                name: 'Job Roles'
+                sortOrder: 2
+                fields:
+                  f08f684f-1af1-417b-94f2-5df2f3ac7da6:
+                    required: false
+                    sortOrder: 1
+              -
+                name: 'CPD Cycle'
+                sortOrder: 3
+                fields:
+                  1fb0d5d7-af10-4668-8a88-e918e5134c14:
+                    required: false
+                    sortOrder: 3
+                  2f75994a-9452-4602-857a-c5f8eb169bf2:
+                    required: false
+                    sortOrder: 8
+                  30a277bf-ed0a-48fb-9a03-3e7d5a79b357:
+                    required: false
+                    sortOrder: 6
+                  4505e42f-b7ae-43dd-ae25-694fc4e9b816:
+                    required: false
+                    sortOrder: 5
+                  4967ee7c-a86e-49fd-89f6-a281f294c8a4:
+                    required: false
+                    sortOrder: 7
+                  5a41c0e5-8a79-4db5-89f2-b87a6104ffca:
+                    required: false
+                    sortOrder: 4
+                  ab5599bf-7e9b-4581-ab6d-6862127dd932:
+                    required: false
+                    sortOrder: 2
+                  d3594414-790c-479e-ada1-8e93cd99e906:
+                    required: false
+                    sortOrder: 1
+      dbd7f9dd-1424-48cc-8aba-f0533bce83be:
+        name: Qualification
+        handle: qualification
+        hasTitleField: true
+        titleLabel: Title
+        titleFormat: ''
         sortOrder: 1
         fieldLayouts:
           70e84763-f654-4aea-8ba8-7ef0b4a62538:
@@ -3406,19 +3745,16 @@ sections:
                 fields:
                   3bfea235-c57e-4998-b079-8c15a1ebbf0e:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 4
                   646454e2-66f9-4f03-bac7-b94a89aba17a:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 3
                   6b431a5f-e1ee-4520-ab30-89ca72993c00:
                     required: false
                     sortOrder: 2
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 6
-                  c6890220-ae06-4dc6-a162-58ef3815e8c5:
-                    required: false
-                    sortOrder: 3
+                    sortOrder: 5
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
                     sortOrder: 1
@@ -3429,12 +3765,6 @@ sections:
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
-    siteSettings:
-      47b102e1-4aed-4206-8420-dfd6e6684f7c:
-        enabledByDefault: true
-        hasUrls: true
-        uriFormat: 'module/{id}'
-        template: module/_entry
 siteGroups:
   c5e418fc-d028-4dae-86d0-52f2cb163583:
     name: 'Skills Plus (en-GB)'
@@ -3499,69 +3829,46 @@ superTableBlockTypes:
         contentColumnType: text
   922f36f2-d6ec-4530-be00-d8784974eb73:
     field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
-    fieldLayouts:
-      bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
-        tabs:
-          -
-            name: Content
-            sortOrder: '1'
-            fields:
-              19794a8d-aa57-4cea-9297-7c4ccfb2d561:
-                required: '0'
-                sortOrder: '2'
-              31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
-                required: '0'
-                sortOrder: '3'
-              6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
-                required: '0'
-                sortOrder: '5'
-              74329152-64bf-43a9-95b3-0458edd36e4f:
-                required: '0'
-                sortOrder: '4'
-              8fec0242-3542-431e-8a9a-d2d86b3e3b06:
-                required: '0'
-                sortOrder: '1'
-              a37728d1-3a88-46ca-b9d5-ec79b66ba635:
-                required: '0'
-                sortOrder: '6'
     fields:
       19794a8d-aa57-4cea-9297-7c4ccfb2d561:
         name: 'Field Label'
         handle: fieldLabel
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\PlainText
         settings:
           placeholder: ''
+          code: ''
           multiline: ''
           initialRows: '4'
           charLimit: ''
           columnType: text
-        fieldGroup: null
         contentColumnType: text
+        fieldGroup: null
       31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
         name: 'Field Manager Only'
         handle: fieldManagerOnly
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\Lightswitch
         settings:
           default: ''
-        fieldGroup: null
         contentColumnType: boolean
+        fieldGroup: null
       6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
         name: 'Field Custom Type'
         handle: fieldCustomType
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\Dropdown
         settings:
+          optgroups: true
           options:
             -
               label: Text
@@ -3571,33 +3878,47 @@ superTableBlockTypes:
               label: Dropdown
               value: dropdown
               default: ''
-        fieldGroup: null
         contentColumnType: string
+        fieldGroup: null
       74329152-64bf-43a9-95b3-0458edd36e4f:
         name: 'Field Custom Key'
         handle: fieldCustomKey
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\PlainText
         settings:
           placeholder: ''
+          code: ''
           multiline: ''
           initialRows: '4'
           charLimit: ''
           columnType: text
-        fieldGroup: null
         contentColumnType: text
+        fieldGroup: null
+      7ed267ff-a262-4e68-81b8-be3bcaa5c178:
+        name: 'Field Required'
+        handle: fieldRequired
+        instructions: ''
+        searchable: true
+        translationMethod: none
+        translationKeyFormat: null
+        type: craft\fields\Lightswitch
+        settings:
+          default: ''
+        contentColumnType: boolean
+        fieldGroup: null
       8fec0242-3542-431e-8a9a-d2d86b3e3b06:
         name: 'Field Type'
         handle: fieldType
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\Dropdown
         settings:
+          optgroups: true
           options:
             -
               label: Type
@@ -3647,24 +3968,53 @@ superTableBlockTypes:
               label: Custom
               value: resultCustom
               default: ''
-        fieldGroup: null
         contentColumnType: string
+        fieldGroup: null
       a37728d1-3a88-46ca-b9d5-ec79b66ba635:
         name: 'Field Custom Options'
         handle: fieldCustomOptions
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\PlainText
         settings:
           placeholder: ''
+          code: ''
           multiline: ''
           initialRows: '4'
           charLimit: ''
           columnType: text
-        fieldGroup: null
         contentColumnType: text
+        fieldGroup: null
+    fieldLayouts:
+      bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
+        tabs:
+          -
+            name: Content
+            sortOrder: 1
+            fields:
+              19794a8d-aa57-4cea-9297-7c4ccfb2d561:
+                required: false
+                sortOrder: 2
+              31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
+                required: false
+                sortOrder: 3
+              6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
+                required: false
+                sortOrder: 5
+              74329152-64bf-43a9-95b3-0458edd36e4f:
+                required: false
+                sortOrder: 4
+              7ed267ff-a262-4e68-81b8-be3bcaa5c178:
+                required: false
+                sortOrder: 7
+              8fec0242-3542-431e-8a9a-d2d86b3e3b06:
+                required: false
+                sortOrder: 1
+              a37728d1-3a88-46ca-b9d5-ec79b66ba635:
+                required: false
+                sortOrder: 6
   e1217b3a-3108-405d-9e31-243f335635c8:
     field: 61e98c20-6536-4fb2-8420-7b21d34b4dd5
     fields:
