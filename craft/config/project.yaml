@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1580214626
+dateModified: 1580219363
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -3667,83 +3667,88 @@ superTableBlockTypes:
         contentColumnType: text
   e1217b3a-3108-405d-9e31-243f335635c8:
     field: 61e98c20-6536-4fb2-8420-7b21d34b4dd5
-    fieldLayouts:
-      21ce6d78-5c1b-4d6b-84b6-73b6b453d065:
-        tabs:
-          -
-            name: Content
-            sortOrder: '1'
-            fields:
-              0c515fa0-cbdd-4bd9-8267-917a447e5702:
-                required: '0'
-                sortOrder: '1'
-              3c50a00d-c61b-4018-bed4-f1685a215e01:
-                required: '0'
-                sortOrder: '2'
-              974df618-fa82-42bd-9ad4-612f8f4a985c:
-                required: '0'
-                sortOrder: '4'
-              cea55199-bbc5-4529-8451-c12a00ff1080:
-                required: '0'
-                sortOrder: '3'
     fields:
       0c515fa0-cbdd-4bd9-8267-917a447e5702:
         name: User
         handle: user
         instructions: ''
-        searchable: '1'
-        translationMethod: none
+        searchable: true
+        translationMethod: site
         translationKeyFormat: null
         type: craft\fields\Users
         settings:
           sources: '*'
+          source: null
+          targetSiteId: null
+          viewMode: null
           limit: '1'
           selectionLabel: ''
           localizeRelations: false
-        fieldGroup: null
+          validateRelatedElements: false
         contentColumnType: string
+        fieldGroup: null
       3c50a00d-c61b-4018-bed4-f1685a215e01:
         name: Comment
         handle: comment
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\PlainText
         settings:
           placeholder: ''
+          code: false
           multiline: ''
           initialRows: '4'
           charLimit: ''
           columnType: text
-        fieldGroup: null
         contentColumnType: text
+        fieldGroup: null
       974df618-fa82-42bd-9ad4-612f8f4a985c:
         name: Read
         handle: read
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\Lightswitch
         settings:
           default: ''
-        fieldGroup: null
         contentColumnType: boolean
+        fieldGroup: null
       cea55199-bbc5-4529-8451-c12a00ff1080:
         name: Date
         handle: date
         instructions: ''
-        searchable: '1'
+        searchable: true
         translationMethod: none
         translationKeyFormat: null
         type: craft\fields\Date
         settings:
-          minuteIncrement: '30'
-          showTime: 1
           showDate: 1
-        fieldGroup: null
+          showTime: 1
+          minuteIncrement: '30'
         contentColumnType: datetime
+        fieldGroup: null
+    fieldLayouts:
+      21ce6d78-5c1b-4d6b-84b6-73b6b453d065:
+        tabs:
+          -
+            name: Content
+            sortOrder: 1
+            fields:
+              0c515fa0-cbdd-4bd9-8267-917a447e5702:
+                required: false
+                sortOrder: 1
+              3c50a00d-c61b-4018-bed4-f1685a215e01:
+                required: false
+                sortOrder: 2
+              974df618-fa82-42bd-9ad4-612f8f4a985c:
+                required: false
+                sortOrder: 4
+              cea55199-bbc5-4529-8451-c12a00ff1080:
+                required: false
+                sortOrder: 3
 system:
   edition: pro
   live: true
