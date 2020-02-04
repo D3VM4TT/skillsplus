@@ -14,7 +14,7 @@ use lantra\sp\Plugin as Lantra;
 
 class CronController extends BaseController {
 
-    public $allowAnonymous = ['actionRun'];
+    protected $allowAnonymous = ['run'];
     /**
      * Run all cron jobs
      *
