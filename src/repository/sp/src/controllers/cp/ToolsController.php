@@ -226,7 +226,7 @@ class ToolsController extends Controller
         $managers = $this->getManagers();
         $message = '';
         foreach ($managers as $user) {
-            $user->setFieldVaule('managerReadOnly', 1);
+            $user->setFieldValue('managerReadOnly', 1);
             if (!Craft::$app->elements->saveElement($user)) {
                 $message .= ' ' . $user->fullName . ' not updated.';
             };
@@ -246,7 +246,7 @@ class ToolsController extends Controller
         $managers = $this->getManagers(100, 'ManagersChildren', false);
         $message = '';
         foreach ($managers as $user) {
-            $user->setFieldVaule('dataCleanManagersChildren', 1);
+            $user->setFieldValue('dataCleanManagersChildren', 1);
             Craft::$app->elements->saveElement($user, false);
             $companies = Lantra::$app->users->getManagerCompanies($user, true);
             $companyIds = [];
@@ -285,7 +285,7 @@ class ToolsController extends Controller
         $managers = $this->getManagers(100, 'ManagersUserCompany', false);
         $message = '';
         foreach ($managers as $manager) {
-            $manager->setFieldVaule('dataCleanManagersUserCompany', 1);
+            $manager->setFieldValue('dataCleanManagersUserCompany', 1);
             Craft::$app->elements->saveElement($manager, false);
             $companies = Lantra::$app->users->getManagerCompanies($manager, true);
             if (!$companies) {
@@ -296,7 +296,7 @@ class ToolsController extends Controller
                 $companyId = $company->id;
             }
             if ($companyId) {
-                $manager->setFieldVaule('userCompany', [$companyId]);
+                $manager->setFieldValue('userCompany', [$companyId]);
                 if (!Craft::$app->elements->saveElement($manager, false)) {
                     $message .= ' ' . $manager->fullName . ' not updated.';
                 };
@@ -331,8 +331,8 @@ class ToolsController extends Controller
             if ($results->count()) {
                 Lantra::$app->results->saveUserResultCache($user->id, $results->find());
             }
-            $user->setFieldVaule('dataCleanResultCache', 1);
-            $user->setFieldVaule('userType', Lantra::$app->users->canManage($user) ? 'manager' : 'member');
+            $user->setFieldValue('dataCleanResultCache', 1);
+            $user->setFieldValue('userType', Lantra::$app->users->canManage($user) ? 'manager' : 'member');
             if (!Craft::$app->elements->saveElement($user, false)) {
                 $message .= ' ' . $user->fullName . ' not updated.';
             };
@@ -366,7 +366,7 @@ class ToolsController extends Controller
         $criteria->limit = null;
         $criteria->status = null;
         foreach ($criteria->all() as $report) {
-            $report->setFieldVaule('reportIncludeRequired', 1);
+            $report->setFieldValue('reportIncludeRequired', 1);
             Craft::$app->elements->saveElement($report, false);
         };
         Craft::$app->session->setNotice($criteria->count() . ' reports updated.');
@@ -398,8 +398,8 @@ class ToolsController extends Controller
                     'read' => 1
                 ]
             );
-            $result->setFieldVaule('resultNotes', '');
-            $result->setFieldVaule('resultComments', $comments);
+            $result->setFieldValue('resultNotes', '');
+            $result->setFieldValue('resultComments', $comments);
             Craft::$app->elements->saveElement($result, false);
         }
         if ($criteria->count()) {
