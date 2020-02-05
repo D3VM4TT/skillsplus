@@ -8,26 +8,42 @@
  * @see craft\config\DbConfig
  */
 
+$dbPort = '3306';
+if (getenv('SITE') == 'bics') {
+    ## barracuda
+    $dbServer = '10.1.4.13';
+}
+else {
+    ## general db
+    $dbServer = '10.1.4.6';
+}
+
+define('DB_SERVER', $dbServer);
+define('DB_PORT', $dbPort);
+
 return [
     '*' => [
         'driver' => 'mysql',
-        'server' => getenv('DB_SERVER'),
         'user' => getenv('DB_USER'),
         'password' => getenv('DB_PASSWORD'),
         'schema' => 'public',
         'tablePrefix' => 'craft',
-        'port' => getenv('DB_PORT')
+        'port' => $dbPort
     ],
     'local' => [
+        'server' => 'localhost',
         'database' => getenv('DB_DATABASE'),
     ],
     'dev' => [
+        'server' => $dbServer,
         'database' => 'dev-' . getenv('SITE'),
     ],
     'uat' => [
+        'server' => $dbServer,
         'database' => 'uat-' . getenv('SITE'),
     ],
     'prod' => [
+        'server' => $dbServer,
         'database' => 'prod-' . getenv('SITE'),
     ]
 ];
