@@ -1,14 +1,7 @@
-{% if isManager %}
-    {% if resultEntry and resultEntry.resultStatus == 'endorsed' %}
-        <div class="container-btn">
-            <button class="button primary-bg status" data-status="pending" type="button">Save as pending</button>
-        </div>
-    {% endif %}
-    {% if account.id != currentUser.id %}
-        <div class="container-btn">
-            <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
-        </div>
-    {% endif %}
+{% if isManager and account.id != currentUser.id %}
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
+    </div>
 {% else %}
     {% if not craft.lantra.setting('jobRoleEndorse', false) %}
         <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
