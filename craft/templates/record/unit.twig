@@ -24,7 +24,7 @@
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}
 {% if not addNew %}
-    {% set resultEntry = craft.entries.section('results').id(resultId is defined ? resultId : null).authorId(account.id).relatedTo(unitEntry).status('live', 'expired').one() %}
+    {% set resultEntry = craft.entries.section('results').id(resultId is defined ? resultId : null).authorId(account.id).relatedTo(unitEntry).status(null).one() %}
 {% endif %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
