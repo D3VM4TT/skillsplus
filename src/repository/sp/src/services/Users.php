@@ -813,8 +813,8 @@ class Users extends Component
             unset($secondaryManagerIds[$key]);
         }
 
-        $company->setFieldVaule('companyPrimaryManagers', $primaryManagerIds);
-        $company->setFieldVaule('companySecondaryManagers', $secondaryManagerIds);
+        $company->setFieldValue('companyPrimaryManagers', $primaryManagerIds);
+        $company->setFieldValue('companySecondaryManagers', $secondaryManagerIds);
 
         Craft::$app->elements->saveElement($company);
     }
