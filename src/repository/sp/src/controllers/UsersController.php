@@ -247,4 +247,29 @@ class UsersController extends BaseController {
         }
         $this->_returnMessage('User has been restored.');
     }
+
+    /**
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionRefreshResults()
+    {
+        $users = [];
+        $this->requireLogin();
+        $userId = Craft::$app->request->getParam('userId');
+        $companyId = Craft::$app->request->getParam('companyId');
+        if ($companyId) {
+            $criteria = Lantra::$app->users->getCompanyUsers($companyId);
+            $users = $criteria ? $criteria->all() : [];
+        }
+        elseif ($userId) {
+            $users = [Craft::$app->users->getUserById($userId)];
+        }
+        $total = count($users);
+        if ($total) {
+            Lantra::$app->results->refreshResultCache($users);
+        }
+        $this->_returnMessage($total . ' users refreshed', true, 'management/' . ($companyId ? 'companies' : 'users'));
+    }
 }

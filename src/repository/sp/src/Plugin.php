@@ -315,6 +315,8 @@ class Plugin extends BasePlugin
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
 
+            'sp/results/refresh'                        => 'sp/users/refresh-results',
+
             'sp/entries/reset-result'                   => 'sp/entries/reset-result',
             'sp/entries/delete-entry'                   => 'sp/entries/delete-entry',
             'sp/entries/endorse-evidence'               => 'sp/entries/endorse-evidence',

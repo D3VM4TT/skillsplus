@@ -97,5 +97,10 @@
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Save company</button>
     </div>
+    {% if entry %}
+        <div class="container-btn">
+            <a class="button primary-bg" href="/sp/results/refresh?companyId={{ entry.id }}">Refresh Result Cache</a>
+        </div>
+    {% endif %}
 </form>
 {% endblock %}

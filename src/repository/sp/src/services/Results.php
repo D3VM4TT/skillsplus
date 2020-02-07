@@ -1922,6 +1922,31 @@ class Results extends Component
     }
 
     /**
+     * @param $users array
+     */
+    public function refreshResultCache($users = [])
+    {
+        foreach ($users as $user) {
+            $results = $this->getUserUnitResults($user->id);
+            if ($results->count()) {
+                $this->saveUserResultCache($user->id, $results->find());
+            }
+        }
+    }
+
+    /**
+     * @param $userId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getUserUnitResults($userId) {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        return $criteria;
+    }
+
+    /**
      * save user result
      *
      * @param $userId
