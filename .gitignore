@@ -53,3 +53,6 @@ error_log
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+!craft2.default.sql
+!craft3.default.sql
