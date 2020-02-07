@@ -144,7 +144,8 @@ class Reports extends Component
             $reportEntry->authorId = $author->id;
         }
         $reportEntry->title = $title;
-        $reportEntry->setAttributes($fields);
+        unset($fields['reportTitle']);
+        $reportEntry->setFieldValues($fields);
         Craft::$app->elements->saveElement($reportEntry);
         return $reportEntry;
     }
