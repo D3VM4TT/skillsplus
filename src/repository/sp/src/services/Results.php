@@ -1793,6 +1793,31 @@ class Results extends Component
     }
 
     /**
+     * @param $users array
+     */
+    public function refreshResultCache($users = [])
+    {
+        foreach ($users as $user) {
+            $results = $this->getUserUnitResults($user->id);
+            if ($results->count()) {
+                $this->saveUserResultCache($user->id, $results->find());
+            }
+        }
+    }
+
+    /**
+     * @param $userId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getUserUnitResults($userId) {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        return $criteria;
+    }
+
+    /**
      * save user result
      *
      * @param $userId
@@ -1889,10 +1914,23 @@ class Results extends Component
      * @return string
      */
     private function setResultValue($resultEntry) {
+
+        if (is_object($resultEntry->resultStartDate)) {
+            $startDate = $resultEntry->resultStartDate->getTimestamp();
+        }
+        else {
+            $startDate = $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null;
+        }
+        if (is_object($resultEntry->resultFinishDate)) {
+            $finishDate = $resultEntry->resultFinishDate->getTimestamp();
+        }
+        else {
+            $finishDate = $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null;
+        }
         return json_encode([
             'expiryDate' => $resultEntry->expiryDate ? $resultEntry->expiryDate->getTimestamp() : null,
-            'startDate' => $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null,
-            'finishDate' => $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null
+            'startDate' => $startDate,
+            'finishDate' => $finishDate
         ]);
     }
 }
