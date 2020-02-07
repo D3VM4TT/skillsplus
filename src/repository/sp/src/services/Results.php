@@ -573,6 +573,7 @@ class Results extends Component
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
                     $unitEntry = $resultEntry->resultUnit->one();
+                    ## point overridded by unit group
                     $points += $this->getUnitPoints($unitEntry, $moduleEntry);
                 }
                 ## user result value is custom
@@ -624,20 +625,24 @@ class Results extends Component
         }
         $moduleEntry = $moduleResult->resultModule->one();
         if ($moduleEntry->type == 'cpd') {
-            if ($moduleEntry->targetType == 'hours') {
-                return $moduleResult->resultHours >= $moduleEntry->targetHours;
-            } elseif ($moduleEntry->targetType == 'points')
+            $targetType = (string) $moduleEntry->targetType->value;
+            if ($targetType == 'hours') {
+                 return $moduleResult->resultHours >= $moduleEntry->targetHours;
+            }
+            elseif ($targetType == 'points') {
                 return $moduleResult->resultPoints >= $moduleResult->targetPoints;
-            } else {
-                $remainingPoints = ($moduleEntry->targetHours - $moduleResult->resultHours);
-                $remainingHours = ($moduleEntry->targetPoints - $moduleResult->resultPoints);
-                if ($moduleEntry->targetType == 'pointsAndHours') {
+            }
+            else {
+                $remainingPoints = max($moduleEntry->targetHours - $moduleResult->resultHours, 0);
+                $remainingHours = max($moduleEntry->targetPoints - $moduleResult->resultPoints, 0);
+                if ($targetType == 'pointsAndHours') {
                     return !$remainingPoints && !$remainingHours;
-                } elseif ($moduleEntry->targetType == 'pointsOrHours') {
+                } elseif ($targetType == 'pointsOrHours') {
                     return !$remainingPoints || !$remainingHours;
                 }
+            }
         }
-        if ($moduleEntry->type == 'qualification') {
+        elseif ($moduleEntry->type == 'qualification') {
             $totalUnits = count($this->getModuleUnitIds($moduleEntry));
             $totalResults = $this->getModuleUnitResults($moduleEntry, $moduleResult->getAuthor()->id, true);
             return $totalResults >= $totalUnits;
