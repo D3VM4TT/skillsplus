@@ -35,7 +35,7 @@ return [
         ],
     ],
     'local' => [
-        'siteUrl' => 'http://craft3.skills-plus.local',
+        'siteUrl' => 'http://skills-plus.local',
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
