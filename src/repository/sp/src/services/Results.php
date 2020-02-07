@@ -129,12 +129,12 @@ class Results extends Component
                 $dateFormat = 'Y-m-d H:i:s';
                 if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
                     $userStartDate = $date->format(DATE_ATOM);
+                    $entry->resultStartDate = $userStartDate;
                 }
-                $entry->resultStartDate = $userStartDate;
                 if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
                     $userFinishDate = $date->format(DATE_ATOM);
+                    $entry->resultFinishDate = $userFinishDate;
                 }
-                $entry->resultFinishDate = $userFinishDate;
                 if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
                     $userExpiryDate = $date->getTimestamp();
                     $entry->expiryDate = $date->format(DATE_ATOM);
