@@ -814,7 +814,7 @@ class Results extends Component
         $return = [];
         foreach ($resultEntries as $resultEntry) {
             $unitId = $resultEntry->resultUnit->one()->id;
-            $return[$unitId] = $resultEntry;
+            $return[] = $resultEntry;
         }
         return $return;
     }
