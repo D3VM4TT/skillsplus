@@ -16,19 +16,25 @@ class ReportsController extends BaseController
 {
     /**
      * @return void|\yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveReport()
     {
         $manager = Craft::$app->getUser();
         $fields = $this->getFields();
-        if (! $fields['reportAllCompanies'] && !count($fields['reportCompanies'])) {
-            return $this->_returnError('You must select some companies or select Include all companies.');
+        if (!$fields['reportAllCompanies'] && !count($fields['reportCompanies'])) {
+            Craft::$app->session->setError('You must select some companies or select Include all companies.');
+            return;
         }
         $type = $fields['reportType'];
         $automated = Craft::$app->request->getParam('automated');
         $entryId = Craft::$app->request->getParam('entryId');
         $title = Craft::$app->request->getParam('title');
-        // custom title
+        ## custom title
         if ($automated) {
             $fields['reportAutomated'] = true;
             $redirect = 'reporting/automated';
@@ -39,7 +45,8 @@ class ReportsController extends BaseController
         }
         $reportEntry = Lantra::$app->reports->saveCustomReport($manager, $title, $fields, $entryId);
         if ($reportEntry->hasErrors()) {
-            return Craft::$app->urlManager->setRouteParams(array('entry' => $reportEntry));
+            Craft::$app->urlManager->setRouteParams(['entry' => $reportEntry]);
+            return;
         }
         ## add to queue
         if (!$automated) {
