@@ -220,7 +220,7 @@ class Reports extends Component
         elseif ($type == 'expired') {
             $resultFilter['status'] = 'expired';
             if (isset($filter['reportResultExpiry'])) {
-                $resultFilter['status'] = ['expired', 'live'];
+                $resultFilter['status'] = null;
                 $resultFilter['expiryDate'] = ':notempty';
                 // expired
                 if ($filter['reportResultExpiry'] == '0') {
