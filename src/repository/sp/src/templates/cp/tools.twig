@@ -42,6 +42,11 @@
     <p>{{ dataCleanResultCacheTotal }}/{{ totalUsers }} users processed.</p>
     <p><a href="{{ url('sp/tools?method=dataResetResultCache') }}" class="btn btn-small">Reset users result cache (data clean)</a></p>
     <hr />
+    <h3>Sync User Result Cache</h3>
+    <p>The result cache was updated on {{ resultCacheDateUpdated ? resultCacheDateUpdated|date('d/m/y H:i') : 'never'}}</p>
+    <p>The last result was updated on {{ resultLastDate ? resultLastDate|date('d/m/y H:i') : 'never' }}</p>
+    <p><a href="{{ url('sp/tools?method=syncResultCache') }}" class="btn btn-small">Sync Result Cache</a></p>
+    <hr />
     <h3>Set All Reports - Report Include Required</h3>
     <p><a href="{{ url('sp/tools?method=setReportIncludeRequired') }}" class="btn btn-small">Update all reports</a></p>
     <hr />

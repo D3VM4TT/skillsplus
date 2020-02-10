@@ -1922,14 +1922,15 @@ class Results extends Component
     }
 
     /**
-     * @param $users array
+     * @param array $users
+     * @throws \yii\db\Exception
      */
     public function refreshResultCache($users = [])
     {
         foreach ($users as $user) {
             $results = $this->getUserUnitResults($user->id);
             if ($results->count()) {
-                $this->saveUserResultCache($user->id, $results->find());
+                $this->saveUserResultCache($user->id, $results->all());
             }
         }
     }
@@ -1947,11 +1948,9 @@ class Results extends Component
     }
 
     /**
-     * save user result
-     *
      * @param $userId
-     * @param $resultEntries
-     *
+     * @param null $resultEntries
+     * @throws \yii\db\Exception
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
         if (LantraHelper::setting('disableResultCache')) {
@@ -1972,11 +1971,77 @@ class Results extends Component
                 }
             }
         }
-        Craft::$app->db->createCommand()->upsert('{{%lantra_result_cache}}', $keyColumns, $updateColumns);
+        Craft::$app->db->createCommand()->upsert('{{%lantra_result_cache}}', $keyColumns, $updateColumns)->execute();
+    }
+
+    /**
+     *
+     */
+    public function syncUserResultCache()
+    {
+        $dateUpdated = $this->getResultCacheDateUpdated();
+        $users = $this->getResultUsersSince($dateUpdated);
+        if (!count($users)) {
+            return 0;
+        }
+        $this->refreshResultCache($users);
+        return count($users);
+    }
+
+    /**
+     * Gets all users with results later than a date
+     *
+     * @param $dateUpdated
+     * @return array
+     */
+    public function getResultUsersSince($dateUpdated)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        if ($dateUpdated) {
+            $criteria->dateUpdated('> ' . $dateUpdated);
+        }
+        $results = $criteria->all();
+        $users = [];
+        foreach($results as $result){
+            if (! isset($users[$result->authorId])){
+                $users[] = $result->author;
+            }
+        }
+        return $users;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getResultLastDate()
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->orderBy('dateUpdated desc');
+        $criteria->limit(1);
+        $result = $criteria->one();
+        return $result ? $result->dateUpdated : null;
+    }
+
+    /**
+     * @return bool|false|null|string
+     */
+    public function getResultCacheDateUpdated()
+    {
+        $dateUpdated = (new Query())
+            ->select('dateUpdated')
+            ->from('{{%lantra_result_cache}}')
+            ->orderBy('dateUpdated desc')
+            ->limit(1)
+            ->scalar();
+
+        return $dateUpdated;
     }
 
     /**
      * @param $resultEntry
+     * @throws \yii\db\Exception
      */
     public function deleteUserResultCache($resultEntry) {
         if (Lantra::$app->settings->getSetting('disableResultCache')) {
@@ -1985,7 +2050,7 @@ class Results extends Component
         $userId = $resultEntry->getAuthor()->id;
         $unitId = $resultEntry->resultUnit->one()->id;
         if ($userId && $unitId) {
-            Craft::$app->db->createCommand()->update('{{%lantra_result_cache}}', ['unit' . $unitId => ""], ['userId' => $userId]);
+            Craft::$app->db->createCommand()->update('{{%lantra_result_cache}}', ['unit' . $unitId => ""], ['userId' => $userId])->execute();
         }
     }
 

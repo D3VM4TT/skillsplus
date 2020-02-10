@@ -41,6 +41,8 @@ class ToolsController extends Controller
         $resultNotes = $criteria->count();
 
         $variables = [
+            'resultCacheDateUpdated' => Lantra::$app->results->getResultCacheDateUpdated(),
+            'resultLastDate' => Lantra::$app->results->getResultLastDate(),
             'dataCleanResultNotes' => $resultNotes,
             'dataCleanManagersChildrenTotal' => $this->getManagers(null, 'ManagersChildren', 1, true),
             'dataCleanManagersUserCompanyTotal' => $this->getManagers(null, 'ManagersUserCompany', 1, true),
@@ -271,6 +273,16 @@ class ToolsController extends Controller
     {
         Lantra::$app->settings->resetDataClean('ManagersChildren');
         Craft::$app->session->setNotice('All managers have been reset.');
+        $this->redirectToPostedUrl();
+    }
+
+    /**
+     * @throws \yii\web\BadRequestHttpException
+     */
+    private function syncResultCache()
+    {
+        $updated = Lantra::$app->results->syncUserResultCache();
+        Craft::$app->session->setNotice('Result cache has been updated for ' . $updated . ' users.');
         $this->redirectToPostedUrl();
     }
 
