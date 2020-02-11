@@ -1904,7 +1904,7 @@ class Results extends Component
             return;
         }
         if (!Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
-            Craft::$app->db->createCommand()->addColumn('lantra_result_cache', 'unit' . $id, 'text');
+            Craft::$app->db->createCommand()->addColumn('{{%lantra_result_cache}}', 'unit' . $id, 'text FIRST')->execute();
         }
     }
 
@@ -1917,7 +1917,7 @@ class Results extends Component
             return;
         }
         if (Craft::$app->db->columnExists('{{%lantra_result_cache}}', 'unit' . $id)) {
-            Craft::$app->db->createCommand()->dropColumn('lantra_result_cache', 'unit' . $id);
+            Craft::$app->db->createCommand()->dropColumn('{{%lantra_result_cache}}', 'unit' . $id)->execute();
         }
     }
 
