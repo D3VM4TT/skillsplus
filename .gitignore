@@ -4,6 +4,7 @@ html/assets/uploads/*
 src/dev/*
 craft/storage/*
 craft/.env
+craft-assets/*
 
 # Craft 2  #
 ###################
