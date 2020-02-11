@@ -10,31 +10,31 @@
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'unitPoints' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultPoints|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultExpiryDate' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
         {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
         {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
         {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultHours' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
@@ -43,7 +43,7 @@
         {# try to move legacy result files #}
         {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
         {% set resultEvidence = resultExists ? resultEntry.resultEvidence : false %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="asset" data-required="{{ row.fieldRequired }}">
             {% if not resultLocked and not fieldDisabled %}
                 {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
                 {% if evidenceFolderId %}
@@ -80,7 +80,7 @@
         </div>
     {% endif %}
     {% if row.fieldType == 'resultCustom' %}
-        <div class="field--wrapper">
+        <div class="field--wrapper" data-type="{{ row.fieldCustomType }}" data-required="{{ row.fieldRequired }}">
             {% set customBlockId = false %}
             {% set customValue = '' %}
             {% if resultExists %}

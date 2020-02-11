@@ -10,7 +10,7 @@
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {# undo result locked #}
 {% set resultLocked = false %}
-<form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+<form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
     {{ csrfInput() }}
     {% if resultEntry is defined and resultEntry %}
         <div id="name-fields">
