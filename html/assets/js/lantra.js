@@ -58,8 +58,7 @@ $(document).ready(function(){
         f.submit();
     });
 
-    $('form.result').submit(function(e){
-        e.preventDefault();
+    $('form.result').submit(function(){
         $('body').addClass('loading');
         var f = $(this),
             v = true,
