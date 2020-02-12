@@ -35,7 +35,7 @@
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
                         {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
 
-                        {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+                        {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id ~ '">' ~ rowName ~ '</a>' %}
                         {% set newLink = readOnly ? rowName : '<a href="' ~ editUrl ~ 'new?ref=' ~ moduleElementId ~ '">Add New</a>' %}
 
                         {# if a single row (no multiple submissions or no results yet #}

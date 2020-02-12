@@ -17,7 +17,12 @@
 {% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
 
-{% set moduleResultEntry = craft.lantra.currentModuleResult(moduleId) %}
+{% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
+{% if moduleResultId %}
+    {% set moduleResultEntry = craft.entries.id(moduleResultId).one() %}
+{% else %}
+    {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleId) %}
+{% endif %}
 
 {% set addNew = craft.app.request.getSegment(5) == 'new' %}
 {% set resultEntry = false %}
@@ -26,7 +31,8 @@
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}
 {% if not addNew %}
-    {% set resultEntry = craft.entries.section('results').id(resultId is defined ? resultId : null).authorId(account.id).relatedTo(unitEntry).status(null).one() %}
+    {% set resultQuery = craft.lantra.unitResultsQuery(account.id, unitEntry.id, 1, moduleEntry.type == 'cpd' ? moduleResultEntry.id : null) %}
+    {% set resultEntry = resultQuery.one() %}
 {% endif %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
@@ -50,7 +56,7 @@
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
-                    {{ unitEntry.title }}
+                    {{ unitEntry.title }} {{ moduleResultEntry.cycleName }}<br />
                     {{ unitEntry.unitHeading }}
                 </p>
             </div>
@@ -119,7 +125,7 @@
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
-                    {{ unitEntry.title }}
+                    {{ unitEntry.title }} {{ moduleResultEntry.cycleName }}<br />
                     {{ unitEntry.unitHeading }}
                 </p>
             </div>
@@ -140,7 +146,7 @@
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
                 {% endif %}
-                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager} %}
+                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry} %}
             </div>
         </section>
     {% endif %}
