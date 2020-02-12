@@ -386,6 +386,36 @@ class Results extends Component
     }
 
     /**
+     * Gets all the result for a unit - must be linked to a module result entry of cpd
+     *
+     * @param $userId
+     * @param $unitId
+     * @param int $limit
+     * @param null $moduleResultId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->limit = $limit;
+        $criteria->authorId = $userId;
+        if ($moduleResultId) {
+            $criteria->relatedTo = [
+                'and',
+                ['targetElement' => $unitId, 'field' => 'resultUnit'],
+                ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult']
+            ];
+        }
+        else {
+            $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        }
+        $criteria->status = ['live', 'expired'];
+        return $criteria;
+    }
+
+    /**
      * Get a module result entry
      *
      * @param $userId
@@ -517,14 +547,22 @@ class Results extends Component
     function checkUnitResult($resultEntry) {
         ## the related unit id
         $resultUnitEntry = $resultEntry->resultUnit->one();
-        if ( ! $resultUnitEntry) {
+        if (!$resultUnitEntry) {
             return;
         };
         ## get the user job roles
         $user = $resultEntry->author;
         $jobRoles = $user->userRole;
-        if ( ! $jobRoles->count()) {
+        if (!$jobRoles->count()) {
             return;
+        }
+        ## if cpd (specific module result entry) check the specific module result
+        if ($resultEntry->resultModuleResult) {
+            $moduleResultEntry = $resultEntry->resultModuleResult->one();
+            $moduleEntry = $this->getModuleResultModule($moduleResultEntry);
+            if($moduleEntry && $moduleEntry->type == 'cpd') {
+                return $this->checkModuleResult($moduleEntry, $user->id, $moduleResultEntry);
+            }
         }
         ## get all modules related to their job roles
         $criteria = Entry::find();
@@ -543,21 +581,43 @@ class Results extends Component
     }
 
     /**
+     * @param $moduleResultEntry
+     * @return null
+     */
+    public function getModuleResultModule($moduleResultEntry)
+    {
+        if (!$moduleResultEntry || null == $moduleEntry = $moduleResultEntry->resultModule->one()) {
+            return null;
+        }
+        return $moduleEntry;
+    }
+
+    /**
      * @param $moduleEntry
      * @param $userId
+     * @param $moduleResultEntry
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function checkModuleResult($moduleEntry, $userId) {
-        $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
-        $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
-        $resultEntries = array_merge($unitResultEntries, $userResultEntries);
+    public function checkModuleResult($moduleEntry, $userId, $moduleResultEntry = null)
+    {
+        if ($moduleResultEntry) {
+            ## only get results linked to a specific module result
+            $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId, false, $moduleResultEntry->id);
+        }
+        else {
+            $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
+            $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
+            $resultEntries = array_merge($unitResultEntries, $userResultEntries);
+        }
         if (!count($resultEntries)) {
             return;
         }
         ## create module result if it doesn't already exist
-        $moduleResult = $this->getModuleResult($userId, $moduleEntry->id, true);
+        if (!$moduleResultEntry) {
+            $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
+        }
         $moduleResultExpiryTime = null;
         if ($moduleEntry->type == 'qualification') {
             ## set default module result expiry
@@ -586,11 +646,11 @@ class Results extends Component
                 }
             }
         }
-        $moduleResult->setFieldValue('resultHours', $hours);
-        $moduleResult->setFieldValue('resultPoints', $points);
-        Craft::$app->getElements()->saveElement($moduleResult);
-        if ($this->isCompleteModuleResult($moduleResult)) {
-            $this->completeModuleResult($moduleEntry, $userId, $moduleResultExpiryTime);
+        $moduleResultEntry->setFieldValue('resultHours', $hours);
+        $moduleResultEntry->setFieldValue('resultPoints', $points);
+        Craft::$app->getElements()->saveElement($moduleResultEntry);
+        if ($this->isCompleteModuleResult($moduleResultEntry)) {
+            $this->completeModuleResult($moduleResultEntry, $userId, $moduleResultExpiryTime);
         }
         return;
     }
@@ -703,23 +763,18 @@ class Results extends Component
     /**
      * Complete a module result
      *
-     * @param $moduleEntry
      * @param $userId
      * @param $expiryDate
      * @return null
      * @throws /Exception
      */
-    function completeModuleResult($moduleEntry, $userId, $expiryDate = null) {
-        $resultEntry = $this->getModuleResult($userId, $moduleEntry->id);
-        ## @todo error reporting
-        if (!$resultEntry) {
-            return;
-        }
+    function completeModuleResult($moduleResultEntry, $userId, $expiryDate = null)
+    {
         ## either no expiry, default module expiry or set by result
-        $resultEntry->expiryDate = $expiryDate;
-        $resultEntry->resultStatus = 'complete';
+        $moduleResultEntry->expiryDate = $expiryDate;
+        $moduleResultEntry->resultStatus = 'complete';
         ## @todo error reporting?
-        Craft::$app->elements->saveElement($resultEntry);
+        Craft::$app->elements->saveElement($moduleResultEntry);
     }
 
     /**
@@ -766,9 +821,11 @@ class Results extends Component
      */
     function getModuleUnitIds($moduleEntry) {
         $unitIds = [];
-        foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
-            foreach ($unitGroup->unitEntries as $unitEntry) {
-                $unitIds[] = $unitEntry->id;
+        if ($moduleEntry->moduleUnitGroups) {
+            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
+                foreach ($unitGroup->unitEntries as $unitEntry) {
+                    $unitIds[] = $unitEntry->id;
+                }
             }
         }
         return $unitIds;
@@ -797,21 +854,29 @@ class Results extends Component
     }
 
     /**
-     * Get module unit results grouped by unit ID
-     *
      * @param $moduleEntry
      * @param $userId
-     * @return array
-     * @throws Exception
+     * @param bool $count
+     * @param null $moduleResultId
+     * @return array|int|string
      */
-    function getModuleUnitResults($moduleEntry, $userId, $count = false) {
+    function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
         $criteria->limit = null;
-        $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        if ($moduleResultId) {
+            $criteria->relatedTo = [
+                'and',
+                ['targetElement' => $unitIds, 'field' => 'resultUnit'],
+                ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult']
+            ];
+        }
+        else {
+            $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        }
         if ($count) {
             return $criteria->count();
         }

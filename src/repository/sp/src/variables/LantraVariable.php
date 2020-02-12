@@ -821,6 +821,18 @@ class LantraVariable
     }
 
     /**
+     * @param $userId
+     * @param $unitId
+     * @param null $moduleResultId
+     * @param int $limit
+     * @return mixed
+     */
+    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null)
+    {
+        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId);
+    }
+
+    /**
      * @param $moduleId
      * @param null $userId
      * @return null
