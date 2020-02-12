@@ -17,6 +17,8 @@
 {% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
 
+{% set moduleResultEntry = craft.lantra.currentModuleResult(moduleId) %}
+
 {% set addNew = craft.app.request.getSegment(5) == 'new' %}
 {% set resultEntry = false %}
 
