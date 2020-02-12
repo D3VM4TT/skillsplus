@@ -157,7 +157,7 @@ class Cycle extends Model
     public function setCycles()
     {
         $count = 1;
-        $cycle = new CyclePeriod($this->_cycleStartDate, $this->_cycleDuration, $count);
+        $cycle = new CyclePeriod($this->_cycleStartDate, $this->_cycleDuration, $this->_cycleGrace, $count);
         $this->_cycles[$count] = $cycle;
         while (!$cycle->isCurrent()) {
             # emergency break?

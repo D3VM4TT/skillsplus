@@ -821,6 +821,19 @@ class LantraVariable
     }
 
     /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function cycleModuleResults($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->cycles->getModuleCycleResults($moduleId, $user->id);
+    }
+
+    /**
      * @param $cycle
      * @param $moduleId
      * @param null $userId

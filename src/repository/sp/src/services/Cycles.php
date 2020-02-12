@@ -12,6 +12,7 @@ use Craft;
 use craft\elements\Entry;
 use craft\base\Component;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\CyclePeriod;
 
@@ -37,6 +38,37 @@ class Cycles extends Component
             $criteria->postDate = '<= '.$cycle->startDate->format('Y-m-d H:i');
         }
         return $criteria->one();
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $userId
+     * @return array|null
+     */
+    public function getModuleCycleResults($moduleId, $userId = null)
+    {
+        if (false == $moduleEntry = Craft::$app->entries->getEntryById($moduleId)) {
+            return null;
+        }
+        $cycles = LantraHelper::getModuleCycles($moduleEntry);
+        $results = [];
+        foreach ($cycles as $cycle) {
+            ## is there a result?
+            $result = $this->getCycleResult($cycle, $moduleId, $userId);
+            ## is the cycle active?
+
+
+            ## is the cycle current?
+
+            ## create new result for current cycle
+            if ((false == $result = $this->getCycleResult($cycle, $moduleId, $userId)) && $cycle->isCurrent()) {
+                $result = Lantra::$app->results->getModuleResult($userId, $moduleId, true);
+            }
+            if ($result) {
+                $results[] = $result;
+            }
+        }
+        return array_reverse($results);
     }
 
     /**
