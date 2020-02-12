@@ -573,7 +573,7 @@ class Results extends Component
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
                     $unitEntry = $resultEntry->resultUnit->one();
-                    ## point overridded by unit group
+                    ## point overridden by unit group
                     $points += $this->getUnitPoints($unitEntry, $moduleEntry);
                 }
                 ## user result value is custom
@@ -663,7 +663,7 @@ class Results extends Component
         if ($moduleEntry->targetType == 'hours') {
             return $moduleEntry->targetHours - $moduleResult->resultHours . ' hours';
         } elseif ($moduleEntry->targetType == 'points') {
-            return $moduleResult->targetPoints - $moduleResult->resultPoints . ' points';
+            return $moduleEntry->targetPoints - $moduleResult->resultPoints . ' points';
         } else {
             $remainingPoints = ($moduleEntry->targetPoints - $moduleResult->resultPoints) . ' points';
             $remainingHours = ($moduleEntry->targetHours - $moduleResult->resultHours) . ' hours';
