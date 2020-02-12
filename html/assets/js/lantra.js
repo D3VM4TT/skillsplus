@@ -479,12 +479,13 @@ $(document).ready(function(){
     if (cpdWrapper.data('ref')) {
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
-            jobRoleLink = moduleGroupLink.closest('div.job-role').find('a.jobroleEndorseExpand');
+            jobRoleDiv = moduleGroupLink.closest('div.job-role'),
+            jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
         jobRoleLink.click();
         moduleGroupLink.click();
         moduleLink.click();
         $('html, body').animate({
-            scrollTop: jobRoleLink.offset().top - 200
+            scrollTop: jobRoleDiv.offset().top - 200
         }, 500, function(){});
     }
 
