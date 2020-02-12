@@ -14,4 +14,4 @@
     <p><span class="status-inprogress"></span>You need {{ remainingText }} to complete this module.</p>
 {% endif %}
 </div>
-{% include 'record/_modules/unitGroups' with {'cycle':cycle} %}
+{% include 'record/_modules/unitGroups' with {'cycle':cycle, 'moduleResultEntry':moduleResultEntry, 'readOnly':readOnly or (not readOnly and cycle.isLocked) } %}

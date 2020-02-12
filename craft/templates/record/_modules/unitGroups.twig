@@ -29,8 +29,12 @@
                         {% set unitType = unitEntry.unitType %}
                         {% set unitPoints = craft.lantra.unitPoints(unitEntry, module) %}
 
-                        {# get either one or mutliple results for this unit #}
-                        {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').limit(addResult ? null : 1) %}
+                        {# get either one or mutliple results for this unit and module result #}
+                        {% set resultQuery = craft.entries.section('results').authorId(cpdUser.id).relatedTo([
+                            'and',
+                            {targetElement: unitEntry, field: 'resultUnit'},
+                            {targetElement: moduleResultEntry, field: 'resultModuleResult'}
+                        ]).status('live, expired').limit(addResult ? null : 1) %}
                         {% set hasResult = resultQuery.count() %}
 
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
@@ -47,9 +51,7 @@
                         {% else %}
 
                             {% for unitResultEntry in resultQuery.all() %}
-
                                 {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
-
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                 {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}

@@ -4,11 +4,11 @@
     {% if  module.type == 'cpd' %}
         {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id) %}
         {% for moduleResultEntry in cycleModuleResults %}
-            {% include 'record/_modules/types/cpd' with{'moduleResultEntry' : moduleResultEntry}%}
+            {% include 'record/_modules/types/cpd' with{'moduleResultEntry':moduleResultEntry} %}
         {% endfor %}
     {% else %}
         {# get the current module result entry - create if none exists #}
         {% set moduleResultEntry = craft.lantra.currentModuleResult(module.id) %}
-        {% include 'record/_modules/types/' ~  module.type %}
+        {% include 'record/_modules/types/' ~  module.type  with{'moduleResultEntry':moduleResultEntry}  %}
     {% endif %}
 </div>

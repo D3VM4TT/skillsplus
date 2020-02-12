@@ -1,4 +1,4 @@
 <div class="header" data-target="#m{{ role.id ~ module.id }}">
     <h4>{{ module.title }}</h4>
 </div>
-{% include 'record/_modules/_unitGroups' %}
+{% include 'record/_modules/_unitGroups' with {'moduleResultEntry':moduleResultEntry}  %}
