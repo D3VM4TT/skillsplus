@@ -607,16 +607,13 @@ class Results extends Component
             $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId, false, $moduleResultEntry->id);
         }
         else {
+            $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
             $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
             $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
             $resultEntries = array_merge($unitResultEntries, $userResultEntries);
         }
         if (!count($resultEntries)) {
             return;
-        }
-        ## create module result if it doesn't already exist
-        if (!$moduleResultEntry) {
-            $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
         }
         $moduleResultExpiryTime = null;
         if ($moduleEntry->type == 'qualification') {
@@ -690,7 +687,7 @@ class Results extends Component
                  return $moduleResult->resultHours >= $moduleEntry->targetHours;
             }
             elseif ($targetType == 'points') {
-                return $moduleResult->resultPoints >= $moduleResult->targetPoints;
+                return $moduleResult->resultPoints >= $moduleEntry->targetPoints;
             }
             else {
                 $remainingPoints = max($moduleEntry->targetHours - $moduleResult->resultHours, 0);
