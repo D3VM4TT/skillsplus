@@ -53,14 +53,6 @@ class Cycles extends Component
         $cycles = LantraHelper::getModuleCycles($moduleEntry);
         $results = [];
         foreach ($cycles as $cycle) {
-            ## is there a result?
-            $result = $this->getCycleResult($cycle, $moduleId, $userId);
-            ## is the cycle active?
-
-
-            ## is the cycle current?
-
-            ## create new result for current cycle
             if ((false == $result = $this->getCycleResult($cycle, $moduleId, $userId)) && $cycle->isCurrent()) {
                 $result = Lantra::$app->results->getModuleResult($userId, $moduleId, true);
             }

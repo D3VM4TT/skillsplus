@@ -164,9 +164,9 @@ class Cycle extends Model
             if ($count == 200) {
                 break;
             }
+            $count++;
             $cycle = $cycle->getNext();
             $this->_cycles[$count] = $cycle;
-            $count++;
         }
         $this->_current = $cycle;
     }
