@@ -401,18 +401,6 @@ fields:
       allowSelect: ''
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: text
-  240244e2-5e76-4832-8772-32468aee96f4:
-    name: 'User Edit Start Date'
-    handle: userEditStartDate
-    instructions: ''
-    searchable: true
-    translationMethod: none
-    translationKeyFormat: null
-    type: craft\fields\Lightswitch
-    settings:
-      default: ''
-    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
-    contentColumnType: boolean
   2722a41a-2635-4f3b-8ecb-d39db9efa049:
     name: 'Team Description'
     handle: teamDescription
