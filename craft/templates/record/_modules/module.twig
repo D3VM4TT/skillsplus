@@ -2,7 +2,7 @@
 {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
 <div id="module{{ moduleElementId }}" class="module open">
     {% if  module.type == 'cpd' %}
-        {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id) %}
+        {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id, cpdUser.id) %}
         {% for moduleResultEntry in cycleModuleResults %}
             {% include 'record/_modules/types/cpd' with{'moduleResultEntry':moduleResultEntry} %}
         {% endfor %}
