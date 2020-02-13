@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1581442791
+dateModified: 1581612248
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -401,6 +401,31 @@ fields:
       allowSelect: ''
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: text
+  22f6cba0-1e8a-4d82-8678-9a33b1d06163:
+    name: 'Unit Recurring Period'
+    handle: unitRecurringPeriod
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Dropdown
+    settings:
+      optgroups: true
+      options:
+        -
+          label: Monthly
+          value: monthly
+          default: ''
+        -
+          label: Quarterly
+          value: quarterly
+          default: ''
+        -
+          label: Yearly
+          value: yearly
+          default: ''
+    contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
   2722a41a-2635-4f3b-8ecb-d39db9efa049:
     name: 'Team Description'
     handle: teamDescription
@@ -858,6 +883,18 @@ fields:
       columnType: text
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: text
+  556fe388-9b99-4cda-835a-bc491fa00273:
+    name: 'Unit Recurring'
+    handle: unitRecurring
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
   563ab173-4e2b-4622-b7dd-284d3df35f95:
     name: 'Result Display Hours'
     handle: resultDisplayHours
@@ -2302,6 +2339,20 @@ fields:
       localizeRelations: false
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
     contentColumnType: string
+  fabb8307-8d88-4171-bfe1-3309efb0b71a:
+    name: 'Result Date Required'
+    handle: resultDateRequired
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Date
+    settings:
+      showDate: true
+      showTime: false
+      minuteIncrement: '30'
+    contentColumnType: datetime
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
   fbb9f4ca-eb83-49d9-a5f0-b1a7996bf39c:
     name: 'Data Clean Result Cache'
     handle: dataCleanResultCache
@@ -2371,10 +2422,6 @@ globalSets:
           -
             name: Content
             sortOrder: 1
-            fields:
-              240244e2-5e76-4832-8772-32468aee96f4:
-                required: false
-                sortOrder: 1
   a1969b12-a29f-4cbc-ad95-96798d730775:
     name: Theme
     handle: globalsTheme
@@ -3072,7 +3119,7 @@ sections:
         handle: unit
         hasTitleField: true
         titleLabel: Title
-        titleFormat: null
+        titleFormat: ''
         sortOrder: 1
         fieldLayouts:
           3d94edeb-73ba-41ad-b224-c77a85c59742:
@@ -3119,8 +3166,18 @@ sections:
                     required: false
                     sortOrder: 3
               -
-                name: Legacy
+                name: Reccuring
                 sortOrder: 3
+                fields:
+                  22f6cba0-1e8a-4d82-8678-9a33b1d06163:
+                    required: false
+                    sortOrder: 2
+                  556fe388-9b99-4cda-835a-bc491fa00273:
+                    required: false
+                    sortOrder: 1
+              -
+                name: Legacy
+                sortOrder: 4
                 fields:
                   dc88c84b-17f2-4b8b-8cc6-124b5115c9cc:
                     required: false
@@ -3470,6 +3527,9 @@ sections:
                   d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
                     required: false
                     sortOrder: 6
+                  fabb8307-8d88-4171-bfe1-3309efb0b71a:
+                    required: false
+                    sortOrder: 8
               -
                 name: Evidence
                 sortOrder: 2

@@ -23,6 +23,8 @@ class CyclePeriod extends Model
     public $count;
     public $duration;
     public $grace;
+    public $label;
+    private $_recurring;
 
     /**
      * CyclePeriod constructor.
@@ -43,7 +45,8 @@ class CyclePeriod extends Model
             $this->finishDate = $this->_getFinishDate();
             $this->graceDate = $this->_getGraceDate();
         }
-        $this->name = $this->startDate->format('jS M Y') . ($duration ? ' - ' . $this->finishDate->format('jS M Y') : '');
+        $this->_setName();
+        $this->_setLabel();
     }
 
     /**
@@ -135,6 +138,45 @@ class CyclePeriod extends Model
     }
 
     /**
+     * @param string $type
+     * @return mixed
+     */
+    public function getRecurring($type = 'monthly')
+    {
+        if (is_null($this->_recurring)) {
+            $this->setRecurring($type);
+        }
+        return $this->_recurring;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setRecurring($type = 'monthly')
+    {
+        if (!$this->finishDate) {
+            return;
+        }
+        if ($type == 'monthly') {
+            $duration = 1;
+        } elseif ($type == 'quarterly') {
+            $duration = 3;
+        } else {
+            $duration = 12;
+        }
+        $count = 1;
+        ## create sub cycles for recurring periods
+        $cycle = $this->_getCycle($this->startDate, $count, $duration, 0);
+        ## work out how many cycles in this cycle (matrix...!)
+        $total = ceil($this->duration / $cycle->duration);
+        $this->_recurring[$count] = $cycle;
+        for ($count = 2; $count < ($total + 1); $count++) {
+            $cycle = $cycle->getNext();
+            $this->_recurring[$count] = $cycle;
+        }
+    }
+
+    /**
      * @return DateTime
      */
     private function _getFinishDate()
@@ -162,11 +204,48 @@ class CyclePeriod extends Model
     /**
      * @param $startDate
      * @param $count
+     * @param $duration
+     * @param $grace
      * @return CyclePeriod
      */
-    private function _getCycle($startDate, $count)
+    private function _getCycle($startDate, $count, $duration = null, $grace = null)
     {
-        return new CyclePeriod($startDate, $this->duration, $this->grace, $count);
+        $_grace = $grace ? $grace : $this->grace;
+        $_duration = $duration ? $duration : $this->duration;
+
+        return new CyclePeriod($startDate, $_duration, $_grace, $count);
+    }
+
+    /**
+     *
+     */
+    private function _setName()
+    {
+        $this->name = $this->startDate->format('jS M Y') . ($this->finishDate ? ' - ' . $this->finishDate->format('jS M Y') : '');
+    }
+
+    /**
+     *
+     */
+    private function _setLabel()
+    {
+        ## year starting on first
+        if ($this->duration == 12 && $this->startDate->format('dm') == '0101') {
+            $this->label = $this->startDate->format('Y');
+        }
+        ## month or quarter starting on first
+        elseif ($this->startDate->format('d') == '01') {
+            if ($this->duration == 1) {
+                $this->label = $this->startDate->format('F Y');
+            }
+            elseif ($this->duration == 3) {
+                $m = $this->startDate->format('n');
+                $this->label = 'Q' . ceil($m/3) . ' ' . $this->startDate->format('Y');
+            }
+        }
+        else {
+            $this->label = $this->startDate->format('d/m/y') . ($this->finishDate ? ' - ' . $this->finishDate->format('d/m/y') : '');
+        }
     }
 }
 

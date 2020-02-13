@@ -823,6 +823,18 @@ class LantraVariable
     /**
      * @param $userId
      * @param $unitId
+     * @param $cycle
+     * @param $moduleResultId
+     * @return mixed
+     */
+    public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
+    {
+        return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId);
+    }
+
+    /**
+     * @param $userId
+     * @param $unitId
      * @param null $moduleResultId
      * @param int $limit
      * @return mixed

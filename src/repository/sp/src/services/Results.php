@@ -385,6 +385,20 @@ class Results extends Component
         return $criteria->one();
     }
 
+    public function getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
+    {
+        if (false == $unitEntry = Craft::$app->entries->getEntryById($unitId)) {
+            return null;
+        }
+        $cycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
+        foreach($cycles as $cycle) {
+            echo  $cycle->label . '<br />';
+        }
+
+        return $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
+
+    }
+
     /**
      * Gets all the result for a unit - must be linked to a module result entry of cpd
      *

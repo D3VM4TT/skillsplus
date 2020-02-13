@@ -28,8 +28,13 @@
 
                         {% set unitType = unitEntry.unitType %}
                         {% set unitPoints = craft.lantra.unitPoints(unitEntry, module) %}
-                        {# get only results linked to this module result if a cpd type module #}
-                        {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unitEntry.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null) %}
+                        {%  if unitEntry.unitRecurring %}
+                            {# get or create results for recurring period #}
+                            {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unitEntry.id, cycle, moduleResultEntry.id) %}
+                        {% else %}
+                            {# get only results linked to this module result if a cpd type module #}
+                            {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unitEntry.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null) %}
+                        {% endif %}
                         {% set hasResult = resultQuery.count() %}
 
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
