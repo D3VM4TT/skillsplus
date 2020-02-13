@@ -140,10 +140,13 @@ class Queue extends Component
 
     /**
      * @param $elementId
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function success($elementId)
     {
-        $this->status($elementId, 'success');
+        $this->delete($elementId);
+        // $this->status($elementId, 'success');
     }
 
     /**

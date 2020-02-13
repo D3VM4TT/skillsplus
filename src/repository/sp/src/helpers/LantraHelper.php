@@ -104,9 +104,11 @@ class LantraHelper
      */
     public static function assetPath(Asset $asset)
     {
-        $volumePath = $asset->getVolume()->settings['path'];
+        $volumePath = Yii::getAlias($asset->getVolume()->settings['path']);
         $folderPath = $asset->getFolder()->path;
-        return Yii::getAlias($volumePath) . $folderPath . $asset->filename;
+        $volumePath = rtrim($volumePath, '/') . '/';
+        $folderPath = rtrim($folderPath, '/') . '/';
+        return $volumePath . $folderPath . $asset->filename;
     }
 
     /**
