@@ -16,7 +16,7 @@ return [
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
         'devMode' => false,
-        'allowAdminChanges' => true,
+        'allowAdminChanges' => false,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
