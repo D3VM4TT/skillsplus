@@ -70,6 +70,20 @@ class MigrationHelper
     }
 
     /**
+     * @param $fieldHandles
+     * @throws \Throwable
+     */
+    public static function deleteFields($fieldHandles)
+    {
+        $fieldsService = Craft::$app->getFields();
+        foreach($fieldHandles as $handle) {
+            if ($field = self::getFieldByHandle($handle)) {
+                $fieldsService->deleteField($field);
+            }
+        }
+    }
+
+    /**
      * Get field by handle (regardless of context)
      *
      * @param $handle

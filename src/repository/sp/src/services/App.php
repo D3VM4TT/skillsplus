@@ -30,6 +30,7 @@ use craft\base\Component;
 class App extends Component
 {
     public $attempts;
+    public $cycles;
     public $deploy;
     public $licences;
     public $migrations;
@@ -47,6 +48,7 @@ class App extends Component
     public function init()
     {
         $this->attempts = new Attempts();
+        $this->cycles = new Cycles();
         $this->deploy = new Deploy();
         $this->licences = new Licences();
         $this->migrations = new Migrations();

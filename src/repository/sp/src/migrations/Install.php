@@ -11,9 +11,7 @@ namespace lantra\sp\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\services\Routes as RoutesService;
-use lantra\sp\helpers\MigrationHelper;
 use lantra\sp\Plugin as Lantra;
-use lantra\sp\migrations\m200120_163920_update_modules as ModuleMigration;
 
 class Install extends Migration
 {
@@ -42,26 +40,20 @@ class Install extends Migration
         $this->_removePlugins();
         Craft::$app->plugins->installPlugin('redactor');
 
-        ## update module types
-       // $this->_updateModules();
-
+        $this->_fixConfig();
+        
         return true;
     }
 
     /**
-     * @throws \Throwable
-     * @throws \craft\errors\EntryTypeNotFoundException
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
      */
-    private function _updateModules()
+    private function _fixConfig()
     {
-        ## check to see if the entry type has already been changed...
-        $entryType = Craft::$app->getSections()->getEntryTypeById(6);
-        if ($entryType != 'qualification') {
-            $migration = new ModuleMigration();
-            $migration->safeUp();
-        }
+        $migration = new m200110_105532_fix_config();
+        $migration->safeUp();
     }
-
 
     /**
      * make all lantra result cache columns blobs
@@ -89,7 +81,7 @@ class Install extends Migration
     {
         $sectionsService = Craft::$app->getSections();
         if(false != $modules = $sectionsService->getSectionByHandle('modules')) {
-            $modules->type = 'channel';
+            $modules->type = 'structure';
             $modules->structureId = null;
             $sectionsService->saveSection($modules);
         }

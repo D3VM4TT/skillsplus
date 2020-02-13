@@ -1,0 +1,49 @@
+<div class="job-role" style="position: relative;">
+    {# number of results to complete - line 123 #}
+    {% set jobRoleNoResult = 0 %}
+    <div class="align-vertical">
+        <div class="align-horizontal"><img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt=""></div>
+        <div class="align-horizontal">
+            <div><h4>{{ craft.lantra.setting('labelJobRole', 'Job Role') }}</h4></div>
+            <div><h2>{{ role.title }}</h2></div>
+            {% if jobRoleEndorse %}
+                <a class="jobroleEndorseExpand" href="javascript:" data-target="#j{{ role.id }}"><img src="/assets/img/img-arrow-down.png"></a>
+            {% endif %}
+        </div>
+    </div>
+    <div id="j{{ role.id }}" {% if jobRoleEndorse %}class="open"{% endif %}>
+        {% set allModules = craft.entries.section('modules').relatedTo(role).orderBy('title') %}
+        {% if not allModules|length %}
+            <p>No modules have been assigned to this role.</p>
+        {% else %}
+            <div class="module-group-tabs">
+                <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ role.id }}">
+                    {% set moduleGroups = craft.categories.group('moduleGroups').relatedTo({sourceElement: allModules, field: 'moduleGroup'}) %}
+                    {% for moduleGroup in moduleGroups.all() %}
+                        {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
+                        <li>
+                            <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
+                                <h4>{{ moduleGroup.title }}</h4>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
+                {% for moduleGroup in moduleGroups.all() %}
+                    {% include 'record/_modules/moduleGroup' %}
+                {% endfor %}
+            </section>
+        {% endif %}
+    </div>
+    {% if jobRoleEndorse %}
+        <p class="jobroleEndorse">
+            {% if jobRoleNoResult == 0 %}
+                <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
+                   data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Submit for Endorsement</a>
+            {% else %}
+                Complete {{ jobRoleNoResult }} more unit(s) and then submit for endorsement.
+            {% endif %}
+        </p>
+    {% endif %}
+</div>

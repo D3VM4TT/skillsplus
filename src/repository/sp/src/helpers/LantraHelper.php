@@ -11,6 +11,7 @@ namespace lantra\sp\helpers;
 use Craft;
 use craft\elements\Asset;
 use craft\models\VolumeFolder;
+use lantra\sp\models\Cycle;
 use craft\helpers\Assets as AssetsHelper;
 use yii\web\UploadedFile;
 
@@ -132,5 +133,45 @@ class LantraHelper
         }
         return $folder;
 
+    }
+
+
+    /**
+     * @param $moduleEntry
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    static function getModuleCurrentCycle($moduleEntry)
+    {
+        if ($moduleEntry->type != 'cpd') {
+            return;
+        }
+        $cycle = new Cycle();
+        $cycle->setModule($moduleEntry)->setCycles();
+        return $cycle->getCurrent();
+    }
+
+    /**
+     * @param $moduleEntry
+     * @return array
+     */
+    static function getModuleCycles($moduleEntry)
+    {
+        if ($moduleEntry->type != 'cpd') {
+            return;
+        }
+        $cycle = new Cycle();
+        $cycle->setModule($moduleEntry)->setCycles();
+        return $cycle->getCycles();
+    }
+
+    /**
+     * @param $resultEntry
+     * @param $current
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    static function getResultCycle($resultEntry, $current = false)
+    {
+        $cycle = new Cycle($resultEntry);
+        return $current ? $cycle->getCurrent() : $cycle->getCycle();
     }
 }

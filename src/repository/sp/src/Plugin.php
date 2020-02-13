@@ -25,12 +25,14 @@ use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\assetbundles\SpCpAsset;
+use lantra\sp\migrations\m200128_160852_rename_unitValue;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
+use yii\db\Query;
 
 /**
  * Class LantraPlugin
@@ -168,7 +170,6 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
-                $this->resetUploads();
                 $entry = $event->sender;
                 ## ignore drafts and revisions
                 if (ElementHelper::isDraftOrRevision($entry)) {
@@ -212,6 +213,8 @@ class Plugin extends BasePlugin
                     'accessReports' => ['label' => 'Access Reports'],
                 ];
             });
+
+        $this->_runMigrations();
     }
 
     /**
@@ -280,13 +283,15 @@ class Plugin extends BasePlugin
 
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
-            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/result/<entryId>'             => ['template' => 'cpd/achievement'],
-            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'cpd/unit'],
-            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'cpd/unit'],
-            'cpd/<userId>/archive'                      => ['template' => 'cpd/index'],
-            'cpd/<userId>/print'                        => ['template' => 'cpd/index'],
-            'cpd/<userId>'                              => ['template' => 'cpd/index'],
+            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
+            'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
+            'cpd/<userId>/<moduleId>/<unitId>/add'      => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/<resultId>'   => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'record/unit'],
+            'cpd/<userId>/archive'                      => ['template' => 'record/index'],
+            'cpd/<userId>/print'                        => ['template' => 'record/index'],
+            'cpd/<userId>'                              => ['template' => 'record/index'],
             'result/<resultId>'                         => ['template' => 'result/_form'],
 
             ## management routes
@@ -331,10 +336,13 @@ class Plugin extends BasePlugin
     /**
      *
      */
-    private function resetUploads()
+    private function _runMigrations()
     {
-        ## unset($_FILES);
-        ## UploadedFile::reset();
+        $exists = (new Query())->from('{{%stc_columnlayout}}')->where(['field_fieldType' => 'unitValue'])->count();
+        if ($exists) {
+            $migration = new m200128_160852_rename_unitValue();
+            $migration->safeUp();
+        }
     }
 }
 

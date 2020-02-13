@@ -768,6 +768,118 @@ class LantraVariable
     }
 
     /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function currentModuleResult($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getModuleResult($user->id, $moduleId, true);
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function allModuleResults($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getUserModuleResults($moduleId, $user->id);
+    }
+
+    /**
+     * @param $resultEntry
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    public function currentCycle($resultEntry)
+    {
+        return LantraHelper::getResultCycle($resultEntry, true);
+    }
+
+    /**
+     * @param $resultEntry
+     * @return \lantra\sp\models\CyclePeriod
+     */
+    public function resultCycle($resultEntry)
+    {
+        return LantraHelper::getResultCycle($resultEntry);
+    }
+
+    /**
+     * @param $moduleEntry
+     * @return array
+     */
+    public function allCycles($moduleEntry)
+    {
+        return LantraHelper::getModuleCycles($moduleEntry);
+    }
+
+    /**
+     * @param $userId
+     * @param $unitId
+     * @param null $moduleResultId
+     * @param int $limit
+     * @return mixed
+     */
+    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null)
+    {
+        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId);
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function cycleModuleResults($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->cycles->getModuleCycleResults($moduleId, $user->id);
+    }
+
+    /**
+     * @param $cycle
+     * @param $moduleId
+     * @param null $userId
+     * @return null
+     */
+    public function cycleResult($cycle, $moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->cycles->getCycleResult($cycle, $moduleId, $user->id);
+    }
+
+    /**
+     * @param $moduleResult
+     * @return string
+     */
+    public function remainingText($moduleResult)
+    {
+        return Lantra::$app->results->remainingText($moduleResult);
+    }
+
+
+    /**
+     * @param $unitEntry
+     * @param null $moduleEntry
+     * @return float|int|null
+     */
+    public function unitPoints($unitEntry, $moduleEntry = null)
+    {
+        return Lantra::$app->results->getUnitPoints($unitEntry, $moduleEntry);
+    }
+
+    /**
      * Get report data
      *
      * @param $entryId

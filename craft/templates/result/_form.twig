@@ -45,7 +45,7 @@
         <input type="hidden" name="redirect" value="/cpd/{{ entry.authorId }}">
         <input type="hidden" name="entryId" value="{{ entry.id }}">
 
-        {% include 'cpd/_units/fields' with {columnLayout:globalsTheme.columnLayout, resultEntry:entry, accountId:entry.authorId, resultLocked:resultLocked, isManager:isManager} %}
+        {% include 'record/_units/fields' with {columnLayout:globalsTheme.columnLayout, resultEntry:entry, accountId:entry.authorId, resultLocked:resultLocked, isManager:isManager} %}
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save result</button>
         </div>

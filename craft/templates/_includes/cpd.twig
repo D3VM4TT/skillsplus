@@ -137,7 +137,7 @@
                                                         {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                                     {% endif %}
                                                     {% if unitResultEntry and unitResultEntry.resultStatus == 'endorsed' %}
-                                                        {% set totalPoints = totalPoints + unitEntry.unitValue %}
+                                                        {% set totalPoints = totalPoints + unitEntry.unitPoints %}
                                                     {% endif %}
                                                     <tr>
                                                         <td>
@@ -183,7 +183,7 @@
                                                         </td>
                                                         {% include '_includes/columnLayout' with {
                                                             unitType: unitEntry.unitType,
-                                                            unitValue: unitEntry.unitValue,
+                                                            unitPoints: unitEntry.unitPoints,
                                                             resultEntry: unitResultEntry,
                                                             columnLayout: moduleGroup.columnLayout,
                                                             isManager: isManager
@@ -258,14 +258,14 @@
                                                         </td>
                                                         {% include '_includes/columnLayout' with {
                                                             unitType: 'evidence',
-                                                            unitValue: userResultEntry.unitValue,
+                                                            unitPoints: userResultEntry.unitPoints,
                                                             resultEntry :userResultEntry,
                                                             columnLayout:moduleGroup.columnLayout,
                                                             isManager: isManager
                                                         } %}
                                                     </tr>
                                                     {% if (userResultEntry.resultStatus == 'endorsed') %}
-                                                        {% set totalPoints = totalPoints + userResultEntry.resultValue %}
+                                                        {% set totalPoints = totalPoints + userResultEntry.resultPoints %}
                                                     {% endif %}
                                                 {% endfor %}
                                                 </tbody>

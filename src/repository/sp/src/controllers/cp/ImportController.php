@@ -987,7 +987,7 @@ class ImportController extends Controller
     {
         $results = $this->getDataByType('results', $limit);
         foreach ($results as $id => $result) {
-            ## type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultValue, resultEndorsedDate, resultStatus, resultNotes, resultEvidence
+            ## type, legacyUserId, legacyUnitId, title, postDate, startDate, endDate, expiryDate, resultLocation, resultHours,  resultPoints, resultEndorsedDate, resultStatus, resultNotes, resultEvidence
             $legacyUserId = (int)$result[1];
             $legacyUnitId = (int)$result[2];
             $title = $result[3];
@@ -997,7 +997,7 @@ class ImportController extends Controller
             $expiryDate = $result[7];
             $resultLocation = $result[8];
             $resultHours = $result[9];
-            $resultValue = $result[10];
+            $resultPoints = $result[10];
             $resultEndorsedDate = $result[11];
             $resultStatus = strtolower($result[12]) == 'unendorsed' ? 'pending' : 'endorsed';
             $resultNotes = $result[13];
@@ -1040,7 +1040,7 @@ class ImportController extends Controller
                 'resultFinishDate' => DateTime::createFromFormat('d/m/Y',$resultEndDate),
                 'resultLocation' => $resultLocation,
                 'resultHours' => (int)$resultHours ? (int)$resultHours : null,
-                'resultValue' => (int)$resultValue ? (int)$resultValue : null,
+                'resultPoints' => (int)$resultPoints ? (int)$resultPoints : null,
                 'resultNotes' => utf8_encode($resultNotes),
                 'resultEndorsedDate' => $resultEndorsedDate ? DateTime::createFromFormat('d/m/Y', $resultEndorsedDate) : null,
                 'legacyResultFiles' => $legacyResultFiles

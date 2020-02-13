@@ -740,6 +740,17 @@ form.page-form .field--wrapper {
     margin-bottom: 10px !important;
 }
 
+.field--wrapper.error label,
+.field--wrapper span.error {
+    font-weight:bold;
+    color:red;
+}
+
+.field--wrapper span.error {
+    display:inline-block;
+    margin-top:10px;
+}
+
 input:focus,
 select:focus,
 textarea:focus,

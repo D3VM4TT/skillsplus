@@ -4,6 +4,7 @@ html/assets/uploads/*
 src/dev/*
 craft/storage/*
 craft/.env
+craft-assets/*
 
 # Craft 2  #
 ###################
@@ -43,6 +44,7 @@ craft2/craft/config/db.php
 error_log
 
 !src/sql/lantra.default.sql
+!src/repository/sp/src/resources/sql/config.sql
 
 # OS generated files #
 ######################

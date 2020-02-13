@@ -38,6 +38,7 @@
 
 {% if moduleEntry %}
     {% set moduleGroup = moduleEntry.moduleGroup.one %}
+    {% set moduleResultEntry = craft.lantra.resultCycle(module.id) %}
 {% endif %}
 
 {% set userModules = [] %}
@@ -79,7 +80,7 @@
                     </ul>
                 </div>
             {% endif %}
-            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data">
+            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
 
                 {% if resultEntry is defined and resultEntry %}
                     <div id="name-fields">
@@ -92,6 +93,7 @@
                 {{ csrfInput() }}
                 <input type="hidden" name="action" value="entries/save-entry">
                 {{ redirectInput('cpd/' ~ account.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
+                <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry.id }}" />
                 <input type="hidden" name="typeId" value="17">
                 <input type="hidden" name="sectionId" value="10">
                 <input type="hidden" name="enabled" value="1">
@@ -130,9 +132,9 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'cpd/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
+                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
                 {% endif %}
-                {% include 'cpd/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
+                {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
             </form>
         </div>
     </section>

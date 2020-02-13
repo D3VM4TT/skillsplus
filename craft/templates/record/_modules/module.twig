@@ -1,0 +1,14 @@
+{# element id used in html/js passed as ref to find correct tab #}
+{% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+<div id="module{{ moduleElementId }}" class="module open">
+    {% if  module.type == 'cpd' %}
+        {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id) %}
+        {% for moduleResultEntry in cycleModuleResults %}
+            {% include 'record/_modules/types/cpd' with{'moduleResultEntry':moduleResultEntry} %}
+        {% endfor %}
+    {% else %}
+        {# get the current module result entry - create if none exists #}
+        {% set moduleResultEntry = craft.lantra.currentModuleResult(module.id) %}
+        {% include 'record/_modules/types/' ~  module.type  with{'moduleResultEntry':moduleResultEntry}  %}
+    {% endif %}
+</div>

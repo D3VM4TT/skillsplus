@@ -58,6 +58,51 @@ $(document).ready(function(){
         f.submit();
     });
 
+    $('form.result').submit(function(){
+        $('body').addClass('loading');
+        var f = $(this),
+            v = true,
+            message = $('<span>').addClass('error').text('This field is required!');
+
+        f.find('div.field--wrapper').removeClass('error');
+        f.find('span.error').remove();
+
+        f.find('div.field--wrapper').each(function(){
+            var t = $(this).data('type'),
+                r = $(this).data('required'),
+                e = false;
+
+            // not required
+            if (r == 0) {
+                return;
+            }
+            // make sure input
+            if (t == 'text' || t == 'number' || t == 'date') {
+                if (!$(this).find('input').eq(0).val()) {
+                    e = true;
+                }
+            }
+            if (t == 'asset' && !$(this).find('div.files').find('input').length) {
+                e = true;
+            }
+            // add error message and class
+            if (e) {
+                $(this).append(message.clone());
+                $(this).addClass('error');
+                v = false;
+            }
+        });
+        // scroll to first error field
+        if (!v) {
+            $('html,body').animate({
+                scrollTop: f.find('div.field--wrapper.error').eq(0).offset().top - 300
+            }, 500);
+
+            $('body').removeClass('loading');
+        }
+        return v;
+    });
+
     // menu
     $('.menu-tab').click(function(){
         $('.menu-hide').toggleClass('show');

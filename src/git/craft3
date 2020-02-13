@@ -1,0 +1,168 @@
+#!/bin/bash
+
+# domains i.e. folders (separated by space) included in 'all' command
+ALL_SITES="bcsa bics cha demo demo1 demo2 demo3 demo4 demo5 eoc fbaass iopf ltp poultec poultrypassport ptr"
+
+# email address for notification
+EMAIL="robin@coffeebean.design"
+
+# database credentials for release record
+DB_USER="craft"
+DB_PASS="RIrYmX!rFp2fxPRT%yu4"
+DB_HOST="10.1.4.6"
+
+# remote server ips
+DEV_IP="10.1.4.4"
+UAT_IP="10.1.4.5"
+PROD_IP=""
+
+##################################
+#                                #
+#   DO NOT EDIT BELOW THIS LINE  #
+#                                #
+##################################
+
+# make sure we have input
+if [[ $# -eq 0 || $2 == "" ]] ; then
+    echo 'You must enter branch and site parameters i.e. craft3 dev bics'
+    exit 0
+fi
+
+# check name of server
+if [[ "$1" != "dev" && "$1" != "uat" && "$1" != "prod" ]] ; then
+    echo 'You must enter server as dev uat or prod i.e. craft3 dev bics'
+    exit 0
+fi
+
+SERVER="$1"
+
+# set sites (might be one or all)
+if [[ "$2" == "all" ]] ; then
+    SITES="$ALL_SITES"
+else
+    SITES="$2"
+fi
+
+# set branch
+if [[ "$1" == "prod" ]] ; then
+    BRANCH="master"
+    REMOTE_IP="$PROD_IP"
+elif [[ "$1" == "uat" ]] ; then
+   BRANCH="uat"
+   REMOTE_IP="$UAT_IP"
+else
+   BRANCH="develop"
+   REMOTE_IP="$DEV_IP"
+fi
+
+if [[ "$3" == "" || "$2" == "composer" ]] ; then
+  COMPOSER="true"
+else
+  COMPOSER="false"
+fi
+
+# make temp directory for checkout
+TMP_DIR="/git/tmp/$BRANCH"
+mkdir -p $TMP_DIR
+
+CRAFT_DIR="$TMP_DIR/craft"
+HTML_DIR="$TMP_DIR/html"
+REPO_DIR="$TMP_DIR/src/repository"
+
+# checkout repo to temp directory
+git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
+RELEASE_TAG=$(git --git-dir="/git/cpd.git" describe --abbrev=0 --tags)
+COMMIT=$(git --git-dir="/git/cpd.git" rev-parse --short HEAD)
+
+# add release tag
+if [[ "$SITES" == "tag" ]] ; then
+    if [[ "$RELEASE_TAG" == "" ]] ; then
+        NOW=$(date +"%Y%m%d_%H%M")
+        TAG="release_$NOW"
+        git --git-dir="/git/cpd.git" tag $TAG $BRANCH
+
+        # write release to database
+        SQL_QUERY="INSERT INTO \`admin\`.\`releases\` (\`tag\`, \`commit\`) VALUES ('$TAG', '$COMMIT');"
+        mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
+        echo "$TAG added to $BRANCH"
+    else
+        echo "$RELEASE_TAG already exists on $BRANCH"
+    fi
+else
+    # install composer
+    if [[ "$COMPOSER" == "true" ]] ; then
+        cd $CRAFT_DIR
+        composer install --no-suggest
+    fi
+    # write release tag
+    echo "$RELEASE_TAG" > $CRAFT_DIR/config/.release
+
+    # loop through domains and copy to server
+    for SITE in $SITES;
+    do
+	REMOTE_FOLDER="/datadisk/sites/$SITE"
+
+        echo "starting deployment of $SITE to $SERVER [$REMOTE_IP]"
+
+        # set .env properties
+        cp /git/config/.env $CRAFT_DIR
+        echo "ENVIRONMENT='$SERVER'" >> $CRAFT_DIR/.env
+        echo "SITE='${SITE}'" >> $CRAFT_DIR/.env
+
+        # switch directory ownership to git
+        ssh git@$REMOTE_IP sudo chown git:apache -R $REMOTE_FOLDER
+
+	echo "syncing files from $CRAFT_DIR to $REMOTE_FOLDER"
+        # with vendor folder
+	if [[ "$COMPOSER" == "true" ]] ; then
+          rsync -acvz --no-perms --no-owner --no-group --no-times --delete --exclude 'craft/storage' $CRAFT_DIR git@$REMOTE_IP:$REMOTE_FOLDER
+	else
+          rsync -acvz --no-perms --no-owner --no-group --no-times --delete --exclude 'craft/vendor' --exclude 'craft/storage' $CRAFT_DIR git@$REMOTE_IP:$REMOTE_FOLDER
+	fi
+
+	echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
+        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
+
+	echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
+        rsync -acvz --no-perms --no-owner --no-group --no-times --delete $REPO_DIR git@$REMOTE_IP:$REMOTE_FOLDER/src/
+
+        # switch directory ownership back to apache
+        ssh git@$REMOTE_IP sudo chown apache:apache -R $REMOTE_FOLDER
+
+	echo "setting file and folder permissions on $REMOTE_FOLDER"
+        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage
+	ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage/runtime
+	ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage/runtime
+        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
+        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
+        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
+        ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
+        ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
+
+        # update craft via cli
+        ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/craft/craft
+        # ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
+	# this runs twice to upgrade plugins
+	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
+
+	echo "setting file and folder permissions on $REMOTE_FOLDER"
+	ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage/logs
+        ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
+
+        # write deployment to database
+        SQL_QUERY="INSERT INTO \`admin\`.\`deployments\` (\`server\`, \`site\`, \`release\`) VALUES ('$SERVER', '$SITE', '$RELEASE_TAG');"
+        mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "$SQL_QUERY"
+
+        echo "finished deployment of $SITE to $SERVER [$REMOTE_IP]"
+    done
+    # send notification
+    if [[ "$EMAIL" != "" ]] ; then
+        echo "$SITES" | mail -s "Lantra Deploy [$SERVER] $RELEASE_TAG" -r "Skills Plus REPO<noreply@skills-plus.net>" $EMAIL
+        echo "sending email confirmation to $EMAIL"
+    fi
+fi
+
+# remove temp files
+rm -rf "$TMP_DIR"

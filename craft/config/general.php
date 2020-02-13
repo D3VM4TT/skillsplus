@@ -22,7 +22,7 @@ return [
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
         'securityKey' => getenv('SECURITY_KEY'),
-        'useProjectConfigFile' => false,
+        'useProjectConfigFile' => true,
         'backupOnUpdate' => false,
         'autoLoginAfterAccountActivation' => true,
         'phpMaxMemoryLimit' => '4096M',
@@ -39,7 +39,7 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/websites/skills-plus.net/craft3',
+            '@basePath' => '/websites/skills-plus.net/',
             '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
         ],
     ],

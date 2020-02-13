@@ -1,0 +1,49 @@
+<tr>
+    <td>
+        {% if editLink is defined %}
+            {{ editLink|raw }}
+        {% endif %}
+        <div class="cpd-icons">
+            {% if unitEntry is defined %}
+            <a href="#" data-tooltip title="{{ unitEntry.unitDescription|raw }}">
+                <img src="/assets/img/files.svg" width="16" height="16" class="" alt="">
+            </a>
+            {% endif %}
+            {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) %}
+                {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
+                {% set managerEndorse = craft.lantra.canEndorse(resultEntry) %}
+                {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/delete-entry" data-id="{{ resultEntry.id }}"
+                       data-tooltip title="Delete this result">
+                        <img src="/assets/img/delete.svg" width="16" height="16" class="" alt="">
+                    </a>
+                {% endif %}
+                {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
+                    <a class="action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/endorse-evidence" data-id="{{ resultEntry.id }}"
+                       data-tooltip title="Endorse this result">
+                        <img src="/assets/img/endorse.svg" width="16" height="16" class="" alt=""></a>
+                {% endif %}
+            {% endif %}
+            {% if totalComments %}
+                <div class="cpd-comment" data-tooltip title="Click the Unit title above to view comments">
+                    <div class="cpd-comment-number">
+                        <p>{{ totalComments }}</p>
+                    </div>
+                    <div class="cpd-comment-txt">
+                        comment{{ unreadComments != 1 ? 's' }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </td>
+    {% include '_includes/columnLayout' with {
+        unitType: unitType,
+        unitPoints: unitPoints,
+        resultEntry: resultEntry,
+        columnLayout: columnLayout,
+        isManager: isManager
+    } %}
+    {% if addResult is defined and addResult %}
+        <td style="text-align: right">{{ newLink|raw }}</td>
+    {% endif %}
+</tr>
