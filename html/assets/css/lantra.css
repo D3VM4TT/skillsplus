@@ -238,6 +238,7 @@ body.logged-in .btn-toggle-small {
   transform: rotate(-45deg) !important;
   -webkit-transform: rotate(-45deg) !important;
 }
+
 @media (min-width: 950px) {
   .container-flex {
     flex-direction: row;
@@ -251,7 +252,10 @@ body.logged-in .btn-toggle-small {
     /* 33.333% is the width of the sidebar */
     flex: 0 0 33.333%;
     transition: all .3s ease-out;
+    /*remove position:sticky on touchscreen devices*/
+    position: initial !important;
   }
+
   body.logged-in .sidebar {
     /* 25% is the width of the sidebar when logged in */
     flex: 0 0 20%;
