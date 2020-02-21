@@ -252,8 +252,6 @@ body.logged-in .btn-toggle-small {
     /* 33.333% is the width of the sidebar */
     flex: 0 0 33.333%;
     transition: all .3s ease-out;
-    /*remove position:sticky on touchscreen devices*/
-    position: initial !important;
   }
 
   body.logged-in .sidebar {
@@ -2000,7 +1998,12 @@ body.print a {
     header {
     position: initial;
     }
-
+    
+    .sidebar {
+        /*remove position:sticky on touchscreen devices*/
+        position: initial !important;
+    }
+    
     .page-subHeader {
     min-height: 25px;
     }
@@ -2096,7 +2099,7 @@ body.print a {
 
     #address-fields .field--wrapper textarea {
     width: 100% !important;
-}
+    }
     /*Format Scheme Profile and Admin Tools */
     .row {
         display: initial;
