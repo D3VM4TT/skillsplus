@@ -1999,11 +1999,6 @@ body.print a {
     position: initial;
     }
     
-    .sidebar {
-        /*remove position:sticky on touchscreen devices*/
-        position: initial !important;
-    }
-    
     .page-subHeader {
     min-height: 25px;
     }
@@ -2113,6 +2108,11 @@ body.print a {
     .footer {
         position: initial;
         padding: 20px;
+    }
+    .sidebar {
+    padding: 20px;
+    /*remove position:sticky on touchscreen devices*/
+    position: initial !important;
     }
     .sidebar-form,
     body.logged-in .sidebar-form {
