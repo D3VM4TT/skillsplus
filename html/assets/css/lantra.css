@@ -135,7 +135,7 @@ flex-direction: column;
 }
 .sidebar {
     transition: all .3s ease-out;
-    position: sticky;
+/*    position: sticky;*/
     top: 0;
 }
 .sidebar-sticky {
@@ -2121,7 +2121,6 @@ body.print a {
         padding: 20px;
     }
     .sidebar {
-    padding: 20px;
     /*remove position:sticky on touchscreen devices*/
     position: initial !important;
     }
