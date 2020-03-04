@@ -389,8 +389,8 @@ class Users extends Component
      */
     public function isManager($subordinateId = null, $manager = null, $includeHierarchy = true)
     {
-        if (is_null($manager)) {
-            $manager = Craft::$app->getUser()->getIdentity();
+        if (is_null($manager) && false == $manager = Craft::$app->getUser()->getIdentity()) {
+            return false;
         }
         ## admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
