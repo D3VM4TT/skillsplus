@@ -1148,7 +1148,7 @@ class Results extends Component
 
             if ($localPath && $folder) {
                 $response = LantraHelper::addAsset($localPath, $filename, 'evidence', $folder->name);
-                if ($response['success']) {
+                if ($response['asset']) {
                     $assetIds[] = $response['asset']->id;
                     ## leave archive file in place, just in case.
                     ## unlink($localPath);
