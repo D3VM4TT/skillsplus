@@ -64,11 +64,12 @@ class LantraHelper
     public static function findAsset($volumeHandle, $folderId, $filename)
     {
         $filenameSpaces = str_replace('%20', ' ', $filename);
+        $filename20 = str_replace('%20', '20', $filename);
         $filenameDash = str_replace(' ', '-', $filename);
         return Asset::find()
             ->volume($volumeHandle)
             ->folderId($folderId)
-            ->filename([$filename, $filenameSpaces, $filenameDash])
+            ->filename([$filename, $filenameSpaces, $filenameDash, $filename20])
             ->one();
     }
 
