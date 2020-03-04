@@ -1157,7 +1157,7 @@ class Results extends Component
                 }
             }
             else {
-                Craft::error("Legacy files not found: [". $localPath . "] ", __METHOD__);
+                Craft::warning("Legacy files not found: [". $localPath . "] ", __METHOD__);
             }
         }
 
