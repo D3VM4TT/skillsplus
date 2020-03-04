@@ -20,6 +20,8 @@
                             </thead>
                             <tbody>
                             {% for resultEntry in resultEntries %}
+                                {# try to move legacy result files #}
+                                {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
                                 {% set resultUnit = resultEntry.resultUnit.one %}
                                 <tr>
                                     <td>{{ resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title }}</td>
