@@ -14,6 +14,7 @@ use craft\db\Query;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use verbb\supertable\elements\SuperTableBlockElement;
+use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
