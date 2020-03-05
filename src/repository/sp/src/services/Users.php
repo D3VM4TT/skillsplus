@@ -103,7 +103,7 @@ class Users extends Component
      * @param string $order
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery
      */
-    public function userCriteria($search = '', $userStatus = 'all', $companyId = false, $limit = 25, $order = 'username')
+    public function userCriteria($search = '', $userStatus = 'active', $companyId = false, $limit = 25, $order = 'username')
     {
         $user = Craft::$app->getUser()->getIdentity();
         $criteria = User::find();
@@ -112,7 +112,7 @@ class Users extends Component
             $criteria->userCompany = ':empty:';
         } elseif ($userStatus == 'suspended') {
             $criteria->status = 'suspended';
-        } else {
+        } elseif ($userStatus == 'all') {
             $criteria->status = null;
         }
         if ($search) {
