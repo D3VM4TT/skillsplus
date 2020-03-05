@@ -1629,6 +1629,10 @@ span.status-complete {
     background-color:#59c269;
 }
 
+span.status-active {
+    background-color:#0D99F2;
+}
+
 div.cpd-icons, div.cpd-comment, div.cpd-comment-number, div.cpd-comment-txt {
     display: flex;
 }
