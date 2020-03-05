@@ -16,11 +16,7 @@
                 {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                 <li>
                     <a href="#module{{ moduleElementId }}" class="module-status">
-                        {% if moduleResultEntry %}
-                            <span class="status-complete"></span>
-                        {% else %}
-                            <span class="status-inprogress"></span>
-                        {% endif %}
+                        <span class="status-active"></span>
                         {{ module.title }}
                     </a>
                 </li>
