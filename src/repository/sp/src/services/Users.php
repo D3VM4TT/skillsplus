@@ -631,6 +631,15 @@ class Users extends Component
                 }
             }
         }
+        return $this->sortManagers($managers);
+    }
+
+    private function sortManagers($managers = [])
+    {
+        usort($managers, function($a, $b) {
+            return strcmp(strtolower($a->lastName), strtolower($b->lastName));
+        });
+
         return $managers;
     }
 
