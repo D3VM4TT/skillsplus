@@ -15,9 +15,10 @@
     <input type="text" class="text-search" placeholder="search" name="search" value="{{ filterSearch }}" />
     {% if filterUserStatus is defined and filterUserStatus %}
         <select name="status" class="sp-select">
-            <option value="all"{% if filterUserStatus == 'all' %} selected="selected"{% endif %}>All Users</option>
+            <option value="active"{% if filterUserStatus == 'active' %} selected="selected"{% endif %}>Active Users</option>
             <option value="suspended"{% if filterUserStatus == 'suspended' %} selected="selected"{% endif %}>Suspended Users</option>
             <option value="orphaned"{% if filterUserStatus == 'orphaned' %} selected="selected"{% endif %}>Orphaned Users</option>
+            <option value="all"{% if filterUserStatus == 'all' %} selected="selected"{% endif %}>All Users</option>
         </select>
     {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>
