@@ -36,7 +36,7 @@
                                             <a href="/result/{{ resultEntry.id }}">edit</a>
                                             {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
                                             {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                                                | <a class="action" href="#" data-action="lantra/entries/deleteEntry" data-id="{{ resultEntry.id }}"
+                                                | <a class="action" href="#" data-action="entries/delete-entry" data-id="{{ resultEntry.id }}"
                                                    data-tooltip title="Delete this result">delete
                                                 </a>
                                             {% endif %}
