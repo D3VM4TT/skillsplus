@@ -303,7 +303,6 @@ class Plugin extends BasePlugin
             'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],
             'reporting/custom/new'                      => ['template' => 'reporting/custom/_form'],
             'reporting/user/<userId>'                   => ['template' => 'reporting/user'],
-            'reporting/standard/<reportSlug>/csv'       => ['template' => 'reporting/standard'],
             'reporting/standard/<reportSlug>'           => ['template' => 'reporting/standard'],
 
             ## action routes
@@ -327,6 +326,7 @@ class Plugin extends BasePlugin
             'sp/reports/save-report'                    => 'sp/reports/save-report',
             'sp/reports/delete-report'                  => 'sp/reports/delete-report',
             'sp/reports/run-report'                     => 'sp/reports/run-report',
+            'sp/reports/standard-report/<reportType>'   => 'sp/reports/standard-report',
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',

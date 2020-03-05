@@ -692,83 +692,8 @@ class LantraVariable
      */
     public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
     {
-        if (false == $user = $this->getUser($userId)) {
-            return null;
-        }
-        $criteria = null;
-        switch ($reportType) {
-            case 'units-required':
-                $criteria = Lantra::$app->results->getManagerUnitRequiredResults($user->id);
-                break;
-            case 'units-blocked':
-                $criteria = Lantra::$app->results->getManagerUnitBlockedResults($user->id, $days, $limit, $search);
-            break;
-            case 'units-expiring':
-                $criteria = Lantra::$app->results->getManagerUnitExpiringResults($user->id, $days, $limit, $search);
-            break;
-            case 'units-endorsed':
-                $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($user->id, $days, $limit, $search);
-                break;
-            case 'modules-active':
-                $criteria = Lantra::$app->results->getManagerModuleActiveResults($user->id, $days, $limit, $search);
-            break;
-            case 'modules-expiring':
-                $criteria = Lantra::$app->results->getManagerModuleExpiringResults($user->id, $days, $limit, $search);
-            break;
-            case 'modules-completed':
-                $criteria = Lantra::$app->results->getManagerModuleCompletedResults($user->id, $days, $limit, $search);
-            break;
-            case 'users':
-                $criteria = Lantra::$app->users->getManagerUsers($user->id, $limit, $search);
-            break;
-        }
-        if ($criteria) {
-            return ($count) ? $criteria->count() : $criteria;
-        }
-        return null;
-    }
-
-    /**
-     * Export a results report
-     *
-     * @param string $reportType
-     * @param int $days
-     * @param string $search
-     * @throws mixed
-     * @return string
-    */
-    public function exportReport($reportType = 'users', $days = 28, $search = '')
-    {
-        $data = [];
-        if (false != $results = $this->managerReport($reportType, null, $days, $search, false)) {
-            foreach ($results as $row) {
-                if ($reportType == 'users') {
-                    $data[] = [
-                        $row->getFullName(),
-                        $row->email,
-                        $row->userTeam->one(),
-                    ];
-                }
-                else {
-                    $company = $row->author->userCompany->one();
-                    $title = $row->title;
-                    if ($row->type == 'unitResult') {
-                        $title = $row->resultUnit->one()->title;
-                    }
-                    elseif ($row->type == 'moduleResult' && $row->resultModule->count()) {
-                        $title = $row->resultModule->one()->title;
-                    }
-                    $data[] = [
-                        $row->author->getFullName(),
-                        $company ? $company->title : '~',
-                        $title,
-                        $row->postDate->format('d-m-Y'),
-                        $row->expiryDate ? $row->expiryDate->format('d-m-Y') : '',
-                    ];
-                }
-            }
-        }
-        $this->sendReport($reportType, $data);
+        $user = $this->getUser($userId);
+        return Lantra::$app->reports->getStandardReportData($reportType, $user->id, $days, $search, $limit, $count);
     }
 
     /**
@@ -916,26 +841,6 @@ class LantraVariable
     {
         $reportEntry = Craft::$app->entries->getEntryById($entryId);
         return ($reportEntry) ? Lantra::$app->reports->getReportData($reportEntry) : null;
-    }
-
-    /**
-     * Send the csv report to the browser
-     *
-     * @param $reportType
-     * @param $data
-     * @throws HttpException
-     */
-    private function sendReport($reportType, $data)
-    {
-        ob_start();
-        $export = fopen('php://output', 'w');
-        foreach ($data as $row) {
-            fputcsv($export, $row);
-        }
-        fclose($export);
-        $content = ob_get_clean();
-        $content = str_replace("\n", "\r\n", $content);
-        Craft::$app->request->sendFile('report-' . $reportType . '.csv', $content, array('forceDownload' => true, 'mimeType' => 'text/csv'));
     }
 
     /**

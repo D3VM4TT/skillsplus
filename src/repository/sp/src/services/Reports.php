@@ -99,6 +99,53 @@ class Reports extends Component
     }
 
     /**
+     * Return a manager report
+     *
+     * @param string $reportType
+     * @param null $userId
+     * @param mixed $days
+     * @param mixed $search
+     * @param int $limit
+     * @param bool $count
+     * @return mixed
+     * @throws Exception
+     */
+    public function getStandardReportData($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
+    {
+        $criteria = null;
+        switch ($reportType) {
+            case 'units-required':
+                $criteria = Lantra::$app->results->getManagerUnitRequiredResults($userId);
+                break;
+            case 'units-blocked':
+                $criteria = Lantra::$app->results->getManagerUnitBlockedResults($userId, $days, $limit, $search);
+                break;
+            case 'units-expiring':
+                $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+                break;
+            case 'units-endorsed':
+                $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
+                break;
+            case 'modules-active':
+                $criteria = Lantra::$app->results->getManagerModuleActiveResults($userId, $days, $limit, $search);
+                break;
+            case 'modules-expiring':
+                $criteria = Lantra::$app->results->getManagerModuleExpiringResults($userId, $days, $limit, $search);
+                break;
+            case 'modules-completed':
+                $criteria = Lantra::$app->results->getManagerModuleCompletedResults($userId, $days, $limit, $search);
+                break;
+            case 'users':
+                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
+                break;
+        }
+        if ($criteria) {
+            return ($count) ? $criteria->count() : $criteria;
+        }
+        return null;
+    }
+
+    /**
      * @param $reportType
      * @param $data
      * @throws HttpException
