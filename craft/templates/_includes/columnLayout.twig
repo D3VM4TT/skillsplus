@@ -69,6 +69,8 @@
                 {{ resultEntry ? resultEntry.resultHours|default('-') }}
             </td>
         {% elseif row.fieldType == 'resultEvidence'  %}
+            {# try to move legacy result files #}
+            {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
             <td class="resultEvidence">
                 <p class="td-title-responsive">Evidence: </p>
                 {% if resultEntry and resultEntry.resultEvidence|length %}

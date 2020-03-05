@@ -57,6 +57,24 @@ class LantraHelper
     }
 
     /**
+     * @param string $volumeHandle
+     * @param string $folderId
+     * @param $filename
+     * @return array|\craft\base\ElementInterface|Asset|null
+     */
+    public static function findAsset($volumeHandle, $folderId, $filename)
+    {
+        $filenameSpaces = str_replace('%20', ' ', $filename);
+        $filename20 = str_replace('%20', '20', $filename);
+        $filenameDash = str_replace(' ', '-', $filename);
+        return Asset::find()
+            ->volume($volumeHandle)
+            ->folderId($folderId)
+            ->filename([$filename, $filenameSpaces, $filenameDash, $filename20])
+            ->one();
+    }
+
+    /**
      * @param $filePath
      * @param $fileName
      * @param string $volumeHandle

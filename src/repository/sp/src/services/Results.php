@@ -1341,6 +1341,15 @@ class Results extends Component
             $parts = explode('/', $legacyPath);
             $filename = end($parts);
 
+            ## check existing asset?
+            if (false != $existingAsset = LantraHelper::findAsset('evidence', $folder->id, $filename)) {
+                $assetIds[] = $existingAsset->id;
+                unset($updatedLegacyResultFiles[$key]);
+                $unchanged = false;
+                Craft::info("Legacy file is existing asset: [". $filename . "] ", __METHOD__);
+                continue;
+            }
+
             ## look for path with spaces
             $legacyPathSpaces = str_replace('%20', ' ', $legacyPath);
             $localPath = false;
@@ -1352,7 +1361,7 @@ class Results extends Component
 
             if ($localPath && $folder) {
                 $response = LantraHelper::addAsset($localPath, $filename, 'evidence', $folder->name);
-                if ($response['success']) {
+                if ($response['asset']) {
                     $assetIds[] = $response['asset']->id;
                     ## leave archive file in place, just in case.
                     ## unlink($localPath);
@@ -1361,7 +1370,7 @@ class Results extends Component
                 }
             }
             else {
-                Craft::error("Legacy files not found: [". $localPath . "] ", __METHOD__);
+                Craft::warning("Legacy files not found: [". $localPath . "] ", __METHOD__);
             }
         }
 
