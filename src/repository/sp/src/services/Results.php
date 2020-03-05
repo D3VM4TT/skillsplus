@@ -1816,7 +1816,7 @@ class Results extends Component
             $criteria->search = $search;
         }
         // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
             $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
