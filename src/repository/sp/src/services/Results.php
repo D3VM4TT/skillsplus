@@ -2034,6 +2034,7 @@ class Results extends Component
     /**
      * @param $userId
      * @param null $resultEntries
+     * @throws \yii\base\NotSupportedException
      * @throws \yii\db\Exception
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
@@ -2051,6 +2052,8 @@ class Results extends Component
             foreach ($resultEntries as $resultEntry) {
                 $unit = $resultEntry->resultUnit->one();
                 if ($unit) {
+                    ## make sure unit column exists
+                    $this->addUnitColumn($unit->id);
                     $updateColumns['unit' . $unit->id] = $this->setResultValue($resultEntry);
                 }
             }
