@@ -560,6 +560,21 @@ class LantraVariable
     }
 
     /**
+     * Get manager reports
+     *
+     * @param null $userId
+     * @return BaseElementModel|null
+     * @throws Exception
+     */
+    public function managerReports($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->reports->getManagerReports($user);
+    }
+
+    /**
      * Return manager teams
      *
      * @param null $userId

@@ -336,6 +336,22 @@ class Reports extends Component
     }
 
     /**
+     * @param $manager
+     * @return array|\craft\base\ElementInterface[]|Entry[]
+     */
+    public function getManagerReports($manager)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'reports';
+        $criteria->order = 'title';
+        $criteria->relatedTo = [
+            'targetElement' => $manager,
+            'field' => 'reportRecipients'
+        ];
+        return $criteria->all();
+    }
+
+    /**
      * Format report values
      *
      * @param array

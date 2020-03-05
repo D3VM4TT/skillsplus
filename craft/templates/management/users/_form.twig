@@ -192,41 +192,52 @@
                                         value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
                             {% endfor %}
                         </select>
-                        {% if account is defined %}
-                            {% set managerCompanies = craft.lantra.managerCompanies(account) %}
-                            {% if managerCompanies|length %}
-                                <div class="field--wrapper">
-                                    <h3>Existing manager of:</h3>
-                                    <p>
-                                        {% for company in managerCompanies %}{{ company.title }}<br/>{% endfor %}
-                                    </p>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                        {% if craft.lantra.setting('schemeTeams', false) %}
                     </div>
+                    {% if account is defined %}
+                        {% set managerCompanies = craft.lantra.managerCompanies(account) %}
+                        {% if managerCompanies|length %}
+                            <div class="field--wrapper">
+                                <h3>Existing manager of:</h3>
+                                <p>
+                                    {% for company in managerCompanies %}
+                                        <a href="/management/companies/edit/{{ company.id }}">{{ company.title }}</a><br/>
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        {% endif %}
+                        {% set managerReports = craft.lantra.managerReports(account) %}
+                        {% if managerReports|length %}
+                        <div class="field--wrapper">
+                            <h3>Recipient for automated reports:</h3>
+                            <p>
+                                {% for report in managerReports %}
+                                    <a href="/reporting/custom/edit/{{ report.id }}">{{ report.title }}</a><br/>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
+                {% if craft.lantra.setting('schemeTeams', false) %}
                 <div class="col-6">
                     <input type="checkbox" id="teamManagers" name="teamManagers" value="1"
-                           {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getParam('teamManagers') %}checked="checked"{% endif %}>
-                         <span>Make Team manager</span>
-                    {% endif %}
-                    {% if craft.lantra.setting('schemeTeams', false) %}
-                        <div id="team-fields" class="hide">
-                            <div class="field--wrapper">
-                                {#<label for="userCompany">User team:</label>#}
-                                {% set teamEntries = craft.entries.section('teams').limit(null) %}
-                                <select data-relation="fields[userTeam]"
-                                        data-value="{{ account.userTeam.one().id|default(hierarchyTeam) }}" id="userTeam">
-                                    <option value="">Select User Team</option>
-                                    {% for teamEntry in teamEntries %}
-                                        <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                    {% if account is defined and account.isInGroup('teamManagers') or craft.app.request.getParam('teamManagers') %}checked="checked"{% endif %}>
+                    <span>Make Team manager</span>
+                    <div id="team-fields" class="hide">
+                        <div class="field--wrapper">
+                            {#<label for="userCompany">User team:</label>#}
+                            {% set teamEntries = craft.entries.section('teams').limit(null) %}
+                            <select data-relation="fields[userTeam]"
+                                    data-value="{{ account.userTeam.one().id|default(hierarchyTeam) }}" id="userTeam">
+                                <option value="">Select User Team</option>
+                                {% for teamEntry in teamEntries %}
+                                    <option value="{{ teamEntry.id }}">{{ craft.lantra.teamLabel(teamEntry) }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         
