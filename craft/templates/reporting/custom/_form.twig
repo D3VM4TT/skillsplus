@@ -55,6 +55,9 @@
             <option value="expired" {% if entry is defined and entry.reportType == 'expired' %} selected="selected"{% endif %}>
                 Expired (Expired Training)
             </option>
+            <option value="required" {% if entry is defined and entry.reportType == 'required' %} selected="selected"{% endif %}>
+                Required (CPD)
+            </option>
             <option value="cpd" {% if entry is defined and entry.reportType == 'cpd' %} selected="selected"{% endif %}>
                 CPD
             </option>
