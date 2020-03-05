@@ -246,6 +246,9 @@ class Reports extends Component
         elseif ($type == 'required') {
             $values = Lantra::$app->results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
+        elseif ($type == 'cpd') {
+            $values = Lantra::$app->results->getManagerCpdResults($manager->id, $userFilter, $resultFilter);
+        }
         return $values;
     }
 
