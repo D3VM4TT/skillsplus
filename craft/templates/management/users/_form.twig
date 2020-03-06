@@ -197,23 +197,45 @@
                         {% set managerCompanies = craft.lantra.managerCompanies(account) %}
                         {% if managerCompanies|length %}
                             <div class="field--wrapper">
-                                <h3>Existing manager of:</h3>
-                                <p>
+                                <h4>Existing manager of:</h4>
+                                <table class="data">
+                                    <thead>
+                                    <tr>
+                                        <th>Company ID</th>
+                                        <th>Company Title</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     {% for company in managerCompanies %}
-                                        <a href="/management/companies/edit/{{ company.id }}">{{ company.title }}</a><br/>
+                                    <tr>
+                                        <td>{{ company.id }}</td>
+                                        <td><a href="/management/companies/edit/{{ company.id }}">{{ company.title }}</a></td>
+                                    </tr>
                                     {% endfor %}
-                                </p>
+                                    <tbody>
+                                </table>
                             </div>
                         {% endif %}
                         {% set managerReports = craft.lantra.managerReports(account) %}
                         {% if managerReports|length %}
                         <div class="field--wrapper">
-                            <h3>Recipient for automated reports:</h3>
-                            <p>
+                            <h4>Recipient for automated reports:</h4>
+                            <table class="data">
+                                <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Report Title</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {% for report in managerReports %}
-                                    <a href="/reporting/custom/edit/{{ report.id }}">{{ report.title }}</a><br/>
+                                <tr>
+                                    <td>{{ report.id }}</td>
+                                    <td><a href="/reporting/custom/edit/{{ report.id }}">{{ report.title }}</a></td>
+                                </tr>
                                 {% endfor %}
-                            </p>
+                                <tbody>
+                            </table>
                         </div>
                         {% endif %}
                     {% endif %}
