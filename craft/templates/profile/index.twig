@@ -55,6 +55,7 @@
                 <span class="label">{{ currentUser.userTelephone }}</span>
             </div>
         {% endif %}
+        {% if getenv('site') is not 'bics' %}
         {% if currentUserCompany %}
             <div class="field--wrapper">
                 <label class="no-float primary-color">User Company:</label>
@@ -70,6 +71,7 @@
                     {% endfor %}
                 </span>
             </div>
+        {% endif %}
         {% endif %}
         {% if managerCompanies|length %}
             <div class="field--wrapper">
