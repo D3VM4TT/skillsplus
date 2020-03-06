@@ -55,7 +55,7 @@
                 <span class="label">{{ currentUser.userTelephone }}</span>
             </div>
         {% endif %}
-        {% if getenv('SITE') is not 'bics' %}
+        {% if getenv('SITE') != 'bics' %}
         {% if currentUserCompany %}
             <div class="field--wrapper">
                 <label class="no-float primary-color">User Company:</label>
