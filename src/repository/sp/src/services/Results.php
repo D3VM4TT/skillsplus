@@ -1304,7 +1304,12 @@ class Results extends Component
                 $result = $this->getUserResult($allResults, $user->id, $id, $title);
                 if ($result) {
                     $fieldValue = $result->$displayField;
-                    $value = $fieldValue ? $fieldValue: '-';
+                    if ($this->isDateField($displayField)) {
+                        $value = $fieldValue ? $fieldValue->format($this->dateFormat) : '-';
+                    }
+                    else {
+                        $value = $fieldValue ? $fieldValue : '-';
+                    }
                 }
                 // if mandatory report
                 elseif ($resultFilter['resultType'] == 'unitResult' && !isset($mandatoryUnits[$id])) {
@@ -1318,6 +1323,15 @@ class Results extends Component
             $rows[] = $row;
         }
         return $rows;
+    }
+
+    /**
+     * @param $displayField
+     * @return bool
+     */
+    private function isDateField($displayField)
+    {
+        return in_array($displayField, ['expiryDate', 'resultStartDate', 'resultFinishDate']);
     }
 
     /**
