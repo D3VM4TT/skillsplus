@@ -128,7 +128,7 @@
                                                 </thead>
                                                 <tbody>
                                                 {% for unitEntry in unitGroupEntries.all() %}
-                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').one() %}
+                                                    {% set unitResultEntry = craft.entries.section('results').authorId(cpdUser.id).relatedTo(unitEntry).status('live, expired').orderBy('dateCreated asc').one() %}
                                                     {# if no result set jobRoleComplete to false #}
                                                     {% if not unitResultEntry %}{% set jobRoleNoResult = jobRoleNoResult + 1 %}{% endif %}
                                                     {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
