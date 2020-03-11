@@ -14,6 +14,7 @@
 {% endif %}
 {% set unitEntries = craft.entries.section('units').limit(null).orderBy('title') %}
 {% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').orderBy('firstName').limit(null) %}
+{% set moduleGroups = craft.categories.group('moduleGroups').limit(null).orderBy('title') %}
 
 {% set dateFormat = 'd-m-y H:i' %}
 
@@ -45,20 +46,31 @@
     <div class="field--wrapper">
         <label for="reportType">Report Type</label>
         <select id="reportType" name="fields[reportType]">
-            <option value="users" {% if entry is defined and entry.reportType == 'user' %} selected="selected"{% endif %}>
+            {% if craft.lantra.settingCustomReports('users') %}
+            <option value="users" {% if entry is defined and entry.reportType == 'users' %} selected="selected"{% endif %}>
                 Users (Hierarchy Report)
             </option>
+            {% endif %}
+            {% if craft.lantra.settingCustomReports('results') %}
             <option value="results" {% if entry is defined and entry.reportType == 'results' %} selected="selected"{% endif %}>
                 Results (Qual User)
             </option>
+            {% endif %}
+            {% if craft.lantra.settingCustomReports('expired') %}
             <option value="expired" {% if entry is defined and entry.reportType == 'expired' %} selected="selected"{% endif %}>
                 Expired (Expired Training)
             </option>
-            <!--
+            {% endif %}
+            {% if craft.lantra.settingCustomReports('required') %}
             <option value="required" {% if entry is defined and entry.reportType == 'required' %} selected="selected"{% endif %}>
-                Required (Required Training)
+                Required (CPD)
             </option>
-            -->
+            {% endif %}
+            {% if craft.lantra.settingCustomReports('cpd') %}
+            <option value="cpd" {% if entry is defined and entry.reportType == 'cpd' %} selected="selected"{% endif %}>
+                CPD
+            </option>
+            {% endif %}
         </select>
     </div>
     <div class="field--wrapper">
@@ -142,7 +154,32 @@
             </option>
         </select>
     </div>
-
+    <!--
+    <div class="field--wrapper fields fields-cpd">
+        <label for="reportModules" class="no-float">Modules</label>
+        <input type="hidden" name="fields[reportModules]" value="" />
+        <select multiple class="js-select2" name="fields[reportModules][]" id="reportModules">
+            {% for moduleGroup in moduleGroups %}
+                {% set moduleEntries = craft.entries.section('modules').relatedTo(moduleGroup).limit(null).orderBy('title, pageHeading') %}
+                {% if moduleEntries.total %}
+                <optgroup label="{{ moduleGroup.title }}">
+                        {% for moduleEntry in moduleEntries %}
+                        <option {% if entry is defined and moduleEntry.id in entry.reportModules.ids() %} selected="selected"{% endif %}
+                                value="{{ moduleEntry.id }}">{{ moduleEntry.title }} {{ moduleEntry.pageHeading }}</option>
+                    {% endfor %}
+                </optgroup>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field--wrapper fields fields-cpd">
+        <label for="reportAllModules" class="no-float">
+            <input name="fields[reportAllModules]" id="reportAllModules" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportAllModules %} checked{% endif %}>
+            Include all modules
+        </label>
+    </div>
+    -->
     <div {% if entry is not defined %}id="reportAutomated"{% endif %}>
         <h2>Automated Report Settings</h2>
         <div class="field--wrapper">

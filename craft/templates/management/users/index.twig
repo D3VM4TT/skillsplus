@@ -7,7 +7,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
-{% set filterUserStatus = craft.app.request.getParam('status')|default('all') %}
+{% set filterUserStatus = craft.app.request.getParam('status')|default('active') %}
 {% set userStatus = filterUserStatus == 'suspended' ? 'suspended' : null %}
 {% set sortParam = craft.app.request.getParam('sort') %}
 {% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
@@ -64,7 +64,6 @@
                     <th>Team</th>
                 {% endif %}
                 <th>Last Login</th>
-                <th style="width:210px;">&nbsp;</th>
                 <th>&nbsp;</th>
             </tr>
             </thead>
@@ -80,7 +79,7 @@
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
-                    <td><p class="td-title-responsive">Name: </p><a href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                    <td><p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
                     <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                     <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                     {% if craft.lantra.setting('schemeTeams', false) %}
@@ -88,25 +87,22 @@
                         <td>{{ team.title|default('') }}</td>
                     {%  endif %}
                     <td><p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}</td>
-                    <td style="text-align:right">
-                        <a href="/cpd/{{ user.id }}">dashboard</a>
+                    <td class="icons" style="width:140px;text-align:right">
+                        {% if not user.userDummyEmail %}
+                            <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
+                        {% endif %}
                         {% if not currentUser.managerReadOnly %}
-                           | <a href="/management/users/edit/{{ user.id }}">edit</a>
+                            <a class="icon" href="/management/users/edit/{{ user.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
                             {% if user.status == 'active' %}
-                                 | <a class="action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}">suspend</a>
+                                <a class="icon action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}"><img src="/assets/img/suspend.svg" title="Suspend" /></a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                                | <a class="action" href="#" data-action="users/restore-user" data-id="{{ user.id }}">restore</a>
+                                <a class="icon action" href="#" data-action="users/restore-user" data-id="{{ user.id }}"><img src="/assets/img/endorse.svg" title="Restore" /></a>
                             {% endif %}
                             {#
                             {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 | <a class="action" href="#" data-action="users/delete-user" data-id="{{ user.id }}">delete</a>
                             {% endif %}
                             #}
-                        {% endif %}
-                    </td>
-                    <td class="icons" style="text-align:right">
-                        {% if not user.userDummyEmail %}
-                            <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
                         {% endif %}
                     </td>
                 </tr>

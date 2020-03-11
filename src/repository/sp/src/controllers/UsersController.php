@@ -65,15 +65,14 @@ class UsersController extends BaseController {
     public function actionCompanyManagers()
     {
         $this->requirePostRequest();
-        $companyIds = Craft::$app->request->getParam('companyIds');
+        $companyIds = Craft::$app->request->getParam('companyIds', []);
         $return = [];
-        if (count($companyIds)) {
+        if (is_countable($companyIds) && count($companyIds)) {
             $managers = Lantra::$app->users->getMultipleCompanyManagers($companyIds);
             if (count($managers)) {
                 foreach ($managers as $manager) {
                     $return[$manager->id] = $manager->fullName;
                 }
-                sort($managers);
             }
         }
         return $this->asJson($return);

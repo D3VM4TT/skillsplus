@@ -1463,6 +1463,72 @@ class Results extends Component
     }
 
     /**
+     * Return manager CPD results
+     *
+     * @param null $userId
+     * @param array $userFilter
+     * @param array $resultFilter
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerCpdResults($userId = null, $userFilter = [], $resultFilter) {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        $subordinateIds = $subordinates->ids();
+
+        $header = [
+            'User ID',
+            'User Name',
+            'Company ID',
+            'Company Label',
+            'Unit',
+            'Start Date',
+            'Finish Date',
+            'Hours',
+            'Points',
+            'Evidence',
+            'Comments'
+        ];
+
+        $resultFilter['resultType'] = 'unitResult';
+        $resultFilter = $this->formatResultsFilter($resultFilter);
+        $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
+
+        $rows = [$header];
+        foreach($subordinates as $user) {
+            if (isset($allResults[$user->id]) && count($allResults[$user->id])) {
+                $company = Lantra::$app->users->userCompany($user);
+                foreach($allResults[$user->id] as $result) {
+                    $unit = $result->resultUnit->one();
+                    $files = [];
+                    $comments = [];
+                    foreach ($result->resultEvidence as $file) {
+                        $files[] = $file->filename;
+                    }
+                    foreach ($result->resultComments as $comment) {
+                        $comments[] = $comment->comment . ' (' . ($comment->user ? $comment->user->one()->fullName : 'unknown') . ')';
+                    }
+                    $row = [
+                        $user->id,
+                        $user->fullName,
+                        $company ? $company->id : '~',
+                        $company ? $company->companyLabel : 'unknown',
+                        $unit->title,
+                        $result->resultStartDate ? $result->resultStartDate->format($this->dateFormat) : '~',
+                        $result->resultFinishDate ? $result->resultFinishDate->format($this->dateFormat) : '~',
+                        $result->resultHours,
+                        $result->resultValue,
+                        implode(', ', $files),
+                        implode(', ', $comments)
+                    ];
+                    $rows[] = $row;
+                }
+            }
+        }
+        return $rows;
+    }
+
+    /**
      * Return all required (including expired)
      *
      * @param null $userId
@@ -1764,7 +1830,7 @@ class Results extends Component
             $criteria->search = $search;
         }
         // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
             $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
             if ( ! count($subordinateIds)) {
                 return null;
@@ -1844,6 +1910,7 @@ class Results extends Component
     /**
      * @param $userId
      * @param null $resultEntries
+     * @throws \yii\base\NotSupportedException
      * @throws \yii\db\Exception
      */
     public function saveUserResultCache($userId, $resultEntries = null) {
@@ -1861,6 +1928,8 @@ class Results extends Component
             foreach ($resultEntries as $resultEntry) {
                 $unit = $resultEntry->resultUnit->one();
                 if ($unit) {
+                    ## make sure unit column exists
+                    $this->addUnitColumn($unit->id);
                     $updateColumns['unit' . $unit->id] = $this->setResultValue($resultEntry);
                 }
             }

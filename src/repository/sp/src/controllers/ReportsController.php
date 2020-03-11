@@ -104,6 +104,71 @@ class ReportsController extends BaseController
     }
 
     /**
+     * Run  standard report
+     *
+     * @throws mixed
+     */
+    public function actionStandardReport()
+    {
+        $type = Craft::$app->request->getSegment(4);
+        $days = Craft::$app->request->getParam('days', 28);
+        $search = Craft::$app->request->getParam('search', '');
+
+        $manager = Craft::$app->getUser();
+
+        $data = [];
+        if (false != $results = Lantra::$app->reports->getStandardReportData($type, $manager->id, $days, $search, false)) {
+            foreach ($results as $row) {
+                if ($type == 'users') {
+                    $company = $row->userCompany->one();
+                    $data[] = [
+                        $company ? $company->companyLabel : '~',
+                        $row->getFullName(),
+                        $row->email,
+                    ];
+                }
+                else {
+                    $company = $row->author->userCompany->one();
+                    $title = $row->title;
+                    if ($row->type == 'unitResult') {
+                        $title = $row->resultUnit->one()->title;
+                    }
+                    elseif ($row->type == 'moduleResult' && $row->resultModule->count()) {
+                        $title = $row->resultModule->one()->title;
+                    }
+                    $data[] = [
+                        $company ? $company->companyLabel : '~',
+                        $row->author->getFullName(),
+                        $title,
+                        $row->postDate->format('d-m-Y'),
+                        $row->expiryDate ? $row->expiryDate->format('d-m-Y') : '',
+                    ];
+                }
+            }
+        }
+        return $this->downloadReport($data, 'report-' . $type . '.csv');
+    }
+
+    /**
+     * @param $data
+     * @param $name
+     * @throws \yii\web\HttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    private function downloadReport($data, $name)
+    {
+        ob_start();
+        $export = fopen('php://output', 'w');
+        foreach ($data as $row) {
+            fputcsv($export, $row);
+        }
+        fclose($export);
+        $content = ob_get_clean();
+        $content = str_replace("\n", "\r\n", $content);
+        Craft::$app->response->sendContentAsFile($content, $name, ['mimeType' => 'text/csv']);
+    }
+
+    /**
      * @return array
      */
     private function getFields()

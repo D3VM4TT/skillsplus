@@ -296,7 +296,7 @@ $(document).ready(function(){
             $('#reportRecipientsLabel span').hide();
             var selectedIds = $("select#reportRecipients").val();
             // first get rid of non selected
-            $('select#reportRecipients option').not(':eq(0), :selected').remove();
+            $('select#reportRecipients option').not(':selected').remove();
             $('select#reportRecipients').trigger('change');
             $.each(response, function (id, name) {
                 if (!$('select#reportRecipients').find("option[value='" + id + "']").length) {

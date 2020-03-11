@@ -1084,6 +1084,11 @@ span.module-status-inprogress {
     color: #ffb848;
 }
 
+span.module-status-active {
+    font-weight: 600;
+    color: #0D99F2;
+}
+
 span.module-status-complete img, span.module-status-inprogress img {
     float: left !important;
     margin: 7px 11px 0px 0px;
@@ -1597,7 +1602,8 @@ body.logged-in .topNavigation {
 }
 
 span.status-inprogress,
-span.status-complete {
+span.status-complete,
+span.status-active {
     border-radius:50%;
     width:12px;
     height:12px;
@@ -1611,6 +1617,10 @@ span.status-inprogress {
 
 span.status-complete {
     background-color:#59c269;
+}
+
+span.status-active {
+    background-color:#0D99F2;
 }
 
 div.cpd-icons, div.cpd-comment, div.cpd-comment-number, div.cpd-comment-txt {
