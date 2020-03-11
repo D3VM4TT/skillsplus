@@ -11,6 +11,7 @@
     licences: {label: 'Licences', url: '#settings-tab-licences' },
     notifications: {label: 'Notifications', url: '#settings-tab-notifications' },
     users: {label: 'Users', url: '#settings-tab-users' },
+    reports: {label: 'Reports', url: '#settings-tab-reports' },
     config: {label: 'Config', url: '#settings-tab-config' }
 } %}
 
@@ -48,6 +49,11 @@
     <div id="tab-users" class="hidden">
         <div id="fields">
         {% include 'sp/cp/settings/_users.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-reports" class="hidden">
+        <div id="fields">
+            {% include 'sp/cp/settings/_reports.twig' with {settings:settings, config:config} %}
         </div>
     </div>
     <div id="tab-config" class="hidden">

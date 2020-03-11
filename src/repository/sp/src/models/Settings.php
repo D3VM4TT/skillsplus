@@ -82,6 +82,14 @@ class Settings extends Model
     public $labelJobRole                        = '';
     public $queue                               = [];
     public $disableResultCache                  = false;
+    public $customReports                       = [
+        'users'     => true,
+        'results'   => true,
+        'expired'   => true,
+        'required'  => true,
+        'cpd'       => false
+    ];
+    public $standardReports                     = false;
 
     /*
      * modified values

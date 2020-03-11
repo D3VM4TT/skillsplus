@@ -95,6 +95,24 @@ class LantraVariable
     }
 
     /**
+     * @param $key
+     * @return bool
+     */
+    public function settingCustomReports($key = null)
+    {
+        $customReports = Lantra::$app->settings->getSetting('customReports');
+        if (is_null($key)) {
+            foreach($customReports as $key => $customReport) {
+                if ($customReport) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return isset($customReports[$key]) && $customReports[$key];
+    }
+
+    /**
      * @param $attemptEntry
      * @return array
      */

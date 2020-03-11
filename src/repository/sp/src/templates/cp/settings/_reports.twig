@@ -1,0 +1,46 @@
+{% import "_includes/forms" as forms %}
+{{ forms.lightswitchField ({
+    label:			"Show Standard Reports?",
+    id:				"standardReports",
+    name:			"standardReports",
+    on:		        settings.standardReports == 1
+}) }}
+
+<h3>Custom Report Types</h3>
+
+{{ forms.lightswitchField ({
+    label:			"Users",
+    id:				"customReports-users",
+    name:			"customReports[users]",
+    on:		        settings.customReports.users
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Results",
+    id:				"customReports-results",
+    name:			"customReports[results]",
+    on:		        settings.customReports.results
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Expired",
+    id:				"customReports-expired",
+    name:			"customReports[expired]",
+    on:		        settings.customReports.expired
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Required",
+    id:				"customReports-required",
+    name:			"customReports[required]",
+    on:		        settings.customReports.required
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"CPD",
+    id:				"customReports-cpd",
+    name:			"customReports[cpd]",
+    on:		        settings.customReports.cpd
+}) }}
+
+
