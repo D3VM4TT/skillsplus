@@ -42,7 +42,7 @@
         <input type="hidden" name="action" value="entries/save-entry">
         <input type="hidden" name="sectionId" value="3">
         <input type="hidden" name="enabled" value="1">
-        <input type="hidden" name="redirect" value="/cpd/{{ entry.authorId }}">
+        {{ redirectInput('cpd/' ~ entry.authorId) }}
         <input type="hidden" name="entryId" value="{{ entry.id }}">
 
         {% include 'cpd/_units/fields' with {columnLayout:globalsTheme.columnLayout, resultEntry:entry, accountId:entry.authorId, resultLocked:resultLocked, isManager:isManager} %}
