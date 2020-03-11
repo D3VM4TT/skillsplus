@@ -94,7 +94,7 @@
                         {% if not currentUser.managerReadOnly %}
                             <a class="icon" href="/management/users/edit/{{ user.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
                             {% if user.status == 'active' %}
-                                <a class="icon action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}"><img src="/assets/img/delete.svg" title="Suspend" /></a>
+                                <a class="icon action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}"><img src="/assets/img/suspend.svg" title="Suspend" /></a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 <a class="icon action" href="#" data-action="users/restore-user" data-id="{{ user.id }}"><img src="/assets/img/endorse.svg" title="Restore" /></a>
                             {% endif %}
