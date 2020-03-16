@@ -2413,20 +2413,11 @@ fields:
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
     contentColumnType: text
 globalSets:
-  88d32a73-58a9-4105-a09a-e64e8b3891b4:
-    name: 'User Profile'
-    handle: userProfile
-    fieldLayouts:
-      106ab0fa-af71-4120-9080-283772fe2850:
-        tabs:
-          -
-            name: Content
-            sortOrder: 1
   a1969b12-a29f-4cbc-ad95-96798d730775:
     name: Theme
     handle: globalsTheme
     fieldLayouts:
-      8c4cb10f-efa5-4668-b26a-e9986c340f76:
+      106ab0fa-af71-4120-9080-283772fe2850:
         tabs:
           -
             name: Content

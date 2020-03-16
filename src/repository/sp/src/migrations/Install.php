@@ -40,7 +40,7 @@ class Install extends Migration
         $this->_removePlugins();
         Craft::$app->plugins->installPlugin('redactor');
 
-        $this->_fixConfig();
+        ## $this->_fixConfig();
         
         return true;
     }
