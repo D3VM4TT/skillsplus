@@ -19,15 +19,18 @@ use lantra\sp\records\Settings as SettingsRecord;
 class Settings extends Component
 {
     /**
-     * @param $settings
-     * @return bool
+     * @param array $settings
+     * @return int
+     * @throws \yii\db\Exception
      */
     public function saveSettings($settings)
     {
         $count = 0;
-        foreach ($settings as $key => $value) {
-            if ($this->saveSetting($key, $value)) {
-                $count++;
+        if (is_countable($settings)) {
+            foreach ($settings as $key => $value) {
+                if ($this->saveSetting($key, $value)) {
+                    $count++;
+                }
             }
         }
         return $count;

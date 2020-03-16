@@ -135,10 +135,9 @@ class Install extends Migration
                 'uid' => $this->uid()
             ]);
             $this->createIndex('key', '{{%lantra_settings}}', 'key', true);
-            # copy lantra settings to sp
-            $settings = Craft::$app->getProjectConfig()->get('plugins.lantra.settings');
+            # copy default yaml settings to db
+            $settings = Craft::$app->getProjectConfig()->get('plugins.sp.settings');
             Lantra::$app->settings->saveSettings($settings);
-            Craft::$app->getProjectConfig()->remove('plugins.lantra');
         }
     }
 
