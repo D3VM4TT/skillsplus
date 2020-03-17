@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1584449030
+dateModified: 1584461168
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1266,6 +1266,28 @@ fields:
           default: '1'
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
     contentColumnType: string
+  82f069e1-b11c-4e0d-96f6-eaf3e5d58387:
+    name: 'Result Narrative'
+    handle: resultNarrative
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\redactor\Field
+    settings:
+      redactorConfig: ''
+      purifierConfig: ''
+      cleanupHtml: true
+      removeInlineStyles: '1'
+      removeEmptyTags: '1'
+      removeNbsp: '1'
+      purifyHtml: '1'
+      columnType: text
+      availableVolumes:
+        - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+      availableTransforms: '*'
+    contentColumnType: text
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
   838b996f-8f5d-4df2-9a75-0d1692348632:
     name: 'Team Secondary Managers'
     handle: teamSecondaryManagers
@@ -4052,6 +4074,10 @@ superTableBlockTypes:
             -
               label: 'Result Hours'
               value: resultHours
+              default: ''
+            -
+              label: 'Result Narrative'
+              value: resultNarrative
               default: ''
         contentColumnType: string
         fieldGroup: null

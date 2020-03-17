@@ -3,6 +3,11 @@
 {% set customNew = 1 %}
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{%- do view.registerJsFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.js')) -%}
+{%- do view.registerCssFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.css')) -%}
+{% includeJs "$('.redactor').redactor();" %}
+
 {% if columnLayout is not defined and moduleGroup is defined %}
     {% set columnLayout = moduleGroup.columnLayout %}
 {% endif %}
@@ -38,6 +43,13 @@
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
+        </div>
+    {% elseif row.fieldType == 'resultNarrative' %}
+        <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
+            <label for="resultNarrative" class="">{{ label }} (if applicable)</label>
+            <textarea{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultNarrative]" type="text" class="float-label redactor" placeholder="{{ label }}">
+                {{ resultExists ? resultEntry.resultNarrative|default('') }}
+            </textarea>
         </div>
     {% elseif row.fieldType == 'resultEvidence' %}
         {# try to move legacy result files #}

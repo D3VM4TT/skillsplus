@@ -11,7 +11,7 @@
     <p style="color:green;"><span class="status-complete"></span>Congratulations, this module is complete!</p>
     {% else %}
     {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
-    {% set pending = craft.lantra.pending(moduleResultEntry, account.id) %}
+    {% set pending = craft.lantra.pending(moduleResultEntry, cpdUser.id) %}
     <p>
         <span class="status-inprogress"></span>
         {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
