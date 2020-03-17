@@ -44,6 +44,9 @@ class Cycles extends Component
      * @param $moduleId
      * @param null $userId
      * @return array|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function getModuleCycleResults($moduleId, $userId = null)
     {
@@ -53,8 +56,11 @@ class Cycles extends Component
         $cycles = LantraHelper::getModuleCycles($moduleEntry);
         $results = [];
         foreach ($cycles as $cycle) {
-            if ((false == $result = $this->getCycleResult($cycle, $moduleId, $userId)) && $cycle->isCurrent()) {
-                $result = Lantra::$app->results->getModuleResult($userId, $moduleId, true);
+            $result = $this->getCycleResult($cycle, $moduleId, $userId);
+            if (!$result && $cycle->isActive()) {
+                $postDate = $cycle->startDate;
+                $postDate->setTime(06, 00, 00);
+                $result = Lantra::$app->results->createModuleResult($userId, $moduleId, $postDate);
             }
             if ($result) {
                 $results[] = $result;

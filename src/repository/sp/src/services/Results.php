@@ -52,7 +52,7 @@ class Results extends Component
             $moduleEntry = $entry->resultModule->one();
             if ($moduleEntry->type == 'cpd') {
                 if (!$entry->cycleName) {
-                    $cycle = LantraHelper::getModuleCurrentCycle($moduleEntry);
+                    $cycle = LantraHelper::getResultCycle($entry);
                     $entry->cycleName = $cycle->name;
                     $entry->cycleStartDate = $cycle->startDate;
                     $entry->cycleFinishDate = $cycle->finishDate;
@@ -812,12 +812,15 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createModuleResult($userId, $moduleEntryId) {
+    function createModuleResult($userId, $moduleEntryId, $postDate = null) {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
+        if ($postDate) {
+            $resultEntry->postDate = $postDate;
+        }
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
         $resultEntry->setFieldValue('resultStatus',  'active');
         if (!Craft::$app->elements->saveElement($resultEntry)) {
