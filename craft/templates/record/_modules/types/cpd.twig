@@ -2,13 +2,13 @@
     {% set cycle = craft.lantra.resultCycle(moduleResultEntry) %}
     <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
     {% if cycle.isGrace %}
-        <h5 style="display:block;text-align:right;color:green">ACTIVE until {{ cycle.graceDate|date('d/m/y') }}</h5>
+        <h5 style="display:block;text-align:right;color:red">ACTIVE until {{ cycle.graceDate|date('d/m/y') }}</h5>
     {% endif %}
     {% if cycle.isLocked %}
-        <h5 style="display:block;text-align:right;color:red">LOCKED</h5>
+        <h5 style="display:block;text-align:right;color:black">LOCKED</h5>
     {% endif %}
     {% if moduleResultEntry.resultStatus == 'complete' %}
-    <p><span class="status-complete"></span>Congratulations, this module is complete!</p>
+    <p style="color:green;"><span class="status-complete"></span>Congratulations, this module is complete!</p>
     {% else %}
     {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
     {% set pending = craft.lantra.pending(moduleResultEntry, account.id) %}
