@@ -744,13 +744,13 @@ class Results extends Component
             $return['total']++;
         }
         if ($pendingHours) {
-            $return['text'] = $pendingHours . ' hours';
+            $return['text'] = $pendingHours . ' hour' . ($pendingHours > 1 ? 's' : '');
         }
         if ($pendingHours && $pendingPoints) {
             $return['text'] .= ' and ';
         }
         if ($pendingPoints) {
-            $return['text'] = $pendingPoints . ' points';
+            $return['text'] = $pendingPoints . ' point' . ($pendingPoints > 1 ? 's' : '');
         }
         return $return;
     }
@@ -778,24 +778,27 @@ class Results extends Component
         $resultHours = (int) $moduleResult->resultHours;
         $resultPoints = (int) $moduleResult->resultPoints;
 
+        $remainingPoints = $targetPoints - $resultPoints;
+        $remainingHours = $targetHours - $resultHours;
+        $remainingPointsText = $remainingPoints . ' point' . ($remainingPoints > 1 ? 's' : '');
+        $remainingHoursText = $remainingHours . ' hour' . ($remainingHours > 1 ? 's' : '');
+
         if ($moduleEntry->targetType == 'hours') {
             $return['hoursScore'] = $resultHours . '/' . $targetHours;
-            $return['text'] = $targetHours - $resultHours . ' hours';
+            $return['text'] = $remainingHoursText;
         } elseif ($moduleEntry->targetType == 'points') {
             $return['pointsScore'] = $resultPoints . '/' . $targetPoints;
-            $return['text'] = $targetPoints - $resultPoints . ' points';
+            $return['text'] = $remainingPointsText;
         } else {
-            $remainingPoints = ($targetPoints - $resultPoints ). ' points';
-            $remainingHours = ($targetHours - $resultHours) . ' hours';
             $return['hoursScore'] = $resultHours . '/' . $targetHours;
             $return['pointsScore'] = $resultPoints . '/' . $targetPoints;
             if ($moduleEntry->targetType == 'pointsAndHours') {
                 if ($remainingPoints && $remainingHours) {
-                    $return['text'] =  $remainingPoints . ' and ' . $remainingHours;
+                    $return['text'] =  $remainingPointsText . ' and ' . $remainingHoursText;
                 }
-                $return['text'] = $remainingPoints ? $remainingPoints : $remainingHours;
+                $return['text'] = $remainingPoints ? $remainingPointsText : $remainingHoursText;
             } elseif ($moduleEntry->targetType == 'pointsOrHours') {
-                $return['text'] = $remainingPoints . ' or ' . $remainingHours;
+                $return['text'] = $remainingPointsText . ' or ' . $remainingHoursText;
             }
         }
         return $return;

@@ -17,7 +17,7 @@
         {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
         {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
         <br />You need {{ remaining.text }} to complete this module.
-        <br />You have {{ pending.total }} result waiting for endorsement worth {{ pending.text }}.
+        {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ?? 's' }} waiting for endorsement worth {{ pending.text }}.{% endif %}
     </p>
 {% endif %}
 </div>
