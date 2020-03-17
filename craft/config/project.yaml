@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1581612248
+dateModified: 1584449030
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -4006,7 +4006,7 @@ superTableBlockTypes:
               value: unitType
               default: ''
             -
-              label: Points
+              label: 'Unit Points'
               value: unitPoints
               default: ''
             -
@@ -4038,16 +4038,20 @@ superTableBlockTypes:
               value: resultLocation
               default: ''
             -
-              label: Hours
-              value: resultHours
-              default: ''
-            -
               label: Evidence
               value: resultEvidence
               default: ''
             -
               label: Custom
               value: resultCustom
+              default: ''
+            -
+              label: 'Result Points'
+              value: resultPoints
+              default: ''
+            -
+              label: 'Result Hours'
+              value: resultHours
               default: ''
         contentColumnType: string
         fieldGroup: null

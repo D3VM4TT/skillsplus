@@ -15,9 +15,9 @@
     <p>
         <span class="status-inprogress"></span>
         {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
-        {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}
-        - You have {{ pending }} waiting for endorsement.
+        {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
         <br />You need {{ remaining.text }} to complete this module.
+        <br />You have {{ pending.total }} result waiting for endorsement worth {{ pending.text }}.
     </p>
 {% endif %}
 </div>

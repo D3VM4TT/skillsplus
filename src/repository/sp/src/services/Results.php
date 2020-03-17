@@ -727,8 +727,32 @@ class Results extends Component
      */
     public function pending($moduleResult, $userId)
     {
+        $return = [
+            'text'    => '',
+            'total'   => 0
+        ];
         $module = $moduleResult->resultModule->one();
-        return $this->getModuleUnitResults($module, $userId, true, $moduleResult->id, 'pending');
+        $results = $this->getModuleUnitResults($module, $userId, false, $moduleResult->id, 'pending');
+
+        $pendingHours = 0;
+        $pendingPoints = 0;
+        foreach($results as $result) {
+            $pendingHours = $pendingHours + (int) $result->resultHours;
+            if (null != $resultUnit = $result->resultUnit->one()) {
+                $pendingPoints = $pendingPoints + (int)$result->resultUnit->one()->unitPoints;
+            }
+            $return['total']++;
+        }
+        if ($pendingHours) {
+            $return['text'] = $pendingHours . ' hours';
+        }
+        if ($pendingHours && $pendingPoints) {
+            $return['text'] .= ' and ';
+        }
+        if ($pendingPoints) {
+            $return['text'] = $pendingPoints . ' points';
+        }
+        return $return;
     }
 
     /**

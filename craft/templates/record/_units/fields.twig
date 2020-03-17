@@ -9,13 +9,7 @@
 {% for row in columnLayout.all() %}
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
-    {% if row.fieldType == 'unitPoints' %}
-        <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
-            <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultPoints|default(1) }}" />
-        </div>
-    {% elseif row.fieldType == 'resultExpiryDate' %}
+    {% if row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
         {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now.year + 5, ye: now.year - 50} %}
         </div>
@@ -32,6 +26,12 @@
             <label for="resultLocation" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
+        </div>
+    {% elseif row.fieldType == 'resultPoints' %}
+        <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
+            <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
+                    value="{{ resultExists ? resultEntry.resultPoints|default(1) }}" />
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">

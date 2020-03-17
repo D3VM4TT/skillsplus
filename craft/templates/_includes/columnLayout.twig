@@ -13,8 +13,8 @@
                 {{ unitType == 'evidence' ? 'Evidence' : 'Assessment' }}
             </td>
         {% elseif row.fieldType == 'unitPoints'  %}
-            <td class="unitValue">
-                <p class="td-title-responsive">Unit Points: </p>
+            <td class="unitPoints">
+                <p class="td-title-responsive">Points: </p>
                 {{ unitPoints }}
             </td>
         {% elseif row.fieldType == 'resultStatus'  %}
@@ -67,6 +67,11 @@
             <td class="resultHours">
                 <p class="td-title-responsive">Hours: </p>
                 {{ resultEntry ? resultEntry.resultHours|default('-') }}
+            </td>
+        {% elseif row.fieldType == 'resultPoints'  %}
+            <td class="resultPoints">
+                <p class="td-title-responsive">Points: </p>
+                {{ resultEntry ? resultEntry.resultPoints|default('-') }}
             </td>
         {% elseif row.fieldType == 'resultEvidence'  %}
             {# try to move legacy result files #}
