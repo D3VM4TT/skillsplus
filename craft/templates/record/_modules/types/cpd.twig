@@ -10,8 +10,15 @@
     {% if moduleResultEntry.resultStatus == 'complete' %}
     <p><span class="status-complete"></span>Congratulations, this module is complete!</p>
     {% else %}
-    {% set remainingText = craft.lantra.remainingText(moduleResultEntry) %}
-    <p><span class="status-inprogress"></span>You need {{ remainingText }} to complete this module.</p>
+    {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
+    {% set pending = craft.lantra.pending(moduleResultEntry, account.id) %}
+    <p>
+        <span class="status-inprogress"></span>
+        {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
+        {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}
+        - You have {{ pending }} waiting for endorsement.
+        <br />You need {{ remaining.text }} to complete this module.
+    </p>
 {% endif %}
 </div>
 {% include 'record/_modules/unitGroups' with {'cycle':cycle, 'moduleResultEntry':moduleResultEntry, 'readOnly':readOnly or (not readOnly and cycle.isLocked) } %}

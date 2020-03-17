@@ -723,30 +723,51 @@ class Results extends Component
 
     /**
      * @param $moduleResult
-     * @return string
+     * @return int
      */
-    public function remainingText($moduleResult)
+    public function pending($moduleResult, $userId)
     {
-        if (!$moduleResult->resultModule) {
-            return 'unknown';
+        $module = $moduleResult->resultModule->one();
+        return $this->getModuleUnitResults($module, $userId, true, $moduleResult->id, 'pending');
+    }
+
+    /**
+     * @param $moduleResult
+     * @return array
+     */
+    public function remaining($moduleResult)
+    {
+        $return = [
+            'text'          => '',
+            'pointsScore'   => '',
+            'hoursScore'     => ''
+        ];
+
+        if (!$moduleResult || !$moduleResult->resultModule) {
+            return $return;
         }
         $moduleEntry = $moduleResult->resultModule->one();
         if ($moduleEntry->targetType == 'hours') {
-            return $moduleEntry->targetHours - $moduleResult->resultHours . ' hours';
+            $return['hoursScore'] = (int) $moduleEntry->resultHours . '/' . $moduleEntry->resultHours;
+            $return['text'] = $moduleEntry->targetHours - (int) $moduleResult->resultHours . ' hours';
         } elseif ($moduleEntry->targetType == 'points') {
-            return $moduleEntry->targetPoints - $moduleResult->resultPoints . ' points';
+            $return['pointsScore'] = (int) $moduleEntry->resultPoints . '/' . $moduleEntry->targetPoints;
+            $return['text'] = $moduleEntry->targetPoints - (int) $moduleResult->resultPoints . ' points';
         } else {
-            $remainingPoints = ($moduleEntry->targetPoints - $moduleResult->resultPoints) . ' points';
-            $remainingHours = ($moduleEntry->targetHours - $moduleResult->resultHours) . ' hours';
+            $remainingPoints = ($moduleEntry->targetPoints - (int) $moduleResult->resultPoints) . ' points';
+            $remainingHours = ($moduleEntry->targetHours - (int) $moduleResult->resultHours) . ' hours';
+            $return['hoursScore'] = $moduleEntry->resultHours . '/' . (int) $moduleEntry->resultHours;
+            $return['pointsScore'] = $moduleEntry->resultPoints . '/' . (int) $moduleEntry->targetPoints;
             if ($moduleEntry->targetType == 'pointsAndHours') {
                 if ($remainingPoints && $remainingHours) {
-                    return $remainingPoints . ' and ' . $remainingHours;
+                    $return['text'] =  $remainingPoints . ' and ' . $remainingHours;
                 }
-                return $remainingPoints ? $remainingPoints : $remainingHours;
+                $return['text'] = $remainingPoints ? $remainingPoints : $remainingHours;
             } elseif ($moduleEntry->targetType == 'pointsOrHours') {
-                return $remainingPoints . ' or ' . $remainingHours;
+                $return['text'] = $remainingPoints . ' or ' . $remainingHours;
             }
         }
+        return $return;
     }
 
     /**
@@ -870,13 +891,16 @@ class Results extends Component
      * @param null $moduleResultId
      * @return array|int|string
      */
-    function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null) {
+    function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null, $status = null) {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
         $criteria->limit = null;
+        if ($status) {
+            $criteria->resultStatus = $status;
+        }
         if ($moduleResultId) {
             $criteria->relatedTo = [
                 'and',

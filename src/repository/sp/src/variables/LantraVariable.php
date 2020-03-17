@@ -832,13 +832,25 @@ class LantraVariable
 
     /**
      * @param $moduleResult
-     * @return string
+     * @return array
      */
-    public function remainingText($moduleResult)
+    public function remaining($moduleResult)
     {
-        return Lantra::$app->results->remainingText($moduleResult);
+        return Lantra::$app->results->remaining($moduleResult);
     }
 
+    /**
+     * @param $moduleResult
+     * @param $userId
+     * @return int
+     */
+    public function pending($moduleResult, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->pending($moduleResult, $user->id);
+    }
 
     /**
      * @param $unitEntry
