@@ -40,7 +40,7 @@
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
                         {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
 
-                        {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id ~ '">' ~ rowName ~ '</a>' %}
+                        {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id ~ '">' ~ rowName ~ '</a>' %}
                         {% set newLink = readOnly ? rowName : '<a href="' ~ editUrl ~ 'new?ref=' ~ moduleElementId ~ '">Add New</a>' %}
 
                         {# if a single row (no multiple submissions or no results yet #}
@@ -51,7 +51,7 @@
                         {% else %}
 
                             {% for unitResultEntry in resultQuery.all() %}
-                                {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+                                {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                 {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}

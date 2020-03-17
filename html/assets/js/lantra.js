@@ -522,7 +522,7 @@ $(document).ready(function(){
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
-        var moduleLink = $('.tabs a[href="#module' + cpdWrapper.data('ref') + '"]'),
+        var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             jobRoleDiv = moduleGroupLink.closest('div.job-role');
         if (jobRoleDiv) {
