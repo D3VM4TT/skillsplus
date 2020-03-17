@@ -34,6 +34,15 @@ return [
             '@site' => getenv('SITE'),
         ],
     ],
+    'cbd' => [
+        'siteUrl' => 'http://sp.coffeebean.design',
+        'devMode' => true,
+        'allowAdminChanges' => true,
+        'aliases' => [
+            '@basePath' => '/var/www/sp.coffeebean.design',
+            '@assetsPath' => '/var/www/sp.coffeebean.design/assets/',
+        ],
+    ],
     'local' => [
         'siteUrl' => 'http://skills-plus.local',
         'devMode' => true,

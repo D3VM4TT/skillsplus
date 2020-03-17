@@ -30,6 +30,10 @@ return [
         'tablePrefix' => 'craft',
         'port' => $dbPort
     ],
+    'cbd' => [
+        'server' => 'localhost',
+        'database' => getenv('DB_DATABASE'),
+    ],
     'local' => [
         'server' => 'localhost',
         'database' => getenv('DB_DATABASE'),
