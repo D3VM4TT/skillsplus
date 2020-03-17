@@ -522,16 +522,19 @@ $(document).ready(function(){
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
-        var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
+        var moduleLink = $('.tabs a[href="#module' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
-            jobRoleDiv = moduleGroupLink.closest('div.job-role'),
-            jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
-        jobRoleLink.click();
-        moduleGroupLink.click();
-        moduleLink.click();
-        $('html, body').animate({
-            scrollTop: jobRoleDiv.offset().top - 200
-        }, 500, function(){});
+            jobRoleDiv = moduleGroupLink.closest('div.job-role');
+        if (jobRoleDiv) {
+            var jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
+            jobRoleLink.click();
+            moduleGroupLink.click();
+            moduleLink.click();
+            $('html, body').animate({
+                scrollTop: jobRoleDiv.offset().top - 200
+            }, 500, function () {
+            });
+        }
     }
 
     $('.module-group-tabs').show();
