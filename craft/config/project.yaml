@@ -50,7 +50,7 @@ categoryGroups:
         hasUrls: false
         uriFormat: null
         template: null
-dateModified: 1584461168
+dateModified: 1584533110
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -174,6 +174,18 @@ fields:
       columnType: text
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: text
+  078e3016-c25c-4a8e-a445-404a441c465c:
+    name: 'Cycle Notify End'
+    handle: cycleNotifyEnd
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   080bb830-4bd6-458e-a3f3-dbb58358aeb1:
     name: 'Data Clean Managers User Company'
     handle: dataCleanManagersUserCompany
@@ -955,6 +967,18 @@ fields:
       decimals: '0'
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: integer(10)
+  5afbaea1-bb0e-4189-bd27-3b00a46c9db3:
+    name: 'Cycle Notify Start'
+    handle: cycleNotifyStart
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     name: 'Result Display Status'
     handle: resultDisplayStatus
@@ -1084,6 +1108,35 @@ fields:
       localizeRelations: false
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: string
+  68c27db1-5957-4d1c-896f-d45fe1c2a062:
+    name: 'Cycle Notify Reminder Frequency'
+    handle: cycleNotifyReminderFrequency
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Dropdown
+    settings:
+      optgroups: true
+      options:
+        -
+          label: Weekly
+          value: weekly
+          default: ''
+        -
+          label: Monthly
+          value: monthly
+          default: ''
+        -
+          label: Quartley
+          value: quartley
+          default: ''
+        -
+          label: Yearly
+          value: yearly
+          default: '1'
+    contentColumnType: string
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   6b431a5f-e1ee-4520-ab30-89ca72993c00:
     name: Heading
     handle: pageHeading
@@ -1450,6 +1503,18 @@ fields:
           default: ''
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     contentColumnType: string
+  9b4c8ae8-e860-435e-b436-2befb8d35d88:
+    name: 'Cycle Notify Reminder'
+    handle: cycleNotifyReminder
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   a15416ef-8183-4171-946e-fb80248cdc21:
     name: 'User Membership Number'
     handle: userMembershipNumber
@@ -1957,6 +2022,18 @@ fields:
       allowSelect: ''
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
     contentColumnType: text
+  d2a928eb-2546-4416-8531-6a94c7a1f8a6:
+    name: 'Cycle Notify Completed'
+    handle: cycleNotifyCompleted
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\Lightswitch
+    settings:
+      default: ''
+    contentColumnType: boolean
+    fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
   d3594414-790c-479e-ada1-8e93cd99e906:
     name: 'Cycle Start Date'
     handle: cycleStartDate
@@ -3819,8 +3896,27 @@ sections:
                     required: false
                     sortOrder: 1
               -
-                name: 'Column Layout'
+                name: Notifications
                 sortOrder: 4
+                fields:
+                  078e3016-c25c-4a8e-a445-404a441c465c:
+                    required: false
+                    sortOrder: 2
+                  5afbaea1-bb0e-4189-bd27-3b00a46c9db3:
+                    required: false
+                    sortOrder: 1
+                  68c27db1-5957-4d1c-896f-d45fe1c2a062:
+                    required: false
+                    sortOrder: 5
+                  9b4c8ae8-e860-435e-b436-2befb8d35d88:
+                    required: false
+                    sortOrder: 4
+                  d2a928eb-2546-4416-8531-6a94c7a1f8a6:
+                    required: false
+                    sortOrder: 3
+              -
+                name: 'Column Layout'
+                sortOrder: 5
                 fields:
                   bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
                     required: false
