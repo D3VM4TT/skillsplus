@@ -1437,4 +1437,19 @@ class Users extends Component
             }
         }
     }
+
+    /**
+     * @param $moduleEntry
+     * @return array|\craft\base\ElementInterface[]|User[]
+     */
+    public function getModuleUsers($moduleEntry)
+    {
+        if (!$moduleEntry->moduleRoles) {
+            return [];
+        }
+        $criteria = User::find();
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $moduleEntry->moduleRoles->ids(), 'field' => 'userRole'];
+        return $criteria->all();
+    }
 }

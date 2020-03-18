@@ -341,7 +341,8 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function readComment(SuperTableBlockElement $comment, $userId) {
+    function readComment(SuperTableBlockElement $comment, $userId)
+    {
         ## userId of result
         $resultAuthorId = $comment->getOwner()->author->id;
         $commentAuthorId = $comment->user->one()->id;
@@ -355,7 +356,8 @@ class Results extends Component
      * @param $result
      * @return int
      */
-    function unreadComments($result, $userId) {
+    function unreadComments($result, $userId)
+    {
         $unread = 0;
         $comments = $result->resultComments->all();
         foreach($comments as $comment) {
@@ -375,7 +377,8 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function getUnitResult($userId, $unitId) {
+    function getUnitResult($userId, $unitId)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
@@ -850,7 +853,8 @@ class Results extends Component
      * @throws Exception
      * @return mixed
      */
-    public function jobRoleModules($jobRoleIds = []) {
+    public function jobRoleModules($jobRoleIds = [])
+    {
         $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
@@ -864,7 +868,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getJobRoleUserResults($jobRoleId, $userId = null) {
+    public function getJobRoleUserResults($jobRoleId, $userId = null)
+    {
         if (! $userId) {
             return [];
         }

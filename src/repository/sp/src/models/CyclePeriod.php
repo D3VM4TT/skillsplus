@@ -138,6 +138,24 @@ class CyclePeriod extends Model
     }
 
     /**
+     *
+     */
+    public function startsToday()
+    {
+        $now = new DateTime();
+        return $now->format('dmy') == $this->startDate->format('dmy');
+    }
+
+    /**
+     * @return bool
+     */
+    public function finishesToday()
+    {
+        $now = new DateTime();
+        return $this->finishDate && $now->format('dmy') == $this->finishDate->format('dmy');
+    }
+
+    /**
      * @param string $type
      * @return mixed
      */

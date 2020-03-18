@@ -10,6 +10,7 @@ namespace lantra\sp\helpers;
 
 use Craft;
 use craft\elements\Asset;
+use craft\elements\Entry;
 use craft\models\VolumeFolder;
 use lantra\sp\models\Cycle;
 use craft\helpers\Assets as AssetsHelper;
@@ -191,5 +192,17 @@ class LantraHelper
     {
         $cycle = new Cycle($resultEntry);
         return $current ? $cycle->getCurrent() : $cycle->getCycle();
+    }
+
+    /**
+     * @return mixed
+     */
+    static function getCpdModules()
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'modules';
+        $criteria->type = 'cpd';
+        $criteria->limit = null;
+        return $criteria->all();
     }
 }

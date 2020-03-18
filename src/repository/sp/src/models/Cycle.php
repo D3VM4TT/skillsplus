@@ -169,6 +169,7 @@ class Cycle extends Model
             $this->_cycles[$count] = $cycle;
         }
         $this->_current = $cycle;
+        return $this;
     }
 
     /**

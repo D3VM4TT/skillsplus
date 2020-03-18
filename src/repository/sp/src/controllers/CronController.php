@@ -37,7 +37,7 @@ class CronController extends BaseController {
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
             Lantra::$app->reports->sendDailyReports($weekValue, $monthValue);
-
+            Lantra::$app->cycles->createCycleResults();
         }
         if ($frequency == 'weekly') {
             Craft::info("Weekly Cron", __METHOD__);
