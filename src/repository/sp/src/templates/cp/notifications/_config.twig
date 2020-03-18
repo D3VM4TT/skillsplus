@@ -1,0 +1,23 @@
+{% import "_includes/forms" as forms %}
+{{ forms.textField ({
+    instructions:   "Default: admin@skills-plus.co.uk",
+    label:			"Notify Admin Email",
+    id:				"notifyAdminEmail",
+    name:			"notifyAdminEmail",
+    value:		    settings.notifyAdminEmail
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Incldued on all notifications",
+    label:			"Notify Footer",
+    id:				"notifyFooter",
+    name:			"notifyFooter",
+    value:		    settings.notifyFooter
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Disable Endorsement Notification?",
+    id:				"disableEndorsementNotify",
+    name:			"disableEndorsementNotify",
+    on:		        settings.disableEndorsementNotify == 1
+}) }}

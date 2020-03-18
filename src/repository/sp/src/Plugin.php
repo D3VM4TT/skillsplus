@@ -224,13 +224,13 @@ class Plugin extends BasePlugin
     {
         $ret = parent::getCpNavItem();
         $ret['url'] = 'sp';
-        $ret['label'] = 'Lantra Skills Plus';
+        $ret['label'] = 'Lantra Skills+';
         $ret['subnav'] = [
             'settings' => ['label' => 'Settings', 'url' => 'sp/settings'],
+            'notifications' => ['label' => 'Notifications', 'url' => 'sp/notifications'],
             'import' => ['label' => 'Import', 'url' => 'sp/import'],
             'tools' => ['label' => 'Tools', 'url' => 'sp/tools'],
-            'queue' => ['label' => 'Queue', 'url' => 'sp/queue'],
-            'cache' => ['label' => 'Result Cache', 'url' => 'sp/cache'],
+            'queue' => ['label' => 'Queue', 'url' => 'sp/queue']
         ];
         return $ret;
     }
@@ -259,6 +259,7 @@ class Plugin extends BasePlugin
         return [
             'sp'                                => 'sp/cp/settings/index',
             'sp/settings'                       => 'sp/cp/settings/index',
+            'sp/notifications'                  => 'sp/cp/settings/notifications',
             'sp/queue'                          => 'sp/cp/settings/queue',
             'sp/cache'                          => 'sp/cp/settings/cache',
             'sp/tools'                          => 'sp/cp/tools',

@@ -1,0 +1,61 @@
+{% set title = 'Lantra Skills+ Notifications' %}
+{% extends "sp/cp/_layout" %}
+{% import "_includes/forms" as forms %}
+{% set selectedSubnavItem = 'notifications' %}
+
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = 'sp/settings' %}
+
+{% set tabs = {
+    config: {label: 'Config', url: '#settings-tab-config' },
+    results: {label: 'Results', url: '#settings-tab-results' },
+    comments: {label: 'Comments', url: '#settings-tab-comments' },
+    comments: {label: 'Reports', url: '#settings-tab-reports' },
+    scheme: {label: 'Scheme', url: '#settings-tab-scheme' },
+    cpd: {label: 'CPD', url: '#settings-tab-cpd' }
+} %}
+
+{% set saveButton %}
+    <div class="buttons">
+        <input class="btn submit" type="submit" value="{{ 'Save'|t }}">
+    </div>
+{% endset %}
+
+{% block content %}
+
+    <input type="hidden" name="action" value="sp/cp/settings/save-settings">
+
+    {% namespace 'settings' %}
+        <div id="tab-config">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_config.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-results" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_results.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-comments" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_comments.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-reports" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_reports.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-scheme" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_scheme.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-cpd" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_cpd.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+    {% endnamespace %}
+
+{% endblock %}

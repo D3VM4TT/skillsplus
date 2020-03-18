@@ -22,15 +22,38 @@ use lantra\sp\models\Settings as SettingsModel;
 class SettingsController extends Controller
 {
     /**
-     * @throws HttpException
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionIndex()
     {
         $this->requireAdmin(false);
+        $variables = [
+            'config'    => $this->_config(),
+            'settings'  => $this->_settings()
+            ];
+        $this->renderTemplate('sp/cp/settings/index', $variables);
+    }
 
-        $settingsModel = new SettingsModel;
-        $settingsModel->setAttributes(Lantra::getInstance()->getSettings());
-        $variables['settings'] = $settingsModel;
+    /**
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionNotifications()
+    {
+        $this->requireAdmin(false);
+        $variables = [
+            'config'    => $this->_config(),
+            'settings'  => $this->_settings()
+        ];
+        $this->renderTemplate('sp/cp/notifications/index', $variables);
+
+    }
+
+    /**
+     * @return array
+     */
+    private function _config()
+    {
+        $config = [];
         $config['version'] = Lantra::getInstance()->getVersion();
 
         ## config for logo asset
@@ -48,13 +71,27 @@ class SettingsController extends Controller
         $config['assetsElementType'] = Asset::class;
         $config['entryElementType'] = Entry::class;
         $config['categoryElementType'] = Category::class;
-        $variables['config'] = $config;
 
-        $this->renderTemplate('sp/cp/settings/index', $variables);
+        ## config for logo asset
+        $volume = Craft::$app->volumes->getVolumeByHandle('theme');
+        $themeFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
+        $config['themeFolder'] = ['folder:'.$themeFolder->uid];
+
+        return $config;
     }
 
     /**
-     * @throws HttpException
+     * @return SettingsModel
+     */
+    private function _settings()
+    {
+        $settingsModel = new SettingsModel;
+        $settingsModel->setAttributes(Lantra::getInstance()->getSettings());
+        return $settingsModel;
+    }
+
+    /**
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionQueue()
     {
@@ -63,7 +100,7 @@ class SettingsController extends Controller
     }
 
     /**
-     * @throws HttpException
+     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionCache()
     {
@@ -72,6 +109,8 @@ class SettingsController extends Controller
     }
 
     /**
+     * @return \yii\web\Response
+     * @throws \yii\db\Exception
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionSaveSettings()

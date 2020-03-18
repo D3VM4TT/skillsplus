@@ -1,0 +1,15 @@
+{% import "_includes/forms" as forms %}
+{{ forms.textField ({
+    label:			"Subject Comment",
+    id:				"notifySubjectComment",
+    name:			"notifySubjectComment",
+    value:		    settings.notifySubjectComment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ entry.title }} - {{ user.fullName}}: {{ comment }}",
+    label:			"Message Comment",
+    id:				"notifyComment",
+    name:			"notifyComment",
+    value:		    settings.notifyComment
+}) }}

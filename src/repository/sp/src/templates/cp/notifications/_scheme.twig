@@ -1,0 +1,46 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject Scheme Expiry",
+    id:				"notifySubjectSchemeExpiry",
+    name:			"notifySubjectSchemeExpiry",
+    value:		    settings.notifySubjectSchemeExpiry
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
+    label:			"Message Scheme Expiry",
+    id:				"notifySchemeExpiry",
+    name:			"notifySchemeExpiry",
+    value:		    settings.notifySchemeExpiry
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject User Expiry",
+    id:				"notifySubjectUserExpiry",
+    name:			"notifySubjectUserExpiry",
+    value:		    settings.notifySubjectUserExpiry
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Your individual licence expires on {{ user.userExpiryDate|date('d-m'Y') }}.",
+    label:			"Message User Expiry",
+    id:				"notifyUserExpiry",
+    name:			"notifyUserExpiry",
+    value:		    settings.notifyUserExpiry
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Licences Remaining",
+    id:				"notifySubjectLicencesRemaining",
+    name:			"notifySubjectLicencesRemaining",
+    value:		    settings.notifySubjectLicencesRemaining
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ title }} has {{ licences}} remaining.",
+    label:			"Message Licences Remaining",
+    id:				"notifyLicencesRemaining",
+    name:			"notifyLicencesRemaining",
+    value:		    settings.notifyLicencesRemaining
+}) }}

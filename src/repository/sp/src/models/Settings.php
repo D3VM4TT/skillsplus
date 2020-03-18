@@ -25,6 +25,7 @@ class Settings extends Model
     public $schemeEmailDomain                   = 'skills-plus.co.uk';
     public $schemeTestEmailAddress              = 'robin@coffeebean.design';
     public $jobRoleEndorse                      = false;
+
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;
     public $themeLoginMessage                   = '';
@@ -36,6 +37,7 @@ class Settings extends Model
     public $themeColorSecondary                 = '#2e338f';
     public $themeNavigationPublic               = ["1090","3618"];
     public $themeNavigationPrivate              = ["1090","3618"];
+
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;
     public $schemeExpiryDate                    = null;
@@ -43,8 +45,10 @@ class Settings extends Model
     public $individualLicenceDays               = 365;
     public $individualLicencePaypalButton       = '';
     public $individualJobRole                   = null;
+
     public $notifyAdminEmail                    = 'admin@skills-plus.co.uk';
     public $notifyFooter                        = '';
+
     public $notifySubjectBlockedResult          = '';
     public $notifySubjectEndorsementResult      = '';
     public $notifySubjectLicencesRemaining      = '';
@@ -63,6 +67,16 @@ class Settings extends Model
     public $notifyComment                       = '';
     public $notifySubjectCustomReport           = '';
     public $notifyCustomReport                  = '';
+
+    public $notifySubjectCycleStart             = '';
+    public $notifyCycleStart                    = '';
+    public $notifySubjectCycleEnd               = '';
+    public $notifyCycleEnd                      = '';
+    public $notifySubjectCycleCompleted         = '';
+    public $notifyCycleCompleted                = '';
+    public $notifySubjectCycleReminder          = '';
+    public $notifyCycleReminder                 = '';
+
     public $disableEndorsementNotify            = false;
     public $userEditName                        = true;
     public $userEditEmail                       = true;

@@ -1,0 +1,16 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject Custom Report",
+    id:				"notifySubjectCustomReport",
+    name:			"notifySubjectCustomReport",
+    value:		    settings.notifySubjectCustomReport
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Custom report: {{ entry.title }}.",
+    label:			"Message Custom Report",
+    id:				"notifyCustomReport",
+    name:			"notifyCustomReport",
+    value:		    settings.notifyCustomReport
+}) }}

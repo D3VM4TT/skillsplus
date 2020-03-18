@@ -1,0 +1,57 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject CPD Cycle Start",
+    id:				"notifySubjectCycleStart",
+    name:			"notifySubjectCycleStart",
+    value:		    settings.notifySubjectCycleStart
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Message CPD Cycle Start",
+    id:				"notifyCycleStart",
+    name:			"notifyCycleStart",
+    value:		    settings.notifyCycleStart
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject CPD Cycle End",
+    id:				"notifySubjectCycleEnd",
+    name:			"notifySubjectCycleEnd",
+    value:		    settings.notifySubjectCycleEnd
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Message CPD Cycle End",
+    id:				"notifyCycleEnd",
+    name:			"notifyCycleEnd",
+    value:		    settings.notifyCycleEnd
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject CPD Cycle Completed",
+    id:				"notifySubjectCycleCompleted",
+    name:			"notifySubjectCycleCompleted",
+    value:		    settings.notifySubjectCycleCompleted
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Message CPD Cycle Completed",
+    id:				"notifyCycleCompleted",
+    name:			"notifyCycleCompleted",
+    value:		    settings.notifyCycleCompleted
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject CPD Cycle Reminder",
+    id:				"notifySubjectCycleReminder",
+    name:			"notifySubjectCycleReminder",
+    value:		    settings.notifySubjectCycleReminder
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Message CPD Cycle Reminder",
+    id:				"notifyCycleReminder",
+    name:			"notifyCycleReminder",
+    value:		    settings.notifyCycleReminder
+}) }}

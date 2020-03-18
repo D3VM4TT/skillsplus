@@ -1,3 +1,4 @@
+{% set title = 'Lantra Skills+ Settings' %}
 {% extends "sp/cp/_layout" %}
 {% import "_includes/forms" as forms %}
 {% set selectedSubnavItem = 'settings' %}
@@ -9,7 +10,6 @@
     scheme: {label: 'Scheme', url: '#settings-tab-scheme' },
     theme: {label: 'Theme', url: '#settings-tab-theme' },
     licences: {label: 'Licences', url: '#settings-tab-licences' },
-    notifications: {label: 'Notifications', url: '#settings-tab-notifications' },
     users: {label: 'Users', url: '#settings-tab-users' },
     reports: {label: 'Reports', url: '#settings-tab-reports' },
     config: {label: 'Config', url: '#settings-tab-config' }
@@ -62,7 +62,5 @@
         </div>
     </div>
     {% endnamespace %}
-
-    <p class="small">Version: {{ config.version }}</p>
 
 {% endblock %}

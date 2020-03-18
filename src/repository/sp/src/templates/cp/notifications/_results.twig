@@ -1,0 +1,46 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject Blocked Result",
+    id:				"notifySubjectBlockedResult",
+    name:			"notifySubjectBlockedResult",
+    value:		    settings.notifySubjectBlockedResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
+    label:			"Message Blocked Result",
+    id:				"notifyBlockedResult",
+    name:			"notifyBlockedResult",
+    value:		    settings.notifyBlockedResult
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Endorsement Result",
+    id:				"notifySubjectEndorsementResult",
+    name:			"notifySubjectEndorsementResult",
+    value:		    settings.notifySubjectEndorsementResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has submitted a result {{ entry.title }}.",
+    label:			"Message Endorsement Result",
+    id:				"notifyEndorsementResult",
+    name:			"notifyEndorsementResult",
+    value:		    settings.notifyEndorsementResult
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Module Result",
+    id:				"notifySubjectModuleResult",
+    name:			"notifySubjectModuleResult",
+    value:		    settings.notifySubjectModuleResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has completed {{ entry.title }}.",
+    label:			"Message Module Result",
+    id:				"notifyModuleResult",
+    name:			"notifyModuleResult",
+    value:		    settings.notifyModuleResult
+}) }}
