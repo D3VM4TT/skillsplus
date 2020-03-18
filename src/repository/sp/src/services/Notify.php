@@ -16,9 +16,97 @@ use craft\mail\Message;
 use craft\web\View;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\models\Cycle;
+use lantra\sp\models\CyclePeriod;
+use lantra\sp\helpers\CycleHelper;
 
 class Notify extends Component
 {
+    /**
+     * @param Entry $resultEntry
+     * @return null
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendCycleStart(Entry $resultEntry)
+    {
+        $moduleEntry = $resultEntry->resultModule->one();
+        if (!$moduleEntry || $moduleEntry->type != 'cpd') {
+            return null;
+        }
+        $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+
+        if ($cycle->startsToday()) {
+            return null;
+        }
+
+        $subject = $this->getNotifySetting('subjectCycleStart', 'CPD Cycle Start');
+        $variables = [
+            'module'    => $moduleEntry,
+            'cycle'     => $cycle
+        ];
+        $template = $this->getNotifySetting('cycleStart', "Module {{ module.title }} {{ cycle.name }} starts today.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($resultEntry->author->email, $subject, $message);
+    }
+
+    /**
+     * @param Entry $resultEntry
+     * @return null
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendCycleEnd(Entry $resultEntry)
+    {
+        $moduleEntry = $resultEntry->resultModule->one();
+        if (!$moduleEntry || $moduleEntry->type != 'cpd') {
+            return null;
+        }
+        $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+
+        if ($cycle->endsToday()) {
+            return null;
+        }
+
+        $subject = $this->getNotifySetting('subjectCycleEnd', 'CPD Cycle End');
+        $variables = [
+            'module'    => $moduleEntry,
+            'result'    => $resultEntry,
+            'cycle'     => $cycle
+        ];
+        $template = $this->getNotifySetting('cycleStart', "Module {{ module.title }} {{ cycle.name }} ends today.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($resultEntry->author->email, $subject, $message);
+    }
+
+    /**
+     * @param Entry $resultEntry
+     * @return null
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendCycleComplete(Entry $resultEntry)
+    {
+        if ($resultEntry->resultStatus != 'complete') {
+            return null;
+        }
+        $moduleEntry = $resultEntry->resultModule->one();
+        if (!$moduleEntry || $moduleEntry->type != 'cpd') {
+            return null;
+        }
+        $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+
+        $subject = $this->getNotifySetting('subjectCycleComplete', 'CPD Cycle Complete');
+        $variables = [
+            'module'    => $moduleEntry,
+            'result'    => $resultEntry,
+            'cycle'     => $cycle
+        ];
+        $template = $this->getNotifySetting('cycleComplete', "Module {{ module.title }} {{ cycle.name }} has been completed.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($resultEntry->author->email, $subject, $message);
+    }
+
     /**
      * @param $expiryDate
      * @throws \Twig\Error\LoaderError

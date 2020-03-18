@@ -13,6 +13,8 @@ use craft\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\helpers\CycleHelper;
+
 use verbb\supertable\elements\SuperTableBlockElement;
 use yii\web\ForbiddenHttpException;
 
@@ -758,7 +760,7 @@ class LantraVariable
      */
     public function currentCycle($resultEntry)
     {
-        return LantraHelper::getResultCycle($resultEntry, true);
+        return CycleHelper::getResultCycle($resultEntry, true);
     }
 
     /**
@@ -767,7 +769,7 @@ class LantraVariable
      */
     public function resultCycle($resultEntry)
     {
-        return LantraHelper::getResultCycle($resultEntry);
+        return CycleHelper::getResultCycle($resultEntry);
     }
 
     /**
@@ -776,7 +778,7 @@ class LantraVariable
      */
     public function allCycles($moduleEntry)
     {
-        return LantraHelper::getModuleCycles($moduleEntry);
+        return CycleHelper::getModuleCycles($moduleEntry);
     }
 
     /**

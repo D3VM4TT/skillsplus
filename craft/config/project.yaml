@@ -2023,8 +2023,8 @@ fields:
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
     contentColumnType: text
   d2a928eb-2546-4416-8531-6a94c7a1f8a6:
-    name: 'Cycle Notify Completed'
-    handle: cycleNotifyCompleted
+    name: 'Cycle Notify Complete'
+    handle: cycleNotifyComplete
     instructions: ''
     searchable: true
     translationMethod: none

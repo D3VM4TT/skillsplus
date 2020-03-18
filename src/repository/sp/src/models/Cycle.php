@@ -173,6 +173,44 @@ class Cycle extends Model
     }
 
     /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function remindsToday()
+    {
+        if (!$this->_moduleEntry || !$this->_moduleEntry->cycleNotifyReminder) {
+            return false;
+        }
+        $now = new \DateTime();
+        $current = $this->getCurrent();
+        $startDate = $current->startDate;
+        $frequency = $this->_moduleEntry->cycleNotifyReminderFrequency;
+        ## weekly sends on Mondays
+        if ($frequency == 'weekly' && $now->format('w') == '1') {
+            return true;
+        }
+        ## monthly sends on first of month
+        if ($frequency == 'monthly' && $now->format('d') == '01') {
+            return true;
+        }
+        ## quarterly sends plus three, six and nine months
+        $quarterlyDate = $startDate;
+        $quarterly = [
+            $quarterlyDate->modify('+3 months')->format('dm'),
+            $quarterlyDate->modify('+3 months')->format('dm'),
+            $quarterlyDate->modify('+3 months')->format('dm')
+        ];
+        if ($frequency == 'quarterly' && in_array($now->format('dm'), $quarterly)) {
+            return true;
+        }
+        ## yearly send one year from start date
+        if ($frequency == 'yearly' && $now->format('dm') == $startDate->format('dm')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return User
      */
     private function _getUser()

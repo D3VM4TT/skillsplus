@@ -52,7 +52,7 @@ class Results extends Component
             $moduleEntry = $entry->resultModule->one();
             if ($moduleEntry->type == 'cpd') {
                 if (!$entry->cycleName) {
-                    $cycle = LantraHelper::getResultCycle($entry);
+                    $cycle = CycleHelper::getResultCycle($entry);
                     $entry->cycleName = $cycle->name;
                     $entry->cycleStartDate = $cycle->startDate;
                     $entry->cycleFinishDate = $cycle->finishDate;
@@ -165,6 +165,8 @@ class Results extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
      */
     function onSaveResult(ModelEvent $event, Entry $entry)
     {
@@ -185,6 +187,19 @@ class Results extends Component
         ## save unit result in user result cache (if enabled)
         if ($entry->enabled && $entry->type == 'unitResult') {
             $this->saveUserResultCache($entry->authorId, $entry);
+        }
+        if ($entry->type == 'moduleResult') {
+            if (null !== $moduleEntry = $entry->resultModule->one()) {
+                ## save new module result
+                if ($event->isNew) {
+                    if ($moduleEntry->type == 'cpd' && $moduleEntry->cycleNotifyStart) {
+                        Lantra::$app->notify->notifyCycleStart($entry);
+                    }
+                }
+                if ($moduleEntry->cycleNotifyComplete && $entry->resultStatus == 'complete') {
+                    Lantra::$app->notify->notifyCycleComplete($entry);
+                }
+            }
         }
     }
 

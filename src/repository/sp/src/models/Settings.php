@@ -72,8 +72,8 @@ class Settings extends Model
     public $notifyCycleStart                    = '';
     public $notifySubjectCycleEnd               = '';
     public $notifyCycleEnd                      = '';
-    public $notifySubjectCycleCompleted         = '';
-    public $notifyCycleCompleted                = '';
+    public $notifySubjectCycleComplete          = '';
+    public $notifyCycleComplete                 = '';
     public $notifySubjectCycleReminder          = '';
     public $notifyCycleReminder                 = '';
 
@@ -212,7 +212,9 @@ class Settings extends Model
     private function _populateModel($settings)
     {
         foreach ($settings as $key => $value) {
-            $this->{$key} = $value;
+            if (isset($this->{$key})) {
+                $this->{$key} = $value;
+            }
         }
     }
 }

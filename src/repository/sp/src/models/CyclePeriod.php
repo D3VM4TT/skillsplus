@@ -149,10 +149,11 @@ class CyclePeriod extends Model
     /**
      * @return bool
      */
-    public function finishesToday()
+    public function endsToday()
     {
         $now = new DateTime();
-        return $this->finishDate && $now->format('dmy') == $this->finishDate->format('dmy');
+        ## graceDate will be finishDate of no grace period
+        return $this->graceDate && $now->format('dmy') == $this->graceDate->format('dmy');
     }
 
     /**
