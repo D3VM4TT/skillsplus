@@ -200,12 +200,12 @@ body.logged-in header, body.logged-in .page-subHeader {
     position: sticky;
     top: 32px;
     width:100%;
-    z-index:10;
+    z-index:101;
 }
 body.logged-in .page-header {
     position: sticky;
     top: 83px;
-    z-index:10;
+    z-index:101;
 }
 .btn-toggle-small {
     display: none;
@@ -221,7 +221,7 @@ body.logged-in .page-header {
     box-shadow: none;
     width: 100%;
     cursor: pointer;
-    z-index: 99;
+    z-index: 101;
 }
 body.logged-in .btn-toggle-small {
     display: initial;
