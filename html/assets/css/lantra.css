@@ -1744,8 +1744,13 @@ table.data tbody td {
     vertical-align: top;
 }
 
-table.data tbody tr:nth-of-type(2n+1) {
+table.data tbody tr:nth-of-type(2n+1),
+table.data tbody tr.odd {
     background-color: #f7f7fa;
+}
+
+table.data tbody tr.even {
+    background-color: #FFF;
 }
 
 div.module table.data tbody tr td:first-child {
@@ -1769,6 +1774,13 @@ table.data tbody tr td:first-child {
 
 table.data tbody td:nth-child(2) {
     font-weight: 600;
+}
+
+table.data tbody td.icons {
+    text-align: right;
+    white-space: nowrap;
+    border-collapse: collapse;
+    width: 1px;
 }
 
 div.links {

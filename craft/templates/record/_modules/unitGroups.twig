@@ -16,12 +16,11 @@
                     <tr>
                         <th>Unit title</th>
                         {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager:isManager} %}
-                        {% if addResult %}
-                            <th></th>
-                        {% endif %}
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
+                    {% set rowClass = 'odd' %}
                     {% for unitEntry in unitGroupEntries.all() %}
                         {% set resultEntry = null %}
                         {% set totalComments = 0 %}
@@ -40,17 +39,19 @@
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
                         {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
 
-                        {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id ~ '">' ~ rowName ~ '</a>' %}
-                        {% set newLink = readOnly ? rowName : '<a href="' ~ editUrl ~ 'new?ref=module' ~ moduleElementId ~ '">Add New</a>' %}
+                        {% set editLink = editUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
+                        {% set newLink = editUrl ~ 'new?ref=module' ~ moduleElementId %}
 
                         {# if a single row (no multiple submissions or no results yet #}
                         {% if not addResult or (addResult and not hasResult) %}
+                            {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
                             {% set jobRoleNoResult = jobRoleNoResult + 1 %}
                             {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
-                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry} %}
+                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass} %}
                         {% else %}
-
                             {% for unitResultEntry in resultQuery.all() %}
+                                {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
+                                {% set rowTitle = loop.first ? rowTitle : '' %}
                                 {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
@@ -58,9 +59,10 @@
                                 {% if unitResultEntry.resultStatus == 'endorsed' %}
                                     {% set totalPoints = totalPoints + unitEntry.unitPoints %}
                                 {% endif %}
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink} %}
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink, rowClass:rowClass} %}
                             {% endfor %}
                         {% endif %}
+                        {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}
                     </tbody>
                 </table>
