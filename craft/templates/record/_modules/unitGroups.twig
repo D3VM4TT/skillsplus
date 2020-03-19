@@ -96,9 +96,6 @@
                         {% set unitType = 'evidence' %}
                         {% set unitPoints = userResultEntry.unitPoints %}
                         {% include 'record/_modules/row' with{resultEntry: userResultEntry} %}
-                        {% if (userResultEntry.resultStatus == 'endorsed') %}
-                            {% set totalPoints = totalPoints + userResultEntry.resultPoints %}
-                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
