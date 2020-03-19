@@ -36,7 +36,7 @@ class Notify extends Component
         }
         $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
 
-        if ($cycle->startsToday()) {
+        if (!$cycle->startsToday()) {
             return null;
         }
 
@@ -45,26 +45,26 @@ class Notify extends Component
             'module'    => $moduleEntry,
             'cycle'     => $cycle
         ];
-        $template = $this->getNotifySetting('cycleStart', "Module {{ module.title }} {{ cycle.name }} starts today.");
+        $template = $this->getNotifySetting('cycleStart', "{{ module.title }} {{ cycle.name }} starts today.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($resultEntry->author->email, $subject, $message);
     }
 
     /**
      * @param Entry $resultEntry
+     * @param Entry $moduleEntry
+     * @param CyclePeriod $cycle
      * @return null
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendCycleEnd(Entry $resultEntry)
+    function sendCycleEnd(Entry $resultEntry, $moduleEntry, $cycle)
     {
-        $moduleEntry = $resultEntry->resultModule->one();
-        if (!$moduleEntry || $moduleEntry->type != 'cpd') {
+        if ($moduleEntry->type != 'cpd') {
             return null;
         }
-        $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
 
-        if ($cycle->endsToday()) {
+        if (!$cycle->endsYesterday()) {
             return null;
         }
 
@@ -74,7 +74,7 @@ class Notify extends Component
             'result'    => $resultEntry,
             'cycle'     => $cycle
         ];
-        $template = $this->getNotifySetting('cycleStart', "Module {{ module.title }} {{ cycle.name }} ends today.");
+        $template = $this->getNotifySetting('cycleStart', "{{ module.title }} {{ cycle.name }} has ended.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($resultEntry->author->email, $subject, $message);
     }
@@ -102,7 +102,36 @@ class Notify extends Component
             'result'    => $resultEntry,
             'cycle'     => $cycle
         ];
-        $template = $this->getNotifySetting('cycleComplete', "Module {{ module.title }} {{ cycle.name }} has been completed.");
+        $template = $this->getNotifySetting('cycleComplete', "{{ module.title }} {{ cycle.name }} has been completed.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($resultEntry->author->email, $subject, $message);
+    }
+
+    /**
+     * @param Entry $resultEntry
+     * @return null
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendCycleReminder(Entry $resultEntry)
+    {
+        if ($resultEntry->resultStatus == 'complete') {
+            return null;
+        }
+        $moduleEntry = $resultEntry->resultModule->one();
+        if (!$moduleEntry || $moduleEntry->type != 'cpd') {
+            return null;
+        }
+        $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+
+        $subject = $this->getNotifySetting('subjectCycleReminder', 'CPD Cycle Reminder');
+        $variables = [
+            'module'    => $moduleEntry,
+            'result'    => $resultEntry,
+            'remaining' => Lantra::$app->results->remaining($resultEntry),
+            'cycle'     => $cycle
+        ];
+        $template = $this->getNotifySetting('cycleReminder', "{{ module.title }} {{ cycle.name }} {{ remaining.text }} ");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($resultEntry->author->email, $subject, $message);
     }
@@ -404,8 +433,11 @@ class Notify extends Component
                         ]);
                     }
                 }
-                if (!$message->send()) {
-                    Craft::error('notify(' . $address . ') not sent!' , __METHOD__);
+                if ($message->send()) {
+                    Craft::info('notify(' . $address . ') ' . $subject . ' sent.', __METHOD__);
+                }
+                else {
+                    Craft::error('notify(' . $address . ') ' . $subject . ' not sent!' , __METHOD__);
                 }
             } catch (\Exception $e) {
                 $this->notifyAdmin('Notify error (' . $address. ')', $e->getMessage());

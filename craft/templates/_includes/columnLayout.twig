@@ -1,6 +1,6 @@
 {% if header is defined %}
     {% for row in columnLayout.all() %}
-        {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
+        {% if (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) and row.fieldType != 'resultNarrative' %}
             <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
         {% endif %}
     {% endfor %}

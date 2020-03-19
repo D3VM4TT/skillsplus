@@ -181,8 +181,12 @@ class Cycle extends Model
         if (!$this->_moduleEntry || !$this->_moduleEntry->cycleNotifyReminder) {
             return false;
         }
-        $now = new \DateTime();
         $current = $this->getCurrent();
+        ## skip in case today is the cycle starts today
+        if ($current->startsToday()) {
+            return false;
+        }
+        $now = new \DateTime();
         $startDate = $current->startDate;
         $frequency = $this->_moduleEntry->cycleNotifyReminderFrequency;
         ## weekly sends on Mondays
@@ -190,21 +194,21 @@ class Cycle extends Model
             return true;
         }
         ## monthly sends on first of month
-        if ($frequency == 'monthly' && $now->format('d') == '01') {
+        elseif ($frequency == 'monthly' && $now->format('d') == '01') {
             return true;
         }
-        ## quarterly sends plus three, six and nine months
-        $quarterlyDate = $startDate;
-        $quarterly = [
-            $quarterlyDate->modify('+3 months')->format('dm'),
-            $quarterlyDate->modify('+3 months')->format('dm'),
-            $quarterlyDate->modify('+3 months')->format('dm')
-        ];
-        if ($frequency == 'quarterly' && in_array($now->format('dm'), $quarterly)) {
-            return true;
+        elseif ($frequency == 'quarterly') {
+            ## quarterly sends plus three, six and nine months
+            $quarterlyDate = clone $startDate;
+            $quarterly = [
+                $quarterlyDate->modify('+3 months')->format('dm'),
+                $quarterlyDate->modify('+3 months')->format('dm'),
+                $quarterlyDate->modify('+3 months')->format('dm')
+            ];
+            return in_array($now->format('dm'), $quarterly);
         }
         ## yearly send one year from start date
-        if ($frequency == 'yearly' && $now->format('dm') == $startDate->format('dm')) {
+        elseif ($frequency == 'yearly' && $now->format('dm') == $startDate->format('dm')) {
             return true;
         }
         return false;

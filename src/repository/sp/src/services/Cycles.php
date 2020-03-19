@@ -21,25 +21,23 @@ use lantra\sp\helpers\CycleHelper;
 class Cycles extends Component
 {
     /**
-     * @param CyclePeriod $cycle
-     * @param $moduleId
+     * Wrapper for Results::getModuleResult() with cycle
+     *
      * @param null $userId
+     * @param $moduleId
+     * @param CyclePeriod $cycle
+     * @param bool $create
      * @return array|\craft\base\ElementInterface|Entry|null
      */
-    public function getCycleResult(CyclePeriod $cycle, $moduleId, $userId = null)
+    public function getCycleResult($userId = null, $moduleId, CyclePeriod $cycle, $create = false)
     {
-        $criteria = Entry::find();
-        $criteria->section = 'results';
-        $criteria->type = 'moduleResult';
-        $criteria->limit = 1;
-        $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
         if ($cycle->finishDate) {
-            $criteria->postDate = ['and', '>= '.$cycle->startDate->format('Y-m-d H:i'), '<= '.$cycle->finishDate->format('Y-m-d H:i')];
+            $postDate= ['and', '>= '.$cycle->startDate->format('Y-m-d H:i'), '<= '.$cycle->finishDate->format('Y-m-d H:i')];
         } else {
-            $criteria->postDate = '<= '.$cycle->startDate->format('Y-m-d H:i');
+            $postDate = '<= '.$cycle->startDate->format('Y-m-d H:i');
         }
-        return $criteria->one();
+
+        return Lantra::$app->results->getModuleResult($userId, $moduleId, $create, $postDate);
     }
 
     /**
@@ -58,7 +56,7 @@ class Cycles extends Component
         $cycles = CycleHelper::getModuleCycles($moduleEntry);
         $results = [];
         foreach ($cycles as $cycle) {
-            $result = $this->getCycleResult($cycle, $moduleId, $userId);
+            $result = $this->getCycleResult($userId, $moduleId, $cycle);
             if (!$result && $cycle->isActive()) {
                 $postDate = $cycle->startDate;
                 $postDate->setTime(06, 00, 00);
@@ -77,7 +75,7 @@ class Cycles extends Component
      */
     public function hasCycleResult(CyclePeriod $cycle, $moduleId, $userId = null)
     {
-        return $this->getCycleResult($cycle, $moduleId, $userId) ? true : false;
+        return $this->getCycleResult($userId, $moduleId, $cycle) ? true : false;
     }
 
     /**
@@ -91,15 +89,15 @@ class Cycles extends Component
         }
 
         $total = 0;
-        ## loop modules see which start today
+        ## loop modules and see which start today
         foreach($modules as $moduleEntry) {
-            $current = CycleHelper::getModuleCurrentCycle($moduleEntry);
-            if ($current->startsToday()) {
+            $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+            if ($cycle->startsToday()) {
                 ## get users
                 $users = Lantra::$app->users->getModuleUsers($moduleEntry);
                 foreach($users as $user) {
                     ## will create if it doesn't already exist
-                    Lantra::$app->results->getModuleResult($user->id, $moduleEntry->id, true);
+                    Lantra::$app->cycles->getCycleResult($user->id, $moduleEntry->id, $cycle, true);
                     $total++;
                 }
             }
@@ -120,17 +118,17 @@ class Cycles extends Component
         }
         $total = 0;
 
-        ## loop modules see which start today
+        ## loop modules and see which end yesterday
         foreach($modules as $moduleEntry) {
-            $current = CycleHelper::getModuleCurrentCycle($moduleEntry);
-            if ($current->endsToday()) {
+            $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry)->getPrev();
+            if ($cycle->endsYesterday()) {
                 ## get users
                 $users = Lantra::$app->users->getModuleUsers($moduleEntry);
                 foreach($users as $user) {
                     ## get result for this user for this cycle
-                    $resultEntry = $this->getCycleResult($current, $moduleEntry->id, $user->id);
+                    $resultEntry = $this->getCycleResult($user->id, $moduleEntry->id, $cycle);
                     if ($resultEntry) {
-                        Lantra::$app->notify->sendCycleEnd($resultEntry);
+                        Lantra::$app->notify->sendCycleEnd($resultEntry, $moduleEntry, $cycle);
                     }
                     $total++;
                 }
@@ -154,13 +152,12 @@ class Cycles extends Component
         ## loop modules see which start today
         foreach($modules as $moduleEntry) {
             $cycle = CycleHelper::getModuleCycle($moduleEntry);
-            $current = $cycle->getCurrent();
             if ($cycle->remindsToday()) {
                 ## get users
                 $users = Lantra::$app->users->getModuleUsers($moduleEntry);
                 foreach ($users as $user) {
                     ## get result for this user for this cycle
-                    $resultEntry = $this->getCycleResult($current, $moduleEntry->id, $user->id);
+                    $resultEntry = $this->getCycleResult($user->id, $moduleEntry->id, $cycle->getCurrent());
                     if ($resultEntry && $resultEntry->resultStatus != 'complete') {
                         Lantra::$app->notify->sendCycleReminder($resultEntry);
                     }

@@ -193,11 +193,11 @@ class Results extends Component
                 ## save new module result
                 if ($event->isNew) {
                     if ($moduleEntry->type == 'cpd' && $moduleEntry->cycleNotifyStart) {
-                        Lantra::$app->notify->notifyCycleStart($entry);
+                        Lantra::$app->notify->sendCycleStart($entry);
                     }
                 }
                 if ($moduleEntry->cycleNotifyComplete && $entry->resultStatus == 'complete') {
-                    Lantra::$app->notify->notifyCycleComplete($entry);
+                    Lantra::$app->notify->sendCycleComplete($entry);
                 }
             }
         }
@@ -453,16 +453,21 @@ class Results extends Component
      * @param $userId
      * @param $moduleId
      * @param $create
+     * @param $postDate
      * @return null
      * @throws Mixed
      */
-    function getModuleResult($userId, $moduleId, $create = false) {
+    function getModuleResult($userId, $moduleId, $create = false, $postDate = null) {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        ## postDate might be sent from Cycles
+        if ($postDate) {
+            $criteria->postDate = $postDate;
+        }
         $existing = $criteria->one();
         if (!$existing && $create) {
             return $this->createModuleResult($userId, $moduleId);

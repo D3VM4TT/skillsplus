@@ -11,6 +11,7 @@ namespace lantra\sp\models;
 use Craft;
 use craft\base\Model;
 use \DateTime;
+use \DateInterval;
 
 use lantra\sp\Plugin as Lantra;
 
@@ -149,11 +150,12 @@ class CyclePeriod extends Model
     /**
      * @return bool
      */
-    public function endsToday()
+    public function endsYesterday()
     {
-        $now = new DateTime();
+        $date = new DateTime();
+        $date->add(DateInterval::createFromDateString('yesterday'));
         ## graceDate will be finishDate of no grace period
-        return $this->graceDate && $now->format('dmy') == $this->graceDate->format('dmy');
+        return $this->graceDate && $date->format('dmy') == $this->graceDate->format('dmy');
     }
 
     /**

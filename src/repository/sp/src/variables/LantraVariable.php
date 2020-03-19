@@ -829,7 +829,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->cycles->getCycleResult($cycle, $moduleId, $user->id);
+        return Lantra::$app->cycles->getCycleResult($user->id, $moduleId, $cycle);
     }
 
     /**

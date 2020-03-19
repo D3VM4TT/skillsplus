@@ -37,8 +37,8 @@ class CronController extends BaseController {
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
             Lantra::$app->reports->sendDailyReports($weekValue, $monthValue);
-            Lantra::$app->cycles->createCycleResults();
             Lantra::$app->cycles->sendCycleEnds();
+            Lantra::$app->cycles->createCycleResults();
             Lantra::$app->cycles->sendCycleReminders();
         }
         if ($frequency == 'weekly') {
