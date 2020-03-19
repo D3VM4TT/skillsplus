@@ -8,6 +8,7 @@
 }) }}
 
 {{ forms.textareaField ({
+    instructions:   "{{ user }} {{ module }} {{ cycle }}",
     label:			"Message CPD Cycle Start",
     id:				"notifyCycleStart",
     name:			"notifyCycleStart",
@@ -22,6 +23,7 @@
 }) }}
 
 {{ forms.textareaField ({
+    instructions:   "{{ user }} {{ module }} {{ result }} {{ cycle }}",
     label:			"Message CPD Cycle End",
     id:				"notifyCycleEnd",
     name:			"notifyCycleEnd",
@@ -36,6 +38,7 @@
 }) }}
 
 {{ forms.textareaField ({
+    instructions:   "{{ user }} {{ module }} {{ result }} {{ cycle }}",
     label:			"Message CPD Cycle Complete",
     id:				"notifyCycleComplete",
     name:			"notifyCycleComplete",
@@ -50,6 +53,7 @@
 }) }}
 
 {{ forms.textareaField ({
+    instructions:   "{{ user }} {{ module }} {{ result }} {{ remaining }} {{ cycle }}",
     label:			"Message CPD Cycle Reminder",
     id:				"notifyCycleReminder",
     name:			"notifyCycleReminder",
