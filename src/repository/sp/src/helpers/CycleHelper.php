@@ -65,6 +65,23 @@ class CycleHelper
     }
 
     /**
+     * @param $resultEntry
+     * @param string $code
+     * @return Cycle|null
+     */
+    static function getUnitResultRecurringCycle($resultEntry, $code = '')
+    {
+        $cycle = new Cycle($resultEntry);
+        $recurring = $cycle->getCurrent()->getRecurring();
+        foreach($recurring as $cyclePeriod) {
+            if($code && $cyclePeriod->code == $code) {
+                return $cyclePeriod;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return mixed
      */
     static function getCpdModules()

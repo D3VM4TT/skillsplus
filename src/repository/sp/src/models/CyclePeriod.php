@@ -25,6 +25,7 @@ class CyclePeriod extends Model
     public $duration;
     public $grace;
     public $label;
+    public $code;
     private $_recurring;
 
     /**
@@ -48,6 +49,7 @@ class CyclePeriod extends Model
         }
         $this->_setName();
         $this->_setLabel();
+        $this->_setCode();
     }
 
     /**
@@ -180,21 +182,35 @@ class CyclePeriod extends Model
         }
         if ($type == 'monthly') {
             $duration = 1;
+            $nameFormat = 'F';
         } elseif ($type == 'quarterly') {
             $duration = 3;
+            $nameFormat = 'F';
         } else {
             $duration = 12;
+            $nameFormat = 'Y';
         }
         $count = 1;
         ## create sub cycles for recurring periods
         $cycle = $this->_getCycle($this->startDate, $count, $duration, 0);
+        $cycle->setNameFromFormat($nameFormat);
         ## work out how many cycles in this cycle (matrix...!)
         $total = ceil($this->duration / $cycle->duration);
         $this->_recurring[$count] = $cycle;
         for ($count = 2; $count < ($total + 1); $count++) {
             $cycle = $cycle->getNext();
+            $cycle->setNameFromFormat($nameFormat);
             $this->_recurring[$count] = $cycle;
         }
+    }
+
+    /**
+     * @param $startDateFormat
+     * @param string $finishDateFormat
+     */
+    public function setNameFromFormat($startDateFormat, $finishDateFormat = '')
+    {
+        $this->name = $this->startDate->format($startDateFormat) . ($finishDateFormat && $this->finishDate ? ' - ' . $this->finishDate->format($finishDateFormat) : '');
     }
 
     /**
@@ -267,6 +283,14 @@ class CyclePeriod extends Model
         else {
             $this->label = $this->startDate->format('d/m/y') . ($this->finishDate ? ' - ' . $this->finishDate->format('d/m/y') : '');
         }
+    }
+
+    /**
+     *
+     */
+    private function _setCode()
+    {
+        $this->code = $this->startDate->format('dmy') . ($this->finishDate ? $this->finishDate->format('dmy') : '');
     }
 }
 

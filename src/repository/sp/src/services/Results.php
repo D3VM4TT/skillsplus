@@ -22,6 +22,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
 use lantra\sp\models\Cycle;
+use lantra\sp\models\CyclePeriod;
 
 use verbb\supertable\SuperTable;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -392,7 +393,7 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function getUnitResult($userId, $unitId)
+    function getUnitResult($userId, $unitId, $cycleCode = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -400,17 +401,30 @@ class Results extends Component
         $criteria->limit = 1;
         $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        if ($cycleCode) {
+            $criteria->resultRecurringCycleCode = $cycleCode;
+        }
         return $criteria->one();
     }
 
-    public function getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
+    /**
+     * @param $userId
+     * @param $unitId
+     * @param $cycle
+     * @param $moduleResultId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     */
+    public function getRecurringResultsQuery($userId, $unitId, CyclePeriod $cycle, $moduleResultId)
     {
         if (false == $unitEntry = Craft::$app->entries->getEntryById($unitId)) {
             return null;
         }
         $cycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
         foreach($cycles as $cycle) {
-            echo  $cycle->label . '<br />';
+            ## make sure the recurring results exist
+            if (!$this->getUnitResult($userId, $unitId, $cycle->code)) {
+                $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
+            }
         }
 
         return $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
@@ -825,6 +839,36 @@ class Results extends Component
             }
         }
         return $return;
+    }
+
+    /**
+     * @param $userId
+     * @param $unitId
+     * @param $resultModuleResult
+     * @param $cycleCode
+     * @return EntryModel|void
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null) {
+        $resultEntry = new Entry();
+        $resultEntry->sectionId = $this->sectionIdResults;
+        $resultEntry->typeId = $this->typeIdUnitResult;
+        $resultEntry->enabled = true;
+        $resultEntry->authorId = $userId;
+        if ($cycle) {
+            $resultEntry->setFieldValue('resultRecurringCycleCode', $cycle->code);
+        }
+        if ($resultModuleResult) {
+            $resultEntry->setFieldValue('resultModuleResult', [$resultModuleResult]);
+        }
+        $resultEntry->setFieldValue('resultUnit', [$unitId]);
+        $resultEntry->setFieldValue('resultStatus',  'incomplete');
+        if (!Craft::$app->elements->saveElement($resultEntry)) {
+            return;
+        }
+        return $resultEntry;
     }
 
     /**

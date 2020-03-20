@@ -30,7 +30,7 @@
         {% if editLink is defined and editLink and resultEntry %}
             <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result"><img src="/assets/img/edit.svg" title="Edit" /></a>
         {% endif %}
-        {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) %}
+        {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
             {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
             {% set managerEndorse = craft.lantra.canEndorse(resultEntry) %}
             {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}

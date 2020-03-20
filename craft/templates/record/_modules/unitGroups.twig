@@ -24,6 +24,7 @@
                     {% for unitEntry in unitGroupEntries.all() %}
                         {% set resultEntry = null %}
                         {% set totalComments = 0 %}
+                        {% set multipleRows = unitEntry.unitRecurring or addResult %}
 
                         {% set unitType = unitEntry.unitType %}
                         {% set unitPoints = craft.lantra.unitPoints(unitEntry, module) %}
@@ -43,24 +44,28 @@
                         {% set newLink = editUrl ~ 'new?ref=module' ~ moduleElementId %}
 
                         {# if a single row (no multiple submissions or no results yet #}
-                        {% if not addResult or (addResult and not hasResult) %}
+                        {% if multipleRows %}
+                            {% for unitResultEntry in resultQuery.all() %}
+                                {% if unitResultEntry.resultRecurringCycleCode %}
+                                    {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
+                                    {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
+                                    {% set editLink = cyclePeriod.isCurrent() or cyclePeriod.isPast() ? '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' : ''%}
+                                {% else %}
+                                    {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
+                                    {% set rowTitle = loop.first ? rowTitle : '' %}
+                                    {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+                                {% endif %}
+                                {# remember all result ids so as to get user results below #}
+                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
+                                {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
+                                {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink, rowClass:rowClass} %}
+                            {% endfor %}
+                        {% else %}
                             {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
                             {% set jobRoleNoResult = jobRoleNoResult + 1 %}
                             {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
                             {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass} %}
-                        {% else %}
-                            {% for unitResultEntry in resultQuery.all() %}
-                                {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
-                                {% set rowTitle = loop.first ? rowTitle : '' %}
-                                {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
-                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
-                                {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
-                                {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
-                                {% if unitResultEntry.resultStatus == 'endorsed' %}
-                                    {% set totalPoints = totalPoints + unitEntry.unitPoints %}
-                                {% endif %}
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, newLink: loop.last ? newLink, rowClass:rowClass} %}
-                            {% endfor %}
                         {% endif %}
                         {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}
