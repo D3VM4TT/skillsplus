@@ -447,6 +447,7 @@ class Results extends Component
         $criteria->type = 'unitResult';
         $criteria->limit = $limit;
         $criteria->authorId = $userId;
+        $criteria->orderBy = 'resultRecurringCycleCode';
         if ($moduleResultId) {
             $criteria->relatedTo = [
                 'and',

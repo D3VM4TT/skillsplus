@@ -290,7 +290,7 @@ class CyclePeriod extends Model
      */
     private function _setCode()
     {
-        $this->code = $this->startDate->format('dmy') . ($this->finishDate ? $this->finishDate->format('dmy') : '');
+        $this->code = $this->startDate->format('Ymd') . ($this->finishDate ? $this->finishDate->format('Ymd') : '');
     }
 }
 
