@@ -413,6 +413,23 @@ fields:
       allowSelect: ''
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
     contentColumnType: text
+  20ebe212-6fe5-4cd3-8045-a82a1c462e88:
+    name: 'Result Recurring Cycle Code'
+    handle: resultRecurringCycleCode
+    instructions: ''
+    searchable: true
+    translationMethod: none
+    translationKeyFormat: null
+    type: craft\fields\PlainText
+    settings:
+      placeholder: ''
+      code: ''
+      multiline: ''
+      initialRows: '4'
+      charLimit: ''
+      columnType: text
+    contentColumnType: text
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
   22f6cba0-1e8a-4d82-8678-9a33b1d06163:
     name: 'Unit Recurring Period'
     handle: unitRecurringPeriod
@@ -685,6 +702,7 @@ fields:
     translationKeyFormat: null
     type: craft\fields\Dropdown
     settings:
+      optgroups: true
       options:
         -
           label: Draft
@@ -714,8 +732,12 @@ fields:
           label: Complete
           value: complete
           default: ''
-    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+        -
+          label: Incomplete
+          value: incomplete
+          default: ''
     contentColumnType: string
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
   3cff7796-6519-48a5-97e7-e4dbb14befcc:
     name: 'Result Endorsed User'
     handle: resultEndorsedUser
@@ -3599,6 +3621,9 @@ sections:
                   14b8c677-a8a8-4df3-a74e-a30106bd5398:
                     required: false
                     sortOrder: 1
+                  20ebe212-6fe5-4cd3-8045-a82a1c462e88:
+                    required: false
+                    sortOrder: 8
                   2c8efd67-eb2c-40fd-b9d3-f660cc251a99:
                     required: false
                     sortOrder: 7
@@ -3619,7 +3644,7 @@ sections:
                     sortOrder: 6
                   fabb8307-8d88-4171-bfe1-3309efb0b71a:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 9
               -
                 name: Evidence
                 sortOrder: 2
