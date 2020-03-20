@@ -49,11 +49,11 @@
                                 {% if unitResultEntry.resultRecurringCycleCode %}
                                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
                                     {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
-                                    {% set editLink = cyclePeriod.isCurrent() or cyclePeriod.isPast() ? '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' : ''%}
+                                    {% set editLink = cyclePeriod.isCurrent() or cyclePeriod.isPast() ? editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
                                 {% else %}
                                     {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
                                     {% set rowTitle = loop.first ? rowTitle : '' %}
-                                    {% set editLink = readOnly ? rowName : '<a href="' ~ editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId ~ '">' ~ rowName ~ '</a>' %}
+                                    {% set editLink = readOnly ? rowName : editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId %}
                                 {% endif %}
                                 {# remember all result ids so as to get user results below #}
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
