@@ -49,7 +49,7 @@
                                 {% if unitResultEntry.resultRecurringCycleCode %}
                                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
                                     {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
-                                    {% set editLink = cyclePeriod.isCurrent() or cyclePeriod.isPast() ? editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
+                                    {% set editLink = cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) ? editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
                                 {% else %}
                                     {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
                                     {% set rowTitle = loop.first ? rowTitle : '' %}
