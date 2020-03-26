@@ -30,11 +30,11 @@
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}
-{% if resultId %}
+{% if resultId is defined and resultId %}
     {% set resultEntry = craft.entries.id(resultId).one() %}
 {% elseif not addNew %}
     {% set resultQuery = craft.lantra.unitResultsQuery(account.id, unitEntry.id, 1, moduleEntry.type == 'cpd' ? moduleResultEntry.id : null) %}
-    {% set resultEntry = craft.entries.id(moduleResultId).one() %}
+    {% set resultEntry = resultQuery.one() %}
 {% endif %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 

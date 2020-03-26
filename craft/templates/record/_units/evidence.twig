@@ -1,4 +1,4 @@
-{% if resultEntry.resultStatus == 'incomplete' %}
+{% if resultEntry and resultEntry.resultStatus == 'incomplete' %}
     <p>This unit is {{ resultEntry.resultStatus }}.</p>
 {% elseif resultEntry  %}
     <p>You submitted evidence for this unit on {{ resultEntry.postDate|date(dateFormat) }} and your result status is {{ resultEntry.resultStatus }}.</p>
