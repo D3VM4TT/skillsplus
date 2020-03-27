@@ -813,8 +813,9 @@ class Results extends Component
         }
         $targetPoints = (int) $moduleEntry->targetPoints;
         $targetHours = (int) $moduleEntry->targetHours;
-        $resultHours = (int) $moduleResult->resultHours;
+
         $resultPoints = (int) $moduleResult->resultPoints;
+        $resultHours = (int) $moduleResult->resultHours;
 
         $remainingPoints = $targetPoints - $resultPoints;
         $remainingHours = $targetHours - $resultHours;
@@ -834,7 +835,9 @@ class Results extends Component
                 if ($remainingPoints && $remainingHours) {
                     $return['text'] =  $remainingPointsText . ' and ' . $remainingHoursText;
                 }
-                $return['text'] = $remainingPoints ? $remainingPointsText : $remainingHoursText;
+                else {
+                    $return['text'] = $remainingPoints ? $remainingPointsText : $remainingHoursText;
+                }
             } elseif ($moduleEntry->targetType == 'pointsOrHours') {
                 $return['text'] = $remainingPointsText . ' or ' . $remainingHoursText;
             }
