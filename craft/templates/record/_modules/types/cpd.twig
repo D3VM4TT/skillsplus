@@ -8,17 +8,22 @@
         <h5 style="display:block;text-align:right;color:black">LOCKED</h5>
     {% endif %}
     {% if moduleResultEntry.resultStatus == 'complete' %}
-    <p style="color:green;"><span class="status-complete"></span>Congratulations, this module is complete!</p>
+        <p style="color:green;">
+        <span class="status-complete"></span>Congratulations, this module is complete!</p>
     {% else %}
-    {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
-    {% set pending = craft.lantra.pending(moduleResultEntry, cpdUser.id) %}
-    <p>
-        <span class="status-inprogress"></span>
-        {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
-        {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
-        <br />You need {{ remaining.text }} to complete this module.
-        {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ?? 's' }} waiting for endorsement worth {{ pending.text }}.{% endif %}
-    </p>
+        <p>
+
+            {% set unitResultCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, true) %}
+            {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
+            {% set pending = craft.lantra.pending(moduleResultEntry, cpdUser.id) %}
+
+            <span class="status-{{ unitResultCount ? 'inprogress' : 'active' }}"></span>
+
+            {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
+            {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
+            <br />You need {{ remaining.text }} to complete this module.
+            {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ?? 's' }} waiting for endorsement worth {{ pending.text }}.{% endif %}
+        </p>
 {% endif %}
 </div>
 {% include 'record/_modules/unitGroups' with {'cycle':cycle, 'moduleResultEntry':moduleResultEntry, 'readOnly':readOnly or (not readOnly and cycle.isLocked) } %}

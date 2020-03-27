@@ -806,6 +806,16 @@ class LantraVariable
     }
 
     /**
+     * @param null $moduleResultId
+     * @param $count
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getModuleResultUnitResults($moduleResultId = null, $count = false)
+    {
+        return Lantra::$app->results->getModuleResultUnitResults($moduleResultId, $count);
+    }
+
+    /**
      * @param $moduleId
      * @param null $userId
      * @return null
