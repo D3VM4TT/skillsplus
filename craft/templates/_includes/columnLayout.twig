@@ -1,12 +1,12 @@
 {% if header is defined %}
     {% for row in columnLayout.all() %}
-        {% if (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) and row.fieldType != 'resultNarrative' %}
+        {% if (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) and row.fieldType != 'resultNarrative' and row.fieldDisplay != 'form' %}
             <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
         {% endif %}
     {% endfor %}
 {% else %}
     {% for row in columnLayout.all() %}
-        {% if not row.fieldManagerOnly or (row.fieldManagerOnly and isManager) %}
+        {% if (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) and row.fieldDisplay != 'form' %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
                 <p class="td-title-responsive">Unit type: </p>

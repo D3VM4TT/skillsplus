@@ -30,7 +30,7 @@
     </div>
     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
         {% for module in modules.all() %}
-            {% set columnLayout = module.columnLayout ?  module.columnLayout : moduleGroup.columnLayout %}
+            {% set columnLayout = module.columnLayout.count ?  module.columnLayout : moduleGroup.columnLayout %}
             {% include 'record/_modules/module' %}
         {% endfor %}
     </div>

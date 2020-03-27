@@ -51,6 +51,7 @@ categoryGroups:
         uriFormat: null
         template: null
 dateModified: 1584533110
+dateModified: 1585324581
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -4219,6 +4220,31 @@ superTableBlockTypes:
           columnType: text
         contentColumnType: text
         fieldGroup: null
+      b46f9aa2-ceed-4dee-ac99-835a93962438:
+        name: 'Field Display'
+        handle: fieldDisplay
+        instructions: ''
+        searchable: true
+        translationMethod: none
+        translationKeyFormat: null
+        type: craft\fields\Dropdown
+        settings:
+          optgroups: true
+          options:
+            -
+              label: Both
+              value: both
+              default: '1'
+            -
+              label: Table
+              value: table
+              default: ''
+            -
+              label: Form
+              value: form
+              default: ''
+        contentColumnType: string
+        fieldGroup: null
     fieldLayouts:
       bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
         tabs:
@@ -4247,6 +4273,9 @@ superTableBlockTypes:
               a37728d1-3a88-46ca-b9d5-ec79b66ba635:
                 required: false
                 sortOrder: 6
+              b46f9aa2-ceed-4dee-ac99-835a93962438:
+                required: false
+                sortOrder: 8
   e1217b3a-3108-405d-9e31-243f335635c8:
     field: 61e98c20-6536-4fb2-8420-7b21d34b4dd5
     fields:
