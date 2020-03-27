@@ -7,6 +7,18 @@
 {%- do view.registerJsFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.js')) -%}
 {%- do view.registerCssFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.css')) -%}
 {% includeJs "$('.redactor').redactor();" %}
+<style>
+    .redactor-styles ul,
+    .redactor-styles ol {
+        list-style: outside !important;
+    }
+    .redactor-styles strong {
+        font-weight:bold !important;
+    }
+    .redactor-styles em {
+        font-style:italic !important;
+    }
+</style>
 
 {% if columnLayout is not defined and moduleGroup is defined %}
     {% set columnLayout = moduleGroup.columnLayout %}
