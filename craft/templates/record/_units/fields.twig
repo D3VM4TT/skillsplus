@@ -49,7 +49,7 @@
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
-                    value="{{ resultExists ? resultEntry.resultPoints|default(1) }}" />
+                    value="{{ resultExists ? resultEntry.resultPoints|default('') }}" />
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
