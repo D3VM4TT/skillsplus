@@ -464,15 +464,20 @@ class Results extends Component
 
     /**
      * @param $moduleResultId
+     * @param bool $status
      * @param bool $count
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    function getModuleResultUnitResults($moduleResultId, $count = false)
+    function getModuleResultUnitResults($moduleResultId, $status = null, $count = false)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
-        $criteria->status = ['live', 'expired'];
+        if ($status) {
+            $criteria->status = [$status];
+        } else {
+            $criteria->status = ['live', 'expired'];
+        }
         $criteria->relatedTo = ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult'];
         return $count ? $criteria->count() : $criteria->all();
     }

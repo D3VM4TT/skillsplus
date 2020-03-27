@@ -13,11 +13,20 @@
     {% else %}
         <p>
 
-            {% set unitResultCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, true) %}
+            {% set unitResultCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, null, true) %}
+            {% set unitResultExpiredCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, 'expired', true) %}
             {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
             {% set pending = craft.lantra.pending(moduleResultEntry, cpdUser.id) %}
 
-            <span class="status-{{ unitResultCount ? 'inprogress' : 'active' }}"></span>
+            {% if unitResultExpiredCount %}
+                {% set status = 'expired' %}
+            {% elseif unitResultCount %}
+                {% set status = 'inprogress' %}
+            {% else %}
+                {% set status = 'active' %}
+            {% endif %}
+
+            <span class="status-{{ status }}"></span>
 
             {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
             {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />

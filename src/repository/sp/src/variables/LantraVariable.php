@@ -807,12 +807,13 @@ class LantraVariable
 
     /**
      * @param null $moduleResultId
+     * @param $status
      * @param $count
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getModuleResultUnitResults($moduleResultId = null, $count = false)
+    public function getModuleResultUnitResults($moduleResultId = null, $status = null, $count = false)
     {
-        return Lantra::$app->results->getModuleResultUnitResults($moduleResultId, $count);
+        return Lantra::$app->results->getModuleResultUnitResults($moduleResultId, $status, $count);
     }
 
     /**
