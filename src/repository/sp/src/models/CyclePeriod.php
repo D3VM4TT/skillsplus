@@ -35,13 +35,13 @@ class CyclePeriod extends Model
      * @param $grace
      * @param $count
      */
-    public function __construct(\DateTime $startDate, int $duration, int $grace, int $count)
+    public function __construct(\DateTime $startDate, $duration, $grace, $count)
     {
         parent::__construct();
         $startDate->setTime(00, 00, 00);
         $this->startDate = $startDate;
         $this->count = (int) $count;
-        $this->duration = (int) $duration;
+        $this->duration = $duration ? (int) $duration : 1;
         $this->grace = (int) $grace;
         if ($duration) {
             $this->finishDate = $this->_getFinishDate();

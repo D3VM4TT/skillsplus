@@ -199,6 +199,9 @@ class Plugin extends BasePlugin
                     ## delete result cache unit column (if enabled)
                     Lantra::$app->results->removeUnitColumn($entry->id);
                 }
+                if ($entry->sectionId == $this->sectionIdResults) {
+                    Lantra::$app->results->onDeleteResult($event, $entry);
+                }
             });
 
         Event::on(

@@ -207,6 +207,23 @@ class Results extends Component
     /**
      * @param ModelEvent $event
      * @param Entry $entry
+     */
+    public function onDeleteResult(ModelEvent $event, Entry $entry)
+    {
+        ## check the cpd module result
+        if ($entry->type == 'unitResult') {
+            if (null != $moduleResultEntry = $entry->resultModuleResult->one()) {
+                $moduleEntry = $moduleResultEntry->resultModule->one();
+                if ($moduleEntry && $moduleEntry->type == 'cpd') {
+                    $this->checkModuleResult($moduleEntry, $entry->authorId, $moduleResultEntry);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param Entry $entry
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -718,8 +735,12 @@ class Results extends Component
         $moduleResultEntry->setFieldValue('resultHours', $hours);
         $moduleResultEntry->setFieldValue('resultPoints', $points);
         Craft::$app->getElements()->saveElement($moduleResultEntry);
+        ## update result status to complete or revert to active (if unit result was deleted)
         if ($this->isCompleteModuleResult($moduleResultEntry)) {
             $this->completeModuleResult($moduleResultEntry, $userId, $moduleResultExpiryTime);
+        }
+        else {
+            $this->activateModuleResult($moduleResultEntry, $userId);
         }
         return;
     }
@@ -933,6 +954,19 @@ class Results extends Component
         ## either no expiry, default module expiry or set by result
         $moduleResultEntry->expiryDate = $expiryDate;
         $moduleResultEntry->setFieldValue('resultStatus', 'complete');
+        Craft::$app->elements->saveElement($moduleResultEntry);
+    }
+
+    /**
+     * Activate a module result
+     *
+     * @param $moduleResultEntry
+     * @return null
+     * @throws /Exception
+     */
+    function activateModuleResult($moduleResultEntry)
+    {
+        $moduleResultEntry->setFieldValue('resultStatus', 'active');
         Craft::$app->elements->saveElement($moduleResultEntry);
     }
 
