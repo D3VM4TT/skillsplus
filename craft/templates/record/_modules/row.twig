@@ -1,4 +1,4 @@
-<tr class="{{ rowClass ?? rowClass }}">
+<tr class="{{ rowClass is defined and rowClass ?? rowClass }}">
     <td>
         {{ rowTitle|raw }}
         <div class="cpd-icons">
