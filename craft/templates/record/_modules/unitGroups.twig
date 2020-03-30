@@ -42,7 +42,7 @@
 
                         {% set editLink = editUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
                         {% if addResult and hasResult %}
-                            {% set newLink = editUrl ~ 'new?ref=module' ~ moduleElementId %}
+                            {% set newLink = editUrl ~ 'new?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
                         {% endif %}
 
                         {# if a single row (no multiple submissions or no results yet #}
