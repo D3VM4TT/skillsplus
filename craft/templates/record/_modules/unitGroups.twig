@@ -16,7 +16,7 @@
                     <tr>
                         <th>Unit title</th>
                         {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager:isManager} %}
-                        <th></th>
+                        <th colspan="2"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,12 +38,9 @@
                         {% set multipleRows = unitEntry.unitRecurring or (addResult and hasResult) %}
 
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
-                        {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
-
-                        {% set editLink = editUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
-                        {% if addResult and hasResult %}
-                            {% set newLink = editUrl ~ 'new?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
-                        {% endif %}
+                        {% set baseUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
+                        {% set newUrl = baseUrl ~ 'new?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
+                        {% set editUrl = baseUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
 
                         {# if a single row (no multiple submissions or no results yet #}
                         {% if multipleRows %}
@@ -51,23 +48,28 @@
                                 {% if unitEntry.unitRecurring %}
                                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
                                     {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
-                                    {% set editLink = cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) ? editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
-                                {% else %}
-                                    {% set rowTitle = readOnly ? rowName : '<a href="' ~ newLink ~ '">' ~ rowName ~ '</a>' %}
-                                    {% set rowTitle = loop.first ? rowTitle : '' %}
-                                    {% set editLink = readOnly ? rowName : editUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId %}
+                                    {% set editLink = cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) ? baseUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
+                                {% elseif addResult %}
+                                    {% set rowTitle = loop.first ? rowName : '' %}
+                                    {% set editLink = '' %}
                                 {% endif %}
                                 {# remember all result ids so as to get user results below #}
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                 {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass} %}
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass, newLink: loop.last and addResult ? newUrl} %}
                             {% endfor %}
                         {% else %}
-                            {% set rowTitle = readOnly ? rowName : '<a href="' ~ editLink ~ '">' ~ rowName ~ '</a>' %}
+                            {% if addResult %}
+                                {% set rowTitle = rowName %}
+                                {% set editLink = '' %}
+                            {% else %}
+                                {# standard single units #}
+                                {% set rowTitle = readOnly ? rowName : '<a href="' ~ editUrl ~ '">' ~ rowName ~ '</a>' %}
+                            {% endif %}
                             {% set jobRoleNoResult = jobRoleNoResult + 1 %}
                             {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
-                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass} %}
+                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass, newLink: addResult ? newUrl} %}
                         {% endif %}
                         {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}

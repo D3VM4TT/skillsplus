@@ -27,9 +27,6 @@
         isManager: isManager
     } %}
     <td class="icons">
-        {% if editLink is defined and editLink and resultEntry %}
-            <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result"><img src="/assets/img/edit.svg" title="Edit" /></a>
-        {% endif %}
         {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
             {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
             {% set managerEndorse = craft.lantra.canEndorse(resultEntry) %}
@@ -40,6 +37,16 @@
             {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
                 <a class="icon action" href="#" data-ref="module{{ moduleElementId }}" data-action="entries/endorse-evidence" data-id="{{ resultEntry.id }}"
                    data-tooltip title="Endorse this result"><img src="/assets/img/endorse.svg" alt="Endorse"></a>
+            {% endif %}
+        {% endif %}
+    </td>
+    <td class="icons">
+        {% if not readOnly %}
+            {% if editLink is defined and editLink and resultEntry %}
+                <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result"><img src="/assets/img/edit.svg" title="Edit" /></a>
+            {% endif %}
+            {% if newLink is defined and newLink %}
+                <a class="icon" href="{{ newLink }}" data-tooltip title="Add new result"><img src="/assets/img/add.svg" title="Add" /></a>
             {% endif %}
         {% endif %}
     </td>
