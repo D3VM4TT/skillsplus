@@ -428,9 +428,12 @@ class Results extends Component
     /**
      * @param $userId
      * @param $unitId
-     * @param $cycle
+     * @param CyclePeriod $cycle
      * @param $moduleResultId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function getRecurringResultsQuery($userId, $unitId, CyclePeriod $cycle, $moduleResultId)
     {
@@ -440,13 +443,31 @@ class Results extends Component
         $cycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
         foreach($cycles as $cycle) {
             ## make sure the recurring results exist
-            if (!$this->getUnitResult($userId, $unitId, $cycle->code)) {
+            if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $cycle->code)) {
                 $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
+            }
+            ## fix to update resultModuleResult if cycle has changed
+            $moduleResult = $resultEntry->resultModuleResult->one();
+            if (!$moduleResult || $moduleResult->id != $moduleResultId) {
+                $this->setResultModuleResult($resultEntry, $moduleResultId);
             }
         }
 
         return $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
+    }
 
+    /**
+     * @param $resultEntry
+     * @param $moduleResultId
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    function setResultModuleResult($resultEntry, $moduleResultId)
+    {
+        $resultEntry->setFieldValue('resultModuleResult', [$moduleResultId]);
+        return Craft::$app->elements->saveElement($resultEntry);
     }
 
     /**
