@@ -17,6 +17,7 @@ use craft\elements\User;
 use craft\helpers\DateTimeHelper;
 use craft\events\ModelEvent;
 use DateTime;
+use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -205,10 +206,10 @@ class Results extends Component
     }
 
     /**
-     * @param ModelEvent $event
+     * @param Event $event
      * @param Entry $entry
      */
-    public function onDeleteResult(ModelEvent $event, Entry $entry)
+    public function onDeleteResult(Event $event, Entry $entry)
     {
         ## check the cpd module result
         if ($entry->type == 'unitResult') {
