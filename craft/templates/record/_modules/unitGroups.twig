@@ -57,7 +57,7 @@
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
                                 {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass, newLink: loop.last and addResult ? newUrl} %}
+                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass: rowClass, newLink:loop.last and addResult ? newUrl} %}
                             {% endfor %}
                         {% else %}
                             {% if addResult %}
@@ -69,7 +69,7 @@
                             {% endif %}
                             {% set jobRoleNoResult = jobRoleNoResult + 1 %}
                             {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
-                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass:rowClass, newLink: addResult ? newUrl} %}
+                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass: rowClass, newLink: addResult ? newUrl} %}
                         {% endif %}
                         {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}
