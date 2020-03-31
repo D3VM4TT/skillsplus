@@ -447,8 +447,8 @@ class Results extends Component
                 $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
             }
             ## fix to update resultModuleResult if cycle has changed
-            $moduleResult = $resultEntry->resultModuleResult->one();
-            if (!$moduleResult || $moduleResult->id != $moduleResultId) {
+            $moduleResult = $resultEntry->resultModuleResult;
+            if (!$moduleResult || $moduleResult->one()->id != $moduleResultId) {
                 $this->setResultModuleResult($resultEntry, $moduleResultId);
             }
         }
