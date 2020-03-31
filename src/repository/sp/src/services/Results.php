@@ -444,7 +444,7 @@ class Results extends Component
         foreach($cycles as $cycle) {
             ## make sure the recurring results exist
             if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $cycle->code)) {
-                $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
+                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
             }
             ## fix to update resultModuleResult if cycle has changed
             $moduleResult = $resultEntry->resultModuleResult;
