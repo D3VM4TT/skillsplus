@@ -72,7 +72,7 @@ class CycleHelper
     static function getUnitResultRecurringCycle($resultEntry, $code = '')
     {
         $cycle = new Cycle($resultEntry);
-        $recurring = $cycle->getCurrent()->getRecurring();
+        $recurring = $cycle->getCycle()->getRecurring();
         foreach($recurring as $cyclePeriod) {
             if($code && $cyclePeriod->code == $code) {
                 return $cyclePeriod;
