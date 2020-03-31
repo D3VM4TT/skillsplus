@@ -912,7 +912,7 @@ class Results extends Component
      * @param $userId
      * @param $unitId
      * @param $resultModuleResult
-     * @param $cycleCode
+     * @param $cycle
      * @return EntryModel|void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
@@ -926,6 +926,7 @@ class Results extends Component
         $resultEntry->authorId = $userId;
         if ($cycle) {
             $resultEntry->setFieldValue('resultRecurringCycleCode', $cycle->code);
+            $resultEntry->postDate = $cycle->startDate;
         }
         if ($resultModuleResult) {
             $resultEntry->setFieldValue('resultModuleResult', [$resultModuleResult]);
