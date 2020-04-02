@@ -16,7 +16,7 @@ return [
         'omitScriptNameInUrls' => true,
         'cpTrigger' => 'admin',
         'devMode' => false,
-        'allowAdminChanges' => true,
+        'allowAdminChanges' => false,
         'loginPath' => '/public',
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
@@ -45,7 +45,7 @@ return [
     ],
     'local' => [
         'siteUrl' => 'http://skills-plus.local',
-        'devMode' => true,
+        'devMode' => false,
         'allowAdminChanges' => true,
         'aliases' => [
             '@basePath' => '/websites/skills-plus.net/',
