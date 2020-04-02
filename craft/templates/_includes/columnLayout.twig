@@ -80,8 +80,8 @@
                 <p class="td-title-responsive">Evidence: </p>
                 {% if resultEntry and resultEntry.resultEvidence|length %}
                     {% for resultEvidenceAsset in resultEntry.resultEvidence %}
-                        <a title="{{ resultEvidenceAsset.filename }}" target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">
-                           Evidence {{ loop.count }} - Uploaded {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}
+                        <a data-tooltip title="{{ resultEvidenceAsset.filename }}" target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">
+                           Evidence {{ loop.index }} - {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}
                         </a>
                         <br />
                     {% endfor %}
