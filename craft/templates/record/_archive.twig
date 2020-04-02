@@ -1,0 +1,43 @@
+<p> </p>
+
+<section id="archive" class="{% if craft.lantra.setting('themeResultHistoryLink') %}hidden{% endif %}">
+    <div class="module-wrapper">
+        <div class="module">
+            <div class="header" data-target="#results-archive">
+                <h4>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</h4>
+                <div class="status">View results<img src="/assets/img/img-arrow-down-trans.png"></div>
+            </div>
+            <div id="results-archive" class="unit-groups open">
+                <div class="unit-group">
+                    <div class="units">
+                        <table class="data">
+                            <thead>
+                            <tr>
+                                <th>Result Title</th>
+                                {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                                <th colspan="2"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for resultEntry in resultEntries %}
+                            {# try to move legacy result files #}
+                            {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
+                            {% set resultUnit = resultEntry.resultUnit.one %}
+                            {% set rowTitle = resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title %}
+                            {% include 'record/_modules/row' with {
+                                unitType: resultEntry.unitType,
+                                unitPoints: resultEntry.unitPoints,
+                                resultEntry: resultEntry,
+                                editLink: '/result/' ~ resultEntry.id,
+                                columnLayout: globalsTheme.columnLayout
+                            } %}
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

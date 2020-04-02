@@ -21,15 +21,14 @@
 <section class="page">
     <div class="page-header secondary-bg">
         {% if hierarchyNode %}
-        <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
-    {% else %}
-        <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
-    {% endif %}
-
+            <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+        {% else %}
+            <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+        {% endif %}
         <h2>{{ account.fullname }}'s Dashboard</h2>
     </div>
         {% if userId %}
-        {% include '_includes/account' with{cpdUser:account} %}
+            {% include '_includes/account' with{cpdUser:account} %}
         {% endif %}
     <div class="page-content">
         {% include 'record/_modules' with{cpdUser:account} %}

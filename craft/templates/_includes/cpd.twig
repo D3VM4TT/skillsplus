@@ -317,7 +317,7 @@
 {% endif %}
     </div>
     {% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
-        {% include '_includes/resultArchive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
+        {% include 'record/_archive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
     {% endif %}
     <p style="text-align:right">
         {% if craft.lantra.setting('themeResultHistoryLink') and resultArchive|length %}

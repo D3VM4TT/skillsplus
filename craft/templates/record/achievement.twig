@@ -36,9 +36,13 @@
     {% set moduleEntry = resultEntry.resultModule.one %}
 {% endif %}
 
+{% set moduleResultEntry = false %}
+
 {% if moduleEntry %}
     {% set moduleGroup = moduleEntry.moduleGroup.one %}
-    {% set moduleResultEntry = craft.lantra.resultCycle(module.id) %}
+    {% if moduleEntry.type == 'cpd' %}
+        {% set moduleResultEntry = craft.lantra.resultCycle(moduleEntry.id) %}
+    {% endif %}
 {% endif %}
 
 {% set userModules = [] %}
@@ -93,7 +97,7 @@
                 {{ csrfInput() }}
                 <input type="hidden" name="action" value="entries/save-entry">
                 {{ redirectInput('cpd/' ~ account.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
-                <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry.id }}" />
+                <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry ? moduleResultEntry.id }}" />
                 <input type="hidden" name="typeId" value="17">
                 <input type="hidden" name="sectionId" value="10">
                 <input type="hidden" name="enabled" value="1">
