@@ -447,10 +447,7 @@ class Results extends Component
                 $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
             }
             ## fix to update resultModuleResult if cycle has changed
-            $moduleResult = $resultEntry->resultModuleResult;
-            if (!$moduleResult || $moduleResult->one()->id != $moduleResultId) {
-                $this->setResultModuleResult($resultEntry, $moduleResultId);
-            }
+            $this->setResultModuleResult($resultEntry, $moduleResultId);
         }
 
         return $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
