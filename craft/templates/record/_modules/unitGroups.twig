@@ -34,42 +34,82 @@
                             {# get only results linked to this module result if a cpd type module #}
                             {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unitEntry.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null) %}
                         {% endif %}
+
                         {% set hasResult = resultQuery.count() %}
                         {% set multipleRows = unitEntry.unitRecurring or (addResult and hasResult) %}
+                        {% set singleRow = not unitEntry.unitRecurring and not addResult %}
 
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
+                        {# url format cpd/<userId>/<moduleId>/<unitId>/<resultId> #}
                         {% set baseUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
-                        {% set newUrl = baseUrl ~ 'new?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
-                        {% set editUrl = baseUrl ~ '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
+                        {% set params = '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
+                        {% set newUrl = baseUrl ~ 'new' ~ params %}
+                        {% set editUrl = baseUrl ~ params %}
 
-                        {# if a single row (no multiple submissions or no results yet #}
+                        {# if multple rows - reccuring or multiple submissions #}
                         {% if multipleRows %}
                             {% for unitResultEntry in resultQuery.all() %}
+
+                                {% set newLink = '' %}
+                                {% set editLink = '' %}
+
+                                {# append this result id to url #}
+                                {% set resultUrl = baseUrl ~ unitResultEntry.id ~ '/' ~ params %}
+
+                                {# recurring rows #}
                                 {% if unitEntry.unitRecurring %}
                                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
+                                    {# i.e. january, february etc. #}
                                     {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
-                                    {% set editLink = cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) ? baseUrl ~ unitResultEntry.id ~ '/?ref=module' ~ moduleElementId : '' %}
+                                    {% if cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) %}
+                                        {# show add icon #}
+                                        {% if unitResultEntry.resultStatus == 'incomplete' %}
+                                            {% set newLink = resultUrl %}
+                                        {# show edit icon #}
+                                        {% else %}
+                                            {% set editLink = resultUrl %}
+                                        {% endif %}
+                                    {% endif %}
+                                {# if multiple submissions #}
                                 {% elseif addResult %}
                                     {% set rowTitle = loop.first ? rowName : '' %}
-                                    {% set editLink = '' %}
+                                    {% set editLink = resultUrl %}
                                 {% endif %}
                                 {# remember all result ids so as to get user results below #}
                                 {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
-                                {% set totalComments = unitResultEntry ? unitResultEntry.resultComments.count : 0 %}
-                                {% set unreadComments = unitResultEntry ? craft.lantra.unreadComments(unitResultEntry) : 0 %}
-                                {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass: rowClass, newLink:loop.last and addResult ? newUrl} %}
+                                {% include 'record/_modules/row' with {
+                                    resultEntry: unitResultEntry,
+                                    rowClass: rowClass,
+                                    editLink: editLink,
+                                    newLink: newLink
+                                } %}
                             {% endfor %}
-                        {% else %}
-                            {% if addResult %}
-                                {% set rowTitle = rowName %}
-                                {% set editLink = '' %}
-                            {% else %}
-                                {# standard single units #}
-                                {% set rowTitle = readOnly ? rowName : '<a href="' ~ editUrl ~ '">' ~ rowName ~ '</a>' %}
+                        {% endif %}
+                        {# add extra row for a new multiple submission unit #}
+                        {% if addResult %}
+                            {% set rowTitle = hasResult ? '' : rowName %}
+                            {% include 'record/_modules/row' with {
+                                rowClass: rowClass,
+                                newLink: newUrl
+                            } %}
+                        {# just show the single unit/result row #}
+                        {% elseif singleRow %}
+                            {% set rowTitle = rowName %}
+                            {% set unitResultEntry = null %}
+                            {% if hasResult %}
+                                {% set unitResultEntry = resultQuery.one() %}
+                                {# remember all result ids so as to get user results below #}
+                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                             {% endif %}
+                            {% include 'record/_modules/row' with {
+                                resultEntry: unitResultEntry,
+                                rowClass: rowClass,
+                                editLink: addResult ? newUrl : editUrl,
+                                newLink: not hasResult ? newUrl
+                            } %}
+                        {% endif %}
+                        {% if not hasResult %}
                             {% set jobRoleNoResult = jobRoleNoResult + 1 %}
-                            {% set unitResultEntry = hasResult ? resultQuery.one() : null %}
-                            {% include 'record/_modules/row' with{resultEntry: unitResultEntry, rowClass: rowClass, newLink: addResult ? newUrl} %}
                         {% endif %}
                         {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}
@@ -100,13 +140,14 @@
                     </thead>
                     <tbody>
                     {% for userResultEntry in moduleUserResults %}
-                        {% set totalComments = userResultEntry.resultComments.count %}
-                        {% set unreadComments = craft.lantra.unreadComments(userResultEntry) %}
                         {% set rowTitle = userResultEntry.title %}
-                        {% set rowUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
+                        {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
                         {% set unitType = 'evidence' %}
                         {% set unitPoints = userResultEntry.unitPoints %}
-                        {% include 'record/_modules/row' with{resultEntry: userResultEntry} %}
+                        {% include 'record/_modules/row' with {
+                            resultEntry: userResultEntry,
+                            editLink: editUrl
+                        } %}
                     {% endfor %}
                     </tbody>
                 </table>

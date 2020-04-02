@@ -1,3 +1,6 @@
+{% set totalComments = resultEntry ? resultEntry.resultComments.count : 0 %}
+{% set unreadComments = resultEntry ? craft.lantra.unreadComments(resultEntry) : 0 %}
+
 <tr class="{{ rowClass is defined and rowClass ? rowClass : '' }}">
     <td>
         {{ rowTitle|raw }}

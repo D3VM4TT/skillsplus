@@ -18,6 +18,7 @@ use lantra\sp\Plugin as Lantra;
 class CyclePeriod extends Model
 {
     public $name = '';
+    public $year = '';
     public $startDate;
     public $finishDate;
     public $graceDate;
@@ -194,13 +195,25 @@ class CyclePeriod extends Model
         ## create sub cycles for recurring periods
         $cycle = $this->_getCycle($this->startDate, $count, $duration, 0);
         $cycle->setNameFromFormat($nameFormat);
+        $cycle->setRecurringYear($type);
         ## work out how many cycles in this cycle (matrix...!)
         $total = ceil($this->duration / $cycle->duration);
         $this->_recurring[$count] = $cycle;
         for ($count = 2; $count < ($total + 1); $count++) {
             $cycle = $cycle->getNext();
             $cycle->setNameFromFormat($nameFormat);
+            $cycle->setRecurringYear($type);
             $this->_recurring[$count] = $cycle;
+        }
+    }
+
+    /**
+     * @param $type
+     */
+    public function setRecurringYear($type)
+    {
+        if ($type == 'monthly' || $type == 'quarterly') {
+            $this->year = $this->startDate->format('Y');
         }
     }
 

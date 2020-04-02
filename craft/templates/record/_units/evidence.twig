@@ -19,11 +19,12 @@
     {% if resultEntry is defined and resultEntry %}
         <div id="name-fields">
             <div class="col-6 field--wrapper">
-                <h3>Result ID: {{ resultEntry.id }}</h3>
+                <h3>Result ID: {{ resultEntry.id }}
                 {% if resultEntry.resultRecurringCycleCode %}
                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, resultEntry.resultRecurringCycleCode) %}
-                    <h3>{{ cyclePeriod.name }}</h3>
+                    {{ cyclePeriod.name }} {{ cyclePeriod.year }}
                 {% endif %}
+                </h3>
             </div>
         </div>
     {% endif %}
