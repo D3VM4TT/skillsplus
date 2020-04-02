@@ -212,7 +212,7 @@ class Settings extends Model
     private function _populateModel($settings)
     {
         foreach ($settings as $key => $value) {
-            if (isset($this->{$key})) {
+            if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
