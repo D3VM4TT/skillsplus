@@ -58,7 +58,7 @@
 
                                 {# recurring rows #}
                                 {% if unitEntry.unitRecurring %}
-                                    {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode) %}
+                                    {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, unitResultEntry.resultRecurringCycleCode, unitEntry.unitRecurringPeriod) %}
                                     {# i.e. january, february etc. #}
                                     {% set rowTitle = cyclePeriod ? cyclePeriod.name : 'unknown' %}
                                     {% if cyclePeriod and (cyclePeriod.isCurrent() or cyclePeriod.isPast()) %}

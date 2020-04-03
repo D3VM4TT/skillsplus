@@ -441,10 +441,11 @@ class Results extends Component
             return null;
         }
         $cycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
+        $startDate = $cycle->startDate;
         foreach($cycles as $cycle) {
             ## make sure the recurring results exist
             if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $cycle->code)) {
-                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle);
+                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle, $startDate);
             }
             ## fix to update resultModuleResult if cycle has changed
             $this->setResultModuleResult($resultEntry, $moduleResultId);
@@ -910,12 +911,13 @@ class Results extends Component
      * @param $unitId
      * @param $resultModuleResult
      * @param $cycle
+     * @param $postDate
      * @return EntryModel|void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null) {
+    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null) {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdUnitResult;
@@ -923,7 +925,9 @@ class Results extends Component
         $resultEntry->authorId = $userId;
         if ($cycle) {
             $resultEntry->setFieldValue('resultRecurringCycleCode', $cycle->code);
-            $resultEntry->postDate = $cycle->startDate;
+        }
+        if ($postDate) {
+            $resultEntry->postDate = $postDate;
         }
         if ($resultModuleResult) {
             $resultEntry->setFieldValue('resultModuleResult', [$resultModuleResult]);

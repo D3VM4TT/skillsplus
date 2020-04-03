@@ -847,9 +847,9 @@ class LantraVariable
      * @param $moduleResult
      * @param $code
      */
-    public function unitResultRecurringCycle($moduleResult, $code)
+    public function unitResultRecurringCycle($moduleResult, $code, $type)
     {
-        $cyclePeriod = CycleHelper::getUnitResultRecurringCycle($moduleResult, $code);
+        $cyclePeriod = CycleHelper::getUnitResultRecurringCycle($moduleResult, $code, $type);
         return $cyclePeriod;
     }
 

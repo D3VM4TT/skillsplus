@@ -67,12 +67,13 @@ class CycleHelper
     /**
      * @param $resultEntry
      * @param string $code
+     * @param string $type
      * @return Cycle|null
      */
-    static function getUnitResultRecurringCycle($resultEntry, $code = '')
+    static function getUnitResultRecurringCycle($resultEntry, $code = '', $type = 'monthly')
     {
         $cycle = new Cycle($resultEntry);
-        $recurring = $cycle->getCycle()->getRecurring();
+        $recurring = $cycle->getCycle()->getRecurring($type);
         foreach($recurring as $cyclePeriod) {
             if($code && $cyclePeriod->code == $code) {
                 return $cyclePeriod;
