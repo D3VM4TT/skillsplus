@@ -34,6 +34,7 @@ class App extends Component
     public $deploy;
     public $licences;
     public $migrations;
+    public $modules;
     public $notify;
     public $queue;
     public $reports;
@@ -52,6 +53,7 @@ class App extends Component
         $this->deploy = new Deploy();
         $this->licences = new Licences();
         $this->migrations = new Migrations();
+        $this->modules = new Modules();
         $this->notify = new Notify();
         $this->queue = new Queue();
         $this->reports = new Reports();

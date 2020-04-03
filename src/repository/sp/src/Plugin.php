@@ -49,6 +49,7 @@ class Plugin extends BasePlugin
     public $schemaVersion = '0.0.1';
 
     private $sectionIdCompanies = 3;
+    private $sectionIdModules   = 6;
     private $sectionIdUnits     = 7;
     private $sectionIdResults   = 10;
     private $sectionIdAttempts  = 12;
@@ -156,6 +157,9 @@ class Plugin extends BasePlugin
                 }
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
+                }
+                elseif ($entry->sectionId == $this->sectionIdModules) {
+                    Lantra::$app->modules->onBeforeSaveModule($event, $entry);
                 }
                 elseif($entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->results->onBeforeSaveAttempt($event, $entry);
