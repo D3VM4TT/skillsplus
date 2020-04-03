@@ -29,15 +29,15 @@
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
     {% if row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
-        {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
         </div>
     {% elseif row.fieldType == 'resultStartDate' %}
         <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
-        {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        {% include '_includes/date' with {label:label, name:'userStartDate', value: resultExists ? resultEntry.resultStartDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
         </div>
     {% elseif row.fieldType == 'resultFinishDate' %}
         <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
-        {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null, ys: now.year + 5, ye: now.year - 50} %}
+        {% include '_includes/date' with {label:label, name:'userFinishDate', value: resultExists ? resultEntry.resultFinishDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">

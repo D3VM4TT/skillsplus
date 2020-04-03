@@ -140,7 +140,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for userResultEntry in moduleUserResults %}
+                    {% for userResultEntry in moduleUserResults.all %}
                         {% set rowTitle = userResultEntry.title %}
                         {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
                         {% set unitType = 'evidence' %}

@@ -423,7 +423,7 @@ class LantraVariable
             return false;
         }
         ## you can't mark your own homework...!
-        $owner = $resultEntry->resultOwner->total() ? $resultEntry->resultOwner->one() : $resultEntry->author;
+        $owner = $resultEntry->resultOwner->count() ? $resultEntry->resultOwner->one() : $resultEntry->author;
         if ($manager->id == $owner->id) {
             return false;
         }
@@ -790,6 +790,9 @@ class LantraVariable
      */
     public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
     {
+        if (!$cycle) {
+            return null;
+        }
         return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId);
     }
 

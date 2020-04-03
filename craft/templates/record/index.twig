@@ -10,6 +10,9 @@
     {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% endif %}
 
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountUserPhoto ? accountUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
 {% set metaTitle = 'CPD > ' ~ account.fullname %}
 
 {% block content %}
@@ -21,9 +24,9 @@
 <section class="page">
     <div class="page-header secondary-bg">
         {% if hierarchyNode %}
-            <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
         {% else %}
-            <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
         {% endif %}
         <h2>{{ account.fullname }}'s Dashboard</h2>
     </div>

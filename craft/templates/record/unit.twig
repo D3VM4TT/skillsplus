@@ -42,6 +42,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
 {% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
+{% set currentUserPhotoUrl = currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -52,9 +53,9 @@
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
-                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% else %}
-                    <a href="/management/users"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/users"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>

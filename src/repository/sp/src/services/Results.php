@@ -773,7 +773,7 @@ class Results extends Component
     public function getUnitPoints(Entry $unitEntry, Entry $moduleEntry = null)
     {
         if ($moduleEntry) {
-            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
+            foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitGroup->unitEntries->ids())) {
                    return $unitGroup->unitPointsOverride;
                 }
@@ -1041,8 +1041,8 @@ class Results extends Component
     function getModuleUnitIds($moduleEntry) {
         $unitIds = [];
         if ($moduleEntry->moduleUnitGroups) {
-            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
-                foreach ($unitGroup->unitEntries as $unitEntry) {
+            foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+                foreach ($unitGroup->unitEntries->all() as $unitEntry) {
                     $unitIds[] = $unitEntry->id;
                 }
             }
@@ -2123,7 +2123,7 @@ class Results extends Component
      */
     public function userUnits($user, $unitIds = [])  {
         $units = [];
-        foreach($user->userRole as $role) {
+        foreach($user->userRole->all() as $role) {
             $modules = $this->roleModules($role);
             foreach ($modules as $module) {
                 $moduleUnits = $this->moduleUnits($module);

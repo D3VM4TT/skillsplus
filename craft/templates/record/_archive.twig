@@ -19,20 +19,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for resultEntry in resultEntries %}
-                            {# try to move legacy result files #}
-                            {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
-                            {% set resultUnit = resultEntry.resultUnit.one %}
-                            {% set rowTitle = resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title %}
-                            {% include 'record/_modules/row' with {
-                                unitType: resultEntry.unitType,
-                                unitPoints: resultEntry.unitPoints,
-                                resultEntry: resultEntry,
-                                editLink: '/result/' ~ resultEntry.id,
-                                columnLayout: globalsTheme.columnLayout
-                            } %}
-
-                                {% endfor %}
+                            {% for resultEntry in resultEntries.all %}
+                                {# try to move legacy result files #}
+                                {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
+                                {% set resultUnit = resultEntry.resultUnit.one %}
+                                {% set rowTitle = resultEntry.type != 'userType' and resultUnit ? resultUnit.title : resultEntry.title %}
+                                {% include 'record/_modules/row' with {
+                                    unitType: resultEntry.unitType,
+                                    unitPoints: resultEntry.unitPoints,
+                                    resultEntry: resultEntry,
+                                    editLink: '/result/' ~ resultEntry.id,
+                                    columnLayout: globalsTheme.columnLayout
+                                } %}
+                             {% endfor %}
                             </tbody>
                         </table>
                     </div>
