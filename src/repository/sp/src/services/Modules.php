@@ -24,14 +24,17 @@ class Modules extends Component
     public function onBeforeSaveModule(ModelEvent $event, Entry $entry)
     {
         ## make sure recurring units are in cpd type modules
-        if ($entry->type != 'cpd') {
-            if ($entry->moduleUnitGroups) {
-                foreach ($entry->moduleUnitGroups as $key => $unitGroup) {
-                    foreach ($unitGroup->unitEntries as $unitEntry) {
-                        if ($unitEntry->unitRecurring) {
-                            $event->isValid = false;
-                            $entry->addError('moduleUnitGroups', $unitEntry->title . ' is a recurring unit and can only be added to a CPD type module.');
-                        }
+        if ($entry->type != 'cpd' && $entry->moduleUnitGroups) {
+            $unitGroups = $entry->moduleUnitGroups->all();
+            foreach ($unitGroups as $unitGroup) {
+                if (!$unitGroup->unitEntries) {
+                    continue;
+                }
+                $unitEntries = $unitGroup->unitEntries->all();
+                foreach ($unitEntries as $unitEntry) {
+                    if ($unitEntry->unitRecurring) {
+                        $event->isValid = false;
+                        $entry->addError('moduleUnitGroups', $unitEntry->title . ' is a recurring unit and can only be added to a CPD type module.');
                     }
                 }
             }
@@ -47,12 +50,17 @@ class Modules extends Component
      * @param $moduleEntry
      * @return bool
      */
-    private function countRecurringUnits($moduleEntry)
+    private function countRecurringUnits($entry)
     {
         $total = 0;
-        if ($moduleEntry->moduleUnitGroups) {
-            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
-                foreach ($unitGroup->unitEntries as $unitEntry) {
+        if ($entry->moduleUnitGroups) {
+            $unitGroups = $entry->moduleUnitGroups->all();
+            foreach ($unitGroups as $unitGroup) {
+                if (!$unitGroup->unitEntries) {
+                    continue;
+                }
+                $unitEntries = $unitGroup->unitEntries->all();
+                foreach ($unitEntries as $unitEntry) {
                     if ($unitEntry->unitRecurring) {
                         $total++;
                     }
