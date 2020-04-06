@@ -440,12 +440,28 @@ class Results extends Component
         if (false == $unitEntry = Craft::$app->entries->getEntryById($unitId)) {
             return null;
         }
-        $cycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
+        $recurringCycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
+
+        $validCodes = [];
+        foreach($recurringCycles as $recurringCycle) {
+            $validCodes[] = $recurringCycle->code;
+        }
+
+        if (count($validCodes)) {
+            ## delete incomplete results that are no longer needed for this cycle (if cycle changed)
+            $allResults = $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId)->all();
+            foreach ($allResults as $result) {
+                if (!in_array($result->resultRecurringCycleCode, $validCodes) && $result->resultStatus == 'incomplete') {
+                    Craft::$app->elements->deleteElementById($result->id);
+                }
+            }
+        }
+
         $startDate = $cycle->startDate;
-        foreach($cycles as $cycle) {
+        foreach($recurringCycles as $recurringCycle) {
             ## make sure the recurring results exist
-            if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $cycle->code)) {
-                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $cycle, $startDate);
+            if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
+                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
             }
             ## fix to update resultModuleResult if cycle has changed
             $this->setResultModuleResult($resultEntry, $moduleResultId);
