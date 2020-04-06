@@ -12,7 +12,6 @@
         <span class="status-complete"></span>Congratulations, this module is complete!</p>
     {% else %}
         <p>
-
             {% set unitResultCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, null, true) %}
             {% set unitResultExpiredCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, 'expired', true) %}
             {% set remaining = craft.lantra.remaining(moduleResultEntry) %}
@@ -31,7 +30,8 @@
             {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
             {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
             <br />You need {{ remaining.text }} to complete this module.
-            {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.{% endif %}
+            {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.{% endif %}<br />
+            Result ID: {{ moduleResultEntry.id }}
         </p>
 {% endif %}
 </div>
