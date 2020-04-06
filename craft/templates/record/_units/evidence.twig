@@ -21,7 +21,7 @@
             <div class="col-6 field--wrapper">
                 <h3>Result ID: {{ resultEntry.id }}
                 {% if resultEntry.resultRecurringCycleCode %}
-                    {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, resultEntry.resultRecurringCycleCode) %}
+                    {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, resultEntry.resultRecurringCycleCode, unitEntry.unitRecurringPeriod) %}
                     {{ cyclePeriod.name }} {{ cyclePeriod.year }}
                 {% endif %}
                 </h3>
