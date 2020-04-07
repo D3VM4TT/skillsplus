@@ -151,6 +151,10 @@ class Plugin extends BasePlugin
             Entry::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
                 $entry = $event->sender;
+                ## ignore cli
+                if (Craft::$app->request->isConsoleRequest) {
+                    return;
+                }
                 ## ignore drafts and revisions
                 if (ElementHelper::isDraftOrRevision($entry)) {
                     return;
@@ -175,6 +179,10 @@ class Plugin extends BasePlugin
             Entry::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
                 $entry = $event->sender;
+                ## ignore cli
+                if (Craft::$app->request->isConsoleRequest) {
+                    return;
+                }
                 ## ignore drafts and revisions
                 if (ElementHelper::isDraftOrRevision($entry)) {
                     return;
