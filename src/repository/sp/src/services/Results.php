@@ -393,11 +393,13 @@ class Results extends Component
     function unreadComments($result, $userId)
     {
         $unread = 0;
-        $comments = $result->resultComments->all();
-        foreach($comments as $comment) {
-            $commentAuthorId = $comment->user->one()->id;
-            if ($commentAuthorId != $userId && ! $comment->read) {
-                $unread++;
+        if ($result && $result->resultComments) {
+            $comments = $result->resultComments->all();
+            foreach ($comments as $comment) {
+                $commentAuthorId = $comment->user->one()->id;
+                if ($commentAuthorId != $userId && !$comment->read) {
+                    $unread++;
+                }
             }
         }
         return $unread;
