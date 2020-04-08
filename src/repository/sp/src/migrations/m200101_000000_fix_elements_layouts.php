@@ -147,7 +147,10 @@ class m200101_000000_fix_elements_layouts extends Migration
      */
     private function _updateElements()
     {
-        $this->dropForeignKey('craft_elements_fieldLayoutId_fk', '{{%elements}}');
+        $key = 'craft_elements_fieldLayoutId_fk';
+        if ($this->_hasForeignKey($key)) {
+            $this->dropForeignKey($key, '{{%elements}}');
+        }
 
         # update all users
         $this->update('{{%elements}}', ['fieldLayoutId' => 401], ['type' => 'craft\elements\User']);
@@ -165,6 +168,16 @@ class m200101_000000_fix_elements_layouts extends Migration
 
         # $this->addForeignKey(null, '{{%elements}}', ['fieldLayoutId'], '{{%fieldlayouts}}', ['id'], 'SET NULL', null);
         Craft::info('update elements (' . count($this->_layoutUpdate) . ') fieldLayoutId', __METHOD__);
+    }
+
+    /**
+     * @return bool
+     * @throws \yii\base\NotSupportedException
+     */
+    private function _hasForeignKey($key)
+    {
+        $indexes = $this->db->getSchema()->findIndexes('{{%elements}}');
+        return isset($indexes[$key]);
     }
 
     /**
