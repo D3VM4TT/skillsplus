@@ -1,10 +1,13 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space) included in 'all' command
-ALL_SITES="bcsa bics cha demo demo1 demo2 demo3 demo4 demo5 eoc fbaass iopf ltp poultec poultrypassport ptr"
+PROD_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs"
+
+# demo sites not deployed to prod if using 'all' command
+DEMO_DOMAINS="demo demo1 demo2 demo3 demo4 demo5 demo6 demo7 demo8 demo9 demo10"
 
 # email address for notification
-EMAIL="robin@coffeebean.design"
+EMAIL="portia.hartley@skills-plus.co.uk"
 
 # database credentials for release record
 DB_USER="craft"
@@ -14,7 +17,7 @@ DB_HOST="10.1.4.6"
 # remote server ips
 DEV_IP="10.1.4.4"
 UAT_IP="10.1.4.5"
-PROD_IP=""
+PROD_IP="10.1.4.9"
 
 ##################################
 #                                #
@@ -38,7 +41,11 @@ SERVER="$1"
 
 # set sites (might be one or all)
 if [[ "$2" == "all" ]] ; then
-    SITES="$ALL_SITES"
+    if [[ "$1" == "prod" ]] ; then
+    	SITES="$PROD_DOMAINS"
+    else
+	SITES="$PROD_DOMAINS $DEMO_DOMAINS"
+    fi
 else
     SITES="$2"
 fi
@@ -121,7 +128,7 @@ else
 	fi
 
 	echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
-        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
+        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
 
 	echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times --delete $REPO_DIR git@$REMOTE_IP:$REMOTE_FOLDER/src/
@@ -129,27 +136,22 @@ else
         # switch directory ownership back to apache
         ssh git@$REMOTE_IP sudo chown apache:apache -R $REMOTE_FOLDER
 
-	echo "setting file and folder permissions on $REMOTE_FOLDER"
-        ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage
-	ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage/runtime
-	ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage/runtime
+	    echo "setting file and folder permissions on $REMOTE_FOLDER"
+        ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage/runtime
+	    ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/storage
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
         ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
+	    ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
 
         # update craft via cli
         ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/craft/craft
-        # ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
-	# this runs twice to upgrade plugins
-	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
-	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
-	ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
-
-	echo "setting file and folder permissions on $REMOTE_FOLDER"
-	ssh git@$REMOTE_IP sudo chmod -R 777 $REMOTE_FOLDER/craft/storage/logs
-        ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
+		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
+		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/up --plugin=sp
+		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
 
         # write deployment to database
         SQL_QUERY="INSERT INTO \`admin\`.\`deployments\` (\`server\`, \`site\`, \`release\`) VALUES ('$SERVER', '$SITE', '$RELEASE_TAG');"
@@ -159,7 +161,7 @@ else
     done
     # send notification
     if [[ "$EMAIL" != "" ]] ; then
-        echo "$SITES" | mail -s "Lantra Deploy [$SERVER] $RELEASE_TAG" -r "Skills Plus REPO<noreply@skills-plus.net>" $EMAIL
+        echo "$SITES" | mail -s "Lantra Deploy [$SERVER] $RELEASE_TAG" -r "Skills Plus REPO<noreply@skills-plus.repo>" $EMAIL
         echo "sending email confirmation to $EMAIL"
     fi
 fi
