@@ -10,7 +10,7 @@ use craft\db\Migration;
  */
 class m200101_000000_fix_elements_layouts extends Migration
 {
-    private $_layoutUpdate;
+    private $_layoutUpdate = [];
     private $_n = 1;
 
     /**
