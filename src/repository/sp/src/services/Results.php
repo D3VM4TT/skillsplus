@@ -411,6 +411,24 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
+    function unitResultExists($userId, $unitId)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        return $criteria->count() ? true : false;
+    }
+
+    /**
+     * Get a unit result entry
+     *
+     * @param $userId
+     * @param $unitId
+     * @return null
+     * @throws Mixed
+     */
     function getUnitResult($userId, $unitId, $cycleCode = null)
     {
         $criteria = Entry::find();

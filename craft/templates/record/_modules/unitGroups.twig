@@ -108,9 +108,6 @@
                                 newLink: not hasResult ? newUrl
                             } %}
                         {% endif %}
-                        {% if not hasResult %}
-                            {% set jobRoleNoResult = jobRoleNoResult + 1 %}
-                        {% endif %}
                         {% set rowClass = rowClass == 'odd' ? 'even' : 'odd' %}
                     {% endfor %}
                     </tbody>
