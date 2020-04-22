@@ -20,6 +20,22 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+
+    /**
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function taskbookLevels()
+    {
+        $mysql = 'SELECT f.settings FROM {{%fields}} f  WHERE f.handle = "packageModuleLevel"';
+        $result = Craft::$app->db->createCommand($mysql)->queryOne();
+        if (!$result || !isset($result['settings'])) {
+            return [];
+        }
+        $settings = json_decode($result['settings']);
+        return $settings->options;
+    }
+
     /**
      * @param $modules
      * @return bool

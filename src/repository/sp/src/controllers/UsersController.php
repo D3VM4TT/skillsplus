@@ -10,9 +10,10 @@ namespace lantra\sp\controllers;
 
 use Craft;
 use craft\elements\User;
-
+use craft\elements\MatrixBlock;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
+use verbb\supertable\elements\SuperTableBlockElement;
 
 class UsersController extends BaseController {
 
@@ -270,5 +271,69 @@ class UsersController extends BaseController {
             Lantra::$app->results->refreshResultCache($users);
         }
         $this->_returnMessage($total . ' users refreshed', true, 'management/' . ($companyId ? 'companies' : 'users'));
+    }
+
+    /**
+     * Saves user taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionSavePackage()
+    {
+        $this->requireLogin();
+        $userId = Craft::$app->request->getParam('userId');
+        $package = Craft::$app->request->getParam('package');
+        $user = Craft::$app->users->getUserById($userId);
+
+        if (! $user || !$package) {
+            return $this->_returnError('Invalid params [userId = ' . $userId .'].');
+        }
+
+        $modules = [];
+        foreach ($package as $id => $m) {
+            if (isset($m['selected']) && $m['selected']) {
+                $modules[$id] = $m['level'];
+            }
+        }
+
+        if (!count($modules)) {
+            return $this->_returnError('You must select some modules for your package.');
+        }
+
+        $spField = Craft::$app->fields->getFieldByHandle('userPackages');
+        if (!$spField) {
+            return $this->_returnError('Could not locate field type.');
+        }
+        $spType = $spField->getBlockTypes()[0];
+
+        $spBlock = new SuperTableBlockElement();
+        $spBlock->ownerId = $user->id;
+        $spBlock->fieldId = $spField->id;
+        $spBlock->typeId = $spType->id;
+        $spBlock->enabled = true;
+        $spBlock->setFieldValue('packageDateCreated', time());
+        Craft::$app->elements->saveElement($spBlock);
+
+        $mBlock = null;
+        foreach ($spField->getBlockTypeFields() as $field) {
+            if ($field->handle == 'packageModules') {
+                $mBlock = $field;
+            }
+        }
+        if (!$mBlock) {
+            return $this->_returnError('Could not locate field type.');
+        }
+        foreach ($modules as $id => $level) {
+            $block = new MatrixBlock();
+            $block->enabled = true;
+            $block->ownerId = $spBlock->id;
+            $block->fieldId = $mBlock->id;
+            $block->typeId = $mBlock->getBlockTypes()[0]->id;
+            $block->setFieldValue('packageModule', [$id]);
+            $block->setFieldValue('packageModuleLevel', $level);
+            Craft::$app->elements->saveElement($block);
+        }
+
+        $this->_returnMessage('Taskbook package saved.', 'true', 'profile/taskbooks');
     }
 }

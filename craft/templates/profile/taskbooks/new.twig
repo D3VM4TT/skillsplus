@@ -1,0 +1,65 @@
+{% requireLogin %}
+
+{% extends "_layout" %}
+
+{% set account = currentUser %}
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <a href="/">
+                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            </a>
+            {{ currentUserCompany|default('') }}
+            <h2>My taskbooks</h2>
+            <p>Manage your taskbook packages.</p>
+        </div>
+        <div class="page-content">
+
+            {% set taskbookModules = craft.entries.section('modules').type('taskbook').all() %}
+            {% set levelsOptions = '' %}
+            {% for option in craft.lantra.taskbookLevels() %}
+                {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+            {% endfor %}
+            <form id="taskbooks" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+                {{ csrfInput() }}
+                {{ actionInput('sp/users/save-package') }}
+                {{ hiddenInput('userId', currentUser.id) }}
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Level</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for module in taskbookModules %}
+                        <tr>
+                            <td>
+                                {{ module.title }}{% if module.moduleCore %} (core){% endif %}
+                            </td>
+                            <td>
+                                <select name="package[{{ module.id }}][level]">
+                                    {{ levelsOptions|raw }}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="package[{{ module.id }}][selected]" value="1">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="container-btn">
+                    <button type="submit" class="button primary-bg">Add Package</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

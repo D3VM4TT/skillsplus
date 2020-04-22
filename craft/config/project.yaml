@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1585916111
+dateModified: 1587564842
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -260,6 +260,47 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  1022847b-4be9-4ff1-8da5-42262968137b:
+    contentColumnType: string
+    fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+    handle: userPackages
+    instructions: ''
+    name: 'User Packages'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - 84dc4265-7a53-4780-b112-1d2fba91357c
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 053f6b7e-6705-488b-86a5-19e2949e5b0a
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 36baf4de-52bb-4930-9841-de3e7e173b5f
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_userpackages}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   14b8c677-a8a8-4df3-a74e-a30106bd5398:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -1176,6 +1217,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  5c77b862-6815-4486-97ce-f137878f8dd7:
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleAllRoles
+    instructions: 'Make this module available to all roles?'
+    name: 'Module All Roles'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -1857,6 +1910,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  a1f70b85-8550-4cf0-87a5-1f16cde82405:
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleCore
+    instructions: ''
+    name: 'Module Core'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   a75d2fa6-54eb-4155-9483-d7729fb83004:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -2988,6 +3053,120 @@ globalSets:
     handle: globalsTheme
     name: Theme
 matrixBlockTypes:
+  05afb6d2-e20e-418e-bde7-181c7d522355:
+    field: 1022847b-4be9-4ff1-8da5-42262968137b
+    fieldLayouts:
+      ea8a5b18-2b94-48ad-ae3e-24ee7b107687:
+        tabs:
+          -
+            fields:
+              243889c4-7589-42ea-94e0-a286dbb9fee4:
+                required: false
+                sortOrder: 1
+              8ff64d8e-d82b-4c1e-b71d-2b699da2750e:
+                required: false
+                sortOrder: 4
+              a93736d0-e0be-4ae1-bf9d-8ffb4163c871:
+                required: false
+                sortOrder: 2
+              beb3a9ff-30e2-4353-80fa-92a1e6a8cbb2:
+                required: false
+                sortOrder: 3
+            name: Content
+            sortOrder: 1
+    fields:
+      243889c4-7589-42ea-94e0-a286dbb9fee4:
+        contentColumnType: text
+        fieldGroup: null
+        handle: packageModule
+        instructions: ''
+        name: Module
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
+      8ff64d8e-d82b-4c1e-b71d-2b699da2750e:
+        contentColumnType: datetime
+        fieldGroup: null
+        handle: packageDateCreated
+        instructions: ''
+        name: 'Date Created'
+        searchable: true
+        settings:
+          minuteIncrement: '30'
+          showDate: true
+          showTime: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Date
+      a93736d0-e0be-4ae1-bf9d-8ffb4163c871:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageLevel
+        instructions: ''
+        name: Level
+        searchable: true
+        settings:
+          optgroups: true
+          options:
+            -
+              __assoc__:
+                -
+                  - label
+                  - Standard
+                -
+                  - value
+                  - standard
+                -
+                  - default
+                  - '1'
+            -
+              __assoc__:
+                -
+                  - label
+                  - Senior
+                -
+                  - value
+                  - senior
+                -
+                  - default
+                  - ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Dropdown
+      beb3a9ff-30e2-4353-80fa-92a1e6a8cbb2:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageJobRole
+        instructions: ''
+        name: 'Job Role'
+        searchable: true
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          branchLimit: '1'
+          limit: null
+          localizeRelations: false
+          selectionLabel: 'Select job role'
+          source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+    handle: package
+    name: Package
+    sortOrder: 1
   31396686-93c4-4dbe-a8c9-9328d191a511:
     field: 4a4bc5cd-115e-4309-a51a-3e5095ceea90
     fieldLayouts:
@@ -3661,6 +3840,80 @@ matrixBlockTypes:
     handle: columns
     name: Columns
     sortOrder: 1
+  f23a9961-9a29-46e0-98b1-2d5612fd6aa8:
+    field: 84dc4265-7a53-4780-b112-1d2fba91357c
+    fieldLayouts:
+      d83c3be3-9752-49f5-823d-5f91bab65605:
+        tabs:
+          -
+            fields:
+              37e12357-84a7-4a85-b6e6-542040a4b744:
+                required: false
+                sortOrder: 2
+              9441b5a4-b743-4143-9a59-aa0d48c6cfc0:
+                required: false
+                sortOrder: 1
+            name: Content
+            sortOrder: 1
+    fields:
+      37e12357-84a7-4a85-b6e6-542040a4b744:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageModuleLevel
+        instructions: ''
+        name: Level
+        searchable: true
+        settings:
+          optgroups: true
+          options:
+            -
+              __assoc__:
+                -
+                  - label
+                  - Standard
+                -
+                  - value
+                  - standard
+                -
+                  - default
+                  - '1'
+            -
+              __assoc__:
+                -
+                  - label
+                  - Senior
+                -
+                  - value
+                  - senior
+                -
+                  - default
+                  - ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Dropdown
+      9441b5a4-b743-4143-9a59-aa0d48c6cfc0:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageModule
+        instructions: ''
+        name: Module
+        searchable: true
+        settings:
+          limit: '1'
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Entries
+    handle: packageModules
+    name: 'Package Modules'
+    sortOrder: 1
 plugins:
   preparse-field:
     enabled: '1'
@@ -4317,6 +4570,49 @@ sections:
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     enableVersioning: false
     entryTypes:
+      0b770895-5b1b-4424-976b-53d7cfd96fbe:
+        fieldLayouts:
+          cc195c64-b902-4637-9825-d5fc0d27b48e:
+            tabs:
+              -
+                fields:
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 2
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 4
+                  a1f70b85-8550-4cf0-87a5-1f16cde82405:
+                    required: false
+                    sortOrder: 3
+                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
+                    required: false
+                    sortOrder: 1
+                name: Module
+                sortOrder: 1
+              -
+                fields:
+                  5c77b862-6815-4486-97ce-f137878f8dd7:
+                    required: false
+                    sortOrder: 2
+                  f08f684f-1af1-417b-94f2-5df2f3ac7da6:
+                    required: false
+                    sortOrder: 1
+                name: 'Job Roles'
+                sortOrder: 2
+              -
+                fields:
+                  bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
+                    required: false
+                    sortOrder: 1
+                name: 'Column Layout'
+                sortOrder: 3
+        handle: taskbook
+        hasTitleField: true
+        name: Taskbook
+        sortOrder: 3
+        titleFormat: ''
+        titleLabel: Title
       a6165775-faf3-4cc0-b6d6-069095d3ca39:
         fieldLayouts:
           89a1da50-2312-48cf-8d06-5c4168438cb9:
@@ -4970,6 +5266,76 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Date
+  f97342ac-7163-48da-8ad0-d8af0000ca6e:
+    field: 1022847b-4be9-4ff1-8da5-42262968137b
+    fieldLayouts:
+      fb40efc7-ca8c-4a89-9be6-f85b23acd4bf:
+        tabs:
+          -
+            fields:
+              053f6b7e-6705-488b-86a5-19e2949e5b0a:
+                required: false
+                sortOrder: 2
+              36baf4de-52bb-4930-9841-de3e7e173b5f:
+                required: false
+                sortOrder: 3
+              84dc4265-7a53-4780-b112-1d2fba91357c:
+                required: false
+                sortOrder: 1
+            name: Content
+            sortOrder: 1
+    fields:
+      053f6b7e-6705-488b-86a5-19e2949e5b0a:
+        contentColumnType: datetime
+        fieldGroup: null
+        handle: packageDateCreated
+        instructions: ''
+        name: 'Package Date Created'
+        searchable: true
+        settings:
+          minuteIncrement: '30'
+          showDate: true
+          showTime: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Date
+      36baf4de-52bb-4930-9841-de3e7e173b5f:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageJobRole
+        instructions: ''
+        name: 'Package Job Role'
+        searchable: true
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          branchLimit: '1'
+          limit: null
+          localizeRelations: false
+          selectionLabel: 'Select job role'
+          source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+      84dc4265-7a53-4780-b112-1d2fba91357c:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageModules
+        instructions: ''
+        name: 'Package Modules'
+        searchable: true
+        settings:
+          contentTable: '{{%matrixcontent_packagemodules}}'
+          maxBlocks: ''
+          minBlocks: ''
+          propagationMethod: all
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Matrix
 system:
   edition: pro
   live: true
@@ -4984,7 +5350,7 @@ users:
   allowPublicRegistration: 1
   defaultGroup: 32ed3edf-a621-4c98-8c9f-785e45ed329f
   fieldLayouts:
-    e52a05af-b3c5-4fe2-a72f-374f4f270ecb:
+    e313cedf-8c04-4fa5-989a-e087a1432495:
       tabs:
         -
           fields:
@@ -5058,6 +5424,13 @@ users:
           sortOrder: 4
         -
           fields:
+            1022847b-4be9-4ff1-8da5-42262968137b:
+              required: false
+              sortOrder: 1
+          name: Packages
+          sortOrder: 5
+        -
+          fields:
             080bb830-4bd6-458e-a3f3-dbb58358aeb1:
               required: false
               sortOrder: 7
@@ -5095,7 +5468,7 @@ users:
               required: false
               sortOrder: 11
           name: Legacy
-          sortOrder: 5
+          sortOrder: 6
   groups:
     0ff8d9a2-50f8-473e-93c9-5eb5d41750f6:
       handle: companyManagers
