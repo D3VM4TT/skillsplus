@@ -45,7 +45,7 @@ return [
     ],
     'local' => [
         'siteUrl' => 'http://skills-plus.local',
-        'devMode' => false,
+        'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
             '@basePath' => '/websites/skills-plus.net/',

@@ -1,6 +1,4 @@
 <div class="job-role" style="position: relative;">
-    {# number of results to complete - line 123 #}
-    {% set jobRoleNoResult = 0 %}
     <div class="align-vertical">
         <div class="align-horizontal"><img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt=""></div>
         <div class="align-horizontal">
@@ -36,13 +34,15 @@
             </section>
         {% endif %}
     </div>
-    {% if jobRoleEndorse %}
+    {% if jobRoleEndorse and allModules|length %}
         <p class="jobroleEndorse">
-            {% if jobRoleNoResult == 0 %}
+            {% set totalUnits = craft.lantra.totalUnits(allModules) %}
+            {% set unitsComplete = craft.lantra.unitsComplete(allModules, cpdUser) %}
+            {% if unitsComplete >= totalUnits %}
                 <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
                    data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Submit for Endorsement</a>
             {% else %}
-                Complete {{ jobRoleNoResult }} more unit(s) and then submit for endorsement.
+                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
             {% endif %}
         </p>
     {% endif %}

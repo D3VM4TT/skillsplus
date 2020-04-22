@@ -21,6 +21,26 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param $modules
+     * @return bool
+     */
+    public function totalUnits($modules)
+    {
+        return Lantra::$app->modules->totalUnits($modules);
+    }
+
+    /**
+     * @param $modules
+     * @param null $userId
+     * @return bool
+     */
+    public function unitsComplete($modules, $userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->modules->unitsComplete($modules, $user);
+    }
+
+    /**
      * @return mixed
      */
     public function release()

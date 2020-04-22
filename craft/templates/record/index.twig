@@ -11,7 +11,7 @@
 {% endif %}
 
 {% set accountPhoto = account.getPhoto() %}
-{% set accountPhotoUrl = accountUserPhoto ? accountUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set metaTitle = 'CPD > ' ~ account.fullname %}
 

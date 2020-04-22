@@ -46,6 +46,43 @@ class Modules extends Component
         }
     }
 
+    public function totalUnits($moduleEntries)
+    {
+        if (!$moduleEntries || !$moduleEntries->count()) {
+            return 0;
+        }
+        $return = 0;
+        foreach ($moduleEntries as $moduleEntry) {
+            if ($moduleEntry->moduleUnitGroups) {
+                foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+                    $return += $unitGroup->unitEntries->count();
+                }
+            }
+        }
+        return $return;
+    }
+
+
+    public function unitsComplete($moduleEntries, $user)
+    {
+        if (!$moduleEntries || !$moduleEntries->count()) {
+            return 0;
+        }
+        $return = 0;
+        foreach ($moduleEntries as $moduleEntry) {
+            if ($moduleEntry->moduleUnitGroups) {
+                foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+                    foreach ($unitGroup->unitEntries->all() as $unitEntry) {
+                        if (Lantra::$app->results->unitResultExists($user->id, $unitEntry->id)) {
+                            $return++;
+                        }
+                    }
+                }
+            }
+        }
+        return $return;
+    }
+
     /**
      * @param $moduleEntry
      * @return bool
