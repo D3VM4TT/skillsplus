@@ -1,0 +1,31 @@
+<div class="taskbook-optional taskbook-optional-{{ coreModule.id }}">
+    {% if modules|length  %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>Optional Module</th>
+                <th>Level</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                <tr>
+                    <td>{{ module.title }}</td>
+                    <td>
+                        <select  class="optional-level" name="package[optional][{{ coreModule.id }}][{{ module.id }}][level]">
+                            {{ levelsOptions|raw }}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="package[optional][{{ coreModule.id }}][{{ module.id }}][selected]" value="1">
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>There are currently no optional modules for {{ coreModule.title }}.</p>
+        <p>&nbsp;</p>
+    {% endif %}
+</div>

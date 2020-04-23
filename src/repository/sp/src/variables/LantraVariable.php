@@ -23,17 +23,27 @@ class LantraVariable
 
     /**
      * @return array
-     * @throws \yii\db\Exception
      */
     public function taskbookLevels()
     {
-        $mysql = 'SELECT f.settings FROM {{%fields}} f  WHERE f.handle = "packageModuleLevel"';
-        $result = Craft::$app->db->createCommand($mysql)->queryOne();
-        if (!$result || !isset($result['settings'])) {
-            return [];
+        return [
+            ['value' => 5, 'label' => 'Standard'],
+            ['value' => 10, 'label' => 'Senior'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function taskbookLevel($level)
+    {
+        $levels = $this->taskbookLevels();
+        foreach($levels as $l) {
+            if ($l['value'] == $level) {
+                return $l['label'];
+            }
         }
-        $settings = json_decode($result['settings']);
-        return $settings->options;
+        return 'unknown';
     }
 
     /**

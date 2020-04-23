@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1587564842
+dateModified: 1587637888
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -270,6 +270,20 @@ fields:
     settings:
       columns:
         __assoc__:
+          -
+            - d671f864-8408-4319-bfe2-e622e44028e7
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 1fc1d0db-7a2a-4856-bd25-2c71f6d0832b
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
           -
             - 84dc4265-7a53-4780-b112-1d2fba91357c
             -
@@ -2137,6 +2151,26 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  bb939b81-7659-4976-b0bb-8d8f76d8c4d0:
+    contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleCoreModule
+    instructions: ''
+    name: 'Module Core Module'
+    searchable: true
+    settings:
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: 'Select core module'
+      source: null
+      sources:
+        - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   bb9d49ae-464b-4650-b8f1-fa4f12b3c769:
     contentColumnType: text
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -3857,44 +3891,27 @@ matrixBlockTypes:
             sortOrder: 1
     fields:
       37e12357-84a7-4a85-b6e6-542040a4b744:
-        contentColumnType: string
+        contentColumnType: integer(10)
         fieldGroup: null
-        handle: packageModuleLevel
+        handle: optionalLevel
         instructions: ''
         name: Level
         searchable: true
         settings:
-          optgroups: true
-          options:
-            -
-              __assoc__:
-                -
-                  - label
-                  - Standard
-                -
-                  - value
-                  - standard
-                -
-                  - default
-                  - '1'
-            -
-              __assoc__:
-                -
-                  - label
-                  - Senior
-                -
-                  - value
-                  - senior
-                -
-                  - default
-                  - ''
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
         translationKeyFormat: null
         translationMethod: none
-        type: craft\fields\Dropdown
+        type: craft\fields\Number
       9441b5a4-b743-4143-9a59-aa0d48c6cfc0:
         contentColumnType: string
         fieldGroup: null
-        handle: packageModule
+        handle: optionalModule
         instructions: ''
         name: Module
         searchable: true
@@ -3911,8 +3928,8 @@ matrixBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Entries
-    handle: packageModules
-    name: 'Package Modules'
+    handle: optionalModules
+    name: 'Optional Modules'
     sortOrder: 1
 plugins:
   preparse-field:
@@ -4581,10 +4598,13 @@ sections:
                     sortOrder: 2
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   a1f70b85-8550-4cf0-87a5-1f16cde82405:
                     required: false
                     sortOrder: 3
+                  bb939b81-7659-4976-b0bb-8d8f76d8c4d0:
+                    required: false
+                    sortOrder: 4
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: false
                     sortOrder: 1
@@ -5275,11 +5295,17 @@ superTableBlockTypes:
             fields:
               053f6b7e-6705-488b-86a5-19e2949e5b0a:
                 required: false
+                sortOrder: 4
+              1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
+                required: false
                 sortOrder: 2
               36baf4de-52bb-4930-9841-de3e7e173b5f:
                 required: false
-                sortOrder: 3
+                sortOrder: 5
               84dc4265-7a53-4780-b112-1d2fba91357c:
+                required: false
+                sortOrder: 3
+              d671f864-8408-4319-bfe2-e622e44028e7:
                 required: false
                 sortOrder: 1
             name: Content
@@ -5299,6 +5325,24 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Date
+      1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: packageCoreLevel
+        instructions: ''
+        name: 'Package Core Level'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
       36baf4de-52bb-4930-9841-de3e7e173b5f:
         contentColumnType: string
         fieldGroup: null
@@ -5324,18 +5368,38 @@ superTableBlockTypes:
       84dc4265-7a53-4780-b112-1d2fba91357c:
         contentColumnType: string
         fieldGroup: null
-        handle: packageModules
+        handle: packageOptionalModules
         instructions: ''
-        name: 'Package Modules'
+        name: 'Package Optional Modules'
         searchable: true
         settings:
-          contentTable: '{{%matrixcontent_packagemodules}}'
+          contentTable: '{{%matrixcontent_packageoptionalmodules}}'
           maxBlocks: ''
           minBlocks: ''
           propagationMethod: all
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Matrix
+      d671f864-8408-4319-bfe2-e622e44028e7:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageCoreModule
+        instructions: ''
+        name: 'Package Core Module'
+        searchable: true
+        settings:
+          limit: '1'
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Entries
 system:
   edition: pro
   live: true

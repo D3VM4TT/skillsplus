@@ -285,19 +285,20 @@ class UsersController extends BaseController {
         $package = Craft::$app->request->getParam('package');
         $user = Craft::$app->users->getUserById($userId);
 
-        if (! $user || !$package) {
+        if (! $user || !$package || !isset($package['core'])) {
             return $this->_returnError('Invalid params [userId = ' . $userId .'].');
         }
 
-        $modules = [];
-        foreach ($package as $id => $m) {
-            if (isset($m['selected']) && $m['selected']) {
-                $modules[$id] = $m['level'];
-            }
-        }
+        $coreModule = $package['core']['module'];
+        $coreLevel = $package['core']['level'];
+        $allOptionalModules = isset($package['optional']) && isset($package['optional'][$coreModule]) ? $package['optional'][$coreModule] : [];
 
-        if (!count($modules)) {
-            return $this->_returnError('You must select some modules for your package.');
+        $optionalModules = [];
+        foreach ($allOptionalModules as $id => $m) {
+            if (isset($m['selected']) && $m['selected']) {
+                $level = isset($m['level']) ? $m['level'] : $coreLevel;
+                $optionalModules[$id] = $level;
+            }
         }
 
         $spField = Craft::$app->fields->getFieldByHandle('userPackages');
@@ -312,26 +313,30 @@ class UsersController extends BaseController {
         $spBlock->typeId = $spType->id;
         $spBlock->enabled = true;
         $spBlock->setFieldValue('packageDateCreated', time());
+        $spBlock->setFieldValue('packageCoreModule', [$coreModule]);
+        $spBlock->setFieldValue('packageCoreLevel', $coreLevel);
         Craft::$app->elements->saveElement($spBlock);
 
-        $mBlock = null;
-        foreach ($spField->getBlockTypeFields() as $field) {
-            if ($field->handle == 'packageModules') {
-                $mBlock = $field;
+        if (count($optionalModules)) {
+            $mBlock = null;
+            foreach ($spField->getBlockTypeFields() as $field) {
+                if ($field->handle == 'packageOptionalModules') {
+                    $mBlock = $field;
+                }
             }
-        }
-        if (!$mBlock) {
-            return $this->_returnError('Could not locate field type.');
-        }
-        foreach ($modules as $id => $level) {
-            $block = new MatrixBlock();
-            $block->enabled = true;
-            $block->ownerId = $spBlock->id;
-            $block->fieldId = $mBlock->id;
-            $block->typeId = $mBlock->getBlockTypes()[0]->id;
-            $block->setFieldValue('packageModule', [$id]);
-            $block->setFieldValue('packageModuleLevel', $level);
-            Craft::$app->elements->saveElement($block);
+            if (!$mBlock) {
+                return $this->_returnError('Could not locate field type.');
+            }
+            foreach ($optionalModules as $id => $level) {
+                $block = new MatrixBlock();
+                $block->enabled = true;
+                $block->ownerId = $spBlock->id;
+                $block->fieldId = $mBlock->id;
+                $block->typeId = $mBlock->getBlockTypes()[0]->id;
+                $block->setFieldValue('optionalModule', [$id]);
+                $block->setFieldValue('optionalLevel', $level);
+                Craft::$app->elements->saveElement($block);
+            }
         }
 
         $this->_returnMessage('Taskbook package saved.', 'true', 'profile/taskbooks');

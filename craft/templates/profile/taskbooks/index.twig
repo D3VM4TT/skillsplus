@@ -25,23 +25,29 @@
             <thead>
                 <tr>
                     <th>Date Created</th>
-                    <th>Job Role</th>
-                    <th>Modules</th>
+                    <th>Core Module</th>
+                    <th>Level</th>
+                    <th>Optional Modules</th>
                 <tr>
             </thead>
             <tbody>
                 {% for package in currentUser.userPackages.all %}
-                <tr>
-                    <td>{{ package.packageDateCreated|date('d/m/y') }}</td>
-                    <td>{{ package.packageJobRole.count ? package.packageJobRole.one.title : 'None' }}</td>
-                    <td>
-                        {% for packageModuleBlock in package.packageModules.all %}
-                            {% set module = packageModuleBlock.packageModule.one %}
-                            {{ module.title }} ({{ packageModuleBlock.packageModuleLevel.label }})<br />
-                        {% endfor %}
-                    </td>
+                    <tr>
+                        <td>{{ package.packageDateCreated|date('d/m/y') }}</td>
+                        {% if not package.packageCoreModule.count %}
+                            <td style="color:red">Invalid Core Module</td>
+                        {% else %}
+                            <td>{{ package.packageCoreModule.one.title }}</td>
+                        {% endif %}
+                        <td>{{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</td>
+                        <td>
+                            {% for optionalModuleBlock in package.packageOptionalModules.all %}
+                                {% set module = optionalModuleBlock.optionalModule.one %}
+                                {{ module.title }} ({{ craft.lantra.taskbookLevel(optionalModuleBlock.optionalLevel) }})<br />
+                            {% endfor %}
+                        </td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
         {% endif %}
