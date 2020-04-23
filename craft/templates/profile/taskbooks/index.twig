@@ -28,6 +28,8 @@
                     <th>Core Module</th>
                     <th>Level</th>
                     <th>Optional Modules</th>
+                    <th>Cost</th>
+                    <th>Paid</th>
                 <tr>
             </thead>
             <tbody>
@@ -37,7 +39,7 @@
                         {% if not package.packageCoreModule.count %}
                             <td style="color:red">Invalid Core Module</td>
                         {% else %}
-                            <td>{{ package.packageCoreModule.one.title }}</td>
+                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.packageCoreModule.one.title }}</a></td>
                         {% endif %}
                         <td>{{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</td>
                         <td>
@@ -46,7 +48,9 @@
                                 {{ module.title }} ({{ craft.lantra.taskbookLevel(optionalModuleBlock.optionalLevel) }})<br />
                             {% endfor %}
                         </td>
-                </tr>
+                        <td>£{{ package.packageCost }}</td>
+                        <td>{{ package.packagePaid ? 'Yes' : 'No' }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

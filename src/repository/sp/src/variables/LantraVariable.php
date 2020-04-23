@@ -20,6 +20,21 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+    /**
+     * @param $packageId
+     * @param null $userId
+     * @return null
+     */
+    public function getUserPackage($packageId, $userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        foreach($user->userPackages as $package) {
+            if ($package->id == $packageId) {
+                 return $package;
+            }
+        }
+        return null;
+    }
 
     /**
      * @return array

@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1587652914
+dateModified: 1587653580
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -5387,6 +5387,12 @@ superTableBlockTypes:
               36baf4de-52bb-4930-9841-de3e7e173b5f:
                 required: false
                 sortOrder: 5
+              493e16f8-0ba3-4d3c-a602-b003a957c6f3:
+                required: false
+                sortOrder: 7
+              838899fa-4b6f-4707-88c3-3b55575d86cc:
+                required: false
+                sortOrder: 6
               84dc4265-7a53-4780-b112-1d2fba91357c:
                 required: false
                 sortOrder: 3
@@ -5450,6 +5456,36 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Categories
+      493e16f8-0ba3-4d3c-a602-b003a957c6f3:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: packagePaid
+        instructions: ''
+        name: 'Package Paid'
+        searchable: true
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      838899fa-4b6f-4707-88c3-3b55575d86cc:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: packageCost
+        instructions: ''
+        name: 'Package Cost'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
       84dc4265-7a53-4780-b112-1d2fba91357c:
         contentColumnType: string
         fieldGroup: null

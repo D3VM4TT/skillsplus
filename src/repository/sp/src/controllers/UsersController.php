@@ -274,6 +274,22 @@ class UsersController extends BaseController {
     }
 
     /**
+     * @param $packageId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionPay($packageId)
+    {
+        $spBlock = Craft::$app->elements->getElementById($packageId);
+        $spBlock->setFieldValue('packagePaid', 1);
+        Craft::$app->elements->saveElement($spBlock);
+        $this->_returnMessage('Package Paid', true, 'profile/taskbooks');
+    }
+
+    /**
      * Saves user taskbook package
      *
      * @throws mixed
@@ -289,10 +305,9 @@ class UsersController extends BaseController {
             return $this->_returnError('Invalid params [userId = ' . $userId .'].');
         }
 
-        $coreModule = $package['core']['module'];
+        $coreModuleId = $package['core']['module'];
         $coreLevel = $package['core']['level'];
-        $allOptionalModules = isset($package['optional']) && isset($package['optional'][$coreModule]) ? $package['optional'][$coreModule] : [];
-
+        $allOptionalModules = isset($package['optional']) && isset($package['optional'][$coreModuleId]) ? $package['optional'][$coreModuleId] : [];
         $optionalModules = [];
         foreach ($allOptionalModules as $id => $m) {
             if (isset($m['selected']) && $m['selected']) {
@@ -301,22 +316,41 @@ class UsersController extends BaseController {
             }
         }
 
+        $totalOptional = count($optionalModules);
+
+        $coreModule = Craft::$app->entries->getEntryById($coreModuleId);
+        if ($totalOptional < $coreModule->moduleMinimumOptional) {
+            $errors = ['You must select a minimum of ' . $coreModule->moduleMinimumOptional . ' optional modules.'];
+            return Craft::$app->urlManager->setRouteParams(['errors' => $errors]);
+        }
+
+        $cost = $coreModule->moduleMaxCost;
+        foreach ($coreModule->moduleCosts as $row) {
+            if ($totalOptional == $row['optionalModules']) {
+                $cost = (int) $row['cost'];
+            }
+        }
+
         $spField = Craft::$app->fields->getFieldByHandle('userPackages');
         if (!$spField) {
-            return $this->_returnError('Could not locate field type.');
+            $this->_returnError('Could not locate field type.');
+            return;
         }
-        $spType = $spField->getBlockTypes()[0];
 
+        ## create the package block
+        $spType = $spField->getBlockTypes()[0];
         $spBlock = new SuperTableBlockElement();
         $spBlock->ownerId = $user->id;
         $spBlock->fieldId = $spField->id;
         $spBlock->typeId = $spType->id;
         $spBlock->enabled = true;
         $spBlock->setFieldValue('packageDateCreated', time());
-        $spBlock->setFieldValue('packageCoreModule', [$coreModule]);
+        $spBlock->setFieldValue('packageCoreModule', [$coreModuleId]);
         $spBlock->setFieldValue('packageCoreLevel', $coreLevel);
+        $spBlock->setFieldValue('packageCost', $cost);
         Craft::$app->elements->saveElement($spBlock);
 
+        ## add the optional modules
         if (count($optionalModules)) {
             $mBlock = null;
             foreach ($spField->getBlockTypeFields() as $field) {
@@ -339,6 +373,6 @@ class UsersController extends BaseController {
             }
         }
 
-        $this->_returnMessage('Taskbook package saved.', 'true', 'profile/taskbooks');
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $spBlock->id);
     }
 }

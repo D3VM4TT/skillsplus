@@ -24,6 +24,15 @@
             {% endfor %}
             </tbody>
         </table>
+        <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
+        {% for row in coreModule.moduleCosts %}
+           Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />
+        {% endfor %}
+            Max Cost: £{{ coreModule.moduleMaxCost }}</p>
+        {% if coreModule.moduleMinimumOptional %}
+            Minimum optional modules: {{ coreModule.moduleMinimumOptional }}
+        {% endif %}
+        </div>
     {% else %}
         <p>There are currently no optional modules for {{ coreModule.title }}.</p>
         <p>&nbsp;</p>

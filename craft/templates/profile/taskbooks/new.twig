@@ -1,6 +1,7 @@
 {% requireLogin %}
 
 {% extends "_layout" %}
+{% import "_macros" as ui %}
 
 {% set account = currentUser %}
 {% set accountPhoto = account.getPhoto() %}
@@ -20,7 +21,6 @@
             <p>Manage your taskbook packages.</p>
         </div>
         <div class="page-content">
-
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
@@ -29,7 +29,11 @@
             {% set coreModules = craft.entries.section('modules').type('taskbook').moduleCore(1).all() %}
             {% set optionalModulesCount = craft.entries.section('modules').type('taskbook').moduleCore(0).count() %}
 
-            <form id="taskbooks" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+            {% if errors is defined %}
+                {{ ui.errorList(errors) }}
+            {% endif %}
+
+            <form class="page-form"  id="taskbooks" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
                 {{ csrfInput() }}
                 {{ actionInput('sp/users/save-package') }}
                 {{ hiddenInput('userId', currentUser.id) }}
@@ -38,7 +42,7 @@
                         <label for="coreModule" class="no-float">Core Module:</label>
                         <select class="core-module" name="package[core][module]">
                             {% for coreModule in coreModules %}
-                                <option value="{{ coreModule.id }}">{{ coreModule.title }}</option>
+                                <option data-minimum="{{ coreModule.moduleMinimumOptional }}" value="{{ coreModule.id }}">{{ coreModule.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -74,12 +78,12 @@
     $('select.core-level').change(function(){
         var level = $(this).val(),
             optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
-        if (level == 10) {
+        if (level == 5) {
            optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
         }
         else {
             optionalSelectInputs.prop('disabled', false).css('opacity', 1);
         }
-    });
+    }).change();
 </script>
 {% endblock %}

@@ -299,6 +299,7 @@ class Plugin extends BasePlugin
 
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
+            'profile/taskbooks/view/<packageId>'        => ['template' => 'profile/taskbooks/view'],
             'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
             'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
             'cpd/<userId>/<moduleId>/<unitId>/add'      => ['template' => 'record/unit'],
@@ -346,6 +347,8 @@ class Plugin extends BasePlugin
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
+
+            'sp/users/pay/<packageId>'                  => 'sp/users/pay',
         ];
     }
 
