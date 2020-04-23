@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1587637888
+dateModified: 1587652914
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1231,18 +1231,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  5c77b862-6815-4486-97ce-f137878f8dd7:
-    contentColumnType: boolean
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: moduleAllRoles
-    instructions: 'Make this module available to all roles?'
-    name: 'Module All Roles'
-    searchable: true
-    settings:
-      default: ''
-    translationKeyFormat: null
-    translationMethod: none
-    type: craft\fields\Lightswitch
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -1384,6 +1372,64 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Assets
+  680431de-8445-48e9-8acf-e32d867f73dd:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleCosts
+    instructions: ''
+    name: 'Module Costs'
+    searchable: true
+    settings:
+      addRowLabel: 'Add a row'
+      columnType: text
+      columns:
+        __assoc__:
+          -
+            - col1
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'No. Optional Modules'
+                -
+                  - handle
+                  - optionalModules
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col2
+            -
+              __assoc__:
+                -
+                  - heading
+                  - Cost
+                -
+                  - handle
+                  - cost
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+      defaults:
+        -
+          __assoc__:
+            -
+              - col1
+              - ''
+            -
+              - col2
+              - ''
+      maxRows: ''
+      minRows: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Table
   68c27db1-5957-4d1c-896f-d45fe1c2a062:
     contentColumnType: string
     fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
@@ -2610,6 +2656,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  da81a368-f84c-47f8-9e3a-b83346be0865:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleMinimumOptional
+    instructions: ''
+    name: 'Module Minimum Optional'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: 'optional modules'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
     contentColumnType: string
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -2780,6 +2844,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleMaxCost
+    instructions: ''
+    name: 'Module Max Cost'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   e7ff470a-3e85-47be-9037-1508ea540121:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -4612,13 +4694,16 @@ sections:
                 sortOrder: 1
               -
                 fields:
-                  5c77b862-6815-4486-97ce-f137878f8dd7:
+                  680431de-8445-48e9-8acf-e32d867f73dd:
                     required: false
                     sortOrder: 2
-                  f08f684f-1af1-417b-94f2-5df2f3ac7da6:
+                  da81a368-f84c-47f8-9e3a-b83346be0865:
                     required: false
                     sortOrder: 1
-                name: 'Job Roles'
+                  e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+                    required: false
+                    sortOrder: 3
+                name: Costs
                 sortOrder: 2
               -
                 fields:
