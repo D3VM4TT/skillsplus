@@ -1,0 +1,59 @@
+{% if cpdUser.userPackages|length %}
+    <div id="taskbooks-cpd">
+        {% for package in cpdUser.userPackages %}
+            {% set coreModule = package.packageCoreModule.one %}
+            <div class="job-role package" style="position: relative;">
+                <div class="align-vertical">
+                    <div class="align-horizontal">
+                        <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
+                    </div>
+                    <div class="align-horizontal">
+                        <div><h4>craft.lantra.setting('labelTaskbook', 'Taskbook') </h4></div>
+                        <div><h2>{{ coreModule.title }}</h2></div>
+                    </div>
+                </div>
+                <div id="j{{ package.id }}" class="open">
+                    <div class="module-group-tabs">
+                        <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
+                            <li>
+                                <a href="#tab{{ package.id }}" class="primary-bg">
+                                    <h4>{{ coreModule.title }}</h4>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% set packageModules = craft.lantra.getPackageModules(package) %}
+                    <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
+                        <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}">
+                            <div class="module-tabs">
+                                <ul class="tabs clearfix" data-tabgroup="tab-group-{{ package.id }}">
+                                    <div class="tabs-group">
+                                        {% for row in packageModules %}
+                                        {% set module = row.entry %}
+                                            {% set moduleElementId = package.id ~ module.id %}
+                                            <li>
+                                                <a href="#module{{ moduleElementId }}" class="module-status">
+                                                    <span class="status-active"></span>
+                                                    {{ module.title }}
+                                                </a>
+                                            </li>
+                                            {% if not loop.last and loop.index is divisible by(4) %}</div><div class="tabs-group">{% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </ul>
+                            </div>
+                            <div id="tab-group-{{ package.id }}" class="tabgroup module-wrapper">
+                                {% for row in packageModules %}
+                                    {% set module = row.entry %}
+                                    {% set moduleElementId = package.id ~ module.id %}
+                                    {% set columnLayout = module.columnLayout.count ?  module.columnLayout : coreModule.columnLayout %}
+                                    {% include 'record/_modules/module' with {moduleElementId:moduleElementId, level:row.level} %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

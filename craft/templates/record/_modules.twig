@@ -10,6 +10,7 @@
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}
 
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
+    {% include 'record/_modules/taskbooks' with {cpdUser:cpdUser} %}
     {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
         {% if not cpdUser.userRole.count %}

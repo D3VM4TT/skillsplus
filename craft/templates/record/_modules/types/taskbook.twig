@@ -1,0 +1,5 @@
+<div class="header" data-target="#m{{ moduleElementId }}">
+    <h4>{{ module.title }}</h4>
+    <h6>{{ craft.lantra.taskbookLevel(level) }}</h6>
+</div>
+{% include 'record/_modules/unitGroups' with{moduleElementId:moduleElementId}%}

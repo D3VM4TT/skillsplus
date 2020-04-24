@@ -94,6 +94,7 @@ class Settings extends Model
             'managerCompanies'  => ''
     ];
     public $labelJobRole                        = '';
+    public $labelTaskbook                       = '';
     public $queue                               = [];
     public $disableResultCache                  = false;
     public $customReports                       = [

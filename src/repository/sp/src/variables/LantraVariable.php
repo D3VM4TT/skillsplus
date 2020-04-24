@@ -21,6 +21,27 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param $package
+     * @return array
+     */
+    public function getPackageModules($package)
+    {
+        $modules = [
+            [
+                'entry'    => $package->packageCoreModule->one(),
+                'level'    => $package->packageCoreLevel
+            ]
+        ];
+        foreach($package->packageOptionalModules as $optionalModuleBlock) {
+            $modules[] = [
+                'entry'    => $optionalModuleBlock->optionalModule->one(),
+                'level'    => $optionalModuleBlock->level
+            ];
+        }
+        return $modules;
+    }
+
+    /**
      * @param $packageId
      * @param null $userId
      * @return null
