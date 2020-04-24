@@ -800,14 +800,14 @@ class Results extends Component
         $mysql .= "
             FROM {{%entries}} e
             LEFT JOIN {{%content}} c ON c.elementId = e.id
-            LEFT JOIN {{%elements}}el ON el.id = e.id
+            LEFT JOIN {{%elements}} el ON el.id = e.id
             WHERE e.sectionId = 10 
             AND c.field_resultStatus = 'pending'
             AND el.enabled = 1
             AND el.revisionId IS NULL
             AND el.draftId IS NULL
-            AND e.typeId = 10
-            AND e.typeId = 10";
+            AND (e.typeId = 10 OR e.typeId = 17)
+            AND authorId != " . $manager->id;
 
         # add subordinates and level to query
         if ($onlySubordinates) {
