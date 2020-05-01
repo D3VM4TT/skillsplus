@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1587653580
+dateModified: 1588340523
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -305,12 +305,26 @@ fields:
                 -
                   - width
                   - ''
+          -
+            - 838899fa-4b6f-4707-88c3-3b55575d86cc
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 493e16f8-0ba3-4d3c-a602-b003a957c6f3
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
       contentTable: '{{%stc_userpackages}}'
-      fieldLayout: table
+      fieldLayout: row
       maxRows: ''
       minRows: ''
       propagationMethod: all
-      selectionLabel: ''
+      selectionLabel: 'Add package'
       staticField: ''
     translationKeyFormat: null
     translationMethod: site
@@ -5393,6 +5407,9 @@ superTableBlockTypes:
               838899fa-4b6f-4707-88c3-3b55575d86cc:
                 required: false
                 sortOrder: 6
+              83ba93dc-b17a-4931-b32a-e49127527ce1:
+                required: false
+                sortOrder: 8
               84dc4265-7a53-4780-b112-1d2fba91357c:
                 required: false
                 sortOrder: 3
@@ -5486,6 +5503,52 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Number
+      83ba93dc-b17a-4931-b32a-e49127527ce1:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageStatus
+        instructions: ''
+        name: 'Package Status'
+        searchable: true
+        settings:
+          optgroups: true
+          options:
+            -
+              __assoc__:
+                -
+                  - label
+                  - Active
+                -
+                  - value
+                  - active
+                -
+                  - default
+                  - '1'
+            -
+              __assoc__:
+                -
+                  - label
+                  - Pending
+                -
+                  - value
+                  - pending
+                -
+                  - default
+                  - ''
+            -
+              __assoc__:
+                -
+                  - label
+                  - Endorsed
+                -
+                  - value
+                  - endorsed
+                -
+                  - default
+                  - ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Dropdown
       84dc4265-7a53-4780-b112-1d2fba91357c:
         contentColumnType: string
         fieldGroup: null

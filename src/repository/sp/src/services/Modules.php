@@ -48,7 +48,7 @@ class Modules extends Component
 
     public function totalUnits($moduleEntries)
     {
-        if (!$moduleEntries || !$moduleEntries->count()) {
+        if (!$moduleEntries) {
             return 0;
         }
         $return = 0;
@@ -65,7 +65,7 @@ class Modules extends Component
 
     public function unitsComplete($moduleEntries, $user)
     {
-        if (!$moduleEntries || !$moduleEntries->count()) {
+        if (!$moduleEntries) {
             return 0;
         }
         $return = 0;

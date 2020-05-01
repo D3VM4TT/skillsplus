@@ -1,4 +1,19 @@
 {% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Job Role CPD?",
+    id:				"enableJobRoles",
+    name:			"enableJobRoles",
+    value:		    settings.enableJobRoles
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Taskbooks CPD?",
+    id:				"enableTaskbooks",
+    name:			"enableTaskbooks",
+    value:		    settings.enableTaskbooks
+}) }}
+
 {{ forms.lightswitchField ({
     label:			"Job Role Endorse",
     id:				"jobRoleEndorse",

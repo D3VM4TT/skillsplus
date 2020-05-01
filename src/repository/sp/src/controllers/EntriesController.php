@@ -34,6 +34,10 @@ class EntriesController extends BaseController {
         if ($ref == 'jobRole') {
             $results = Lantra::$app->results->getJobRoleUserResults($id, $userId);
         }
+        if ($ref == 'package') {
+            $results = Lantra::$app->results->getPackageUserResults($id, $userId);
+            Lantra::$app->packages->setStatus($id, 'pending');
+        }
         $count = 0;
         ## loop entries and update status
         foreach ($results as $resultEntry) {

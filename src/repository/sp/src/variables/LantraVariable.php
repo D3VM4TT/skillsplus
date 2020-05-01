@@ -22,23 +22,21 @@ class LantraVariable
 {
     /**
      * @param $package
+     * @param $complete
+     * @return array
+     */
+    public function countPackageUnits($package, $complete = false, $status = 'draft')
+    {
+        return Lantra::$app->packages->countPackageUnits($package,  $complete, $status);
+    }
+
+    /**
+     * @param $package
      * @return array
      */
     public function getPackageModules($package)
     {
-        $modules = [
-            [
-                'entry'    => $package->packageCoreModule->one(),
-                'level'    => $package->packageCoreLevel
-            ]
-        ];
-        foreach($package->packageOptionalModules as $optionalModuleBlock) {
-            $modules[] = [
-                'entry'    => $optionalModuleBlock->optionalModule->one(),
-                'level'    => $optionalModuleBlock->level
-            ];
-        }
-        return $modules;
+        return Lantra::$app->packages->getPackageModules($package);
     }
 
     /**
@@ -49,12 +47,7 @@ class LantraVariable
     public function getUserPackage($packageId, $userId = null)
     {
         $user = (is_null($userId)) ? null : $this->getUser($userId);
-        foreach($user->userPackages as $package) {
-            if ($package->id == $packageId) {
-                 return $package;
-            }
-        }
-        return null;
+        return Lantra::$app->packages->getUserPackage($packageId, $user);
     }
 
     /**

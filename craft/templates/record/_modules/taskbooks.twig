@@ -1,6 +1,7 @@
 {% if cpdUser.userPackages|length %}
     <div id="taskbooks-cpd">
         {% for package in cpdUser.userPackages %}
+            {% set readOnly = package.packageStatus != 'active' %}
             {% set coreModule = package.packageCoreModule.one %}
             <div class="job-role package" style="position: relative;">
                 <div class="align-vertical">
@@ -8,8 +9,22 @@
                         <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
                     </div>
                     <div class="align-horizontal">
-                        <div><h4>craft.lantra.setting('labelTaskbook', 'Taskbook') </h4></div>
+                        <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ coreModule.title }}</h2></div>
+                        <div class="packageEndorse">
+                            {% set totalUnits = craft.lantra.countPackageUnits(package) %}
+                            {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
+                            {% if unitsComplete >= totalUnits %}
+                                {% if package.packageStatus == 'pending' %}
+                                    Endorsement Pending
+                                {% else %}
+                                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                                        data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Endorsement</a>
+                                {% endif %}
+                            {% else %}
+                                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div id="j{{ package.id }}" class="open">
@@ -18,7 +33,7 @@
                             <li>
                                 <a href="#tab{{ package.id }}" class="primary-bg">
                                     <h4>{{ coreModule.title }}</h4>
-                                </a>
+                                  </a>
                             </li>
                         </ul>
                     </div>

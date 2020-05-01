@@ -1067,6 +1067,33 @@ class Results extends Component
     }
 
     /**
+     * @param $packageId
+     * @param $userId
+     * @return array
+     * @throws Exception
+     */
+    public function getPackageUserResults($packageId, $userId = null)
+    {
+        if (! $userId) {
+            return [];
+        }
+        $results = [];
+        // get all modules for job role
+        $package = Lantra::$app->packages->getUserPackage($packageId, $userId);
+        if ($package) {
+            $modules = Lantra::$app->packages->getPackageModuleEntries($package);
+            foreach ($modules as $moduleEntry) {
+                // get unit results relating to module
+                $unitResults = $this->getModuleUnitResults($moduleEntry, $userId);
+                // get user results relating to module
+                $userResults = $this->getModuleUserResults($moduleEntry, $userId, false);
+                $results = array_merge($results, $unitResults, $userResults);
+            }
+        }
+        return $results;
+    }
+
+    /**
      * Get all the module unit IDs
      *
      * @param $moduleEntry

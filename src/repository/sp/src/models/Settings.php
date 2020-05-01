@@ -78,6 +78,10 @@ class Settings extends Model
     public $notifyCycleReminder                 = '';
 
     public $disableEndorsementNotify            = false;
+
+    public $enableTaskbooks                     = false;
+    public $enableJobRoles                      = true;
+
     public $userEditName                        = true;
     public $userEditEmail                       = true;
     public $userEditAddress                     = true;
