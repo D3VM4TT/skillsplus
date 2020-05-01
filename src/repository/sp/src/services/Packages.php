@@ -50,6 +50,35 @@ class Packages extends Component
 
     /**
      * @param $package
+     * @return mixed
+     */
+    public function countPackageUnitsEndorsed($package)
+    {
+        $return = 0;
+        $user = Craft::$app->users->getUserById($package->ownerId);
+        $units = $this->getPackageUnits($package);
+        foreach ($units as $unit) {
+            $result = Lantra::$app->results->getUnitResult($user->id, $unit->id);
+            if ($result->resultStatus == 'endorsed') {
+                $return++;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $package
+     * @return bool
+     */
+    public function isPackageUnitsEndorsed($package)
+    {
+        $units = $this->countPackageUnits($package);
+        $endorsed = $this->countPackageUnitsEndorsed($package);
+        return $endorsed == $units;
+    }
+
+    /**
+     * @param $package
      * @return array
      */
     public function getPackageModules($package)
@@ -70,6 +99,16 @@ class Packages extends Component
             ];
         }
         return $modules;
+    }
+
+    /**
+     * @param $package
+     * @return array
+     */
+    public function getPackageUnits($package)
+    {
+        $moduleEntries = $this->getPackageModuleEntries($package);
+        return Lantra::$app->modules->moduleUnits($moduleEntries);
     }
 
     /**
@@ -107,10 +146,18 @@ class Packages extends Component
     }
 
     /**
-     * @param $moduleResult
+     * @param $package
+     * @param $unitId
+     * @return bool
      */
-    public function checkTaskbookComplete($moduleResult)
+    public function unitExists($package, $unitId)
     {
-        ## run through user packages and if module exists
+        $units = $this->getPackageUnits($package);
+        foreach($units as $unit) {
+            if ($unit->id == $unitId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

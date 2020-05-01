@@ -1,7 +1,7 @@
 {% if cpdUser.userPackages|length %}
     <div id="taskbooks-cpd">
         {% for package in cpdUser.userPackages %}
-            {% set readOnly = package.packageStatus != 'active' %}
+
             {% set coreModule = package.packageCoreModule.one %}
             <div class="job-role package" style="position: relative;">
                 <div class="align-vertical">
@@ -15,8 +15,10 @@
                             {% set totalUnits = craft.lantra.countPackageUnits(package) %}
                             {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
                             {% if unitsComplete >= totalUnits %}
-                                {% if package.packageStatus == 'pending' %}
-                                    Endorsement Pending
+                                {% if craft.lantra.isPackageUnitsEndorsed(package) %}
+                                    All units have been been endorsed
+                                {% elseif package.packageStatus == 'pending' %}
+                                    Units require endorsement
                                 {% else %}
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
                                         data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Endorsement</a>

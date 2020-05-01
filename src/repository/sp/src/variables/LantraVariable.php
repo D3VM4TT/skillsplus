@@ -22,6 +22,15 @@ class LantraVariable
 {
     /**
      * @param $package
+     * @return bool
+     */
+    public function isPackageUnitsEndorsed($package)
+    {
+        return Lantra::$app->packages->isPackageUnitsEndorsed($package);
+    }
+
+    /**
+     * @param $package
      * @param $complete
      * @return array
      */

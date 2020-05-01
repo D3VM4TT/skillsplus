@@ -164,8 +164,11 @@ class Results extends Component
     /**
      * @param ModelEvent $event
      * @param Entry $entry
+     * @throws \Throwable
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\base\NotSupportedException
      * @throws \yii\db\Exception
