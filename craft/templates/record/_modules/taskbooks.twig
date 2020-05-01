@@ -26,7 +26,7 @@
                                 Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
                             {% endif %}
                             {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-                                {% set assessorId = package.packageAssessor ? package.packageAssessor.one.id %}
+                                {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
                                 {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
                                 <select class="assessor" name="packageAssessor" data-id="{{ package.id }}">
                                     <option value="">Select Assessor:</option>
