@@ -375,4 +375,31 @@ class UsersController extends BaseController {
 
         $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $spBlock->id);
     }
+
+    /**
+     * Saves user taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionPackageAssessor()
+    {
+        $this->requireLogin();
+        $userId = Craft::$app->request->getParam('userId');
+        $packageId = Craft::$app->request->getParam('packageId');
+        if (null == $package = SuperTableBlockElement::findOne($packageId)) {
+            return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
+        }
+        $assessor = $userId ? Craft::$app->users->getUserById($userId) :null;
+        $package->setFieldValue('packageAssessor', [$userId]);
+        if (!Craft::$app->elements->saveElement($package)) {
+            return $this->_returnError($package->getFirstErrors()[0]);
+        }
+        if ($assessor) {
+            $message = $assessor->fullname . ' assigned as assessor';
+        }
+        else {
+            $message = 'Assessor unassigned.';
+        }
+        $this->_returnMessage($message, 'true');
+    }
 }

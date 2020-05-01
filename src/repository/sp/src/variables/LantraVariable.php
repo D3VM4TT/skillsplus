@@ -393,6 +393,26 @@ class LantraVariable
     }
 
     /**
+     * @param null $limit
+     * @param string $order
+     * @param null $assessorId
+     * @return \verbb\supertable\services\ElementCriteriaModel
+     */
+    public function assessmentCriteria($limit = null, $order = 'lastName', $assessorId = null)
+    {
+        return Lantra::$app->users->assessmentCriteria($limit, $order, $this->getUser($assessorId));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function assessmentCount($assessorId = null)
+    {
+        $criteria = $this->assessmentCriteria(null, 'lastName', $this->getUser($assessorId));
+        return $criteria->count();
+    }
+
+    /**
      * Return criteria based on company name and location
      *
      * @param $search
@@ -484,12 +504,11 @@ class LantraVariable
     }
 
     /**
-     * Check whether this user manages the subordinate
-     *
      * @param null $subordinateId
-     * @param bool $managerId
+     * @param null $managerId
      * @param bool $includeHierarchy
      * @return bool
+     * @throws \Exception
      */
     public function isManager($subordinateId = null, $managerId = null, $includeHierarchy = true)
     {
@@ -498,9 +517,23 @@ class LantraVariable
     }
 
     /**
+     * Check whether this user can assess the subordinate
+     *
+     * @param null $subordinateId
+     * @param bool $assessorId
+     * @return bool
+     */
+    public function isAssessor($subordinateId = null, $assessorId = null)
+    {
+        $assessor = (is_null($assessorId)) ? null : $this->getUser($assessorId);
+        return Lantra::$app->users->isAssessor($subordinateId, $assessor);
+    }
+
+    /**
      * @param $resultEntry
      * @param null $managerId
-     * @return mixed
+     * @return bool
+     * @throws \Exception
      */
     public function canEndorse($resultEntry, $managerId = null) {
         if (false == $manager = $this->getUser($managerId)) {

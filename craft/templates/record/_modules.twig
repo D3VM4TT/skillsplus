@@ -1,10 +1,12 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set existingResultIds = [] %}
 {% set isManager = false %}
+{% set isAssessor = false %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
 {% if cpdUser.id != currentUser.id %}
     {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
+    {% set isAssessor = craft.lantra.isAssessor(cpdUser.id, currentUser.id) %}
 {% endif %}
 
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}

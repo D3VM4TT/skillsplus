@@ -330,6 +330,7 @@ class Plugin extends BasePlugin
             'sp/users/restore-user'                     => 'sp/users/restore-user',
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
+            'sp/users/package-assessor'                 => 'sp/users/package-assessor',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 

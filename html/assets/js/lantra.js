@@ -332,6 +332,21 @@ $(document).ready(function(){
         });
     });
 
+    // select package assessor
+    $('select.assessor').on('change', function(e){
+        $('body').addClass('loading');
+        var data = {packageId: $(this).data('id'), userId: $(this).val()};
+        data[window.csrfTokenName] = window.csrfTokenValue;
+        $.post("/sp/users/package-assessor", data, function(response) {
+            $('body').removeClass('loading');
+            alert(response.message);
+        }).fail(function(error) {
+            $('body').removeClass('loading');
+            console.log(error);
+            alert('Server error, check the console.');
+        });
+    });
+
     // update report managers based on selected companies
     $('select#reportCompanies').on('change', function () {
         var data = {companyIds: $(this).val()};

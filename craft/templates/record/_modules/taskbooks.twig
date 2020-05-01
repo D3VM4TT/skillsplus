@@ -1,7 +1,6 @@
 {% if cpdUser.userPackages|length %}
     <div id="taskbooks-cpd">
         {% for package in cpdUser.userPackages %}
-
             {% set coreModule = package.packageCoreModule.one %}
             <div class="job-role package" style="position: relative;">
                 <div class="align-vertical">
@@ -25,6 +24,16 @@
                                 {% endif %}
                             {% else %}
                                 Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
+                            {% endif %}
+                            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+                                {% set assessorId = package.packageAssessor ? package.packageAssessor.one.id %}
+                                {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
+                                <select class="assessor" name="packageAssessor" data-id="{{ package.id }}">
+                                    <option value="">Select Assessor:</option>
+                                    {% for cm in userCompanyManagers %}
+                                        <option value="{{ cm.id }}" {% if cm.id == assessorId %}selected{% endif %}>{{ cm.fullname }}</option>
+                                    {% endfor %}
+                                </select>
                             {% endif %}
                         </div>
                     </div>

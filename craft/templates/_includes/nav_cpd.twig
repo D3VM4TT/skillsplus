@@ -43,6 +43,11 @@
                 <li>
                 <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
                 </li>
+                {% if craft.lantra.assessmentCount() %}
+                    <li>
+                        <a class="{% if craft.app.request.getSegment(2) == 'assessments' %}active{% endif %}" href="/management/assessments">Assessments</a>
+                    </li>
+                {%  endif %}
                 {%  endif %}
                 {#
                 {% if craft.lantra.can('editRoles') %}

@@ -19,6 +19,8 @@ use craft\helpers\DateTimeHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use verbb\supertable\services\SuperTableService;
+
 use DateTime;
 use yii\db\Query;
 
@@ -140,6 +142,28 @@ class Users extends Component
             $criteria->relatedTo = ['targetElement' => [$companyId], 'field' => 'userCompany'];
         }
         return $criteria;
+    }
+
+    /**
+     * @param int $limit
+     * @param string $order
+     * @param User|null $assessor
+     * @return \verbb\supertable\services\ElementCriteriaModel
+     */
+    public function assessmentCriteria($limit = 25, $order = 'lastName', User $assessor)
+    {
+        $supertableService = new SuperTableService();
+        $params = [
+            'elementType'   => 'craft\\elements\\User',
+            'criteria'      => [
+                'order' => $order,
+                'limit' => $limit
+            ],
+            'relatedTo'     => [
+                'targetElement' => $assessor->id,
+                'field'         => 'userPackages.packageAssessor'
+            ]];
+        return $supertableService->getRelatedElementsQuery($params);
     }
 
     /** more efficient way to search users */
@@ -396,11 +420,31 @@ class Users extends Component
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
             return true;
         }
+        ## check whether can assess
+        if ($this->isAssessor($subordinateId, $manager)) {
+            return true;
+        }
         $subordinateIds = $this->getManagerSubordinateIds($manager, $includeHierarchy);
         if (!count($subordinateIds)) {
             return false;
         }
         return $subordinateIds && in_array($subordinateId, $subordinateIds);
+    }
+
+    /**
+     * @param int $subordinateId
+     * @param User $assessor
+     * @return bool
+     */
+    public function isAssessor($subordinateId, User $assessor)
+    {
+        $criteria = $this->assessmentCriteria(null, 'lastName', $assessor);
+        foreach($criteria->all() as $user) {
+            if ($user->id == $subordinateId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

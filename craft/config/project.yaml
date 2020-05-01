@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1588340523
+dateModified: 1588344747
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -314,6 +314,13 @@ fields:
                   - ''
           -
             - 493e16f8-0ba3-4d3c-a602-b003a957c6f3
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 83ba93dc-b17a-4931-b32a-e49127527ce1
             -
               __assoc__:
                 -
@@ -5404,6 +5411,9 @@ superTableBlockTypes:
               493e16f8-0ba3-4d3c-a602-b003a957c6f3:
                 required: false
                 sortOrder: 7
+              7b280df0-309a-447b-bc17-c44180467951:
+                required: false
+                sortOrder: 9
               838899fa-4b6f-4707-88c3-3b55575d86cc:
                 required: false
                 sortOrder: 6
@@ -5485,6 +5495,26 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Lightswitch
+      7b280df0-309a-447b-bc17-c44180467951:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageAssessor
+        instructions: ''
+        name: 'Package Assessor'
+        searchable: true
+        settings:
+          limit: '1'
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Users
       838899fa-4b6f-4707-88c3-3b55575d86cc:
         contentColumnType: integer(10)
         fieldGroup: null
