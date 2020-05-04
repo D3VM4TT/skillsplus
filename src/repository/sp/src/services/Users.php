@@ -19,6 +19,7 @@ use craft\helpers\DateTimeHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;
 
 use DateTime;
@@ -434,10 +435,18 @@ class Users extends Component
     /**
      * @param int $subordinateId
      * @param User $assessor
+     * @param bool $includeAdmin
      * @return bool
      */
-    public function isAssessor($subordinateId, User $assessor)
+    public function isAssessor($subordinateId, User $assessor = null, $includeAdmin = true)
     {
+        if (is_null($assessor)) {
+            $assessor = Craft::$app->getUser()->getIdentity();
+        }
+        ## admins and scheme managers can manage everyone
+        if ($includeAdmin && ($assessor->admin || $assessor->isInGroup('schemeManagers'))) {
+            return true;
+        }
         $criteria = $this->assessmentCriteria(null, 'lastName', $assessor);
         foreach($criteria->all() as $user) {
             if ($user->id == $subordinateId) {
@@ -445,6 +454,27 @@ class Users extends Component
             }
         }
         return false;
+    }
+
+    /**
+     * @param SuperTableBlockElement $packageBlock
+     * @param User $reviewer
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isReviewer(SuperTableBlockElement $packageBlock, User $reviewer = null, $includeAdmin = true)
+    {
+        if (is_null($reviewer)) {
+            $reviewer = Craft::$app->getUser()->getIdentity();
+        }
+        ## admins and scheme managers can review everyone
+        if ($includeAdmin && ($reviewer->admin || $reviewer->isInGroup('schemeManagers'))) {
+            return true;
+        }
+        if ($packageBlock->packageReviewer) {
+            return false;
+        }
+        return $packageBlock->packageReviewer->one()->id == $reviewer->id;
     }
 
     /**

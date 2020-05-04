@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1588344747
+dateModified: 1588592065
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -321,6 +321,13 @@ fields:
                   - ''
           -
             - 83ba93dc-b17a-4931-b32a-e49127527ce1
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 7b280df0-309a-447b-bc17-c44180467951
             -
               __assoc__:
                 -
@@ -5411,6 +5418,9 @@ superTableBlockTypes:
               493e16f8-0ba3-4d3c-a602-b003a957c6f3:
                 required: false
                 sortOrder: 7
+              55663960-c109-4c89-a946-00a0da111287:
+                required: false
+                sortOrder: 10
               7b280df0-309a-447b-bc17-c44180467951:
                 required: false
                 sortOrder: 9
@@ -5424,7 +5434,7 @@ superTableBlockTypes:
                 required: false
                 sortOrder: 3
               d671f864-8408-4319-bfe2-e622e44028e7:
-                required: false
+                required: true
                 sortOrder: 1
             name: Content
             sortOrder: 1
@@ -5495,6 +5505,26 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Lightswitch
+      55663960-c109-4c89-a946-00a0da111287:
+        contentColumnType: string
+        fieldGroup: null
+        handle: packageReviewer
+        instructions: ''
+        name: 'Package Reviewer'
+        searchable: true
+        settings:
+          limit: '1'
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Users
       7b280df0-309a-447b-bc17-c44180467951:
         contentColumnType: string
         fieldGroup: null
@@ -5558,10 +5588,10 @@ superTableBlockTypes:
               __assoc__:
                 -
                   - label
-                  - Pending
+                  - Assessed
                 -
                   - value
-                  - pending
+                  - assessed
                 -
                   - default
                   - ''
@@ -5569,10 +5599,21 @@ superTableBlockTypes:
               __assoc__:
                 -
                   - label
-                  - Endorsed
+                  - Reviewed
                 -
                   - value
-                  - endorsed
+                  - reviewed
+                -
+                  - default
+                  - ''
+            -
+              __assoc__:
+                -
+                  - label
+                  - Complete
+                -
+                  - value
+                  - complete
                 -
                   - default
                   - ''

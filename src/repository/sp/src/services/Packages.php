@@ -17,6 +17,28 @@ use verbb\supertable\elements\SuperTableBlockElement;
 class Packages extends Component
 {
     /**
+     * @param $package
+     * @param $changed
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function onSavePackage($package, $changed)
+    {
+        if ($changed['assessor']) {
+            Lantra::$app->notify->sendPackageAssigned($package, 'assessor');
+        }
+        if ($changed['reviewer']) {
+            Lantra::$app->notify->sendPackageAssigned($package, 'reviewer');
+        }
+        if ($changed['status']) {
+            Lantra::$app->notify->sendPackageStatus($package);
+            if ($package->packageStatus == 'reviewed') {
+                Lantra::$app->notify->sendPackageReviewed($package);
+            }
+        }
+    }
+
+    /**
      * @param $packageId
      * @param $status
      * @return bool

@@ -521,12 +521,45 @@ class LantraVariable
      *
      * @param null $subordinateId
      * @param bool $assessorId
+     * @param bool $includeAdmin
      * @return bool
      */
-    public function isAssessor($subordinateId = null, $assessorId = null)
+    public function isAssessor($subordinateId = null, $assessorId = null, $includeAdmin = true)
     {
         $assessor = (is_null($assessorId)) ? null : $this->getUser($assessorId);
-        return Lantra::$app->users->isAssessor($subordinateId, $assessor);
+        return Lantra::$app->users->isAssessor($subordinateId, $assessor, $includeAdmin);
+    }
+
+    /**
+     * Check whether this user can assess the subordinate
+     *
+     * @param $packageBlock
+     * @param int $reviewerId
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isReviewer($packageBlock, $reviewerId = null, $includeAdmin = true)
+    {
+        $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
+        return Lantra::$app->users->isReviewer($packageBlock, $reviewer, $includeAdmin);
+    }
+
+    /**
+     * @param $packageBlock
+     * @param null $assessorId
+     * @return bool
+     * @throws \Exception
+     */
+    public function canAssess($packageBlock, $assessorId = null)
+    {
+        if (false == $assessor = $this->getUser($assessorId)) {
+                return false;
+        }
+        ## you can't mark your own homework...!
+        if (!$assessor->admin && $assessor->id == $packageBlock->owner->id) {
+            return false;
+        }
+        return $this->isAssessor($packageBlock->owner->id, $assessor);
     }
 
     /**

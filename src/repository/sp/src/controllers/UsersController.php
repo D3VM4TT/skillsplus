@@ -377,6 +377,53 @@ class UsersController extends BaseController {
     }
 
     /**
+     * Update taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionUpdatePackage()
+    {
+        $this->requireLogin();
+        $packageId = Craft::$app->request->getRequiredParam('packageId');
+        if (null == $package = SuperTableBlockElement::findOne($packageId)) {
+            return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
+        }
+
+        $oldAssessorId = $package->packageAssessor->count() ? $package->packageAssessor->one()->id : null;
+        $oldReviewerId = $package->packageReviewer->count() ? $package->packageReviewer->one()->id : null;
+        $oldStatus = $package->packageStatus;
+
+        $changed = [
+          'assessor' => false,
+          'reviewer' => false,
+          'status' => false
+        ];
+
+        $assessorId = Craft::$app->request->getParam('assessorId');
+        $reviewerId = Craft::$app->request->getParam('reviewerId');
+        $status = Craft::$app->request->getParam('packageStatus');
+
+        if ($assessorId != $oldAssessorId) {
+            $package->setFieldValue('packageAssessor', [$assessorId]);
+            $changed['assessor'] = true;
+        }
+        if ($reviewerId != $oldReviewerId) {
+            $package->setFieldValue('packageReviewer', [$reviewerId]);
+            $changed['reviewer'] = true;
+        }
+        if ($status != $oldStatus) {
+            $package->setFieldValue('packageStatus', $status);
+            $changed['status'] = true;
+        }
+        if (!Craft::$app->elements->saveElement($package)) {
+            return Craft::$app->urlManager->setRouteParams(['package' => $package]);
+        }
+        Lantra::$app->packages->onSavePackage($package, $changed);
+        $redirect = '/cpd/' . $package->owner->id;
+        $this->_returnMessage('Package has been updated', true, $redirect);
+    }
+
+    /**
      * Saves user taskbook package
      *
      * @throws mixed

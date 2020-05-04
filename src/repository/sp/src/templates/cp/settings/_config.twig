@@ -4,14 +4,14 @@
     label:			"Enable Job Role CPD?",
     id:				"enableJobRoles",
     name:			"enableJobRoles",
-    value:		    settings.enableJobRoles
+    on:		        settings.enableJobRoles == 1
 }) }}
 
 {{ forms.lightswitchField ({
     label:			"Enable Taskbooks CPD?",
     id:				"enableTaskbooks",
     name:			"enableTaskbooks",
-    value:		    settings.enableTaskbooks
+    on:		        settings.enableTaskbooks == 1
 }) }}
 
 {{ forms.lightswitchField ({

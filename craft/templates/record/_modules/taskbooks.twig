@@ -1,6 +1,8 @@
 {% if cpdUser.userPackages|length %}
     <div id="taskbooks-cpd">
         {% for package in cpdUser.userPackages %}
+            {% set isAssessor = craft.lantra.isAssessor(package) %}
+            {% set isReviewer = craft.lantra.isReviewer(package) %}
             {% set coreModule = package.packageCoreModule.one %}
             <div class="job-role package" style="position: relative;">
                 <div class="align-vertical">
@@ -10,32 +12,32 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ coreModule.title }}</h2></div>
-                        <div class="packageEndorse">
-                            {% set totalUnits = craft.lantra.countPackageUnits(package) %}
-                            {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
-                            {% if unitsComplete >= totalUnits %}
+                        {% set totalUnits = craft.lantra.countPackageUnits(package) %}
+                        {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
+                        {% if unitsComplete >= totalUnits %}
+                            {% if package.packageStatus == 'active' %}
                                 {% if craft.lantra.isPackageUnitsEndorsed(package) %}
-                                    All units have been been endorsed
-                                {% elseif package.packageStatus == 'pending' %}
-                                    Units require endorsement
+                                    Status: Endorsed
                                 {% else %}
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                                        data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Endorsement</a>
+                                       data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Endorsement</a>
                                 {% endif %}
-                            {% else %}
-                                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
                             {% endif %}
-                            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-                                {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
-                                {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
-                                <select class="assessor" name="packageAssessor" data-id="{{ package.id }}">
-                                    <option value="">Select Assessor:</option>
-                                    {% for cm in userCompanyManagers %}
-                                        <option value="{{ cm.id }}" {% if cm.id == assessorId %}selected{% endif %}>{{ cm.fullname }}</option>
-                                    {% endfor %}
-                                </select>
+                            {% if package.packageStatus == 'assessed' %}
+                                Status: Assessed
+                            {% elseif package.packageStatus == 'reviewed' %}
+                                Status: Reviewed
+                            {% elseif package.packageStatus == 'complete' %}
+                                Status: Complete
                             {% endif %}
-                        </div>
+                        {% else %}
+                            Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
+                        {% endif %}
+                        {% if isAssessor or isReviewer %}
+                            {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
+                            {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
+                            <a href="/management/assessments/edit/{{ package.id }}">Manage taskbook</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div id="j{{ package.id }}" class="open">
