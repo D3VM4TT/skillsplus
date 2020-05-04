@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1588592065
+dateModified: 1588601506
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -328,6 +328,13 @@ fields:
                   - ''
           -
             - 7b280df0-309a-447b-bc17-c44180467951
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 55663960-c109-4c89-a946-00a0da111287
             -
               __assoc__:
                 -
@@ -5409,6 +5416,9 @@ superTableBlockTypes:
               053f6b7e-6705-488b-86a5-19e2949e5b0a:
                 required: false
                 sortOrder: 4
+              0ce02ac5-70e3-4196-b0c4-384288afb090:
+                required: false
+                sortOrder: 11
               1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
                 required: false
                 sortOrder: 2
@@ -5453,6 +5463,102 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Date
+      0ce02ac5-70e3-4196-b0c4-384288afb090:
+        contentColumnType: text
+        fieldGroup: null
+        handle: packageLog
+        instructions: ''
+        name: 'Package Log'
+        searchable: true
+        settings:
+          addRowLabel: 'Add a row'
+          columnType: text
+          columns:
+            __assoc__:
+              -
+                - col1
+                -
+                  __assoc__:
+                    -
+                      - heading
+                      - Date
+                    -
+                      - handle
+                      - date
+                    -
+                      - width
+                      - ''
+                    -
+                      - type
+                      - date
+              -
+                - col2
+                -
+                  __assoc__:
+                    -
+                      - heading
+                      - Message
+                    -
+                      - handle
+                      - message
+                    -
+                      - width
+                      - ''
+                    -
+                      - type
+                      - singleline
+              -
+                - col3
+                -
+                  __assoc__:
+                    -
+                      - heading
+                      - 'User Full Name'
+                    -
+                      - handle
+                      - userFullname
+                    -
+                      - width
+                      - ''
+                    -
+                      - type
+                      - singleline
+              -
+                - col4
+                -
+                  __assoc__:
+                    -
+                      - heading
+                      - 'User ID'
+                    -
+                      - handle
+                      - userId
+                    -
+                      - width
+                      - ''
+                    -
+                      - type
+                      - number
+          defaults:
+            -
+              __assoc__:
+                -
+                  - col1
+                  - null
+                -
+                  - col2
+                  - ''
+                -
+                  - col3
+                  - ''
+                -
+                  - col4
+                  - ''
+          maxRows: ''
+          minRows: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Table
       1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
         contentColumnType: integer(10)
         fieldGroup: null

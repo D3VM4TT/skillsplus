@@ -1,0 +1,23 @@
+{% if package.packageLog|length %}
+    <h2>Log</h2>
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Message</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in package.packageLog %}
+                {% set user = craft.app.users.getUserById(row.userId) %}
+                <tr>
+                    <td>{{ row.date|date('d/m/y G:i') }}</td>
+                    <td>{{ row.message }}</td>
+                    <td>{{ user ? user.fullName }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+

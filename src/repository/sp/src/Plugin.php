@@ -26,6 +26,8 @@ use craft\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\assetbundles\SpCpAsset;
 use lantra\sp\migrations\m200128_160852_rename_unitValue;
+use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\services\SuperTableService;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
@@ -143,6 +145,21 @@ class Plugin extends BasePlugin
             function (ModelEvent $event) {
                 $user = $event->sender;
                 Lantra::$app->users->onBeforeDeleteUser($user, $event);
+            }
+        );
+
+        Event::on(
+            SuperTableBlockElement::class,
+            SuperTableBlockElement::EVENT_BEFORE_SAVE,
+            function (ModelEvent $event) {
+                $package = $event->sender;
+                if (null != $field = Craft::$app->fields->getFieldByHandle('userPackages')) {
+                    $sp = new SuperTableService();
+                    $packagesBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+                    if ($package->typeId == $packagesBlockType->id) {
+                        Lantra::$app->packages->onBeforeSavePackage($event, $package);
+                    }
+                }
             }
         );
 

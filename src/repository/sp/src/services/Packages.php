@@ -10,6 +10,7 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\events\ModelEvent;
 
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -17,25 +18,69 @@ use verbb\supertable\elements\SuperTableBlockElement;
 class Packages extends Component
 {
     /**
+     * @param ModelEvent $event
+     * @param SuperTableBlockElement $packageBlock
+     */
+    public function onBeforeSavePackage(ModelEvent $event, SuperTableBlockElement $packageBlock)
+    {
+        $assessorId = $packageBlock->packageAssessor->count() ? $packageBlock->packageAssessor->one()->id : null;
+        $reviewerId = $packageBlock->packageReviewer->count() ? $packageBlock->packageReviewer->one()->id : null;
+
+        if ($assessorId && $reviewerId && $assessorId == $reviewerId) {
+            $packageBlock->addError('packageAssessor', 'Assessor and Reviewer can not be the same.');
+            $event->isValid = false;
+        }
+    }
+
+    /**
      * @param $package
      * @param $changed
+     * @throws \Throwable
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function onSavePackage($package, $changed)
     {
         if ($changed['assessor']) {
+            $this->log($package, 'Assessor changed to ' . $package->packageAssessor->one()->fullName);
             Lantra::$app->notify->sendPackageAssigned($package, 'assessor');
         }
         if ($changed['reviewer']) {
+            $this->log($package, 'Reviewer changed to ' . $package->packageReviewer->one()->fullName);
             Lantra::$app->notify->sendPackageAssigned($package, 'reviewer');
         }
         if ($changed['status']) {
+            $this->log($package, 'Package status changed to ' . $package->packageStatus);
             Lantra::$app->notify->sendPackageStatus($package);
             if ($package->packageStatus == 'reviewed') {
                 Lantra::$app->notify->sendPackageReviewed($package);
             }
         }
+    }
+
+    /**
+     * @param $package
+     * @param $message
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function log($package, $message)
+    {
+        $user = Craft::$app->getUser()->getIdentity();
+        $new = [
+            'col1'       => time(),
+            'col2'       => $message,
+            'col3'       => $user->fullName,
+            'col4'       => $user->id
+        ];
+        $packageLog = $package->packageLog;
+        $packageLog['new1'] = $new;
+        $package->setFieldValue('packageLog', $packageLog);
+        return Craft::$app->elements->saveElement($package);
     }
 
     /**

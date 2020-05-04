@@ -415,9 +415,11 @@ class UsersController extends BaseController {
             $package->setFieldValue('packageStatus', $status);
             $changed['status'] = true;
         }
+
         if (!Craft::$app->elements->saveElement($package)) {
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
+
         Lantra::$app->packages->onSavePackage($package, $changed);
         $redirect = '/cpd/' . $package->owner->id;
         $this->_returnMessage('Package has been updated', true, $redirect);
