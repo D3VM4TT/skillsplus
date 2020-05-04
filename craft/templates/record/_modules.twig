@@ -6,7 +6,7 @@
 {% if cpdUser.id != currentUser.id %}
     {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
-    {% set isAssessor = craft.lantra.isAssessor(cpdUser.id, currentUser.id) %}
+    {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
 
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}

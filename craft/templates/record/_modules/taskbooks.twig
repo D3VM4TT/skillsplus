@@ -36,7 +36,7 @@
                         {% if isAssessor or isReviewer %}
                             {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
                             {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
-                            <a href="/management/assessments/edit/{{ package.id }}">Manage taskbook</a>
+                            <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
                         {% endif %}
                     </div>
                 </div>

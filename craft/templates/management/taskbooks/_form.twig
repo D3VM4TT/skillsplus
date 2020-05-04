@@ -19,7 +19,7 @@
 
 {% block content %}
     <div class="page-subHeader primary-bg">
-        <a class="back-link" href="/management/assessments"><strong>&laquo; back</a>
+        <a class="back-link" href="/management/taskbook-assessments"><strong>&laquo; back</a>
         {% include '_includes/topNavigation' %}
     </div>
     <div class="page-header secondary-bg">
@@ -65,7 +65,7 @@
             <div class="field--wrapper">
                 <label for="packageStatus" class="">Status:</label>
                 <select name="packageStatus">
-                    {% if isAdmin or isAssesor %}
+                    {% if isAdmin or isAssessor %}
                         <option value="active"{% if package.packageStatus == 'active' %} selected{% endif %}>Active</option>
                     {% endif %}
                     <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>

@@ -395,20 +395,42 @@ class LantraVariable
     /**
      * @param null $limit
      * @param string $order
-     * @param null $assessorId
+     * @param null $managerId
      * @return \verbb\supertable\services\ElementCriteriaModel
      */
-    public function assessmentCriteria($limit = null, $order = 'lastName', $assessorId = null)
+    public function assessmentCriteria($limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->users->assessmentCriteria($limit, $order, $this->getUser($assessorId));
+        return Lantra::$app->users->assessmentCriteria($limit, $order, $this->getUser($managerId));
     }
 
     /**
+     * @param null $limit
+     * @param string $order
+     * @param null $managerId
+     * @return \verbb\supertable\services\ElementCriteriaModel
+     */
+    public function reviewCriteria($limit = null, $order = 'lastName', $managerId = null)
+    {
+        return Lantra::$app->users->reviewCriteria($limit, $order, $this->getUser($managerId));
+    }
+
+    /**
+     * @param null $assessorId
      * @return mixed
      */
     public function assessmentCount($assessorId = null)
     {
         $criteria = $this->assessmentCriteria(null, 'lastName', $this->getUser($assessorId));
+        return $criteria->count();
+    }
+
+    /**
+     * @param null $reviewerId
+     * @return mixed
+     */
+    public function reviewCount($reviewerId = null)
+    {
+        $criteria = $this->reviewCriteria(null, 'lastName', $this->getUser($reviewerId));
         return $criteria->count();
     }
 
@@ -517,17 +539,28 @@ class LantraVariable
     }
 
     /**
+     * @param null $subordinateId
+     * @param null $managerId
+     * @return bool
+     */
+    public function isPackageManager($subordinateId = null, $managerId = null)
+    {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return Lantra::$app->users->isPackageManager($subordinateId, $manager);
+    }
+
+    /**
      * Check whether this user can assess the subordinate
      *
-     * @param null $subordinateId
+     * @param $packageBlock
      * @param bool $assessorId
      * @param bool $includeAdmin
      * @return bool
      */
-    public function isAssessor($subordinateId = null, $assessorId = null, $includeAdmin = true)
+    public function isAssessor($packageBlock = null, $assessorId = null, $includeAdmin = true)
     {
         $assessor = (is_null($assessorId)) ? null : $this->getUser($assessorId);
-        return Lantra::$app->users->isAssessor($subordinateId, $assessor, $includeAdmin);
+        return Lantra::$app->users->isAssessor($packageBlock, $assessor, $includeAdmin);
     }
 
     /**
@@ -559,7 +592,7 @@ class LantraVariable
         if (!$assessor->admin && $assessor->id == $packageBlock->owner->id) {
             return false;
         }
-        return $this->isAssessor($packageBlock->owner->id, $assessor);
+        return $this->isAssessor($packageBlock, $assessor);
     }
 
     /**
