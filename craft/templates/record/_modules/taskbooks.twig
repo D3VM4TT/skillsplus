@@ -48,6 +48,11 @@
                                     <h4>{{ coreModule.title }}</h4>
                                   </a>
                             </li>
+                            <li>
+                                <a href="#tab{{ package.id }}log" class="primary-bg">
+                                    <h4>Log</h4>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     {% set packageModules = craft.lantra.getPackageModules(package) %}
@@ -58,14 +63,14 @@
                                     <div class="tabs-group">
                                         {% for row in packageModules %}
                                         {% set module = row.entry %}
-                                            {% set moduleElementId = package.id ~ module.id %}
-                                            <li>
-                                                <a href="#module{{ moduleElementId }}" class="module-status">
-                                                    <span class="status-active"></span>
-                                                    {{ module.title }}
-                                                </a>
-                                            </li>
-                                            {% if not loop.last and loop.index is divisible by(4) %}</div><div class="tabs-group">{% endif %}
+                                        {% set moduleElementId = package.id ~ module.id %}
+                                        <li>
+                                            <a href="#module{{ moduleElementId }}" class="module-status">
+                                                <span class="status-active"></span>
+                                                {{ module.title }}
+                                            </a>
+                                        </li>
+                                        {% if not loop.last and loop.index is divisible by(4) %}</div><div class="tabs-group">{% endif %}
                                         {% endfor %}
                                     </div>
                                 </ul>
@@ -78,6 +83,9 @@
                                     {% include 'record/_modules/module' with {moduleElementId:moduleElementId, level:row.level} %}
                                 {% endfor %}
                             </div>
+                        </div>
+                        <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
+                            {% include '_includes/packageLog' with {admin:false} %}
                         </div>
                     </section>
                 </div>

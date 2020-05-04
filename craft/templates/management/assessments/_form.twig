@@ -81,6 +81,6 @@
                 <button class="button primary-bg" type="submit">Update package</button>
             </div>
         {% endif %}
-        {% include 'management/assessments/_packageLog' with {package:package} %}
+        {% include '_includes/packageLog' with {package:package, admin:true} %}
     </form>
 {% endblock %}

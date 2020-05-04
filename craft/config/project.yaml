@@ -5497,10 +5497,10 @@ superTableBlockTypes:
                   __assoc__:
                     -
                       - heading
-                      - Message
+                      - 'User Message'
                     -
                       - handle
-                      - message
+                      - userMessage
                     -
                       - width
                       - ''
@@ -5509,6 +5509,22 @@ superTableBlockTypes:
                       - singleline
               -
                 - col3
+                -
+                  __assoc__:
+                    -
+                      - heading
+                      - 'Admin Message'
+                    -
+                      - handle
+                      - adminMessage
+                    -
+                      - width
+                      - ''
+                    -
+                      - type
+                      - singleline
+              -
+                - col4
                 -
                   __assoc__:
                     -
@@ -5524,7 +5540,7 @@ superTableBlockTypes:
                       - type
                       - singleline
               -
-                - col4
+                - col5
                 -
                   __assoc__:
                     -
@@ -5553,6 +5569,9 @@ superTableBlockTypes:
                   - ''
                 -
                   - col4
+                  - ''
+                -
+                  - col5
                   - ''
           maxRows: ''
           minRows: ''

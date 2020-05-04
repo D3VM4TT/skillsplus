@@ -44,12 +44,12 @@ class Packages extends Component
     public function onSavePackage($package, $changed)
     {
         if ($changed['assessor']) {
-            $this->log($package, 'Assessor changed to ' . $package->packageAssessor->one()->fullName);
-            Lantra::$app->notify->sendPackageAssigned($package, 'assessor');
+            $this->log($package, 'Assessor assigned' );
+            Lantra::$app->notify->sendPackageAssigned($package, 'assessor', $package->packageAssessor->one()->fullName);
         }
         if ($changed['reviewer']) {
-            $this->log($package, 'Reviewer changed to ' . $package->packageReviewer->one()->fullName);
-            Lantra::$app->notify->sendPackageAssigned($package, 'reviewer');
+            $this->log($package, 'Reviewer assigned');
+            Lantra::$app->notify->sendPackageAssigned($package, 'reviewer', $package->packageReviewer->one()->fullName);
         }
         if ($changed['status']) {
             $this->log($package, 'Package status changed to ' . $package->packageStatus);
@@ -68,14 +68,15 @@ class Packages extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function log($package, $message)
+    public function log($package, $message, $admin)
     {
         $user = Craft::$app->getUser()->getIdentity();
         $new = [
             'col1'       => time(),
             'col2'       => $message,
-            'col3'       => $user->fullName,
-            'col4'       => $user->id
+            'col3'       => $admin,
+            'col4'       => $user->fullName,
+            'col5'       => $user->id
         ];
         $packageLog = $package->packageLog;
         $packageLog['new1'] = $new;
