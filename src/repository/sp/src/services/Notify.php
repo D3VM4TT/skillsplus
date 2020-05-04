@@ -96,6 +96,26 @@ class Notify extends Component
     }
 
     /**
+     * @param SuperTableBlockElement $packageBlock
+     * @return null
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendPackageComment(SuperTableBlockElement $packageBlock, $comment)
+    {
+        $subject = $this->getNotifySetting('subjectPackageComment', 'Taskbook Comment');
+        $variables = [
+            'package'    => $packageBlock,
+            'comment'    => $comment,
+            'core'       => $packageBlock->packageCoreModule->one(),
+            'user'       => $packageBlock->owner
+        ];
+        $template = $this->getNotifySetting('packageComment', "Comment for {{ core.title }}: {{ comment }}");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($packageBlock->owner->email, $subject, $message);
+    }
+
+    /**
      * @param Entry $resultEntry
      * @return null
      * @throws \Twig\Error\LoaderError

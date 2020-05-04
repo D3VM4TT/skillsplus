@@ -62,13 +62,26 @@ class Packages extends Component
 
     /**
      * @param $package
+     * @param $comment
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function addComment($package, $comment)
+    {
+        Lantra::$app->packages->log($package, 'Comment: ' . $comment);
+        Lantra::$app->notify->sendPackageComment($package, $comment);
+    }
+
+    /**
+     * @param $package
      * @param $message
      * @return bool
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function log($package, $message, $admin)
+    public function log($package, $message, $admin = '')
     {
         $user = Craft::$app->getUser()->getIdentity();
         $new = [

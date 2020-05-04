@@ -402,6 +402,7 @@ class UsersController extends BaseController {
         $assessorId = Craft::$app->request->getParam('assessorId');
         $reviewerId = Craft::$app->request->getParam('reviewerId');
         $status = Craft::$app->request->getParam('packageStatus');
+        $comment = Craft::$app->request->getParam('packageComment');
 
         if ($assessorId != $oldAssessorId) {
             $package->setFieldValue('packageAssessor', [$assessorId]);
@@ -418,6 +419,10 @@ class UsersController extends BaseController {
 
         if (!Craft::$app->elements->saveElement($package)) {
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
+        }
+
+        if ($comment) {
+            Lantra::$app->packages->addComment($package, $comment);
         }
 
         Lantra::$app->packages->onSavePackage($package, $changed);

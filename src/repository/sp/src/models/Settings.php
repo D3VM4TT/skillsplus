@@ -83,6 +83,8 @@ class Settings extends Model
     public $notifyPackageStatus                 = '';
     public $notifySubjectPackageReviewed        = '';
     public $notifyPackageReviewed               = '';
+    public $notifySubjectPackageComment         = '';
+    public $notifyPackageComment                = '';
 
     public $disableEndorsementNotify            = false;
 

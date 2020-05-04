@@ -44,3 +44,18 @@
     name:			"notifyPackageReviewed",
     value:		    settings.notifyPackageReviewed
 }) }}
+
+{{ forms.textField ({
+    label:			"Subject Package Comment",
+    id:				"notifySubjectPackageComment",
+    name:			"notifySubjectPackageComment",
+    value:		    settings.notifySubjectPackageComment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Comment for {{ core.title }}: {{ comment }}",
+    label:			"Message Package Comment",
+    id:				"notifyPackageComment",
+    name:			"notifyPackageComment",
+    value:		    settings.notifyPackageComment
+}) }}
