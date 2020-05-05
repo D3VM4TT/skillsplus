@@ -37,10 +37,10 @@ class Reports extends Component
         $criteria->limit = $limit;
         $criteria->order = $order;
         if ($automated) {
-            $criteria->reportAutomated = '1';
+            $criteria->reportAutomated = true;
         }
         else {
-            $criteria->reportAutomated = 'not 1';
+            $criteria->reportAutomated = false;
             $criteria->authorId = $user->id;
         }
         if ($search) {
