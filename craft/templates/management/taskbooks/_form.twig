@@ -70,10 +70,10 @@
                     {% endif %}
                     <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>
                     {% if isAdmin or isReviewer %}
-                        <option value="reviewed"{% if package.packageStatus == 'reviewed' %}selected{% endif %}>Reviewed</option>
+                        <option value="reviewed"{% if package.packageStatus == 'reviewed' %} selected{% endif %}>Reviewed</option>
                     {% endif %}
                     {% if isAdmin %}
-                        <option value="complete"{% if package.packageStatus == 'complete' %}selected{% endif %}>Complete</option>
+                        <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
                     {% endif %}
                 </select>
             </div>
