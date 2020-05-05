@@ -10,6 +10,7 @@ namespace lantra\sp;
 
 use Craft;
 use craft\base\Plugin as BasePlugin;
+use craft\base\Element;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
@@ -18,6 +19,7 @@ use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\web\View;
 use craft\services\UserPermissions;
+use craft\services\Globals;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
@@ -159,6 +161,17 @@ class Plugin extends BasePlugin
                     if ($package->typeId == $packagesBlockType->id) {
                         Lantra::$app->packages->onBeforeSavePackage($event, $package);
                     }
+                }
+            }
+        );
+
+        Event::on(
+            Element::class,
+            Element::EVENT_BEFORE_SAVE,
+            function (ModelEvent $event) {
+                $element = $event->sender;
+                if (get_class($element) == 'craft\elements\GlobalSet' && $element->handle == 'globalsPackage') {
+                    Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $element);
                 }
             }
         );

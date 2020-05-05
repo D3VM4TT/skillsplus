@@ -11,12 +11,64 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 use craft\events\ModelEvent;
-
+use craft\elements\GlobalSet;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
 
 class Packages extends Component
 {
+    /**
+     * @param ModelEvent $event
+     * @param GlobalSet $globalSet
+     */
+    public function onBeforeSavePackageWorkflow(ModelEvent $event, GlobalSet $globalSet)
+    {
+        ## check steps in order assessment -> review -> sign off
+        $assessment = false;
+        $review = false;
+        $signOff = false;
+        $error = false;
+
+        foreach($globalSet->packageWorkflow as $step) {
+            if ($step->stepType->value == 'assessment') {
+                $assessment = true;
+                if ($review || $signOff) {
+                    $error = 'Assessments can not follow review or sign off step.';
+                    $event->isValid = false;
+                }
+            }
+            if ($step->stepType->value == 'review') {
+                $review = true;
+                if ($signOff) {
+                    $error = 'Review can not follow sign off step.';
+                    $event->isValid = false;
+                }
+            }
+            if ($step->stepType->value == 'signOff') {
+                if ($signOff) {
+                    $error = 'Workflow can only contain one sign off step.';
+                    $event->isValid = false;
+                }
+                $signOff = true;
+            }
+            if ($step->stepUserGroup == 'jobRole' && !$step->stepJobRole->count()) {
+                $step->addError('stepJobRole',  'Job role(s) required.');
+                $event->isValid = false;
+            }
+            if ($step->stepAssignUserGroup == 'jobRole' && !$step->stepAssignJobRole->count()) {
+                $step->addError('stepAssignJobRole', 'Job role(s) required.');
+                $event->isValid = false;
+            }
+        }
+        if (!$signOff) {
+            $error = 'Workflow must contain a sign off step.';
+            $event->isValid = false;
+        }
+        if ($error) {
+            $globalSet->addError('packageWorkflow', $error);
+        }
+    }
+
     /**
      * @param ModelEvent $event
      * @param SuperTableBlockElement $packageBlock
