@@ -1,4 +1,20 @@
 {% if isManager and account.id != currentUser.id %}
+    {% if resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+        {% set resultEndorsedUser = resultEntry.resultEndorsedUser ? resultEntry.resultEndorsedUser.one() %}
+        {% if resultEndorsedUser and resultEntry.resultEndorsedDate %}
+        <p>
+            <strong>
+                Endorsed by {{ resultEndorsedUser.fullname }}
+                on {{  resultEntry.resultEndorsedDate|date('d-m-y') }}
+            </strong>
+        </p>
+        {% endif %}
+        <p>
+            <label for="newEndorse">
+                <input id="newEndorse" type="checkbox" value="1" name="newEndorse" /> Update endorsement?
+            </label>
+        </p>
+    {% endif %}
     <div class="container-btn">
         <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
     </div>

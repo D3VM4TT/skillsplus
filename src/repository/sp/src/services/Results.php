@@ -92,7 +92,8 @@ class Results extends Component
             if (!Craft::$app->request->isCpRequest && $entry->resultStatus == 'endorsed') {
                 if ($entry->authorId != $currentUser->id && Lantra::$app->users->isManager($entry->authorId)) {
                     $entry->setFieldValue('resultStatus', 'endorsed');
-                    if (!$oldEntry || !$oldEntry->resultEndorsedDate) {
+                    $newEndorse = Craft::$app->request->getParam('newEndorse');
+                    if (!$oldEntry || !$oldEntry->resultEndorsedDate || $newEndorse) {
                         $entry->setFieldValue('resultEndorsedDate', $dateTime);
                         $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
                     }
