@@ -42,7 +42,7 @@
                     {% for report in reportEntries %}
                         {% set complete = report.reportData|length %}
                         {% set job = craft.lantra.job(report.id) %}
-                        <tr>
+                        <tr class="item">
                             <td>{{ report.id }}</td>
                             <td>{{ report.title }}</td>
                             <td>{{ report.reportType|title }}</td>
