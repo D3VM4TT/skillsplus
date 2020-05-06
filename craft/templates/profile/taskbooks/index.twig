@@ -6,6 +6,8 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
+{% set packages = craft.entries.section('packages').authorId(currentUser.id) %}
+
 {% block content %}
 <section class="page dashboard">
     <div class="page-subHeader primary-bg">
@@ -20,7 +22,7 @@
         <p>Manage your taskbook packages.</p>
     </div>
     <div class="page-content">
-        {% if currentUser.userPackages.count %}
+        {% if packages.count %}
         <table class="data">
             <thead>
                 <tr>
@@ -33,9 +35,9 @@
                 <tr>
             </thead>
             <tbody>
-                {% for package in currentUser.userPackages.all %}
+                {% for package in packages.all %}
                     <tr>
-                        <td>{{ package.packageDateCreated|date('d/m/y') }}</td>
+                        <td>{{ package.dateCreated|date('d/m/y') }}</td>
                         {% if not package.packageCoreModule.count %}
                             <td style="color:red">Invalid Core Module</td>
                         {% else %}

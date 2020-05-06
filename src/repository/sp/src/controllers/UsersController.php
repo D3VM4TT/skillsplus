@@ -11,6 +11,7 @@ namespace lantra\sp\controllers;
 use Craft;
 use craft\elements\User;
 use craft\elements\MatrixBlock;
+use craft\elements\Entry;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -297,83 +298,29 @@ class UsersController extends BaseController {
     public function actionSavePackage()
     {
         $this->requireLogin();
-        $userId = Craft::$app->request->getParam('userId');
-        $package = Craft::$app->request->getParam('package');
+        $userId = Craft::$app->request->getRequiredParam('userId');
+        $fields = Craft::$app->request->getRequiredParam('fields');
+        $allOptionalModules = Craft::$app->request->getParam('optionalModules');
         $user = Craft::$app->users->getUserById($userId);
 
-        if (! $user || !$package || !isset($package['core'])) {
-            return $this->_returnError('Invalid params [userId = ' . $userId .'].');
+        if (!$user) {
+            return $this->_returnError('Invalid user [userId = ' . $userId .'].');
         }
 
-        $coreModuleId = $package['core']['module'];
-        $coreLevel = $package['core']['level'];
-        $allOptionalModules = isset($package['optional']) && isset($package['optional'][$coreModuleId]) ? $package['optional'][$coreModuleId] : [];
-        $optionalModules = [];
-        foreach ($allOptionalModules as $id => $m) {
-            if (isset($m['selected']) && $m['selected']) {
-                $level = isset($m['level']) ? $m['level'] : $coreLevel;
-                $optionalModules[$id] = $level;
-            }
+
+
+        $package = new Entry();
+        $package->authorId = $userId;
+        $package->enabled = true;
+        $package->sectionId = 15;
+        $package->typeId = 20;
+        $package->setFieldValues($fields);
+
+        if (!Craft::$app->elements->saveElement($package)) {
+            return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
 
-        $totalOptional = count($optionalModules);
-
-        $coreModule = Craft::$app->entries->getEntryById($coreModuleId);
-        if ($totalOptional < $coreModule->moduleMinimumOptional) {
-            $errors = ['You must select a minimum of ' . $coreModule->moduleMinimumOptional . ' optional modules.'];
-            return Craft::$app->urlManager->setRouteParams(['errors' => $errors]);
-        }
-
-        $cost = $coreModule->moduleMaxCost;
-        foreach ($coreModule->moduleCosts as $row) {
-            if ($totalOptional == $row['optionalModules']) {
-                $cost = (int) $row['cost'];
-            }
-        }
-
-        $spField = Craft::$app->fields->getFieldByHandle('userPackages');
-        if (!$spField) {
-            $this->_returnError('Could not locate field type.');
-            return;
-        }
-
-        ## create the package block
-        $spType = $spField->getBlockTypes()[0];
-        $spBlock = new SuperTableBlockElement();
-        $spBlock->ownerId = $user->id;
-        $spBlock->fieldId = $spField->id;
-        $spBlock->typeId = $spType->id;
-        $spBlock->enabled = true;
-        $spBlock->setFieldValue('packageDateCreated', time());
-        $spBlock->setFieldValue('packageCoreModule', [$coreModuleId]);
-        $spBlock->setFieldValue('packageCoreLevel', $coreLevel);
-        $spBlock->setFieldValue('packageCost', $cost);
-        Craft::$app->elements->saveElement($spBlock);
-
-        ## add the optional modules
-        if (count($optionalModules)) {
-            $mBlock = null;
-            foreach ($spField->getBlockTypeFields() as $field) {
-                if ($field->handle == 'packageOptionalModules') {
-                    $mBlock = $field;
-                }
-            }
-            if (!$mBlock) {
-                return $this->_returnError('Could not locate field type.');
-            }
-            foreach ($optionalModules as $id => $level) {
-                $block = new MatrixBlock();
-                $block->enabled = true;
-                $block->ownerId = $spBlock->id;
-                $block->fieldId = $mBlock->id;
-                $block->typeId = $mBlock->getBlockTypes()[0]->id;
-                $block->setFieldValue('optionalModule', [$id]);
-                $block->setFieldValue('optionalLevel', $level);
-                Craft::$app->elements->saveElement($block);
-            }
-        }
-
-        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $spBlock->id);
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $package->id);
     }
 
     /**

@@ -1,6 +1,7 @@
-{% if cpdUser.userPackages|length %}
+{% set userPackages = craft.lantra.getUserPackages(cpdUser) %}
+{% if userPackages|length %}
     <div id="taskbooks-cpd">
-        {% for package in cpdUser.userPackages %}
+        {% for package in userPackages %}
             {% set isAssessor = craft.lantra.isAssessor(package) %}
             {% set isReviewer = craft.lantra.isReviewer(package) %}
             {% set coreModule = package.packageCoreModule.one %}
@@ -34,8 +35,6 @@
                             Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
                         {% endif %}
                         {% if isAssessor or isReviewer %}
-                            {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
-                            {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
                             <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
                         {% endif %}
                     </div>

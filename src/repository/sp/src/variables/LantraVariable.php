@@ -10,6 +10,7 @@ namespace lantra\sp\variables;
 
 use Craft;
 use craft\db\Query;
+use craft\elements\Entry;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -20,30 +21,46 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+    public function getUserPackages($userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->packages->getUserPackages($user);
+    }
+
     /**
-     * @param $package
+     * @param Entry|null $package
+     * @param $moduleId
+     * @return null
+     */
+    public function getOptionalModuleRow($package = null, $moduleId)
+    {
+        return Lantra::$app->packages->getOptionalModuleRow($package, $moduleId);
+    }
+
+    /**
+     * @param Entry $package
      * @return bool
      */
-    public function isPackageUnitsEndorsed($package)
+    public function isPackageUnitsEndorsed(Entry $package)
     {
         return Lantra::$app->packages->isPackageUnitsEndorsed($package);
     }
 
     /**
-     * @param $package
+     * @param Entry $package
      * @param $complete
      * @return array
      */
-    public function countPackageUnits($package, $complete = false, $status = 'draft')
+    public function countPackageUnits(Entry $package, $complete = false, $status = 'draft')
     {
         return Lantra::$app->packages->countPackageUnits($package,  $complete, $status);
     }
 
     /**
-     * @param $package
+     * @param Entry $package
      * @return array
      */
-    public function getPackageModules($package)
+    public function getPackageModules(Entry $package)
     {
         return Lantra::$app->packages->getPackageModules($package);
     }
@@ -51,7 +68,7 @@ class LantraVariable
     /**
      * @param $packageId
      * @param null $userId
-     * @return null
+     * @return Entry|null
      */
     public function getUserPackage($packageId, $userId = null)
     {
@@ -71,7 +88,7 @@ class LantraVariable
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function taskbookLevel($level)
     {
@@ -400,7 +417,7 @@ class LantraVariable
      */
     public function assessmentCriteria($limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->users->assessmentCriteria($limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->assessmentCriteria($limit, $order, $this->getUser($managerId));
     }
 
     /**
@@ -411,7 +428,7 @@ class LantraVariable
      */
     public function reviewCriteria($limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->users->reviewCriteria($limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->reviewCriteria($limit, $order, $this->getUser($managerId));
     }
 
     /**
@@ -552,47 +569,61 @@ class LantraVariable
     /**
      * Check whether this user can assess the subordinate
      *
-     * @param $packageBlock
+     * @param $package
      * @param bool $assessorId
      * @param bool $includeAdmin
      * @return bool
      */
-    public function isAssessor($packageBlock = null, $assessorId = null, $includeAdmin = true)
+    public function isAssessor($package = null, $assessorId = null, $includeAdmin = true)
     {
         $assessor = (is_null($assessorId)) ? null : $this->getUser($assessorId);
-        return Lantra::$app->users->isAssessor($packageBlock, $assessor, $includeAdmin);
+        return Lantra::$app->packages->isAssessor($package, $assessor, $includeAdmin);
     }
 
     /**
-     * Check whether this user can assess the subordinate
+     * Check whether this user can review the subordinate
      *
-     * @param $packageBlock
+     * @param $package
      * @param int $reviewerId
      * @param bool $includeAdmin
      * @return bool
      */
-    public function isReviewer($packageBlock, $reviewerId = null, $includeAdmin = true)
+    public function isReviewer($package, $reviewerId = null, $includeAdmin = true)
     {
         $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
-        return Lantra::$app->users->isReviewer($packageBlock, $reviewer, $includeAdmin);
+        return Lantra::$app->packages->isReviewer($package, $reviewer, $includeAdmin);
     }
 
     /**
-     * @param $packageBlock
+     * Check whether this user can complete the subordinate
+     *
+     * @param $package
+     * @param int $reviewerId
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isCompleter($package, $reviewerId = null, $includeAdmin = true)
+    {
+        $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
+        return Lantra::$app->packages->isCompleter($package, $reviewer, $includeAdmin);
+    }
+
+    /**
+     * @param $package
      * @param null $assessorId
      * @return bool
      * @throws \Exception
      */
-    public function canAssess($packageBlock, $assessorId = null)
+    public function canAssess($package, $assessorId = null)
     {
         if (false == $assessor = $this->getUser($assessorId)) {
                 return false;
         }
         ## you can't mark your own homework...!
-        if (!$assessor->admin && $assessor->id == $packageBlock->owner->id) {
+        if (!$assessor->admin && $assessor->id == $package->author->id) {
             return false;
         }
-        return $this->isAssessor($packageBlock, $assessor);
+        return $this->isAssessor($package, $assessor);
     }
 
     /**

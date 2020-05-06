@@ -10,15 +10,18 @@
             </thead>
             <tbody>
             {% for module in modules %}
-                <tr>
+                {% set packageOptionalModuleRow = craft.lantra.getOptionalModuleRow(entry, module.id)  %}
+                <tr class="optional-module">
                     <td>{{ module.title }}</td>
                     <td>
-                        <select  class="optional-level" name="package[optional][{{ coreModule.id }}][{{ module.id }}][level]">
-                            {{ levelsOptions|raw }}
+                        <select class="optional-level" name="optionalLevel">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if packageOptionalModuleRow and packageOptionalModuleRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
                         </select>
                     </td>
                     <td>
-                        <input type="checkbox" name="package[optional][{{ coreModule.id }}][{{ module.id }}][selected]" value="1">
+                        <input class="optional" type="checkbox" name="optionalModule" value="{{ module.id }}" {% if packageOptionalModuleRow %}checked{% endif %}>
                     </td>
                 </tr>
             {% endfor %}

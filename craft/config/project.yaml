@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1588709783
+dateModified: 1588771887
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -280,96 +280,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  1022847b-4be9-4ff1-8da5-42262968137b:
-    contentColumnType: string
-    fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
-    handle: userPackages
-    instructions: ''
-    name: 'User Packages'
-    searchable: true
-    settings:
-      columns:
-        __assoc__:
-          -
-            - d671f864-8408-4319-bfe2-e622e44028e7
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 1fc1d0db-7a2a-4856-bd25-2c71f6d0832b
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 84dc4265-7a53-4780-b112-1d2fba91357c
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 053f6b7e-6705-488b-86a5-19e2949e5b0a
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 36baf4de-52bb-4930-9841-de3e7e173b5f
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 838899fa-4b6f-4707-88c3-3b55575d86cc
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 493e16f8-0ba3-4d3c-a602-b003a957c6f3
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 83ba93dc-b17a-4931-b32a-e49127527ce1
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 7b280df0-309a-447b-bc17-c44180467951
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 55663960-c109-4c89-a946-00a0da111287
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-      contentTable: '{{%stc_userpackages}}'
-      fieldLayout: row
-      maxRows: ''
-      minRows: ''
-      propagationMethod: all
-      selectionLabel: 'Add package'
-      staticField: ''
-    translationKeyFormat: null
-    translationMethod: site
-    type: verbb\supertable\fields\SuperTableField
   14b8c677-a8a8-4df3-a74e-a30106bd5398:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -1483,6 +1393,13 @@ fields:
                   - ''
           -
             - 1292c2fb-743c-439b-ac8a-fed7ab18b685
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 04fde5ce-7c41-4d16-9fde-711b0bb360c8
             -
               __assoc__:
                 -
@@ -3341,18 +3258,32 @@ fields:
     name: 'Package Optional Modules'
     searchable: true
     settings:
-      limit: ''
-      localizeRelations: false
-      selectionLabel: 'Select optional modules'
-      source: null
-      sources:
-        - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-      targetSiteId: null
-      validateRelatedElements: ''
-      viewMode: null
+      columns:
+        __assoc__:
+          -
+            - e76e4f67-f16a-4ee8-9823-1d2f0cdf27f6
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - ace5ad19-a3ad-4ff7-be68-a5c34a960238
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_packageoptionalmodules}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
     translationKeyFormat: null
     translationMethod: site
-    type: craft\fields\Entries
+    type: verbb\supertable\fields\SuperTableField
   f0039d1f-5cfd-4bf6-970e-5592f86712de:
     contentColumnType: datetime
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -4405,63 +4336,6 @@ matrixBlockTypes:
     handle: columns
     name: Columns
     sortOrder: 1
-  f23a9961-9a29-46e0-98b1-2d5612fd6aa8:
-    field: 84dc4265-7a53-4780-b112-1d2fba91357c
-    fieldLayouts:
-      d83c3be3-9752-49f5-823d-5f91bab65605:
-        tabs:
-          -
-            fields:
-              37e12357-84a7-4a85-b6e6-542040a4b744:
-                required: false
-                sortOrder: 2
-              9441b5a4-b743-4143-9a59-aa0d48c6cfc0:
-                required: false
-                sortOrder: 1
-            name: Content
-            sortOrder: 1
-    fields:
-      37e12357-84a7-4a85-b6e6-542040a4b744:
-        contentColumnType: integer(10)
-        fieldGroup: null
-        handle: optionalLevel
-        instructions: ''
-        name: Level
-        searchable: true
-        settings:
-          decimals: 0
-          defaultValue: null
-          max: null
-          min: '0'
-          prefix: ''
-          size: null
-          suffix: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Number
-      9441b5a4-b743-4143-9a59-aa0d48c6cfc0:
-        contentColumnType: string
-        fieldGroup: null
-        handle: optionalModule
-        instructions: ''
-        name: Module
-        searchable: true
-        settings:
-          limit: '1'
-          localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Entries
-    handle: optionalModules
-    name: 'Optional Modules'
-    sortOrder: 1
 plugins:
   preparse-field:
     enabled: '1'
@@ -4573,6 +4447,52 @@ sections:
     enableVersioning: true
     entryTypes:
       f1be4708-798f-4906-84b1-b8c6e54a32e3:
+        fieldLayouts:
+          c7fc9695-dd0b-42be-9d6a-4b9b5476f8a8:
+            tabs:
+              -
+                fields:
+                  006c28e4-4119-476d-bf1f-82019f947b02:
+                    required: false
+                    sortOrder: 1
+                  164fe93f-d610-4819-8ca4-77cc4a88112e:
+                    required: false
+                    sortOrder: 2
+                  534ba9ca-50bd-4b63-a843-b3358f1bc352:
+                    required: false
+                    sortOrder: 5
+                  5e4e967d-f646-4378-aedf-9f6ef84c1e28:
+                    required: false
+                    sortOrder: 3
+                  edcdcb64-8b0b-4f31-ab57-106c9e252317:
+                    required: false
+                    sortOrder: 4
+                name: Modules
+                sortOrder: 1
+              -
+                fields:
+                  60c37e60-aa57-4044-8164-0fbd42dc6127:
+                    required: false
+                    sortOrder: 1
+                name: Log
+                sortOrder: 2
+              -
+                fields:
+                  5cb734ab-4ba5-4bae-ad23-abd5de1daf4c:
+                    required: false
+                    sortOrder: 1
+                name: Reviews
+                sortOrder: 3
+              -
+                fields:
+                  1e03a0c1-334b-4517-9560-d95c13db8a99:
+                    required: false
+                    sortOrder: 1
+                  a9271765-2484-428e-8c34-62e30184b582:
+                    required: false
+                    sortOrder: 2
+                name: Payments
+                sortOrder: 4
         handle: package
         hasTitleField: true
         name: Package
@@ -5521,6 +5441,60 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Date
+  3f042657-c4b8-44de-a216-84449fa08a51:
+    field: edcdcb64-8b0b-4f31-ab57-106c9e252317
+    fieldLayouts:
+      1fec76e6-301b-49d2-a65d-7e7589e07374:
+        tabs:
+          -
+            fields:
+              00afc899-b37a-415c-8829-b06a42a8638f:
+                required: true
+                sortOrder: 1
+              9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
+                required: true
+                sortOrder: 2
+            name: Content
+            sortOrder: 1
+    fields:
+      00afc899-b37a-415c-8829-b06a42a8638f:
+        contentColumnType: string
+        fieldGroup: null
+        handle: optionalModule
+        instructions: ''
+        name: Module
+        searchable: true
+        settings:
+          limit: ''
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Entries
+      9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
+        contentColumnType: smallint(2)
+        fieldGroup: null
+        handle: optionalLevel
+        instructions: ''
+        name: Level
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: '1'
+          max: '10'
+          min: '1'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
   44e21cea-14c2-44e9-9bbf-8c104a4c7128:
     field: a75d2fa6-54eb-4155-9483-d7729fb83004
     fieldLayouts:
@@ -6133,10 +6107,10 @@ superTableBlockTypes:
               __assoc__:
                 -
                   - label
-                  - 'Sign Off'
+                  - Complete
                 -
                   - value
-                  - signOff
+                  - complete
                 -
                   - default
                   - ''
@@ -6271,380 +6245,6 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Date
-  f97342ac-7163-48da-8ad0-d8af0000ca6e:
-    field: 1022847b-4be9-4ff1-8da5-42262968137b
-    fieldLayouts:
-      fb40efc7-ca8c-4a89-9be6-f85b23acd4bf:
-        tabs:
-          -
-            fields:
-              053f6b7e-6705-488b-86a5-19e2949e5b0a:
-                required: false
-                sortOrder: 4
-              0ce02ac5-70e3-4196-b0c4-384288afb090:
-                required: false
-                sortOrder: 11
-              1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
-                required: false
-                sortOrder: 2
-              36baf4de-52bb-4930-9841-de3e7e173b5f:
-                required: false
-                sortOrder: 5
-              493e16f8-0ba3-4d3c-a602-b003a957c6f3:
-                required: false
-                sortOrder: 7
-              55663960-c109-4c89-a946-00a0da111287:
-                required: false
-                sortOrder: 10
-              7b280df0-309a-447b-bc17-c44180467951:
-                required: false
-                sortOrder: 9
-              838899fa-4b6f-4707-88c3-3b55575d86cc:
-                required: false
-                sortOrder: 6
-              83ba93dc-b17a-4931-b32a-e49127527ce1:
-                required: false
-                sortOrder: 8
-              84dc4265-7a53-4780-b112-1d2fba91357c:
-                required: false
-                sortOrder: 3
-              d671f864-8408-4319-bfe2-e622e44028e7:
-                required: true
-                sortOrder: 1
-            name: Content
-            sortOrder: 1
-    fields:
-      053f6b7e-6705-488b-86a5-19e2949e5b0a:
-        contentColumnType: datetime
-        fieldGroup: null
-        handle: packageDateCreated
-        instructions: ''
-        name: 'Package Date Created'
-        searchable: true
-        settings:
-          minuteIncrement: '30'
-          showDate: true
-          showTime: false
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Date
-      0ce02ac5-70e3-4196-b0c4-384288afb090:
-        contentColumnType: text
-        fieldGroup: null
-        handle: packageLog
-        instructions: ''
-        name: 'Package Log'
-        searchable: true
-        settings:
-          addRowLabel: 'Add a row'
-          columnType: text
-          columns:
-            __assoc__:
-              -
-                - col1
-                -
-                  __assoc__:
-                    -
-                      - heading
-                      - Date
-                    -
-                      - handle
-                      - date
-                    -
-                      - width
-                      - ''
-                    -
-                      - type
-                      - date
-              -
-                - col2
-                -
-                  __assoc__:
-                    -
-                      - heading
-                      - 'User Message'
-                    -
-                      - handle
-                      - userMessage
-                    -
-                      - width
-                      - ''
-                    -
-                      - type
-                      - singleline
-              -
-                - col3
-                -
-                  __assoc__:
-                    -
-                      - heading
-                      - 'Admin Message'
-                    -
-                      - handle
-                      - adminMessage
-                    -
-                      - width
-                      - ''
-                    -
-                      - type
-                      - singleline
-              -
-                - col4
-                -
-                  __assoc__:
-                    -
-                      - heading
-                      - 'User Full Name'
-                    -
-                      - handle
-                      - userFullname
-                    -
-                      - width
-                      - ''
-                    -
-                      - type
-                      - singleline
-              -
-                - col5
-                -
-                  __assoc__:
-                    -
-                      - heading
-                      - 'User ID'
-                    -
-                      - handle
-                      - userId
-                    -
-                      - width
-                      - ''
-                    -
-                      - type
-                      - number
-          defaults:
-            -
-              __assoc__:
-                -
-                  - col1
-                  - null
-                -
-                  - col2
-                  - ''
-                -
-                  - col3
-                  - ''
-                -
-                  - col4
-                  - ''
-                -
-                  - col5
-                  - ''
-          maxRows: ''
-          minRows: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Table
-      1fc1d0db-7a2a-4856-bd25-2c71f6d0832b:
-        contentColumnType: integer(10)
-        fieldGroup: null
-        handle: packageCoreLevel
-        instructions: ''
-        name: 'Package Core Level'
-        searchable: true
-        settings:
-          decimals: 0
-          defaultValue: null
-          max: null
-          min: '0'
-          prefix: ''
-          size: null
-          suffix: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Number
-      36baf4de-52bb-4930-9841-de3e7e173b5f:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageJobRole
-        instructions: ''
-        name: 'Package Job Role'
-        searchable: true
-        settings:
-          allowLimit: false
-          allowMultipleSources: false
-          branchLimit: '1'
-          limit: null
-          localizeRelations: false
-          selectionLabel: 'Select job role'
-          source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
-          sources: '*'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Categories
-      493e16f8-0ba3-4d3c-a602-b003a957c6f3:
-        contentColumnType: boolean
-        fieldGroup: null
-        handle: packagePaid
-        instructions: ''
-        name: 'Package Paid'
-        searchable: true
-        settings:
-          default: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Lightswitch
-      55663960-c109-4c89-a946-00a0da111287:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageReviewer
-        instructions: ''
-        name: 'Package Reviewer'
-        searchable: true
-        settings:
-          limit: '1'
-          localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Users
-      7b280df0-309a-447b-bc17-c44180467951:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageAssessor
-        instructions: ''
-        name: 'Package Assessor'
-        searchable: true
-        settings:
-          limit: '1'
-          localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Users
-      838899fa-4b6f-4707-88c3-3b55575d86cc:
-        contentColumnType: integer(10)
-        fieldGroup: null
-        handle: packageCost
-        instructions: ''
-        name: 'Package Cost'
-        searchable: true
-        settings:
-          decimals: 0
-          defaultValue: null
-          max: null
-          min: '0'
-          prefix: ''
-          size: null
-          suffix: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Number
-      83ba93dc-b17a-4931-b32a-e49127527ce1:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageStatus
-        instructions: ''
-        name: 'Package Status'
-        searchable: true
-        settings:
-          optgroups: true
-          options:
-            -
-              __assoc__:
-                -
-                  - label
-                  - Active
-                -
-                  - value
-                  - active
-                -
-                  - default
-                  - '1'
-            -
-              __assoc__:
-                -
-                  - label
-                  - Assessed
-                -
-                  - value
-                  - assessed
-                -
-                  - default
-                  - ''
-            -
-              __assoc__:
-                -
-                  - label
-                  - Reviewed
-                -
-                  - value
-                  - reviewed
-                -
-                  - default
-                  - ''
-            -
-              __assoc__:
-                -
-                  - label
-                  - Complete
-                -
-                  - value
-                  - complete
-                -
-                  - default
-                  - ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Dropdown
-      84dc4265-7a53-4780-b112-1d2fba91357c:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageOptionalModules
-        instructions: ''
-        name: 'Package Optional Modules'
-        searchable: true
-        settings:
-          contentTable: '{{%matrixcontent_packageoptionalmodules}}'
-          maxBlocks: ''
-          minBlocks: ''
-          propagationMethod: all
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Matrix
-      d671f864-8408-4319-bfe2-e622e44028e7:
-        contentColumnType: string
-        fieldGroup: null
-        handle: packageCoreModule
-        instructions: ''
-        name: 'Package Core Module'
-        searchable: true
-        settings:
-          limit: '1'
-          localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Entries
 system:
   edition: pro
   live: true
@@ -6732,10 +6332,6 @@ users:
           name: 'Custom Scheme User Fields'
           sortOrder: 4
         -
-          fields:
-            1022847b-4be9-4ff1-8da5-42262968137b:
-              required: false
-              sortOrder: 1
           name: Packages
           sortOrder: 5
         -

@@ -7,6 +7,8 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
+{% set packageCoreModule = entry is defined and entry.packageCoreModule ? entry.packageCoreModule.one : null %}
+
 {% block content %}
     <section class="page dashboard">
         <div class="page-subHeader primary-bg">
@@ -29,33 +31,39 @@
             {% set coreModules = craft.entries.section('modules').type('taskbook').moduleCore(1).all() %}
             {% set optionalModulesCount = craft.entries.section('modules').type('taskbook').moduleCore(0).count() %}
 
-            {% if errors is defined %}
-                {{ ui.errorList(errors) }}
+            {% if entry is defined %}
+                {{ ui.errorList(entry.getFirstErrors()) }}
             {% endif %}
 
-            <form class="page-form"  id="taskbooks" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
+            <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
                 {{ csrfInput() }}
-                {{ actionInput('sp/users/save-package') }}
-                {{ hiddenInput('userId', currentUser.id) }}
+                {{ actionInput('entries/save-entry') }}
+                {{ hiddenInput('sectionId', 15) }}
+                {{ hiddenInput('typeId', 20) }}
+                {{ hiddenInput('enabled', 1) }}
+                {{ redirectInput('profile/taskbooks') }}
                 {% if coreModules|length %}
                     <div class="field--wrapper">
                         <label for="coreModule" class="no-float">Core Module:</label>
-                        <select class="core-module" name="package[core][module]">
+                        <select class="core-module" name="fields[packageCoreModule][]">
                             {% for coreModule in coreModules %}
-                                <option data-minimum="{{ coreModule.moduleMinimumOptional }}" value="{{ coreModule.id }}">{{ coreModule.title }}</option>
+                                <option {% if entry is defined and packageCoreModule and packageCoreModule.id == coreModule.id %}selected {% endif %}
+                                        data-minimum="{{ coreModule.moduleMinimumOptional }}" value="{{ coreModule.id }}">{{ coreModule.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="field--wrapper">
                         <label for="coreModule" class="no-float">Level:</label>
-                        <select class="core-level" name="package[core][level]">
-                            {{ levelsOptions|raw }}
+                        <select class="core-level" name="fields[packageCoreLevel]">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if entry is defined and entry.packageCoreLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     {% if optionalModulesCount %}
                         {% for coreModule in coreModules %}
                             {% set optionalModules = craft.entries.section('modules').type('taskbook').moduleCore(0).relatedTo(coreModule).all() %}
-                            {% include 'profile/taskbooks/_optionalModules' with {modules: optionalModules, coreModule: coreModule} %}
+                            {% include 'profile/taskbooks/_optionalModules' with {modules: optionalModules, coreModule: coreModule, entry: entry is defined ? entry} %}
                         {% endfor %}
                     {% endif %}
                 {% endif %}
@@ -65,6 +73,12 @@
             </form>
         </div>
     </section>
+    <script id="input-template" type="text/template">
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][type]" value="8" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][enabled]" value="1" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalModule][]" value="{optionalModuleId}" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
+    </script>
 {% endblock %}
 
 {% block js %}
@@ -85,5 +99,28 @@
             optionalSelectInputs.prop('disabled', false).css('opacity', 1);
         }
     }).change();
+
+    updateOptional = function() {
+        var n = 1;
+        $('form#taskbooks').find('.optional-hidden').remove();
+        $('tr.optional-module').each(function(){
+            var c = $(this).find('input[type=checkbox]'),
+                l = $(this).find('select').val(),
+                t = $('#input-template').clone().html();
+            if (c.is(':checked')) {
+                t = t.replace(/{n}/g, n).replace(/{optionalModuleId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                $('form#taskbooks').prepend($(t));
+                n ++;
+            }
+        });
+    };
+
+    $('select.optional-level').change(function(){
+        updateOptional();
+    });
+    $('input.optional').change(function(){
+        updateOptional();
+    }).change();
+
 </script>
 {% endblock %}

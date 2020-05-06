@@ -145,50 +145,6 @@ class Users extends Component
         return $criteria;
     }
 
-    /**
-     * @param int $limit
-     * @param string $order
-     * @param User|null $assessor
-     * @return \verbb\supertable\services\ElementCriteriaModel
-     */
-    public function assessmentCriteria($limit = 25, $order = 'lastName', User $assessor)
-    {
-        $supertableService = new SuperTableService();
-        $params = [
-            'elementType'   => 'craft\\elements\\User',
-            'criteria'      => [
-                'order' => $order,
-                'limit' => $limit
-            ],
-            'relatedTo'     => [
-                'targetElement' => $assessor->id,
-                'field'         => 'userPackages.packageAssessor'
-            ]];
-        return $supertableService->getRelatedElementsQuery($params);
-    }
-
-    /**
-     * @param int $limit
-     * @param string $order
-     * @param User $reviewer
-     * @return \verbb\supertable\services\ElementCriteriaModel
-     */
-    public function reviewCriteria($limit = 25, $order = 'lastName', User $reviewer)
-    {
-        $supertableService = new SuperTableService();
-        $params = [
-            'elementType'   => 'craft\\elements\\User',
-            'criteria'      => [
-                'order' => $order,
-                'limit' => $limit
-            ],
-            'relatedTo'     => [
-                'targetElement' => $reviewer->id,
-                'field'         => 'userPackages.packageReviewer'
-            ]];
-        return $supertableService->getRelatedElementsQuery($params);
-    }
-
     /** more efficient way to search users */
     private function searchUserIds($search = '')
     {
@@ -444,7 +400,7 @@ class Users extends Component
             return true;
         }
         ## check whether can assess or review
-        if ($this->isPackageManager($subordinateId, $manager)) {
+        if (Lantra::$app->packages->isPackageManager($subordinateId, $manager)) {
             return true;
         }
         $subordinateIds = $this->getManagerSubordinateIds($manager, $includeHierarchy);
@@ -452,71 +408,6 @@ class Users extends Component
             return false;
         }
         return $subordinateIds && in_array($subordinateId, $subordinateIds);
-    }
-
-    /**
-     * Checks whether this user has been assigned as assessor or reviewer
-     *
-     * @param $subordinateId
-     * @param User|null $manager
-     * @return bool
-     */
-    public function isPackageManager($subordinateId, User $manager = null)
-    {
-        if (null == $user = Craft::$app->users->getUserById($subordinateId)) {
-            return false;
-        }
-        if (!$user->userPackages->count()) {
-            return false;
-        }
-        foreach ($user->userPackages as $package) {
-            if ($this->isAssessor($package, $manager) || $this->isReviewer($package, $manager)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param SuperTableBlockElement $packageBlock
-     * @param User $assessor
-     * @param bool $includeAdmin
-     * @return bool
-     */
-    public function isAssessor(SuperTableBlockElement $packageBlock, User $assessor = null, $includeAdmin = true)
-    {
-        if (is_null($assessor)) {
-            $assessor = Craft::$app->getUser()->getIdentity();
-        }
-        ## admins and scheme managers can manage everyone
-        if ($includeAdmin && ($assessor->admin || $assessor->isInGroup('schemeManagers'))) {
-            return true;
-        }
-        if (!$packageBlock->packageAssessor) {
-            return false;
-        }
-        return $packageBlock->packageAssessor->one()->id == $assessor->id;
-    }
-
-    /**
-     * @param SuperTableBlockElement $packageBlock
-     * @param User $reviewer
-     * @param bool $includeAdmin
-     * @return bool
-     */
-    public function isReviewer(SuperTableBlockElement $packageBlock, User $reviewer = null, $includeAdmin = true)
-    {
-        if (is_null($reviewer)) {
-            $reviewer = Craft::$app->getUser()->getIdentity();
-        }
-        ## admins and scheme managers can review everyone
-        if ($includeAdmin && ($reviewer->admin || $reviewer->isInGroup('schemeManagers'))) {
-            return true;
-        }
-        if (!$packageBlock->packageReviewer) {
-            return false;
-        }
-        return $packageBlock->packageReviewer->one()->id == $reviewer->id;
     }
 
     /**

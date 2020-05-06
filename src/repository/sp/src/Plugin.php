@@ -57,6 +57,7 @@ class Plugin extends BasePlugin
     private $sectionIdUnits     = 7;
     private $sectionIdResults   = 10;
     private $sectionIdAttempts  = 12;
+    private $sectionIdPackages  = 15;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -150,6 +151,7 @@ class Plugin extends BasePlugin
             }
         );
 
+        /*
         Event::on(
             SuperTableBlockElement::class,
             SuperTableBlockElement::EVENT_BEFORE_SAVE,
@@ -164,6 +166,7 @@ class Plugin extends BasePlugin
                 }
             }
         );
+        */
 
         Event::on(
             Element::class,
@@ -191,16 +194,14 @@ class Plugin extends BasePlugin
                 }
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdModules) {
+                } elseif ($entry->sectionId == $this->sectionIdModules) {
                     Lantra::$app->modules->onBeforeSaveModule($event, $entry);
-                }
-                elseif($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->results->onBeforeSaveAttempt($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdCompanies) {
+                } elseif ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onBeforeSaveCompany($event, $entry);
-                }
+                } elseif ($entry->sectionId == $this->sectionIdPackages)
+                    Lantra::$app->packages->onBeforeSavePackage($event, $entry);
             }
         );
 
@@ -219,16 +220,15 @@ class Plugin extends BasePlugin
                 }
                 if ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onSaveCompany($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdResults) {
+                } elseif ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onSaveResult($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->results->onSaveAttempt($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdUnits) {
+                } elseif ($entry->sectionId == $this->sectionIdUnits) {
                     ## add result cache unit column (if enabled)
                     Lantra::$app->results->addUnitColumn($entry->id);
+                } elseif ($entry->sectionId == $this->sectionIdPackages) {
+                    Lantra::$app->packages->onSavePackage($event, $entry);
                 }
         });
 
