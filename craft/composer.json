@@ -1,11 +1,11 @@
 {
   "require": {
     "aelvan/preparse-field": "v1.1.0",
-    "craftcms/cms": "3.4.13",
+    "craftcms/cms": "3.4.18",
     "craftcms/redactor": "2.6.1",
     "lantra/sp": "^2.0.0",
     "league/csv": "^9.4.1",
-    "verbb/super-table": "2.4.7"
+    "verbb/super-table": "2.4.9"
   },
   "autoload": {
     "psr-4": {
