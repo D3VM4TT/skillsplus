@@ -1,0 +1,65 @@
+{% requireLogin %}
+
+{% extends "_layout" %}
+
+{% set account = currentUser %}
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{% set packages = craft.entries.section('packages').authorId(currentUser.id) %}
+
+{% block content %}
+<section class="page dashboard">
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <div class="page-header secondary-bg">
+        <a href="/">
+            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+        </a>
+        {{ currentUserCompany|default('') }}
+        <h2>My taskbooks</h2>
+        <p>Manage your taskbook packages.</p>
+    </div>
+    <div class="page-content">
+        {% if packages.count %}
+        <table class="data">
+            <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Core Module</th>
+                    <th>Level</th>
+                    <th>Optional Modules</th>
+                    <th>Cost</th>
+                    <th>Paid</th>
+                <tr>
+            </thead>
+            <tbody>
+                {% for package in packages.all %}
+                    <tr>
+                        <td>{{ package.dateCreated|date('d/m/y') }}</td>
+                        {% if not package.packageCoreModule.count %}
+                            <td style="color:red">Invalid Core Module</td>
+                        {% else %}
+                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.packageCoreModule.one.title }}</a></td>
+                        {% endif %}
+                        <td>{{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</td>
+                        <td>
+                            {% for optionalModuleBlock in package.packageOptionalModules.all %}
+                                {% set module = optionalModuleBlock.optionalModule.one %}
+                                {{ module.title }} ({{ craft.lantra.taskbookLevel(optionalModuleBlock.optionalLevel) }})<br />
+                            {% endfor %}
+                        </td>
+                        <td>£{{ package.packageCost }}</td>
+                        <td>{{ package.packagePaid ? 'Yes' : 'No' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <div class="container-btn">
+            <p><a href="/profile/taskbooks/new" class="button primary-bg">Add New Taskbook</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

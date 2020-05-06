@@ -19,6 +19,9 @@ use craft\helpers\DateTimeHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\services\SuperTableService;
+
 use DateTime;
 use yii\db\Query;
 
@@ -394,6 +397,10 @@ class Users extends Component
         }
         ## admins and scheme managers can manage everyone
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
+            return true;
+        }
+        ## check whether can assess or review
+        if (Lantra::$app->packages->isPackageManager($subordinateId, $manager)) {
             return true;
         }
         $subordinateIds = $this->getManagerSubordinateIds($manager, $includeHierarchy);

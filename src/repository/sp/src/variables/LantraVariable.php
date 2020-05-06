@@ -10,6 +10,7 @@ namespace lantra\sp\variables;
 
 use Craft;
 use craft\db\Query;
+use craft\elements\Entry;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
@@ -20,6 +21,86 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+    public function getUserPackages($userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->packages->getUserPackages($user);
+    }
+
+    /**
+     * @param Entry|null $package
+     * @param $moduleId
+     * @return null
+     */
+    public function getOptionalModuleRow($package = null, $moduleId)
+    {
+        return Lantra::$app->packages->getOptionalModuleRow($package, $moduleId);
+    }
+
+    /**
+     * @param Entry $package
+     * @return bool
+     */
+    public function isPackageUnitsEndorsed(Entry $package)
+    {
+        return Lantra::$app->packages->isPackageUnitsEndorsed($package);
+    }
+
+    /**
+     * @param Entry $package
+     * @param $complete
+     * @return array
+     */
+    public function countPackageUnits(Entry $package, $complete = false, $status = 'draft')
+    {
+        return Lantra::$app->packages->countPackageUnits($package,  $complete, $status);
+    }
+
+    /**
+     * @param Entry $package
+     * @return array
+     */
+    public function getPackageModules(Entry $package)
+    {
+        return Lantra::$app->packages->getPackageModules($package);
+    }
+
+    /**
+     * @param $packageId
+     * @param null $userId
+     * @return Entry|null
+     */
+    public function getUserPackage($packageId, $userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->packages->getUserPackage($packageId, $user);
+    }
+
+    /**
+     * @return array
+     */
+    public function taskbookLevels()
+    {
+        return [
+            ['value' => 5, 'label' => 'Standard'],
+            ['value' => 10, 'label' => 'Senior'],
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function taskbookLevel($level)
+    {
+        $levels = $this->taskbookLevels();
+        foreach($levels as $l) {
+            if ($l['value'] == $level) {
+                return $l['label'];
+            }
+        }
+        return 'unknown';
+    }
+
     /**
      * @param $modules
      * @return bool
@@ -329,6 +410,48 @@ class LantraVariable
     }
 
     /**
+     * @param null $limit
+     * @param string $order
+     * @param null $managerId
+     * @return \verbb\supertable\services\ElementCriteriaModel
+     */
+    public function assessmentCriteria($limit = null, $order = 'lastName', $managerId = null)
+    {
+        return Lantra::$app->packages->assessmentCriteria($limit, $order, $this->getUser($managerId));
+    }
+
+    /**
+     * @param null $limit
+     * @param string $order
+     * @param null $managerId
+     * @return \verbb\supertable\services\ElementCriteriaModel
+     */
+    public function reviewCriteria($limit = null, $order = 'lastName', $managerId = null)
+    {
+        return Lantra::$app->packages->reviewCriteria($limit, $order, $this->getUser($managerId));
+    }
+
+    /**
+     * @param null $assessorId
+     * @return mixed
+     */
+    public function assessmentCount($assessorId = null)
+    {
+        $criteria = $this->assessmentCriteria(null, 'lastName', $this->getUser($assessorId));
+        return $criteria->count();
+    }
+
+    /**
+     * @param null $reviewerId
+     * @return mixed
+     */
+    public function reviewCount($reviewerId = null)
+    {
+        $criteria = $this->reviewCriteria(null, 'lastName', $this->getUser($reviewerId));
+        return $criteria->count();
+    }
+
+    /**
      * Return criteria based on company name and location
      *
      * @param $search
@@ -420,12 +543,11 @@ class LantraVariable
     }
 
     /**
-     * Check whether this user manages the subordinate
-     *
      * @param null $subordinateId
-     * @param bool $managerId
+     * @param null $managerId
      * @param bool $includeHierarchy
      * @return bool
+     * @throws \Exception
      */
     public function isManager($subordinateId = null, $managerId = null, $includeHierarchy = true)
     {
@@ -434,9 +556,81 @@ class LantraVariable
     }
 
     /**
+     * @param null $subordinateId
+     * @param null $managerId
+     * @return bool
+     */
+    public function isPackageManager($subordinateId = null, $managerId = null)
+    {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return Lantra::$app->users->isPackageManager($subordinateId, $manager);
+    }
+
+    /**
+     * Check whether this user can assess the subordinate
+     *
+     * @param $package
+     * @param bool $assessorId
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isAssessor($package = null, $assessorId = null, $includeAdmin = true)
+    {
+        $assessor = (is_null($assessorId)) ? null : $this->getUser($assessorId);
+        return Lantra::$app->packages->isAssessor($package, $assessor, $includeAdmin);
+    }
+
+    /**
+     * Check whether this user can review the subordinate
+     *
+     * @param $package
+     * @param int $reviewerId
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isReviewer($package, $reviewerId = null, $includeAdmin = true)
+    {
+        $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
+        return Lantra::$app->packages->isReviewer($package, $reviewer, $includeAdmin);
+    }
+
+    /**
+     * Check whether this user can complete the subordinate
+     *
+     * @param $package
+     * @param int $reviewerId
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isCompleter($package, $reviewerId = null, $includeAdmin = true)
+    {
+        $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
+        return Lantra::$app->packages->isCompleter($package, $reviewer, $includeAdmin);
+    }
+
+    /**
+     * @param $package
+     * @param null $assessorId
+     * @return bool
+     * @throws \Exception
+     */
+    public function canAssess($package, $assessorId = null)
+    {
+        if (false == $assessor = $this->getUser($assessorId)) {
+                return false;
+        }
+        ## you can't mark your own homework...!
+        if (!$assessor->admin && $assessor->id == $package->author->id) {
+            return false;
+        }
+        return $this->isAssessor($package, $assessor);
+    }
+
+    /**
      * @param $resultEntry
      * @param null $managerId
-     * @return mixed
+     * @return bool
+     * @throws \Exception
      */
     public function canEndorse($resultEntry, $managerId = null) {
         if (false == $manager = $this->getUser($managerId)) {

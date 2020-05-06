@@ -10,6 +10,7 @@ namespace lantra\sp;
 
 use Craft;
 use craft\base\Plugin as BasePlugin;
+use craft\base\Element;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
@@ -18,6 +19,7 @@ use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\web\View;
 use craft\services\UserPermissions;
+use craft\services\Globals;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
@@ -26,6 +28,8 @@ use craft\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\assetbundles\SpCpAsset;
 use lantra\sp\migrations\m200128_160852_rename_unitValue;
+use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\services\SuperTableService;
 use yii\base\Event;
 
 use lantra\sp\Plugin as Lantra;
@@ -53,6 +57,7 @@ class Plugin extends BasePlugin
     private $sectionIdUnits     = 7;
     private $sectionIdResults   = 10;
     private $sectionIdAttempts  = 12;
+    private $sectionIdPackages  = 15;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -146,6 +151,34 @@ class Plugin extends BasePlugin
             }
         );
 
+        /*
+        Event::on(
+            SuperTableBlockElement::class,
+            SuperTableBlockElement::EVENT_BEFORE_SAVE,
+            function (ModelEvent $event) {
+                $package = $event->sender;
+                if (null != $field = Craft::$app->fields->getFieldByHandle('userPackages')) {
+                    $sp = new SuperTableService();
+                    $packagesBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+                    if ($package->typeId == $packagesBlockType->id) {
+                        Lantra::$app->packages->onBeforeSavePackage($event, $package);
+                    }
+                }
+            }
+        );
+        */
+
+        Event::on(
+            Element::class,
+            Element::EVENT_BEFORE_SAVE,
+            function (ModelEvent $event) {
+                $element = $event->sender;
+                if (get_class($element) == 'craft\elements\GlobalSet' && $element->handle == 'globalsPackage') {
+                    Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $element);
+                }
+            }
+        );
+
         Event::on(
             Entry::class,
             Entry::EVENT_BEFORE_SAVE,
@@ -161,16 +194,14 @@ class Plugin extends BasePlugin
                 }
                 if ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdModules) {
+                } elseif ($entry->sectionId == $this->sectionIdModules) {
                     Lantra::$app->modules->onBeforeSaveModule($event, $entry);
-                }
-                elseif($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->results->onBeforeSaveAttempt($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdCompanies) {
+                } elseif ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onBeforeSaveCompany($event, $entry);
-                }
+                } elseif ($entry->sectionId == $this->sectionIdPackages)
+                    Lantra::$app->packages->onBeforeSavePackage($event, $entry);
             }
         );
 
@@ -189,16 +220,15 @@ class Plugin extends BasePlugin
                 }
                 if ($entry->sectionId == $this->sectionIdCompanies) {
                     Lantra::$app->structure->onSaveCompany($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdResults) {
+                } elseif ($entry->sectionId == $this->sectionIdResults) {
                     Lantra::$app->results->onSaveResult($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
                     Lantra::$app->results->onSaveAttempt($event, $entry);
-                }
-                elseif ($entry->sectionId == $this->sectionIdUnits) {
+                } elseif ($entry->sectionId == $this->sectionIdUnits) {
                     ## add result cache unit column (if enabled)
                     Lantra::$app->results->addUnitColumn($entry->id);
+                } elseif ($entry->sectionId == $this->sectionIdPackages) {
+                    Lantra::$app->packages->onSavePackage($event, $entry);
                 }
         });
 
@@ -299,6 +329,7 @@ class Plugin extends BasePlugin
 
             ## cpd routes
             'profile'                                   => ['template' => 'profile/index'],
+            'profile/taskbooks/view/<packageId>'        => ['template' => 'profile/taskbooks/view'],
             'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
             'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
             'cpd/<userId>/<moduleId>/<unitId>/add'      => ['template' => 'record/unit'],
@@ -329,6 +360,7 @@ class Plugin extends BasePlugin
             'sp/users/restore-user'                     => 'sp/users/restore-user',
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
+            'sp/users/update-package'                   => 'sp/users/update-package',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 
@@ -346,6 +378,8 @@ class Plugin extends BasePlugin
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
+
+            'sp/users/pay/<packageId>'                  => 'sp/users/pay',
         ];
     }
 

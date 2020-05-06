@@ -1,0 +1,43 @@
+<div class="taskbook-optional taskbook-optional-{{ coreModule.id }}">
+    {% if modules|length  %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>Optional Module</th>
+                <th>Level</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                {% set packageOptionalModuleRow = craft.lantra.getOptionalModuleRow(entry, module.id)  %}
+                <tr class="optional-module">
+                    <td>{{ module.title }}</td>
+                    <td>
+                        <select class="optional-level" name="optionalLevel">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if packageOptionalModuleRow and packageOptionalModuleRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="optional" type="checkbox" name="optionalModule" value="{{ module.id }}" {% if packageOptionalModuleRow %}checked{% endif %}>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
+        {% for row in coreModule.moduleCosts %}
+           Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />
+        {% endfor %}
+            Max Cost: £{{ coreModule.moduleMaxCost }}</p>
+        {% if coreModule.moduleMinimumOptional %}
+            Minimum optional modules: {{ coreModule.moduleMinimumOptional }}
+        {% endif %}
+        </div>
+    {% else %}
+        <p>There are currently no optional modules for {{ coreModule.title }}.</p>
+        <p>&nbsp;</p>
+    {% endif %}
+</div>

@@ -46,9 +46,34 @@ class Modules extends Component
         }
     }
 
+    /**
+     * @param $moduleEntries
+     * @return array
+     */
+    public function moduleUnits($moduleEntries)
+    {
+        if (!$moduleEntries || !count($moduleEntries)) {
+            return [];
+        }
+        $return = [];
+        foreach ($moduleEntries as $moduleEntry) {
+            if ($moduleEntry->moduleUnitGroups) {
+                foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+                    if (!$unitGroup->unitEntries) {
+                        continue;
+                    }
+                    foreach ($unitGroup->unitEntries->all() as $unitEntry) {
+                        $return[] = $unitEntry;
+                    }
+                }
+            }
+        }
+        return $return;
+    }
+
     public function totalUnits($moduleEntries)
     {
-        if (!$moduleEntries || !$moduleEntries->count()) {
+        if (!$moduleEntries) {
             return 0;
         }
         $return = 0;
@@ -65,7 +90,7 @@ class Modules extends Component
 
     public function unitsComplete($moduleEntries, $user)
     {
-        if (!$moduleEntries || !$moduleEntries->count()) {
+        if (!$moduleEntries) {
             return 0;
         }
         $return = 0;

@@ -1,0 +1,94 @@
+{% set userPackages = craft.lantra.getUserPackages(cpdUser) %}
+{% if userPackages|length %}
+    <div id="taskbooks-cpd">
+        {% for package in userPackages %}
+            {% set isAssessor = craft.lantra.isAssessor(package) %}
+            {% set isReviewer = craft.lantra.isReviewer(package) %}
+            {% set coreModule = package.packageCoreModule.one %}
+            <div class="job-role package" style="position: relative;">
+                <div class="align-vertical">
+                    <div class="align-horizontal">
+                        <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
+                    </div>
+                    <div class="align-horizontal">
+                        <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
+                        <div><h2>{{ coreModule.title }}</h2></div>
+                        {% set totalUnits = craft.lantra.countPackageUnits(package) %}
+                        {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
+                        {% if unitsComplete >= totalUnits %}
+                            {% if package.packageStatus == 'active' %}
+                                {% if craft.lantra.isPackageUnitsEndorsed(package) %}
+                                    Status: Endorsed
+                                {% else %}
+                                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                                       data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Endorsement</a>
+                                {% endif %}
+                            {% endif %}
+                            {% if package.packageStatus == 'assessed' %}
+                                Status: Assessed
+                            {% elseif package.packageStatus == 'reviewed' %}
+                                Status: Reviewed
+                            {% elseif package.packageStatus == 'complete' %}
+                                Status: Complete
+                            {% endif %}
+                        {% else %}
+                            Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
+                        {% endif %}
+                        {% if isAssessor or isReviewer %}
+                            <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="j{{ package.id }}" class="open">
+                    <div class="module-group-tabs">
+                        <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
+                            <li>
+                                <a href="#tab{{ package.id }}" class="primary-bg">
+                                    <h4>{{ coreModule.title }}</h4>
+                                  </a>
+                            </li>
+                            <li>
+                                <a href="#tab{{ package.id }}log" class="primary-bg">
+                                    <h4>Log</h4>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% set packageModules = craft.lantra.getPackageModules(package) %}
+                    <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
+                        <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}">
+                            <div class="module-tabs">
+                                <ul class="tabs clearfix" data-tabgroup="tab-group-{{ package.id }}">
+                                    <div class="tabs-group">
+                                        {% for row in packageModules %}
+                                        {% set module = row.entry %}
+                                        {% set moduleElementId = package.id ~ module.id %}
+                                        <li>
+                                            <a href="#module{{ moduleElementId }}" class="module-status">
+                                                <span class="status-active"></span>
+                                                {{ module.title }}
+                                            </a>
+                                        </li>
+                                        {% if not loop.last and loop.index is divisible by(4) %}</div><div class="tabs-group">{% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </ul>
+                            </div>
+                            <div id="tab-group-{{ package.id }}" class="tabgroup module-wrapper">
+                                {% for row in packageModules %}
+                                    {% set module = row.entry %}
+                                    {% set moduleElementId = package.id ~ module.id %}
+                                    {% set columnLayout = module.columnLayout.count ?  module.columnLayout : coreModule.columnLayout %}
+                                    {% include 'record/_modules/module' with {moduleElementId:moduleElementId, level:row.level} %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
+                            {% include '_includes/packageLog' with {admin:false} %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

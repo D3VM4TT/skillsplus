@@ -10,9 +10,11 @@ namespace lantra\sp\controllers;
 
 use Craft;
 use craft\elements\User;
-
+use craft\elements\MatrixBlock;
+use craft\elements\Entry;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
+use verbb\supertable\elements\SuperTableBlockElement;
 
 class UsersController extends BaseController {
 
@@ -270,5 +272,135 @@ class UsersController extends BaseController {
             Lantra::$app->results->refreshResultCache($users);
         }
         $this->_returnMessage($total . ' users refreshed', true, 'management/' . ($companyId ? 'companies' : 'users'));
+    }
+
+    /**
+     * @param $packageId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionPay($packageId)
+    {
+        $spBlock = Craft::$app->elements->getElementById($packageId);
+        $spBlock->setFieldValue('packagePaid', 1);
+        Craft::$app->elements->saveElement($spBlock);
+        $this->_returnMessage('Package Paid', true, 'profile/taskbooks');
+    }
+
+    /**
+     * Saves user taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionSavePackage()
+    {
+        $this->requireLogin();
+        $userId = Craft::$app->request->getRequiredParam('userId');
+        $fields = Craft::$app->request->getRequiredParam('fields');
+        $allOptionalModules = Craft::$app->request->getParam('optionalModules');
+        $user = Craft::$app->users->getUserById($userId);
+
+        if (!$user) {
+            return $this->_returnError('Invalid user [userId = ' . $userId .'].');
+        }
+
+
+
+        $package = new Entry();
+        $package->authorId = $userId;
+        $package->enabled = true;
+        $package->sectionId = 15;
+        $package->typeId = 20;
+        $package->setFieldValues($fields);
+
+        if (!Craft::$app->elements->saveElement($package)) {
+            return Craft::$app->urlManager->setRouteParams(['package' => $package]);
+        }
+
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $package->id);
+    }
+
+    /**
+     * Update taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionUpdatePackage()
+    {
+        $this->requireLogin();
+        $packageId = Craft::$app->request->getRequiredParam('packageId');
+        if (null == $package = SuperTableBlockElement::findOne($packageId)) {
+            return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
+        }
+
+        $oldAssessorId = $package->packageAssessor->count() ? $package->packageAssessor->one()->id : null;
+        $oldReviewerId = $package->packageReviewer->count() ? $package->packageReviewer->one()->id : null;
+        $oldStatus = $package->packageStatus;
+
+        $changed = [
+          'assessor' => false,
+          'reviewer' => false,
+          'status' => false
+        ];
+
+        $assessorId = Craft::$app->request->getParam('assessorId');
+        $reviewerId = Craft::$app->request->getParam('reviewerId');
+        $status = Craft::$app->request->getParam('packageStatus');
+        $comment = Craft::$app->request->getParam('packageComment');
+
+        if ($assessorId != $oldAssessorId) {
+            $package->setFieldValue('packageAssessor', [$assessorId]);
+            $changed['assessor'] = true;
+        }
+        if ($reviewerId != $oldReviewerId) {
+            $package->setFieldValue('packageReviewer', [$reviewerId]);
+            $changed['reviewer'] = true;
+        }
+        if ($status != $oldStatus) {
+            $package->setFieldValue('packageStatus', $status);
+            $changed['status'] = true;
+        }
+
+        if (!Craft::$app->elements->saveElement($package)) {
+            return Craft::$app->urlManager->setRouteParams(['package' => $package]);
+        }
+
+        if ($comment) {
+            Lantra::$app->packages->addComment($package, $comment);
+        }
+
+        Lantra::$app->packages->onSavePackage($package, $changed);
+        $redirect = '/cpd/' . $package->owner->id;
+        $this->_returnMessage('Package has been updated', true, $redirect);
+    }
+
+    /**
+     * Saves user taskbook package
+     *
+     * @throws mixed
+     */
+    public function actionPackageAssessor()
+    {
+        $this->requireLogin();
+        $userId = Craft::$app->request->getParam('userId');
+        $packageId = Craft::$app->request->getParam('packageId');
+        if (null == $package = SuperTableBlockElement::findOne($packageId)) {
+            return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
+        }
+        $assessor = $userId ? Craft::$app->users->getUserById($userId) :null;
+        $package->setFieldValue('packageAssessor', [$userId]);
+        if (!Craft::$app->elements->saveElement($package)) {
+            return $this->_returnError($package->getFirstErrors()[0]);
+        }
+        if ($assessor) {
+            $message = $assessor->fullname . ' assigned as assessor';
+        }
+        else {
+            $message = 'Assessor unassigned.';
+        }
+        $this->_returnMessage($message, 'true');
     }
 }

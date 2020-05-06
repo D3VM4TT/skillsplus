@@ -77,7 +77,20 @@ class Settings extends Model
     public $notifySubjectCycleReminder          = '';
     public $notifyCycleReminder                 = '';
 
+    public $notifySubjectPackageAssigned        = '';
+    public $notifyPackageAssigned               = '';
+    public $notifySubjectPackageStatus          = '';
+    public $notifyPackageStatus                 = '';
+    public $notifySubjectPackageReviewed        = '';
+    public $notifyPackageReviewed               = '';
+    public $notifySubjectPackageComment         = '';
+    public $notifyPackageComment                = '';
+
     public $disableEndorsementNotify            = false;
+
+    public $enableTaskbooks                     = false;
+    public $enableJobRoles                      = true;
+
     public $userEditName                        = true;
     public $userEditEmail                       = true;
     public $userEditAddress                     = true;
@@ -94,6 +107,7 @@ class Settings extends Model
             'managerCompanies'  => ''
     ];
     public $labelJobRole                        = '';
+    public $labelTaskbook                       = '';
     public $queue                               = [];
     public $disableResultCache                  = false;
     public $customReports                       = [

@@ -1,0 +1,38 @@
+{% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
+<div id="job-role-cpd">
+    {% if not cpdUser.userRole.count %}
+        <h2>Job Role</h2>
+        <div class="col-pd-btm col-flex">
+            <img src="/assets/img/delete.svg" class="test-icon" alt="">
+            <p>
+                {% if isManager %}
+                    This user has no job role(s) allocated to their account.
+                {% else %}
+                    You have no job role(s) allocated to your account.
+                {% endif %}
+            </p>
+        </div>
+    {% else %}
+        {% for role in cpdUser.userRole.all() %}
+            {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
+        {% endfor %}
+        {% if existingResultIds|length %}
+            {# get all the results no longer related to existing job role #}
+            {% set existingResultIdsString = existingResultIds | join(', not ') %}
+            {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired').id('and, not ' ~ existingResultIdsString) %}
+        {% endif %}
+    {% endif %}
+</div>
+{% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
+    {% include 'record/_archive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
+{% endif %}
+<p style="text-align:right">
+    {% if craft.lantra.setting('themeResultHistoryLink') and resultArchive|length %}
+        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
+            <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
+        </a>
+    {% endif %}
+    <a class="button no-shadow primary-bg" target="_blank" href="/cpd/{{ cpdUser.id }}/print">
+        <span>Print Version</span>
+    </a>
+</p>

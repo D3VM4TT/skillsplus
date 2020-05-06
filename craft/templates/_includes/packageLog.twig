@@ -1,0 +1,26 @@
+{% if package.packageLog|length %}
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Message</th>
+                {% if admin %}
+                    <th>User</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in package.packageLog %}
+                {% set user = row.userId ? craft.app.users.getUserById(row.userId) %}
+                <tr>
+                    <td>{{ row.date|date('d/m/y G:i') }}</td>
+                    <td>{{ row.userMessage }}{% if admin %} {{ row.adminMessage }}{% endif %}</td>
+                    {% if admin %}
+                        <td>{{ user ? user.fullName }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+

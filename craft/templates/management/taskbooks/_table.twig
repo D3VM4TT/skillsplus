@@ -1,0 +1,77 @@
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > " ~ type|ucwords %}
+{% set pageTitle = type|ucwords %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set sortParam = craft.app.request.getParam('sort') %}
+{% set validSorts = ['lastName', 'id', 'legacyId', 'userCompanyName'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'lastName' %}
+{% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
+
+{% if type == 'assessments' %}
+    {% set criteria = craft.lantra.assessmentCriteria(pageLimit, sort ~ ' ' ~ order) %}
+{% else %}
+    {% set criteria = craft.lantra.reviewCriteria(pageLimit, sort ~ ' ' ~ order) %}
+{% endif %}
+
+{% if criteria%}{% paginate criteria as pageInfo, userEntries %}{% endif %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>{{ pageTitle }}</h2>
+            <p>View {{ type }}</p>.</p>
+        </div>
+        {% if userEntries is defined and userEntries|length %}
+            <div class="page-content">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
+                        <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
+                        <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
+                        <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
+                        <th>Location</th>
+                        {% if craft.lantra.setting('schemeTeams', false) %}
+                            <th>Team</th>
+                        {% endif %}
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in userEntries %}
+                        {% set company = craft.lantra.userCompany(user.id) %}
+                        <tr>
+                            <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
+                            <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
+                            <td><p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
+                            <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
+                            <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
+                            {% if craft.lantra.setting('schemeTeams', false) %}
+                                {% set team = user.userTeam.one() %}
+                                <td>{{ team.title|default('') }}</td>
+                            {%  endif %}
+                            <td class="icons" style="width:140px;text-align:right">
+                                {% if not user.userDummyEmail %}
+                                    <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+            </div>
+        {% else %}
+            <div class="page-content">
+                <h3>There are no users to display.</h3>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

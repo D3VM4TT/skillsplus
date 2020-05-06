@@ -1,5 +1,7 @@
 {# element id used in html/js passed as ref to find correct tab #}
-{% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+{% if moduleElementId is not defined %}
+    {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
+{% endif %}
 <div id="module{{ moduleElementId }}" class="module open">
     {% if  module.type == 'cpd' %}
         {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id, cpdUser.id) %}

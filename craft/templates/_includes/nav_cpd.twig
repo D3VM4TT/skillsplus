@@ -40,9 +40,22 @@
                     </li>
                 {%  endif %}
                 {% if craft.lantra.can('editUsers') %}
-                <li>
-                <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
-                </li>
+                    <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                    </li>
+                    {% set assessmentCount = craft.lantra.assessmentCount() %}
+                    {% set reviewCount = craft.lantra.reviewCount() %}
+
+                    {% if assessmentCount %}
+                        <li>
+                            <a class="{% if craft.app.request.getSegment(3) == 'assessments' %}active{% endif %}" href="/management/taskbooks/assessments">Taskbook Assessments</a>
+                        </li>
+                    {%  endif %}
+                    {% if reviewCount %}
+                        <li>
+                            <a class="{% if craft.app.request.getSegment(3) == 'reviews' %}active{% endif %}" href="/management/taskbooks/reviews">Taskbook Reviews</a>
+                        </li>
+                    {%  endif %}
                 {%  endif %}
                 {#
                 {% if craft.lantra.can('editRoles') %}

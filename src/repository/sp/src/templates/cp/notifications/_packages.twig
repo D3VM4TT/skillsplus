@@ -1,0 +1,61 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject Package Assigned",
+    id:				"notifySubjectPackageAssigned",
+    name:			"notifySubjectPackageAssigned",
+    value:		    settings.notifySubjectPackageAssigned
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: You have been assigned as {{ type }} for {{ user.fullname }} - {{ core.title }}.",
+    label:			"Message Package Assigned",
+    id:				"notifyPackageAssigned",
+    name:			"notifyPackageAssigned",
+    value:		    settings.notifyPackageAssigned
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Package Status",
+    id:				"notifySubjectPackageStatus",
+    name:			"notifySubjectPackageStatus",
+    value:		    settings.notifySubjectPackageStatus
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Status update for {{ core.title }}: {{ package.packageStatus }}.",
+    label:			"Message Package Status",
+    id:				"notifyPackageStatus",
+    name:			"notifyPackageStatus",
+    value:		    settings.notifyPackageStatus
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Package Reviewed",
+    id:				"notifySubjectPackageReviewed",
+    name:			"notifySubjectPackageReviewed",
+    value:		    settings.notifySubjectPackageReviewed
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullname }} - {{ core.title }} has been reviewed by {{ reviewer.fullname }}.",
+    label:			"Message Package Reviewed",
+    id:				"notifyPackageReviewed",
+    name:			"notifyPackageReviewed",
+    value:		    settings.notifyPackageReviewed
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Package Comment",
+    id:				"notifySubjectPackageComment",
+    name:			"notifySubjectPackageComment",
+    value:		    settings.notifySubjectPackageComment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Comment for {{ core.title }}: {{ comment }}",
+    label:			"Message Package Comment",
+    id:				"notifyPackageComment",
+    name:			"notifyPackageComment",
+    value:		    settings.notifyPackageComment
+}) }}

@@ -1,0 +1,90 @@
+{% set packageId = craft.app.request.getSegment(4) %}
+{% if packageId and package is not defined %}
+    {% set package = craft.superTable.blocks.id(packageId).one %}
+{% endif %}
+
+{% if not package or not craft.lantra.canAssess(package) %}
+    {% exit 404 %}
+{% endif %}
+
+{% set student = package.owner %}
+{% set coreModule = package.packageCoreModule.one %}
+{% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManager') %}
+{% set isAssessor = craft.lantra.isAssessor(package, currentUser.id, false) %}
+{% set isReviewer = craft.lantra.isReviewer(package, currentUser.id, false) %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Assessment" %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        <a class="back-link" href="/management/taskbook-assessments"><strong>&laquo; back</a>
+        {% include '_includes/topNavigation' %}
+    </div>
+    <div class="page-header secondary-bg">
+        <h2>Manage taskbook</h2>
+        <p>{{ student.fullName  }} - {{ coreModule.title }}</p>
+    </div>
+
+    {{ ui.errorList(package.getFirstErrors()) }}
+
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        {{ csrfInput() }}
+        {{ actionInput('sp/users/update-package') }}
+        <input type="hidden" name="packageId" value="{{ package.id }}">
+        {% if isAdmin %}
+            <div class="field--wrapper">
+                {% set assessorId = package.packageAssessor.count ? package.packageAssessor.one.id %}
+                {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
+                <label for="packageReviewer" class="">Assessor:</label>
+                <select name="assessorId">
+                    <option value="">Select Assessor:</option>
+                    {% for cm in userCompanyManagers %}
+                        <option value="{{ cm.id }}" {% if cm.id == assessorId %}selected{% endif %}>{{ cm.fullname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        {% if not isReviewer %}
+        <div class="field--wrapper">
+            {% set reviewerId = package.packageReviewer.count ? package.packageReviewer.one.id %}
+            {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
+            <label for="packageReviewer" class="">Reviewer (IQA):</label>
+            <select name="reviewerId">
+                <option value="">No Reviewer</option>
+                {% for cm in userCompanyManagers %}
+                    <option value="{{ cm.id }}" {% if cm.id == reviewerId %}selected{% endif %}>{{ cm.fullname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+        {% if isReviewer and package.packageStatus != 'assessed' %}
+            <p class="warning">This package has not yet been assessed.</p>
+        {% else %}
+            <div class="field--wrapper">
+                <label for="packageStatus" class="">Status:</label>
+                <select name="packageStatus">
+                    {% if isAdmin or isAssessor %}
+                        <option value="active"{% if package.packageStatus == 'active' %} selected{% endif %}>Active</option>
+                    {% endif %}
+                    <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>
+                    {% if isAdmin or isReviewer %}
+                        <option value="reviewed"{% if package.packageStatus == 'reviewed' %} selected{% endif %}>Reviewed</option>
+                    {% endif %}
+                    {% if isAdmin %}
+                        <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="packageComment" class="">Comment:</label>
+                <textarea name="packageComment"></textarea>
+            </div>
+            <div class="container-btn">
+                <button class="button primary-bg" type="submit">Update package</button>
+            </div>
+        {% endif %}
+        {% include '_includes/packageLog' with {package:package, admin:true} %}
+    </form>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% requireLogin %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set account = currentUser %}
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{% set packageCoreModule = entry is defined and entry.packageCoreModule ? entry.packageCoreModule.one : null %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <a href="/">
+                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            </a>
+            {{ currentUserCompany|default('') }}
+            <h2>My taskbooks</h2>
+            <p>Manage your taskbook packages.</p>
+        </div>
+        <div class="page-content">
+            {% set levelsOptions = '' %}
+            {% for option in craft.lantra.taskbookLevels() %}
+                {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+            {% endfor %}
+
+            {% set coreModules = craft.entries.section('modules').type('taskbook').moduleCore(1).all() %}
+            {% set optionalModulesCount = craft.entries.section('modules').type('taskbook').moduleCore(0).count() %}
+
+            {% if entry is defined %}
+                {{ ui.errorList(entry.getFirstErrors()) }}
+            {% endif %}
+
+            <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
+                {{ csrfInput() }}
+                {{ actionInput('entries/save-entry') }}
+                {{ hiddenInput('sectionId', 15) }}
+                {{ hiddenInput('typeId', 20) }}
+                {{ hiddenInput('enabled', 1) }}
+                {{ redirectInput('profile/taskbooks') }}
+                {% if coreModules|length %}
+                    <div class="field--wrapper">
+                        <label for="coreModule" class="no-float">Core Module:</label>
+                        <select class="core-module" name="fields[packageCoreModule][]">
+                            {% for coreModule in coreModules %}
+                                <option {% if entry is defined and packageCoreModule and packageCoreModule.id == coreModule.id %}selected {% endif %}
+                                        data-minimum="{{ coreModule.moduleMinimumOptional }}" value="{{ coreModule.id }}">{{ coreModule.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field--wrapper">
+                        <label for="coreModule" class="no-float">Level:</label>
+                        <select class="core-level" name="fields[packageCoreLevel]">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if entry is defined and entry.packageCoreLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if optionalModulesCount %}
+                        {% for coreModule in coreModules %}
+                            {% set optionalModules = craft.entries.section('modules').type('taskbook').moduleCore(0).relatedTo(coreModule).all() %}
+                            {% include 'profile/taskbooks/_optionalModules' with {modules: optionalModules, coreModule: coreModule, entry: entry is defined ? entry} %}
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                <div class="container-btn">
+                    <button type="submit" class="button primary-bg">Add Package</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script id="input-template" type="text/template">
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][type]" value="8" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][enabled]" value="1" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalModule][]" value="{optionalModuleId}" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
+    </script>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('select.core-module').change(function(){
+        var coreModuleId = $(this).val();
+        $('div.taskbook-optional').hide();
+        $('div.taskbook-optional.taskbook-optional-' + coreModuleId).show();
+    }).change();
+
+    $('select.core-level').change(function(){
+        var level = $(this).val(),
+            optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
+        if (level == 5) {
+           optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
+        }
+        else {
+            optionalSelectInputs.prop('disabled', false).css('opacity', 1);
+        }
+    }).change();
+
+    updateOptional = function() {
+        var n = 1;
+        $('form#taskbooks').find('.optional-hidden').remove();
+        $('tr.optional-module').each(function(){
+            var c = $(this).find('input[type=checkbox]'),
+                l = $(this).find('select').val(),
+                t = $('#input-template').clone().html();
+            if (c.is(':checked')) {
+                t = t.replace(/{n}/g, n).replace(/{optionalModuleId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                $('form#taskbooks').prepend($(t));
+                n ++;
+            }
+        });
+    };
+
+    $('select.optional-level').change(function(){
+        updateOptional();
+    });
+    $('input.optional').change(function(){
+        updateOptional();
+    }).change();
+
+</script>
+{% endblock %}
