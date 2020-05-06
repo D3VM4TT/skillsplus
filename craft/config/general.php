@@ -10,6 +10,7 @@
 
 return [
     '*' => [
+        'enableGql' => false,
         'elevatedSessionDuration' => 0,
         'enableCsrfProtection' => false,
         'defaultWeekStartDay' => 0,
