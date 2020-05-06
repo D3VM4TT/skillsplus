@@ -151,27 +151,13 @@ class Plugin extends BasePlugin
             }
         );
 
-        /*
-        Event::on(
-            SuperTableBlockElement::class,
-            SuperTableBlockElement::EVENT_BEFORE_SAVE,
-            function (ModelEvent $event) {
-                $package = $event->sender;
-                if (null != $field = Craft::$app->fields->getFieldByHandle('userPackages')) {
-                    $sp = new SuperTableService();
-                    $packagesBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-                    if ($package->typeId == $packagesBlockType->id) {
-                        Lantra::$app->packages->onBeforeSavePackage($event, $package);
-                    }
-                }
-            }
-        );
-        */
-
         Event::on(
             Element::class,
             Element::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
+                if (Craft::$app->request->isConsoleRequest) {
+                    return;
+                }
                 $element = $event->sender;
                 if (get_class($element) == 'craft\elements\GlobalSet' && $element->handle == 'globalsPackage') {
                     Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $element);
