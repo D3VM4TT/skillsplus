@@ -200,6 +200,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $package
      * @param $comment
      * @throws \Throwable
@@ -213,6 +215,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $package
      * @param $message
      * @return bool
@@ -240,6 +244,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $packageId
      * @param $status
      * @return bool
@@ -257,6 +263,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $package
      * @param bool $complete
      * @return mixed
@@ -299,6 +307,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $package
      * @return array
      */
@@ -333,6 +343,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param $package
      * @return array
      */
@@ -392,6 +404,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * Checks whether this user has been assigned as assessor, reviewer or completer
      *
      * @param $subordinateId
@@ -417,6 +431,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param Entry $package
      * @param User $assessor
      * @param bool $includeAdmin
@@ -428,6 +444,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param Entry $package
      * @param User $reviewer
      * @param bool $includeAdmin
@@ -439,6 +457,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param Entry $package
      * @param User $completer
      * @param bool $includeAdmin
@@ -450,6 +470,8 @@ class Packages extends Component
     }
 
     /**
+     * @todo move to behaviour
+     *
      * @param Entry $package
      * @param User $manager
      * @param bool $includeAdmin

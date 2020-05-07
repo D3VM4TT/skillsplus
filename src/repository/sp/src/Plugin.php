@@ -17,26 +17,27 @@ use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
+use craft\events\DefineBehaviorsEvent;
 use craft\web\View;
 use craft\services\UserPermissions;
-use craft\services\Globals;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
-use lantra\sp\assetbundles\SpCpAsset;
-use lantra\sp\migrations\m200128_160852_rename_unitValue;
-use verbb\supertable\elements\SuperTableBlockElement;
-use verbb\supertable\services\SuperTableService;
 use yii\base\Event;
+use yii\db\Query;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\behaviors\PackageBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
-use yii\db\Query;
+use lantra\sp\assetbundles\SpCpAsset;
+use lantra\sp\migrations\m200128_160852_rename_unitValue;
+
+
 
 /**
  * Class LantraPlugin
@@ -231,6 +232,16 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->onDeleteResult($event, $entry);
                 }
             });
+
+        Event::on(
+            Entry::class,
+            Entry::EVENT_DEFINE_BEHAVIORS,
+            function(DefineBehaviorsEvent $event) {
+                if ($event->sender->sectionId == 15) {
+                    $event->behaviors[] = PackageBehavior::class;
+                }
+            }
+        );
 
         Event::on(
             UserPermissions::class,

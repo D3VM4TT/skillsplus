@@ -11,6 +11,7 @@ namespace lantra\sp\helpers;
 use Craft;
 use craft\elements\Asset;
 use craft\elements\Entry;
+use craft\elements\User;
 use craft\models\VolumeFolder;
 use lantra\sp\models\Cycle;
 use craft\helpers\Assets as AssetsHelper;
@@ -151,6 +152,23 @@ class LantraHelper
             Craft::$app->assets->createFolder($folder, true);
         }
         return $folder;
+    }
 
+    /**
+     * Generic get user from user id or currently logged in user
+     *
+     * @param null $userId
+     * @return User|null
+     */
+    public static function getUser($userId = null)
+    {
+        if (is_object($userId)) {
+            return $userId;
+        }
+        elseif (is_null($userId)) {
+            return Craft::$app->getUser()->getIdentity();
+        }
+
+        return (int) $userId > 0 ? Craft::$app->users->getUserById( (int) $userId) : null;
     }
 }
