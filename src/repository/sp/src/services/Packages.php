@@ -222,6 +222,9 @@ class Packages extends Component
      */
     public function log($package, $message, $admin = '')
     {
+        if (!$message) {
+            return;
+        }
         $user = Craft::$app->getUser()->getIdentity();
         $new = [
             'col1'       => time(),
@@ -400,10 +403,12 @@ class Packages extends Component
         if (null == $user = Craft::$app->users->getUserById($subordinateId)) {
             return false;
         }
-        if (!$user->userPackages->count()) {
+        $packages = $this->getUserPackages($user);
+
+        if (!count($packages)) {
             return false;
         }
-        foreach ($user->userPackages as $package) {
+        foreach ($packages as $package) {
             if ($this->isAssessor($package, $manager) || $this->isReviewer($package, $manager) || $this->isCompleter($package, $manager)) {
                 return true;
             }

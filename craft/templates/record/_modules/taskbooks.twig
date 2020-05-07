@@ -13,6 +13,11 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ coreModule.title }}</h2></div>
+                        {% if isAssessor or isReviewer %}
+                            <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
+                        {% endif %}
+                    </div>
+                    <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
                         {% set totalUnits = craft.lantra.countPackageUnits(package) %}
                         {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
                         {% if unitsComplete >= totalUnits %}
@@ -34,9 +39,6 @@
                         {% else %}
                             Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
                         {% endif %}
-                        {% if isAssessor or isReviewer %}
-                            <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
-                        {% endif %}
                     </div>
                 </div>
                 <div id="j{{ package.id }}" class="open">
@@ -46,6 +48,11 @@
                                 <a href="#tab{{ package.id }}" class="primary-bg">
                                     <h4>{{ coreModule.title }}</h4>
                                   </a>
+                            </li>
+                            <li>
+                                <a href="#tab{{ package.id }}reviews" class="primary-bg">
+                                    <h4>Reviews</h4>
+                                </a>
                             </li>
                             <li>
                                 <a href="#tab{{ package.id }}log" class="primary-bg">
@@ -82,6 +89,9 @@
                                     {% include 'record/_modules/module' with {moduleElementId:moduleElementId, level:row.level} %}
                                 {% endfor %}
                             </div>
+                        </div>
+                        <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
+                            {% include '_includes/packageReviews' with {admin:false} %}
                         </div>
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                             {% include '_includes/packageLog' with {admin:false} %}

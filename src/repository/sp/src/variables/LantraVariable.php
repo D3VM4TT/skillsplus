@@ -563,7 +563,7 @@ class LantraVariable
     public function isPackageManager($subordinateId = null, $managerId = null)
     {
         $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
-        return Lantra::$app->users->isPackageManager($subordinateId, $manager);
+        return Lantra::$app->packages->isPackageManager($subordinateId, $manager);
     }
 
     /**
