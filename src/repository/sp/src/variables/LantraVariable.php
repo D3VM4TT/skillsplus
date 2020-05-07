@@ -413,42 +413,21 @@ class LantraVariable
      * @param null $limit
      * @param string $order
      * @param null $managerId
-     * @return \verbb\supertable\services\ElementCriteriaModel
+     * @return mixed
      */
-    public function assessmentCriteria($limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->packages->assessmentCriteria($limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($limit, $order, $this->getUser($managerId));
     }
 
     /**
-     * @param null $limit
-     * @param string $order
      * @param null $managerId
-     * @return \verbb\supertable\services\ElementCriteriaModel
-     */
-    public function reviewCriteria($limit = null, $order = 'lastName', $managerId = null)
-    {
-        return Lantra::$app->packages->reviewCriteria($limit, $order, $this->getUser($managerId));
-    }
-
-    /**
-     * @param null $assessorId
      * @return mixed
      */
-    public function assessmentCount($assessorId = null)
+    public function packagesCount($managerId = null)
     {
-        $criteria = $this->assessmentCriteria(null, 'lastName', $this->getUser($assessorId));
-        return $criteria->count();
-    }
-
-    /**
-     * @param null $reviewerId
-     * @return mixed
-     */
-    public function reviewCount($reviewerId = null)
-    {
-        $criteria = $this->reviewCriteria(null, 'lastName', $this->getUser($reviewerId));
-        return $criteria->count();
+        $criteria = $this->packagesCriteria(null, 'lastName', $this->getUser($managerId));
+        return $criteria ? $criteria->count() : 0;
     }
 
     /**
@@ -523,6 +502,10 @@ class LantraVariable
         }
         if ($task == 'editUsers') {
             $permission = 'editUsers';
+        }
+        if ($task == 'editTaskbooks') {
+            $section = Craft::$app->sections->getSectionByHandle('packages');
+            $permission = 'editEntries:'.$section->uid;
         }
         return $permission ? $user->can($permission) : false;
     }

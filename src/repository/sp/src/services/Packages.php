@@ -143,7 +143,6 @@ class Packages extends Component
         }
     }
 
-
     /**
      * @return \verbb\supertable\elements\db\SuperTableBlockQuery
      */
@@ -151,6 +150,20 @@ class Packages extends Component
     {
         $globalsSet = Craft::$app->globals->getSetByHandle('globalsPackage');
         return $globalsSet->packageWorkflow;
+    }
+
+    /**
+     * @return \verbb\supertable\elements\db\SuperTableBlockQuery
+     */
+    public function getPackageWorkflowStep($type)
+    {
+        $packagesWorkflow = $this->getPackageWorkflow();
+        foreach($packagesWorkflow as $step) {
+            if ($step->stepType == $type) {
+                return $step;
+            }
+        }
+        return null;
     }
 
     /**
@@ -404,8 +417,6 @@ class Packages extends Component
     }
 
     /**
-     * @todo move to behaviour
-     *
      * Checks whether this user has been assigned as assessor, reviewer or completer
      *
      * @param $subordinateId
@@ -417,128 +428,65 @@ class Packages extends Component
         if (null == $user = Craft::$app->users->getUserById($subordinateId)) {
             return false;
         }
-        $packages = $this->getUserPackages($user);
+        $packages = $this->getUserPackages($user, false);
 
         if (!count($packages)) {
             return false;
         }
         foreach ($packages as $package) {
-            if ($this->isAssessor($package, $manager) || $this->isReviewer($package, $manager) || $this->isCompleter($package, $manager)) {
+            if ($package->isManager($manager)) {
                 return true;
             }
         }
         return false;
     }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param Entry $package
-     * @param User $assessor
-     * @param bool $includeAdmin
-     * @return bool
-     */
-    public function isAssessor(Entry $package, User $assessor = null, $includeAdmin = true)
-    {
-        return $this->isStepManager($package, $assessor, $includeAdmin, 'assessment');
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param Entry $package
-     * @param User $reviewer
-     * @param bool $includeAdmin
-     * @return bool
-     */
-    public function isReviewer(Entry $package, User $reviewer = null, $includeAdmin = true)
-    {
-        return $this->isStepManager($package, $reviewer, $includeAdmin, 'review');
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param Entry $package
-     * @param User $completer
-     * @param bool $includeAdmin
-     * @return bool
-     */
-    public function isCompleter(Entry $package, User $completer = null, $includeAdmin = true)
-    {
-        return $this->isStepManager($package, $completer, $includeAdmin, 'complete');
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param Entry $package
-     * @param User $manager
-     * @param bool $includeAdmin
-     * @param string $type assessment|review|complete
-     * @return bool
-     */
-    private function isStepManager(Entry $package, User $manager = null, $includeAdmin = true, $type = 'assessment')
-    {
-        if (is_null($manager)) {
-            $manager = Craft::$app->getUser()->getIdentity();
-        }
-        ## admins and scheme managers can manage everyone
-        if ($includeAdmin && ($manager->admin || $manager->isInGroup('schemeManagers'))) {
-            return true;
-        }
-        foreach($package->packageReviews as $step) {
-            if ($step->stepType == $type && $step->stepUser->count() && $step->stepUser->one()->id == $manager->id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     /**
      * @param int $limit
      * @param string $order
-     * @param User|null $assessor
-     * @return \verbb\supertable\services\ElementCriteriaModel
+     * @param User $assessor
+     * @param null $type
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function assessmentCriteria($limit = 25, $order = 'lastName', User $assessor)
+    public function packagesCriteria($limit = 25, $order = 'title', User $assessor, $type = null)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'packages';
+        $criteria->limit = $limit;
+        $criteria->orderBy = $order;
+
+        if (!$assessor->admin && !$assessor->isInGroup('schemeManager')) {
+            $ids = $this->getRelatedPackageIds($assessor, $type);
+            if (!count($ids)) {
+                return null;
+            }
+            $criteria->id = $ids;
+        }
+        else {
+            $criteria->authorId = 'not ' . $assessor->id;
+        }
+
+        return $criteria;
+    }
+
+    /**
+     * @param User $assessor
+     * @param null $type
+     * @return array
+     */
+    public function getRelatedPackageIds(User $assessor, $type = null)
     {
         $supertableService = new SuperTableService();
         $params = [
-            'elementType'   => 'craft\\elements\\User',
-            'criteria' => [
-                'order' => $order,
-                'limit' => $limit,
-                'reviewStepType' => 'assessment'
-            ],
+            'elementType'   => 'craft\\elements\\Entry',
             'relatedTo'     => [
                 'targetElement' => $assessor->id,
                 'field'         => 'packageReviews.reviewUser'
             ]];
-        return $supertableService->getRelatedElementsQuery($params);
-    }
-
-    /**
-     * @param int $limit
-     * @param string $order
-     * @param User $reviewer
-     * @return \verbb\supertable\services\ElementCriteriaModel
-     */
-    public function reviewCriteria($limit = 25, $order = 'lastName', User $reviewer)
-    {
-        $supertableService = new SuperTableService();
-        $params = [
-            'elementType'   => 'craft\\elements\\User',
-            'criteria'      => [
-                'order' => $order,
-                'limit' => $limit,
-                'reviewStepType' => 'review'
-            ],
-            'relatedTo'     => [
-                'targetElement' => $reviewer->id,
-                'field'         => 'packageReviews.reviewUser'
-            ]];
-        return $supertableService->getRelatedElementsQuery($params);
+        if ($type) {
+            $params['criteria']['reviewStepType'] = $type;
+        }
+        $query = $supertableService->getRelatedElementsQuery($params);
+        return $query ? $query->ids() : [];
     }
 }

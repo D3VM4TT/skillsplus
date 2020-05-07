@@ -89,6 +89,62 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param user|null $user
+     * @return array
+     */
+    public function managerSteps(User $user = null)
+    {
+        $manager = LantraHelper::getUser($user);
+        $steps = [];
+        foreach($this->owner->packageReviews as $step) {
+            if ($step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id) {
+                $steps[] = $step;
+            }
+        }
+        return $steps;
+    }
+
+    /**
+     * @param user|null $user
+     * @return bool
+     */
+    public function canAssign(User $user = null)
+    {
+        $manager = LantraHelper::getUser($user);
+        foreach($this->owner->packageReviews as $step) {
+            if ($this->canAssignStep($step, $manager)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $step
+     * @param user|null $user
+     * @return bool
+     */
+    public function canAssignStep($step, User $user = null)
+    {
+        $manager = LantraHelper::getUser($user);
+        if ($manager->admin || $manager->isInGroup('schemeManagers')) {
+            return true;
+        }
+        ## run through job roles
+        $packageWorkflowStep = Lantra::$app->packages->getPackageWorkflowStep($step->reviewStepType);
+        if ($packageWorkflowStep->stepAssignUserGroup == 'jobRole') {
+            foreach ($packageWorkflowStep->stepAssignJobRole as $role) {
+                if (in_array($role->id, $user->userRole->ids())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        ## check user group
+        return $user->isInGroup($packageWorkflowStep->stepAssignUserGroup);
+    }
+
+    /**
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -150,7 +206,7 @@ class PackageBehavior extends Behavior
             return true;
         }
         foreach($this->owner->packageReviews as $step) {
-            if ($step->stepType == $type && $step->stepUser->count() && $step->stepUser->one()->id == $manager->id) {
+            if ($step->reviewStepType == $type && $step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id) {
                 return true;
             }
         }
