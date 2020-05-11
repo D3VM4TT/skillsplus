@@ -10,6 +10,7 @@ namespace lantra\sp\behaviors;
 
 use Craft;
 use craft\elements\user;
+use verbb\supertable\elements\SuperTableBlockElement;
 use yii\base\Behavior;
 
 use lantra\sp\Plugin as Lantra;
@@ -55,7 +56,7 @@ class PackageBehavior extends Behavior
      */
     public function isAssessor(User $user = null, $includeAdmin = false)
     {
-        return $this->isStepManager($user, $includeAdmin, 'assessment');
+        return $this->isPackageManager($user, $includeAdmin, 'assessment');
     }
 
     /**
@@ -65,7 +66,7 @@ class PackageBehavior extends Behavior
      */
     public function isReviewer(User $user = null, $includeAdmin = false)
     {
-        return $this->isStepManager($user, $includeAdmin, 'review');
+        return $this->isPackageManager($user, $includeAdmin, 'review');
     }
 
     /**
@@ -75,7 +76,7 @@ class PackageBehavior extends Behavior
      */
     public function isCompleter(User $user = null, $includeAdmin = false)
     {
-        return $this->isStepManager($user, $includeAdmin, 'complete');
+        return $this->isPackageManager($user, $includeAdmin, 'complete');
     }
 
     /**
@@ -193,11 +194,28 @@ class PackageBehavior extends Behavior
 
     /**
      * @param User $user
+     * @param SuperTableBlockElement $step
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isReviewUser(User $user = null, SuperTableBlockElement $step, $includeAdmin = false)
+    {
+        $manager = LantraHelper::getUser($user);
+
+        ## admins and scheme managers can manage everyone
+        if ($includeAdmin && ($manager->admin || $manager->isInGroup('schemeManagers'))) {
+            return true;
+        }
+        return $step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id;
+    }
+
+    /**
+     * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete
      * @return bool
      */
-    private function isStepManager(User $user = null, $includeAdmin = false, $type = 'assessment')
+    private function isPackageManager(User $user = null, $includeAdmin = false, $type = 'assessment')
     {
         $manager = LantraHelper::getUser($user);
 
@@ -206,7 +224,7 @@ class PackageBehavior extends Behavior
             return true;
         }
         foreach($this->owner->packageReviews as $step) {
-            if ($step->reviewStepType == $type && $step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id) {
+            if ($step->reviewStepType == $type && $this->isReviewUser($manager, $step, $includeAdmin)) {
                 return true;
             }
         }

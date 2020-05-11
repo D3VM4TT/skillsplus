@@ -53,22 +53,36 @@
             </table>
         {% endif %}
 
-            <div class="field--wrapper">
-                <label for="packageStatus" class="">Status:</label>
-                <select name="packageStatus">
-                    <option value="active"{% if package.packageStatus == 'active' %} selected{% endif %}>Active</option>
-                    <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>
-                    <option value="reviewed"{% if package.packageStatus == 'reviewed' %} selected{% endif %}>Reviewed</option>
-                    <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
-                  </select>
-            </div>
-            <div class="field--wrapper">
-                <label for="packageComment" class="">Comment:</label>
-                <textarea name="packageComment"></textarea>
-            </div>
-            <div class="container-btn">
-                <button class="button primary-bg" type="submit">Update package</button>
-            </div>
+        <div class="field--wrapper">
+            <label for="packageStatus" class="">Status:</label>
+            <select name="packageStatus">
+                <option value="active"{% if package.packageStatus == 'active' %} selected{% endif %}>Active</option>
+                <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>
+                <option value="reviewed"{% if package.packageStatus == 'reviewed' %} selected{% endif %}>Reviewed</option>
+                <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
+            </select>
+        </div>
+
+        {% for step in package.packageReviews %}
+            {% if step.reviewUser.count and package.isReviewUser(currentUser, step, true) %}
+                <h3>{{ step.reviewStepName }} - {{ step.reviewUser.one.fullName }}</h3>
+                <div class="field--wrapper">
+                    <label for="stepComment{{ step.id }}" class="">Comment:</label>
+                    <textarea id="stepComment{{ step.id }}" name="step[{{ step.id }}][stepPassed]"></textarea>
+                </div>
+                <div class="field--wrapper">
+                    <label for="stepPassed{{ step.id }}" class="">Result:</label>
+                    <select id="stepPassed{{ step.id }}" name="step[{{ step.id }}][stepPassed]">
+                        <option value="passed" >Passed</option>
+                        <option value="failed" >Failed</option>
+                    </select>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Update package</button>
+        </div>
 
         {% include '_includes/packageLog' with {package:package, admin:true} %}
     </form>

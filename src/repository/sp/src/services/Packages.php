@@ -455,15 +455,15 @@ class Packages extends Component
         $criteria->limit = $limit;
         $criteria->orderBy = $order;
 
-        if (!$assessor->admin && !$assessor->isInGroup('schemeManager')) {
+        if ($assessor->admin || $assessor->isInGroup('schemeManagers')) {
+            $criteria->authorId = 'not ' . $assessor->id;
+        }
+        else {
             $ids = $this->getRelatedPackageIds($assessor, $type);
             if (!count($ids)) {
                 return null;
             }
             $criteria->id = $ids;
-        }
-        else {
-            $criteria->authorId = 'not ' . $assessor->id;
         }
 
         return $criteria;

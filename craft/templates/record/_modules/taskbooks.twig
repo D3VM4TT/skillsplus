@@ -10,7 +10,7 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ package.coreModule.title }}</h2></div>
-                        {% if package.isManager %}
+                        {% if package.isManager(currentUser, true) %}
                             <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
                         {% endif %}
                     </div>
