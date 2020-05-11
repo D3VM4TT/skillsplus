@@ -1006,15 +1006,18 @@ class Results extends Component
     /**
      * Complete a module result
      *
+     * @param $moduleResultEntry
      * @param $userId
-     * @param $expiryDate
+     * @param $moduleResultExpiryTime
      * @return null
      * @throws /Exception
      */
-    function completeModuleResult($moduleResultEntry, $userId, $expiryDate = null)
+    function completeModuleResult($moduleResultEntry, $userId, $moduleResultExpiryTime = null)
     {
         ## either no expiry, default module expiry or set by result
-        $moduleResultEntry->expiryDate = $expiryDate;
+        if ($moduleResultExpiryTime) {
+            $moduleResultEntry->expiryDate = new DateTime($moduleResultExpiryTime);
+        }
         $moduleResultEntry->setFieldValue('resultStatus', 'complete');
         Craft::$app->elements->saveElement($moduleResultEntry);
     }
