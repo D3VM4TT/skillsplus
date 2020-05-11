@@ -1013,7 +1013,7 @@ class Results extends Component
     {
         ## either no expiry, default module expiry or set by result
         if ($moduleResultExpiryTime) {
-            $moduleResultEntry->expiryDate = new DateTime($moduleResultExpiryTime);
+            $moduleResultEntry->expiryDate = DateTime::createFromFormat('U', $moduleResultExpiryTime);
         }
         $moduleResultEntry->setFieldValue('resultStatus', 'complete');
         Craft::$app->elements->saveElement($moduleResultEntry);
