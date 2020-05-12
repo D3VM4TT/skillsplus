@@ -21,6 +21,19 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+    /**
+     * @param SuperTableBlockElement $step
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
+     */
+    public function getStepManagers(SuperTableBlockElement $step)
+    {
+        return Lantra::$app->packages->getStepManagers($step);
+    }
+
+    /**
+     * @param null $userId
+     * @return null
+     */
     public function getUserPackages($userId = null)
     {
         $user = (is_null($userId)) ? null : $this->getUser($userId);

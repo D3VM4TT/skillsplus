@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1588874216
+dateModified: 1589278205
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -84,7 +84,7 @@ fieldGroups:
   f09af15b-015a-415a-b707-81fa9d1a1d69:
     name: Structure
   f4fdf728-2474-483c-8746-0b3bfcdb988a:
-    name: Packages
+    name: Taskbooks
   f5eec841-a56b-474d-b01a-8ad8158d89b8:
     name: Legacy
   fe9133b9-1ac4-4551-9989-99fd7865a70c:
@@ -832,14 +832,21 @@ fields:
     type: craft\fields\Entries
   31c31961-f4f1-4f09-9c8e-cbbd46d62e97:
     contentColumnType: string
-    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
-    handle: packageWorkflow
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: workflow
     instructions: ''
-    name: 'Package Workflow'
+    name: Workflow
     searchable: true
     settings:
       columns:
         __assoc__:
+          -
+            - d4afcfe1-1ba1-4435-8a39-88a785af7535
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
           -
             - 8baba5fc-1c81-4b6d-a597-453862005a68
             -
@@ -882,7 +889,7 @@ fields:
                 -
                   - width
                   - ''
-      contentTable: '{{%stc_packageworkflow}}'
+      contentTable: '{{%stc_workflow}}'
       fieldLayout: table
       maxRows: ''
       minRows: ''
@@ -904,6 +911,26 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  3455bcb3-f959-4b7a-a64d-b0138268b594:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageWorkflow
+    instructions: ''
+    name: 'Package Workflow'
+    searchable: true
+    settings:
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:c0a51ffd-8054-40a9-824f-32657b83f14c'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   3629d8e1-89dd-47fd-939f-c81889682a13:
     contentColumnType: text
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -1357,12 +1384,19 @@ fields:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: packageReviews
-    instructions: ''
+    instructions: 'The default rows are copied from with workflow when the entry is created.'
     name: 'Package Reviews'
     searchable: true
     settings:
       columns:
         __assoc__:
+          -
+            - 8c4c8131-af05-49d5-91b9-c8d9eb756f8a
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
           -
             - 7820fc2f-23ff-4f94-8253-558119a25d40
             -
@@ -4223,6 +4257,10 @@ matrixBlockTypes:
     name: Columns
     sortOrder: 1
 plugins:
+  incognito-field:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.1.1
   preparse-field:
     enabled: '1'
     licenseKey: null
@@ -4342,7 +4380,7 @@ sections:
                     required: false
                     sortOrder: 1
                   164fe93f-d610-4819-8ca4-77cc4a88112e:
-                    required: false
+                    required: true
                     sortOrder: 2
                   534ba9ca-50bd-4b63-a843-b3358f1bc352:
                     required: false
@@ -4364,9 +4402,12 @@ sections:
                 sortOrder: 2
               -
                 fields:
+                  3455bcb3-f959-4b7a-a64d-b0138268b594:
+                    required: true
+                    sortOrder: 1
                   5cb734ab-4ba5-4bae-ad23-abd5de1daf4c:
                     required: false
-                    sortOrder: 1
+                    sortOrder: 2
                 name: Reviews
                 sortOrder: 3
               -
@@ -4386,7 +4427,7 @@ sections:
         titleFormat: ''
         titleLabel: Title
     handle: packages
-    name: Packages
+    name: 'Taskbook Packages'
     previewTargets:
       -
         __assoc__:
@@ -4398,14 +4439,14 @@ sections:
             - '{url}'
           -
             - refresh
-            - '1'
+            - ''
     propagationMethod: all
     siteSettings:
       47b102e1-4aed-4206-8420-dfd6e6684f7c:
         enabledByDefault: true
-        hasUrls: true
-        template: ''
-        uriFormat: 'packages/{slug}'
+        hasUrls: false
+        template: null
+        uriFormat: ''
     type: channel
   1d590683-b16e-4955-be62-315accb3e628:
     enableVersioning: false
@@ -4953,6 +4994,48 @@ sections:
         template: null
         uriFormat: null
     type: channel
+  c0a51ffd-8054-40a9-824f-32657b83f14c:
+    enableVersioning: true
+    entryTypes:
+      d1813da3-56a4-441b-84ad-2a2bc2a9ab36:
+        fieldLayouts:
+          c4b22db3-609f-427d-b427-8b75e7bc7161:
+            tabs:
+              -
+                fields:
+                  31c31961-f4f1-4f09-9c8e-cbbd46d62e97:
+                    required: false
+                    sortOrder: 1
+                name: 'Package Workflow'
+                sortOrder: 1
+        handle: workflow
+        hasTitleField: true
+        name: Workflow
+        sortOrder: 1
+        titleFormat: ''
+        titleLabel: Title
+    handle: workflows
+    name: 'Taskbook Workflows'
+    previewTargets:
+      -
+        __assoc__:
+          -
+            - label
+            - 'Primary entry page'
+          -
+            - urlFormat
+            - '{url}'
+          -
+            - refresh
+            - '1'
+    propagationMethod: all
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: false
+        template: null
+        uriFormat: ''
+    type: channel
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     enableVersioning: false
     entryTypes:
@@ -5178,22 +5261,25 @@ superTableBlockTypes:
             fields:
               04fde5ce-7c41-4d16-9fde-711b0bb360c8:
                 required: false
-                sortOrder: 6
+                sortOrder: 7
               1292c2fb-743c-439b-ac8a-fed7ab18b685:
                 required: false
-                sortOrder: 5
+                sortOrder: 6
               338df730-70f4-4575-99b8-bc3374348734:
                 required: false
-                sortOrder: 2
+                sortOrder: 3
               560ff052-c964-4838-855c-75d5dd11a2eb:
                 required: false
-                sortOrder: 3
+                sortOrder: 4
               7820fc2f-23ff-4f94-8253-558119a25d40:
+                required: false
+                sortOrder: 2
+              8c4c8131-af05-49d5-91b9-c8d9eb756f8a:
                 required: false
                 sortOrder: 1
               8ca46d62-8d48-439a-af12-51a2cfa7481e:
                 required: false
-                sortOrder: 4
+                sortOrder: 5
             name: Content
             sortOrder: 1
     fields:
@@ -5301,6 +5387,24 @@ superTableBlockTypes:
         handle: reviewStepName
         instructions: ''
         name: 'Review Step Name'
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
+      8c4c8131-af05-49d5-91b9-c8d9eb756f8a:
+        contentColumnType: text
+        fieldGroup: null
+        handle: reviewStepId
+        instructions: ''
+        name: 'Review Step ID'
         searchable: true
         settings:
           byteLimit: null
@@ -5795,22 +5899,25 @@ superTableBlockTypes:
             fields:
               43c2a918-aa04-4759-bf4e-df7f7a51578a:
                 required: false
-                sortOrder: 5
+                sortOrder: 6
               703cc741-3177-4d42-88f9-c3c0f4ce9249:
                 required: false
-                sortOrder: 3
+                sortOrder: 4
               8baba5fc-1c81-4b6d-a597-453862005a68:
                 required: true
-                sortOrder: 1
+                sortOrder: 2
               b893071b-6c51-4812-b88c-dd1f60840ff5:
                 required: false
-                sortOrder: 2
+                sortOrder: 3
               c344533c-3fba-4da5-9c4c-b04d1470eaf9:
                 required: false
-                sortOrder: 6
+                sortOrder: 7
+              d4afcfe1-1ba1-4435-8a39-88a785af7535:
+                required: false
+                sortOrder: 1
               f5f4282b-109d-4b80-a44f-78c73c254b37:
                 required: false
-                sortOrder: 4
+                sortOrder: 5
             name: Content
             sortOrder: 1
     fields:
@@ -6025,6 +6132,26 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Categories
+      d4afcfe1-1ba1-4435-8a39-88a785af7535:
+        contentColumnType: text
+        fieldGroup: null
+        handle: stepId
+        instructions: ''
+        name: 'Step ID'
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          mode: disabled
+          modeOverride: '{{ not element.id ? ''hidden'' : ''disabled'' }}'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: mmikkel\incognitofield\fields\IncognitoFieldType
       f5f4282b-109d-4b80-a44f-78c73c254b37:
         contentColumnType: string
         fieldGroup: null

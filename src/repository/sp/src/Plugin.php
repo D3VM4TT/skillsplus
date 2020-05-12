@@ -59,6 +59,7 @@ class Plugin extends BasePlugin
     private $sectionIdResults   = 10;
     private $sectionIdAttempts  = 12;
     private $sectionIdPackages  = 15;
+    private $sectionIdWorkflows = 16;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -153,20 +154,6 @@ class Plugin extends BasePlugin
         );
 
         Event::on(
-            Element::class,
-            Element::EVENT_BEFORE_SAVE,
-            function (ModelEvent $event) {
-                if (Craft::$app->request->isConsoleRequest) {
-                    return;
-                }
-                $element = $event->sender;
-                if (get_class($element) == 'craft\elements\GlobalSet' && $element->handle == 'globalsPackage') {
-                    Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $element);
-                }
-            }
-        );
-
-        Event::on(
             Entry::class,
             Entry::EVENT_BEFORE_SAVE,
             function (ModelEvent $event) {
@@ -189,6 +176,8 @@ class Plugin extends BasePlugin
                     Lantra::$app->structure->onBeforeSaveCompany($event, $entry);
                 } elseif ($entry->sectionId == $this->sectionIdPackages)
                     Lantra::$app->packages->onBeforeSavePackage($event, $entry);
+                elseif ($entry->sectionId == $this->sectionIdWorkflows)
+                    Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $entry);
             }
         );
 
@@ -216,6 +205,8 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->addUnitColumn($entry->id);
                 } elseif ($entry->sectionId == $this->sectionIdPackages) {
                     Lantra::$app->packages->onSavePackage($event, $entry);
+                } elseif ($entry->sectionId == $this->sectionIdWorkflows) {
+                    Lantra::$app->packages->onSavePackageWorkflow($event, $entry);
                 }
         });
 

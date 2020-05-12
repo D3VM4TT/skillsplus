@@ -22,9 +22,9 @@ class Packages extends Component
 {
     /**
      * @param ModelEvent $event
-     * @param GlobalSet $globalSet
+     * @param Entry $entry
      */
-    public function onBeforeSavePackageWorkflow(ModelEvent $event, GlobalSet $globalSet)
+    public function onBeforeSavePackageWorkflow(ModelEvent $event, Entry $entry)
     {
         ## check steps in order assessment -> review -> complete
         $assessment = false;
@@ -32,7 +32,7 @@ class Packages extends Component
         $complete = false;
         $error = false;
 
-        foreach($globalSet->packageWorkflow as $step) {
+        foreach ($entry->workflow as $step) {
             if ($step->stepType->value == 'assessment') {
                 $assessment = true;
                 if ($review || $complete) {
@@ -55,7 +55,7 @@ class Packages extends Component
                 $complete = true;
             }
             if ($step->stepUserGroup == 'jobRole' && !$step->stepJobRole->count()) {
-                $step->addError('stepJobRole',  'Job role(s) required.');
+                $step->addError('stepJobRole', 'Job role(s) required.');
                 $event->isValid = false;
             }
             if ($step->stepAssignUserGroup == 'jobRole' && !$step->stepAssignJobRole->count()) {
@@ -68,7 +68,7 @@ class Packages extends Component
             $event->isValid = false;
         }
         if ($error) {
-            $globalSet->addError('packageWorkflow', $error);
+            $entry->addError('workflow', $error);
         }
     }
 
@@ -120,22 +120,21 @@ class Packages extends Component
     public function onSavePackage(ModelEvent $event, Entry $entry)
     {
         if ($event->isNew) {
-            ## add package workflow from globals
-            if (null != $packageWorkflow = $this->getPackageWorkflow()) {
-                $field = Craft::$app->fields->getFieldByHandle('packageReviews');
-                $sp = new SuperTableService();
-                $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-                foreach ($packageWorkflow as $step) {
-                    $review = new SuperTableBlockElement();
-                    $review->ownerId = $entry->id;
-                    $review->typeId = $stepBlockType->id;
-                    $review->fieldId = $field->id;
-                    $review->setFieldValue('reviewStepName', $step->stepName);
-                    $review->setFieldValue('reviewStepType', $step->stepType);
-                    Craft::$app->elements->saveElement($review);
-                }
+            $packageWorkflow = $entry->packageWorkflow->one()->workflow;
+            $field = Craft::$app->fields->getFieldByHandle('packageReviews');
+            $sp = new SuperTableService();
+            $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+            foreach ($packageWorkflow as $step) {
+                $review = new SuperTableBlockElement();
+                $review->ownerId = $entry->id;
+                $review->typeId = $stepBlockType->id;
+                $review->fieldId = $field->id;
+                $review->setFieldValue('reviewStepId', $step->stepId);
+                $review->setFieldValue('reviewStepName', $step->stepName);
+                $review->setFieldValue('reviewStepType', $step->stepType);
+                Craft::$app->elements->saveElement($review);
             }
-            $this->log($entry, 'Package created');
+            # $this->log($entry, 'Package created');
             ## redirect to paypal payment
             if (Craft::$app->request->isSiteRequest && !$entry->packagePaid) {
                 ## @todo redirect to PayPal
@@ -144,26 +143,23 @@ class Packages extends Component
     }
 
     /**
-     * @return \verbb\supertable\elements\db\SuperTableBlockQuery
+     * @param ModelEvent $event
+     * @param Entry $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    public function getPackageWorkflow()
+    public function onSavePackageWorkflow(ModelEvent $event, Entry $entry)
     {
-        $globalsSet = Craft::$app->globals->getSetByHandle('globalsPackage');
-        return $globalsSet->packageWorkflow;
-    }
-
-    /**
-     * @return \verbb\supertable\elements\db\SuperTableBlockQuery
-     */
-    public function getPackageWorkflowStep($type)
-    {
-        $packagesWorkflow = $this->getPackageWorkflow();
-        foreach($packagesWorkflow as $step) {
-            if ($step->stepType == $type) {
-                return $step;
+        $s = 1;
+        foreach ($entry->workflow as $step) {
+            if (!$step->stepId) {
+                $step->stepId =  'step-' . $s;
+                $step->setFieldValue('stepId', 'step-' . $s);
+                $s++;
+                Craft::$app->elements->saveElement($step);
             }
         }
-        return null;
     }
 
     /**
@@ -178,7 +174,7 @@ class Packages extends Component
     public function _onSavePackage($package, $changed)
     {
         if ($changed['assessor']) {
-            $this->log($package, 'Assessor assigned' );
+            $this->log($package, 'Assessor assigned');
             Lantra::$app->notify->sendPackageAssigned($package, 'assessor', $package->packageAssessor->one()->fullName);
         }
         if ($changed['reviewer']) {
@@ -204,7 +200,7 @@ class Packages extends Component
         if (!$package || !$package->packageOptionalModules) {
             return null;
         }
-        foreach($package->packageOptionalModules as $row) {
+        foreach ($package->packageOptionalModules as $row) {
             if ($row->optionalModule->one()->id == $moduleId) {
                 return $row;
             }
@@ -244,11 +240,11 @@ class Packages extends Component
         }
         $user = Craft::$app->getUser()->getIdentity();
         $new = [
-            'col1'       => time(),
-            'col2'       => $message,
-            'col3'       => $admin,
-            'col4'       => $user->id,
-            'col5'       => $user->fullName
+            'col1' => time(),
+            'col2' => $message,
+            'col3' => $admin,
+            'col4' => $user->id,
+            'col5' => $user->fullName
         ];
         $packageLog = $package->packageLog;
         $packageLog['new1'] = $new;
@@ -332,14 +328,14 @@ class Packages extends Component
         }
         $modules = [
             [
-                'entry'    => $package->packageCoreModule->one(),
-                'level'    => $package->packageCoreLevel
+                'entry' => $package->packageCoreModule->one(),
+                'level' => $package->packageCoreLevel
             ]
         ];
-        foreach($package->packageOptionalModules as $optionalModuleBlock) {
+        foreach ($package->packageOptionalModules as $optionalModuleBlock) {
             $modules[] = [
-                'entry'    => $optionalModuleBlock->optionalModule->one(),
-                'level'    => $optionalModuleBlock->optionalLevel
+                'entry' => $optionalModuleBlock->optionalModule->one(),
+                'level' => $optionalModuleBlock->optionalLevel
             ];
         }
         return $modules;
@@ -408,33 +404,8 @@ class Packages extends Component
     public function unitExists($package, $unitId)
     {
         $units = $this->getPackageUnits($package);
-        foreach($units as $unit) {
+        foreach ($units as $unit) {
             if ($unit->id == $unitId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether this user has been assigned as assessor, reviewer or completer
-     *
-     * @param $subordinateId
-     * @param User|null $manager
-     * @return bool
-     */
-    public function isPackageManager($subordinateId, User $manager = null)
-    {
-        if (null == $user = Craft::$app->users->getUserById($subordinateId)) {
-            return false;
-        }
-        $packages = $this->getUserPackages($user, false);
-
-        if (!count($packages)) {
-            return false;
-        }
-        foreach ($packages as $package) {
-            if ($package->isManager($manager)) {
                 return true;
             }
         }
@@ -457,8 +428,7 @@ class Packages extends Component
 
         if ($assessor->admin || $assessor->isInGroup('schemeManagers')) {
             $criteria->authorId = 'not ' . $assessor->id;
-        }
-        else {
+        } else {
             $ids = $this->getRelatedPackageIds($assessor, $type);
             if (!count($ids)) {
                 return null;
@@ -478,15 +448,37 @@ class Packages extends Component
     {
         $supertableService = new SuperTableService();
         $params = [
-            'elementType'   => 'craft\\elements\\Entry',
-            'relatedTo'     => [
+            'elementType' => 'craft\\elements\\Entry',
+            'relatedTo' => [
                 'targetElement' => $assessor->id,
-                'field'         => 'packageReviews.reviewUser'
+                'field' => 'packageReviews.reviewUser'
             ]];
         if ($type) {
             $params['criteria']['reviewStepType'] = $type;
         }
         $query = $supertableService->getRelatedElementsQuery($params);
         return $query ? $query->ids() : [];
+    }
+
+    /**
+     * @param SuperTableBlockElement $step
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
+     */
+    public function getStepManagers(SuperTableBlockElement $step)
+    {
+        $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId);
+        if (!$packageWorkflowStep) {
+            return null;
+        }
+
+        $criteria = User::find();
+        if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
+            $criteria->relatedTo = ['sourceElement' => $packageWorkflowStep->stepJobRole, 'field' => 'stepJobRole'];
+        } else {
+
+            $criteria->group = $packageWorkflowStep->stepUserGroup;
+        }
+        $criteria->limit = null;
+        return $criteria;
     }
 }

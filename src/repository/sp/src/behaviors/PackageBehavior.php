@@ -132,7 +132,7 @@ class PackageBehavior extends Behavior
             return true;
         }
         ## run through job roles
-        $packageWorkflowStep = Lantra::$app->packages->getPackageWorkflowStep($step->reviewStepType);
+        $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId);
         if ($packageWorkflowStep->stepAssignUserGroup == 'jobRole') {
             foreach ($packageWorkflowStep->stepAssignJobRole as $role) {
                 if (in_array($role->id, $user->userRole->ids())) {
@@ -143,6 +143,29 @@ class PackageBehavior extends Behavior
         }
         ## check user group
         return $user->isInGroup($packageWorkflowStep->stepAssignUserGroup);
+    }
+
+    /**
+     * @param $stepId
+     * @return mixed|null
+     */
+    public function getPackageWorkflowStep($stepId)
+    {
+        $packagesWorkflow = $this->getWorkflow();
+        foreach($packagesWorkflow as $step) {
+            if ($step->stepId == $stepId) {
+                return $step;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     */
+    public function getWorkflow()
+    {
+        return $this->owner->packageWorkflow->one()->workflow;
     }
 
     /**

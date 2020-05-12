@@ -25,13 +25,15 @@
         {{ csrfInput() }}
         {{ actionInput('sp/users/update-package') }}
         <input type="hidden" name="packageId" value="{{ package.id }}">
-        {% if package.canAssign() %}
-            <label>Assigned Managers</label>
+
+            <label>Reviews</label>
             <table class="data">
                 <thead>
                     <tr>
                         <th>Step</th>
                         <th>Manager</th>
+                        <th>Result</th>
+                        <th>Comment</th>
                     </tr>
                 </thead>
             {% for step in package.packageReviews %}
@@ -39,19 +41,37 @@
                 <tr>
                     <td>{{ step.reviewStepName }}</td>
                     <td>
-                        {% set userCompanyManagers = craft.users.group('companyManagers').limit(null).orderBy('lastName') %}
-                        <select name="step[{{ step.id }}][manager]">
-                            <option value="">Select Manager:</option>
-                            {% for cm in userCompanyManagers %}
-                                <option value="{{ cm.id }}"{% if step.reviewUser and step.reviewUser.id == cm.id %} selected{% endif %}>{{ cm.fullname }}</option>
-                            {% endfor %}
+                        {% if package.canAssignStep(step) %}
+                            {% set stepManagers = craft.lantra.getStepManagers(step.id) %}
+                            {% if stepManagers %}
+                            <select name="step[{{ step.id }}][manager]">
+                                <option value="">Select Manager:</option>
+                                {% for m in stepManagers %}
+                                    <option value="{{ m.id }}"{% if step.reviewUser and step.reviewUser.id == m.id %} selected{% endif %}>{{ m.fullname }}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                                <span style="color:red">Invalid</span>
+                            {% endif %}
+                        {% elseif step.reviewUser.count %}
+                            {{ reviewUser.one.fullname }}
+                         {% else %}
+                             Unassigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        <select id="stepPassed{{ step.id }}" name="step[{{ step.id }}][stepPassed]">
+                            <option value="passed" >Passed</option>
+                            <option value="failed" >Failed</option>
                         </select>
+                    </td>
+                    <td>
+                        <textarea id="stepComment{{ step.id }}" name="step[{{ step.id }}][stepPassed]"></textarea>
                     </td>
                 </tr>
                 {% endif %}
             {% endfor %}
             </table>
-        {% endif %}
 
         <div class="field--wrapper">
             <label for="packageStatus" class="">Status:</label>
@@ -62,23 +82,6 @@
                 <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
             </select>
         </div>
-
-        {% for step in package.packageReviews %}
-            {% if step.reviewUser.count and package.isReviewUser(currentUser, step, true) %}
-                <h3>{{ step.reviewStepName }} - {{ step.reviewUser.one.fullName }}</h3>
-                <div class="field--wrapper">
-                    <label for="stepComment{{ step.id }}" class="">Comment:</label>
-                    <textarea id="stepComment{{ step.id }}" name="step[{{ step.id }}][stepPassed]"></textarea>
-                </div>
-                <div class="field--wrapper">
-                    <label for="stepPassed{{ step.id }}" class="">Result:</label>
-                    <select id="stepPassed{{ step.id }}" name="step[{{ step.id }}][stepPassed]">
-                        <option value="passed" >Passed</option>
-                        <option value="failed" >Failed</option>
-                    </select>
-                </div>
-            {% endif %}
-        {% endfor %}
 
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Update package</button>
