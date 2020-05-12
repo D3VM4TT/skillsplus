@@ -1,5 +1,4 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set existingResultIds = [] %}
 {% set isManager = false %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
 {% if cpdUser.id != currentUser.id %}
@@ -9,8 +8,10 @@
 
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}
 
+{% set recordResultIds = craft.lantra.recordResults(cpdUser.id, 'ids') %}
+{% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').id('and, not ' ~ recordResultIds|join(', not ')) %}
+
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
-    {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired') %}
     <div id="job-role-cpd">
         {% if not cpdUser.userRole.count %}
         <h2>Job Role</h2>
@@ -28,11 +29,6 @@
             {% for role in cpdUser.userRole.all() %}
                 {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
             {% endfor %}
-            {% if existingResultIds|length %}
-                {# get all the results no longer related to existing job role #}
-                {% set existingResultIdsString = existingResultIds | join(', not ') %}
-                {% set resultArchive = craft.entries.section('results').type('userResult', 'unitResult').authorId(cpdUser.id).status('live, expired').id('and, not ' ~ existingResultIdsString) %}
-            {% endif %}
         {% endif %}
     </div>
     {% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
