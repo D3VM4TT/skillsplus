@@ -156,12 +156,17 @@ class Cycle extends Model
      */
     public function setCycles()
     {
+        ## ignore future start dates
+        $now = new \DateTime();
+        if ($this->_cycleStartDate > $now) {
+            return $this;
+        }
         $count = 1;
         $cycle = new CyclePeriod($this->_cycleStartDate, $this->_cycleDuration, $this->_cycleGrace, $count);
         $this->_cycles[$count] = $cycle;
         while (!$cycle->isCurrent()) {
             # emergency break?
-            if ($count == 200) {
+            if ($count == 20) {
                 break;
             }
             $count++;
