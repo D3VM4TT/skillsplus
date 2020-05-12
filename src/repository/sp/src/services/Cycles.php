@@ -56,6 +56,9 @@ class Cycles extends Component
         $cycles = CycleHelper::getModuleCycles($moduleEntry);
         $results = [];
         foreach ($cycles as $cycle) {
+            if ($cycle->isFuture()) {
+                continue;
+            }
             $result = $this->getCycleResult($userId, $moduleId, $cycle);
             if (!$result && $cycle->isActive()) {
                 $postDate = $cycle->startDate;
