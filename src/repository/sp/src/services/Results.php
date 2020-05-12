@@ -55,20 +55,20 @@ class Results extends Component
             if ($moduleEntry->type == 'cpd') {
                 if (!$entry->cycleName) {
                     $cycle = CycleHelper::getResultCycle($entry);
-                    $entry->cycleName = $cycle->name;
-                    $entry->cycleStartDate = $cycle->startDate;
-                    $entry->cycleFinishDate = $cycle->finishDate;
+                    $entry->setFieldValue('cycleName', $cycle->name);
+                    $entry->setFieldValue('cycleStartDate', $cycle->startDate);
+                    $entry->setFieldValue('cycleFinishDate', $cycle->finishDate);
                 }
             }
         }
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
             ## set result owner as user
             if (!$entry->resultOwner) {
-                $entry->resultOwner = [$userId];
+                $entry->setFieldValue('resultOwner', [$userId]);
             }
             ## copy manager endorsement level from unit for submitted evidence
             if ($entry->resultEvidence && $entry->type == 'unitResult' && $unitEntry) {
-                $entry->unitEndorsementManagerLevel = $unitEntry->unitEndorsementManagerLevel;
+                $entry->setFieldValue('unitEndorsementManagerLevel', $unitEntry->unitEndorsementManagerLevel);
             }
             ## set author
             $author = null;
