@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d400654bc2e7a3d97c071d6a0eee1d0b",
+    "content-hash": "ed334c6a912d07ffa33bd85959d3aee7",
     "packages": [
         {
             "name": "aelvan/preparse-field",
@@ -126,11 +126,6 @@
                 "ext-pcre": "*",
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8",
-                "psr/log": "^1.0",
-                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0"
-            },
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -142,7 +137,6 @@
                     "Composer\\CaBundle\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -498,7 +492,6 @@
                     "craft\\composer\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -872,11 +865,6 @@
                 "guzzlehttp/psr7": "^1.6.1",
                 "php": ">=5.5"
             },
-            "require-dev": {
-                "ext-curl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
-                "psr/log": "^1.1"
-            },
             "suggest": {
                 "ext-intl": "Required for Internationalized Domain Name (IDN) support",
                 "psr/log": "Required for using the Log middleware"
@@ -895,7 +883,6 @@
                     "src/functions_include.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2532,6 +2519,56 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
+            "name": "robuust/craft-reverserelations",
+            "version": "1.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robuust/craft-reverserelations/zipball/a8371f201e18ca74534a558bda3f4ecda90cb817",
+                "reference": "a8371f201e18ca74534a558bda3f4ecda90cb817",
+                "shasum": ""
+            },
+            "require": {
+                "craftcms/cms": "^3.1",
+                "php": "^7.0"
+            },
+            "type": "craft-plugin",
+            "extra": {
+                "schemaVersion": "1.0.1",
+                "handle": "reverserelations",
+                "name": "Reverse Relations",
+                "developer": "Robuust",
+                "developerUrl": "https://robuust.digital",
+                "documentationUrl": "https://github.com/robuust/craft-reverserelations/blob/master/README.md",
+                "changelogUrl": "https://github.com/robuust/craft-reverserelations/blob/master/CHANGELOG.md",
+                "downloadUrl": "https://github.com/robuust/craft-reverserelations/releases/latest",
+                "hasSettings": false,
+                "hasCpSection": false
+            },
+            "autoload": {
+                "psr-4": {
+                    "robuust\\reverserelations\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bob Olde Hampsink",
+                    "email": "bob@robuust.digital"
+                },
+                {
+                    "name": "Maarten de Graaf",
+                    "email": "wiejeben@gmail.com"
+                }
+            ],
+            "description": "Reverse Relations for Craft 3",
+            "support": {
+                "email": "bob@robuust.digital"
+            },
+            "time": "2020-05-08T13:54:58+00:00"
+        },
+        {
             "name": "seld/cli-prompt",
             "version": "1.0.3",
             "dist": {
@@ -2586,9 +2623,6 @@
             "require": {
                 "php": "^5.3 || ^7.0"
             },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
-            },
             "bin": [
                 "bin/jsonlint"
             ],
@@ -2598,7 +2632,6 @@
                     "Seld\\JsonLint\\": "src/Seld/JsonLint/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4346,10 +4379,6 @@
             "require": {
                 "composer-plugin-api": "^1.0"
             },
-            "require-dev": {
-                "composer/composer": "^1.0",
-                "phpunit/phpunit": "<7"
-            },
             "type": "composer-plugin",
             "extra": {
                 "class": "yii\\composer\\Plugin",
@@ -4362,7 +4391,6 @@
                     "yii\\composer\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
