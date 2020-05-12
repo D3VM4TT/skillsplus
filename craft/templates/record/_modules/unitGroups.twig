@@ -139,7 +139,7 @@
                     <tbody>
                     {% for userResultEntry in moduleUserResults.all %}
                         {% set rowTitle = userResultEntry.title %}
-                        {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/result' ~ userResultEntry.id %}
+                        {% set editUrl = '/cpd/' ~ cpdUser.id ~ '/result/' ~ userResultEntry.id %}
                         {% set unitType = 'evidence' %}
                         {% set unitPoints = userResultEntry.unitPoints %}
                         {% include 'record/_modules/row' with {
