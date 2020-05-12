@@ -79,8 +79,6 @@
                                     {% set rowTitle = loop.first ? rowName : '' %}
                                     {% set editLink = resultUrl %}
                                 {% endif %}
-                                {# remember all result ids so as to get user results below #}
-                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                                 {% include 'record/_modules/row' with {
                                     resultEntry: unitResultEntry,
                                     rowClass: rowClass,
@@ -102,8 +100,6 @@
                             {% set unitResultEntry = null %}
                             {% if hasResult %}
                                 {% set unitResultEntry = resultQuery.one() %}
-                                {# remember all result ids so as to get user results below #}
-                                {% set existingResultIds = existingResultIds|merge([unitResultEntry.id]) %}
                             {% endif %}
                             {% include 'record/_modules/row' with {
                                 resultEntry: unitResultEntry,
@@ -122,7 +118,6 @@
     {# get user results related to module #}
     {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
     {% if moduleUserResults|length %}
-        {% set existingResultIds = existingResultIds|merge(moduleUserResults.ids()) %}
         <div class="unit-group">
             <div class="header" data-target="#u{{ moduleElementId }}-user">
                 <h5>My Achievements</h5>

@@ -22,6 +22,31 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param int $userId
+     * @param string $return
+     * @return array
+     */
+    public function recordResults($userId = null, $return = 'results')
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        $results = [];
+        foreach($user->userRole->all() as $jobRole) {
+            $jobRoleResults = Lantra::$app->results->getJobRoleUserResults($jobRole->id, $user->id);
+            $results = array_merge($results, $jobRoleResults);
+        }
+        if ($return == 'results') {
+            return $results;
+        }
+        $ids = [];
+        foreach ($results as $result) {
+            $ids[] = $result->id;
+        }
+        return $ids;
+    }
+
+    /**
+
+    /**
      * @param SuperTableBlockElement $step
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
      */
