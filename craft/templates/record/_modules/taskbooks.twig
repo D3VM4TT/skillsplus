@@ -51,11 +51,13 @@
                                     <h4>Reviews</h4>
                                 </a>
                             </li>
+                            {% if package.packageLog|length %}
                             <li>
                                 <a href="#tab{{ package.id }}log" class="primary-bg">
                                     <h4>Log</h4>
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
@@ -89,9 +91,11 @@
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                             {% include '_includes/packageReviews' with {admin:false} %}
                         </div>
+                        {% if package.packageLog|length %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                             {% include '_includes/packageLog' with {admin:false} %}
                         </div>
+                        {% endif %}
                     </section>
                 </div>
             </div>

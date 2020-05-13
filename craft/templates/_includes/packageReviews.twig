@@ -16,9 +16,9 @@
             {% set user = step.reviewUser ? step.reviewUser.one %}
             <tr>
                 <td>{{ step.reviewStepName }}</td>
-                <td>{{ step.reviewDate ? (step.reviewPassed ? 'yes' : 'no') : '' }}</td>
-                <td>{{ step.reviewDate ? step.reviewDate|date('d/m/y') }}</td>
+                <td>{{ step.reviewDate ? (step.reviewPassed ? 'Yes' : 'No') : '' }}</td>
                 <th>{{ step.reviewComment }}</th>
+                <td>{{ step.reviewDate ? step.reviewDate|date('d/m/y') }}</td>
                 {% if admin %}
                     <td>{{ user ? user.fullName }}</td>
                 {% endif %}

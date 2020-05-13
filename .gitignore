@@ -1,6 +1,6 @@
 # Craft 3  #
 ###################
-html/assets/uploads/*
+html/assets/uploads
 src/dev/*
 craft/storage/*
 craft/.env

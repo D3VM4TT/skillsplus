@@ -233,6 +233,40 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param SuperTableBlockElement $step
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
+     */
+    public function getStepManagers(SuperTableBlockElement $step)
+    {
+        $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId);
+        if (!$packageWorkflowStep) {
+            return null;
+        }
+
+        $criteria = User::find();
+        if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
+            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->one()->id, 'field' => 'userRole'];
+        } else {
+            $criteria->group = $packageWorkflowStep->stepUserGroup;
+        }
+        $criteria->limit = null;
+        return $criteria;
+    }
+
+    /**
+     *
+     */
+    public function getNextStep()
+    {
+        foreach($this->owner->packageReviews as $step) {
+            if ($step->reviewUser->count() && !$step->reviewDate) {
+                return $step;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete

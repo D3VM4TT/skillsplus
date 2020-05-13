@@ -1,6 +1,5 @@
 {% requireLogin %}
 
-
 {% set account = currentUser %}
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}

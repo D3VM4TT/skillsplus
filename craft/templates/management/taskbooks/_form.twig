@@ -25,63 +25,58 @@
         {{ csrfInput() }}
         {{ actionInput('sp/users/update-package') }}
         <input type="hidden" name="packageId" value="{{ package.id }}">
-
-            <label>Reviews</label>
-            <table class="data">
-                <thead>
-                    <tr>
-                        <th>Step</th>
-                        <th>Manager</th>
-                        <th>Result</th>
-                        <th>Comment</th>
-                    </tr>
-                </thead>
-            {% for step in package.packageReviews %}
-                {% if package.canAssignStep(step) %}
+        <h2>Assign Managers</h2>
+        <table class="data">
+            <thead>
                 <tr>
-                    <td>{{ step.reviewStepName }}</td>
-                    <td>
-                        {% if package.canAssignStep(step) %}
-                            {% set stepManagers = craft.lantra.getStepManagers(step.id) %}
-                            {% if stepManagers %}
-                            <select name="step[{{ step.id }}][manager]">
+                    <th>Step</th>
+                    <th>Manager</th>
+                </tr>
+            </thead>
+        {% for step in package.packageReviews %}
+            {% if package.canAssignStep(step) %}
+            <tr>
+                <td>{{ step.reviewStepName }}</td>
+                <td>
+                    {% if package.canAssignStep(step) and not step.reviewDate %}
+                        {% set stepManagers = package.getStepManagers(step) %}
+                        {% if stepManagers %}
+                            <select name="steps[{{ step.id }}][manager]">
                                 <option value="">Select Manager:</option>
                                 {% for m in stepManagers %}
-                                    <option value="{{ m.id }}"{% if step.reviewUser and step.reviewUser.id == m.id %} selected{% endif %}>{{ m.fullname }}</option>
+                                    <option value="{{ m.id }}"{% if step.reviewUser.count and step.reviewUser.one.id == m.id %} selected{% endif %}>{{ m.fullname }}</option>
                                 {% endfor %}
                             </select>
-                            {% else %}
-                                <span style="color:red">Invalid</span>
-                            {% endif %}
-                        {% elseif step.reviewUser.count %}
-                            {{ reviewUser.one.fullname }}
-                         {% else %}
-                             Unassigned
+                        {% else %}
+                            <span style="color:red">Invalid</span>
                         {% endif %}
-                    </td>
-                    <td>
-                        <select id="stepPassed{{ step.id }}" name="step[{{ step.id }}][stepPassed]">
-                            <option value="passed" >Passed</option>
-                            <option value="failed" >Failed</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea id="stepComment{{ step.id }}" name="step[{{ step.id }}][stepPassed]"></textarea>
-                    </td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-            </table>
+                    {% elseif step.reviewUser.count %}
+                        {{ step.reviewUser.one.fullname }} - {{ step.reviewDate|date('d/m/y') }} - {{ step.reviewPassed ? 'Passed' : 'Failed' }}
+                     {% else %}
+                         Unassigned
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
 
-        <div class="field--wrapper">
-            <label for="packageStatus" class="">Status:</label>
-            <select name="packageStatus">
-                <option value="active"{% if package.packageStatus == 'active' %} selected{% endif %}>Active</option>
-                <option value="assessed"{% if package.packageStatus == 'assessed' %} selected{% endif %}>Assessed</option>
-                <option value="reviewed"{% if package.packageStatus == 'reviewed' %} selected{% endif %}>Reviewed</option>
-                <option value="complete"{% if package.packageStatus == 'complete' %} selected{% endif %}>Complete</option>
-            </select>
-        </div>
+        {% set nextStep = package.nextStep %}
+        {% if nextStep and package.isReviewUser(currentUser, nextStep, true) %}
+            <h2 for="result">{{ nextStep.reviewStepName }}</h2>
+            <div class="field--wrapper">
+                <label for="result">Result:</label>
+                <select id="result" name="steps[{{ nextStep.id }}][result]">
+                    <option value="">Please select:</option>
+                    <option value="1">Passed</option>
+                    <option value="0">Failed</option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="comment">Comment:</label>
+                <textarea name="steps[{{ nextStep.id }}][comment]"></textarea>
+            </div>
+        {% endif %}
 
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Update package</button>

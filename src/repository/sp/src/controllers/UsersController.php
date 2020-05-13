@@ -332,48 +332,30 @@ class UsersController extends BaseController {
     {
         $this->requireLogin();
         $packageId = Craft::$app->request->getRequiredParam('packageId');
-        if (null == $package = SuperTableBlockElement::findOne($packageId)) {
+        $steps = Craft::$app->request->getRequiredParam('steps');
+        if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
             return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
         }
 
-        $oldAssessorId = $package->packageAssessor->count() ? $package->packageAssessor->one()->id : null;
-        $oldReviewerId = $package->packageReviewer->count() ? $package->packageReviewer->one()->id : null;
-        $oldStatus = $package->packageStatus;
-
-        $changed = [
-          'assessor' => false,
-          'reviewer' => false,
-          'status' => false
-        ];
-
-        $assessorId = Craft::$app->request->getParam('assessorId');
-        $reviewerId = Craft::$app->request->getParam('reviewerId');
-        $status = Craft::$app->request->getParam('packageStatus');
-        $comment = Craft::$app->request->getParam('packageComment');
-
-        if ($assessorId != $oldAssessorId) {
-            $package->setFieldValue('packageAssessor', [$assessorId]);
-            $changed['assessor'] = true;
+        foreach($package->packageReviews as $step) {
+            if (isset($steps[$step->id])) {
+                $data = $steps[$step->id];
+                if (isset($data['manager'])) {
+                    Lantra::$app->packages->stepAssign($step, $data['manager']);
+                }
+                if (isset($data['result']) && $data['result'] !== '') {
+                    $package->setFieldValue('packageStatus', $step->reviewStepType);
+                    Lantra::$app->packages->stepUpdate($step, $data['result'] == '1', $data['comment']);
+                }
+            }
         }
-        if ($reviewerId != $oldReviewerId) {
-            $package->setFieldValue('packageReviewer', [$reviewerId]);
-            $changed['reviewer'] = true;
-        }
-        if ($status != $oldStatus) {
-            $package->setFieldValue('packageStatus', $status);
-            $changed['status'] = true;
-        }
+
 
         if (!Craft::$app->elements->saveElement($package)) {
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
 
-        if ($comment) {
-            Lantra::$app->packages->addComment($package, $comment);
-        }
-
-        Lantra::$app->packages->onSavePackage($package, $changed);
-        $redirect = '/cpd/' . $package->owner->id;
+        $redirect = '/cpd/' . $package->authorId;
         $this->_returnMessage('Package has been updated', true, $redirect);
     }
 

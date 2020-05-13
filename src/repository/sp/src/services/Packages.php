@@ -85,6 +85,11 @@ class Packages extends Component
             $event->isValid = false;
             return;
         }
+        if ($coreModule->type->name != 'Taskbook' || !$coreModule->moduleCoreModule) {
+            $entry->addError('packageCoreModule', 'You must select a Taskbook type core module.');
+            $event->isValid = false;
+        }
+
         $entry->title = '[' . $coreModule->title . '] ' . $entry->author->fullname;
         $totalOptional = $entry->packageOptionalModules ? $entry->packageOptionalModules->count() : 0;
 
@@ -104,6 +109,9 @@ class Packages extends Component
             }
         }
         $entry->setFieldValue('packageCost', $cost);
+
+        ## make sure log is clear
+        $entry->setFieldValue('packageLog', []);
 
         ## package is free
         if (!$cost) {
@@ -133,11 +141,11 @@ class Packages extends Component
     public function onSavePackage(ModelEvent $event, Entry $entry)
     {
         if ($event->isNew) {
-            # $this->log($entry, 'Package created');
             ## redirect to paypal payment
             if (Craft::$app->request->isSiteRequest && !$entry->packagePaid) {
                 ## @todo redirect to PayPal
-            }        }
+            }
+        }
 
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
@@ -226,6 +234,39 @@ class Packages extends Component
     }
 
     /**
+     * @param SuperTableBlockElement $step
+     * @param $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function stepAssign(SuperTableBlockElement $step, $userId)
+    {
+        ## already assigned
+        if ($step->reviewUser->count() && $step->reviewUser->one()->id == $userId) {
+            return;
+        }
+        $step->setFieldValue('reviewUser', [$userId]);
+        Craft::$app->elements->saveElement($step);
+    }
+
+    /**
+     * @param SuperTableBlockElement $step
+     * @param $passed
+     * @param string $comment
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function stepUpdate(SuperTableBlockElement $step, $passed, $comment = '')
+    {
+        $step->setFieldValue('reviewPassed', $passed);
+        $step->setFieldValue('reviewComment', $comment);
+        $step->setFieldValue('reviewDate', time());
+        Craft::$app->elements->saveElement($step);
+    }
+
+    /**
      * @param Entry|null $package
      * @param $moduleId
      * @return mixed|null
@@ -241,50 +282,6 @@ class Packages extends Component
             }
         }
         return null;
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param $package
-     * @param $comment
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     */
-    public function addComment($package, $comment)
-    {
-        Lantra::$app->packages->log($package, 'Comment: ' . $comment);
-        Lantra::$app->notify->sendPackageComment($package, $comment);
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param $package
-     * @param $message
-     * @return bool
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     */
-    public function log($package, $message, $admin = '')
-    {
-        if (!$message) {
-            return;
-        }
-        $user = Craft::$app->getUser()->getIdentity();
-        $new = [
-            'col1' => time(),
-            'col2' => $message,
-            'col3' => $admin,
-            'col4' => $user->id,
-            'col5' => $user->fullName
-        ];
-        $packageLog = $package->packageLog;
-        $packageLog['new1'] = $new;
-        $package->setFieldValue('packageLog', $packageLog);
-        return Craft::$app->elements->saveElement($package);
     }
 
     /**
@@ -409,7 +406,7 @@ class Packages extends Component
      */
     public function getUserPackage($packageId, $user)
     {
-        $criteria = new Entry();
+        $criteria = Entry::find();
         $criteria->id = $packageId;
         $criteria->authorId = $user->id;
         return $criteria->count() ? $criteria->one() : null;
@@ -493,27 +490,5 @@ class Packages extends Component
         }
         $query = $supertableService->getRelatedElementsQuery($params);
         return $query ? $query->ids() : [];
-    }
-
-    /**
-     * @param SuperTableBlockElement $step
-     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
-     */
-    public function getStepManagers(SuperTableBlockElement $step)
-    {
-        $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId);
-        if (!$packageWorkflowStep) {
-            return null;
-        }
-
-        $criteria = User::find();
-        if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            $criteria->relatedTo = ['sourceElement' => $packageWorkflowStep->stepJobRole, 'field' => 'stepJobRole'];
-        } else {
-
-            $criteria->group = $packageWorkflowStep->stepUserGroup;
-        }
-        $criteria->limit = null;
-        return $criteria;
     }
 }
