@@ -83,6 +83,9 @@ class Settings extends Component
         if ($key == 'schemeLogo') {
             return $settings['schemeLogo'] ? $settings['schemeLogo'][0] : null;
         }
+        if ($key == 'defaultWorkflow') {
+            return $settings['defaultWorkflow'] ? $settings['defaultWorkflow'][0] : null;
+        }
         return isset($settings[$key]) ? $settings[$key] : $default;
     }
 

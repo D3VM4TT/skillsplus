@@ -50,7 +50,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1589278205
+dateModified: 1589383762
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1380,75 +1380,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  5cb734ab-4ba5-4bae-ad23-abd5de1daf4c:
-    contentColumnType: string
-    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageReviews
-    instructions: 'The default rows are copied from with workflow when the entry is created.'
-    name: 'Package Reviews'
-    searchable: true
-    settings:
-      columns:
-        __assoc__:
-          -
-            - 8c4c8131-af05-49d5-91b9-c8d9eb756f8a
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 7820fc2f-23ff-4f94-8253-558119a25d40
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 338df730-70f4-4575-99b8-bc3374348734
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 560ff052-c964-4838-855c-75d5dd11a2eb
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 8ca46d62-8d48-439a-af12-51a2cfa7481e
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 1292c2fb-743c-439b-ac8a-fed7ab18b685
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - 04fde5ce-7c41-4d16-9fde-711b0bb360c8
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-      contentTable: '{{%stc_packagereviews}}'
-      fieldLayout: table
-      maxRows: ''
-      minRows: ''
-      propagationMethod: all
-      selectionLabel: ''
-      staticField: ''
-    translationKeyFormat: null
-    translationMethod: site
-    type: verbb\supertable\fields\SuperTableField
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -1988,6 +1919,75 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Matrix
+  7f722e30-ba1b-49e0-a5f4-e7070b600311:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageReviews
+    instructions: ''
+    name: 'Package Reviews'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - eed6767c-11d8-46d2-b3d5-47ef288cd76b
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 92d2e862-77f6-43f3-aa6e-cd75c38d424d
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - e97c33b5-d88c-43c2-a829-e12ba86c75ac
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 13071690-5bed-43f9-8afb-8c2c799eac7e
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - e927b48c-3108-4edd-a018-67e44c2989d5
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 7497821d-a351-4210-97ac-024153a093af
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - e98e5085-4cf9-46ca-818c-b71e74ed4eaa
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_packagereviews}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   8200bbc7-18f0-49da-a017-2fb3a82ee950:
     contentColumnType: string
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -4429,9 +4429,9 @@ sections:
               -
                 fields:
                   3455bcb3-f959-4b7a-a64d-b0138268b594:
-                    required: true
+                    required: false
                     sortOrder: 1
-                  5cb734ab-4ba5-4bae-ad23-abd5de1daf4c:
+                  7f722e30-ba1b-49e0-a5f4-e7070b600311:
                     required: false
                     sortOrder: 2
                 name: Reviews
@@ -5281,185 +5281,6 @@ sites:
     siteGroup: c5e418fc-d028-4dae-86d0-52f2cb163583
     sortOrder: 1
 superTableBlockTypes:
-  1e3d9e2b-eb1d-48b9-8b2a-83347098a069:
-    field: 5cb734ab-4ba5-4bae-ad23-abd5de1daf4c
-    fieldLayouts:
-      a8202799-d9a5-4030-8152-c0a62e2c3683:
-        tabs:
-          -
-            fields:
-              04fde5ce-7c41-4d16-9fde-711b0bb360c8:
-                required: false
-                sortOrder: 7
-              1292c2fb-743c-439b-ac8a-fed7ab18b685:
-                required: false
-                sortOrder: 6
-              338df730-70f4-4575-99b8-bc3374348734:
-                required: false
-                sortOrder: 3
-              560ff052-c964-4838-855c-75d5dd11a2eb:
-                required: false
-                sortOrder: 4
-              7820fc2f-23ff-4f94-8253-558119a25d40:
-                required: false
-                sortOrder: 2
-              8c4c8131-af05-49d5-91b9-c8d9eb756f8a:
-                required: false
-                sortOrder: 1
-              8ca46d62-8d48-439a-af12-51a2cfa7481e:
-                required: false
-                sortOrder: 5
-            name: Content
-            sortOrder: 1
-    fields:
-      04fde5ce-7c41-4d16-9fde-711b0bb360c8:
-        contentColumnType: text
-        fieldGroup: null
-        handle: reviewComment
-        instructions: ''
-        name: 'Review Comment'
-        searchable: true
-        settings:
-          byteLimit: null
-          charLimit: null
-          code: ''
-          columnType: null
-          initialRows: '2'
-          multiline: '1'
-          placeholder: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\PlainText
-      1292c2fb-743c-439b-ac8a-fed7ab18b685:
-        contentColumnType: boolean
-        fieldGroup: null
-        handle: reviewPassed
-        instructions: ''
-        name: 'Review Passed'
-        searchable: true
-        settings:
-          default: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Lightswitch
-      338df730-70f4-4575-99b8-bc3374348734:
-        contentColumnType: string
-        fieldGroup: null
-        handle: reviewStepType
-        instructions: ''
-        name: 'Review Step Type'
-        searchable: true
-        settings:
-          optgroups: true
-          options:
-            -
-              __assoc__:
-                -
-                  - label
-                  - Assessment
-                -
-                  - value
-                  - assessment
-                -
-                  - default
-                  - '1'
-            -
-              __assoc__:
-                -
-                  - label
-                  - Review
-                -
-                  - value
-                  - review
-                -
-                  - default
-                  - ''
-            -
-              __assoc__:
-                -
-                  - label
-                  - Complete
-                -
-                  - value
-                  - complete
-                -
-                  - default
-                  - ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Dropdown
-      560ff052-c964-4838-855c-75d5dd11a2eb:
-        contentColumnType: string
-        fieldGroup: null
-        handle: reviewUser
-        instructions: ''
-        name: 'Review User'
-        searchable: true
-        settings:
-          limit: '1'
-          localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
-            - 'group:2a75e796-1574-407e-8869-545d14d6d126'
-            - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Users
-      7820fc2f-23ff-4f94-8253-558119a25d40:
-        contentColumnType: text
-        fieldGroup: null
-        handle: reviewStepName
-        instructions: ''
-        name: 'Review Step Name'
-        searchable: true
-        settings:
-          byteLimit: null
-          charLimit: null
-          code: ''
-          columnType: null
-          initialRows: '4'
-          multiline: ''
-          placeholder: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\PlainText
-      8c4c8131-af05-49d5-91b9-c8d9eb756f8a:
-        contentColumnType: text
-        fieldGroup: null
-        handle: reviewStepId
-        instructions: ''
-        name: 'Review Step ID'
-        searchable: true
-        settings:
-          byteLimit: null
-          charLimit: null
-          code: ''
-          columnType: null
-          initialRows: '4'
-          multiline: ''
-          placeholder: ''
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\PlainText
-      8ca46d62-8d48-439a-af12-51a2cfa7481e:
-        contentColumnType: datetime
-        fieldGroup: null
-        handle: reviewDate
-        instructions: ''
-        name: 'Review Date'
-        searchable: true
-        settings:
-          minuteIncrement: '30'
-          showDate: true
-          showTime: false
-        translationKeyFormat: null
-        translationMethod: none
-        type: craft\fields\Date
   3f042657-c4b8-44de-a216-84449fa08a51:
     field: edcdcb64-8b0b-4f31-ab57-106c9e252317
     fieldLayouts:
@@ -5562,6 +5383,190 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\PlainText
+  677982c1-5077-4256-905d-8d01ee013e15:
+    field: 7f722e30-ba1b-49e0-a5f4-e7070b600311
+    fieldLayouts:
+      781d536b-9543-4153-8654-47ec0202f97c:
+        tabs:
+          -
+            fields:
+              13071690-5bed-43f9-8afb-8c2c799eac7e:
+                required: false
+                sortOrder: 4
+              7497821d-a351-4210-97ac-024153a093af:
+                required: false
+                sortOrder: 6
+              92d2e862-77f6-43f3-aa6e-cd75c38d424d:
+                required: false
+                sortOrder: 2
+              e927b48c-3108-4edd-a018-67e44c2989d5:
+                required: false
+                sortOrder: 5
+              e97c33b5-d88c-43c2-a829-e12ba86c75ac:
+                required: false
+                sortOrder: 3
+              e98e5085-4cf9-46ca-818c-b71e74ed4eaa:
+                required: false
+                sortOrder: 7
+              eed6767c-11d8-46d2-b3d5-47ef288cd76b:
+                required: false
+                sortOrder: 1
+            name: Content
+            sortOrder: 1
+    fields:
+      13071690-5bed-43f9-8afb-8c2c799eac7e:
+        contentColumnType: string
+        fieldGroup: null
+        handle: reviewUser
+        instructions: ''
+        name: 'Review User'
+        searchable: true
+        settings:
+          limit: '1'
+          localizeRelations: false
+          selectionLabel: ''
+          source: null
+          sources:
+            - admins
+            - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
+            - 'group:2a75e796-1574-407e-8869-545d14d6d126'
+            - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Users
+      7497821d-a351-4210-97ac-024153a093af:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: reviewPassed
+        instructions: ''
+        name: 'Review Passed'
+        searchable: true
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      92d2e862-77f6-43f3-aa6e-cd75c38d424d:
+        contentColumnType: text
+        fieldGroup: null
+        handle: reviewStepName
+        instructions: ''
+        name: 'Step Name'
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          mode: disabled
+          modeOverride: ''
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: mmikkel\incognitofield\fields\IncognitoFieldType
+      e927b48c-3108-4edd-a018-67e44c2989d5:
+        contentColumnType: datetime
+        fieldGroup: null
+        handle: reviewDate
+        instructions: ''
+        name: 'Review Date'
+        searchable: true
+        settings:
+          minuteIncrement: '30'
+          showDate: true
+          showTime: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Date
+      e97c33b5-d88c-43c2-a829-e12ba86c75ac:
+        contentColumnType: string
+        fieldGroup: null
+        handle: reviewStepType
+        instructions: ''
+        name: 'Step Type'
+        searchable: true
+        settings:
+          optgroups: true
+          options:
+            -
+              __assoc__:
+                -
+                  - label
+                  - Assessment
+                -
+                  - value
+                  - assessment
+                -
+                  - default
+                  - '1'
+            -
+              __assoc__:
+                -
+                  - label
+                  - Review
+                -
+                  - value
+                  - review
+                -
+                  - default
+                  - ''
+            -
+              __assoc__:
+                -
+                  - label
+                  - Complete
+                -
+                  - value
+                  - complete
+                -
+                  - default
+                  - ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Dropdown
+      e98e5085-4cf9-46ca-818c-b71e74ed4eaa:
+        contentColumnType: text
+        fieldGroup: null
+        handle: reviewComment
+        instructions: ''
+        name: 'Review Comment'
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: '1'
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
+      eed6767c-11d8-46d2-b3d5-47ef288cd76b:
+        contentColumnType: text
+        fieldGroup: null
+        handle: reviewStepId
+        instructions: ''
+        name: 'Step ID'
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          mode: disabled
+          modeOverride: ''
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: mmikkel\incognitofield\fields\IncognitoFieldType
   922f36f2-d6ec-4530-be00-d8784974eb73:
     field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
     fieldLayouts:

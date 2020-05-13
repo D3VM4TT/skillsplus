@@ -66,6 +66,8 @@ class SettingsController extends Controller
         $config['pagesSection'] = ['section:'.$pagesSection->uid];
         $companiesSection = Craft::$app->sections->getSectionByHandle('companies');
         $config['companiesSection'] = ['section:'.$companiesSection->uid];
+        $workflowsSection = Craft::$app->sections->getSectionByHandle('workflows');
+        $config['workflowsSection'] = ['section:'.$workflowsSection->uid];
         $jobRolesCategoryGroup = Craft::$app->categories->getGroupByHandle('roles');
         $config['jobRoleCategoryGroup'] = ['group:'.$jobRolesCategoryGroup->uid];
         $config['assetsElementType'] = Asset::class;

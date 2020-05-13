@@ -27,3 +27,17 @@
     name:			"disableResultCache",
     on:		        settings.disableResultCache == 1,
 }) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Workflow",
+    id:				    "defaultWorkflow",
+    name:			    "defaultWorkflow",
+    elementType:        config.entryElementType,
+    sources:            config.workflowsSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.defaultWorkflow ? settings.defaultWorkflow,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}

@@ -14,6 +14,7 @@ use craft\events\ModelEvent;
 use craft\elements\GlobalSet;
 use craft\elements\Entry;
 use craft\elements\User;
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;
@@ -80,7 +81,7 @@ class Packages extends Component
     {
         $coreModule = $entry->packageCoreModule ? $entry->packageCoreModule->one() : null;
         if (!$coreModule) {
-            $entry->addError('packageCoreModule', 'You must select a core module -TEST.');
+            $entry->addError('packageCoreModule', 'You must select a core module.');
             $event->isValid = false;
             return;
         }
@@ -108,6 +109,18 @@ class Packages extends Component
         if (!$cost) {
             $entry->setFieldValue('packagePaid', true);
         }
+
+        ## set default workflow
+        if (!$entry->packageWorkflow->count()) {
+            $defaultWorkflow = LantraHelper::setting('defaultWorkflow');
+            if (!$defaultWorkflow) {
+                $entry->addError('packageWorkflow', 'You must select a package workflow or set default workflow in settings.');
+                $event->isValid = false;
+            }
+            else {
+                $entry->setFieldValue('packageWorkflow', [$defaultWorkflow->id]);
+            }
+        }
     }
 
     /**
@@ -120,25 +133,14 @@ class Packages extends Component
     public function onSavePackage(ModelEvent $event, Entry $entry)
     {
         if ($event->isNew) {
-            $packageWorkflow = $entry->packageWorkflow->one()->workflow;
-            $field = Craft::$app->fields->getFieldByHandle('packageReviews');
-            $sp = new SuperTableService();
-            $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-            foreach ($packageWorkflow as $step) {
-                $review = new SuperTableBlockElement();
-                $review->ownerId = $entry->id;
-                $review->typeId = $stepBlockType->id;
-                $review->fieldId = $field->id;
-                $review->setFieldValue('reviewStepId', $step->stepId);
-                $review->setFieldValue('reviewStepName', $step->stepName);
-                $review->setFieldValue('reviewStepType', $step->stepType);
-                Craft::$app->elements->saveElement($review);
-            }
             # $this->log($entry, 'Package created');
             ## redirect to paypal payment
             if (Craft::$app->request->isSiteRequest && !$entry->packagePaid) {
                 ## @todo redirect to PayPal
-            }
+            }        }
+
+        if (!$entry->packageReviews->count()) {
+            $this->applyPackageWorkflow($entry);
         }
     }
 
@@ -160,6 +162,39 @@ class Packages extends Component
                 Craft::$app->elements->saveElement($step);
             }
         }
+    }
+
+    /**
+     * @param $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function applyPackageWorkflow(Entry $entry)
+    {
+        $packageWorkflow = $entry->packageWorkflow->one()->workflow;
+        if (!count($packageWorkflow)) {
+            return;
+        }
+        $sp = new SuperTableService();
+        $field = Craft::$app->fields->getFieldByHandle('packageReviews');
+        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $packageReviews = [];
+        $n = 1;
+        foreach ($packageWorkflow as $step) {
+            $packageReviews['new'.$n] = [
+                'type'      => $stepBlockType->id,
+                'enabled'   => true,
+                'fields' => [
+                    'reviewStepId'      => $step->stepId,
+                    'reviewStepName'    => $step->stepName,
+                    'reviewStepType'    => $step->stepType
+                ]
+            ];
+            $n++;
+        }
+        $entry->setFieldValues(['packageReviews' => $packageReviews]);
+        Craft::$app->elements->saveElement($entry);
     }
 
     /**

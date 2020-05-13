@@ -91,6 +91,8 @@ class Settings extends Model
     public $enableTaskbooks                     = false;
     public $enableJobRoles                      = true;
 
+    public $defaultWorkflow                     = null;
+
     public $userEditName                        = true;
     public $userEditEmail                       = true;
     public $userEditAddress                     = true;
@@ -129,7 +131,8 @@ class Settings extends Model
     private $entryFields = [
         'themeNavigationPublic',
         'themeNavigationPrivate',
-        'individualCompany'
+        'individualCompany',
+        'defaultWorkflow'
     ];
 
     private $categoryFields = [
