@@ -10,8 +10,8 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ package.coreModule.title }}</h2></div>
-                        {% if package.isManager(currentUser, true) %}
-                            <a href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
+                        {% if package.isManager(currentUser, true) and package.nextStep %}
+                            <p>{{ package.nextStep.reviewStepName }}</p>
                         {% endif %}
                     </div>
                     <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
@@ -90,6 +90,9 @@
                         </div>
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                             {% include '_includes/packageReviews' with {admin:false} %}
+                            {% if package.isManager(currentUser, true) %}
+                                <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
+                            {% endif %}
                         </div>
                         {% if package.packageLog|length %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">

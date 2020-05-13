@@ -206,31 +206,25 @@ class Packages extends Component
     }
 
     /**
-     * @param $package
-     * @param $changed
-     * @throws \Throwable
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
+     * @param $subordinateId
+     * @param User|null $manager
+     * @return bool
      */
-    public function _onSavePackage($package, $changed)
+    public function isPackageManager($subordinateId, User $manager = null)
     {
-        if ($changed['assessor']) {
-            $this->log($package, 'Assessor assigned');
-            Lantra::$app->notify->sendPackageAssigned($package, 'assessor', $package->packageAssessor->one()->fullName);
+        if (null == $user = Craft::$app->users->getUserById($subordinateId)) {
+            return false;
         }
-        if ($changed['reviewer']) {
-            $this->log($package, 'Reviewer assigned');
-            Lantra::$app->notify->sendPackageAssigned($package, 'reviewer', $package->packageReviewer->one()->fullName);
+        $packages = $this->getUserPackages($user, false);
+        if (!count($packages)) {
+            return false;
         }
-        if ($changed['status']) {
-            $this->log($package, 'Package status changed to ' . $package->packageStatus);
-            Lantra::$app->notify->sendPackageStatus($package);
-            if ($package->packageStatus == 'reviewed') {
-                Lantra::$app->notify->sendPackageReviewed($package);
+        foreach ($packages as $package) {
+            if ($package->isManager($manager)) {
+                return true;
             }
         }
+        return false;
     }
 
     /**

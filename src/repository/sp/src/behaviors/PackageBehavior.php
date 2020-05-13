@@ -142,7 +142,7 @@ class PackageBehavior extends Behavior
             return false;
         }
         ## check user group
-        return $user->isInGroup($packageWorkflowStep->stepAssignUserGroup);
+        return $manager->isInGroup($packageWorkflowStep->stepAssignUserGroup);
     }
 
     /**
