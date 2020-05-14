@@ -134,19 +134,13 @@ class Packages extends Component
     /**
      * @param ModelEvent $event
      * @param Entry $entry
+     * @return \craft\web\Response|\yii\console\Response
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
     public function onSavePackage(ModelEvent $event, Entry $entry)
     {
-        if ($event->isNew) {
-            ## redirect to paypal payment
-            if (Craft::$app->request->isSiteRequest && !$entry->packagePaid) {
-                ## @todo redirect to PayPal
-            }
-        }
-
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
         }

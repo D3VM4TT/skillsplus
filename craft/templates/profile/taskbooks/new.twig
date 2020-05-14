@@ -9,6 +9,8 @@
 
 {% set packageCoreModule = entry is defined and entry.packageCoreModule ? entry.packageCoreModule.one : null %}
 
+{% set section = craft.sections.getSectionByHandle('packages') %}
+
 {% block content %}
     <section class="page dashboard">
         <div class="page-subHeader primary-bg">
@@ -38,10 +40,9 @@
             <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
                 {{ csrfInput() }}
                 {{ actionInput('entries/save-entry') }}
-                {{ hiddenInput('sectionId', 15) }}
-                {{ hiddenInput('typeId', 20) }}
+                {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('profile/taskbooks') }}
+                {{ redirectInput('profile/taskbooks/view/{id}') }}
                 {% if coreModules|length %}
                     <div class="field--wrapper">
                         <label for="coreModule" class="no-float">Core Module:</label>
