@@ -3284,40 +3284,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Matrix
-  edcdcb64-8b0b-4f31-ab57-106c9e252317:
-    contentColumnType: string
-    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageOptionalModules
-    instructions: ''
-    name: 'Package Optional Modules'
-    searchable: true
-    settings:
-      columns:
-        __assoc__:
-          -
-            - e76e4f67-f16a-4ee8-9823-1d2f0cdf27f6
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - ace5ad19-a3ad-4ff7-be68-a5c34a960238
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-      contentTable: '{{%stc_packageoptionalmodules}}'
-      fieldLayout: table
-      maxRows: ''
-      minRows: ''
-      propagationMethod: all
-      selectionLabel: ''
-      staticField: ''
-    translationKeyFormat: null
-    translationMethod: site
-    type: verbb\supertable\fields\SuperTableField
+  
   f0039d1f-5cfd-4bf6-970e-5592f86712de:
     contentColumnType: datetime
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
