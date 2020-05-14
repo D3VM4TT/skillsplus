@@ -91,15 +91,7 @@ class Packages extends Component
         }
 
         $entry->title = '[' . $coreModule->title . '] ' . $entry->author->fullname;
-
-        $fields = Craft::$app->request->getParam('fields');
-        ## optional modules have not been created yet
-        if (isset($fields['packageOptionalModules'])) {
-            $totalOptional = count($fields['packageOptionalModules']);
-        }
-        else {
-            $totalOptional = $entry->packageOptionalModules ? $entry->packageOptionalModules->count() : 0;
-        }
+        $totalOptional = $entry->packageOptionalModules ? $entry->packageOptionalModules->count() : 0;
 
         ## check minimum optional modules
         if ($coreModule->moduleMinimumOptional && $totalOptional < $coreModule->moduleMinimumOptional) {
