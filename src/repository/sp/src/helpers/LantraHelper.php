@@ -16,13 +16,27 @@ use craft\models\VolumeFolder;
 use lantra\sp\models\Cycle;
 use craft\helpers\Assets as AssetsHelper;
 use yii\web\UploadedFile;
-
 use Yii;
+use verbb\supertable\services\SuperTableService;
 
 use lantra\sp\Plugin as Lantra;
 
 class LantraHelper
 {
+    /**
+     * @param $handle
+     * @return SuperTableBlockTypeModel|null
+     */
+    public static function spBlockType($handle)
+    {
+        if (null == $field = Craft::$app->fields->getFieldByHandle($handle)) {
+            return null;
+        }
+        $sp = new SuperTableService();
+        $blockType = $sp->getBlockTypesByFieldId($field->id);
+        return $blockType ? $blockType[0] : null;
+    }
+
     /**
      *
      * @return string

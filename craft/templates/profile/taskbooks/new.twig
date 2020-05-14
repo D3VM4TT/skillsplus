@@ -74,7 +74,8 @@
         </div>
     </section>
     <script id="input-template" type="text/template">
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][type]" value="8" />
+        {% set blocktype = craft.lantra.spBlockType('packageOptionalModules') %}
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][type]" value="{{ blocktype.id }}" />
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][enabled]" value="1" />
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalModule][]" value="{optionalModuleId}" />
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalLevel]" value="{optionalLevel}" />

@@ -22,6 +22,15 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $handle
+     * @return SuperTableBlockTypeModel|null
+     */
+    public function spBlockType($handle = null)
+    {
+        return LantraHelper::spBlockType($handle);
+    }
+
+    /**
      * @param int $userId
      * @param string $return
      * @return array
