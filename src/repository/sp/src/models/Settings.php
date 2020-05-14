@@ -77,14 +77,10 @@ class Settings extends Model
     public $notifySubjectCycleReminder          = '';
     public $notifyCycleReminder                 = '';
 
-    public $notifySubjectPackageAssigned        = '';
-    public $notifyPackageAssigned               = '';
-    public $notifySubjectPackageStatus          = '';
-    public $notifyPackageStatus                 = '';
-    public $notifySubjectPackageReviewed        = '';
-    public $notifyPackageReviewed               = '';
-    public $notifySubjectPackageComment         = '';
-    public $notifyPackageComment                = '';
+    public $notifySubjectStepAssign             = '';
+    public $notifyStepAssign                    = '';
+    public $notifySubjectStepUpdate             = '';
+    public $notifyStepUpdate                    = '';
 
     public $disableEndorsementNotify            = false;
 

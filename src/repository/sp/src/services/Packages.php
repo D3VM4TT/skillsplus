@@ -241,7 +241,9 @@ class Packages extends Component
             return;
         }
         $step->setFieldValue('reviewUser', [$userId]);
-        Craft::$app->elements->saveElement($step);
+        if (Craft::$app->elements->saveElement($step)) {
+            Lantra::$app->notify->sendStepAssign($step);
+        }
     }
 
     /**
@@ -257,7 +259,9 @@ class Packages extends Component
         $step->setFieldValue('reviewPassed', $passed);
         $step->setFieldValue('reviewComment', $comment);
         $step->setFieldValue('reviewDate', time());
-        Craft::$app->elements->saveElement($step);
+        if(Craft::$app->elements->saveElement($step)) {
+            Lantra::$app->notify->sendStepUpdate($step);
+        };
     }
 
     /**

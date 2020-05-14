@@ -24,95 +24,49 @@ use verbb\supertable\elements\SuperTableBlockElement;
 class Notify extends Component
 {
     /**
-     * @param SuperTableBlockElement $packageBlock
-     * @param string $type
-     * @return null
+     * @param SuperTableBlockElement $step
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendPackageAssigned(SuperTableBlockElement $packageBlock, $type = 'assessor')
+    function sendStepAssign(SuperTableBlockElement $step)
     {
-        if (($type == 'assessor' && !$packageBlock->packageAssessor) || ($type == 'reviewer' && !$packageBlock->packageReviewer)) {
-            return;
-        }
-        $subject = $this->getNotifySetting('subjectPackageAssigned' . ucwords($type), 'Taskbook Assignment');
+        $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->stepType), 'Taskbook Review Assignment');
+        $manager = $step->reviewUser->one();
+        $package = $step->owner;
         $variables = [
-            'package'    => $packageBlock,
-            'core'       => $packageBlock->packageCoreModule->one(),
-            'user'       => $packageBlock->owner,
-            'type'       => $type,
+            'step'      => $step,
+            'package'   => $package,
+            'core'      => $package->coreModule,
+            'user'      => $package->author,
+            'type'      => $step->stepType,
         ];
-        if ($type == 'assessor') {
-            $email = $packageBlock->packageAssessor->one()->email;
-        }
-        else {
-            $email = $packageBlock->packageReviewer->one()->email;
-        }
-        $template = $this->getNotifySetting('packageAssigned', "You have been assigned as {{ type }} for {{ user.fullname }} - {{ core.title }}.");
+        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($email, $subject, $message);
+        $this->notify($manager->email, $subject, $message);
     }
 
     /**
-     * @param SuperTableBlockElement $packageBlock
-     * @return null
+     * @param SuperTableBlockElement $step
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendPackageStatus(SuperTableBlockElement $packageBlock)
+    function sendStepUpdate(SuperTableBlockElement $step)
     {
-        $subject = $this->getNotifySetting('subjectPackageStatus', 'Taskbook Status');
+        $result = $step->reviewPassed ? 'passed' : 'failed';
+        $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->stepReviewName . ' (' . $result . ')');
+        $manager = $step->reviewUser->one();
+        $package = $step->owner;
         $variables = [
-            'package'    => $packageBlock,
-            'core'       => $packageBlock->packageCoreModule->one(),
-            'user'       => $packageBlock->owner
+            'step'      => $step,
+            'package'   => $package,
+            'core'      => $package->coreModule,
+            'user'      => $package->author,
+            'manager'   => $manager,
+            'result'    => $result
         ];
-        $template = $this->getNotifySetting('packageStatus', "Status update for {{ core.title }}: {{ package.packageStatus }}.");
+        $template = $this->getNotifySetting('stepUpdate', "Status update for {{ core.title }}: result is {{ result }}. {{ step.reviewComment }}");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($packageBlock->owner->email, $subject, $message);
-    }
-
-    /**
-     * @param SuperTableBlockElement $packageBlock
-     * @return null
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
-     */
-    function sendPackageReviewed(SuperTableBlockElement $packageBlock)
-    {
-        if (!$packageBlock->packageReviewer) {
-            return;
-        }
-        $subject = $this->getNotifySetting('subjectPackageReviewed', 'Taskbook Reviewed');
-        $variables = [
-            'package'    => $packageBlock,
-            'core'       => $packageBlock->packageCoreModule->one(),
-            'user'       => $packageBlock->owner,
-            'reviewer'   => $packageBlock->packageReviewer->one()
-        ];
-        $template = $this->getNotifySetting('packageReviewed', "{{ user.fullname }} - {{ core.title }} has been reviewed by {{ reviewer.fullname }}.");
-        $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($packageBlock->owner->email, $subject, $message);
-    }
-
-    /**
-     * @param SuperTableBlockElement $packageBlock
-     * @return null
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
-     */
-    function sendPackageComment(SuperTableBlockElement $packageBlock, $comment)
-    {
-        $subject = $this->getNotifySetting('subjectPackageComment', 'Taskbook Comment');
-        $variables = [
-            'package'    => $packageBlock,
-            'comment'    => $comment,
-            'core'       => $packageBlock->packageCoreModule->one(),
-            'user'       => $packageBlock->owner
-        ];
-        $template = $this->getNotifySetting('packageComment', "Comment for {{ core.title }}: {{ comment }}");
-        $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($packageBlock->owner->email, $subject, $message);
+        $this->notify($package->author->email, $subject, $message);
     }
 
     /**
