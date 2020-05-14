@@ -58,6 +58,8 @@ return [
         'allowAdminChanges' => true,
     ],
     'uat' => [
+        'devMode' => true,
+        'allowAdminChanges' => true,
     ],
     'prod' => [
     ],
