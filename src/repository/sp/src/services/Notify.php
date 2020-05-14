@@ -30,8 +30,10 @@ class Notify extends Component
      */
     function sendStepRequest(SuperTableBlockElement $step)
     {
+        if (null == $manager = $step->reviewUser->one()) {
+            return;
+        }
         $subject = $this->getNotifySetting('subjectStepRequest' . ucwords($step->reviewStepType), 'Taskbook Review Request');
-        $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
             'step'      => $step,
@@ -52,8 +54,10 @@ class Notify extends Component
      */
     function sendStepAssign(SuperTableBlockElement $step)
     {
+        if (null == $manager = $step->reviewUser->one()) {
+            return;
+        }
         $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->reviewStepType), 'Taskbook Review Assignment');
-        $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
             'step'      => $step,
@@ -75,7 +79,7 @@ class Notify extends Component
     function sendStepUpdate(SuperTableBlockElement $step)
     {
         $result = $step->reviewPassed ? 'passed' : 'failed';
-        $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->stepReviewName . ' (' . $result . ')');
+        $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->reviewStepName . ' (' . $result . ')');
         $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
