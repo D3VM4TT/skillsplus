@@ -278,7 +278,9 @@ class Packages extends Component
             Lantra::$app->notify->sendStepUpdate($step);
         };
         ## ask for the next step if applicable
-        $this->stepRequest($step->ownerId);
+        if ($passed) {
+            $this->stepRequest($step->ownerId);
+        }
     }
 
     /**
