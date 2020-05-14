@@ -21,7 +21,7 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function coreModule()
+    public function getCoreModule()
     {
         return $this->owner->packageCoreModule ? $this->owner->packageCoreModule->one() : null;
     }
