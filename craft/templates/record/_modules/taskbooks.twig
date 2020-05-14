@@ -11,7 +11,7 @@
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ package.coreModule.title }}</h2></div>
                         {% if package.isManager(currentUser, true) and package.nextStep %}
-                            <p>{{ package.nextStep.reviewStepName }}</p>
+                            <p>Next Step: {{ package.nextStep.reviewStepName }}</p>
                         {% endif %}
                     </div>
                     <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
@@ -25,10 +25,9 @@
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
                                        data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Review</a>
                                 {% endif %}
-                            {% endif %}
-                            {% if package.packageStatus == 'assessed' %}
+                            {% elseif package.packageStatus == 'assesment' %}
                                 Status: Assessed
-                            {% elseif package.packageStatus == 'reviewed' %}
+                            {% elseif package.packageStatus == 'review' %}
                                 Status: Reviewed
                             {% elseif package.packageStatus == 'complete' %}
                                 Status: Complete

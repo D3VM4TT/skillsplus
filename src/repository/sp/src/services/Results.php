@@ -1081,19 +1081,19 @@ class Results extends Component
      */
     public function getPackageUserResults($packageId, $userId = null)
     {
-        if (! $userId) {
+        if (null == $user = LantraHelper::getUser($userId)) {
             return [];
         }
         $results = [];
         // get all modules for job role
-        $package = Lantra::$app->packages->getUserPackage($packageId, $userId);
+        $package = Lantra::$app->packages->getUserPackage($packageId, $user);
         if ($package) {
             $modules = Lantra::$app->packages->getPackageModuleEntries($package);
             foreach ($modules as $moduleEntry) {
                 // get unit results relating to module
-                $unitResults = $this->getModuleUnitResults($moduleEntry, $userId);
+                $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
                 // get user results relating to module
-                $userResults = $this->getModuleUserResults($moduleEntry, $userId, false);
+                $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
                 $results = array_merge($results, $unitResults, $userResults);
             }
         }

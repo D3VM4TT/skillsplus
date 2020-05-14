@@ -224,14 +224,20 @@ class Packages extends Component
     /**
      * @param $packageId
      * @return null
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function stepRequest($packageId)
     {
-        if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
+        if (null == $package =  Entry::findOne($packageId)) {
             return null;
         }
 
-        if (null != $nextStep = $package->getNextStep() ) {
+        if (null != $nextStep = $package->nextStep) {
+            $this->setStatus($package->id, $nextStep->reviewStepType);
             Lantra::$app->notify->sendStepRequest($nextStep);
         }
     }
@@ -271,6 +277,8 @@ class Packages extends Component
         if(Craft::$app->elements->saveElement($step)) {
             Lantra::$app->notify->sendStepUpdate($step);
         };
+        ## ask for the next step if applicable
+        $this->stepRequest($step->ownerId);
     }
 
     /**
@@ -411,7 +419,7 @@ class Packages extends Component
      * @param $user
      * @return null
      */
-    public function getUserPackage($packageId, $user)
+    public function getUserPackage($packageId, User $user)
     {
         $criteria = Entry::find();
         $criteria->id = $packageId;
@@ -424,7 +432,7 @@ class Packages extends Component
      * @param $paid
      * @return null
      */
-    public function getUserPackages($user, $paid = true)
+    public function getUserPackages(User $user, $paid = true)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';

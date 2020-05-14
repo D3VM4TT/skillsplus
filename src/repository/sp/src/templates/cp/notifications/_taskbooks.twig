@@ -8,7 +8,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: You have been assigned for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.",
+    instructions:   "Default: You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.",
     label:			"Message Step Assign",
     id:				"notifyStepAssign",
     name:			"notifyStepAssign",
@@ -38,7 +38,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: Request for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.",
+    instructions:   "Default: Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.",
     label:			"Message Step Request",
     id:				"notifyStepRequest",
     name:			"notifyStepRequest",

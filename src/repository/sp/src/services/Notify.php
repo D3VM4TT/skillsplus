@@ -40,7 +40,7 @@ class Notify extends Component
             'user'      => $package->author,
             'type'      => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
+        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }
@@ -62,7 +62,7 @@ class Notify extends Component
             'user'      => $package->author,
             'type'      => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
+        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }
