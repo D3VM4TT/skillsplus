@@ -540,7 +540,7 @@ $(document).ready(function(){
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             jobRoleDiv = moduleGroupLink.closest('div.job-role');
-        if (jobRoleDiv) {
+        if (jobRoleDiv.length) {
             var jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
             jobRoleLink.click();
             moduleGroupLink.click();
