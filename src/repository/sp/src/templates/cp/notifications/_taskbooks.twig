@@ -29,3 +29,18 @@
     name:			"notifyStepUpdate",
     value:		    settings.notifyStepUpdate
 }) }}
+
+{{ forms.textField ({
+    label:			"Subject Step Request",
+    id:				"notifySubjectStepRequest",
+    name:			"notifySubjectStepRequest",
+    value:		    settings.notifySubjectStepRequest
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Request for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.",
+    label:			"Message Step Request",
+    id:				"notifyStepRequest",
+    name:			"notifyStepRequest",
+    value:		    settings.notifyStepRequest
+}) }}

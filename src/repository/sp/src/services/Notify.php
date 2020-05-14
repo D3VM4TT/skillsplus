@@ -28,9 +28,9 @@ class Notify extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendStepAssign(SuperTableBlockElement $step)
+    function sendStepRequest(SuperTableBlockElement $step)
     {
-        $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->stepType), 'Taskbook Review Assignment');
+        $subject = $this->getNotifySetting('subjectStepRequest' . ucwords($step->reviewStepType), 'Taskbook Review Request');
         $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
@@ -38,7 +38,29 @@ class Notify extends Component
             'package'   => $package,
             'core'      => $package->coreModule,
             'user'      => $package->author,
-            'type'      => $step->stepType,
+            'type'      => $step->reviewStepType,
+        ];
+        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($manager->email, $subject, $message);
+    }
+
+    /**
+     * @param SuperTableBlockElement $step
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendStepAssign(SuperTableBlockElement $step)
+    {
+        $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->reviewStepType), 'Taskbook Review Assignment');
+        $manager = $step->reviewUser->one();
+        $package = $step->owner;
+        $variables = [
+            'step'      => $step,
+            'package'   => $package,
+            'core'      => $package->coreModule,
+            'user'      => $package->author,
+            'type'      => $step->reviewStepType,
         ];
         $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.stepReviewName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);

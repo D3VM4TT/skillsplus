@@ -222,6 +222,21 @@ class Packages extends Component
     }
 
     /**
+     * @param $packageId
+     * @return null
+     */
+    public function stepRequest($packageId)
+    {
+        if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
+            return null;
+        }
+
+        if (null != $nextStep = $package->getNextStep() ) {
+            Lantra::$app->notify->sendStepRequest($nextStep);
+        }
+    }
+
+    /**
      * @param SuperTableBlockElement $step
      * @param $userId
      * @throws \Throwable

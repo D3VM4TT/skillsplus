@@ -81,6 +81,8 @@ class Settings extends Model
     public $notifyStepAssign                    = '';
     public $notifySubjectStepUpdate             = '';
     public $notifyStepUpdate                    = '';
+    public $notifySubjectStepRequest            = '';
+    public $notifyStepRequest                   = '';
 
     public $disableEndorsementNotify            = false;
 
