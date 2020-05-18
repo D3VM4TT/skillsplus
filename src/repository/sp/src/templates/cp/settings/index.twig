@@ -12,7 +12,8 @@
     licences: {label: 'Licences', url: '#settings-tab-licences' },
     users: {label: 'Users', url: '#settings-tab-users' },
     reports: {label: 'Reports', url: '#settings-tab-reports' },
-    config: {label: 'Config', url: '#settings-tab-config' }
+    config: {label: 'Config', url: '#settings-tab-config' },
+    paypal: {label: 'PayPal', url: '#settings-tab-paypal' }
 } %}
 
 {% set saveButton %}
@@ -54,6 +55,11 @@
     <div id="tab-config" class="hidden">
         <div id="fields">
         {% include 'sp/cp/settings/_config.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-paypal" class="hidden">
+        <div id="fields">
+            {% include 'sp/cp/settings/_paypal.twig' with {settings:settings, config:config} %}
         </div>
     </div>
     {% endnamespace %}

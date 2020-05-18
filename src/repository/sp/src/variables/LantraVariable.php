@@ -22,6 +22,24 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $product
+     * @param int $amount
+     * @param string $label
+     * @param string $return
+     * @param array $custom
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\ErrorException
+     * @throws \yii\base\Exception
+     */
+    public function payPalButton($product = null, $amount = 0, $label = 'Pay Now', $return = '', $custom = [])
+    {
+        return Lantra::$app->paypal->getButton($product, $amount, $label, $return, $custom);
+    }
+
+    /**
      * @param null $handle
      * @return SuperTableBlockTypeModel|null
      */

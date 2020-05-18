@@ -1,0 +1,35 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textareaField ({
+    label:			"PayPal Public Certificate",
+    id:				"payPalPublicCert",
+    name:			"payPalPublicCert",
+    value:		    settings.payPalPublicCert,
+    rows:           20,
+    cols:           50
+}) }}
+
+{{ forms.textField ({
+    label:			"Lantra Public Certificate ID",
+    id:				"payPalCertId",
+    name:			"payPalCertId",
+    value:		    settings.payPalCertId
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Lantra Public Certificate",
+    id:				"payPalLantraCert",
+    name:			"payPalLantraCert",
+    value:		    settings.payPalLantraCert,
+    rows:           20,
+    cols:           50
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Lantra Private Key",
+    id:				"payPalLantraKey",
+    name:			"payPalLantraKey",
+    value:		    settings.payPalLantraKey,
+    rows:           20,
+    cols:           50
+}) }}

@@ -1,0 +1,6 @@
+<form action="{{ url }}" class="paypal-form" method="post" accept-charset="UTF-8">
+    {{ hiddenInput('cmd', '_s-xclick') }}
+    {{ hiddenInput('encrypted', encrypted) }}
+    {{ hiddenInput('return', return) }}
+    <button class="button primary-bg"><span>{{ label }}</span></button>
+</form>

@@ -368,6 +368,8 @@ class Plugin extends BasePlugin
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
 
             'sp/users/pay/<packageId>'                  => 'sp/users/pay',
+
+            'sp/paypal/ipn'                             => 'sp/paypal/ipn',
         ];
     }
 

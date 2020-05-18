@@ -13,6 +13,7 @@ use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\models\VolumeFolder;
+use craft\web\View;
 use lantra\sp\models\Cycle;
 use lantra\sp\models\Record;
 use craft\helpers\Assets as AssetsHelper;
@@ -24,6 +25,23 @@ use lantra\sp\Plugin as Lantra;
 
 class LantraHelper
 {
+    /**
+     * @param $template
+     * @param $variables
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     */
+    public static function renderCpTemplate($template, $variables) {
+        $oldMode = Craft::$app->view->getTemplateMode();
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = Craft::$app->view->renderTemplate($template, $variables);
+        Craft::$app->view->setTemplateMode($oldMode);
+        return $html;
+    }
+
     /**
      * @param $userId
      * @return Record|null

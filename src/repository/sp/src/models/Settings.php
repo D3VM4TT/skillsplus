@@ -119,6 +119,11 @@ class Settings extends Model
     ];
     public $standardReports                     = false;
 
+    public $payPalPublicCert                    = '';
+    public $payPalLantraCert                    = '';
+    public $payPalLantraKey                     = '';
+    public $payPalCertId                        = '';
+
     /*
      * modified values
      */

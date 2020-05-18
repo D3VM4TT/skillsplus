@@ -15,10 +15,29 @@ use lantra\sp\Plugin as Lantra;
 
 class PaypalController extends BaseController
 {
-    public $allowAnonymous = array('actionPayment');
+    /**
+     * Receives confirmation from PayPal IPN script (new for packages)
+     *
+     * @throws mixed
+     */
+    public function actionIpn()
+    {
+        $custom = Craft::$app->request->getParam('custom');
+        $ipnRecord = $this->ipnRecord(
+            Craft::$app->request->getParam('payer_email'),
+            Craft::$app->request->getParam('mc_gross'),
+            Craft::$app->request->getParam('txn_id')
+        );
+        if (!isset($custom['userId']) || null == $user = Craft::$app->users->getUserById($custom['userId'])) {
+            die('INVALID USER');
+        }
+        if (isset($custom['packageId'])) {
+            Lantra::$app->packages->setPaid($custom['packageId'], $ipnRecord);
+        }
+    }
 
     /**
-     * Receives confirmation from PayPal IPN script
+     * Receives confirmation from PayPal IPN script (old for individual buttons)
      *
      * @throws mixed
      */
@@ -59,5 +78,16 @@ class PaypalController extends BaseController
         ## log success message
         Craft::info('IPN request received [' . $payerEmail . ']',__METHOD__);
         die();
+    }
+
+    /**
+     * @param $payerEmail
+     * @param $paymentAmount
+     * @param $transactionId
+     * @return string
+     */
+    private function ipnRecord($payerEmail, $paymentAmount, $transactionId)
+    {
+        return json_encode([$payerEmail, $paymentAmount, $transactionId]);
     }
 }
