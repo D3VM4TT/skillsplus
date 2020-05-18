@@ -22,18 +22,27 @@ class PaypalController extends BaseController
      */
     public function actionIpn()
     {
-        $custom = Craft::$app->request->getParam('custom');
+        Craft::info("IPN Received:  ".json_encode($_POST), __METHOD__);
+
+        if (!Lantra::$app->paypal->verifyIpn()) {
+            Craft::error('PayPal fail to verify IPN.', __METHOD__);
+            return $this->asJson(['success' => 'false']);
+        }
+
+        $custom = json_decode(Craft::$app->request->getParam('custom'));
         $ipnRecord = $this->ipnRecord(
             Craft::$app->request->getParam('payer_email'),
             Craft::$app->request->getParam('mc_gross'),
             Craft::$app->request->getParam('txn_id')
         );
         if (!isset($custom['userId']) || null == $user = Craft::$app->users->getUserById($custom['userId'])) {
-            die('INVALID USER');
+            Craft::error('PayPal failed to validate user.', __METHOD__);
+            return $this->asJson(['success' => 'false']);
         }
         if (isset($custom['packageId'])) {
             Lantra::$app->packages->setPaid($custom['packageId'], $ipnRecord);
         }
+        return $this->asJson(['success' => 'true']);
     }
 
     /**

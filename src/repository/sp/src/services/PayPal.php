@@ -74,11 +74,11 @@ class PayPal extends Component
     }
 
     /**
-     * @param $params
      * @return bool
      */
-    public function verifyIpn($params)
+    public function verifyIpn()
     {
+        $params = Craft::$app->request->getParams();
         $confirmation = "cmd=_notify-validate";
         foreach ($params as $key => $value) {
             $confirmation .= "&" . $key . "=" . urlencode(stripslashes($value));
@@ -130,8 +130,9 @@ class PayPal extends Component
         $lantraCert = trim(LantraHelper::setting('payPalLantraCert'));
         $lantraKey = trim(LantraHelper::setting('payPalLantraKey'));
 
+        $this->certStorage = Craft::$app->path->getStoragePath() . '/paypal/';
+
         if ($this->certId && $payPalCert && $lantraCert && $lantraKey) {
-            $this->certStorage = Craft::$app->path->getStoragePath() . '/paypal/';
             FileHelper::createDirectory($this->certStorage);
             $this->lantraCertPath = $this->certStorage . $certName;
             $this->lantraKeyPath = $this->certStorage . 'lantra-private.pem';
