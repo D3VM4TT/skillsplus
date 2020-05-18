@@ -28,10 +28,6 @@ class PayPal extends Component
 
     public function __construct(array $config = [])
     {
-        $this->ipn = new PayPalIpn();
-        if (getenv('ENVIRONMENT') != 'production') {
-            $this->ipn->useSandbox();
-        }
         parent::__construct($config);
     }
 
