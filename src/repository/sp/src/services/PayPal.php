@@ -13,10 +13,13 @@ use craft\base\Component;
 use craft\helpers\UrlHelper;
 use craft\helpers\FileHelper;
 
+use lantra\sp\contracts\PayPalIpn;
 use lantra\sp\helpers\LantraHelper;
 
 class PayPal extends Component
 {
+    public $ipn;
+
     private $certStorage;
     private $payPalCertPath;
     private $lantraCertPath;
@@ -25,8 +28,15 @@ class PayPal extends Component
 
     private $business;
     private $formUrl;
-    private $ipnHost;
-    private $ipnSsl;
+
+    public function __construct(array $config = [])
+    {
+        $this->ipn = new PayPalIpn();
+        if (getenv('ENVIRONMENT') != 'production') {
+            $this->ipn->useSandbox();
+        }
+        parent::__construct($config);
+    }
 
     /**
      * @param string $product
@@ -73,34 +83,6 @@ class PayPal extends Component
         return LantraHelper::renderCpTemplate('sp/forms/paypal', $variables);
     }
 
-    /**
-     * @return bool
-     */
-    public function verifyIpn()
-    {
-        $params = $_POST;
-        $confirmation = "cmd=_notify-validate";
-        foreach ($params as $key => $value) {
-            $confirmation .= "&" . $key . "=" . urlencode(stripslashes($value));
-        }
-        $headers = "POST /cgi-bin/webscr HTTP/1.1\r\n";
-        $headers .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $headers .= "Host: {$this->ipnHost}\r\n";
-        $headers .= "Connection: close\r\n";
-        $headers .= "Content-Length: " . strlen($confirmation) . "\r\n\r\n";
-        $fp = fsockopen($this->ipnSsl, 443, $errno, $errstr, 30);
-        if ($fp) {
-            fwrite($fp, $headers . $confirmation);
-            while (!feof($fp)) {
-                $line = fgets($fp, 1024);
-                if (strcmp(strtolower(trim($line)), "verified") == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
     /**
      * @throws \yii\base\ErrorException
@@ -111,14 +93,10 @@ class PayPal extends Component
         if (getenv('ENVIRONMENT') == 'production') {
             $this->business = 'accounts@lantra.co.uk';
             $this->formUrl = 'https://www.paypal.com/cgi-bin/webscr';
-            $this->ipnHost = 'www.paypal.com';
-            $this->ipnSsl = 'ssl://www.paypal.com';
         }
         else {
             $this->business = 'lantra-business@thisistraffic.co.uk';
             $this->formUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-            $this->ipnHost = 'www.sandbox.paypal.com';
-            $this->ipnSsl = 'ssl://www.sandbox.paypal.com';
         }
 
         $certName = 'lantra-public-' . getenv('SITE') . '-' . getenv('ENVIRONMENT') . '.pem';
