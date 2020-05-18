@@ -27,7 +27,7 @@ class PaypalController extends BaseController
     {
         Craft::info("IPN Received:  ".json_encode($_POST), __METHOD__);
 
-        if (!Lantra::$app->paypal->ipn->verifyIpn()) {
+        if (!Lantra::$app->paypal->verifyIpn()) {
             Craft::error('PayPal fail to verify IPN.', __METHOD__);
             return $this->asJson(['success' => 'false']);
         }

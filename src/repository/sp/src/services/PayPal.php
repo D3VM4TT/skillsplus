@@ -18,8 +18,6 @@ use lantra\sp\helpers\LantraHelper;
 
 class PayPal extends Component
 {
-    public $ipn;
-
     private $certStorage;
     private $payPalCertPath;
     private $lantraCertPath;
@@ -81,6 +79,52 @@ class PayPal extends Component
         ];
 
         return LantraHelper::renderCpTemplate('sp/forms/paypal', $variables);
+    }
+
+    /**
+     * @param null $ipn
+     * @return bool|null
+     */
+    public function verifyIpn($ipn = null)
+    {
+        if(empty($IPN)){
+            $IPN = $_POST;
+        }
+        if(empty($IPN['verify_sign'])){
+            return null;
+        }
+        $IPN['cmd'] = '_notify-validate';
+        $PaypalHost = (empty($IPN['test_ipn']) ? 'www' : 'www.sandbox').'.paypal.com';
+        $cURL = curl_init();
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, true);
+        curl_setopt($cURL, CURLOPT_URL, "https://{$PaypalHost}/cgi-bin/webscr");
+        curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
+        curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
+        curl_setopt($cURL, CURLOPT_POST, true);
+        curl_setopt($cURL, CURLOPT_POSTFIELDS, $IPN);
+        curl_setopt($cURL, CURLOPT_HEADER, false);
+        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($cURL, CURLOPT_FORBID_REUSE, true);
+        curl_setopt($cURL, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($cURL, CURLOPT_TIMEOUT, 60);
+        curl_setopt($cURL, CURLINFO_HEADER_OUT, true);
+        curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
+            'Connection: close',
+            'Expect: ',
+        ));
+        $Response = curl_exec($cURL);
+        $Status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+        curl_close($cURL);
+        if(empty($Response) or !preg_match('~^(VERIFIED|INVALID)$~i', $Response = trim($Response)) or !$Status){
+            return null;
+        }
+        if(intval($Status / 100) != 2){
+            return false;
+        }
+        return !strcasecmp($Response, 'VERIFIED');
     }
 
 
