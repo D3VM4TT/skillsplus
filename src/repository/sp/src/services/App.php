@@ -21,6 +21,7 @@ use craft\base\Component;
  * @property-read \lantra\sp\services\Notify $notify
  * @property-read \lantra\sp\services\Queue $queue
  * @property-read \lantra\sp\services\Packages $packages
+ * @property-read \lantra\sp\services\Records $records
  * @property-read \lantra\sp\services\Reports $reports
  * @property-read \lantra\sp\services\Results $results
  * @property-read \lantra\sp\services\Settings $settings
@@ -39,6 +40,7 @@ class App extends Component
     public $notify;
     public $queue;
     public $packages;
+    public $records;
     public $reports;
     public $results;
     public $settings;
@@ -59,6 +61,7 @@ class App extends Component
         $this->notify = new Notify();
         $this->queue = new Queue();
         $this->packages = new Packages();
+        $this->records = new Records();
         $this->reports = new Reports();
         $this->results = new Results();
         $this->settings = new Settings();

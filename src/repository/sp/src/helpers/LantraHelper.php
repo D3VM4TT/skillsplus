@@ -14,6 +14,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\models\VolumeFolder;
 use lantra\sp\models\Cycle;
+use lantra\sp\models\Record;
 use craft\helpers\Assets as AssetsHelper;
 use yii\web\UploadedFile;
 use Yii;
@@ -23,6 +24,18 @@ use lantra\sp\Plugin as Lantra;
 
 class LantraHelper
 {
+    /**
+     * @param $userId
+     * @return Record|null
+     */
+    public static function getRecord($userId = null)
+    {
+        if (null == $user = self::getUser($userId)) {
+            return null;
+        }
+        return new Record($user);
+    }
+
     /**
      * @param $handle
      * @return SuperTableBlockTypeModel|null
