@@ -13,7 +13,6 @@ use craft\base\Component;
 use craft\helpers\UrlHelper;
 use craft\helpers\FileHelper;
 
-use lantra\sp\contracts\PayPalIpn;
 use lantra\sp\helpers\LantraHelper;
 
 class PayPal extends Component
