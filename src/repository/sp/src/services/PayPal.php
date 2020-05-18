@@ -57,7 +57,7 @@ class PayPal extends Component
             'cmd'           => '_cart',
             'upload'        => '1',
             'currency_code' => 'GBP',
-            'notify_url'    => UrlHelper::siteUrl('ipn'),
+            'notify_url'    => UrlHelper::siteUrl('sp/paypal/ipn'),
             'item_name_1'   => $product,
             'amount_1'      => $amount,
             'cancel_return' => UrlHelper::siteUrl(),
