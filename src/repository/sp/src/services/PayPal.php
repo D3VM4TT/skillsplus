@@ -78,7 +78,7 @@ class PayPal extends Component
      */
     public function verifyIpn()
     {
-        $params = Craft::$app->request->getParams();
+        $params = $_POST;
         $confirmation = "cmd=_notify-validate";
         foreach ($params as $key => $value) {
             $confirmation .= "&" . $key . "=" . urlencode(stripslashes($value));
