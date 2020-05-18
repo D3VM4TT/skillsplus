@@ -9,6 +9,8 @@
 
 {% extends "_layout" %}
 
+{% set packageTitle = package.packageCoreModule.one.title ~ craft.lantra.taskbookLevel(package.packageCoreLevel) %}
+
 {% block content %}
 <section class="page dashboard">
     <div class="page-subHeader primary-bg">
@@ -23,7 +25,7 @@
         <p>Manage your taskbook packages.</p>
     </div>
     <div class="page-content">
-        <h2>{{ package.packageCoreModule.one.title }} ~ {{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</h2>
+        <h2>{{ packageTitle }}</h2>
         <p>Created {{ package.packageDateCreated|date('d/m/y') }}</p>
         {% for optionalModuleBlock in package.packageOptionalModules.all %}
             {% set module = optionalModuleBlock.optionalModule.one %}
@@ -33,7 +35,7 @@
 
         {% if not package.packagePaid %}
             <div class="container-btn">
-                {{ craft.lantra.payPalButton('Skills+ Taskbook', package.packageCost, 'Pay Now', siteUrl('profile/taskbooks/view/' ~ package.id), {'packageId':package.id})|raw }}
+                {{ craft.lantra.payPalButton(packageTitle, package.packageCost, 'Pay Now', siteUrl('profile/taskbooks/view/' ~ package.id), {'packageId':package.id})|raw }}
     </div>
         {% else %}
             PAID
