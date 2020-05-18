@@ -45,7 +45,7 @@ class PaypalController extends BaseController
             return $this->asJson(['success' => 'false']);
         }
         if (isset($custom->packageId)) {
-            Lantra::$app->packages->setPaid($custom['packageId'], $ipnRecord);
+            Lantra::$app->packages->setPaid($custom->packageId, $ipnRecord);
         }
         return $this->asJson(['success' => 'true']);
     }
