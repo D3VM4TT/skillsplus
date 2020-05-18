@@ -16,7 +16,7 @@ use lantra\sp\Plugin as Lantra;
 class PaypalController extends BaseController
 {
     public $enableCsrfValidation = false;
-    public $allowAnonymous = true;
+    public $allowAnonymous = ['ipn', 'payment'];
 
     /**
      * Receives confirmation from PayPal IPN script (new for packages)
