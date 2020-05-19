@@ -76,60 +76,6 @@ class PayPal extends Component
         return LantraHelper::renderCpTemplate('sp/forms/paypal', $variables);
     }
 
-    /**
-     * @param null $ipn
-     * @return bool|null
-     */
-    public function verifyIpn($ipn = null)
-    {
-        if (empty($ipn)){
-            $ipn = $_POST;
-        }
-        if (empty($ipn['verify_sign'])){
-            Craft::error('PayPal verify_sign empty.', __METHOD__);
-        }
-        try {
-            $ipn['cmd'] = '_notify-validate';
-            $paypalHost = (empty($ipn['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
-            $cURL = curl_init();
-            curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($cURL, CURLOPT_URL, "https://{$paypalHost}/cgi-bin/webscr");
-            curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
-            curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
-            curl_setopt($cURL, CURLOPT_POST, true);
-            curl_setopt($cURL, CURLOPT_POSTFIELDS, $ipn);
-            curl_setopt($cURL, CURLOPT_HEADER, false);
-            curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-            curl_setopt($cURL, CURLOPT_FORBID_REUSE, true);
-            curl_setopt($cURL, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 30);
-            curl_setopt($cURL, CURLOPT_TIMEOUT, 60);
-            curl_setopt($cURL, CURLINFO_HEADER_OUT, true);
-            curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
-                'Connection: close',
-                'Expect: ',
-            ));
-            $response = curl_exec($cURL);
-            $status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
-            curl_close($cURL);
-            if (empty($response) or !preg_match('~^(VERIFIED|INVALID)$~i', $response = trim($response)) or !$status) {
-                Craft::error('PayPal response error. ' . json_encode($response), __METHOD__);
-                return null;
-            }
-            if(intval($status / 100) != 2){
-                Craft::error('PayPal status error ' . $status . '.', __METHOD__);
-                return false;
-            }
-            return !strcasecmp($response, 'VERIFIED');
-        }
-        catch(\Exception $e) {
-            Craft::error($e->getMessage(), __METHOD__);
-            return null;
-        }
-    }
-
 
     /**
      * @throws \yii\base\ErrorException

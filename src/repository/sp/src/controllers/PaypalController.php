@@ -12,6 +12,7 @@ use Craft;
 use craft\elements\MatrixBlock;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\contracts\PaypalIPN;
 
 class PaypalController extends BaseController
 {
@@ -27,7 +28,11 @@ class PaypalController extends BaseController
     {
         Craft::info("IPN Received:  ".json_encode($_POST), __METHOD__);
 
-        if (!Lantra::$app->paypal->verifyIpn()) {
+        $paypalIpn = new PaypalIPN;
+        if (getenv('ENVIRONMENT') != 'production') {
+            $paypalIpn->useSandbox();
+        }
+        if (!$paypalIpn->verifyIpn()) {
             Craft::error('PayPal fail to verify IPN.', __METHOD__);
             Craft::$app->response->setStatusCode(500);
             return $this->asJson(['success' => 'false']);
