@@ -115,7 +115,7 @@ class PayPal extends Component
             $status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
             curl_close($cURL);
             if (empty($response) or !preg_match('~^(VERIFIED|INVALID)$~i', $response = trim($response)) or !$status) {
-                Craft::error('PayPal response error.', __METHOD__);
+                Craft::error('PayPal response error. ' . var_dump($response, true), __METHOD__);
                 return null;
             }
             if(intval($status / 100) != 2){
