@@ -49,6 +49,7 @@ class PaypalController extends BaseController
             return $this->asJson(['success' => 'false']);
         }
         if (isset($custom->packageId)) {
+            Craft::error('Setting package as paid [' . $custom->packageId . ']', __METHOD__);
             Lantra::$app->packages->setPaid($custom->packageId, $ipnRecord);
         }
         return $this->asJson(['success' => 'true']);
