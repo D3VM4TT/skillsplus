@@ -355,7 +355,7 @@ class Reports extends Component
             $template = Lantra::$app->notify->getNotifySetting('customReport', "Custom report: {{ entry.title }}.");
             $message = Craft::$app->view->renderString($template, $variables);
             Lantra::$app->notify->notify($emails, $subject, $message, [$attachment]);
-            $reportEntry->reportLastSentDate = DateTimeHelper::currentUTCDateTime();
+            $reportEntry->setFieldValue('reportLastSentDate', DateTimeHelper::currentUTCDateTime());
             Craft::$app->elements->saveElement($reportEntry);
         }
         ## delete from queue (if it came from the queue)

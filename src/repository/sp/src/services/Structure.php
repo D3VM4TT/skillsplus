@@ -32,7 +32,7 @@ class Structure extends Component
         }
 
         ## update company label
-        $entry->companyLabel = Lantra::$app->structure->getCompanyLabel($entry);
+        $entry->setFieldValue('companyLabel', Lantra::$app->structure->getCompanyLabel($entry));
     }
 
     /**
