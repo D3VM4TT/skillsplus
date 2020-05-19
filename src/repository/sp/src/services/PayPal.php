@@ -82,15 +82,15 @@ class PayPal extends Component
      */
     public function verifyIpn($ipn = null)
     {
-        if(empty($IPN)){
-            $IPN = $_POST;
+        if (empty($ipn)){
+            $ipn = $_POST;
         }
-        if(empty($IPN['verify_sign'])){
+        if (empty($ipn['verify_sign'])){
             return null;
         }
         try {
-            $IPN['cmd'] = '_notify-validate';
-            $PaypalHost = (empty($IPN['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
+            $ipn['cmd'] = '_notify-validate';
+            $PaypalHost = (empty($ipn['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
             $cURL = curl_init();
             curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, true);
@@ -98,7 +98,7 @@ class PayPal extends Component
             curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
             curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
             curl_setopt($cURL, CURLOPT_POST, true);
-            curl_setopt($cURL, CURLOPT_POSTFIELDS, $IPN);
+            curl_setopt($cURL, CURLOPT_POSTFIELDS, $ipn);
             curl_setopt($cURL, CURLOPT_HEADER, false);
             curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
@@ -123,8 +123,8 @@ class PayPal extends Component
             return !strcasecmp($Response, 'VERIFIED');
         }
         catch(\Exception $e) {
-            Craft::error('lantra', $e->getMessage());
-            return false;
+            Craft::error($e->getMessage());
+            return null;
         }
     }
 
