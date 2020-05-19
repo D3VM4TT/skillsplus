@@ -2,7 +2,7 @@
 
 namespace lantra\sp\contracts;
 
-class PaypalIPN
+class PaypalIpn
 {
     /** @var bool Indicates if the sandbox endpoint is used. */
     private $use_sandbox = false;
