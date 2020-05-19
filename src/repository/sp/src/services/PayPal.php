@@ -93,7 +93,7 @@ class PayPal extends Component
             $PaypalHost = (empty($ipn['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
             $cURL = curl_init();
             curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, true);
+            curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($cURL, CURLOPT_URL, "https://{$PaypalHost}/cgi-bin/webscr");
             curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
             curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
