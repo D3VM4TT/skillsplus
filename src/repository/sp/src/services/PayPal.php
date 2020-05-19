@@ -86,15 +86,15 @@ class PayPal extends Component
             $ipn = $_POST;
         }
         if (empty($ipn['verify_sign'])){
-            return null;
+            Craft::error('PayPal verify_sign empty.', __METHOD__);
         }
         try {
             $ipn['cmd'] = '_notify-validate';
-            $PaypalHost = (empty($ipn['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
+            $paypalHost = (empty($ipn['test_ipn']) ? 'www' : 'www.sandbox') . '.paypal.com';
             $cURL = curl_init();
             curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($cURL, CURLOPT_URL, "https://{$PaypalHost}/cgi-bin/webscr");
+            curl_setopt($cURL, CURLOPT_URL, "https://{$paypalHost}/cgi-bin/webscr");
             curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
             curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
             curl_setopt($cURL, CURLOPT_POST, true);
@@ -111,19 +111,21 @@ class PayPal extends Component
                 'Connection: close',
                 'Expect: ',
             ));
-            $Response = curl_exec($cURL);
-            $Status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+            $response = curl_exec($cURL);
+            $status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
             curl_close($cURL);
-            if(empty($Response) or !preg_match('~^(VERIFIED|INVALID)$~i', $Response = trim($Response)) or !$Status){
+            if (empty($response) or !preg_match('~^(VERIFIED|INVALID)$~i', $response = trim($response)) or !$status) {
+                Craft::error('PayPal response error.', __METHOD__);
                 return null;
             }
-            if(intval($Status / 100) != 2){
+            if(intval($status / 100) != 2){
+                Craft::error('PayPal status error ' . $status . '.', __METHOD__);
                 return false;
             }
-            return !strcasecmp($Response, 'VERIFIED');
+            return !strcasecmp($response, 'VERIFIED');
         }
         catch(\Exception $e) {
-            Craft::error($e->getMessage());
+            Craft::error($e->getMessage(), __METHOD__);
             return null;
         }
     }
