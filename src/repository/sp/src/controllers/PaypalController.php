@@ -45,7 +45,7 @@ class PaypalController extends BaseController
             Craft::$app->request->getParam('txn_id')
         );
         if (!isset($custom->userId) || null == $user = Craft::$app->users->getUserById($custom->userId)) {
-            Craft::error('PayPal failed to validate user.', __METHOD__);
+            Craft::error('PayPal failed to validate user [' . ($custom ? $custom->userId : 'NULL') . ']', __METHOD__);
             return $this->asJson(['success' => 'false']);
         }
         if (isset($custom->packageId)) {
