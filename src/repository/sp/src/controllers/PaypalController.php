@@ -12,7 +12,7 @@ use Craft;
 use craft\elements\MatrixBlock;
 
 use lantra\sp\Plugin as Lantra;
-use lantra\sp\contracts\PaypalIpn;
+use lantra\sp\contracts\PayPalIpn;
 
 class PaypalController extends BaseController
 {
@@ -28,7 +28,7 @@ class PaypalController extends BaseController
     {
         Craft::info("IPN Received:  ".json_encode($_POST), __METHOD__);
 
-        $ipn = new PaypalIpn;
+        $ipn = new PayPalIpn;
         if (getenv('ENVIRONMENT') != 'production') {
             $ipn->useSandbox();
         }
