@@ -770,7 +770,9 @@ class Results extends Component
         $hours = 0;
         foreach ($resultEntries as $resultEntry) {
             if ($resultEntry->resultStatus == 'endorsed') {
-                $hours += $resultEntry->resultHours;
+                if ((int) $resultEntry->resultHours) {
+                    $hours += (int) $resultEntry->resultHours;
+                }
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
                     $unitEntry = $resultEntry->resultUnit->one();
@@ -779,7 +781,9 @@ class Results extends Component
                 }
                 ## user result value is custom
                 elseif ($resultEntry->type == 'userResult') {
-                    $points += $resultEntry->resultPoints;
+                    if ((int) $resultEntry->resultPoints) {
+                        $points += (int) $resultEntry->resultPoints;
+                    }
                 }
                 ## check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
