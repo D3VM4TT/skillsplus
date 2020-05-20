@@ -11,7 +11,6 @@
 {% set recordResultIds = craft.lantra.recordResults(cpdUser.id, 'ids') %}
 {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').id('and, not ' ~ recordResultIds|join(', not ')) %}
 
-<!-- {{ recordResultIds|join(', ') }} -->
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
     <div id="job-role-cpd">
         {% if not cpdUser.userRole.count %}
