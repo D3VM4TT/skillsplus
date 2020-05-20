@@ -26,11 +26,13 @@ use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
 use craft\log\FileTarget;
 use craft\web\UrlManager;
+use lantra\sp\models\Record;
 use yii\base\Event;
 use yii\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
+use lantra\sp\behaviors\UserRecordBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
@@ -233,6 +235,13 @@ class Plugin extends BasePlugin
                 }
             }
         );
+
+        Event::on(
+            User::class,
+            User::EVENT_DEFINE_BEHAVIORS,
+            function(DefineBehaviorsEvent $event) {
+                $event->behaviors[] = UserRecordBehavior::class;
+            });
 
         Event::on(
             UserPermissions::class,

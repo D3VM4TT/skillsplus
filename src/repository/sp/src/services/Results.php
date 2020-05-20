@@ -1078,6 +1078,20 @@ class Results extends Component
     }
 
     /**
+     * @param null $userId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getAllResults($userId = null)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->authorId = $userId;
+        $criteria->status = null;
+        $criteria->limit = null;
+        return $criteria;
+    }
+
+    /**
      * @param $packageId
      * @param $userId
      * @return array

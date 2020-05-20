@@ -9,13 +9,14 @@
 namespace lantra\sp\models;
 
 use craft\base\Model;
+use craft\helpers\Json;
 
 class RecordItem extends Model
 {
     public $record;
     public $type;
     public $elementId;
-    public $resultId;
+    public $results;
     public $items = [];
 
     /**
@@ -31,34 +32,94 @@ class RecordItem extends Model
      */
     public function hasResult()
     {
-        return $this->type == 'module' || $this->type == 'unit' ? $this->record->hasElement($this->resultId): false;
+        $results = $this->getResults();
+        return count($results) ? true : false;
     }
 
+    /**
+     * @return null
+     */
+    public function getResults()
+    {
+        if ($this->results === null) {
+            $this->results = $this->record->getResults($this->type, $this->elementId);
+        }
+        return $this->results;
+    }
 
+    /**
+     * @return null
+     */
+    public function getResult()
+    {
+        $results = $this->getResults();
+        return count($results) ? $results[0] : null;
+    }
+
+    /**
+     * @return array
+     */
     public function getItems()
     {
         $data = [];
         foreach ($this->items as $item) {
-            $data[] = $item['item']->getData();
+            $data[] = $item->getData();
         }
         return $data;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return [
             'type' => $this->type,
             'elementId' => $this->elementId,
-            'resultId' => $this->resultId,
+            'results' => $this->getResults(),
             'items' => $this->getItems()
         ];
     }
 
-        /**
+    /**
      * @return string
      */
     public function __toString()
     {
-        return \GuzzleHttp\json_encode($this->getData());
+        return Json::encode($this->getData());
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if ($name == 'result') {
+            return $this->getResult();
+        }
+        $element = $this->getElement();
+        return $element->$name;
+    }
+
+    /**
+     * @param string $name
+     * @param array $params
+     * @return mixed
+     */
+    public function __call($name, $params)
+    {
+        $element = $this->getElement();
+        if (isset($element->$name)) {
+            return $element->$name;
+        }
+        # switch unit group names to title
+        if ($name == 'title' && isset($element->groupName)) {
+            return $element->groupName;
+        }
+        if (in_array($name, ['moduleGroups', 'modules', 'unitGroups', 'units'])) {
+            return $this->items;
+        }
+        return $element->$name($params);
     }
 }

@@ -11,6 +11,7 @@ namespace lantra\sp\models;
 use Craft;
 use craft\base\Element;
 use craft\base\Model;
+use craft\helpers\Json;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\User;
@@ -25,7 +26,12 @@ class Record extends Model
     public $jobRoles = [];
     public $packages = [];
 
-    private $_elements;
+    private $_elements = [];
+    private $_results = [
+        'units'     => [],
+        'modules'   => [],
+        'other'     => []
+    ];
 
     /**
      * Record constructor.
@@ -34,7 +40,42 @@ class Record extends Model
     public function __construct(User $user)
     {
         parent::__construct(['user' => $user]);
+        $this->setResults();
         $this->setRecord();
+    }
+
+    /**
+     *
+     */
+    public function setResults()
+    {
+        $criteria = Lantra::$app->results->getAllResults($this->user->id);
+        $results = $criteria->all();
+        foreach($results as $row) {
+            if ($row->resultUnit) {
+                $this->_results['unit'][$row->resultUnit->one()->id][] = $row;
+            }
+            elseif ($row->resultModule) {
+                $this->_results['module'][$row->resultModule->one()->id][] = $row;
+            }
+            else {
+                $this->_results['other'][] = $row;
+            }
+            $this->addItem('result', $row);
+        }
+    }
+
+    /**
+     * @param string $type
+     * @param int $elementId
+     * @return array
+     */
+    public function getResults($type = 'unit', $elementId = null)
+    {
+        if ($elementId && isset($this->_results[$type][$elementId])) {
+            return $this->_results[$type][$elementId];
+        }
+        return [];
     }
 
     /**
@@ -48,19 +89,11 @@ class Record extends Model
                 $jobRoleModuleEntries = Lantra::$app->records->getJobRoleModules($jobRoleCategory);
                 $moduleGroupCategories = Lantra::$app->records->getModuleGroups($jobRoleModuleEntries);
                 $moduleGroups = [];
-
                 foreach($moduleGroupCategories->all() as $moduleGroup) {
                     $items = $this->_getModuleGroupModuleItems($moduleGroup, $jobRoleModuleEntries);
-                    $moduleGroups[$moduleGroup->id] = [
-                        'item' => $this->addItem('moduleGroup', $moduleGroup, null, $items),
-                        'modules' => $items
-                     ];
+                    $moduleGroups[$moduleGroup->id] = $this->addItem('moduleGroup', $moduleGroup, $items);
                 }
-                $jobRole = [
-                    'item' => $this->addItem('jobRole', $jobRoleCategory, null, $moduleGroups),
-                    'moduleGroups' => $moduleGroups
-                ];
-                $this->jobRoles[$jobRoleCategory->id] = $jobRole;
+                $this->jobRoles[$jobRoleCategory->id] = $this->addItem('jobRole', $jobRoleCategory, $moduleGroups);
             }
         }
     }
@@ -68,18 +101,16 @@ class Record extends Model
     /**
      * @param $type
      * @param $element
-     * @param $result
      * @param $items
      * @return RecordItem
      */
-    public function addItem($type, Element $element, Element $result = null, $items = [])
+    public function addItem($type, Element $element, $items = [])
     {
         $this->_elements[$element->id] = $element;
         return new RecordItem([
             'record' => $this,
             'type' => $type,
             'elementId' => $element->id,
-            'resultId' => $result ? $result->id : null,
             'items' => $items
         ]);
     }
@@ -102,6 +133,28 @@ class Record extends Model
         return $this->hasElement($elementId) ? $this->_elements[$elementId] : null;
     }
 
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        $data = [
+            'jobRoles' => []
+        ];
+        foreach ($this->jobRoles as $id => $jobRole) {
+            $data['jobRoles'][$id] = $jobRole->getData();
+        }
+        return $data;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return Json::encode($this->getData());
+    }
+
 
     /**
      * @param $moduleGroup
@@ -114,12 +167,7 @@ class Record extends Model
         foreach ($jobRoleModuleEntries as $moduleEntry) {
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
                 $items = $this->_getModuleUnitGroupItems($moduleEntry);
-                $module = [
-                    'item' => $this->addItem('module', $moduleEntry, null, $items),
-                    'result' => $this->_getResult('module', $moduleEntry),
-                    'unitGroups' => $items
-                ];
-                $return[$moduleEntry->id] = $module;
+                $return[$moduleEntry->id] = $this->addItem('module', $moduleEntry, $items);
             }
         }
         return $return;
@@ -134,11 +182,7 @@ class Record extends Model
         $return = [];
         foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroupBlock) {
             $items = $this->_getUnitGroupUnitItems($unitGroupBlock);
-            $unitGroup = [
-                'item' => $this->addItem('unitGroup', $unitGroupBlock,null, $items),
-                'units' => $items
-            ];
-            $return[$unitGroupBlock->id] = $unitGroup;
+            $return[$unitGroupBlock->id] = $this->addItem('unitGroup', $unitGroupBlock, $items);
         }
         return $return;
     }
@@ -151,37 +195,8 @@ class Record extends Model
     {
         $return = [];
         foreach ($unitGroupBlock->unitEntries->all() as $unitEntry) {
-            $unit = [
-                'item' => $this->addItem('unit', $unitEntry),
-                'result' => $this->_getResult($unitEntry),
-            ];
-            $return[$unitEntry->id] = $unit;
+            $return[$unitEntry->id] = $this->addItem('unit', $unitEntry);
         }
         return $return;
-    }
-
-    /**
-     * @param $type
-     * @param $entry
-     */
-    private function _getResult($type = 'unit', Entry $entry = null)
-    {
-
-    }
-
-    public function getData()
-    {
-        $data = [
-            'jobRoles' => []
-        ];
-        foreach ($this->jobRoles as $id => $jobRole) {
-            $data['jobRoles'][$id] = $jobRole['item']->getData();
-        }
-        return $data;
-    }
-
-    public function __toString()
-    {
-        return \GuzzleHttp\json_encode($this->getData());
     }
 }
