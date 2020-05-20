@@ -1,0 +1,21 @@
+{% extends "_layout" %}
+
+{% block content %}
+        {% for jobRole in currentUser.record.jobRoles %}
+                {{ jobRole.title }}<br />
+                {% for moduleGroup in jobRole.moduleGroups %}
+                         - {{ moduleGroup.title }}<br />
+                        {% for module in moduleGroup.modules %}
+                            -- {{ module.title }}
+                            {% if module.hasResult %} RESULT ID #{{ module.result.id }} {% endif %}<br /><br />
+                            {% for unitGroup in module.unitGroups %}
+                                --- {{ unitGroup.title }}<br />
+                                {% for unit in unitGroup.units %}
+                                    ---- {{ unit.title }}
+                                    {% if unit.hasResult %}  RESULT ID #{{ unit.result.id }} {% endif %}<br />
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                {% endfor %}
+        {% endfor %}
+{% endblock %}
