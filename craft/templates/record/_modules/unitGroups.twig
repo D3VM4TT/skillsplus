@@ -1,7 +1,3 @@
-{% if role is defined %}
-    {% set moduleElementId = role.id ~ module.id %}
-{% endif %}
-
 <div id="m{{ moduleElementId }}" class="unit-groups">
     {% for unitGroup in module.moduleUnitGroups.all() %}
         {% set addResult = unitGroup.enableSubmissions %}

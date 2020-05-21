@@ -34,19 +34,31 @@ class PackageBehavior extends Behavior
         if (!$this->owner->packageCoreModuleGroup) {
             return [];
         }
-        $modules = [
+        $modulesGroups = [
             [
-                'entry'    => $this->owner->packageCoreModuleGroup->one(),
+                'category' => $this->owner->packageCoreModuleGroup->one(),
                 'level'    => $this->owner->packageCoreLevel
             ]
         ];
         foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
-            $modules[] = [
-                'entry'    => $optionalModuleGroupBlock->optionalModuleGroup->one(),
+            $modulesGroups[] = [
+                'category' => $optionalModuleGroupBlock->optionalModuleGroup->leaves()->one(),
                 'level'    => $optionalModuleGroupBlock->optionalLevel
             ];
         }
-        return $modules;
+        return $modulesGroups;
+    }
+
+    /**
+     * @return null
+     */
+    public function moduleGroupCategories()
+    {
+        $categories = [];
+        foreach($this->moduleGroups() as $moduleGroup) {
+            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
+        }
+        return $categories;
     }
 
     /**

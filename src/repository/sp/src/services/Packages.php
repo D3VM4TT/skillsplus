@@ -393,32 +393,6 @@ class Packages extends Component
     }
 
     /**
-     * @todo move to behaviour
-     *
-     * @param $package
-     * @return array
-     */
-    public function getPackageModules($package)
-    {
-        if (!$package) {
-            return [];
-        }
-        $modules = [
-            [
-                'entry' => $package->packageCoreModule->one(),
-                'level' => $package->packageCoreLevel
-            ]
-        ];
-        foreach ($package->packageOptionalModules as $optionalModuleBlock) {
-            $modules[] = [
-                'entry' => $optionalModuleBlock->optionalModule->one(),
-                'level' => $optionalModuleBlock->optionalLevel
-            ];
-        }
-        return $modules;
-    }
-
-    /**
      * @param $package
      * @return array
      */
@@ -429,19 +403,16 @@ class Packages extends Component
     }
 
     /**
-     * @todo move to behaviour
      *
      * @param $package
      * @return array
      */
     public function getPackageModuleEntries($package)
     {
-        $modules = $this->getPackageModules($package);
-        $entries = [];
-        foreach ($modules as $module) {
-            $entries[] = $module['entry'];
-        }
-        return $entries;
+        $criteria = Entry::find();
+        $criteria->section = 'modules';
+        $criteria->relatedTo(['targetElement' => $package->coreModuleGroup->id, 'field' => 'moduleGroup']);
+        return $criteria->all();
     }
 
     /**

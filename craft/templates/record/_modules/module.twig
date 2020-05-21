@@ -1,7 +1,3 @@
-{# element id used in html/js passed as ref to find correct tab #}
-{% if moduleElementId is not defined %}
-    {% set moduleElementId = role.id ~ moduleGroup.id ~ module.id %}
-{% endif %}
 <div id="module{{ moduleElementId }}" class="module open">
     {% if  module.type == 'cpd' %}
         {% if module.cycleStartDate > date() %}

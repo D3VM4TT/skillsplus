@@ -29,6 +29,7 @@
             </div>
             <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
                 {% for moduleGroup in moduleGroups.all() %}
+                    {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                     {% include 'record/_modules/moduleGroup' %}
                 {% endfor %}
             </section>
