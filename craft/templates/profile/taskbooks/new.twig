@@ -7,7 +7,7 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageCoreModule = entry is defined and entry.packageCoreModule ? entry.packageCoreModule.one : null %}
+{% set packageCoreModuleGroup = entry is defined and entry.packageCoreModuleGroup ? entry.packageCoreModuleGroup.one : null %}
 
 {% set section = craft.sections.getSectionByHandle('packages') %}
 
@@ -30,8 +30,7 @@
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
             {% endfor %}
 
-            {% set coreModules = craft.entries.section('modules').type('taskbook').moduleCore(1).all() %}
-            {% set optionalModulesCount = craft.entries.section('modules').type('taskbook').moduleCore(0).count() %}
+            {% set coreModulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
 
             {% if entry is defined %}
                 {{ ui.errorList(entry.getFirstErrors()) }}
@@ -43,13 +42,17 @@
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
                 {{ redirectInput('profile/taskbooks/view/{id}') }}
-                {% if coreModules|length %}
+                {% if not coreModulesGroups|length %}
                     <div class="field--wrapper">
-                        <label for="coreModule" class="no-float">Core Module:</label>
-                        <select class="core-module" name="fields[packageCoreModule][]">
-                            {% for coreModule in coreModules %}
-                                <option {% if entry is defined and packageCoreModule and packageCoreModule.id == coreModule.id %}selected {% endif %}
-                                        data-minimum="{{ coreModule.moduleMinimumOptional }}" value="{{ coreModule.id }}">{{ coreModule.title }}</option>
+                        <p style="color:red;">There are currently no core module groups available.</p>
+                    </div>
+                {% else %}
+                    <div class="field--wrapper">
+                        <label for="coreModule" class="no-float">Core Module Group:</label>
+                        <select class="core-module" name="fields[packageCoreModuleGroup][]">
+                            {% for coreModuleGroup in coreModulesGroups %}
+                                <option {% if entry is defined and packageCoreModuleGroup and packageCoreModuleGroup.id == coreModuleGroup.id %}selected {% endif %}
+                                        data-minimum="{{ coreModuleGroup.moduleMinimumOptional }}" value="{{ coreModuleGroup.id }}">{{ coreModuleGroup.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -61,12 +64,12 @@
                             {% endfor %}
                         </select>
                     </div>
-                    {% if optionalModulesCount %}
-                        {% for coreModule in coreModules %}
-                            {% set optionalModules = craft.entries.section('modules').type('taskbook').moduleCore(0).relatedTo(coreModule).all() %}
-                            {% include 'profile/taskbooks/_optionalModules' with {modules: optionalModules, coreModule: coreModule, entry: entry is defined ? entry} %}
+                        {% for coreModuleGroup in coreModulesGroups %}
+                            {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(coreModuleGroup).level(2).all() %}
+                            {% if optionalModuleGroups|length %}
+                                {% include 'profile/taskbooks/_optionalModuleGroups' with {moduleGroups: optionalModuleGroups, coreModuleGroup: coreModuleGroup, entry: entry is defined ? entry} %}
+                            {% endif %}
                         {% endfor %}
-                    {% endif %}
                 {% endif %}
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Package</button>
@@ -75,11 +78,11 @@
         </div>
     </section>
     <script id="input-template" type="text/template">
-        {% set blocktype = craft.lantra.spBlockType('packageOptionalModules') %}
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][type]" value="{{ blocktype.id }}" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][enabled]" value="1" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalModule][]" value="{optionalModuleId}" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModules][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
+        {% set blocktype = craft.lantra.spBlockType('packageOptionalModuleGroups') %}
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][type]" value="{{ blocktype.id }}" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][enabled]" value="1" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalModuleGroup][]" value="{optionalModuleGroupId}" />
+        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
     </script>
 {% endblock %}
 
@@ -110,7 +113,7 @@
                 l = $(this).find('select').val(),
                 t = $('#input-template').clone().html();
             if (c.is(':checked')) {
-                t = t.replace(/{n}/g, n).replace(/{optionalModuleId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
                 $('form#taskbooks').prepend($(t));
                 n ++;
             }

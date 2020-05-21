@@ -21,29 +21,29 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function getCoreModule()
+    public function getCoreModuleGroup()
     {
-        return $this->owner->packageCoreModule ? $this->owner->packageCoreModule->one() : null;
+        return $this->owner->packageCoreModuleGroup ? $this->owner->packageCoreModuleGroup->one() : null;
     }
 
     /**
      * @return null
      */
-    public function modules()
+    public function moduleGroups()
     {
-        if (!$this->owner->packageCoreModule) {
+        if (!$this->owner->packageCoreModuleGroup) {
             return [];
         }
         $modules = [
             [
-                'entry'    => $this->owner->packageCoreModule->one(),
+                'entry'    => $this->owner->packageCoreModuleGroup->one(),
                 'level'    => $this->owner->packageCoreLevel
             ]
         ];
-        foreach($this->owner->packageOptionalModules->all() as $optionalModuleBlock) {
+        foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
             $modules[] = [
-                'entry'    => $optionalModuleBlock->optionalModule->one(),
-                'level'    => $optionalModuleBlock->optionalLevel
+                'entry'    => $optionalModuleGroupBlock->optionalModuleGroup->one(),
+                'level'    => $optionalModuleGroupBlock->optionalLevel
             ];
         }
         return $modules;

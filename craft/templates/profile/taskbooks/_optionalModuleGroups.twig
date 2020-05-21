@@ -1,0 +1,43 @@
+<div class="taskbook-optional taskbook-optional-{{ coreModuleGroup.id }}">
+    {% if moduleGroups|length  %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th>Optional Module Groups</th>
+                <th>Level</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for moduleGroup in moduleGroups %}
+                {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, moduleGroup.id)  %}
+                <tr class="optional-module">
+                    <td>{{ moduleGroup.title }}</td>
+                    <td>
+                        <select class="optional-level" name="optionalLevel">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if packageOptionalModuleGroupRow and packageOptionalModuleGroupRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="optional" type="checkbox" name="optionalModuleGroup" value="{{ moduleGroup.id }}" {% if packageOptionalModuleGroupRow %}checked{% endif %}>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
+        {% for row in coreModuleGroup.moduleCosts %}
+           Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />
+        {% endfor %}
+            Max Cost: £{{ coreModuleGroup.moduleMaxCost }}</p>
+        {% if coreModuleGroup.moduleMinimumOptional %}
+            Minimum optional modules: {{ coreModuleGroup.moduleMinimumOptional }}
+        {% endif %}
+        </div>
+    {% else %}
+        <p>There are currently no optional modules for {{ coreModuleGroup.title }}.</p>
+        <p>&nbsp;</p>
+    {% endif %}
+</div>

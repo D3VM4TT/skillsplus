@@ -27,9 +27,9 @@
             <thead>
                 <tr>
                     <th>Date Created</th>
-                    <th>Core Module</th>
+                    <th>Core Module Group</th>
                     <th>Level</th>
-                    <th>Optional Modules</th>
+                    <th>Optional Module Groups</th>
                     <th>Cost</th>
                     <th>Paid</th>
                 <tr>
@@ -38,16 +38,20 @@
                 {% for package in packages.all %}
                     <tr>
                         <td>{{ package.dateCreated|date('d/m/y') }}</td>
-                        {% if not package.packageCoreModule.count %}
-                            <td style="color:red">Invalid Core Module</td>
+                        {% if not package.coreModuleGroup %}
+                            <td style="color:red">Invalid Core Module Group</td>
                         {% else %}
-                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.packageCoreModule.one.title }}</a></td>
+                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.coreModuleGroup.title }}</a></td>
                         {% endif %}
                         <td>{{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</td>
                         <td>
-                            {% for optionalModuleBlock in package.packageOptionalModules.all %}
-                                {% set module = optionalModuleBlock.optionalModule.one %}
-                                {{ module.title }} ({{ craft.lantra.taskbookLevel(optionalModuleBlock.optionalLevel) }})<br />
+                            {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}
+                                {% if not moduleGroup %}
+                                    Invalid Optional Module Group<br />
+                                {% else %}
+                                    {{ moduleGroup.title }} ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                {% endif %}
                             {% endfor %}
                         </td>
                         <td>£{{ package.packageCost }}</td>

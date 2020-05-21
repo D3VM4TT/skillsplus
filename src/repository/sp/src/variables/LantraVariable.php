@@ -97,9 +97,9 @@ class LantraVariable
      * @param $moduleId
      * @return null
      */
-    public function getOptionalModuleRow($package = null, $moduleId)
+    public function getOptionalModuleGroupRow($package = null, $moduleGroupId)
     {
-        return Lantra::$app->packages->getOptionalModuleRow($package, $moduleId);
+        return Lantra::$app->packages->getOptionalModuleGroupRow($package, $moduleGroupId);
     }
 
     /**

@@ -66,7 +66,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1590073818
+dateModified: 1590074135
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -342,23 +342,25 @@ fields:
   164fe93f-d610-4819-8ca4-77cc4a88112e:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageCoreModule
+    handle: packageCoreModuleGroup
     instructions: ''
-    name: 'Package Core Module'
+    name: 'Package Core Module Group'
     searchable: true
     settings:
-      limit: '1'
+      allowLimit: false
+      allowMultipleSources: false
+      branchLimit: '1'
+      limit: null
       localizeRelations: false
-      selectionLabel: 'Add core module'
-      source: null
-      sources:
-        - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+      selectionLabel: 'Select core module group'
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+      sources: '*'
       targetSiteId: null
       validateRelatedElements: ''
       viewMode: null
     translationKeyFormat: null
     translationMethod: site
-    type: craft\fields\Entries
+    type: craft\fields\Categories
   19bb4e6d-2834-456c-93b9-6b942b47b8d4:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -2580,26 +2582,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
-  bb939b81-7659-4976-b0bb-8d8f76d8c4d0:
-    contentColumnType: string
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: moduleCoreModule
-    instructions: ''
-    name: 'Module Core Module'
-    searchable: true
-    settings:
-      limit: '1'
-      localizeRelations: false
-      selectionLabel: 'Select core module'
-      source: null
-      sources:
-        - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-      targetSiteId: null
-      validateRelatedElements: ''
-      viewMode: null
-    translationKeyFormat: null
-    translationMethod: site
-    type: craft\fields\Entries
   bb9d49ae-464b-4650-b8f1-fa4f12b3c769:
     contentColumnType: text
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -3303,28 +3285,28 @@ fields:
   edcdcb64-8b0b-4f31-ab57-106c9e252317:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageOptionalModules
+    handle: packageOptionalModuleGroups
     instructions: ''
-    name: 'Package Optional Modules'
+    name: 'Package Optional Module Groups'
     searchable: true
     settings:
       columns:
         __assoc__:
           -
-            - e76e4f67-f16a-4ee8-9823-1d2f0cdf27f6
+            - 00afc899-b37a-415c-8829-b06a42a8638f
             -
               __assoc__:
                 -
                   - width
                   - ''
           -
-            - ace5ad19-a3ad-4ff7-be68-a5c34a960238
+            - 9a61af4b-dccb-4d5e-9bc1-53b775f9de18
             -
               __assoc__:
                 -
                   - width
                   - ''
-      contentTable: '{{%stc_packageoptionalmodules}}'
+      contentTable: '{{%stc_packageoptionalmodulegroups}}'
       fieldLayout: table
       maxRows: ''
       minRows: ''
@@ -5099,9 +5081,6 @@ sections:
                   a1f70b85-8550-4cf0-87a5-1f16cde82405:
                     required: false
                     sortOrder: 3
-                  bb939b81-7659-4976-b0bb-8d8f76d8c4d0:
-                    required: false
-                    sortOrder: 4
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: false
                     sortOrder: 1
@@ -5316,23 +5295,25 @@ superTableBlockTypes:
       00afc899-b37a-415c-8829-b06a42a8638f:
         contentColumnType: string
         fieldGroup: null
-        handle: optionalModule
+        handle: optionalModuleGroup
         instructions: ''
-        name: Module
+        name: 'Module Group'
         searchable: true
         settings:
-          limit: ''
+          allowLimit: false
+          allowMultipleSources: false
+          branchLimit: '1'
+          limit: null
           localizeRelations: false
-          selectionLabel: ''
-          source: null
-          sources:
-            - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+          selectionLabel: 'Select optional module group'
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+          sources: '*'
           targetSiteId: null
           validateRelatedElements: ''
           viewMode: null
         translationKeyFormat: null
         translationMethod: site
-        type: craft\fields\Entries
+        type: craft\fields\Categories
       9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
         contentColumnType: smallint(2)
         fieldGroup: null

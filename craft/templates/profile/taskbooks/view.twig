@@ -9,7 +9,7 @@
 
 {% extends "_layout" %}
 
-{% set packageTitle = package.packageCoreModule.one.title ~ craft.lantra.taskbookLevel(package.packageCoreLevel) %}
+{% set packageTitle = package.coreModuleGroup.title ~ ' ' ~ craft.lantra.taskbookLevel(package.packageCoreLevel) %}
 
 {% block content %}
 <section class="page dashboard">
@@ -27,9 +27,9 @@
     <div class="page-content">
         <h2>{{ packageTitle }}</h2>
         <p>Created {{ package.packageDateCreated|date('d/m/y') }}</p>
-        {% for optionalModuleBlock in package.packageOptionalModules.all %}
-            {% set module = optionalModuleBlock.optionalModule.one %}
-            <p>{{ module.title }} ({{ craft.lantra.taskbookLevel(optionalModuleBlock.optionalLevel) }})</p>
+        {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+            {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}
+            <p>{{ moduleGroup.title }} ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})</p>
         {% endfor %}
         <p><strong>£{{ package.packageCost }}</strong>
 
