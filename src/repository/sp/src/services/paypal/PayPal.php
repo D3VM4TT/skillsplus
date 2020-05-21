@@ -133,7 +133,7 @@ class PayPal extends Component
      */
     private function _encryptCart($data)
     {
-        if (!$this->_checkCertificates()) {
+        if (!$this->_checkSettings()) {
             return null;
         }
         $data['cert_id'] = $this->certId;
@@ -156,8 +156,12 @@ class PayPal extends Component
     /**
      * @throws \Exception
      */
-    private function _checkCertificates()
+    private function _checkSettings()
     {
+        if (!$this->business) {
+            throw new \Exception('No PayPal business has not been setup.');
+            return false;
+        }
         if (!is_file($this->payPalCertPath) || !is_file($this->lantraCertPath) || !is_file($this->lantraKeyPath)) {
             throw new \Exception('PayPal certificates not found. Check access to ' . $this->certStorage);
             return false;
