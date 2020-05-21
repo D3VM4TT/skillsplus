@@ -33,13 +33,18 @@ class Packages extends Component
         $complete = false;
         $error = false;
 
+        $i = 1;
         foreach ($entry->workflow as $step) {
+            if ($i == 1 && $step->stepType->value != 'assessment') {
+                $error = 'First step must be an assessment step.';
+                $event->isValid = false;
+            }
             if ($step->stepType->value == 'assessment') {
-                $assessment = true;
-                if ($review || $complete) {
-                    $error = 'Assessments can not follow review or complete step.';
+                if ($assessment) {
+                    $error = 'Workflow can only contain one assessment step.';
                     $event->isValid = false;
                 }
+                $assessment = true;
             }
             if ($step->stepType->value == 'review') {
                 $review = true;
@@ -63,9 +68,14 @@ class Packages extends Component
                 $step->addError('stepAssignJobRole', 'Job role(s) required.');
                 $event->isValid = false;
             }
+            $i++;
         }
-        if (!$complete) {
-            $error = 'Workflow must contain a complete step.';
+        if (!$assessment) {
+            $error = 'Workflow must contain an assessment step.';
+            $event->isValid = false;
+        }
+        if ($review && !$complete) {
+            $error = 'If you add any review steps you must also add a complete step.';
             $event->isValid = false;
         }
         if ($error) {

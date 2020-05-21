@@ -16,6 +16,22 @@ categoryGroups:
                 sortOrder: 3
             name: Settings
             sortOrder: 1
+          -
+            fields:
+              680431de-8445-48e9-8acf-e32d867f73dd:
+                required: false
+                sortOrder: 3
+              a1f70b85-8550-4cf0-87a5-1f16cde82405:
+                required: false
+                sortOrder: 1
+              da81a368-f84c-47f8-9e3a-b83346be0865:
+                required: false
+                sortOrder: 2
+              e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+                required: false
+                sortOrder: 4
+            name: Taskbooks
+            sortOrder: 2
     handle: moduleGroups
     name: 'Module Groups'
     siteSettings:
@@ -24,7 +40,7 @@ categoryGroups:
         template: null
         uriFormat: null
     structure:
-      maxLevels: null
+      maxLevels: 2
       uid: bc778126-df63-4aaa-98b1-a3cbd027192f
   d83da856-af9d-458e-8b34-08ff74c012b5:
     fieldLayouts:
@@ -50,7 +66,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1589393077
+dateModified: 1590073818
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -834,7 +850,7 @@ fields:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: workflow
-    instructions: ''
+    instructions: 'The first step must be an assessment step.  Review and complete steps are optional but if you add any review steps, the last step must be a complete step.  If there is only one review you should add assessment -> complete.  If there are multiple reviews you should add assessment -> review -> review -> complete.'
     name: Workflow
     searchable: true
     settings:
@@ -2328,9 +2344,9 @@ fields:
   a1f70b85-8550-4cf0-87a5-1f16cde82405:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: moduleCore
-    instructions: ''
-    name: 'Module Core'
+    handle: moduleGroupTaskbooks
+    instructions: 'Include this module group in taskbook core options?'
+    name: Taskbooks
     searchable: true
     settings:
       default: ''
@@ -6033,6 +6049,17 @@ superTableBlockTypes:
         settings:
           optgroups: true
           options:
+            -
+              __assoc__:
+                -
+                  - label
+                  - Admin
+                -
+                  - value
+                  - admin
+                -
+                  - default
+                  - ''
             -
               __assoc__:
                 -
