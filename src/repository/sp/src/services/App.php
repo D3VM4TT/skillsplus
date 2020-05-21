@@ -10,6 +10,8 @@ namespace lantra\sp\services;
 
 use craft\base\Component;
 
+use lantra\sp\services\paypal\PayPal;
+
 /**
  * Class App
  * @package lantra\sp\services
@@ -21,7 +23,7 @@ use craft\base\Component;
  * @property-read \lantra\sp\services\Notify $notify
  * @property-read \lantra\sp\services\Queue $queue
  * @property-read \lantra\sp\services\Packages $packages
- * @property-read \lantra\sp\services\PayPal $paypal
+ * @property-read \lantra\sp\services\paypal\PayPal $paypal
  * @property-read \lantra\sp\services\Records $records
  * @property-read \lantra\sp\services\Reports $reports
  * @property-read \lantra\sp\services\Results $results

@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2020 Coffee Bean Design
  */
 
-namespace lantra\sp\services;
+namespace lantra\sp\services\paypal;
 
 use Craft;
 use craft\base\Component;
@@ -26,9 +26,26 @@ class PayPal extends Component
     private $business;
     private $formUrl;
 
+    public $use_sandbox = false;
+    public $ipn;
+
     public function __construct(array $config = [])
     {
+        $this->ipn = new Ipn();
+        if (getenv('ENVIRONMENT') != 'production') {
+            $this->useSandbox();
+            $this->ipn->useSandbox();
+        }
+
         parent::__construct($config);
+    }
+
+    /**
+     *
+     */
+    public function useSandbox()
+    {
+        $this->use_sandbox = true;
     }
 
     /**
@@ -76,41 +93,36 @@ class PayPal extends Component
         return LantraHelper::renderCpTemplate('sp/forms/paypal', $variables);
     }
 
-
     /**
      * @throws \yii\base\ErrorException
      * @throws \yii\base\Exception
      */
     private function _setup()
     {
-        if (getenv('ENVIRONMENT') == 'production') {
-            $this->business = 'accounts@lantra.co.uk';
-            $this->formUrl = 'https://www.paypal.com/cgi-bin/webscr';
+        if ($this->use_sandbox) {
+            $this->formUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+            $this->payPalCertPath = __DIR__ . "/cert/paypal-sandbox.pem";
         }
         else {
-            $this->business = 'lantra-business@thisistraffic.co.uk';
-            $this->formUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+            $this->formUrl = 'https://www.paypal.com/cgi-bin/webscr';
+            $this->payPalCertPath = __DIR__ . "/cert/paypal-live.pem";
         }
 
         $certName = 'lantra-public-' . getenv('SITE') . '-' . getenv('ENVIRONMENT') . '.pem';
 
         $this->certId = LantraHelper::setting('payPalCertId');
+        $this->business = trim(LantraHelper::setting('payPalBusiness', 'accounts@lantra.co.uk'));
 
-        ## sync the certificates to storage
-        $payPalCert = trim(LantraHelper::setting('payPalPublicCert'));
+        ## sync the certificate to storage
         $lantraCert = trim(LantraHelper::setting('payPalLantraCert'));
         $lantraKey = trim(LantraHelper::setting('payPalLantraKey'));
-
         $this->certStorage = Craft::$app->path->getStoragePath() . '/paypal/';
-
-        if ($this->certId && $payPalCert && $lantraCert && $lantraKey) {
+        if ($this->certId && $lantraCert && $lantraKey) {
             FileHelper::createDirectory($this->certStorage);
             $this->lantraCertPath = $this->certStorage . $certName;
             $this->lantraKeyPath = $this->certStorage . 'lantra-private.pem';
-            $this->payPalCertPath = $this->certStorage . 'paypal-public.pem';
             FileHelper::writeToFile($this->lantraCertPath, $lantraCert);
             FileHelper::writeToFile($this->lantraKeyPath, $lantraKey);
-            FileHelper::writeToFile($this->payPalCertPath, $payPalCert);
         }
     }
 
@@ -146,7 +158,7 @@ class PayPal extends Component
      */
     private function _checkCertificates()
     {
-        if (!is_file($this->payPalCertPath) || !is_file($this->lantraKeyPath) || !is_file($this->lantraCertPath)) {
+        if (!is_file($this->payPalCertPath) || !is_file($this->lantraCertPath) || !is_file($this->lantraKeyPath)) {
             throw new \Exception('PayPal certificates not found. Check access to ' . $this->certStorage);
             return false;
         }

@@ -1,12 +1,10 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textareaField ({
-    label:			"PayPal Public Certificate",
-    id:				"payPalPublicCert",
-    name:			"payPalPublicCert",
-    value:		    settings.payPalPublicCert,
-    rows:           20,
-    cols:           50
+{{ forms.textField ({
+    label:			"PayPal Business (email address)",
+    id:				"payPalBusiness",
+    name:			"payPalBusiness",
+    value:		    settings.payPalBusiness
 }) }}
 
 {{ forms.textField ({
