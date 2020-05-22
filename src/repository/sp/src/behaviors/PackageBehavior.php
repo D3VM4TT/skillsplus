@@ -266,16 +266,38 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Get the next step that can be reviewed (has user)
      *
+     * @return null
      */
     public function getNextStep()
     {
         foreach($this->owner->packageReviews as $step) {
-            if ($step->reviewUser->count() && !$step->reviewDate) {
+            if (!$step->reviewDate) {
                 return $step;
             }
         }
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasNextStep()
+    {
+        return $this->getNextStep() ? true : false;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isNextStepAssigned()
+    {
+        if (null == $step = $this->getNextStep()) {
+            return null;
+        }
+        return $step->reviewUser->count() ? true : false;
     }
 
     /**

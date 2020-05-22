@@ -10,7 +10,7 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ package.coreModuleGroup.title }}</h2></div>
-                        {% if package.isManager(currentUser, true) and package.nextStep %}
+                        {% if package.isManager(currentUser, true) and package.hasNextStep %}
                             <p>Next Step: {{ package.nextStep.reviewStepName }}</p>
                         {% endif %}
                     </div>
@@ -19,11 +19,11 @@
                         {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
                         {% if unitsComplete >= totalUnits %}
                             {% if package.packageStatus == 'active' %}
-                                {% if craft.lantra.isPackageUnitsEndorsed(package) %}
-                                    Status: Endorsed
+                                {% if package.hasNextStep and not package.isNextStepAssigned %}
+                                    Units complete but assessor has not been assigned.  Contact your manager.
                                 {% else %}
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                                       data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Request Review</a>
+                                       data-userid="{{ cpdUser.id }}" data-action="entries/request-assessment">Request Assessment</a>
                                 {% endif %}
                             {% elseif package.packageStatus == 'assesment' %}
                                 Status: Assessed
@@ -33,7 +33,7 @@
                                 Status: Complete
                             {% endif %}
                         {% else %}
-                            Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for endorsement.
+                            Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
                         {% endif %}
                     </div>
                 </div>

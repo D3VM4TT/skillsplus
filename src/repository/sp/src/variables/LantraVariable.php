@@ -104,15 +104,6 @@ class LantraVariable
 
     /**
      * @param Entry $package
-     * @return bool
-     */
-    public function isPackageUnitsEndorsed(Entry $package)
-    {
-        return Lantra::$app->packages->isPackageUnitsEndorsed($package);
-    }
-
-    /**
-     * @param Entry $package
      * @param $complete
      * @return array
      */
