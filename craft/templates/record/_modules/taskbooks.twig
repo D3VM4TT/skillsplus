@@ -10,9 +10,13 @@
                     <div class="align-horizontal">
                         <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
                         <div><h2>{{ package.coreModuleGroup.title }}</h2></div>
+                        <p>
                         {% if package.isManager(currentUser, true) and package.hasNextStep %}
-                            <p>Next Step: {{ package.nextStep.reviewStepName }}</p>
+                            Next Step: {{ package.nextStep.reviewStepName }}
+                        {% else %}
+                            Status: {{ package.packageStatus  }}
                         {% endif %}
+                        </p>
                     </div>
                     <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
                         {% set totalUnits = craft.lantra.countPackageUnits(package) %}
@@ -25,10 +29,8 @@
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
                                        data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
                                 {% endif %}
-                            {% elseif package.packageStatus == 'locked' %}
-                                Status: Locked
-                            {% elseif package.packageStatus == 'complete' %}
-                                Status: Complete
+                            {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
+                                <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
                             {% endif %}
                         {% else %}
                             Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
@@ -66,7 +68,7 @@
                             {% set moduleGroup = row.category %}
                             {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
                             {% set level = row.level %}
-                            {% set readOnly = not isAssessor and package.isLocked %}
+                            {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
                             {% include 'record/_modules/moduleGroup' %}
                         {% endfor %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">

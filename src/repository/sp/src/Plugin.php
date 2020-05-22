@@ -343,6 +343,9 @@ class Plugin extends BasePlugin
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
 
+            ## taskbook review
+            'management/<section>/edit/<elementId>/review' => ['template' => 'management/index'],
+
             ## reporting routes
             'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],
             'reporting/custom/new'                      => ['template' => 'reporting/custom/_form'],

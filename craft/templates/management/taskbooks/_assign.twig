@@ -1,0 +1,46 @@
+{% if package.canAssign() %}
+    {% set submitForm = false %}
+    <h2>Assigned Managers</h2>
+    <table class="data">
+        <thead>
+        <tr>
+            <th>Step</th>
+            <th>Managers</th>
+        </tr>
+        </thead>
+        {% for step in package.packageReviews %}
+            {% if package.canAssignStep(step) %}
+                <tr>
+                    <td>{{ step.reviewStepName }}</td>
+                    <td>
+                        {% if package.canAssignStep(step) and not step.reviewDate %}
+                            {% set stepManagers = package.getStepManagers(step) %}
+                            {% if stepManagers %}
+                                {% set submitForm = true %}
+                                <select name="steps[{{ step.id }}][manager]">
+                                    <option value="">Select Manager:</option>
+                                    {% for m in stepManagers %}
+                                        <option value="{{ m.id }}"{% if step.reviewUser.count and step.reviewUser.one.id == m.id %} selected{% endif %}>{{ m.fullname }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <span style="color:red">Invalid</span>
+                            {% endif %}
+                        {% elseif step.reviewUser.count %}
+                            {{ step.reviewUser.one.fullname }} - {{ step.reviewDate|date('d/m/y') }} - {{ step.reviewPassed ? 'Passed' : 'Failed' }}
+                        {% else %}
+                            Unassigned
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% if submitForm %}
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Update Package</button>
+        </div>
+    {% endif %}
+{% else %}
+    <p style="color:red"><strong>You are not allowed to assign managers to this package.</strong></p>
+{% endif %}

@@ -1,0 +1,24 @@
+{% if nextStep %}
+    <h2 for="result">{{ nextStep.reviewStepName }}</h2>
+    {% if package.isReviewUser(currentUser, nextStep, true) %}
+        <div class="field--wrapper">
+            <label for="result">Result:</label>
+            <select id="result" name="steps[{{ nextStep.id }}][result]">
+                <option value="">Please select:</option>
+                <option value="1">Passed</option>
+                <option value="0">Failed</option>
+            </select>
+        </div>
+        <div class="field--wrapper">
+            <label for="comment">Comment:</label>
+            <textarea name="steps[{{ nextStep.id }}][comment]"></textarea>
+        </div>
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Submit Result</button>
+        </div>
+    {% else %}
+        <p style="color:red"><strong>You are not allowed to review the next step.</strong></p>
+    {% endif %}
+{% else %}
+    <p style="color:red"><strong>There are no steps to complete on this package.</strong></p>
+{% endif %}

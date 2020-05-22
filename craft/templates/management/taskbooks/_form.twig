@@ -3,14 +3,14 @@
 {% if packageId and package is not defined %}
     {% set package = craft.entries.id(packageId).one %}
 {% endif %}
+{% set review = craft.app.request.getSegment(5) == 'review' %}
+
 {% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManagers') %}
 {% set nextStep = package.nextStep %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Taskbooks" %}
-
-{% set submitForm = false %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -28,70 +28,11 @@
         {{ csrfInput() }}
         {{ actionInput('sp/packages/update-package') }}
         <input type="hidden" name="packageId" value="{{ package.id }}">
-        {% if package.canAssign() %}
-            <h2>Assign Managers</h2>
-            <table class="data">
-                <thead>
-                    <tr>
-                        <th>Step</th>
-                        <th>Manager</th>
-                    </tr>
-                </thead>
-            {% for step in package.packageReviews %}
-                {% if package.canAssignStep(step) %}
-                <tr>
-                    <td>{{ step.reviewStepName }}</td>
-                    <td>
-                        {% if package.canAssignStep(step) and not step.reviewDate %}
-                            {% set stepManagers = package.getStepManagers(step) %}
-                            {% if stepManagers %}
-                                {% set submitForm = true %}
-                                <select name="steps[{{ step.id }}][manager]">
-                                    <option value="">Select Manager:</option>
-                                    {% for m in stepManagers %}
-                                        <option value="{{ m.id }}"{% if step.reviewUser.count and step.reviewUser.one.id == m.id %} selected{% endif %}>{{ m.fullname }}</option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <span style="color:red">Invalid</span>
-                            {% endif %}
-                        {% elseif step.reviewUser.count %}
-                            {{ step.reviewUser.one.fullname }} - {{ step.reviewDate|date('d/m/y') }} - {{ step.reviewPassed ? 'Passed' : 'Failed' }}
-                         {% else %}
-                             Unassigned
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-            </table>
+        {% if review  %}
+            {% include 'management/taskbooks/_review' %}
+        {% else %}
+            {% include 'management/taskbooks/_assign' %}
         {% endif %}
-
-        {% if nextStep %}
-            <h2 for="result">{{ nextStep.reviewStepName }}</h2>
-            {% if package.isReviewUser(currentUser, nextStep, true) %}
-                {% set submitForm = true %}
-                <div class="field--wrapper">
-                    <label for="result">Result:</label>
-                    <select id="result" name="steps[{{ nextStep.id }}][result]">
-                        <option value="">Please select:</option>
-                        <option value="1">Passed</option>
-                        <option value="0">Failed</option>
-                    </select>
-                </div>
-                <div class="field--wrapper">
-                    <label for="comment">Comment:</label>
-                    <textarea name="steps[{{ nextStep.id }}][comment]"></textarea>
-                </div>
-            {% endif %}
-        {% endif %}
-
-        {% if submitForm %}
-            <div class="container-btn">
-                <button class="button primary-bg" type="submit">Update package</button>
-            </div>
-        {% endif %}
-
         {% include '_includes/packageLog' with {package:package, admin:true} %}
     </form>
 {% endblock %}

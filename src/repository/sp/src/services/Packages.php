@@ -295,7 +295,9 @@ class Packages extends Component
             if ($step->reviewStepType == 'complete') {
                 $this->completePackage($package);
             }
-            $this->stepRequest($step->ownerId);
+            else {
+                $this->stepRequest($step->ownerId);
+            }
         }
         else {
             if ($step->reviewStepType == 'assessment') {
