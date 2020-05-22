@@ -3,12 +3,10 @@
         <thead>
         <tr>
             <th>Step</th>
+            <th>Reviewer</th>
             <th>Passed</th>
             <th>Comment</th>
             <th>Date</th>
-            {% if admin %}
-                <th>User</th>
-            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -16,12 +14,16 @@
             {% set user = step.reviewUser ? step.reviewUser.one %}
             <tr>
                 <td>{{ step.reviewStepName }}</td>
+                <td>
+                    {% if admin %}
+                        {{ user ? user.fullName }}
+                    {% else %}
+                        {{ user ? 'Assigned' : 'Not Assigned' }}
+                    {% endif %}
+                </td>
                 <td>{{ step.reviewDate ? (step.reviewPassed ? 'Yes' : 'No') : '' }}</td>
                 <th>{{ step.reviewComment }}</th>
                 <td>{{ step.reviewDate ? step.reviewDate|date('d/m/y') }}</td>
-                {% if admin %}
-                    <td>{{ user ? user.fullName }}</td>
-                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

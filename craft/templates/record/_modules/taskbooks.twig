@@ -67,6 +67,7 @@
                         {% for row in package.moduleGroups %}
                             {% set moduleGroup = row.category %}
                             {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                            {% set level = row.level %}
                             {% include 'record/_modules/moduleGroup' %}
                         {% endfor %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
