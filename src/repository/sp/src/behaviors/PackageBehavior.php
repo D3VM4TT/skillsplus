@@ -143,8 +143,11 @@ class PackageBehavior extends Behavior
         if ($manager->admin || $manager->isInGroup('schemeManagers')) {
             return true;
         }
+        ## make sure workflow step exists
+        if (null == $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId)) {
+            return false;
+        }
         ## run through job roles
-        $packageWorkflowStep = $this->getPackageWorkflowStep($step->reviewStepId);
         if ($packageWorkflowStep->stepAssignUserGroup == 'jobRole') {
             foreach ($packageWorkflowStep->stepAssignJobRole as $role) {
                 if (in_array($role->id, $user->userRole->ids())) {
@@ -228,6 +231,22 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return $this->owner->packageStatus != 'active';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isComplete()
+    {
+        return $this->owner->packageStatus == 'complete';
+    }
+
+    /**
      * @param User $user
      * @param SuperTableBlockElement $step
      * @param bool $includeAdmin
@@ -278,6 +297,23 @@ class PackageBehavior extends Behavior
             }
         }
         return null;
+    }
+
+    /**
+     * Get the previous step that can be reviewed (has date)
+     *
+     * @return null
+     */
+    public function getPreviousStep()
+    {
+        $previousStep = null;
+        foreach($this->owner->packageReviews as $step) {
+            if (!$step->reviewDate) {
+                break;
+            }
+            $previousStep = $step;
+        }
+        return $previousStep;
     }
 
     /**

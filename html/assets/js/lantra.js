@@ -296,6 +296,13 @@ $(document).ready(function(){
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
             reload = true;
         }
+        else if (action == 'packages/request-assessment') {
+            if ( ! confirm('Are you sure you want to request assessment?')) {
+                return false;
+            }
+            var data = {id: $(this).data('id'), userId: $(this).data('userid')};
+            reload = true;
+        }
         else {
             alert('Invalid action ' + action);
         }

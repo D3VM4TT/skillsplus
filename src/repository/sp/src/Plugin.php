@@ -357,7 +357,6 @@ class Plugin extends BasePlugin
             'sp/users/restore-user'                     => 'sp/users/restore-user',
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
-            'sp/users/update-package'                   => 'sp/users/update-package',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 
@@ -365,6 +364,10 @@ class Plugin extends BasePlugin
             'sp/entries/delete-entry'                   => 'sp/entries/delete-entry',
             'sp/entries/endorse-evidence'               => 'sp/entries/endorse-evidence',
             'sp/entries/pending-result'                 => 'sp/entries/pending-result',
+
+            'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
+            'sp/packages/update-package'                => 'sp/packages/update-package',
+            'sp/packages/pay/<packageId>'               => 'sp/packages/pay',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
@@ -375,8 +378,6 @@ class Plugin extends BasePlugin
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
-
-            'sp/users/pay/<packageId>'                  => 'sp/users/pay',
 
             'sp/paypal/ipn'                             => 'sp/paypal/ipn',
         ];

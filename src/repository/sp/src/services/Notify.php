@@ -38,7 +38,7 @@ class Notify extends Component
         $variables = [
             'step'      => $step,
             'package'   => $package,
-            'core'      => $package->coreModule,
+            'core'      => $package->coreModuleGroup,
             'user'      => $package->author,
             'type'      => $step->reviewStepType,
         ];
@@ -62,7 +62,7 @@ class Notify extends Component
         $variables = [
             'step'      => $step,
             'package'   => $package,
-            'core'      => $package->coreModule,
+            'core'      => $package->coreModuleGroup,
             'user'      => $package->author,
             'type'      => $step->reviewStepType,
         ];
@@ -76,7 +76,7 @@ class Notify extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendStepUpdate(SuperTableBlockElement $step)
+    function sendStepUpdate(SuperTableBlockElement $step, $user)
     {
         $result = $step->reviewPassed ? 'passed' : 'failed';
         $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->reviewStepName . ' (' . $result . ')');
@@ -85,14 +85,14 @@ class Notify extends Component
         $variables = [
             'step'      => $step,
             'package'   => $package,
-            'core'      => $package->coreModule,
+            'core'      => $package->coreModuleGroup,
             'user'      => $package->author,
             'manager'   => $manager,
             'result'    => $result
         ];
         $template = $this->getNotifySetting('stepUpdate', "Status update for {{ core.title }}: result is {{ result }}. {{ step.reviewComment }}");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($package->author->email, $subject, $message);
+        $this->notify($user->email, $subject, $message);
     }
 
     /**

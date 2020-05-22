@@ -23,12 +23,10 @@
                                     Units complete but assessor has not been assigned.  Contact your manager.
                                 {% else %}
                                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                                       data-userid="{{ cpdUser.id }}" data-action="entries/request-assessment">Request Assessment</a>
+                                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
                                 {% endif %}
-                            {% elseif package.packageStatus == 'assesment' %}
-                                Status: Assessed
-                            {% elseif package.packageStatus == 'review' %}
-                                Status: Reviewed
+                            {% elseif package.packageStatus == 'locked' %}
+                                Status: Locked
                             {% elseif package.packageStatus == 'complete' %}
                                 Status: Complete
                             {% endif %}
@@ -68,6 +66,7 @@
                             {% set moduleGroup = row.category %}
                             {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
                             {% set level = row.level %}
+                            {% set readOnly = not isAssessor and package.isLocked %}
                             {% include 'record/_modules/moduleGroup' %}
                         {% endfor %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">

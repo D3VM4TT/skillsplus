@@ -234,20 +234,18 @@ class Packages extends Component
     /**
      * @param $packageId
      * @return null
-     * @throws \Throwable
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
      */
     public function stepRequest($packageId)
     {
         if (null == $package =  Entry::findOne($packageId)) {
             return null;
         }
-
+        ## lock the package
+        $package->setFieldValue('packageStatus','locked');
+        $package->save();
         if (null != $nextStep = $package->nextStep) {
-            $this->setStatus($package->id, $nextStep->reviewStepType);
             Lantra::$app->notify->sendStepRequest($nextStep);
         }
     }
@@ -281,16 +279,113 @@ class Packages extends Component
      */
     public function stepUpdate(SuperTableBlockElement $step, $passed, $comment = '')
     {
+        $package = $step->owner;
+        $previousStep = $package->previousStep;
         $step->setFieldValue('reviewPassed', $passed);
         $step->setFieldValue('reviewComment', $comment);
         $step->setFieldValue('reviewDate', time());
-        if(Craft::$app->elements->saveElement($step)) {
-            Lantra::$app->notify->sendStepUpdate($step);
-        };
-        ## ask for the next step if applicable
+        if(!Craft::$app->elements->saveElement($step)) {
+            return;
+        }
+        ## handle pass fail
         if ($passed) {
+            if ($step->reviewStepType == 'assessment') {
+                $this->endorsePackageUnits($step->owner);
+            }
+            if ($step->reviewStepType == 'complete') {
+                $this->completePackage();
+            }
             $this->stepRequest($step->ownerId);
         }
+        else {
+            if ($step->reviewStepType == 'assessment') {
+                $this->unlockPackage();
+                ## duplicate assessment step
+                $this->_insertReviewStep($package, $step, $step->sortOrder);
+            }
+            ## duplicate assessment step and review step
+            $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
+            $this->_insertReviewStep($package, $step, $step->sortOrder);
+        }
+        ## send notification to reviewer
+        if ($step->reviewStepType == 'review') {
+            Lantra::$app->notify->sendStepUpdate($step, $previousStep->reviewUser->one());
+        }
+        ## send notification to user for assessment and complete
+        else {
+            Lantra::$app->notify->sendStepUpdate($step, $package->author);
+        }
+    }
+
+    /**
+     * @param $package
+     */
+    public function lockPackage($package)
+    {
+        $package->setFieldValue('packageStatus', 'locked');
+        $package->save();
+    }
+
+    /**
+     * @param $package
+     */
+    public function unlockPackage($package)
+    {
+        $package->setFieldValue('packageStatus', 'active');
+        $package->save();
+    }
+
+    /**
+     * @param $package
+     */
+    public function completePackage($package)
+    {
+        $package->setFieldValue('packageStatus', 'complete');
+        $package->save();
+    }
+
+    /**
+     * @param $package
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function endorsePackageUnits($package)
+    {
+        ## set unit results as endorsed
+        $unitResults = Lantra::$app->results->getPackageUserResults($package->id, $package->authorId);
+        foreach ($unitResults as $resultEntry) {
+            $resultEntry->setFieldValue('resultStatus', 'endorsed');
+            Craft::$app->elements->saveElement($resultEntry);
+        }
+    }
+
+    /**
+     * @param $package
+     * @param $step
+     * @param $sortOrder
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    private function _insertReviewStep($package, $step, $sortOrder)
+    {
+        $field = Craft::$app->fields->getFieldByHandle('packageReviews');
+        $sp = new SuperTableService();
+        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $block = new SuperTableBlockElement();
+        $block->fieldId = $field->id;
+        $block->ownerId = $package->id;
+        $block->typeId = $stepBlockType->id;
+        $block->sortOrder = $sortOrder;
+
+        $block->setFieldValues([
+            'reviewStepId'      => $step->reviewStepId,
+            'reviewStepName'    => $step->reviewStepName,
+            'reviewStepType'    => $step->reviewStepType,
+            'reviewUser'        => [$step->reviewUser->one()->id]
+        ]);
+        Craft::$app->elements->saveElement($block);
     }
 
     /**
@@ -326,25 +421,6 @@ class Packages extends Component
             return false;
         }
         $package->setFieldValue('packagePaid', true);
-        return Craft::$app->elements->saveElement($package);
-    }
-
-    /**
-     * @todo move to behaviour
-     *
-     * @param $packageId
-     * @param $status
-     * @return bool
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     */
-    public function setStatus($packageId, $status)
-    {
-        if (null == $package = Entry::findOne($packageId)) {
-            return false;
-        }
-        $package->setFieldValue('packageStatus', $status);
         return Craft::$app->elements->saveElement($package);
     }
 

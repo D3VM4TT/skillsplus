@@ -19,14 +19,14 @@
     </div>
     <div class="page-header secondary-bg">
         <h2>Manage taskbook</h2>
-        <p>{{ package.author.fullName  }} - {{ package.coreModule.title }}</p>
+        <p>{{ package.author.fullName  }} - {{ package.coreModuleGroup.title }}</p>
     </div>
 
     {{ ui.errorList(package.getFirstErrors()) }}
 
     <form class="page-form" method="post" role="form" accept-charset="UTF-8">
         {{ csrfInput() }}
-        {{ actionInput('sp/users/update-package') }}
+        {{ actionInput('sp/packages/update-package') }}
         <input type="hidden" name="packageId" value="{{ package.id }}">
         {% if package.canAssign() %}
             <h2>Assign Managers</h2>

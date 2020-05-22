@@ -66,7 +66,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1590074135
+dateModified: 1590154203
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1252,21 +1252,10 @@ fields:
           __assoc__:
             -
               - label
-              - Assessment
+              - Locked
             -
               - value
-              - assessment
-            -
-              - default
-              - ''
-        -
-          __assoc__:
-            -
-              - label
-              - Review
-            -
-              - value
-              - review
+              - locked
             -
               - default
               - ''
