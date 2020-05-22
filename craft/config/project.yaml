@@ -66,7 +66,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1590154203
+dateModified: 1590157930
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -5066,35 +5066,19 @@ sections:
                     sortOrder: 2
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 5
-                  a1f70b85-8550-4cf0-87a5-1f16cde82405:
-                    required: false
                     sortOrder: 3
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
-                    required: false
+                    required: true
                     sortOrder: 1
                 name: Module
                 sortOrder: 1
-              -
-                fields:
-                  680431de-8445-48e9-8acf-e32d867f73dd:
-                    required: false
-                    sortOrder: 2
-                  da81a368-f84c-47f8-9e3a-b83346be0865:
-                    required: false
-                    sortOrder: 1
-                  e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
-                    required: false
-                    sortOrder: 3
-                name: Costs
-                sortOrder: 2
               -
                 fields:
                   bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
                     required: false
                     sortOrder: 1
                 name: 'Column Layout'
-                sortOrder: 3
+                sortOrder: 2
         handle: taskbook
         hasTitleField: true
         name: Taskbook
