@@ -293,13 +293,13 @@ class Packages extends Component
                 $this->endorsePackageUnits($step->owner);
             }
             if ($step->reviewStepType == 'complete') {
-                $this->completePackage();
+                $this->completePackage($package);
             }
             $this->stepRequest($step->ownerId);
         }
         else {
             if ($step->reviewStepType == 'assessment') {
-                $this->unlockPackage();
+                $this->unlockPackage($package);
                 ## duplicate assessment step
                 $this->_insertReviewStep($package, $step, $step->sortOrder);
             }
