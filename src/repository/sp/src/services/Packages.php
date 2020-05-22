@@ -407,24 +407,6 @@ class Packages extends Component
     }
 
     /**
-     *
-     * @param $packageId
-     * @param $payment
-     * @return bool
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     */
-    public function setPaid($packageId, $payment = [])
-    {
-        if (null == $package = Entry::findOne($packageId)) {
-            return false;
-        }
-        $package->setFieldValue('packagePaid', true);
-        return Craft::$app->elements->saveElement($package);
-    }
-
-    /**
      * @todo move to behaviour
      *
      * @param $package

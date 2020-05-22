@@ -11,6 +11,7 @@ namespace lantra\sp\helpers;
 use Craft;
 use craft\elements\Asset;
 use craft\elements\Entry;
+use craft\elements\MatrixBlock;
 use craft\elements\User;
 use craft\models\VolumeFolder;
 use craft\web\View;
@@ -26,6 +27,32 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @param $owner
+     * @param $payerEmail
+     * @param $paymentAmount
+     * @param $transactionId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public static function addUserPayment($owner, $payerEmail, $paymentAmount, $transactionId)
+    {
+        $field = Craft::$app->fields->getFieldByHandle('userPayments');
+        $blockType = Craft::$app->matrix->getBlockTypesByFieldId($field->id)[0];
+        ## create payment block
+        $payment = new MatrixBlock();
+        $payment->fieldId = $field->id;
+        $payment->typeId = $blockType->id;
+        $payment->ownerId = $owner->id;
+        $payment->setAttributes([
+            'payer_email'   => $payerEmail,
+            'mc_gross'      => $paymentAmount,
+            'txn_id'        => $transactionId,
+        ]);
+        Craft::$app->elements->saveElement($payment);
+    }
+
+    /**
      * @param $template
      * @param $variables
      * @return string
@@ -34,7 +61,8 @@ class LantraHelper
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    public static function renderCpTemplate($template, $variables) {
+    public static function renderCpTemplate($template, $variables)
+    {
         $oldMode = Craft::$app->view->getTemplateMode();
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
         $html = Craft::$app->view->renderTemplate($template, $variables);

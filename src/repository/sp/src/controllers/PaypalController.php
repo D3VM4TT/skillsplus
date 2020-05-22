@@ -9,10 +9,9 @@
 namespace lantra\sp\controllers;
 
 use Craft;
-use craft\elements\MatrixBlock;
-
+use craft\elements\Entry;
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
-use lantra\sp\services\paypal\Ipn;
 
 class PaypalController extends BaseController
 {
@@ -35,18 +34,25 @@ class PaypalController extends BaseController
         }
 
         $custom = json_decode(Craft::$app->request->getParam('custom'));
-        $ipnRecord = $this->ipnRecord(
-            Craft::$app->request->getParam('payer_email'),
-            Craft::$app->request->getParam('mc_gross'),
-            Craft::$app->request->getParam('txn_id')
-        );
+        $payerEmail = Craft::$app->request->getParam('payer_email');
+        $paymentAmount = Craft::$app->request->getParam('mc_gross');
+        $transactionId = Craft::$app->request->getParam('txn_id');
+
+        ## validate user
         if (!isset($custom->userId) || null == $user = Craft::$app->users->getUserById($custom->userId)) {
             Craft::error('PayPal failed to validate user [' . ($custom ? $custom->userId : 'NULL') . ']', __METHOD__);
             return $this->asJson(['success' => 'false']);
         }
+        ## handle successful package payment
         if (isset($custom->packageId)) {
-            Craft::error('Setting package as paid [' . $custom->packageId . ']', __METHOD__);
-            Lantra::$app->packages->setPaid($custom->packageId, $ipnRecord);
+            if (null == $package = Entry::findOne($custom->packageId)) {
+                Craft::error('PayPal Invalid package ID [' . $custom->packageId . ']', __METHOD__);
+                return $this->asJson(['success' => 'false']);
+            }
+            LantraHelper::addUserPayment($package, $payerEmail, $paymentAmount, $transactionId);
+            $package->setFieldValue('packagePaid', true);
+            $package->save();
+            Craft::info("PayPal payment received for package #" . $package->id, __METHOD__);
         }
         return $this->asJson(['success' => 'true']);
     }
@@ -69,18 +75,8 @@ class PaypalController extends BaseController
             Craft::log('Invalid user ID sent from PayPal.',LogLevel::Error, true, 'paypal', 'lantra');
             die();
         }
-        ## create payment block
-        $payment = new MatrixBlock();
-        $payment->fieldId = 77;
-        $payment->typeId = 6;
-        $payment->ownerId = $user->id;
-        $payment->setAttributes([
-            'payer_email' => $payerEmail,
-            'mc_gross' => $paymentAmount,
-            'txn_id' => $transactionId,
-        ]);
-        ## save payment
-        Craft::$app->elements->saveElement($payment);
+        ## add user payment
+        LantraHelper::addUserPayment($user, $payerEmail, $paymentAmount, $transactionId);
         ## add user to user group
         Lantra::$app->users->activateIndividualUser($user);
         ## add to Lantra company
