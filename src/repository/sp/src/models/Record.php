@@ -27,11 +27,6 @@ class Record extends Model
     public $packages = [];
 
     private $_elements = [];
-    private $_results = [
-        'units'     => [],
-        'modules'   => [],
-        'other'     => []
-    ];
 
     /**
      * Record constructor.
@@ -40,42 +35,7 @@ class Record extends Model
     public function __construct(User $user)
     {
         parent::__construct(['user' => $user]);
-        $this->setResults();
         $this->setRecord();
-    }
-
-    /**
-     *
-     */
-    public function setResults()
-    {
-        $criteria = Lantra::$app->results->getAllResults($this->user->id);
-        $results = $criteria->all();
-        foreach($results as $row) {
-            if ($row->resultUnit) {
-                $this->_results['unit'][$row->resultUnit->one()->id][] = $row;
-            }
-            elseif ($row->resultModule) {
-                $this->_results['module'][$row->resultModule->one()->id][] = $row;
-            }
-            else {
-                $this->_results['other'][] = $row;
-            }
-            $this->addItem('result', $row);
-        }
-    }
-
-    /**
-     * @param string $type
-     * @param int $elementId
-     * @return array
-     */
-    public function getResults($type = 'unit', $elementId = null)
-    {
-        if ($elementId && isset($this->_results[$type][$elementId])) {
-            return $this->_results[$type][$elementId];
-        }
-        return [];
     }
 
     /**
@@ -132,29 +92,6 @@ class Record extends Model
     {
         return $this->hasElement($elementId) ? $this->_elements[$elementId] : null;
     }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        $data = [
-            'jobRoles' => []
-        ];
-        foreach ($this->jobRoles as $id => $jobRole) {
-            $data['jobRoles'][$id] = $jobRole->getData();
-        }
-        return $data;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return Json::encode($this->getData());
-    }
-
 
     /**
      * @param $moduleGroup

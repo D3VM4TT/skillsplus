@@ -14,6 +14,7 @@ use yii\base\Behavior;
 class UserRecordBehavior extends Behavior
 {
     private $_record;
+
     /**
      * @return null
      */
@@ -23,5 +24,14 @@ class UserRecordBehavior extends Behavior
             $this->_record = new Record($this->owner);
         }
         return $this->_record;
+    }
+
+    /**
+     * @param $elementId
+     * @param string $type
+     */
+    public function getResult($elementId, $type = 'unit')
+    {
+
     }
 }

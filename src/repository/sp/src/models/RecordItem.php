@@ -16,7 +16,6 @@ class RecordItem extends Model
     public $record;
     public $type;
     public $elementId;
-    public $results;
     public $items = [];
 
     /**
@@ -25,35 +24,6 @@ class RecordItem extends Model
     public function getElement()
     {
         return $this->record->getElement($this->elementId);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function hasResult()
-    {
-        $results = $this->getResults();
-        return count($results) ? true : false;
-    }
-
-    /**
-     * @return null
-     */
-    public function getResults()
-    {
-        if ($this->results === null) {
-            $this->results = $this->record->getResults($this->type, $this->elementId);
-        }
-        return $this->results;
-    }
-
-    /**
-     * @return null
-     */
-    public function getResult()
-    {
-        $results = $this->getResults();
-        return count($results) ? $results[0] : null;
     }
 
     /**
@@ -76,7 +46,6 @@ class RecordItem extends Model
         return [
             'type' => $this->type,
             'elementId' => $this->elementId,
-            'results' => $this->getResults(),
             'items' => $this->getItems()
         ];
     }
@@ -95,9 +64,6 @@ class RecordItem extends Model
      */
     public function __get($name)
     {
-        if ($name == 'result') {
-            return $this->getResult();
-        }
         $element = $this->getElement();
         return $element->$name;
     }
