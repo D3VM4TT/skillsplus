@@ -11,7 +11,6 @@ namespace lantra\sp\models;
 use Craft;
 use craft\base\Element;
 use craft\base\Model;
-use craft\helpers\Json;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\elements\User;
@@ -27,6 +26,7 @@ class Record extends Model
     public $packages = [];
 
     private $_elements = [];
+    private $_data = [];
 
     /**
      * Record constructor.
@@ -46,6 +46,7 @@ class Record extends Model
         $userRoles = $this->user->userRole->all();
         if ($userRoles) {
             foreach ($userRoles as $jobRoleCategory) {
+                $this->_resetData();
                 $jobRoleModuleEntries = Lantra::$app->records->getJobRoleModules($jobRoleCategory);
                 $moduleGroupCategories = Lantra::$app->records->getModuleGroups($jobRoleModuleEntries);
                 $moduleGroups = [];
@@ -53,25 +54,27 @@ class Record extends Model
                     $items = $this->_getModuleGroupModuleItems($moduleGroup, $jobRoleModuleEntries);
                     $moduleGroups[$moduleGroup->id] = $this->addItem('moduleGroup', $moduleGroup, $items);
                 }
-                $this->jobRoles[$jobRoleCategory->id] = $this->addItem('jobRole', $jobRoleCategory, $moduleGroups);
+                $this->jobRoles[$jobRoleCategory->id] = $this->addItem('jobRole', $jobRoleCategory, $moduleGroups, $this->_data);
             }
         }
     }
 
     /**
-     * @param $type
+     * @param $itemType
      * @param $element
      * @param $items
+     * @param $data
      * @return RecordItem
      */
-    public function addItem($type, Element $element, $items = [])
+    public function addItem($itemType, Element $element, $items = [], $data = [])
     {
         $this->_elements[$element->id] = $element;
         return new RecordItem([
             'record' => $this,
-            'type' => $type,
+            'itemType' => $itemType,
             'elementId' => $element->id,
-            'items' => $items
+            'items' => $items,
+            'data' => $data
         ]);
     }
 
@@ -105,6 +108,7 @@ class Record extends Model
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
                 $items = $this->_getModuleUnitGroupItems($moduleEntry);
                 $return[$moduleEntry->id] = $this->addItem('module', $moduleEntry, $items);
+                $this->_data['moduleIds'][] = $moduleEntry->id;
             }
         }
         return $return;
@@ -133,7 +137,19 @@ class Record extends Model
         $return = [];
         foreach ($unitGroupBlock->unitEntries->all() as $unitEntry) {
             $return[$unitEntry->id] = $this->addItem('unit', $unitEntry);
+            $this->_data['unitIds'][] = $unitEntry->id;
         }
         return $return;
+    }
+
+    /**
+     *
+     */
+    private function _resetData()
+    {
+        $this->_data = [
+            'unitIds' => [],
+            'moduleIds' => []
+        ];
     }
 }

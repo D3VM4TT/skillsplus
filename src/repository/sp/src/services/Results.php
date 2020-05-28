@@ -421,9 +421,31 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
+        $criteria->status = null;
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         return $criteria->count() ? true : false;
     }
+
+    /**
+     * Get a unit result entry
+     *
+     * @param $userId
+     * @param $unitIds
+     * @return null
+     * @throws Mixed
+     */
+    function countUnitResults($userId, $unitIds)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        $criteria->status = ['live', 'expired'];
+        $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        return $criteria->count();
+    }
+
+
 
     /**
      * Get a unit result entry

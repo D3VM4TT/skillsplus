@@ -1,3 +1,4 @@
+{% requireLogin %}
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set userId = craft.app.request.getSegment(2) %}
 {% extends "_layout" %}

@@ -14,9 +14,19 @@ use craft\helpers\Json;
 class RecordItem extends Model
 {
     public $record;
-    public $type;
+    public $itemType;
     public $elementId;
     public $items = [];
+    public $data = [];
+
+    /**
+     * RecordItem constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+    }
 
     /**
      * @return mixed
@@ -41,12 +51,72 @@ class RecordItem extends Model
     /**
      * @return array
      */
+    public function allUnits()
+    {
+        $units = [];
+        if ($this->itemType == 'unitGroup') {
+            $units = $this->items;
+        }
+        elseif ($this->itemType == 'module') {
+            foreach ($this->items as $unitGroup) {
+                $units = array_merge($units, $unitGroup->allUnits());
+            }
+        }
+        elseif ($this->itemType == 'moduleGroup') {
+            foreach($this->items as $module) {
+                $units = array_merge($units, $module->allUnits());
+            }
+        }
+        elseif ($this->itemType == 'jobRole') {
+            foreach($this->items as $moduleGroup) {
+                $units = array_merge($units, $moduleGroup->allUnits());
+            }
+        }
+        return $units;
+    }
+
+    /**
+     * @return int
+     */
+    public function totalModules()
+    {
+        return isset($this->data['moduleIds']) ? count($this->data['moduleIds']) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function totalUnits()
+    {
+        return isset($this->data['unitIds']) ? count($this->data['unitIds']) : 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function moduleIds()
+    {
+        return isset($this->data['moduleIds']) ? $this->data['moduleIds'] : [];
+    }
+
+    /**
+     * @return array
+     */
+    public function unitIds()
+    {
+        return isset($this->data['unitIds']) ? $this->data['unitIds'] : [];
+    }
+
+    /**
+     * @return array
+     */
     public function getData()
     {
         return [
-            'type' => $this->type,
+            'itemType' => $this->itemType,
             'elementId' => $this->elementId,
-            'items' => $this->getItems()
+            'items' => $this->getItems(),
+            'data' => $this->data
         ];
     }
 
@@ -85,6 +155,10 @@ class RecordItem extends Model
         }
         if (in_array($name, ['moduleGroups', 'modules', 'unitGroups', 'units'])) {
             return $this->items;
+        }
+        ## return total items
+        if (in_array($name, ['moduleIds', 'unitIds']) && isset($this->data[$name])) {
+            return $this->data[$name];
         }
         return $element->$name($params);
     }

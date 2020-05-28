@@ -4,11 +4,7 @@
             <div class="tabs-group">
                 {# role is defined #}
                 {% if role is defined %}
-                    {% set modules = craft.entries.relatedTo(
-                        ['and',
-                            { targetElement: role, field: 'moduleRoles' },
-                            { targetElement: moduleGroup, field: 'moduleGroup' }
-                        ]) %}
+                    {% set modules = moduleGroup.modules %}
                 {# taskbooks #}
                 {% else %}
                     {% set childCategories = craft.categories.descendantOf(moduleGroup).ids() %}
@@ -21,29 +17,28 @@
                         {% set modules = craft.entries.relatedTo({targetElement: moduleGroup, field: 'moduleGroup'}) %}
                     {% endif %}
                 {% endif %}
-                {% if not modules.count %}
+                {% if not moduleGroup.modules|length %}
                     No modules have been added to this module group.
                 {% endif %}
-                {% for module in modules.all() %}
-                {% set moduleElementId = moduleGroupElementId ~ module.id %}
-                {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one()
-                %}
-                <li>
-                    <a href="#module{{ moduleElementId }}" class="module-status">
-                        <span class="status-active"></span>
-                        {{ module.title }}
-                    </a>
-                </li>
-                {% if not loop.last and loop.index is divisible by(4) %}
-            </div>
-            <div class="tabs-group">
-                {% endif %}
+                {% for module in moduleGroup.modules %}
+                    {% set moduleElementId = moduleGroupElementId ~ module.id %}
+                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
+                    <li>
+                        <a href="#module{{ moduleElementId }}" class="module-status">
+                            <span class="status-active"></span>
+                            {{ module.title }}
+                        </a>
+                    </li>
+                    {% if not loop.last and loop.index is divisible by(4) %}
+                </div>
+                <div class="tabs-group">
+                    {% endif %}
                 {% endfor %}
             </div>
         </ul>
     </div>
     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
-        {% for module in modules.all() %}
+        {% for module in moduleGroup.modules %}
             {% set moduleElementId = moduleGroupElementId ~ module.id %}
             {% set columnLayout = module.columnLayout.count ?  module.columnLayout : moduleGroup.columnLayout %}
             {% include 'record/_modules/module' %}

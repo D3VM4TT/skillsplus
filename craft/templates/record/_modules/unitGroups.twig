@@ -1,7 +1,6 @@
 <div id="m{{ moduleElementId }}" class="unit-groups">
-    {% for unitGroup in module.moduleUnitGroups.all() %}
+    {% for unitGroup in module.unitGroups %}
         {% set addResult = unitGroup.enableSubmissions %}
-        {% set unitGroupEntries = unitGroup.unitEntries %}
         <div class="unit-group">
             <div class="header primary-bg" data-target="#u{{ moduleElementId ~ unitGroup.id }}">
                 <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
@@ -21,18 +20,19 @@
                     </thead>
                     <tbody>
                     {% set rowClass = 'odd' %}
-                    {% for unitEntry in unitGroupEntries.all() %}
+                    {% for unit in unitGroup.units %}
+                        {% set unitEntry = unit.getElement() %}
                         {% set resultEntry = null %}
                         {% set totalComments = 0 %}
 
                         {% set unitType = unitEntry.unitType %}
-                        {% set unitPoints = craft.lantra.unitPoints(unitEntry, module) %}
+                        {% set unitPoints = craft.lantra.unitPoints(unitEntry, moduleEntry) %}
                         {% if unitEntry.unitRecurring %}
                             {# get or create results for recurring period #}
                             {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unitEntry.id, cycle, moduleResultEntry.id) %}
                         {% else %}
                             {# get only results linked to this module result if a cpd type module #}
-                            {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unitEntry.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null) %}
+                            {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unitEntry.id, addResult ? null : 1, moduleEntry.type == 'cpd' ? moduleResultEntry.id : null) %}
                         {% endif %}
 
                         {% set hasResult = resultQuery.count() %}
@@ -41,7 +41,7 @@
 
                         {% set rowName =  unitEntry.title ~ ' ' ~ unitEntry.unitHeading %}
                         {# url format cpd/<userId>/<moduleId>/<unitId>/<resultId> #}
-                        {% set baseUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unitEntry.id ~ '/' %}
+                        {% set baseUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ moduleEntry.id ~ '/' ~ unitEntry.id ~ '/' %}
                         {% set params = '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
                         {% set newUrl = baseUrl ~ 'new' ~ params %}
                         {% set editUrl = baseUrl ~ params %}
@@ -112,7 +112,7 @@
         </div>
     {% endfor %}
     {# get user results related to module #}
-    {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
+    {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(moduleEntry.id).status('live, expired').limit(null) %}
     {% if moduleUserResults|length %}
         <div class="unit-group">
             <div class="header" data-target="#u{{ moduleElementId }}-user">

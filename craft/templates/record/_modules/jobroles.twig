@@ -2,7 +2,7 @@
 {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').id('and, not ' ~ recordResultIds|join(', not ')) %}
 
 <div id="job-role-cpd">
-    {% if not cpdUser.userRole.count %}
+    {% if not cpdUser.record.jobRoles|length %}
         <h2>Job Role</h2>
         <div class="col-pd-btm col-flex">
             <img src="/assets/img/delete.svg" class="test-icon" alt="">
@@ -15,7 +15,7 @@
             </p>
         </div>
     {% else %}
-        {% for role in cpdUser.userRole.all() %}
+        {% for role in cpdUser.record.jobRoles %}
             {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
         {% endfor %}
     {% endif %}

@@ -15,6 +15,8 @@ use craft\elements\Entry;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
+use lantra\sp\helpers\RecordHelper;
+use lantra\sp\models\RecordItem;
 
 use verbb\supertable\elements\SuperTableBlockElement;
 use yii\web\ForbiddenHttpException;
@@ -158,23 +160,21 @@ class LantraVariable
     }
 
     /**
-     * @param $modules
+     * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalUnits($modules)
+    public function totalUnits(RecordItem $recordItem)
     {
-        return Lantra::$app->modules->totalUnits($modules);
+        return RecordHelper::totalUnits($recordItem);
     }
 
     /**
-     * @param $modules
-     * @param null $userId
+     * @param RecordItem $recordItem
      * @return bool
      */
-    public function unitsComplete($modules, $userId = null)
+    public function totalComplete($recordItem)
     {
-        $user = (is_null($userId)) ? null : $this->getUser($userId);
-        return Lantra::$app->modules->unitsComplete($modules, $user);
+        return RecordHelper::totalComplete($recordItem);
     }
 
     /**
