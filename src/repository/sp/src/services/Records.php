@@ -10,6 +10,7 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\base\ElementInterface;
 use craft\elements\Entry;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
@@ -20,16 +21,22 @@ use lantra\sp\Plugin as Lantra;
 class Records extends Component
 {
     /**
-     * @param Category $jobRole
+     * @param array|Category $relatedTo
+     * @param bool $direct
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getJobRoleModules(Category $jobRole)
+    public function getRelatedModules($relatedTo, $direct = true)
     {
         $criteria = Entry::find();
         $criteria->section = 'modules';
-        $criteria->relatedTo($jobRole->id);
+        $criteria->relatedTo($relatedTo);
         $criteria->orderBy('title');
         $criteria->limit(null);
+        ## get the child category ids and ignore
+        if ($direct && isset($relatedTo->level) && $relatedTo->level == 1) {
+            $childModules = $this->getRelatedModules($relatedTo->children->ids(), false);
+            $criteria->id(['not', $childModules->ids()]);
+        }
         return $criteria;
     }
 

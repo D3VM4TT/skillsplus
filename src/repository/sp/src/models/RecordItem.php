@@ -67,7 +67,7 @@ class RecordItem extends Model
                 $units = array_merge($units, $module->allUnits());
             }
         }
-        elseif ($this->itemType == 'jobRole') {
+        elseif ($this->itemType == 'jobRole' || $this->itemType == 'package') {
             foreach($this->items as $moduleGroup) {
                 $units = array_merge($units, $moduleGroup->allUnits());
             }
@@ -160,6 +160,6 @@ class RecordItem extends Model
         if (in_array($name, ['moduleIds', 'unitIds']) && isset($this->data[$name])) {
             return $this->data[$name];
         }
-        return $element->$name($params);
+        return call_user_func_array([$element, $name], $params);
     }
 }

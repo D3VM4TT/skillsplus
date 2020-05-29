@@ -1,7 +1,6 @@
-{% set userPackages = craft.lantra.getUserPackages(cpdUser) %}
-{% if userPackages|length %}
+{% if cpdUser.record.packages|length %}
     <div id="taskbooks-cpd">
-        {% for package in userPackages %}
+        {% for package in cpdUser.record.packages %}
             <div class="package" style="position: relative;">
                 <div class="align-vertical">
                     <div class="align-horizontal">
@@ -19,8 +18,8 @@
                         </p>
                     </div>
                     <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
-                        {% set totalUnits = craft.lantra.countPackageUnits(package) %}
-                        {% set unitsComplete = craft.lantra.countPackageUnits(package, true) %}
+                        {% set totalUnits = craft.lantra.totalUnits(package) %}
+                        {% set unitsComplete = craft.lantra.totalComplete(package) %}
                         {% if unitsComplete >= totalUnits %}
                             {% if package.packageStatus == 'active' %}
                                 {% if package.hasNextStep and not package.isNextStepAssigned %}
@@ -40,7 +39,7 @@
                 <div id="j{{ package.id }}" class="open">
                     <div class="module-group-tabs">
                         <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
-                            {% for row in package.moduleGroups %}
+                            {% for row in package.getElement().moduleGroups %}
                                 {% set moduleGroup = row.category %}
                                 {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
                                 <li>
@@ -64,10 +63,11 @@
                         </ul>
                     </div>
                     <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
-                        {% for row in package.moduleGroups %}
-                            {% set moduleGroup = row.category %}
-                            {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                        {% for row in package.getElement().moduleGroups %}
+                            {% set moduleGroupCategory = row.category %}
                             {% set level = row.level %}
+                            {% set moduleGroup = cpdUser.record.getItem(moduleGroupCategory.id) %}
+                            {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
                             {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
                             {% include 'record/_modules/moduleGroup' %}
                         {% endfor %}

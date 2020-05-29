@@ -837,7 +837,7 @@ class Results extends Component
     public function getUnitPoints(Entry $unitEntry, Entry $moduleEntry = null)
     {
         if ($moduleEntry) {
-            foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+            foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitGroup->unitEntries->ids())) {
                    return $unitGroup->unitPointsOverride;
                 }

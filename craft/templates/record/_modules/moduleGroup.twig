@@ -2,21 +2,6 @@
     <div class="module-tabs">
         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
             <div class="tabs-group">
-                {# role is defined #}
-                {% if role is defined %}
-                    {% set modules = moduleGroup.modules %}
-                {# taskbooks #}
-                {% else %}
-                    {% set childCategories = craft.categories.descendantOf(moduleGroup).ids() %}
-                    {% if childCategories|length %}
-                        {# core module - ignore child categories #}
-                        {% set childModuleIds = craft.entries.relatedTo(childCategories).ids() %}
-                        {% set modules = craft.entries.relatedTo({targetElement: moduleGroup, field: 'moduleGroup'}).id('and, not ' ~ childModuleIds|join(', not ')) %}
-                    {% else %}
-                        {# optional module #}
-                        {% set modules = craft.entries.relatedTo({targetElement: moduleGroup, field: 'moduleGroup'}) %}
-                    {% endif %}
-                {% endif %}
                 {% if not moduleGroup.modules|length %}
                     No modules have been added to this module group.
                 {% endif %}

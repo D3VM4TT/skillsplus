@@ -26,6 +26,7 @@ class Record extends Model
     public $packages = [];
 
     private $_elements = [];
+    private $_items = [];
     private $_data = [];
 
     /**
@@ -43,19 +44,32 @@ class Record extends Model
      */
     public function setRecord()
     {
+        ## set job role cpd
         $userRoles = $this->user->userRole->all();
         if ($userRoles) {
             foreach ($userRoles as $jobRoleCategory) {
                 $this->_resetData();
-                $jobRoleModuleEntries = Lantra::$app->records->getJobRoleModules($jobRoleCategory);
-                $moduleGroupCategories = Lantra::$app->records->getModuleGroups($jobRoleModuleEntries);
+                $relatedModules = Lantra::$app->records->getRelatedModules($jobRoleCategory);
+                $moduleGroupCategories = Lantra::$app->records->getModuleGroups($relatedModules);
                 $moduleGroups = [];
                 foreach($moduleGroupCategories->all() as $moduleGroup) {
-                    $items = $this->_getModuleGroupModuleItems($moduleGroup, $jobRoleModuleEntries);
+                    $items = $this->_getModuleGroupModuleItems($moduleGroup, $relatedModules);
                     $moduleGroups[$moduleGroup->id] = $this->addItem('moduleGroup', $moduleGroup, $items);
                 }
                 $this->jobRoles[$jobRoleCategory->id] = $this->addItem('jobRole', $jobRoleCategory, $moduleGroups, $this->_data);
             }
+        }
+        ## set user packages
+        $packages = Lantra::$app->packages->getUserPackages($this->user);
+        foreach ($packages as $package) {
+            $this->_resetData();
+            $moduleGroups = [];
+            foreach($package->moduleGroupCategories() as $moduleGroup) {
+                $relatedModules = Lantra::$app->records->getRelatedModules($moduleGroup);
+                $items = $this->_getModuleGroupModuleItems($moduleGroup, $relatedModules);
+                $moduleGroups[$moduleGroup->id] = $this->addItem('moduleGroup', $moduleGroup, $items);
+            }
+            $this->packages[$package->id] = $this->addItem('package', $package, $moduleGroups, $this->_data);
         }
     }
 
@@ -69,13 +83,15 @@ class Record extends Model
     public function addItem($itemType, Element $element, $items = [], $data = [])
     {
         $this->_elements[$element->id] = $element;
-        return new RecordItem([
+        $item = new RecordItem([
             'record' => $this,
             'itemType' => $itemType,
             'elementId' => $element->id,
             'items' => $items,
             'data' => $data
         ]);
+        $this->_items[$element->id] = $item;
+        return $item;
     }
 
     /**
@@ -89,7 +105,7 @@ class Record extends Model
 
     /**
      * @param $elementId
-     * @return bool
+     * @return Element|null
      */
     public function getElement($elementId)
     {
@@ -97,16 +113,25 @@ class Record extends Model
     }
 
     /**
+     * @param $elementId
+     * @return RecordItem|null
+     */
+    public function getItem($elementId)
+    {
+        return isset($this->_items[$elementId]) ? $this->_items[$elementId] : null;
+    }
+
+    /**
      * @param $moduleGroup
-     * @param $jobRoleModuleEntries
+     * @param $relatedEntries
      * @return array
      */
-    private function _getModuleGroupModuleItems(Category $moduleGroup, ElementQueryInterface $jobRoleModuleEntries)
+    private function _getModuleGroupModuleItems(Category $moduleGroup, ElementQueryInterface $relatedEntries)
     {
         $return = [];
-        foreach ($jobRoleModuleEntries as $moduleEntry) {
+        foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
-                $items = $this->_getModuleUnitGroupItems($moduleEntry);
+                $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->addItem('module', $moduleEntry, $items);
                 $this->_data['moduleIds'][] = $moduleEntry->id;
             }
@@ -115,27 +140,27 @@ class Record extends Model
     }
 
     /**
-     * @param $moduleEntry
+     * @param $moduleUnitGroups
      * @return array
      */
-    private function _getModuleUnitGroupItems(Entry $moduleEntry)
+    private function _getModuleUnitGroupItems($moduleUnitGroups)
     {
         $return = [];
-        foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroupBlock) {
-            $items = $this->_getUnitGroupUnitItems($unitGroupBlock);
+        foreach ($moduleUnitGroups as $unitGroupBlock) {
+            $items = $this->_getUnitGroupUnitItems($unitGroupBlock->unitEntries);
             $return[$unitGroupBlock->id] = $this->addItem('unitGroup', $unitGroupBlock, $items);
         }
         return $return;
     }
 
     /**
-     * @param $unitGroupBlock
+     * @param $unitEntries
      * @return array
      */
-    private function _getUnitGroupUnitItems(MatrixBlock $unitGroupBlock)
+    private function _getUnitGroupUnitItems($unitEntries)
     {
         $return = [];
-        foreach ($unitGroupBlock->unitEntries->all() as $unitEntry) {
+        foreach ($unitEntries as $unitEntry) {
             $return[$unitEntry->id] = $this->addItem('unit', $unitEntry);
             $this->_data['unitIds'][] = $unitEntry->id;
         }
