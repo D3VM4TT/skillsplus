@@ -69,7 +69,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591018956
+dateModified: 1591032454
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -3559,12 +3559,19 @@ fields:
     name: 'Module Group'
     searchable: true
     settings:
-      branchLimit: '1'
+      allowLimit: false
+      allowMultipleSources: false
+      branchLimit: '2'
+      limit: null
       localizeRelations: false
       selectionLabel: ''
       source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
     translationKeyFormat: null
-    translationMethod: none
+    translationMethod: site
     type: craft\fields\Categories
   fcef71c8-c93e-4e97-a8f3-4fc223b2d223:
     contentColumnType: text
