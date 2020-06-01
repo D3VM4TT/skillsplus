@@ -39,6 +39,11 @@
                         <a class="{% if craft.app.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
                     </li>
                 {%  endif %}
+                {% if craft.lantra.can('editUsers') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                </li>
+                {% endif %}
                 {% if craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount() %}
                     <li>
                         <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks">Taskbooks</a>
