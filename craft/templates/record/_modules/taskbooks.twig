@@ -1,6 +1,7 @@
 {% if cpdUser.record.packages|length %}
     <div id="taskbooks-cpd">
         {% for package in cpdUser.record.packages %}
+            {% set availableModuleGroups = package.availableModuleGroupCategories %}
             <div class="package" style="position: relative;">
                 <div class="align-vertical">
                     <div class="align-horizontal">
@@ -60,6 +61,13 @@
                                 </a>
                             </li>
                             {% endif %}
+                            {% if availableModuleGroups|length %}
+                                <li>
+                                    <a href="#tab{{ package.id }}optional" class="primary-bg">
+                                        <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
@@ -74,13 +82,18 @@
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                             {% include '_includes/packageReviews' with {admin:false} %}
                             {% if package.isManager(currentUser, true) %}
-                                <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage taskbook</a>
+                                <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage Reviewers</a>
                             {% endif %}
                         </div>
                         {% if package.packageLog|length %}
                         <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                             {% include '_includes/packageLog' with {admin:false} %}
                         </div>
+                        {% endif %}
+                        {% if availableModuleGroups|length %}
+                            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
+                                {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
+                            </div>
                         {% endif %}
                     </section>
                 </div>

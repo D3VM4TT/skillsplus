@@ -89,7 +89,7 @@ class Packages extends Component
      */
     public function onBeforeSavePackage(ModelEvent $event, Entry $entry)
     {
-        $coreModuleGroup = $entry->packageCoreModuleGroup ? $entry->packageCoreModuleGroup->one() : null;
+        $coreModuleGroup = $entry->packageCoreModuleGroup ? $entry->packageCoreModuleGroup->last() : null;
         if (!$coreModuleGroup) {
             $entry->addError('packageCoreModuleGroup', 'You must select a core module group.');
             $event->isValid = false;
@@ -110,11 +110,16 @@ class Packages extends Component
         }
 
         ## calculate cost
-        $cost = $coreModuleGroup->moduleMaxCost;
-        if ($coreModuleGroup->moduleCosts) {
-            foreach ($coreModuleGroup->moduleCosts as $row) {
-                if ($totalOptional == $row['optionalModules']) {
-                    $cost = (int)$row['cost'];
+        if ($coreModuleGroup->level == 2) {
+            $cost = $coreModuleGroup->moduleSingleCost;
+        }
+        else {
+            $cost = $coreModuleGroup->moduleMaxCost;
+            if ($coreModuleGroup->moduleCosts) {
+                foreach ($coreModuleGroup->moduleCosts as $row) {
+                    if ($totalOptional == $row['optionalModules']) {
+                        $cost = (int)$row['cost'];
+                    }
                 }
             }
         }
@@ -207,6 +212,25 @@ class Packages extends Component
         }
         $entry->setFieldValues(['packageReviews' => $packageReviews]);
         Craft::$app->elements->saveElement($entry);
+    }
+
+    /**
+     * Get all the optional module groups available to the user
+     *
+     * @param $user
+     * @return array
+     */
+    public function getOptionalModuleGroups(User $user)
+    {
+        $packages = $this->getUserPackages($user);
+        $available = [];
+        foreach ($packages as $package) {
+            $packageAvailable = $package->availableModuleGroupCategories();
+            if (count($packageAvailable)) {
+                $available = array_merge($available, $packageAvailable);
+            }
+        }
+        return $available;
     }
 
     /**

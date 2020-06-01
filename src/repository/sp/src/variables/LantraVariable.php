@@ -24,6 +24,18 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $userId
+     * @return array
+     */
+    public function getOptionalModuleGroups($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return Lantra::$app->packages->getOptionalModuleGroups($user);
+    }
+
+    /**
      * @param null $product
      * @param int $amount
      * @param string $label

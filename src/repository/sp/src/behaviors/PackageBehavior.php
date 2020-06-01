@@ -23,7 +23,7 @@ class PackageBehavior extends Behavior
      */
     public function getCoreModuleGroup()
     {
-        return $this->owner->packageCoreModuleGroup ? $this->owner->packageCoreModuleGroup->one() : null;
+        return $this->owner->packageCoreModuleGroup ? $this->owner->packageCoreModuleGroup->last() : null;
     }
 
     /**
@@ -36,7 +36,7 @@ class PackageBehavior extends Behavior
         }
         $modulesGroups = [
             [
-                'category' => $this->owner->packageCoreModuleGroup->one(),
+                'category' => $this->owner->packageCoreModuleGroup->last(),
                 'level'    => $this->owner->packageCoreLevel
             ]
         ];
@@ -59,6 +59,23 @@ class PackageBehavior extends Behavior
             $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
         }
         return $categories;
+    }
+
+    /**
+     * @return null
+     */
+    public function availableModuleGroupCategories()
+    {
+        $coreModuleGroup = $this->getCoreModuleGroup();
+        $optionalModules = $coreModuleGroup->children->all();
+        $existingIds = array_keys($this->moduleGroupCategories());
+        $available = [];
+        foreach($optionalModules as $category) {
+            if (!in_array($category->id, $existingIds)) {
+                $available[] = $category;
+            }
+        }
+        return $available;
     }
 
     /**

@@ -1,0 +1,18 @@
+<table class="data">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for categoryGroup in availableModuleGroups %}
+        <tr>
+            <td>{{ categoryGroup.title }}</td>
+            <td>£{{ categoryGroup.moduleSingleCost }}</td>
+            <td style="text-align: right;"><a href="/profile/taskbooks/optional?moduleGroupId={{ categoryGroup.id }}">Buy Now</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

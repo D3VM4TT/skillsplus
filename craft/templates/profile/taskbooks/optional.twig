@@ -1,0 +1,75 @@
+{% requireLogin %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set account = currentUser %}
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{% set packageCoreModuleGroup = entry is defined and entry.packageCoreModuleGroup ? entry.packageCoreModuleGroup.one : null %}
+
+{% set section = craft.sections.getSectionByHandle('packages') %}
+
+{% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <a href="/">
+                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            </a>
+            {{ currentUserCompany|default('') }}
+            <h2>Add optional package</h2>
+        </div>
+        <div class="page-content">
+            {% set levelsOptions = '' %}
+            {% for option in craft.lantra.taskbookLevels() %}
+                {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+            {% endfor %}
+
+            {% set optionalModuleGroups = craft.lantra.getOptionalModuleGroups() %}
+
+            {% if entry is defined %}
+                {{ ui.errorList(entry.getFirstErrors()) }}
+            {% endif %}
+
+            <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
+                {{ csrfInput() }}
+                {{ actionInput('entries/save-entry') }}
+                {{ hiddenInput('sectionId', section.id) }}
+                {{ hiddenInput('enabled', 1) }}
+                {{ redirectInput('profile/taskbooks/view/{id}') }}
+                {% if not optionalModuleGroups|length %}
+                    <div class="field--wrapper">
+                        <p style="color:red;">There are currently no optional module groups available.</p>
+                    </div>
+                {% else %}
+                    <div class="field--wrapper">
+                        <label for="coreModule" class="no-float">Optional Module Group:</label>
+                        <select class="core-module" name="fields[packageCoreModuleGroup][]">
+                            {% for moduleGroup in optionalModuleGroups %}
+                                <option {% if (entry is defined and packageCoreModuleGroup and packageCoreModuleGroup.id == moduleGroup.id) or (moduleGroupId == moduleGroup.id) %}selected {% endif %}
+                                        value="{{ moduleGroup.id }}">{{ moduleGroup.title }} £{{ moduleGroup.moduleSingleCost }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field--wrapper">
+                        <label for="coreModule" class="no-float">Level:</label>
+                        <select class="core-level" name="fields[packageCoreLevel]">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if entry is defined and entry.packageCoreLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+                <div class="container-btn">
+                    <button type="submit" class="button primary-bg">Add Package</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

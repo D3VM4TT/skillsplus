@@ -18,6 +18,9 @@ categoryGroups:
             sortOrder: 1
           -
             fields:
+              294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
+                required: false
+                sortOrder: 5
               680431de-8445-48e9-8acf-e32d867f73dd:
                 required: false
                 sortOrder: 3
@@ -66,7 +69,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1590158791
+dateModified: 1591018956
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -682,6 +685,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleSingleCost
+    instructions: 'Cost if purchased individually.'
+    name: 'Module Single Cost'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   295e5043-483c-4ad9-bfaa-bac22b99dc19:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
