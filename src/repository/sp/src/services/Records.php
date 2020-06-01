@@ -33,9 +33,11 @@ class Records extends Component
         $criteria->orderBy('title');
         $criteria->limit(null);
         ## get the child category ids and ignore
-        if ($direct && isset($relatedTo->level) && $relatedTo->level == 1) {
+        if ($direct && isset($relatedTo->level) && $relatedTo->level == 1 && $relatedTo->children->count()) {
             $childModules = $this->getRelatedModules($relatedTo->children->ids(), false);
-            $criteria->id(['not', $childModules->ids()]);
+            if ($childModules->count()) {
+                $criteria->id(['not', $childModules->ids()]);
+            }
         }
         return $criteria;
     }
