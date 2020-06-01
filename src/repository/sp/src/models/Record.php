@@ -12,9 +12,7 @@ use Craft;
 use craft\base\Element;
 use craft\base\Model;
 use craft\elements\Category;
-use craft\elements\Entry;
 use craft\elements\User;
-use craft\elements\MatrixBlock;
 use craft\elements\db\ElementQueryInterface;
 
 use lantra\sp\Plugin as Lantra;
@@ -105,7 +103,7 @@ class Record extends Model
 
     /**
      * @param $elementId
-     * @return Element|null
+     * @return \craft\base\ElementInterface|mixed|null
      */
     public function getElement($elementId)
     {
