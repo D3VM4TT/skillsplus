@@ -109,8 +109,9 @@ class PayPal extends Component
         }
 
         $certName = 'lantra-public-' . getenv('SITE') . '-' . getenv('ENVIRONMENT') . '.pem';
+        $keyName = 'lantra-private-' . getenv('SITE') . '-' . getenv('ENVIRONMENT') . '.pem';
 
-        $this->certId = LantraHelper::setting('payPalCertId');
+        $this->certId = trim(LantraHelper::setting('payPalCertId'));
         $this->business = trim(LantraHelper::setting('payPalBusiness', 'accounts@lantra.co.uk'));
 
         ## sync the certificate to storage
@@ -120,7 +121,7 @@ class PayPal extends Component
         if ($this->certId && $lantraCert && $lantraKey) {
             FileHelper::createDirectory($this->certStorage);
             $this->lantraCertPath = $this->certStorage . $certName;
-            $this->lantraKeyPath = $this->certStorage . 'lantra-private.pem';
+            $this->lantraKeyPath = $this->certStorage . $keyName;
             FileHelper::writeToFile($this->lantraCertPath, $lantraCert);
             FileHelper::writeToFile($this->lantraKeyPath, $lantraKey);
         }

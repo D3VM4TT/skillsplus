@@ -32,7 +32,7 @@
                         <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                         <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
                         <th>Member</th>
-                        <th>Core Module Group</th>
+                        <th>Module Group</th>
                         <th>Assigned Steps</th>
                         <th class="title"><a href="?sort=packageStatus&order={{ order == 'desc' ? 'asc' : 'desc' }}">Status</a></th>
                         <th>&nbsp;</th>
@@ -46,7 +46,7 @@
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
                             <td><p class="td-title-responsive">Member: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a></td>
-                            <td><p class="td-title-responsive">Core Module Group: </p>{{ package.coreModuleGroup.title }}</td>
+                            <td><p class="td-title-responsive">Module Group: </p>{{ package.moduleGroup.title }}</td>
                             <td>
                                 {% for step in package.managerSteps(currentUser) %}
                                     {{ step.reviewStepName }}

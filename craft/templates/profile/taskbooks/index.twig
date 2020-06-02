@@ -27,7 +27,7 @@
             <thead>
                 <tr>
                     <th>Date Created</th>
-                    <th>Core Module Group</th>
+                    <th>Module Group</th>
                     <th>Level</th>
                     <th>Optional Module Groups</th>
                     <th>Cost</th>
@@ -38,12 +38,12 @@
                 {% for package in packages.all %}
                     <tr>
                         <td>{{ package.dateCreated|date('d/m/y') }}</td>
-                        {% if not package.coreModuleGroup %}
-                            <td style="color:red">Invalid Core Module Group</td>
+                        {% if not package.moduleGroup %}
+                            <td style="color:red">Invalid Module Group</td>
                         {% else %}
-                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.coreModuleGroup.title }}</a></td>
+                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.moduleGroup.title }}</a></td>
                         {% endif %}
-                        <td>{{ craft.lantra.taskbookLevel(package.packageCoreLevel) }}</td>
+                        <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
                         <td>
                             {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
                                 {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}

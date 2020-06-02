@@ -21,9 +21,9 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function getCoreModuleGroup()
+    public function getModuleGroup()
     {
-        return $this->owner->packageCoreModuleGroup ? $this->owner->packageCoreModuleGroup->last() : null;
+        return $this->owner->packageModuleGroup ? $this->owner->packageModuleGroup->last() : null;
     }
 
     /**
@@ -31,13 +31,13 @@ class PackageBehavior extends Behavior
      */
     public function moduleGroups()
     {
-        if (!$this->owner->packageCoreModuleGroup) {
+        if (!$this->owner->packageModuleGroup) {
             return [];
         }
         $modulesGroups = [
             [
-                'category' => $this->owner->packageCoreModuleGroup->last(),
-                'level'    => $this->owner->packageCoreLevel
+                'category' => $this->owner->packageModuleGroup->last(),
+                'level'    => $this->owner->packageLevel
             ]
         ];
         foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
@@ -66,13 +66,13 @@ class PackageBehavior extends Behavior
      */
     public function availableModuleGroupCategories()
     {
-        $coreModuleGroup = $this->getCoreModuleGroup();
-        $optionalModules = $coreModuleGroup->children->all();
+        $moduleGroup = $this->getModuleGroup();
+        $optionalModules = $moduleGroup->children->all();
         $existingIds = array_keys($this->moduleGroupCategories());
         $available = [];
         foreach($optionalModules as $category) {
             if (!in_array($category->id, $existingIds)) {
-                $available[] = $category;
+                $available[$category->id] = $category;
             }
         }
         return $available;

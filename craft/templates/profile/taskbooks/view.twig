@@ -9,7 +9,7 @@
 
 {% extends "_layout" %}
 
-{% set packageTitle = package.coreModuleGroup.title ~ ' ' ~ craft.lantra.taskbookLevel(package.packageCoreLevel) %}
+{% set packageTitle = package.moduleGroup.title ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
 
 {% block content %}
 <section class="page dashboard">

@@ -69,7 +69,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591032454
+dateModified: 1591104277
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -112,9 +112,9 @@ fields:
   006c28e4-4119-476d-bf1f-82019f947b02:
     contentColumnType: smallint(2)
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageCoreLevel
+    handle: packageLevel
     instructions: 'Enter level 1-10 '
-    name: 'Package Core Level'
+    name: 'Package Level'
     searchable: true
     settings:
       decimals: 0
@@ -345,9 +345,9 @@ fields:
   164fe93f-d610-4819-8ca4-77cc4a88112e:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageCoreModuleGroup
+    handle: packageModuleGroup
     instructions: ''
-    name: 'Package Core Module Group'
+    name: 'Package Module Group'
     searchable: true
     settings:
       allowLimit: false
@@ -355,7 +355,7 @@ fields:
       branchLimit: '1'
       limit: null
       localizeRelations: false
-      selectionLabel: 'Select core module group'
+      selectionLabel: 'Select module group'
       source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
       sources: '*'
       targetSiteId: null
@@ -2357,7 +2357,7 @@ fields:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleGroupTaskbooks
-    instructions: 'Include this module group in taskbook core options?'
+    instructions: 'Include this module group in taskbook options?'
     name: Taskbooks
     searchable: true
     settings:

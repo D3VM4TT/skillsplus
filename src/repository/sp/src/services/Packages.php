@@ -89,34 +89,34 @@ class Packages extends Component
      */
     public function onBeforeSavePackage(ModelEvent $event, Entry $entry)
     {
-        $coreModuleGroup = $entry->packageCoreModuleGroup ? $entry->packageCoreModuleGroup->last() : null;
-        if (!$coreModuleGroup) {
-            $entry->addError('packageCoreModuleGroup', 'You must select a core module group.');
+        $moduleGroup = $entry->packageModuleGroup ? $entry->packageModuleGroup->last() : null;
+        if (!$moduleGroup) {
+            $entry->addError('packageModuleGroup', 'You must select a module group.');
             $event->isValid = false;
             return;
         }
-        if (!$coreModuleGroup->moduleGroupTaskbooks) {
-            $entry->addError('packageCoreModuleGroup', 'You must select a Taskbook type core module group.');
+        if (!$moduleGroup->moduleGroupTaskbooks) {
+            $entry->addError('packageModuleGroup', 'You must select a Taskbook type module group.');
             $event->isValid = false;
         }
 
-        $entry->title = '[' . $coreModuleGroup->title . '] ' . $entry->author->fullname;
+        $entry->title = '[' . $moduleGroup->title . '] ' . $entry->author->fullname;
         $totalOptional = $entry->packageOptionalModuleGroups ? $entry->packageOptionalModuleGroups->count() : 0;
 
         ## check minimum optional modules
-        if ($coreModuleGroup->moduleMinimumOptional && $totalOptional < $coreModuleGroup->moduleMinimumOptional) {
-            $entry->addError('packageOptionalModules', 'You must select a minimum of ' . $coreModuleGroup->moduleMinimumOptional . ' optional modules.');
+        if ($moduleGroup->moduleMinimumOptional && $totalOptional < $moduleGroup->moduleMinimumOptional) {
+            $entry->addError('packageOptionalModules', 'You must select a minimum of ' . $moduleGroup->moduleMinimumOptional . ' optional modules.');
             $event->isValid = false;
         }
 
         ## calculate cost
-        if ($coreModuleGroup->level == 2) {
-            $cost = $coreModuleGroup->moduleSingleCost;
+        if ($moduleGroup->level == 2) {
+            $cost = $moduleGroup->moduleSingleCost;
         }
         else {
-            $cost = $coreModuleGroup->moduleMaxCost;
-            if ($coreModuleGroup->moduleCosts) {
-                foreach ($coreModuleGroup->moduleCosts as $row) {
+            $cost = $moduleGroup->moduleMaxCost;
+            if ($moduleGroup->moduleCosts) {
+                foreach ($moduleGroup->moduleCosts as $row) {
                     if ($totalOptional == $row['optionalModules']) {
                         $cost = (int)$row['cost'];
                     }
@@ -226,8 +226,8 @@ class Packages extends Component
         $available = [];
         foreach ($packages as $package) {
             $packageAvailable = $package->availableModuleGroupCategories();
-            if (count($packageAvailable)) {
-                $available = array_merge($available, $packageAvailable);
+            foreach ($packageAvailable as $id => $c) {
+                $available[$id] = $c;
             }
         }
         return $available;
@@ -495,7 +495,7 @@ class Packages extends Component
     {
         $criteria = Entry::find();
         $criteria->section = 'modules';
-        $criteria->relatedTo(['targetElement' => $package->coreModuleGroup->id, 'field' => 'moduleGroup']);
+        $criteria->relatedTo(['targetElement' => $package->moduleGroup->id, 'field' => 'moduleGroup']);
         return $criteria->all();
     }
 

@@ -1,5 +1,5 @@
-<div class="taskbook-optional taskbook-optional-{{ coreModuleGroup.id }}">
-    {% if moduleGroups|length  %}
+<div class="taskbook-optional taskbook-optional-{{ moduleGroup.id }}">
+    {% if optionalModuleGroups|length  %}
         <table class="data">
             <thead>
             <tr>
@@ -9,10 +9,10 @@
             </tr>
             </thead>
             <tbody>
-            {% for moduleGroup in moduleGroups %}
-                {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, moduleGroup.id)  %}
+            {% for optionalModuleGroup in optionalModuleGroups %}
+                {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, optionalModuleGroup.id)  %}
                 <tr class="optional-module">
-                    <td>{{ moduleGroup.title }}</td>
+                    <td>{{ optionalModuleGroup.title }}</td>
                     <td>
                         <select class="optional-level" name="optionalLevel">
                             {% for option in craft.lantra.taskbookLevels() %}
@@ -21,23 +21,23 @@
                         </select>
                     </td>
                     <td>
-                        <input class="optional" type="checkbox" name="optionalModuleGroup" value="{{ moduleGroup.id }}" {% if packageOptionalModuleGroupRow %}checked{% endif %}>
+                        <input class="optional" type="checkbox" name="optionalModuleGroup" value="{{ optionalModuleGroup.id }}" {% if packageOptionalModuleGroupRow %}checked{% endif %}>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
-        {% for row in coreModuleGroup.moduleCosts %}
+        {% for row in moduleGroup.moduleCosts %}
            Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />
         {% endfor %}
-            Max Cost: £{{ coreModuleGroup.moduleMaxCost }}</p>
-        {% if coreModuleGroup.moduleMinimumOptional %}
-            Minimum optional modules: {{ coreModuleGroup.moduleMinimumOptional }}
+            Max Cost: £{{ moduleGroup.moduleMaxCost }}</p>
+        {% if moduleGroup.moduleMinimumOptional %}
+            Minimum optional modules: {{ moduleGroup.moduleMinimumOptional }}
         {% endif %}
         </div>
     {% else %}
-        <p>There are currently no optional modules for {{ coreModuleGroup.title }}.</p>
+        <p>There are currently no optional modules for {{ moduleGroup.title }}.</p>
         <p>&nbsp;</p>
     {% endif %}
 </div>

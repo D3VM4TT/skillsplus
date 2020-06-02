@@ -30,7 +30,7 @@
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
             {% endfor %}
 
-            {% set coreModulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
+            {% set modulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
 
             {% if entry is defined %}
                 {{ ui.errorList(entry.getFirstErrors()) }}
@@ -42,32 +42,32 @@
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
                 {{ redirectInput('profile/taskbooks/view/{id}') }}
-                {% if not coreModulesGroups|length %}
+                {% if not modulesGroups|length %}
                     <div class="field--wrapper">
-                        <p style="color:red;">There are currently no core module groups available.</p>
+                        <p style="color:red;">There are currently no module groups available.</p>
                     </div>
                 {% else %}
                     <div class="field--wrapper">
-                        <label for="coreModule" class="no-float">Core Module Group:</label>
-                        <select class="core-module" name="fields[packageCoreModuleGroup][]">
-                            {% for coreModuleGroup in coreModulesGroups %}
-                                <option {% if entry is defined and packageCoreModuleGroup and packageCoreModuleGroup.id == coreModuleGroup.id %}selected {% endif %}
-                                        data-minimum="{{ coreModuleGroup.moduleMinimumOptional }}" value="{{ coreModuleGroup.id }}">{{ coreModuleGroup.title }}</option>
+                        <label for="packageModuleGroup" class="no-float">Module Group:</label>
+                        <select class="package-module-group" name="fields[packageModuleGroup][]">
+                            {% for moduleGroup in modulesGroups %}
+                                <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
+                                        data-minimum="{{ moduleGroup.moduleMinimumOptional }}" value="{{ moduleGroup.id }}">{{ moduleGroup.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="field--wrapper">
-                        <label for="coreModule" class="no-float">Level:</label>
-                        <select class="core-level" name="fields[packageCoreLevel]">
+                        <label for="packageLevel" class="no-float">Level:</label>
+                        <select class="package-level" name="fields[packageLevel]">
                             {% for option in craft.lantra.taskbookLevels() %}
-                                <option {% if entry is defined and entry.packageCoreLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                                <option {% if entry is defined and entry.packageLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                        {% for coreModuleGroup in coreModulesGroups %}
-                            {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(coreModuleGroup).level(2).all() %}
+                        {% for moduleGroup in modulesGroups %}
+                            {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(moduleGroup).level(2).all() %}
                             {% if optionalModuleGroups|length %}
-                                {% include 'profile/taskbooks/_optionalModuleGroups' with {moduleGroups: optionalModuleGroups, coreModuleGroup: coreModuleGroup, entry: entry is defined ? entry} %}
+                                {% include 'profile/taskbooks/_optionalModuleGroups' with {optionalModuleGroups: optionalModuleGroups, moduleGroup: moduleGroup, entry: entry is defined ? entry} %}
                             {% endif %}
                         {% endfor %}
                 {% endif %}
@@ -88,13 +88,13 @@
 
 {% block js %}
 <script>
-    $('select.core-module').change(function(){
-        var coreModuleId = $(this).val();
+    $('select.package-module-group').change(function(){
+        var moduleGroupId = $(this).val();
         $('div.taskbook-optional').hide();
-        $('div.taskbook-optional.taskbook-optional-' + coreModuleId).show();
+        $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
     }).change();
 
-    $('select.core-level').change(function(){
+    $('select.package-level').change(function(){
         var level = $(this).val(),
             optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
         if (level == 5) {

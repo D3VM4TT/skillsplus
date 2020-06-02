@@ -36,13 +36,13 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectStepRequest' . ucwords($step->reviewStepType), 'Taskbook Review Request');
         $package = $step->owner;
         $variables = [
-            'step'      => $step,
-            'package'   => $package,
-            'core'      => $package->coreModuleGroup,
-            'user'      => $package->author,
-            'type'      => $step->reviewStepType,
+            'step'          => $step,
+            'package'       => $package,
+            'moduleGroup'   => $package->moduleGroup,
+            'user'          => $package->author,
+            'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
+        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }
@@ -60,13 +60,13 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->reviewStepType), 'Taskbook Review Assignment');
         $package = $step->owner;
         $variables = [
-            'step'      => $step,
-            'package'   => $package,
-            'core'      => $package->coreModuleGroup,
-            'user'      => $package->author,
-            'type'      => $step->reviewStepType,
+            'step'          => $step,
+            'package'       => $package,
+            'moduleGroup'   => $package->moduleGroup,
+            'user'          => $package->author,
+            'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ core.title }}.");
+        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }
@@ -83,14 +83,14 @@ class Notify extends Component
         $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
-            'step'      => $step,
-            'package'   => $package,
-            'core'      => $package->coreModuleGroup,
-            'user'      => $package->author,
-            'manager'   => $manager,
-            'result'    => $result
+            'step'          => $step,
+            'package'       => $package,
+            'moduleGroup'   => $package->moduleGroup,
+            'user'          => $package->author,
+            'manager'       => $manager,
+            'result'        => $result
         ];
-        $template = $this->getNotifySetting('stepUpdate', "Status update for {{ core.title }}: result is {{ result }}. {{ step.reviewComment }}");
+        $template = $this->getNotifySetting('stepUpdate', "Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($user->email, $subject, $message);
     }
