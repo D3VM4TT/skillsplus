@@ -68,7 +68,7 @@ class PackageBehavior extends Behavior
     {
         $moduleGroup = $this->getModuleGroup();
         $optionalModules = $moduleGroup->children->all();
-        $existingIds = array_keys($this->moduleGroupCategories());
+        $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
         $available = [];
         foreach($optionalModules as $category) {
             if (!in_array($category->id, $existingIds)) {

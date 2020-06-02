@@ -215,6 +215,23 @@ class Packages extends Component
     }
 
     /**
+     * @param User $user
+     * @return array
+     */
+    public function getAllModuleGroups(User $user)
+    {
+        $packages = $this->getUserPackages($user);
+        $categories = [];
+        foreach ($packages as $package) {
+            foreach($package->moduleGroupCategories() as $category){
+                $categories[$category->id] = $category;
+            }
+        }
+
+        return $categories;
+    }
+
+    /**
      * Get all the optional module groups available to the user
      *
      * @param $user
@@ -224,10 +241,14 @@ class Packages extends Component
     {
         $packages = $this->getUserPackages($user);
         $available = [];
+        $categoryIds = array_keys($this->getAllModuleGroups($user));
+        ## get available ids
         foreach ($packages as $package) {
             $packageAvailable = $package->availableModuleGroupCategories();
             foreach ($packageAvailable as $id => $c) {
-                $available[$id] = $c;
+                if (!in_array($id, $categoryIds)) {
+                    $available[$id] = $c;
+                }
             }
         }
         return $available;

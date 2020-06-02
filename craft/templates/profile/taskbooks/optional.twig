@@ -26,28 +26,28 @@
             <h2>Add optional module group</h2>
         </div>
         <div class="page-content">
+        {% set optionalModuleGroups = craft.lantra.getOptionalModuleGroups() %}
+
+        {% if not optionalModuleGroups|length %}
+            <div class="field--wrapper">
+                <p style="color:red;">There are currently no optional module groups available.</p>
+            </div>
+        {% else %}
+
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
             {% endfor %}
 
-            {% set optionalModuleGroups = craft.lantra.getOptionalModuleGroups() %}
-
             {% if entry is defined %}
                 {{ ui.errorList(entry.getFirstErrors()) }}
             {% endif %}
-
             <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
                 {{ csrfInput() }}
                 {{ actionInput('entries/save-entry') }}
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
                 {{ redirectInput('profile/taskbooks/view/{id}') }}
-                {% if not optionalModuleGroups|length %}
-                    <div class="field--wrapper">
-                        <p style="color:red;">There are currently no optional module groups available.</p>
-                    </div>
-                {% else %}
                     <div class="field--wrapper">
                         <label for="packageModuleGroup" class="no-float">Optional Module Group:</label>
                         <select class="core-module" name="fields[packageModuleGroup][]">
@@ -65,11 +65,12 @@
                             {% endfor %}
                         </select>
                     </div>
-                {% endif %}
+
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Module Group</button>
                 </div>
             </form>
+        {% endif %}
         </div>
     </section>
 {% endblock %}
