@@ -688,7 +688,7 @@ class LantraVariable
             return false;
         }
         ## you can't mark your own homework...!
-        $owner = $resultEntry->resultOwner->count() ? $resultEntry->resultOwner->one() : $resultEntry->author;
+        $owner = $resultEntry->resultOwner && $resultEntry->resultOwner->count() ? $resultEntry->resultOwner->one() : $resultEntry->author;
         if ($manager->id == $owner->id) {
             return false;
         }
