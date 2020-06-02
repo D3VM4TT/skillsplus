@@ -28,7 +28,7 @@
         <h2>{{ packageTitle }}</h2>
         <p>Created {{ package.dateCreated|date('d/m/y') }}</p>
         {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
-            {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}
+            {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.last %}
             <p>{{ moduleGroup.title }} ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})</p>
         {% endfor %}
         <p><strong>£{{ package.packageCost }}</strong>
