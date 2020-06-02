@@ -33,7 +33,7 @@ class RecordHelper
                 $total += self::totalUnits($module);
             }
         }
-        elseif ($recordItem->itemType == 'jobRole') {
+        elseif ($recordItem->itemType == 'jobRole' || $recordItem->itemType == 'package') {
             foreach($recordItem->items as $moduleGroup) {
                 $total += self::totalUnits($moduleGroup);
             }
@@ -51,7 +51,7 @@ class RecordHelper
         if ($recordItem->itemType == 'moduleGroup') {
             $total = $recordItem->totalModules();
         }
-        elseif ($recordItem->itemType == 'role') {
+        elseif ($recordItem->itemType == 'jobRole' || $recordItem->itemType == 'package') {
             foreach($recordItem->items as $moduleGroup) {
                 $total += self::totalModules($moduleGroup);
             }
