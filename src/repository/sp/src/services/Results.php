@@ -178,7 +178,6 @@ class Results extends Component
     {
         $userId = Craft::$app->getUser()->id;;
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
-            $unitEntry = $entry->resultUnit->one();
             ## send notification
             if ($this->notifyManagerEndorsementResult($entry)){
                 Lantra::$app->notify->sendManagerEndorsementResult($entry);
