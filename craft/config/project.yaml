@@ -69,7 +69,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591104277
+dateModified: 1591108290
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -689,8 +689,8 @@ fields:
     contentColumnType: integer(10)
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleSingleCost
-    instructions: 'Cost if purchased individually.'
-    name: 'Module Single Cost'
+    instructions: 'Cost if purchased as individual optional module group.'
+    name: 'Module Group Single Cost'
     searchable: true
     settings:
       decimals: 0
@@ -1691,7 +1691,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleCosts
     instructions: ''
-    name: 'Module Costs'
+    name: 'Module Group Costs'
     searchable: true
     settings:
       addRowLabel: 'Add a row'
@@ -1704,7 +1704,7 @@ fields:
               __assoc__:
                 -
                   - heading
-                  - 'No. Optional Modules'
+                  - 'No. Optional Module Groups'
                 -
                   - handle
                   - optionalModules
@@ -3036,7 +3036,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleMinimumOptional
     instructions: ''
-    name: 'Module Minimum Optional'
+    name: 'Module Group Minimum Optional'
     searchable: true
     settings:
       decimals: 0
@@ -3224,7 +3224,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleMaxCost
     instructions: ''
-    name: 'Module Max Cost'
+    name: 'Module Group Max Cost'
     searchable: true
     settings:
       decimals: 0
