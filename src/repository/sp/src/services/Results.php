@@ -176,7 +176,7 @@ class Results extends Component
      */
     function onSaveResult(ModelEvent $event, Entry $entry)
     {
-        $userId = Craft::$app->getUser()->id;;
+        $userId = Craft::$app->getUser()->id;
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
             ## send notification
             if ($this->notifyManagerEndorsementResult($entry)){
@@ -698,7 +698,7 @@ class Results extends Component
      */
     function checkUserResult($resultEntry) {
         ## the related module id
-        $resultModuleEntry = $resultEntry->resultModule->one();
+        $resultModuleEntry = $resultEntry->resultModule ? $resultEntry->resultModule->one() : null;
         if (!$resultModuleEntry || !$resultEntry->resultPoints) {
             return;
         }
