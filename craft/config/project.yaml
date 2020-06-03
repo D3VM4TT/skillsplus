@@ -69,7 +69,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591108290
+dateModified: 1591192578
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -4839,10 +4839,13 @@ sections:
                     sortOrder: 5
                   53ded07f-6c81-4e7c-8e25-520b62d1a532:
                     required: false
+                    sortOrder: 7
+                  82f069e1-b11c-4e0d-96f6-eaf3e5d58387:
+                    required: false
                     sortOrder: 6
                   a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 8
                   c29bb59d-f545-409b-be92-c9b57e8cf603:
                     required: false
                     sortOrder: 3
@@ -4973,22 +4976,25 @@ sections:
                     sortOrder: 5
                   295e5043-483c-4ad9-bfaa-bac22b99dc19:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 9
                   3103beed-feb4-4eed-b71a-68cb81d67f7e:
                     required: false
-                    sortOrder: 9
+                    sortOrder: 10
                   53ded07f-6c81-4e7c-8e25-520b62d1a532:
                     required: false
                     sortOrder: 6
+                  82f069e1-b11c-4e0d-96f6-eaf3e5d58387:
+                    required: false
+                    sortOrder: 7
                   a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
                     required: false
-                    sortOrder: 10
+                    sortOrder: 11
                   c29bb59d-f545-409b-be92-c9b57e8cf603:
                     required: false
                     sortOrder: 3
                   d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 8
                   d363cf24-3e53-4eea-b5f4-e9c72a3e9f65:
                     required: false
                     sortOrder: 4
@@ -5028,8 +5034,8 @@ sections:
         hasTitleField: true
         name: 'User Result'
         sortOrder: 3
-        titleFormat: null
-        titleLabel: ''
+        titleFormat: ''
+        titleLabel: Title
     handle: results
     name: Results
     previewTargets: null
