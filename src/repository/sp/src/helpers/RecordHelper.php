@@ -10,6 +10,7 @@ namespace lantra\sp\helpers;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\RecordItem;
+use craft\elements\User;
 
 class RecordHelper
 {
@@ -61,10 +62,11 @@ class RecordHelper
 
     /**
      * @param RecordItem $recordItem
-     * @return int
+     * @param User $user
+     * @return null
      */
-    public static function totalComplete(RecordItem $recordItem)
+    public static function totalComplete(RecordItem $recordItem, User $user)
     {
-        return Lantra::$app->results->countUnitResults($recordItem->record->user->id, $recordItem->unitIds());
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds());
     }
 }

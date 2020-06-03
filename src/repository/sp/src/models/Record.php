@@ -39,9 +39,12 @@ class Record extends Model
     public function __construct(User $user)
     {
         parent::__construct(['user' => $user]);
+        $this->_setRecordFromDb();
+        /*
         if (!$this->_setRecordFromCache()) {
             $this->_setRecordFromDb();
         }
+        */
     }
 
     /**
@@ -150,7 +153,6 @@ class Record extends Model
     {
         $this->_elements[$element->id] = $element;
         $item = new RecordItem([
-            'record' => $this,
             'itemType' => $itemType,
             'elementId' => $element->id,
             'items' => $items,

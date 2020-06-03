@@ -184,9 +184,9 @@ class LantraVariable
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalComplete($recordItem)
+    public function totalComplete($recordItem, $userId = null)
     {
-        return RecordHelper::totalComplete($recordItem);
+        return RecordHelper::totalComplete($recordItem, $this->getUser($userId));
     }
 
     /**

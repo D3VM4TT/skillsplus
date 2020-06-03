@@ -13,7 +13,6 @@ use craft\helpers\Json;
 
 class RecordItem extends Model
 {
-    public $record;
     public $itemType;
     public $elementId;
     public $items = [];
@@ -26,14 +25,6 @@ class RecordItem extends Model
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getElement()
-    {
-        return $this->record->getElement($this->elementId);
     }
 
     /**
@@ -128,15 +119,6 @@ class RecordItem extends Model
         return Json::encode($this->getData());
     }
 
-    /**
-     * @param string $name
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        $element = $this->getElement();
-        return $element->$name;
-    }
 
     /**
      * @param string $name
@@ -145,14 +127,6 @@ class RecordItem extends Model
      */
     public function __call($name, $params)
     {
-        $element = $this->getElement();
-        if (isset($element->$name)) {
-            return $element->$name;
-        }
-        # switch unit group names to title
-        if ($name == 'title' && isset($element->groupName)) {
-            return $element->groupName;
-        }
         if (in_array($name, ['moduleGroups', 'modules', 'unitGroups', 'units'])) {
             return $this->items;
         }
@@ -160,6 +134,6 @@ class RecordItem extends Model
         if (in_array($name, ['moduleIds', 'unitIds']) && isset($this->data[$name])) {
             return $this->data[$name];
         }
-        return call_user_func_array([$element, $name], $params);
+        return null;
     }
 }
