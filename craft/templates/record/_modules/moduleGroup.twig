@@ -2,10 +2,11 @@
     <div class="module-tabs">
         <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
             <div class="tabs-group">
-                {% if not moduleGroup.modules|length %}
+                {% if not moduleGroupItem.modules|length %}
                     No modules have been added to this module group.
                 {% endif %}
-                {% for module in moduleGroup.modules %}
+                {% for moduleItem in moduleGroupItem.modules %}
+                    {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
                     {% set moduleElementId = moduleGroupElementId ~ module.id %}
                     {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                     <li>
@@ -23,7 +24,8 @@
         </ul>
     </div>
     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
-        {% for module in moduleGroup.modules %}
+        {% for moduleItem in moduleGroupItem.modules %}
+            {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
             {% set moduleElementId = moduleGroupElementId ~ module.id %}
             {% set columnLayout = module.columnLayout.count ?  module.columnLayout : moduleGroup.columnLayout %}
             {% include 'record/_modules/module' %}

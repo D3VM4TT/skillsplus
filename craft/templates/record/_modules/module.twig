@@ -1,19 +1,18 @@
-{% set moduleEntry = module.getElement() %}
 <div id="module{{ moduleElementId }}" class="module open">
-    {% if  moduleEntry.type == 'cpd' %}
-        {% if moduleEntry.cycleStartDate > date() %}
+    {% if  module.type == 'cpd' %}
+        {% if module.cycleStartDate > date() %}
             <div class="header">
-                This module starts on {{ moduleEntry.cycleStartDate|date('d/m/y') }}
+                This module starts on {{ module.cycleStartDate|date('d/m/y') }}
             </div>
         {% else %}
-            {% set cycleModuleResults = craft.lantra.cycleModuleResults(moduleEntry.id, cpdUser.id) %}
+            {% set cycleModuleResults = craft.lantra.cycleModuleResults(module.id, cpdUser.id) %}
             {% for moduleResultEntry in cycleModuleResults %}
                 {% include 'record/_modules/types/cpd' with{'moduleResultEntry':moduleResultEntry} %}
             {% endfor %}
         {% endif %}
     {% else %}
         {# get the current module result entry - create if none exists #}
-        {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleEntry.id, cpdUser.id) %}
+        {% set moduleResultEntry = craft.lantra.currentModuleResult(module.id, cpdUser.id) %}
         {% include 'record/_modules/types/' ~  module.type  with{'moduleResultEntry':moduleResultEntry}  %}
     {% endif %}
 </div>

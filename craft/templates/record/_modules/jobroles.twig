@@ -1,6 +1,5 @@
 {% set recordResultIds = craft.lantra.recordResults(cpdUser.id, 'ids') %}
 {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').id('and, not ' ~ recordResultIds|join(', not ')) %}
-
 <div id="job-role-cpd">
     {% if not cpdUser.record.jobRoles|length %}
         <h2>Job Role</h2>
@@ -15,7 +14,8 @@
             </p>
         </div>
     {% else %}
-        {% for role in cpdUser.record.jobRoles %}
+        {% for roleItem in cpdUser.record.jobRoles %}
+            {% set role = cpdUser.record.getElement(roleItem.elementId) %}
             {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
         {% endfor %}
     {% endif %}

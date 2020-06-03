@@ -10,12 +10,13 @@
         </div>
     </div>
     <div id="j{{ role.id }}" {% if jobRoleEndorse %}class="open"{% endif %}>
-        {% if not role.modules|length %}
+        {% if not roleItem.modules|length %}
             <p>No modules have been assigned to this role.</p>
         {% else %}
             <div class="module-group-tabs">
                 <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ role.id }}">
-                    {% for moduleGroup in role.moduleGroups %}
+                    {% for moduleGroupItem in roleItem.moduleGroups %}
+                        {% set moduleGroup = cpdUser.record.getElement(moduleGroupItem.elementId) %}
                         {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                         <li>
                             <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
@@ -26,17 +27,18 @@
                 </ul>
             </div>
             <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
-                {% for moduleGroup in role.moduleGroups %}
+                {% for moduleGroupItem in roleItem.moduleGroups %}
+                    {% set moduleGroup = cpdUser.record.getElement(moduleGroupItem.elementId) %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
-                    {% include 'record/_modules/moduleGroup' %}
+                    {% include 'record/_modules/moduleGroup' with {moduleGroupItem:moduleGroupItem, moduleGroup:moduleGroup} %}
                 {% endfor %}
             </section>
         {% endif %}
     </div>
-    {% if jobRoleEndorse and role.modules|length %}
+    {% if jobRoleEndorse and roleItem.modules|length %}
         <p class="jobroleEndorse">
-            {% set totalUnits = craft.lantra.totalUnits(role) %}
-            {% set totalComplete = craft.lantra.totalComplete(role) %}
+            {% set totalUnits = craft.lantra.totalUnits(roleItem) %}
+            {% set totalComplete = craft.lantra.totalComplete(roleItem) %}
             {% if totalComplete >= totalUnits %}
                 <a class="action button no-shadow primary-bg" href="#" data-id="{{ role.id }}" data-ref="jobRole"
                    data-userid="{{ cpdUser.id }}" data-action="entries/pending-result">Submit for Endorsement</a>
