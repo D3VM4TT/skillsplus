@@ -1113,6 +1113,23 @@ class Results extends Component
     }
 
     /**
+     * @param null $userId
+     * @param array $unitIds
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getAllUnitResults($userId = null, $unitIds = [])
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'unitResult';
+        $criteria->authorId = $userId;
+        $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        $criteria->status = null;
+        $criteria->limit = null;
+        return $criteria;
+    }
+
+    /**
      * @param $packageId
      * @param $userId
      * @return array

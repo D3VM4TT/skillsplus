@@ -29,6 +29,7 @@ class Record extends Model
     ];
     private $_elements = [];
     private $_elementIds = [];
+    private $_results = [];
     private $_items = [];
     private $_data = [];
 
@@ -40,11 +41,7 @@ class Record extends Model
     {
         parent::__construct(['user' => $user]);
         $this->_setRecordFromDb();
-        /*
-        if (!$this->_setRecordFromCache()) {
-            $this->_setRecordFromDb();
-        }
-        */
+        ## $this->_setUnitResults();
     }
 
     /**
@@ -98,6 +95,25 @@ class Record extends Model
         return $this->hasElement($elementId) ? $this->_elements[$elementId] : null;
     }
 
+
+    /**
+     * @param $elementId
+     * @return bool
+     */
+    public function hasUnitResult($elementId)
+    {
+        return isset($this->_results[$elementId]);
+    }
+
+    /**
+     * @param $elementId
+     * @return bool
+     */
+    public function getUnitResult($elementId)
+    {
+        return $this->hasUnitResult($elementId) ? $this->_results[$elementId] : null;
+    }
+
     /**
      * @param $elementId
      * @return RecordItem|null
@@ -105,6 +121,22 @@ class Record extends Model
     public function getItem($elementId)
     {
         return isset($this->_items[$elementId]) ? $this->_items[$elementId] : null;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUnitIds()
+    {
+        return $this->_getData('unitIds');
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getModuleIds()
+    {
+        return $this->_getData('moduleIds');
     }
 
     /**
@@ -235,6 +267,26 @@ class Record extends Model
             'unitIds' => [],
             'moduleIds' => []
         ];
+    }
+
+    private function _getData($key)
+    {
+        return isset($this->_data[$key]) && count($this->_data[$key]) ? $this->_data[$key] : null;
+    }
+
+    /**
+     *
+     */
+    private function _setUnitResults()
+    {
+        if (null == $unitIds = $this->getUnitIds()) {
+            return;
+        }
+        $results = Lantra::$app->results->getAllUnitResults($this->user->id, $unitIds)->all();
+        foreach($results as $result) {
+            $resultUnitId = $result->resultUnit->ids()[0];
+            $this->_results[$resultUnitId] = $result;
+        }
     }
 
     /**
