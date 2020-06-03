@@ -39,18 +39,6 @@ class RecordItem extends Model
     /**
      * @return array
      */
-    public function getItems()
-    {
-        $data = [];
-        foreach ($this->items as $item) {
-            $data[] = $item->getData();
-        }
-        return $data;
-    }
-
-    /**
-     * @return array
-     */
     public function allUnits()
     {
         $units = [];
@@ -118,6 +106,18 @@ class RecordItem extends Model
             'items' => $this->getItems(),
             'data' => $this->data
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getItems()
+    {
+        $data = [];
+        foreach ($this->items as $item) {
+            $data[] = $item->getData();
+        }
+        return $data;
     }
 
     /**
