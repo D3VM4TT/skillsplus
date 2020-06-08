@@ -25,15 +25,27 @@
         <thead>
         <tr>
             <th>Module Group</th>
-            <th></th>
-            <th>&nbsp;</th>
+            <th>Level</th>
+            <th>Next Step</th>
+            <th>Status</th>
         </tr>
         </thead>
         <tbody>
-            {% for package in cpdUser.record.packages %}
+            {% for packageItem in cpdUser.record.packages %}
+                {% set package = cpdUser.record.getElement(packageItem.elementId) %}
                 <tr>
-                    <td>{{ package.moduleGroup.title }}</td>
-                    <td><a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">View Taskbook</a></td>
+                    <td>
+                        <a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">{{ package.moduleGroup.title }}</a>
+                    </td>
+                    <td>
+                        {{ craft.lantra.taskbookLevel(package.packageLevel) }}
+                    </td>
+                    <td>
+                        {{ package.nextStep.reviewStepName }}
+                    </td>
+                    <td>
+                        {{ package.packageStatus|title }}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
