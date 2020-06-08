@@ -34,6 +34,7 @@ class PackagesController extends BaseController
 
     /**
      * @param $packageId
+     * @return \yii\web\Response
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -42,10 +43,29 @@ class PackagesController extends BaseController
      */
     public function actionPay($packageId)
     {
-        $spBlock = Craft::$app->elements->getElementById($packageId);
-        $spBlock->setFieldValue('packagePaid', 1);
-        Craft::$app->elements->saveElement($spBlock);
-        $this->_returnMessage('Package Paid', true, 'profile/taskbooks');
+        $packageEntry = Craft::$app->elements->getElementById($packageId);
+        $packageEntry->setFieldValue('packagePaid', 1);
+        Craft::$app->elements->saveElement($packageEntry);
+        $variables = [
+            'packageId' => $packageId,
+            'redirect' => '/profile/taskbooks'
+        ];
+        return $this->renderTemplate('profile/taskbooks/payment', $variables);
+    }
+
+    /**
+     * @param $packageId
+     * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionPayments($packageId)
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        $packageEntry = Craft::$app->elements->getElementById($packageId);
+        return $this->_returnMessage($packageEntry->userPayments->count(), true);
     }
 
     /**
@@ -75,7 +95,7 @@ class PackagesController extends BaseController
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
 
-        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $package->id);
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'taskbooks/view/' . $package->id);
     }
 
     /**

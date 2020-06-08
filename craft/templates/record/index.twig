@@ -11,6 +11,13 @@
     {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% endif %}
 
+{% set isManager = false %}
+{% if account.id != currentUser.id %}
+    {% set isManager = true %}
+{% endif %}
+
+{% set isTaskbooks = craft.request.getSegment(3) == 'taskbooks' %}
+
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
@@ -18,8 +25,10 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
-    <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
-    <a class="back-link" href="/management/users">&laquo; back to Users</a>
+    {% if isManager %}
+        <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
+        <a class="back-link" href="/management/users">&laquo; back to Users</a>
+    {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
 <section class="page">
@@ -29,13 +38,18 @@
         {% else %}
             <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
         {% endif %}
-        <h2>{{ account.fullname }}'s Dashboard</h2>
-    </div>
-        {% if userId %}
-            {% include '_includes/account' with{cpdUser:account} %}
+        <h2>{{ account.fullname }}'s {{ isTaskbooks ? 'Taskbooks' : 'Dashboard' }}</h2>
+        {% if isTaskbooks %}
+            <p><a href="/profile/taskbooks">Manage Taskbooks</a></p>
         {% endif %}
+    </div>
+    {% include '_includes/account' with{cpdUser:account} %}
     <div class="page-content">
-        {% include 'record/_modules' with{cpdUser:account} %}
+        {% if isTaskbooks %}
+            {% include 'record/_taskbooks' with{cpdUser:account} %}
+        {% else %}
+            {% include 'record/_modules' with{cpdUser:account} %}
+        {% endif %}
     </div>
 </section>
 {% endblock %}

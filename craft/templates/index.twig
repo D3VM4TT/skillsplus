@@ -1,3 +1,7 @@
+{% if not craft.lantra.setting('themeMyDashboard') and not craft.lantra.setting('themeMyTaskbooks') %}
+    {% redirect '/profile' %}
+{% endif %}
+
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% extends "_layout" %}
 

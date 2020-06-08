@@ -7,7 +7,7 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageCoreModuleGroup = entry is defined and entry.packageCoreModuleGroup ? entry.packageCoreModuleGroup.one : null %}
+{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
 
 {% set section = craft.sections.getSectionByHandle('packages') %}
 
@@ -21,8 +21,8 @@
                 <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
             </a>
             {{ currentUserCompany|default('') }}
-            <h2>My taskbooks</h2>
-            <p>Manage your taskbook packages.</p>
+            <h2>Create taskbook</h2>
+            <p>Purchase a package of module groups.</p>
         </div>
         <div class="page-content">
             {% set levelsOptions = '' %}

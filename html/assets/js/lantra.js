@@ -583,5 +583,22 @@ $(document).ready(function(){
         choices.change(function(){
             input.val(ul.find('input[type=checkbox]:checked').map(function(){return $(this).val()}).get().join());
         });
-    })
+    });
+
+    if ($("#taskbook-payment").length) {
+        var tp = $("#taskbook-payment");
+        $('body').addClass('loading');
+        var data = {},
+            paymentRedirect = tp.data('redirect'),
+            checkPayment = function(){
+                data[window.csrfTokenName] = window.csrfTokenValue;
+                $.post("/sp/packages/payments/" + tp.data('id'), data, function(response) {
+                    if (response) {
+                        return window.location.replace(paymentRedirect);
+                    }
+                    checkPayment();
+                });
+            }
+        checkPayment();
+    }
 });

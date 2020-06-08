@@ -2297,3 +2297,8 @@ body.print a {
         width: 100%;
     }
 }
+
+table.taskbooks form button {
+    height:40px;
+    line-height:40px;
+}

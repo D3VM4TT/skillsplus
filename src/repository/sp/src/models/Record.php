@@ -63,6 +63,35 @@ class Record extends Model
     }
 
     /**
+     * @return int
+     */
+    public function totalJobRoles()
+    {
+        return count($this->_record['jobRoles']);
+    }
+
+    /**
+     * @return int
+     */
+    public function totalPackages()
+    {
+        return count($this->_record['packages']);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getFirstPackage()
+    {
+        if (!count($this->_record['packages'])) {
+            return null;
+        }
+        foreach($this->_record['packages'] as $package) {
+            return $package;
+        }
+    }
+
+    /**
      * @return array
      */
     public function getData()

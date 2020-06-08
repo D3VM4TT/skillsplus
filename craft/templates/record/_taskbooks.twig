@@ -1,0 +1,47 @@
+{% set packageId = craft.app.request.getSegment(4) %}
+
+{# only one package - redirect to package #}
+{% if not packageId and cpdUser.record.totalPackages == 1 %}
+    {% redirect 'cpd/' ~ currentUser.id ~ '/taskbooks/' ~ cpdUser.record.firstPackage.elementId %}
+{% endif %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set isManager = false %}
+{% set isAssessor = false %}
+{% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
+{% if cpdUser.id != currentUser.id %}
+    {% set isManager = true %}
+    {% set readOnly = currentUser.managerReadOnly %}
+    {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
+{% endif %}
+
+{% if packageId %}
+    {% set packageItem = cpdUser.record.getItem(packageId) %}
+    <article id="cpd-wrapper" class="cpd">
+        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem} %}
+    </article>
+{% elseif cpdUser.record.totalPackages %}
+    <table class="data">
+        <thead>
+        <tr>
+            <th>Module Group</th>
+            <th></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for package in cpdUser.record.packages %}
+                <tr>
+                    <td>{{ package.moduleGroup.title }}</td>
+                    <td><a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">View Taskbook</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% if not cpdUser.record.totalPackages %}
+    <h3>You have not signed up for any taskbook packages.</h3>
+    <p>&nbsp;</p>
+{% endif %}
+
+

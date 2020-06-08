@@ -37,6 +37,8 @@ class Settings extends Model
     public $themeColorSecondary                 = '#2e338f';
     public $themeNavigationPublic               = ["1090","3618"];
     public $themeNavigationPrivate              = ["1090","3618"];
+    public $themeMyDashboard                    = true;
+    public $themeMyTaskbooks                    = false;
 
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;

@@ -38,6 +38,20 @@
     value:		    settings.themeColorSecondary,
 }) }}
 
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Dashboard",
+    id:				"themeMyDashboard",
+    name:			"themeMyDashboard",
+    on:		        settings.themeMyDashboard == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Taskbooks",
+    id:				"themeMyTaskbooks",
+    name:			"themeMyTaskbooks",
+    on:		        settings.themeMyTaskbooks == 1
+}) }}
+
 {{ forms.elementSelectField ({
     label:			    "Theme Navigation Public",
     id:				    "themeNavigationPublic",
