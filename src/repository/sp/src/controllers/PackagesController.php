@@ -60,11 +60,14 @@ class PackagesController extends BaseController
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionPayments($packageId)
+    public function actionPayments()
     {
         $this->requirePostRequest();
         $this->requireLogin();
-        $packageEntry = Craft::$app->elements->getElementById($packageId);
+        $packageId = Craft::$app->request->getParam('packageId');
+        if (!$packageId || null == $packageEntry = Craft::$app->elements->getElementById($packageId)) {
+            return $this->_returnError('Invalid Package ID');
+        }
         return $this->_returnMessage($packageEntry->userPayments->count(), true);
     }
 
@@ -95,7 +98,7 @@ class PackagesController extends BaseController
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
 
-        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'taskbooks/view/' . $package->id);
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks');
     }
 
     /**

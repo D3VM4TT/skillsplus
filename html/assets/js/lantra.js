@@ -588,15 +588,29 @@ $(document).ready(function(){
     if ($("#taskbook-payment").length) {
         var tp = $("#taskbook-payment");
         $('body').addClass('loading');
-        var data = {},
+        var loop = 0,
+            data = {'packageId': tp.data('id')},
             paymentRedirect = tp.data('redirect'),
             checkPayment = function(){
+                if (loop == 5) {
+                    alert('Payment not confirmed.  Contact support.');
+                    $('body').removeClass('loading');
+                    return;
+                }
                 data[window.csrfTokenName] = window.csrfTokenValue;
-                $.post("/sp/packages/payments/" + tp.data('id'), data, function(response) {
-                    if (response) {
-                        return window.location.replace(paymentRedirect);
+                $.post("/sp/packages/payments", data, function(response) {
+                    if (!response.success) {
+                        alert(response.message);
+                        $('body').removeClass('loading');
+                        return;
                     }
-                    checkPayment();
+                    if (response.message == '1') {
+                        window.location.replace(paymentRedirect);
+                        return;
+                    }
+                    console.log(response);
+                    loop++;
+                    setTimeout(function(){checkPayment();}, 2000);
                 });
             }
         checkPayment();

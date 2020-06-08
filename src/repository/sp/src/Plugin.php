@@ -377,7 +377,7 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/pay/<packageId>'               => 'sp/packages/pay',
-            'sp/packages/payments/<packageId>'          => 'sp/packages/payments',
+            'sp/packages/payments'                      => 'sp/packages/payments',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
