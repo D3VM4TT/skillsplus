@@ -1,7 +1,7 @@
 <div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
     {% if package is defined %}
         {% set assessment = package.moduleGroupAssessment(moduleGroup.id) %}
-        {% if assessment.assessmentDate %}
+        {% if assessment %}
             <div class="assessment {{ assessment.assessmentPassed ? 'passed' : 'failed' }}">
                 <p>
                     {{ assessment.assessmentDate|date(dateFormat) }} {{ assessment.assessmentPassed ? 'Passed' : 'Failed' }}
