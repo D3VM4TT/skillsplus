@@ -1325,7 +1325,10 @@ class Results extends Component
             FROM {{%entries}} e
             LEFT JOIN {{%content}} c ON c.elementId = e.id
             LEFT JOIN {{%elements}} el ON el.id = e.id
-            WHERE e.sectionId = 10 
+            LEFT JOIN {{%users}} u ON u.id = authorId
+            WHERE e.sectionId = 10
+            AND u.suspended = 0
+            AND u.pending = 0 
             AND c.field_resultStatus = 'pending'
             AND el.enabled = 1
             AND el.revisionId IS NULL
