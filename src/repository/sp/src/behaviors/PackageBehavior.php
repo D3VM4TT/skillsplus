@@ -94,6 +94,20 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param int $moduleGroupId
+     * @return null
+     */
+    public function moduleGroupAssessment($moduleGroupId = null)
+    {
+        foreach ($this->owner->packageAssessment as $assessment) {
+            if ($assessment->assessmentModuleGroup->last()->id == $moduleGroupId) {
+                return $assessment;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool

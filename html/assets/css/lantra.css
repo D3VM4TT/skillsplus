@@ -2302,3 +2302,21 @@ table.taskbooks form button {
     height:40px;
     line-height:40px;
 }
+div.assessment {
+    background: #e9ecef;
+    padding:10px;
+    border-bottom:3px solid;
+}
+div.assessment p {
+    padding:0;
+}
+div.assessment.passed {
+    border-color:#00dd00;
+}
+div.assessment.failed {
+    border-color:#dd0000;
+}
+
+#cpd-wrapper table.data {
+    margin-top:20px;
+}
