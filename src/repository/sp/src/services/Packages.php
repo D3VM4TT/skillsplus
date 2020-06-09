@@ -428,9 +428,11 @@ class Packages extends Component
                 ## duplicate assessment step
                 $this->_insertReviewStep($package, $step, $step->sortOrder);
             }
-            ## duplicate assessment step and review step
-            $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
-            $this->_insertReviewStep($package, $step, $step->sortOrder);
+            if ($previousStep) {
+                ## duplicate assessment step and review step
+                $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
+                $this->_insertReviewStep($package, $step, $step->sortOrder);
+            }
         }
         ## send notification to reviewer
         if ($step->reviewStepType == 'review') {
