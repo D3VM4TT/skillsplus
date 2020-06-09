@@ -38,7 +38,7 @@ class Notify extends Component
             'moduleGroup'       => $package->moduleGroup,
             'user'              => $user,
         ];
-        $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n {{ assessmentText }}");
+        $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n{{ assessmentText }}");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($user->email, $subject, $message);
     }
