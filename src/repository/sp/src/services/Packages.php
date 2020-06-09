@@ -417,7 +417,7 @@ class Packages extends Component
             if ($step->reviewStepType == 'assessment') {
                 $this->endorsePackageUnits($step->owner);
             }
-            if ($step->reviewStepType == 'complete') {
+            if ($step->reviewStepType == 'complete' || ($step->reviewStepType == 'assessment' && $package->totalSteps == 1)) {
                 $this->completePackage($package);
             } else {
                 $this->stepRequest($step->ownerId);

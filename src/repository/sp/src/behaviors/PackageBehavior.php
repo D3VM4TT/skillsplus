@@ -370,6 +370,13 @@ class PackageBehavior extends Behavior
         return $this->getNextStep() ? true : false;
     }
 
+    /**
+     *
+     */
+    public function getTotalSteps()
+    {
+        return $this->owner->packageReviews->count();
+    }
 
     /**
      * @return bool
