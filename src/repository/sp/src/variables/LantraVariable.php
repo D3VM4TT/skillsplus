@@ -688,11 +688,10 @@ class LantraVariable
             return false;
         }
         ## you can't mark your own homework...!
-        $owner = $resultEntry->resultOwner->count() ? $resultEntry->resultOwner->one() : $resultEntry->author;
-        if ($manager->id == $owner->id) {
+        if ($manager->id == $resultEntry->author->id) {
             return false;
         }
-        return $this->isManager($owner->id, $manager);
+        return $this->isManager($resultEntry->author->id, $manager);
     }
 
     /**
