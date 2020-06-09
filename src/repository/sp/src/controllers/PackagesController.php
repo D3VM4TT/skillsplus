@@ -113,7 +113,7 @@ class PackagesController extends BaseController
         $this->requireLogin();
         $packageId = Craft::$app->request->getRequiredParam('packageId');
         $steps = Craft::$app->request->getRequiredParam('steps');
-        $assessments = Craft::$app->request->getRequiredParam('assessments');
+        $assessments = Craft::$app->request->getParam('assessments');
         if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
             return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
         }
