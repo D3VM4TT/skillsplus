@@ -33,13 +33,15 @@
 </div>
 <section class="page">
     <div class="page-header secondary-bg">
-        {% if hierarchyNode %}
-            <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
-        {% else %}
-            <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+        {% if isManager %}
+            {% if hierarchyNode %}
+                <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            {% else %}
+                <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            {% endif %}
         {% endif %}
-        <h2>{{ account.fullname }}'s {{ isTaskbooks ? 'Taskbooks' : 'Dashboard' }}</h2>
-        {% if isTaskbooks %}
+        <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? 'Taskbooks' : 'Dashboard' }}</h2>
+        {% if not isManager and isTaskbooks %}
             <p><a href="/profile/taskbooks">Manage Taskbooks</a></p>
         {% endif %}
     </div>

@@ -44,3 +44,18 @@
     name:			"notifyStepRequest",
     value:		    settings.notifyStepRequest
 }) }}
+
+{{ forms.textField ({
+    label:			"Subject Assessment",
+    id:				"notifySubjectAssessment",
+    name:			"notifySubjectAssessment",
+    value:		    settings.notifySubjectAssessment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Assessment for {{ moduleGroup.title }}. \n\n {{ assessmentText }}",
+    label:			"Message Assessment",
+    id:				"notifyAssessment",
+    name:			"notifyAssessment",
+    value:		    settings.notifyAssessment
+}) }}

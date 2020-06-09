@@ -21,6 +21,9 @@ categoryGroups:
               294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
                 required: false
                 sortOrder: 5
+              5bdda926-785f-4d89-aebe-9a805b3dab29:
+                required: false
+                sortOrder: 6
               680431de-8445-48e9-8acf-e32d867f73dd:
                 required: false
                 sortOrder: 3
@@ -69,7 +72,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591192578
+dateModified: 1591701293
 email:
   fromEmail: NoReply@Skills-plus.net
   fromName: 'Skills+ (BICS)'
@@ -1408,6 +1411,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  5bdda926-785f-4d89-aebe-9a805b3dab29:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleResitCost
+    instructions: ''
+    name: 'Module Group Resit Cost'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -3168,6 +3189,54 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
+  df065216-2242-4a91-8b81-fa97ca27d449:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageAssessment
+    instructions: ''
+    name: 'Package Assessment'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - 32c6ef2b-26dd-41c1-818c-411a8164e1f0
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 22c29753-9e14-4e97-9291-ca025bc83380
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 3ffef8f2-5599-4a8c-b8e7-ce6b7113d648
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - feebdaae-888d-4c75-b0ed-d99114744179
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_packageassessment}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   e05af851-b6aa-4f59-a43b-0ac897b54887:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -4443,6 +4512,13 @@ sections:
                 sortOrder: 2
               -
                 fields:
+                  df065216-2242-4a91-8b81-fa97ca27d449:
+                    required: false
+                    sortOrder: 1
+                name: Assessment
+                sortOrder: 3
+              -
+                fields:
                   3455bcb3-f959-4b7a-a64d-b0138268b594:
                     required: false
                     sortOrder: 1
@@ -4450,7 +4526,7 @@ sections:
                     required: false
                     sortOrder: 2
                 name: Reviews
-                sortOrder: 3
+                sortOrder: 4
               -
                 fields:
                   1e03a0c1-334b-4517-9560-d95c13db8a99:
@@ -4463,7 +4539,7 @@ sections:
                     required: false
                     sortOrder: 2
                 name: Payments
-                sortOrder: 4
+                sortOrder: 5
         handle: package
         hasTitleField: true
         name: Package
@@ -5390,6 +5466,94 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\PlainText
+  64f6e8d9-8f65-4148-be7f-1b67d29b6d5f:
+    field: df065216-2242-4a91-8b81-fa97ca27d449
+    fieldLayouts:
+      4981846d-1413-471c-89c7-fa2229aabff6:
+        tabs:
+          -
+            fields:
+              22c29753-9e14-4e97-9291-ca025bc83380:
+                required: false
+                sortOrder: 2
+              32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+                required: false
+                sortOrder: 1
+              3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+                required: false
+                sortOrder: 3
+              feebdaae-888d-4c75-b0ed-d99114744179:
+                required: false
+                sortOrder: 4
+            name: Content
+            sortOrder: 1
+    fields:
+      22c29753-9e14-4e97-9291-ca025bc83380:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: assessmentPassed
+        instructions: ''
+        name: Passed
+        searchable: true
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+        contentColumnType: string
+        fieldGroup: null
+        handle: assessmentModuleGroup
+        instructions: ''
+        name: 'Module Group'
+        searchable: true
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          branchLimit: ''
+          limit: null
+          localizeRelations: false
+          selectionLabel: ''
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+      3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+        contentColumnType: text
+        fieldGroup: null
+        handle: assessmentComment
+        instructions: ''
+        name: Comment
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
+      feebdaae-888d-4c75-b0ed-d99114744179:
+        contentColumnType: datetime
+        fieldGroup: null
+        handle: assessmentDate
+        instructions: ''
+        name: Date
+        searchable: true
+        settings:
+          minuteIncrement: '30'
+          showDate: true
+          showTime: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Date
   677982c1-5077-4256-905d-8d01ee013e15:
     field: 7f722e30-ba1b-49e0-a5f4-e7070b600311
     fieldLayouts:

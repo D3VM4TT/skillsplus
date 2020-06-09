@@ -45,7 +45,7 @@
                         <tr>
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
-                            <td><p class="td-title-responsive">Member: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a></td>
+                            <td><p class="td-title-responsive">Member: </p><a href={{ craft.lantra.packageUrl(user.id, package.id) }}>{{ user.fullname }}</a></td>
                             <td><p class="td-title-responsive">Module Group: </p>{{ package.moduleGroup.title }}</td>
                             <td>
                                 {% for step in package.managerSteps(currentUser) %}

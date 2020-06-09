@@ -24,6 +24,16 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param $userId
+     * @param $packageId
+     * @return string
+     */
+    public function packageUrl($userId, $packageId = null)
+    {
+        return LantraHelper::packageUrl($userId, $packageId);
+    }
+
+    /**
      * @param null $userId
      * @return array
      */
@@ -33,6 +43,18 @@ class LantraVariable
             return;
         }
         return Lantra::$app->packages->getOptionalModuleGroups($user);
+    }
+
+    /**
+     * @param null $userId
+     * @return array
+     */
+    public function getResitModuleGroups($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return Lantra::$app->packages->getResitModuleGroups($user);
     }
 
     /**

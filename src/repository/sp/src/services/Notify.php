@@ -24,6 +24,40 @@ use verbb\supertable\elements\SuperTableBlockElement;
 class Notify extends Component
 {
     /**
+     * @param Entry $package
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendAssessment(Entry $package)
+    {
+        $user = $package->author;
+        $subject = $this->getNotifySetting('subjectAssessment', 'Taskbook Assessment');
+        $variables = [
+            'package'           => $package,
+            'assessmentText'    => $this->assessmentText($package),
+            'moduleGroup'       => $package->moduleGroup,
+            'user'              => $user,
+        ];
+        $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n {{ assessmentText }}");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($user->email, $subject, $message);
+    }
+
+    /**
+     * @param $package
+     * @return string
+     */
+    private function assessmentText($package)
+    {
+        $text = "";
+        foreach ($package->packageAssessment as $row) {
+            $moduleGroup = $row->assessmentModuleGroup->last();
+            $text .= $moduleGroup->title . " - " . ($row->assessmentPassed ? 'Passed' : 'Failed') . "\n";
+        }
+        return $text;
+    }
+
+    /**
      * @param SuperTableBlockElement $step
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
@@ -42,7 +76,7 @@ class Notify extends Component
             'user'          => $package->author,
             'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('stepRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }

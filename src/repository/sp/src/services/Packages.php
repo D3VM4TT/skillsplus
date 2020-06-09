@@ -14,6 +14,7 @@ use craft\events\ModelEvent;
 use craft\elements\GlobalSet;
 use craft\elements\Entry;
 use craft\elements\User;
+use \DateTime;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -112,8 +113,7 @@ class Packages extends Component
         ## calculate cost
         if ($moduleGroup->level == 2) {
             $cost = $moduleGroup->moduleSingleCost;
-        }
-        else {
+        } else {
             $cost = $moduleGroup->moduleMaxCost;
             if ($moduleGroup->moduleCosts) {
                 foreach ($moduleGroup->moduleCosts as $row) {
@@ -139,8 +139,7 @@ class Packages extends Component
             if (!$defaultWorkflow) {
                 $entry->addError('packageWorkflow', 'You must select a package workflow or set default workflow in settings.');
                 $event->isValid = false;
-            }
-            else {
+            } else {
                 $entry->setFieldValue('packageWorkflow', [$defaultWorkflow->id]);
             }
         }
@@ -159,6 +158,9 @@ class Packages extends Component
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
         }
+        if (!$entry->packageAssessment->count()) {
+            $this->applyPackageAssessment($entry);
+        }
     }
 
     /**
@@ -173,7 +175,7 @@ class Packages extends Component
         $s = 1;
         foreach ($entry->workflow as $step) {
             if (!$step->stepId) {
-                $step->stepId =  'step-' . $s;
+                $step->stepId = 'step-' . $s;
                 $step->setFieldValue('stepId', 'step-' . $s);
                 $s++;
                 Craft::$app->elements->saveElement($step);
@@ -199,18 +201,48 @@ class Packages extends Component
         $packageReviews = [];
         $n = 1;
         foreach ($packageWorkflow as $step) {
-            $packageReviews['new'.$n] = [
-                'type'      => $stepBlockType->id,
-                'enabled'   => true,
+            $packageReviews['new' . $n] = [
+                'type' => $stepBlockType->id,
+                'enabled' => true,
                 'fields' => [
-                    'reviewStepId'      => $step->stepId,
-                    'reviewStepName'    => $step->stepName,
-                    'reviewStepType'    => $step->stepType
+                    'reviewStepId' => $step->stepId,
+                    'reviewStepName' => $step->stepName,
+                    'reviewStepType' => $step->stepType
                 ]
             ];
             $n++;
         }
         $entry->setFieldValues(['packageReviews' => $packageReviews]);
+        Craft::$app->elements->saveElement($entry);
+    }
+
+    /**
+     * @param $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function applyPackageAssessment(Entry $entry)
+    {
+        $sp = new SuperTableService();
+        $field = Craft::$app->fields->getFieldByHandle('packageAssessment');
+        $assessmentBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $moduleGroupIds = [$entry->packageModuleGroup->last()->id];
+        foreach ($entry->packageOptionalModuleGroups as $block) {
+            $moduleGroupIds[] = $block->optionalModuleGroup->last()->id;
+        }
+        $n = 1;
+        foreach ($moduleGroupIds as $moduleGroupId) {
+            $packageAssessment['new' . $n] = [
+                'type' => $assessmentBlockType->id,
+                'enabled' => true,
+                'fields' => [
+                    'assessmentModuleGroup' => [$moduleGroupId]
+                ]
+            ];
+            $n++;
+        }
+        $entry->setFieldValues(['packageAssessment' => $packageAssessment]);
         Craft::$app->elements->saveElement($entry);
     }
 
@@ -223,7 +255,7 @@ class Packages extends Component
         $packages = $this->getUserPackages($user);
         $categories = [];
         foreach ($packages as $package) {
-            foreach($package->moduleGroupCategories() as $category){
+            foreach ($package->moduleGroupCategories() as $category) {
                 $categories[$category->id] = $category;
             }
         }
@@ -252,6 +284,26 @@ class Packages extends Component
             }
         }
         return $available;
+    }
+
+    /**
+     * Get all the resit module groups available to the user
+     *
+     * @param $user
+     * @return array
+     */
+    public function getResitModuleGroups(User $user)
+    {
+        $packages = $this->getUserPackages($user);
+        $resit = [];
+        ## get resit ids
+        foreach ($packages as $package) {
+            $packageResit = $package->resitModuleGroupCategories();
+            foreach ($packageResit as $id => $c) {
+                $resit[$id] = $c;
+            }
+        }
+        return $resit;
     }
 
     /**
@@ -284,14 +336,41 @@ class Packages extends Component
      */
     public function stepRequest($packageId)
     {
-        if (null == $package =  Entry::findOne($packageId)) {
+        if (null == $package = Entry::findOne($packageId)) {
             return null;
         }
         ## lock the package
-        $package->setFieldValue('packageStatus','locked');
+        $package->setFieldValue('packageStatus', 'locked');
         $package->save();
         if (null != $nextStep = $package->nextStep) {
             Lantra::$app->notify->sendStepRequest($nextStep);
+        }
+    }
+
+    /**
+     * @param Entry $package
+     * @param $data
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function assessment(Entry $package, $data)
+    {
+        $assessment = false;
+        foreach ($package->packageAssessment as $a) {
+            if ($a->assessmentDate) {
+                continue;
+            }
+            if (isset($data[$a->id])) {
+                $data[$a->id]['assessmentDate'] = new DateTime();
+                $a->setFieldValues($data[$a->id]);
+                if (Craft::$app->elements->saveElement($a)) {
+                    $assessment = true;
+                }
+            }
+        }
+        if ($assessment) {
+            Lantra::$app->notify->sendAssessment($package);
         }
     }
 
@@ -329,7 +408,7 @@ class Packages extends Component
         $step->setFieldValue('reviewPassed', $passed);
         $step->setFieldValue('reviewComment', $comment);
         $step->setFieldValue('reviewDate', time());
-        if(!Craft::$app->elements->saveElement($step)) {
+        if (!Craft::$app->elements->saveElement($step)) {
             return;
         }
         ## handle pass fail
@@ -339,12 +418,10 @@ class Packages extends Component
             }
             if ($step->reviewStepType == 'complete') {
                 $this->completePackage($package);
-            }
-            else {
+            } else {
                 $this->stepRequest($step->ownerId);
             }
-        }
-        else {
+        } else {
             if ($step->reviewStepType == 'assessment') {
                 $this->unlockPackage($package);
                 ## duplicate assessment step
@@ -357,8 +434,7 @@ class Packages extends Component
         ## send notification to reviewer
         if ($step->reviewStepType == 'review') {
             Lantra::$app->notify->sendStepUpdate($step, $previousStep->reviewUser->one());
-        }
-        ## send notification to user for assessment and complete
+        } ## send notification to user for assessment and complete
         else {
             Lantra::$app->notify->sendStepUpdate($step, $package->author);
         }
@@ -427,10 +503,10 @@ class Packages extends Component
         $block->sortOrder = $sortOrder;
 
         $block->setFieldValues([
-            'reviewStepId'      => $step->reviewStepId,
-            'reviewStepName'    => $step->reviewStepName,
-            'reviewStepType'    => $step->reviewStepType,
-            'reviewUser'        => [$step->reviewUser->one()->id]
+            'reviewStepId' => $step->reviewStepId,
+            'reviewStepName' => $step->reviewStepName,
+            'reviewStepType' => $step->reviewStepType,
+            'reviewUser' => [$step->reviewUser->one()->id]
         ]);
         Craft::$app->elements->saveElement($block);
     }

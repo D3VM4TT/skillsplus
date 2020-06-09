@@ -41,7 +41,7 @@
                 {{ actionInput('entries/save-entry') }}
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('profile/taskbooks/view/{id}') }}
+                {{ redirectInput('profile/taskbooks') }}
                 {% if not modulesGroups|length %}
                     <div class="field--wrapper">
                         <p style="color:red;">There are currently no module groups available.</p>

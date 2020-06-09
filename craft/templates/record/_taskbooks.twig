@@ -2,7 +2,7 @@
 
 {# only one package - redirect to package #}
 {% if not packageId and cpdUser.record.totalPackages == 1 %}
-    {% redirect 'cpd/' ~ currentUser.id ~ '/taskbooks/' ~ cpdUser.record.firstPackage.elementId %}
+    {% redirect craft.lantra.packageUrl(cpdUser.id, cpdUser.record.firstPackage.elementId) %}
 {% endif %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
@@ -35,13 +35,13 @@
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
                 <tr>
                     <td>
-                        <a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">{{ package.moduleGroup.title }}</a>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.moduleGroup.title }}</a>
                     </td>
                     <td>
                         {{ craft.lantra.taskbookLevel(package.packageLevel) }}
                     </td>
                     <td>
-                        {{ package.nextStep.reviewStepName }}
+                        {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
                     </td>
                     <td>
                         {{ package.packageStatus|title }}

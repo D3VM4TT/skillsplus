@@ -1,8 +1,33 @@
+<table class="data">
+    <thead>
+        <th>Module Group</th>
+        <th>Result</th>
+        <th>Comment</th>
+    </thead>
+    <tbody>
+    {% for assessment in package.packageAssessment %}
+        {% set moduleGroup = assessment.assessmentModuleGroup.last %}
+        <tr>
+            <td style="width:25%;">{{ moduleGroup.title }}</td>
+            <td style="width:10%;">
+                <select id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
+                    <option value="1"{% if assessment.assessmentPassed %} selected{% endif %}>Passed</option>
+                    <option value="0"{% if not assessment.assessmentPassed %} selected{% endif %}>Failed</option>
+                </select>
+            </td>
+            <td style="width:60%;">
+                <textarea rows="4" style="width:100%;" id="comment-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentComment]">{{ assessment.assessmentComment }}</textarea>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% if nextStep %}
     <h2 for="result">{{ nextStep.reviewStepName }}</h2>
     {% if package.isReviewUser(currentUser, nextStep, true) %}
         <div class="field--wrapper">
-            <label for="result">Result:</label>
+            <label for="result">Review Step Result:</label>
             <select id="result" name="steps[{{ nextStep.id }}][result]">
                 <option value="">Please select:</option>
                 <option value="1">Passed</option>

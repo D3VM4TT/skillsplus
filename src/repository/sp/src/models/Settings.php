@@ -86,6 +86,9 @@ class Settings extends Model
     public $notifySubjectStepRequest            = '';
     public $notifyStepRequest                   = '';
 
+    public $notifySubjectAssessment             = '';
+    public $notifyAssessment                    = '';
+
     public $disableEndorsementNotify            = false;
 
     public $enableTaskbooks                     = false;

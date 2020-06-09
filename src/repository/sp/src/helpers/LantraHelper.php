@@ -27,6 +27,22 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @param $userId
+     * @param $packageId
+     * @return string
+     */
+    public static function packageUrl($userId, $packageId = null)
+    {
+        if (LantraHelper::setting('themeMyTaskbooks')) {
+            return '/cpd/' . $userId . '/taskbooks/' . $packageId;
+        }
+        if (LantraHelper::setting('themeMyDashboard')) {
+            return '/cpd/' . $userId;
+        }
+        return '/';
+    }
+
+    /**
      * @param $owner
      * @param $payerEmail
      * @param $paymentAmount

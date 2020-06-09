@@ -1,0 +1,18 @@
+<table class="data">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for categoryGroup in resitModuleGroups %}
+        <tr>
+            <td>{{ categoryGroup.title }}</td>
+            <td>£{{ categoryGroup.moduleResitCost }}</td>
+            <td style="text-align: right;"><a href="/profile/taskbooks/single?type=resit&moduleGroupId={{ categoryGroup.id }}">Buy Now</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

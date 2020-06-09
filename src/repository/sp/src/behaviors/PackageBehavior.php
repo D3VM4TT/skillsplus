@@ -79,6 +79,21 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return null
+     */
+    public function resitModuleGroupCategories()
+    {
+        $resits = [];
+        foreach ($this->owner->packageAssessment as $assessment) {
+            if ($assessment->assessmentDate && ! $assessment->assessmentPassed) {
+                $category = $assessment->assessmentModuleGroup->last();
+                $resits[$category->id] = $category;
+            }
+        }
+        return $resits;
+    }
+
+    /**
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool

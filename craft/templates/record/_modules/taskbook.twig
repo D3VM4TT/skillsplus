@@ -1,5 +1,6 @@
 {% set package = cpdUser.record.getElement(packageId) %}
 {% set availableModuleGroups = package.availableModuleGroupCategories %}
+{% set resitModuleGroups = package.resitModuleGroupCategories %}
 <div class="package" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -59,6 +60,13 @@
                         </a>
                     </li>
                 {% endif %}
+                {% if resitModuleGroups|length %}
+                    <li>
+                        <a href="#tab{{ package.id }}resits" class="primary-bg">
+                            <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if availableModuleGroups|length %}
                     <li>
                         <a href="#tab{{ package.id }}optional" class="primary-bg">
@@ -86,6 +94,11 @@
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                     {% include '_includes/packageLog' with {admin:false} %}
+                </div>
+            {% endif %}
+            {% if resitModuleGroups|length %}
+                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
+                    {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
                 </div>
             {% endif %}
             {% if availableModuleGroups|length %}
