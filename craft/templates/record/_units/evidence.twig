@@ -15,7 +15,7 @@
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
     {{ csrfInput() }}
     <input type="hidden" name="action" value="entries/save-entry">
-    {{ redirectInput('cpd/' ~ account.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
+    {{ redirectInput(craft.app.request.referrer ~ '?ref=' ~ craft.app.request.getParam('ref')) }}
     {% if resultEntry is defined and resultEntry %}
         <div id="name-fields">
             <div class="col-6 field--wrapper">
