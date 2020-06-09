@@ -60,19 +60,21 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if resitModuleGroups|length %}
-                    <li>
-                        <a href="#tab{{ package.id }}resits" class="primary-bg">
-                            <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if availableModuleGroups|length %}
-                    <li>
-                        <a href="#tab{{ package.id }}optional" class="primary-bg">
-                            <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
-                        </a>
-                    </li>
+                {% if not isManager %}
+                    {% if resitModuleGroups|length %}
+                        <li>
+                            <a href="#tab{{ package.id }}resits" class="primary-bg">
+                                <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if availableModuleGroups|length %}
+                        <li>
+                            <a href="#tab{{ package.id }}optional" class="primary-bg">
+                                <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </div>
@@ -95,16 +97,18 @@
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                     {% include '_includes/packageLog' with {admin:false} %}
                 </div>
-            {% endif %}
-            {% if resitModuleGroups|length %}
-                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
-                    {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
-                </div>
-            {% endif %}
-            {% if availableModuleGroups|length %}
-                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                    {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
-                </div>
+            {% endif
+            {% if not isManager %}
+                {% if resitModuleGroups|length %}
+                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
+                        {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
+                    </div>
+                {% endif %}
+                {% if availableModuleGroups|length %}
+                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
+                        {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
+                    </div>
+                {% endif %}
             {% endif %}
         </section>
     </div>
