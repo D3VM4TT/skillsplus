@@ -97,7 +97,7 @@
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                     {% include '_includes/packageLog' with {admin:false} %}
                 </div>
-            {% endif
+            {% endif %}
             {% if not isManager %}
                 {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
