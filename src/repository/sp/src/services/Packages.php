@@ -237,6 +237,7 @@ class Packages extends Component
                 'type' => $assessmentBlockType->id,
                 'enabled' => true,
                 'fields' => [
+                    'assessmentDate' => '',
                     'assessmentModuleGroup' => [$moduleGroupId]
                 ]
             ];
