@@ -21,9 +21,6 @@ use craft\helpers\App;
 use lantra\sp\helpers\LantraHelper;
 
 return [
-    '*' => [
-
-    ],
     'local' => [
         'components' => [
             'mailer' => function() {
@@ -40,7 +37,7 @@ return [
             },
             'mutex' => function() {
                 $config = craft\helpers\App::mutexConfig();
-                $config['isWindows'] = getenv('ENVIRONMENT') == 'local';
+                $config['isWindows'] = true;
                 return Craft::createObject($config);
             },
             'dbCleansed' => [
@@ -57,4 +54,25 @@ return [
 
         ]
     ],
+    '*' => [
+        'components' => [
+            'mailer' => function() {
+                $settings = App::mailSettings();
+                $settings->fromEmail = LantraHelper::setting('notifyFromEmail', 'No-Reply@skills-plus.net');
+                $settings->fromName = LantraHelper::setting('notifyFromName', 'Skills+');
+                $settings->transportType = \craft\mail\transportadapters\Smtp::class;
+                $settings->transportSettings = [
+                    'host'  => getenv('SMTP_HOST'),
+                    'port'  => getenv('SMTP_PORT'),
+                    'useAuthentication'  => getenv('SMTP_AUTHENTICATION'),
+                    'encryptionMethod'  => getenv('SMTP_ENCRYPTION'),
+                    'timeout'  => getenv('SMTP_TIMEOUT'),
+                    'username'  => getenv('SMTP_USERNAME'),
+                    'password'  => getenv('SMTP_PASSWORD')
+                ];
+                $config = App::mailerConfig($settings);
+                return Craft::createObject($config);
+            },
+        ]
+    ]
 ];

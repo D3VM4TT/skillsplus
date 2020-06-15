@@ -48,7 +48,8 @@ class Settings extends Model
     public $individualLicencePaypalButton       = '';
     public $individualJobRole                   = null;
 
-    public $notifyAdminEmail                    = 'admin@skills-plus.co.uk';
+    public $notifyFromEmail                    = 'No-Reply@skills-plus.net';
+    public $notifyFromName                     = 'Skills+';
     public $notifyFooter                        = '';
 
     public $notifySubjectBlockedResult          = '';

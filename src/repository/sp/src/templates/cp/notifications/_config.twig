@@ -1,10 +1,18 @@
 {% import "_includes/forms" as forms %}
 {{ forms.textField ({
-    instructions:   "Default: admin@skills-plus.co.uk",
-    label:			"Notify Admin Email",
-    id:				"notifyAdminEmail",
-    name:			"notifyAdminEmail",
-    value:		    settings.notifyAdminEmail
+    instructions:   "Default: No-Reply@skills-plus.net",
+    label:			"Notify From Email",
+    id:				"notifyFromEmail",
+    name:			"notifyFromEmail",
+    value:		    settings.notifyFromEmail
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Skills+",
+    label:			"Notify From Name",
+    id:				"notifyFromName",
+    name:			"notifyFromName",
+    value:		    settings.notifyFromName
 }) }}
 
 {{ forms.textareaField ({

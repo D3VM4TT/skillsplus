@@ -73,19 +73,6 @@ categoryGroups:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
 dateModified: 1591701293
-email:
-  fromEmail: NoReply@Skills-plus.net
-  fromName: 'Skills+ (BICS)'
-  template: ''
-  transportSettings:
-    encryptionMethod: tls
-    host: smtp.sendgrid.net
-    password: EB7M4bm1pPOEJ0O
-    port: '587'
-    timeout: '30'
-    useAuthentication: 1
-    username: azure_9bf9918bbe6b1e7398be600e09f92204@azure.com
-  transportType: craft\mail\transportadapters\Smtp
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
