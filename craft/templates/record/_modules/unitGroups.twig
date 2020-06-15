@@ -116,8 +116,8 @@
     {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
     {% if moduleUserResults|length %}
         <div class="unit-group">
-            <div class="header" data-target="#u{{ moduleElementId }}-user">
-                <h5>My Achievements</h5>
+            <div class="header primary-bg" data-target="#u{{ moduleElementId }}-user">
+                <h5>Further Achievements</h5>
                 <div class="status">
                     View status and Endorsements
                     <img src="/assets/img/img-arrow-down-trans.png">
