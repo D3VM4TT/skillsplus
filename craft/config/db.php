@@ -35,7 +35,7 @@ return [
         'database' => getenv('DB_DATABASE'),
     ],
     'local' => [
-        'server' => 'localhost',
+        'server' => getenv('DB_SERVER'),
         'database' => getenv('DB_DATABASE'),
     ],
     'dev' => [
