@@ -1791,11 +1791,12 @@ table.data tbody td.icons {
 div.links {
     margin: 40px 0 40px 0;
 }
-
+a.icon {
+    display: inline-block;
+}
 a.icon img {
     width: 30px;
     height: 30px;
-    display: inline-block;
     margin: 0 5px;
     padding: 0;
 }
