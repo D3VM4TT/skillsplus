@@ -5,6 +5,9 @@ categoryGroups:
         tabs:
           -
             fields:
+              48909e73-b939-470f-b472-53ee709db6e4:
+                required: false
+                sortOrder: 4
               6b431a5f-e1ee-4520-ab30-89ca72993c00:
                 required: false
                 sortOrder: 2
@@ -72,7 +75,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1591701293
+dateModified: 1592232749
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1176,6 +1179,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  48909e73-b939-470f-b472-53ee709db6e4:
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleGroupReadOnly
+    instructions: 'Make this module group read-only for all users?'
+    name: 'Module Group Read Only'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   4967ee7c-a86e-49fd-89f6-a281f294c8a4:
     contentColumnType: integer(10)
     fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
