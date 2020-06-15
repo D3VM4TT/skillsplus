@@ -1,6 +1,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set isManager = false %}
 {% set isAssessor = false %}
+{# read only might be set by module group #}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
 {% if cpdUser.id != currentUser.id %}
     {% set isManager = true %}
