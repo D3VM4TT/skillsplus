@@ -8,8 +8,8 @@
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
-
 {% set section = craft.sections.getSectionByHandle('packages') %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}
     <section class="page dashboard">
@@ -48,7 +48,7 @@
                     </div>
                 {% else %}
                     <div class="field--wrapper">
-                        <label for="packageModuleGroup" class="no-float">Module Group:</label>
+                        <label for="packageModuleGroup" class="no-float">Please select which {{ taskbookLabel }} you wish to purchase:</label>
                         <select class="package-module-group" name="fields[packageModuleGroup][]">
                             {% for moduleGroup in modulesGroups %}
                                 <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
@@ -56,6 +56,7 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% if craft.lantra.setting('taskbookLevels') %}
                     <div class="field--wrapper">
                         <label for="packageLevel" class="no-float">Level:</label>
                         <select class="package-level" name="fields[packageLevel]">
@@ -64,12 +65,13 @@
                             {% endfor %}
                         </select>
                     </div>
-                        {% for moduleGroup in modulesGroups %}
-                            {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(moduleGroup).level(2).all() %}
-                            {% if optionalModuleGroups|length %}
-                                {% include 'profile/taskbooks/_optionalModuleGroups' with {optionalModuleGroups: optionalModuleGroups, moduleGroup: moduleGroup, entry: entry is defined ? entry} %}
-                            {% endif %}
-                        {% endfor %}
+                    {% endif %}
+                    {% for moduleGroup in modulesGroups %}
+                        {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(moduleGroup).level(2).all() %}
+                        {% if optionalModuleGroups|length %}
+                            {% include 'profile/taskbooks/_optionalModuleGroups' with {optionalModuleGroups: optionalModuleGroups, moduleGroup: moduleGroup, entry: entry is defined ? entry} %}
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Package</button>
