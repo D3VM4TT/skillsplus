@@ -6,6 +6,12 @@
         {% endif %}
         </label>
         <table class="data">
+            <thead>
+            <tr>
+                <th>Module Group</th>
+                <th>Selected</th>
+            </tr>
+            </thead>
             <tbody>
             {% for optionalModuleGroup in optionalModuleGroups %}
                 {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, optionalModuleGroup.id)  %}

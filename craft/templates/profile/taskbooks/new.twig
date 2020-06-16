@@ -74,7 +74,7 @@
                     {% endfor %}
                 {% endif %}
                 <div class="container-btn">
-                    <button type="submit" class="button primary-bg">Create {{ taskbookLabel }}</button>
+                    <button type="submit" class="button primary-bg">Continue</button>
                 </div>
             </form>
         </div>
@@ -84,7 +84,9 @@
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][type]" value="{{ blocktype.id }}" />
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][enabled]" value="1" />
         <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalModuleGroup][]" value="{optionalModuleGroupId}" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
+        {% if craft.lantra.setting('taskbookLevels') %}
+            <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
+        {% endif %}
     </script>
 {% endblock %}
 
@@ -107,6 +109,10 @@
         }
     }).change();
 
+    $('select.optional-level').change(function(){
+        updateOptional();
+    });
+
     updateOptional = function() {
         var n = 1;
         $('form#taskbooks').find('.optional-hidden').remove();
@@ -122,9 +128,7 @@
         });
     };
 
-    $('select.optional-level').change(function(){
-        updateOptional();
-    });
+
     $('input.optional').change(function(){
         updateOptional();
     }).change();

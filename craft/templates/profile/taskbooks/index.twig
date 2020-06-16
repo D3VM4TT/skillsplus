@@ -34,13 +34,16 @@
                     {% endif %}
                     <th>Optional Module Groups</th>
                     <th>Cost</th>
-                    <th></th>
+                    <th>Payment Reference</th>
                 <tr>
             </thead>
             <tbody>
                 {% for package in packages.all %}
                     {% set hasPayment = package.userPayments.count %}
-                    {% set packageTitle = package.moduleGroup.title ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
+                    {% set packageTitle = package.moduleGroup.title %}
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
+                    {% endif %}
                     <tr>
                         <td>{{ package.dateCreated|date('d/m/y') }}</td>
                         {% if not package.moduleGroup %}
@@ -63,7 +66,10 @@
                                 {% if not moduleGroup %}
                                     Invalid Optional Module Group<br />
                                 {% else %}
-                                    {{ moduleGroup.title }} ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                    {{ moduleGroup.title }}
+                                    {% if craft.lantra.setting('taskbookLevels') %}
+                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </td>
