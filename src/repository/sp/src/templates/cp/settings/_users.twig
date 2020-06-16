@@ -1,4 +1,58 @@
 {% import "_includes/forms" as forms %}
+
+{% set profileFieldOptions =  {
+    'fullName':' Name',
+    'email':'Email',
+    'userAddress':'Address',
+    'userTelephone':'Phone',
+    'userStartDate':'Start Date',
+    'userDateOfBirth':'Date of Birth',
+    'userRole': 'Role',
+    'photo': 'Photo',
+
+    'id': 'User ID',
+    'userCompany': 'User Company',
+    'userManager': 'User Manager',
+    'managerCompanies': 'Manager Companies',
+    'lastLogin': 'Last Login',
+    'legacyId': 'Legacy ID',
+} %}
+
+{{ forms.editableTableField ({
+    label:			"User Profile Fields",
+    instrunctions:  "Name, Email,  ",
+    id:				"userProfileFields",
+    name:			"userProfileFields",
+    addRowLabel:    "Add a user profile field",
+    cols:
+    {
+        field:       {heading: "Field", type: "select", options:profileFieldOptions},
+        label:       {heading: "Label", type: "text"},
+        accountInformation:   {heading: "Account Information?", type: "checkbox"},
+        profile:   {heading: "Profile Page?", type: "checkbox"},
+        managerEdit:   {heading: "Manager Edit?", type: "checkbox"},
+        userEdit:   {heading: "User Edit?", type: "checkbox"}
+    },
+    rows:           settings.userProfileFields
+}) }}
+
+{{ forms.editableTableField ({
+    label:			"User Custom Fields",
+    instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom user field.",
+    id:				"userEditCustomFields",
+    name:			"userEditCustomFields",
+    addRowLabel:    "Add a custom field",
+    cols:
+    {
+        name:       {heading: "Name", type: "singleline"},
+        label:      {heading: "Label", type: "singleline"},
+        userEdit:   {heading: "User Edit", type: "checkbox"}
+    },
+    rows:           settings.userEditCustomFields
+}) }}
+
+<h3>NO LONGER USED</h3>
+
 {{ forms.lightswitchField ({
     label:			"Edit Name?",
     id:				"userEditName",
@@ -53,21 +107,6 @@
     id:				"userEditPhoto",
     name:			"userEditPhoto",
     on:		        settings.userEditPhoto == 1,
-}) }}
-
-{{ forms.editableTableField ({
-    label:			"User Custom Fields",
-    instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom user field.",
-    id:				"userEditCustomFields",
-    name:			"userEditCustomFields",
-    addRowLabel:    "Add a custom field",
-    cols:
-    {
-        name:       {heading: "Name", type: "singleline"},
-        label:      {heading: "Label", type: "singleline"},
-        userEdit:   {heading: "User Edit", type: "checkbox"}
-    },
-    rows:           settings.userEditCustomFields
 }) }}
 
 <h3>Account Information</h3>
