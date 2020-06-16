@@ -97,6 +97,8 @@ class Settings extends Model
 
     public $defaultWorkflow                     = null;
 
+    public $userProfileFields                   = [];
+
     public $userEditName                        = true;
     public $userEditEmail                       = true;
     public $userEditAddress                     = true;
