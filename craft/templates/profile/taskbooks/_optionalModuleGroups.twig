@@ -4,7 +4,9 @@
             <thead>
             <tr>
                 <th>Optional Module Groups</th>
-                <th>Level</th>
+                {% if craft.lantra.setting('taskbookLevels') %}
+                    <th>Level</th>
+                {% endif %}
                 <th></th>
             </tr>
             </thead>
@@ -13,6 +15,7 @@
                 {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, optionalModuleGroup.id)  %}
                 <tr class="optional-module">
                     <td>{{ optionalModuleGroup.title }}</td>
+                    {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
                         <select class="optional-level" name="optionalLevel">
                             {% for option in craft.lantra.taskbookLevels() %}
@@ -20,6 +23,7 @@
                             {% endfor %}
                         </select>
                     </td>
+                    {% endif %}
                     <td>
                         <input class="optional" type="checkbox" name="optionalModuleGroup" value="{{ optionalModuleGroup.id }}" {% if packageOptionalModuleGroupRow %}checked{% endif %}>
                     </td>

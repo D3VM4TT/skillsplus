@@ -29,7 +29,9 @@
                 <tr>
                     <th>Date Created</th>
                     <th>Module Group</th>
-                    <th>Level</th>
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        <th>Level</th>
+                    {% endif %}
                     <th>Optional Module Groups</th>
                     <th>Cost</th>
                     <th></th>
@@ -52,7 +54,9 @@
                                 {% endif %}
                             </td>
                         {% endif %}
-                        <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
+                        {% if craft.lantra.setting('taskbookLevels') %}
+                            <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
+                        {% endif %}
                         <td>
                             {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
                                 {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}
