@@ -7,6 +7,7 @@
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set packages = craft.entries.section('packages').authorId(currentUser.id) %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}
 <section class="page dashboard">
@@ -18,8 +19,8 @@
             <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
         </a>
         {{ currentUserCompany|default('') }}
-        <h2>Manage taskbooks</h2>
-        <p>Manage your taskbook packages.</p>
+        <h2>Manage {{ taskbookLabel|pluralize }}</h2>
+        <p>Manage your {{ taskbookLabel }} packages.</p>
     </div>
     <div class="page-content">
         {% if packages.count %}
@@ -81,7 +82,7 @@
         </table>
         {% endif %}
         <div class="container-btn">
-            <p><a href="/profile/taskbooks/new" class="button primary-bg">New Taskbook</a></p>
+            <p><a href="/profile/taskbooks/new" class="button primary-bg">New {{ taskbookLabel }}</a></p>
         </div>
     </div>
 </section>
