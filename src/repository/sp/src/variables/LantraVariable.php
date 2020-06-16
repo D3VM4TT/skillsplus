@@ -30,7 +30,7 @@ class LantraVariable
      */
     public function userProfileFields($type, $limit = 0)
     {
-        $fields = LantraHelper::setting('userProfileFields');
+        $fields = LantraHelper::setting('userProfileFields', []);
         $return = [];
         foreach($fields as $row) {
             if ($limit && count($return) == $limit) {

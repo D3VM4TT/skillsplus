@@ -17,6 +17,7 @@
 {% endif %}
 
 {% set isTaskbooks = craft.request.getSegment(3) == 'taskbooks' %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
@@ -40,9 +41,9 @@
                 <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
             {% endif %}
         {% endif %}
-        <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? 'Taskbooks' : 'Dashboard' }}</h2>
+        <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
         {% if not isManager and isTaskbooks %}
-            <p><a href="/profile/taskbooks">Manage Taskbooks</a></p>
+            <p><a href="/profile/taskbooks">Manage {{ taskbookLabel|pluralize }}</a></p>
         {% endif %}
     </div>
     {% include '_includes/account' with{cpdUser:account} %}

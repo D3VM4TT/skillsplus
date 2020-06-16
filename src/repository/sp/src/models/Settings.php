@@ -40,6 +40,9 @@ class Settings extends Model
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
 
+    public $taskbookLabel                       = 'Taskbook';
+    public $taskbookIntro                       = [];
+
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;
     public $schemeExpiryDate                    = null;
@@ -143,7 +146,8 @@ class Settings extends Model
         'themeNavigationPublic',
         'themeNavigationPrivate',
         'individualCompany',
-        'defaultWorkflow'
+        'defaultWorkflow',
+        'taskbookIntro'
     ];
 
     private $categoryFields = [

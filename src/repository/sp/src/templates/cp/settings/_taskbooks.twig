@@ -1,0 +1,22 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Taskbook Label",
+    id:				"taskbookLabel",
+    name:			"taskbookLabel",
+    value:		    settings.taskbookLabel
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Taskbook Intro",
+    id:				    "taskbookIntro",
+    name:			    "taskbookIntro",
+    elementType:        config.entryElementType,
+    sources:            config.pagesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.taskbookIntro ? settings.taskbookIntro,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              ''
+}) }}

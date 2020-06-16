@@ -15,6 +15,8 @@
     {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
 
+{% set taskbookIntro = craft.lantra.setting('taskbookIntro') %}
+
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd">
@@ -50,10 +52,17 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if taskbookIntro %}
+        <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel|pluralize }}</a>
+    {% endif %}
+{% elseif taskbookIntro %}
+    {% for block in taskbookIntro.pageContent %}
+        <div class="content-col">
+            <h2>{{ block.columnTitle }}</h2>
+            <p>{{ block.columnHtml }}</p>
+        </div>
+    {% endfor %}
 {% endif %}
-{% if not cpdUser.record.totalPackages %}
-    <h3>You have not signed up for any taskbook packages.</h3>
-    <p>&nbsp;</p>
-{% endif %}
+
 
 

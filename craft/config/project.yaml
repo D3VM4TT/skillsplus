@@ -75,7 +75,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1592232749
+dateModified: 1592321686
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4396,6 +4396,10 @@ plugins:
     licenseKey: null
     schemaVersion: 2.2.1
     settings: null
+  wordsmith:
+    edition: standard
+    enabled: true
+    schemaVersion: 0.0.0.0
 sections:
   090b3c24-a9ac-4935-a919-c4fc8a3099b0:
     enableVersioning: false

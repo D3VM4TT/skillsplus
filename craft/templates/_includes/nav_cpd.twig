@@ -6,8 +6,9 @@
         </li>
         {% endif %}
         {% if craft.lantra.setting('themeMyTaskbooks') %}
+            {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
             <li class="{% if craft.app.request.getSegment(3) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
-                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My Taskbooks</a>
+                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
             </li>
         {% endif %}
         <li class="{% if craft.app.request.getSegment(2) == 'profile' %}nav-open{% else %}nav-closed{% endif %}">
