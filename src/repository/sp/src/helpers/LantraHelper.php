@@ -27,6 +27,23 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @param $field
+     * @return null
+     */
+    public static function userProfileField($field)
+    {
+        $fields = LantraHelper::setting('userProfileFields');
+        if ($fields) {
+            foreach ($fields as $row) {
+                if ($row['field'] == $field) {
+                    return $row;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param $userId
      * @param $packageId
      * @return string

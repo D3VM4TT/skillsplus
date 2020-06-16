@@ -24,6 +24,48 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function userProfileFields($type, $limit = 0)
+    {
+        $fields = LantraHelper::setting('userProfileFields');
+        $return = [];
+        foreach($fields as $row) {
+            if ($limit && count($return) == $limit) {
+                return $return;
+            }
+            if ($row[$type]) {
+                $return[] = $row;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $field
+     * @param $type
+     * @return bool
+     */
+    public function userProfileField($field, $type)
+    {
+        $field = LantraHelper::userProfileField($field);
+        return $field ? $field[$type] : false;
+    }
+
+    /**
+     * @param $field
+     * @param string $default
+     * @return string
+     */
+    public function userProfileLabel($field, $default = '')
+    {
+        $field = LantraHelper::userProfileField($field);
+        return $field ? $field['label'] : $default;
+    }
+
+    /**
      * @param $userId
      * @param $packageId
      * @return string

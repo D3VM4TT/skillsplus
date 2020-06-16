@@ -1,37 +1,105 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set currentUserCompany = craft.lantra.userCompany() %}
+{% set currentUserManagers = craft.lantra.userManagers(currentUser, 0 , false) %}
 {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
-{% set accountSettings = craft.lantra.setting('userAccountInformation') %}
 <div id="account-details-expand" class="acc-info">
-    <div class="col-3">
-        {% if accountSettings.userId is defined and accountSettings.userId %}
-        <div class="col-pd-btm">
-            <h5 class="primary-color">Account ID:</h5>
-            <p class="link-bold">{{ cpdUser.id }}</p>
-        </div>
-        {% endif %}
-        {% if accountSettings.userStartDate is defined and accountSettings.userStartDate %}
-            <h5 class="primary-color">Start Date:</h5>
-            <p class="link-bold">{{ cpdUser.userStartDate|date(dateFormat) }}</p>
-        {% endif %}
+    <div class="row">
+    <div class="col-4">
+        {% for row in craft.lantra.userProfileFields('accountInformation', 9) %}
+        {% switch row.field %}
+                {% case 'id' %}
+                <div class="col">
+                    <h5 class="primary-color">{{ row.label ?: 'Account ID' }}</h5>
+                    <p class="link-bold">{{ cpdUser.id }}</p>
+                </div>
+                {% case 'fullName' %}
+                <div class="col">
+                    <h5 class="primary-color">{{ row.label ?: 'Name' }}</h5>
+                    <p class="link-bold">{{ currentUser.fullName }}</p>
+                </div>
+                {% case 'email' %}
+                <div class="col">
+                    <h5 class="primary-color">{{ row.label ?: 'Email' }}</h5>
+                    <p class="link-bold">{{ currentUser.email }}</p>
+                </div>
+                {% case 'userStartDate' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Start Date' }}</h5>
+                        <p class="link-bold">{{ cpdUser.userStartDate ? cpdUser.userStartDate|date(dateFormat) : '~' }}</p>
+                    </div>
+                {% case 'userDateOfBirth' %}
+                {% if cpdUser.userDateOfBirth %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Date of Birth' }}</h5>
+                        <p class="link-bold">{{ cpdUser.userDateOfBirth ? cpdUser.userDateOfBirth|date(dateFormat) : '~' }}</p>
+                    </div>
+                {% endif %}
+                {% case 'userAddress' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Address' }}</h5>
+                        <p class="link-bold">{{ cpdUser.userAddress ? cpdUser.userAddress : '~' }}</p>
+                    </div>
+                {% case 'userTelephone' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Telephone' }}</h5>
+                        <p class="link-bold">{{ cpdUser.userTelephone ? cpdUser.userTelephone : '~' }}</p>
+                    </div>
+                {% case 'userRole' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Role' }}</h5>
+                        <p class="link-bold">
+                            {% if not currentUser.userRole|length %}~{% endif %}
+                            {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                        </p>
+                    </div>
+                {% case 'userCompany' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'User Company' }}</h5>
+                        <p class="link-bold">{{ currentUserCompany ? currentUserCompany : '~' }}</p>
+                    </div>
+                {% case 'userManagers' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'User Managers' }}</h5>
+                        <p class="link-bold">
+                            {% if not currentUserManagers|length %}~{% endif %}
+                            {% for manager in currentUserManagers %}
+                                {{ manager.fullName }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                        </p>
+                    </div>
+                {% case 'managerCompanies' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Manager Companies' }}</h5>
+                        <p class="link-bold">
+                            {% if not managerCompanies|length %}~{% endif %}
+                            {% for company in managerCompanies %}
+                                {{ company.title }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                        </p>
+                    </div>
+                {% case 'legacyId' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Legacy ID' }}:</h5>
+                        <p class="link-bold">{{ currentUser.legacyId ? currentUser.legacyId : '~' }}</p>
+                    </div>
+                {% case 'lastLogin' %}
+                    <div class="col">
+                        <h5 class="primary-color">{{ row.label ?: 'Last Login' }}:</h5>
+                        <p class="link-bold">{{ currentUser.lastLoginDate|date(dateFormat) }}</p>
+                    </div>
+                {% default  %}
+                <div class="col">
+                    {{ row.field }}
+                </div>
+                        {% endswitch %}
+                {% if not loop.last and loop.index is divisible by(3) %}
+            </div>
+            <div class="col-4">
+                {% endif %}
+        {% endfor %}
     </div>
-    <div class="col-9">
-        {% if accountSettings.userCompany is defined and accountSettings.userCompany %}
-            {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-            {% if cpdUser.userCompany|length %}
-                <h5 class="primary-color">User Company:</h5>
-                <p class="link-bold">{{ craft.lantra.companyLabel(cpdUser.userCompany.one) }}</p>
-            {% endif %}
-        {% endif %}
-        {% if accountSettings.managerCompanies is defined and accountSettings.managerCompanies %}
-            {% if managerCompanies|length %}
-                <h5 class="primary-color">Manager {{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</h5>
-                {% for company in managerCompanies %}
-                    {{ company.title }}{{ not loop.last ? ', ' }}
-                {% endfor %}
-            {% endif %}
-        {% endif %}
     </div>
 </div>
 <div class="link-toggle">

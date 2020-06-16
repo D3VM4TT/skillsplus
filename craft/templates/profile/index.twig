@@ -14,102 +14,101 @@
 
 {% block content %}
     <section class="page dashboard">
-    <div class="page-subHeader primary-bg">
-        {% include '_includes/topNavigation' %}
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="../"><img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <a href="../"><img
+                        src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"
+                        width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             {{ currentUserCompany|default('') }}
             <h2>My profile</h2>
             <p>A snapshot of your personal information, Companies and Job roles.</p>
         </div>
         <div class="page-content">
-        <div class="field--wrapper">
-            <h4>{{ currentUser.fullName }}</h4>
-        </div>
-        <div class="field--wrapper">
-            <label class="no-float primary-color">Email address:</label>
-            <h4>{{ currentUser.email }}</h4>
-        </div>
-        {% if currentUser.userStartDate %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Start date:</label>
-                <span class="label">{{ currentUser.userStartDate|date(dateFormat) }}</span>
-            </div>
-        {% endif %}
-        {% if currentUser.userDateOfBirth %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Date of Birth:</label>
-                <span class="label">{{ currentUser.userDateOfBirth|date(dateFormat)  }}</span>
-            </div>
-        {% endif %}
-        {% if currentUser.userAddress %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Address:</label>
-                <span class="label">{{ currentUser.userAddress }}</span>
-            </div>
-        {% endif %}
-        {% if currentUser.userTelephone %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Telephone:</label>
-                <span class="label">{{ currentUser.userTelephone }}</span>
-            </div>
-        {% endif %}
-        {% if getenv('SITE') != 'bics' %}
-        {% if currentUserCompany %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">User Company:</label>
-                <span class="label">{{ currentUserCompany }}</span>
-            </div>
-        {% endif %}
-        {% if not currentUser.admin and not currentUser.isInGroup('schemeManagers') and currentUserManagers %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">User Managers:</label>
-                <span class="label">
-                    {% for manager in currentUserManagers %}
-                        {{ manager.fullName }}{{ not loop.last ? ', ' }}
-                    {% endfor %}
-                </span>
-            </div>
-        {% endif %}
-        {% endif %}
-        {% if managerCompanies|length %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Manager:</label>
-                <span class="label">{{ managerCompanies|length == 1 ? 'Company' : 'Companies' }}:</span>
-                {% for company in managerCompanies %}
-                    {{ company.title }}{{ not loop.last ? ', ' }}
-                {% endfor %}
-            </div>
-        {% endif %}
-        <div class="field--wrapper">
-            <label class="no-float primary-color">Legacy User ID:</label>
-            <span class="label">{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</span>
-        </div>
-        {% if not craft.lantra.setting('userEditRole') %}
-            <div class="field--wrapper">
-                <label class="no-float primary-color">Job Role:</label>
-                {% if currentUser.userRole.count %}
-                    {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
-                {% else %}
-                ~
-                {% endif %}
-                <br/>
+            {% for row in craft.lantra.userProfileFields('profile') %}
+                {% switch row.field %}
+                    {% case 'fullName' %}
+                        <div class="field--wrapper">
+                            <h4>{{ currentUser.fullName }}</h4>
+                        </div>
+                    {% case 'email' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Email' }}</label>
+                            <h4>{{ currentUser.email }}</h4>
+                        </div>
+                    {% case 'userStartDate' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Start Date' }}</label>
+                            <span class="label">{{ currentUser.userStartDate ? currentUser.userStartDate|date(dateFormat) : '~' }}</span>
+                        </div>
+                    {% case 'userDateOfBirth' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Date of Birth' }}</label>
+                            <span class="label">{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '~' }}</span>
+                        </div>
+                    {% case 'userAddress' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Address' }}</label>
+                            <span class="label">{{ currentUser.userAddress }}</span>
+                        </div>
+                    {% case 'userTelephone' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Telephone' }}</label>
+                            <span class="label">{{ currentUser.userTelephone }}</span>
+                        </div>
+                    {% case 'userRole' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Role' }}</label>
+                            {% if not  currentUser.userRole.count %}~{% endif %}
+                            {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                        </div>
+                    {% case 'userCompany' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'User Company' }}</label>
+                            <span class="label">{{ currentUserCompany  ? currentUserCompany : '~' }}</span>
+                        </div>
+                    {% case 'userManagers' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'User Managers' }}</label>
+                            {% if not currentUserManagers|length %}~{% endif %}
+                            {% for manager in currentUserManagers %}
+                                {{ manager.fullName }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                            </span>
+                        </div>
+                    {% case 'managerCompanies' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Manager Companies' }}</label>
+                            {% if not managerCompanies|length %}~{% endif %}
+                            {% for company in managerCompanies %}
+                                {{ company.title }}{{ not loop.last ? ', ' }}
+                            {% endfor %}
+                        </div>
+                    {% case 'legacyId' %}
+                        <div class="field--wrapper">
+                            <label class="no-float primary-color">{{ row.label ?: 'Legacy ID' }}:</label>
+                            <span class="label">{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</span>
+                        </div>
+                {% endswitch %}
+            {% endfor %}
+
             {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
             {% for block in userCustomFields %}
                 {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).one() %}
-                <span class="label">{{ block.label }}:</span> {{ userCustomBlock.customValue|default('~') }}<br />
+                <div class="field--wrapper">
+                    <label class="no-float primary-color">{{ block.label }}</label>
+                    <span class="label">{{ userCustomBlock.customValue|default('~') }}</span>
+                </div>
             {% endfor %}
-            </div>
-        {% endif %}
-        {% if not readOnly %}
+            {% if not readOnly %}
+                <div class="container-btn col-pd-top">
+                    <a class="button primary-bg" href="/profile/edit">Edit profile</a>
+                </div>
+            {% endif %}
             <div class="container-btn col-pd-top">
-                <a class="button primary-bg" href="/profile/edit">Edit profile</a>
+                <a class="button primary-bg" href="/profile/password">Edit password</a>
             </div>
-        {% endif %}
-        <div class="container-btn col-pd-top">
-            <a class="button primary-bg" href="/profile/password">Edit password</a>
-        </div>
         </div>
     </section>
 {% endblock %}
