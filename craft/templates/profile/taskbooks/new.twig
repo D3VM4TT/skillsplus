@@ -48,7 +48,7 @@
                     </div>
                 {% else %}
                     <div class="field--wrapper">
-                        <label for="packageModuleGroup" class="no-float">Please select which {{ taskbookLabel }} you wish to purchase:</label>
+                        <label for="packageModuleGroup" class="no-float">Please select which {{ taskbookLabel|lower }} you wish to purchase:</label>
                         <select class="package-module-group" name="fields[packageModuleGroup][]">
                             {% for moduleGroup in modulesGroups %}
                                 <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
@@ -58,7 +58,7 @@
                     </div>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <div class="field--wrapper">
-                        <label for="packageLevel" class="no-float">Level:</label>
+                        <label for="packageLevel" class="no-float">Please select the level you would like to achieve:</label>
                         <select class="package-level" name="fields[packageLevel]">
                             {% for option in craft.lantra.taskbookLevels() %}
                                 <option {% if entry is defined and entry.packageLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
@@ -74,7 +74,7 @@
                     {% endfor %}
                 {% endif %}
                 <div class="container-btn">
-                    <button type="submit" class="button primary-bg">Add Package</button>
+                    <button type="submit" class="button primary-bg">Create {{ taskbookLabel }}</button>
                 </div>
             </form>
         </div>

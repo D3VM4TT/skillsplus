@@ -1,15 +1,11 @@
 <div class="taskbook-optional taskbook-optional-{{ moduleGroup.id }}">
     {% if optionalModuleGroups|length  %}
+        <label>Below are the optional modules you can choose to complete along with core.
+        {% if moduleGroup.moduleMinimumOptional %}
+           <br />You must select at least {{ moduleGroup.moduleMinimumOptional }} optional {{ 'module'|pluralize(qty=moduleGroup.moduleMinimumOptional) }}.
+        {% endif %}
+        </label>
         <table class="data">
-            <thead>
-            <tr>
-                <th>Optional Module Groups</th>
-                {% if craft.lantra.setting('taskbookLevels') %}
-                    <th>Level</th>
-                {% endif %}
-                <th></th>
-            </tr>
-            </thead>
             <tbody>
             {% for optionalModuleGroup in optionalModuleGroups %}
                 {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, optionalModuleGroup.id)  %}
