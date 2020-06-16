@@ -7,6 +7,7 @@
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set packages = craft.entries.section('packages').authorId(currentUser.id) %}
+{% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}

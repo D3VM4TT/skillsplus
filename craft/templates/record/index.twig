@@ -43,7 +43,11 @@
         {% endif %}
         <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
         {% if not isManager and isTaskbooks %}
-            <p><a href="/profile/taskbooks">Manage {{ taskbookLabel|pluralize }}</a></p>
+            <div class="header-controls">
+                <div class="container-btn primary-bg" style="margin-left:0;">
+                    <a class="btn-add-new" href="/profile/taskbooks">Manage {{ taskbookLabel|pluralize }}</a>
+                </div>
+            </div>
         {% endif %}
     </div>
     {% include '_includes/account' with{cpdUser:account} %}

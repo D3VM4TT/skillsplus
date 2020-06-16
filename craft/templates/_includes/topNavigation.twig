@@ -17,7 +17,13 @@
 {% endif %}
 
 {% if currentUser %}
-<a class="link-bold" href="/">My Dashboard</a>
+  {% if isTaskbooks is defined and isTaskbooks %}
+    {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+    {% set account = account is defined ? account:currentUser %}
+    <a class="link-bold" href="/cpd/{{ account.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+    {% else %}
+  <a class="link-bold" href="/">My Dashboard</a>
+{% endif %}
 <a class="link-bold" href="{{ logoutUrl }}" style=float:right;>Sign out</a>
 {#
 <nav class="topNavigation secondary-bg">

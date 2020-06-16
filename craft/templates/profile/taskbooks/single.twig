@@ -14,6 +14,8 @@
 {% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
 {% set singleType = craft.request.getParam('type') %}
 
+{% set isTaskbooks = true %}
+
 {% block content %}
     <section class="page dashboard">
         <div class="page-subHeader primary-bg">
@@ -63,6 +65,7 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% if craft.lantra.setting('taskbookLevels') %}
                 <div class="field--wrapper">
                     <label for="packageLevel" class="no-float">Level:</label>
                     <select class="core-level" name="fields[packageLevel]">
@@ -71,6 +74,7 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Module Group</button>
                 </div>

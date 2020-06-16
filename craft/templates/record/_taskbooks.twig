@@ -27,7 +27,9 @@
         <thead>
         <tr>
             <th>Module Group</th>
-            <th>Level</th>
+            {% if craft.lantra.setting('taskbookLevels') %}
+                <th>Level</th>
+            {% endif %}
             <th>Next Step</th>
             <th>Status</th>
         </tr>
@@ -39,9 +41,11 @@
                     <td>
                         <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.moduleGroup.title }}</a>
                     </td>
+                    {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
                         {{ craft.lantra.taskbookLevel(package.packageLevel) }}
                     </td>
+                    {% endif %}
                     <td>
                         {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
                     </td>
