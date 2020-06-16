@@ -38,7 +38,7 @@
         {% for moduleItem in moduleGroupItem.modules %}
             {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
             {% set moduleElementId = moduleGroupElementId ~ module.id %}
-            {% set columnLayout = module.columnLayout.count ?  module.columnLayout : moduleGroup.columnLayout %}
+            {% set columnLayout = module.columnLayout.count ?  module.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
             {% include 'record/_modules/module' %}
         {% endfor %}
     </div>
