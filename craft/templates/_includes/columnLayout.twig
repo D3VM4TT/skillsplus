@@ -6,7 +6,7 @@
     {% endfor %}
 {% else %}
     {% for row in columnLayout.all() %}
-        {% if (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) and row.fieldDisplay != 'form' %}
+        {% if row.fieldDisplay != 'form' or (not row.fieldManagerOnly or (row.fieldManagerOnly and isManager)) %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">
                 <p class="td-title-responsive">Unit type: </p>
