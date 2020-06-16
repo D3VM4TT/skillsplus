@@ -30,7 +30,7 @@ class Records extends Component
         $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->relatedTo($relatedTo);
-        $criteria->orderBy('title');
+        $criteria->orderBy('lft');
         $criteria->limit(null);
         ## get the child category ids and ignore
         if ($direct && isset($relatedTo->level) && $relatedTo->level == 1 && $relatedTo->children->count()) {
