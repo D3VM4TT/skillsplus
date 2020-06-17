@@ -57,7 +57,7 @@
         </tbody>
     </table>
     {% if taskbookIntro %}
-        <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel|pluralize }}</a>
+        <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel }} Details</a>
     {% endif %}
 {% elseif taskbookIntro %}
     {% for block in taskbookIntro.pageContent %}
