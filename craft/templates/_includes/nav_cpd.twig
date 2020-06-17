@@ -1,3 +1,4 @@
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 <nav class="cpd">
     <ul>
         {% if craft.lantra.setting('themeMyDashboard') %}
@@ -6,7 +7,6 @@
         </li>
         {% endif %}
         {% if craft.lantra.setting('themeMyTaskbooks') %}
-            {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
             <li class="{% if craft.app.request.getSegment(3) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
                 <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
             </li>
@@ -50,7 +50,7 @@
                 {% endif %}
                 {% if craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount() %}
                     <li>
-                        <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks">Taskbooks</a>
+                        <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks">{{ taskbookLabel|pluralize }}</a>
                     </li>
                 {%  endif %}
                 {#
