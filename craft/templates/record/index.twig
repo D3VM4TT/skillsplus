@@ -42,6 +42,17 @@
             {% endif %}
         {% endif %}
         <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+        {% if isManager %}
+            <div class="header-controls">
+                <div class="container-btn primary-bg" style="margin-left:0;">
+                    {% if isTaskbooks %}
+                        <a class="btn-add-new" href="/cpd/{{ account.id  }}">Dashboard</a>
+                    {% else %}
+                        <a class="btn-add-new" href="/cpd/{{ account.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
         {% if not isManager and isTaskbooks %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">

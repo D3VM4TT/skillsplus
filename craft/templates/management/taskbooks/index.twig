@@ -1,8 +1,8 @@
 {% do craft.lantra.requirePermission('editTaskbooks') %}
 {% extends "_layout" %}
-
-{% set metaTitle = "Management > Taskbooks" %}
-{% set pageTitle = "Taskbooks" %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set metaTitle = "Management > " ~ taskbookLabel|pluralize %}
+{% set pageTitle = taskbookLabel|pluralize %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
@@ -15,6 +15,8 @@
 
 {% if criteria %}{% paginate criteria as pageInfo, packageEntries %}{% endif %}
 
+
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         {% include '_includes/topNavigation' %}
@@ -22,7 +24,7 @@
     <section class="page">
         <div class="page-header secondary-bg">
             <h2>{{ pageTitle }}</h2>
-            <p>View Taskbooks</p>.</p>
+            <p>View {{ taskbookLabel|pluralize }}</p>.</p>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
             <div class="page-content">

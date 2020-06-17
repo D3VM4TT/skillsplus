@@ -22,14 +22,14 @@
             {% set unitsComplete = craft.lantra.totalComplete(packageItem, cpdUser.id) %}
             {% if unitsComplete >= totalUnits %}
                 {% if package.packageStatus == 'active' %}
-                    {% if package.hasNextStep and not package.isNextStepAssigned %}
-                        Units complete but assessor has not been assigned.  Contact your manager.
-                    {% else %}
-                        <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                           data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
-                    {% endif %}
+                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
                 {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
-                    <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
+                    {% if package.isNextStepAssigned %}
+                        <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
+                    {% else %}
+                        Step reviewer not assigned
+                    {% endif %}
                 {% endif %}
             {% else %}
                 Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
