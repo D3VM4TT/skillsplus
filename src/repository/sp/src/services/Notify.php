@@ -62,6 +62,31 @@ class Notify extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
+    function sendStepUnassigned(SuperTableBlockElement $step)
+    {
+        if ($step->reviewUser->one()) {
+            return;
+        }
+        $subject = $this->getNotifySetting('subjectStepUnassigned', 'Taskbook Review Unassigned');
+        $package = $step->owner;
+        $variables = [
+            'step'          => $step,
+            'package'       => $package,
+            'moduleGroup'   => $package->moduleGroup,
+            'user'          => $package->author,
+            'type'          => $step->reviewStepType,
+        ];
+        $template = $this->getNotifySetting('stepUnassigned', "Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
+        $this->notify($schemeManagerEmails, $subject, $message);
+    }
+
+    /**
+     * @param SuperTableBlockElement $step
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
     function sendStepRequest(SuperTableBlockElement $step)
     {
         if (null == $manager = $step->reviewUser->one()) {

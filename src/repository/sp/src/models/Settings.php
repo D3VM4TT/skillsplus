@@ -84,6 +84,8 @@ class Settings extends Model
     public $notifySubjectCycleReminder          = '';
     public $notifyCycleReminder                 = '';
 
+    public $notifySubjectStepUnassigned         = '';
+    public $notifyStepUnassigned                = '';
     public $notifySubjectStepAssign             = '';
     public $notifyStepAssign                    = '';
     public $notifySubjectStepUpdate             = '';

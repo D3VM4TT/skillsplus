@@ -344,7 +344,12 @@ class Packages extends Component
         $package->setFieldValue('packageStatus', 'locked');
         $package->save();
         if (null != $nextStep = $package->nextStep) {
-            Lantra::$app->notify->sendStepRequest($nextStep);
+            if (null == $manager = $nextStep->reviewUser->one()) {
+                Lantra::$app->notify->sendStepUnassigned($nextStep);
+            }
+            else {
+                Lantra::$app->notify->sendStepRequest($nextStep);
+            }
         }
     }
 

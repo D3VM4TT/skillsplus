@@ -1119,6 +1119,21 @@ class Users extends Component
     }
 
     /**
+     * Return all the scheme manager emails
+     *
+     * @return array
+     */
+    function getSchemeManagersEmails()
+    {
+        $schemeManagers = $this->getSchemeManagers();
+        $emails = [];
+        foreach ($schemeManagers as $schemeManager) {
+            $emails[] = $schemeManager->email;
+        }
+        return $emails;
+    }
+
+    /**
      * @param User $user
      * @param int $level
      * @return array|mixed
