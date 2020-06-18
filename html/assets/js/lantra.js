@@ -1,5 +1,46 @@
 $(document).ready(function(){
 
+    $('select.package-module-group').change(function(){
+        var moduleGroupId = $(this).val();
+        $('div.taskbook-optional').hide();
+        $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
+    }).change();
+
+    $('select.package-level').change(function(){
+        var level = $(this).val(),
+            optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
+        if (level == 5) {
+            optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
+        }
+        else {
+            optionalSelectInputs.prop('disabled', false).css('opacity', 1);
+        }
+    }).change();
+
+    $('select.optional-level').change(function(){
+        updateOptional();
+    });
+
+    updateOptional = function() {
+        var n = 1;
+        $('form#taskbooks').find('.optional-hidden').remove();
+        $('tr.optional-module').each(function(){
+            var c = $(this).find('input[type=checkbox]'),
+                l = $(this).find('select').val(),
+                t = $('#input-template').clone().html();
+            if (c.is(':checked')) {
+                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                $('form#taskbooks').prepend($(t));
+                n ++;
+            }
+        });
+    };
+
+
+    $('input.optional').change(function(){
+        updateOptional();
+    }).change();
+
     $('.btn-toggle-small').on('click', function() {
         $('.sidebar').toggleClass('is-collapsed');
         $('.sidebar-not-sticky').toggleClass('hide');

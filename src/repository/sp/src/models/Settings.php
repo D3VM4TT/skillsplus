@@ -43,6 +43,7 @@ class Settings extends Model
     public $taskbookLabel                       = 'Taskbook';
     public $taskbookIntro                       = [];
     public $taskbookLevels                      = false;
+    public $taskbookJobRole                     = [];
 
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;
@@ -155,6 +156,7 @@ class Settings extends Model
 
     private $categoryFields = [
         'individualJobRole',
+        'taskbookJobRole'
     ];
 
     private $dateFields = [

@@ -53,6 +53,18 @@ class PaypalController extends BaseController
             $package->setFieldValue('packagePaid', true);
             $package->save();
             Craft::info("PayPal payment received for package #" . $package->id, __METHOD__);
+
+            ## move pending users
+            if ($user->isInGroup('usersTaskbookPending')) {
+                $group = Craft::$app->userGroups->getGroupByHandle('users');
+                Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+                ## add user to job role
+                $userRole = $package->moduleGroup->userRole->count() ? $package->moduleGroup->userRole->one() : LantraHelper::setting('taskbookJobRole');
+                if ($userRole) {
+                    $user->setFieldValue('userRole', [$userRole->id]);
+                    Craft::$app->elements->saveElement($user);
+                }
+            }
         }
         return $this->asJson(['success' => 'true']);
     }

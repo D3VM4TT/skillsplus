@@ -22,6 +22,7 @@ return [
         'setPasswordPath' => '/public/password/set',
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
+        'autoLoginAfterAccountActivation' => true,
         'securityKey' => getenv('SECURITY_KEY'),
         'useProjectConfigFile' => true,
         'backupOnUpdate' => false,

@@ -54,17 +54,28 @@
         </div>
     {% endif %}
     {% if currentUser %}
-    <div class="sidebar-form">
-        <div class="scheme-logo">
-            <a href="/">
-                {% if schemeLogo %}
-                    <img src="{{ schemeLogo.url }}">
-                {% else %}
-                    {{ craft.lantra.setting('schemeName') }}
-                {% endif %}
-            </a>
+        <div class="sidebar-form">
+            <div class="scheme-logo">
+                <a href="/">
+                    {% if schemeLogo %}
+                        <img src="{{ schemeLogo.url }}">
+                    {% else %}
+                        {{ craft.lantra.setting('schemeName') }}
+                    {% endif %}
+                </a>
+            </div>
         </div>
-    </div>
-    {% include '_includes/nav_cpd' %}
+        {% if currentUser.isInGroup('usersTaskbookPending')  %}
+            {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+            <nav class="cpd">
+                <ul>
+                    <li class="nav-open">
+                        <a class="secondary-bg-hover" href="/profile/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+                    </li>
+                </ul>
+            </nav>
+        {% else %}
+            {% include '_includes/nav_cpd' %}
+        {% endif %}
     {% endif %}
 

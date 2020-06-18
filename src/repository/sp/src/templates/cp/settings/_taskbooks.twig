@@ -27,3 +27,17 @@
     name:			"taskbookLevels",
     on:		        settings.taskbookLevels == 1
 }) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Taskbook Job Role",
+    id:				    "taskbookJobRole",
+    name:			    "taskbookJobRole",
+    elementType:        config.categoryElementType,
+    sources:            config.jobRoleCategoryGroup,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.taskbookJobRole ? settings.taskbookJobRole,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}

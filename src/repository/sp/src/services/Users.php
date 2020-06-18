@@ -13,6 +13,7 @@ use craft\base\Component;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\events\UserEvent;
 use craft\elements\db\UserQuery;
 use craft\helpers\DateTimeHelper;
 
@@ -31,10 +32,31 @@ class Users extends Component
     /**
      * @param ModelEvent $event
      * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
         Lantra::$app->results->saveUserResultCache($user->id);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function onActivateUser(UserEvent $event, User $user)
+    {
+        if (Craft::$app->request->getParam('taskbook')) {
+            ## add user to users group
+            $group = Craft::$app->userGroups->getGroupByHandle('usersTaskbookPending');
+            Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+        }
     }
 
     /**

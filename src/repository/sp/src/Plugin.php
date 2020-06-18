@@ -18,7 +18,9 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\events\DefineBehaviorsEvent;
+use craft\events\UserEvent;
 use craft\web\View;
+use craft\services\Users;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
@@ -152,6 +154,14 @@ class Plugin extends BasePlugin
             function (ModelEvent $event) {
                 $user = $event->sender;
                 Lantra::$app->users->onBeforeDeleteUser($user, $event);
+            }
+        );
+
+        Event::on(
+            Users::class,
+            Users::EVENT_AFTER_ACTIVATE_USER,
+            function (UserEvent $event) {
+                Lantra::$app->users->onActivateUser($event, $event->user);
             }
         );
 

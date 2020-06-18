@@ -36,6 +36,9 @@ categoryGroups:
               da81a368-f84c-47f8-9e3a-b83346be0865:
                 required: false
                 sortOrder: 2
+              dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
+                required: false
+                sortOrder: 7
               e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
                 required: false
                 sortOrder: 4
@@ -75,7 +78,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1592321686
+dateModified: 1592473555
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -6491,8 +6494,8 @@ tagGroups:
     handle: default
     name: Default
 users:
-  allowPublicRegistration: 1
-  defaultGroup: 32ed3edf-a621-4c98-8c9f-785e45ed329f
+  allowPublicRegistration: true
+  defaultGroup: 9bbb42a9-a0e6-4d9b-8029-3d0c95243dae
   fieldLayouts:
     e313cedf-8c04-4fa5-989a-e087a1432495:
       tabs:
@@ -6848,6 +6851,13 @@ users:
         - 'editpeerimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
+    9bbb42a9-a0e6-4d9b-8029-3d0c95243dae:
+      handle: usersTaskbookPending
+      name: 'Users [Taskbook Pending]'
+      permissions:
+        - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024'
+        - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024'
+        - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024'
     ab9197b3-7032-4015-ba4e-4939118952dd:
       handle: users
       name: Users
@@ -6888,7 +6898,7 @@ users:
         - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
   photoSubpath: ''
   photoVolumeUid: c56fc71b-f1b7-47ac-935c-9ad07177edae
-  requireEmailVerification: 0
+  requireEmailVerification: false
 volumes:
   a6dafdf7-e4c0-4943-aff3-e481bbdf23fc:
     handle: evidence

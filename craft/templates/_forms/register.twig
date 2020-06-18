@@ -1,8 +1,12 @@
 <form class="page-form" id="form-register" method="post" accept-charset="UTF-8">
     {{ csrfInput() }}
     {{ actionInput('users/save-user') }}
-    {{ redirectInput('') }}
-
+    {% if isTaskbook is defined %}
+        {{ hiddenInput('taskbook', 'true') }}
+        {{ redirectInput('/profile/taskbooks/new') }}
+    {% else %}
+        {{ redirectInput('') }}
+    {% endif %}
     <div class="field--wrapper" style="">
         <label for="registerFirstName" class="no-float">First Name</label>
         <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {% if user is defined %} value="{{ user.firstName }}"{% endif %}>
@@ -20,6 +24,7 @@
         <label for="registerPassword" class="no-float">Password</label>
         <input id="registerPassword" type="password" name="password" placeholder="Password">
     </div>
+
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Register</button>
     </div>
