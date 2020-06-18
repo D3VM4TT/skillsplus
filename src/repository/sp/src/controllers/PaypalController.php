@@ -65,6 +65,9 @@ class PaypalController extends BaseController
                     Craft::$app->elements->saveElement($user);
                 }
             }
+
+            ## send notification to scheme managers
+            Lantra::$app->notify->sendNewPackage($package);
         }
         return $this->asJson(['success' => 'true']);
     }

@@ -15,6 +15,7 @@ use craft\elements\Entry;
 use craft\mail\Message;
 use craft\web\View;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\Cycle;
 use lantra\sp\models\CyclePeriod;
@@ -55,6 +56,26 @@ class Notify extends Component
             $text .= $moduleGroup->title . " - " . ($row->assessmentPassed ? 'Passed' : 'Failed') . "\n";
         }
         return $text;
+    }
+
+    /**
+     * @param Entry $packageEntry
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendNewPackage(Entry $packageEntry)
+    {
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectNewPackage', 'New ' . $taskbookLabel);
+        $variables = [
+            'package'       => $packageEntry,
+            'moduleGroup'   => $packageEntry->moduleGroup,
+            'user'          => $packageEntry->author,
+        ];
+        $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
+        $this->notify($schemeManagerEmails, $subject, $message);
     }
 
     /**
