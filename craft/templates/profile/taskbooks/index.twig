@@ -29,7 +29,7 @@
     </div>
     <div class="page-content">
         {% if unpaidPackages.count %}
-            <h2>New {{ unpaidPackages.count ? taskbookLabel : taskbookLabel|pluralize }}</h2>
+            <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
             {% for package in unpaidPackages.all %}
                 {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}

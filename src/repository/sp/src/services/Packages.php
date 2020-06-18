@@ -110,9 +110,10 @@ class Packages extends Component
             $event->isValid = false;
         }
 
+        $singleType = Craft::$app->request->getParam('singleType');
         ## calculate cost
-        if ($moduleGroup->level == 2) {
-            $cost = $moduleGroup->moduleSingleCost;
+        if ($singleType) {
+            $cost = $singleType == 'resit' ?  $moduleGroup->moduleResitCost : $moduleGroup->moduleSingleCost;
         } else {
             $cost = $moduleGroup->moduleMaxCost;
             if ($moduleGroup->moduleCosts) {
