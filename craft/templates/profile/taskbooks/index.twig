@@ -6,6 +6,8 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 {% set unpaidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('not 1') %}
 {% set paidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('1') %}
 
@@ -34,7 +36,7 @@
                     {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
                 {% endif %}
                 <h3>{{ packageTitle }} </h3>
-                <p>Date Created: {{ package.dateCreated|date('d/m/y') }}</p>
+                <p>Date Created: {{ package.dateCreated|date(dateFormat) }}</p>
                 {% if package.packageOptionalModuleGroups.count %}
                     <p>
                     {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}

@@ -6,16 +6,16 @@
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+{% set filterPackageStatus = craft.app.request.getParam('status')|default('locked') %}
 {% set sortParam = craft.app.request.getParam('sort') %}
 {% set validSorts = ['title', 'id', 'dateCreated'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
 {% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
-{% set criteria = craft.lantra.packagesCriteria(pageLimit, sort ~ ' ' ~ order) %}
+{% set criteria = craft.lantra.packagesCriteria(filterSearch, filterPackageStatus, pageLimit, sort ~ ' ' ~ order) %}
 
 {% if criteria %}{% paginate criteria as pageInfo, packageEntries %}{% endif %}
-
-
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -25,6 +25,9 @@
         <div class="page-header secondary-bg">
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
+            <div class="header-controls">
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterPackageStatus:filterPackageStatus} %}</div>
+            </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
             <div class="page-content">
@@ -35,7 +38,8 @@
                         <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
                         <th>Member</th>
                         <th>Module Group</th>
-                        <th>Assigned Steps</th>
+                        <th>Next Step</th>
+                        <th>Reviewer</th>
                         <th class="title"><a href="?sort=packageStatus&order={{ order == 'desc' ? 'asc' : 'desc' }}">Status</a></th>
                         <th>&nbsp;</th>
                     </tr>
@@ -43,18 +47,15 @@
                     <tbody>
                     {% for package in packageEntries %}
                         {% set user = package.author %}
+                        {% set nextStepReviewer = package.nextStepReviewer %}
                         {% set company = craft.lantra.userCompany(user.id) %}
                         <tr>
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
                             <td><p class="td-title-responsive">Member: </p><a href={{ craft.lantra.packageUrl(user.id, package.id) }}>{{ user.fullname }}</a></td>
                             <td><p class="td-title-responsive">Module Group: </p>{{ package.moduleGroup.title }}</td>
-                            <td>
-                                {% for step in package.managerSteps(currentUser) %}
-                                    {{ step.reviewStepName }}
-                                    {{ not loop.last ? ', ' }}
-                                {% endfor %}
-                            </td>
+                            <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
+                            <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
                             <td><p class="td-title-responsive">Status: </p>{{ package.packageStatus }}</td>
                             <td class="icons" style="width:140px;text-align:right">
                                 {% if not user.userDummyEmail %}

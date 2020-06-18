@@ -542,14 +542,16 @@ class LantraVariable
     }
 
     /**
+     * @param $search
+     * @param string $taskbookStatus
      * @param null $limit
      * @param string $order
      * @param null $managerId
-     * @return mixed
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($search, $packageStatus = 'locked', $limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $limit, $order, $this->getUser($managerId));
     }
 
     /**
@@ -558,7 +560,7 @@ class LantraVariable
      */
     public function packagesCount($managerId = null)
     {
-        $criteria = $this->packagesCriteria(null, 'lastName', $this->getUser($managerId));
+        $criteria = $this->packagesCriteria('', 'all',null, 'lastName', $this->getUser($managerId));
         return $criteria ? $criteria->count() : 0;
     }
 

@@ -390,6 +390,17 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return null
+     */
+    public function getNextStepReviewer()
+    {
+        if (null == $step = $this->getNextStep()) {
+            return null;
+        }
+        return $step->reviewUser->one();
+    }
+
+    /**
      * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete

@@ -650,18 +650,27 @@ class Packages extends Component
     }
 
     /**
+     * @param string $search
+     * @param string $packageStatus
      * @param int $limit
      * @param string $order
      * @param User $assessor
      * @param null $type
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($limit = 25, $order = 'title', User $assessor, $type = null)
+    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';
         $criteria->limit = $limit;
         $criteria->orderBy = $order;
+
+        if ($search) {
+            $criteria->search = 'title:' . $search;
+        }
+        if ($packageStatus != 'all') {
+            $criteria->packageStatus = $packageStatus;
+        }
 
         if ($assessor->admin || $assessor->isInGroup('schemeManagers')) {
             $criteria->authorId = 'not ' . $assessor->id;
