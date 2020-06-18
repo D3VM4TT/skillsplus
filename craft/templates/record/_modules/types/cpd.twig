@@ -1,8 +1,9 @@
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 <div class="header" data-target="#m{{ role.id ~ module.id }}">
     {% set cycle = craft.lantra.resultCycle(moduleResultEntry) %}
     <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
     {% if cycle.isGrace %}
-        <h5 style="display:block;text-align:right;color:red">ACTIVE until {{ cycle.graceDate|date('d/m/y') }}</h5>
+        <h5 style="display:block;text-align:right;color:red">ACTIVE until {{ cycle.graceDate|date(dateFormat) }}</h5>
     {% endif %}
     {% if cycle.isLocked %}
         <h5 style="display:block;text-align:right;color:black">LOCKED</h5>

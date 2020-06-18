@@ -80,7 +80,7 @@
                         {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
                     {% endif %}
                     <tr>
-                        <td>{{ package.dateCreated|date('d/m/y') }}</td>
+                        <td>{{ package.dateCreated|date(dateFormat) }}</td>
                         {% if not package.moduleGroup %}
                             <td style="color:red">Invalid Module Group</td>
                         {% else %}
