@@ -7,7 +7,7 @@
             <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
         </div>
         <div class="align-horizontal">
-            <div><h4>{{ craft.lantra.setting('labelTaskbook', 'Taskbook') }}</h4></div>
+            <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
             <div><h2>{{ package.moduleGroup.title }}</h2></div>
             <p>
                 {% if package.isManager(currentUser, true) and package.hasNextStep %}
