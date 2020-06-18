@@ -3,7 +3,7 @@
     {{ actionInput('users/save-user') }}
     {% if isTaskbook is defined %}
         {{ hiddenInput('taskbook', 'true') }}
-        {{ redirectInput('/profile/taskbooks/new') }}
+        {{ redirectInput('/profile/taskbooks') }}
     {% else %}
         {{ redirectInput('') }}
     {% endif %}
