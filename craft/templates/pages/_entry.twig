@@ -17,9 +17,9 @@
 </div>
 <div class="content-main">
 {%  for block in entry.pageContent %}
-    <div class="content-col">
+    <div class="content-col pages">
         <h2>{{ block.columnTitle }}</h2>
-        <p>{{ block.columnHtml }}</p>
+        {{ block.columnHtml }}
     </div>
 {% endfor %}
 </div>

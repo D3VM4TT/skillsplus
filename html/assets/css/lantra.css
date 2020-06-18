@@ -18,8 +18,6 @@ time, mark, audio, video {
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
-    font: inherit;
     vertical-align: baseline;
 }
 html, body {
@@ -2320,4 +2318,18 @@ div.assessment.failed {
 
 #cpd-wrapper table.data {
     margin-top:20px;
+}
+
+div.pages ol, div.pages ul {
+    list-style:outside;
+    margin-left:20px;
+    margin-bottom: 20px;
+}
+
+div.pages ol {
+    list-style:decimal;
+}
+
+div.pages p {
+    margin-bottom:20px;
 }
