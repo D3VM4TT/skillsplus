@@ -1,0 +1,7 @@
+<nav class="cpd">
+    {% include '_includes/navUser' %}
+    {% if craft.lantra.canManage() %}
+        {% include '_includes/navManager' %}
+    {% endif %}
+    {% include '_includes/navLinks' %}
+</nav>

@@ -1,0 +1,27 @@
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+<ul>
+    {% if currentUser.isInGroup('usersTaskbookPending') %}
+        <li class="nav-open">
+            <a class="secondary-bg-hover" href="/profile/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+        </li>
+    {% else %}
+        {% if craft.lantra.setting('themeMyDashboard') %}
+            <li class="{% if craft.app.request.getSegment(1) == '' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover " href="/">My Dashboard</a>
+            </li>
+        {% endif %}
+        {% if craft.lantra.setting('themeMyTaskbooks') %}
+            <li class="{% if craft.app.request.getSegment(3) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+            </li>
+        {% endif %}
+        <li class="{% if craft.app.request.getSegment(2) == 'profile' %}nav-open{% else %}nav-closed{% endif %}">
+            <a class="secondary-bg-hover" href="/profile">My Profile</a>
+        </li>
+        {% if not craft.lantra.setting('themeDisableResultHistory') and craft.lantra.setting('themeResultHistoryLink') %}
+            <li class="{% if craft.app.request.getSegment(3) == 'archive' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/archive">{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }} </a>
+            </li>
+        {% endif %}
+    {% endif %}
+</ul>

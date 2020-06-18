@@ -1,0 +1,100 @@
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+<ul>
+    <li class="{% if craft.app.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
+        <a class="secondary-bg-hover" href="#">Management</a>
+        <ul>
+            {% if craft.lantra.canManage(null, true) %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'scheme' %}active{% endif %}" href="/management/scheme">Scheme</a>
+                </li>
+            {% endif %}
+            <li>
+                <a class="{% if craft.app.request.getSegment(2) == 'hierarchy' %}active{% endif %}" href="/management/hierarchy">Hierarchy</a>
+            </li>
+            {% if craft.lantra.can('editCompanies') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'companies' %}active{% endif %}" href="/management/companies">Companies</a>
+                </li>
+            {%  endif %}
+            {% if craft.lantra.setting('schemeTeams', false) and craft.lantra.can('editTeams') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'teams' %}active{% endif %}" href="/management/teams">Teams</a>
+                </li>
+            {%  endif %}
+            {% if craft.lantra.can('editUsers') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
+                </li>
+            {% endif %}
+            {% if craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount() %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks">{{ taskbookLabel|pluralize }}</a>
+                </li>
+            {%  endif %}
+            {% if craft.lantra.can('editModules') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
+                </li>
+            {%  endif %}
+        </ul>
+    </li>
+    {% if craft.lantra.settingCustomReports() or craft.lantra.setting('standardReports') %}
+        <li class="{% if craft.app.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
+            <a class="secondary-bg-hover" href="#">Reporting</a>
+            <ul>
+                {% if craft.lantra.settingCustomReports() %}
+                    <li>
+                        <a class="{% if craft.app.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
+                    </li>
+                    {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+                        <li>
+                            <a class="{% if craft.app.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                {% if craft.lantra.setting('standardReports') and currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+                    <li>
+                        <a class="{% if craft.app.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
+                        {% if craft.app.request.getSegment(2) == 'standard' %}
+                            <ul class="secondary">
+                                <li>
+                                    <a class="{% if craft.app.request.getSegment(3) == 'users' %}active{% endif %}" href="/reporting/standard/users">Scheme Users</a>
+                                </li>
+                                <li>
+                                    <a class="{% if craft.app.request.getSegment(3) == 'units-blocked' %}active{% endif %}" href="/reporting/standard/units-blocked">Units Blocked</a>
+                                </li>
+                                <li>
+                                    <a class="{% if craft.app.request.getSegment(3) == 'units-endorsed' %}active{% endif %}" href="/reporting/standard/units-endorsed">Units Endorsed</a>
+                                </li>
+                                <li>
+                                    <a class="{% if craft.app.request.getSegment(3) == 'units-expiring' %}active{% endif %}" href="/reporting/standard/units-expiring">Units Expiring</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                <!--
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'dynamic' %}active{% endif %}" href="/reporting/dynamic">Dynamic Reports</a>
+                </li>
+                -->
+            </ul>
+        </li>
+    {% endif %}
+    {% if alias('@site') != 'poultrypassport' %}
+        {% set pendingEndorsementCount = craft.lantra.managerCountEndorsementUsers() %}
+        {% if not currentUser.managerReadOnly %}
+            <li class="{% if craft.app.request.getSegment(2) == 'endorsements' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover" href="#">Endorsements ({{ pendingEndorsementCount }})</a>
+                <ul>
+                    <li>
+                        <a href="/management/endorsements">All Members</a>
+                    </li>
+                    <li>
+                        <a href="/management/endorsements?direct=true">My Direct Members</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+    {% endif %}
+</ul>
