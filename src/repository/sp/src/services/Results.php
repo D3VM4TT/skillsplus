@@ -1333,6 +1333,7 @@ class Results extends Component
             AND el.enabled = 1
             AND el.revisionId IS NULL
             AND el.draftId IS NULL
+            AND el.dateDeleted IS NULL
             AND (e.typeId = 10 OR e.typeId = 17)
             AND authorId != " . $manager->id;
 
