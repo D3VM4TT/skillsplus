@@ -35,8 +35,8 @@
                     {% set unitGroupRemaining = unitGroupRow.targetHours - unitGroupRow.endorsedHours %}
                     <br />You need {{ unitGroupRemaining }} hours in {{ unitGroupRow.title }}.
                 {% endif %}
-                {% if not unitGroupRow.complete and unitGroupRow.targetHours %}
-                    {% set unitGroupRemaining = unitGroupRow.targetHours - unitGroupRow.endorsedPoints %}
+                {% if not unitGroupRow.complete and unitGroupRow.targetPoints %}
+                    {% set unitGroupRemaining = unitGroupRow.targetPoints - unitGroupRow.endorsedPoints %}
                     <br />You need {{ unitGroupRemaining }} points in {{ unitGroupRow.title }}.
                 {% endif %}
             {% endfor %}
