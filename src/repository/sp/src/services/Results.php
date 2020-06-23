@@ -772,7 +772,7 @@ class Results extends Component
     {
         if ($moduleResultEntry) {
             ## only get results linked to a specific module result
-            $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId, false, $moduleResultEntry->id);
+            $unitResultEntries = $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId, false, $moduleResultEntry->id);
         }
         else {
             $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
@@ -815,8 +815,10 @@ class Results extends Component
                 }
             }
         }
+        $unitGroupResults = $this->getUnitGroupResults($moduleEntry, $unitResultEntries);
         $moduleResultEntry->setFieldValue('resultHours', $hours);
         $moduleResultEntry->setFieldValue('resultPoints', $points);
+        $moduleResultEntry->setFieldValue('resultUnitGroupResults', $unitGroupResults);
         Craft::$app->getElements()->saveElement($moduleResultEntry);
         ## update result status to complete or revert to active (if unit result was deleted)
         if ($this->isCompleteModuleResult($moduleResultEntry)) {
@@ -837,7 +839,11 @@ class Results extends Component
     {
         if ($moduleEntry) {
             foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
-                if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitGroup->unitEntries->ids())) {
+                $unitIds = [];
+                foreach($unitGroup->unitEntries as $unitEntry) {
+                    $unitIds[] = $unitEntry->id;
+                }
+                if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitIds)) {
                    return $unitGroup->unitPointsOverride;
                 }
             }
@@ -845,7 +851,77 @@ class Results extends Component
         return $unitEntry->unitPoints;
     }
 
+    /**
+     * @param Entry $moduleEntry
+     * @param $unitResultEntries
+     * @return array
+     */
+    public function getUnitGroupResults(Entry $moduleEntry, $unitResultEntries)
+    {
+        $rows = [];
+        foreach($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+            $targetHours = (int) $unitGroup->cpdTargetHours;
+            $targetPoints = (int) $unitGroup->cpdTargetPoints;
+            $endorsedHours = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'hours');
+            $endorsedPoints = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'points');
+            $complete = ($endorsedHours >= $targetHours && $endorsedPoints >= $targetPoints) ? 1 : 0;
 
+            $row = [
+                'col1' => $unitGroup->id,
+                'col2' => $unitGroup->groupName,
+                'col3' => $targetHours,
+                'col4' => $targetPoints,
+                'col5' => $endorsedHours,
+                'col6' => $endorsedPoints,
+                'col7' => $complete,
+            ];
+            $rows [] = $row;
+        }
+        return $rows;
+    }
+
+    /**
+     * @param $moduleEntry
+     * @param $unitResultEntries
+     * @param $unitGroup
+     * @param $type
+     * @return int
+     */
+    private function getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, $type)
+    {
+        $unitIds = $unitGroup->unitEntries->ids();
+        $return = 0;
+        foreach ($unitIds as $id) {
+            if (isset($unitResultEntries[$id])) {
+                $unitResultEntry = $unitResultEntries[$id];
+                if ($unitResultEntry->resultStatus != 'endorsed') {
+                    continue;
+                }
+                if ($type == 'hours') {
+                    $return += (int) $unitResultEntry->resultHours;
+                }
+                else {
+                    $unitEntry = $unitResultEntry->resultUnit->one();
+                    $return += $this->getUnitPoints($unitEntry, $moduleEntry);
+                }
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $moduleResult
+     * @return bool
+     */
+    function isCompleteUnitGroupResults($moduleResult)
+    {
+        foreach($moduleResult->resultUnitGroupResults as $unitGroupResult) {
+            if (!$unitGroupResult['complete']) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * @param $moduleResult
@@ -858,6 +934,10 @@ class Results extends Component
         }
         $moduleEntry = $moduleResult->resultModule->one();
         if ($moduleEntry->type == 'cpd') {
+            ## check unit group results
+            if (!$this->isCompleteUnitGroupResults($moduleResult)) {
+                return false;
+            }
             $targetType = (string) $moduleEntry->targetType->value;
             if ($targetType == 'hours') {
                  return $moduleResult->resultHours >= $moduleEntry->targetHours;
@@ -1232,7 +1312,7 @@ class Results extends Component
         $return = [];
         foreach ($resultEntries as $resultEntry) {
             $unitId = $resultEntry->resultUnit->one()->id;
-            $return[] = $resultEntry;
+            $return[$unitId] = $resultEntry;
         }
         return $return;
     }

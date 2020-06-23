@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9292d00596762be0c5622e0fa5c97add",
+    "content-hash": "d7efe05ed0b4695ed3f636d217e2ac1c",
     "packages": [
         {
             "name": "aelvan/preparse-field",
@@ -4641,55 +4641,6 @@
                 "graphql"
             ],
             "time": "2018-09-02T14:59:54+00:00"
-        },
-        {
-            "name": "williamisted/plural",
-            "version": "2.0.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/WilliamIsted/CraftPlural/zipball/03922946a3aa520a3127f95454ed3b334246ef5d",
-                "reference": "03922946a3aa520a3127f95454ed3b334246ef5d",
-                "shasum": ""
-            },
-            "require": {
-                "craftcms/cms": "^3.0.0-RC1"
-            },
-            "type": "craft-plugin",
-            "extra": {
-                "name": "Plural",
-                "handle": "plural",
-                "developer": "William Isted",
-                "developerUrl": "https://william.isted.me/",
-                "documentationUrl": "https://github.com/WilliamIsted/CraftPlural/blob/master/README.md",
-                "changelogUrl": "https://github.com/WilliamIsted/CraftPlural/master/CHANGELOG.md"
-            },
-            "autoload": {
-                "psr-4": {
-                    "williamisted\\plural\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "William Isted",
-                    "homepage": "https://william.isted.me/"
-                }
-            ],
-            "description": "Simple plural plugin for Craft - Usage: {{ entries | length | plural('result') }}",
-            "keywords": [
-                "cms",
-                "craft",
-                "craft-plugin",
-                "craftcms",
-                "plural"
-            ],
-            "support": {
-                "docs": "https://github.com/WilliamIsted/CraftPlural/blob/master/README.md",
-                "issues": "https://github.com/WilliamIsted/CraftPlural/issues"
-            },
-            "time": "2020-04-13T09:48:46+00:00"
         },
         {
             "name": "yii2tech/ar-softdelete",

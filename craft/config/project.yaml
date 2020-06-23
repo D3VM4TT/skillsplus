@@ -78,7 +78,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1592473555
+dateModified: 1592912829
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1947,6 +1947,135 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Entries
+  77c7c383-632e-462f-984c-7ab34eb2cd1e:
+    contentColumnType: text
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+    handle: resultUnitGroupResults
+    instructions: ''
+    name: 'Result Unit Group Results'
+    searchable: true
+    settings:
+      addRowLabel: 'Add a row'
+      columnType: text
+      columns:
+        __assoc__:
+          -
+            - col1
+            -
+              __assoc__:
+                -
+                  - heading
+                  - ID
+                -
+                  - handle
+                  - id
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col2
+            -
+              __assoc__:
+                -
+                  - heading
+                  - Title
+                -
+                  - handle
+                  - title
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - singleline
+          -
+            - col3
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Target Hours'
+                -
+                  - handle
+                  - targetHours
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col4
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Target Points'
+                -
+                  - handle
+                  - targetPoints
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col5
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Endorsed Hours'
+                -
+                  - handle
+                  - endorsedHours
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col6
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Endorsed Points'
+                -
+                  - handle
+                  - endorsedPoints
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col7
+            -
+              __assoc__:
+                -
+                  - heading
+                  - Complete
+                -
+                  - handle
+                  - complete
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - lightswitch
+      maxRows: ''
+      minRows: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Table
   7b7af1dc-c01f-4f73-b3f4-a83ff572e941:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -3962,6 +4091,12 @@ matrixBlockTypes:
               46656fa8-cf4d-4c7e-93d0-800132d01aa2:
                 required: false
                 sortOrder: 4
+              64769feb-a327-4c92-8224-bfd94a529f1a:
+                required: false
+                sortOrder: 6
+              7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+                required: false
+                sortOrder: 5
               a773e69f-0bf1-46fd-ae75-5182be37772c:
                 required: false
                 sortOrder: 2
@@ -3988,7 +4123,8 @@ matrixBlockTypes:
         name: Name
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: ''
           columnType: text
           initialRows: '4'
@@ -4012,6 +4148,42 @@ matrixBlockTypes:
           prefix: ''
           size: null
           suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      64769feb-a327-4c92-8224-bfd94a529f1a:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: cpdTargetHours
+        instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+        name: 'CPD Target Hours'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: '0'
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: Hours
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: cpdTargetPoints
+        instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+        name: 'CPD Target Points'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: Points
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Number
@@ -5017,6 +5189,9 @@ sections:
                   73b12e48-7a9e-496f-b91e-01fad8e389d1:
                     required: false
                     sortOrder: 1
+                  77c7c383-632e-462f-984c-7ab34eb2cd1e:
+                    required: false
+                    sortOrder: 6
                   a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
                     required: false
                     sortOrder: 5
