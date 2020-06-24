@@ -78,7 +78,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1592912829
+dateModified: 1593006355
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1256,6 +1256,30 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Matrix
+  4bb00585-cc77-465a-add8-7acdffe931ce:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: unitIntro
+    instructions: ''
+    name: 'Unit Intro'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes:
+        - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   534ba9ca-50bd-4b63-a843-b3358f1bc352:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -2401,14 +2425,16 @@ fields:
     contentColumnType: text
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: unitDescription
-    instructions: 'Add a short description of this unit'
-    name: 'Unit Description'
+    instructions: 'Shown as tooltip with [i] icon in the record table.'
+    name: 'Unit Tootlip'
     searchable: true
     settings:
-      charLimit: ''
+      byteLimit: null
+      charLimit: null
+      code: ''
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: '2'
+      multiline: '1'
       placeholder: ''
     translationKeyFormat: null
     translationMethod: none
@@ -3580,16 +3606,19 @@ fields:
     contentColumnType: text
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: unitHeading
-    instructions: null
+    instructions: 'Appended to unit title in record table.'
     name: 'Unit Heading'
     searchable: true
     settings:
+      byteLimit: null
       charLimit: null
+      code: ''
       columnType: text
-      initialRows: 4
-      multiline: 1
+      initialRows: '2'
+      multiline: '1'
+      placeholder: ''
     translationKeyFormat: null
-    translationMethod: site
+    translationMethod: none
     type: craft\fields\PlainText
   f56275dc-26a8-46e7-bfb5-061917775684:
     contentColumnType: string
@@ -4587,28 +4616,31 @@ sections:
                 fields:
                   1e5a2205-0d2d-4f4c-b087-a5f706ac0449:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 8
                   28e570b6-14a0-4b5e-be07-37e03f6b9b8f:
                     required: false
-                    sortOrder: 2
+                    sortOrder: 9
+                  4bb00585-cc77-465a-add8-7acdffe931ce:
+                    required: false
+                    sortOrder: 7
                   6616a98b-5530-40e0-93db-6e73e439e274:
                     required: false
                     sortOrder: 6
                   98e01bd1-bcac-4523-8399-0c55010d13b6:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 2
                   995ba33c-928b-43a5-8d39-53c4c36782ed:
                     required: false
-                    sortOrder: 1
+                    sortOrder: 3
                   c708fb49-2ead-4372-bb3f-c925d3ab9f41:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                   d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   f2ab3047-5922-481b-a6bc-d1ced215dc10:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 1
                 name: Unit
                 sortOrder: 1
               -

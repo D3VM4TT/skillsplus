@@ -133,11 +133,15 @@
                 </p>
             </div>
             <div class="page-content">
-                <h2>This is an evidence based unit {% if unitEntry.unitPoints %}({{ unitEntry.unitPoints }} points){% endif %}</h2>
                 {% if unitEntry.unitImage|length %}
                     <div class="col-pd-btm">
                         {% set unitImage = unitEntry.unitImage.one %}
                         <p><img class="unit-img" alt="{{ unitEntry.title }}" src="{{ unitImage.url }}" /></p>
+                    </div>
+                {% endif %}
+                {% if unitEntry.unitIntro %}
+                    <div class="col-pd-btm">
+                        {{ unitEntry.unitIntro }}
                     </div>
                 {% endif %}
                 {% include 'record/_units/files' with{unitEntry:unitEntry} %}
@@ -148,6 +152,11 @@
                 {% endif %}
                 {% if unitEntry.unitUrl %}
                     <p><a target="_blank" href="{{ unitEntry.unitUrl }}">View the unit content</a></p>
+                {% endif %}
+                {% if unitEntry.unitPoints %}
+                    <div class="col-pd-btm">
+                        <h5>{{ unitEntry.unitPoints }} points</h5>
+                    </div>
                 {% endif %}
                 {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry} %}
             </div>
