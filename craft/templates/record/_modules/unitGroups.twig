@@ -112,12 +112,17 @@
             </div>
         </div>
     {% endfor %}
-    {# get user results related to module #}
-    {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(module.id).status('live, expired').limit(null) %}
+
+    {% set achievementTitle = module.achievementLabel ? module.achievementLabel : 'Achievements' %}
+    {% set achievementLabel = module.achievementLabel ? module.achievementLabel : 'achievement' %}
+
+    {# get user results related to module or module result #}
+    {% set relatedTo = module.type == 'cpd' ? moduleResultEntry.id : module.id %}
+    {% set moduleUserResults = craft.entries.section('results').type('userResult').authorId(cpdUser.id).relatedTo(relatedTo).status('live, expired').limit(null) %}
     {% if moduleUserResults|length %}
         <div class="unit-group">
             <div class="header primary-bg" data-target="#u{{ moduleElementId }}-user">
-                <h5>Further Achievements</h5>
+                <h5>{{ achievementTitle }}</h5>
                 <div class="status">
                     View status and Endorsements
                     <img src="/assets/img/img-arrow-down-trans.png">
@@ -149,8 +154,8 @@
         </div>
     {% endif %}
     {% if moduleGroup is defined and moduleGroup.addAchievement and not module.addAchievementHide and not readOnly %}
-        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}">
-            <span>Add</span>
+        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}?moduleResultEntry={{ moduleResultEntry.id }}">
+            <span>Add {{ achievementLabel }}</span>
         </a>
     {% endif %}
 </div>

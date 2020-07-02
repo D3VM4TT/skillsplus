@@ -211,16 +211,17 @@ class Results extends Component
     /**
      * @param Event $event
      * @param Entry $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function onDeleteResult(Event $event, Entry $entry)
     {
         ## check the cpd module result
-        if ($entry->type == 'unitResult') {
-            if (null != $moduleResultEntry = $entry->resultModuleResult->one()) {
-                $moduleEntry = $moduleResultEntry->resultModule->one();
-                if ($moduleEntry && $moduleEntry->type == 'cpd') {
-                    $this->checkModuleResult($moduleEntry, $entry->authorId, $moduleResultEntry);
-                }
+        if (null != $moduleResultEntry = $entry->resultModuleResult->one()) {
+            $moduleEntry = $moduleResultEntry->resultModule->one();
+            if ($moduleEntry && $moduleEntry->type == 'cpd') {
+                $this->checkModuleResult($moduleEntry, $entry->authorId, $moduleResultEntry);
             }
         }
     }
@@ -444,8 +445,6 @@ class Results extends Component
         return $criteria->count();
     }
 
-
-
     /**
      * Get a unit result entry
      *
@@ -560,21 +559,29 @@ class Results extends Component
 
     /**
      * @param $moduleResultId
-     * @param bool $status
+     * @param null $status
      * @param bool $count
-     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     * @param string $type
+     * @param null $resultStatus
+     * @return array|\craft\base\ElementInterface[]|Entry[]|int|string
      */
-    function getModuleResultUnitResults($moduleResultId, $status = null, $count = false)
+    function getModuleResultResults($moduleResultId, $status = null, $count = false, $type = 'unitResult', $resultStatus = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
-        $criteria->type = 'unitResult';
+        if ($type == 'both') {
+            $type = ['userResult', 'unitResult'];
+        }
+        $criteria->type = $type;
         if ($status) {
             $criteria->status = [$status];
         } else {
             $criteria->status = ['live', 'expired'];
         }
         $criteria->relatedTo = ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult'];
+        if ($resultStatus) {
+            $criteria->resultStatus($resultStatus);
+        }
         return $count ? $criteria->count() : $criteria->all();
     }
 
@@ -697,12 +704,13 @@ class Results extends Component
     function checkUserResult($resultEntry) {
         ## the related module id
         $resultModuleEntry = $resultEntry->resultModule ? $resultEntry->resultModule->one() : null;
-        if (!$resultModuleEntry || !$resultEntry->resultPoints) {
+        if (!$resultModuleEntry) {
             return;
         }
         ## check the moduleResult
         $user = $resultEntry->author;
-        $this->checkModuleResult($resultModuleEntry, $user->id);
+        ## if cpd (specific module result entry) check the specific module result
+        $this->checkModuleResult($resultModuleEntry, $user->id, $resultEntry->resultModuleResult->one());
     }
 
     /**
@@ -770,16 +778,18 @@ class Results extends Component
      */
     public function checkModuleResult($moduleEntry, $userId, $moduleResultEntry = null)
     {
+        ## linked module results
         if ($moduleResultEntry) {
-            ## only get results linked to a specific module result
-            $unitResultEntries = $resultEntries = $this->getModuleUnitResults($moduleEntry, $userId, false, $moduleResultEntry->id);
-        }
-        else {
+            $unitResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'unitResult');
+            $userResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'userResult');
+        } else {
             $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
             $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
             $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
-            $resultEntries = array_merge($unitResultEntries, $userResultEntries);
         }
+
+        $resultEntries = array_merge($unitResultEntries, $userResultEntries);
+
         if (!count($resultEntries)) {
             return;
         }
@@ -815,10 +825,10 @@ class Results extends Component
                 }
             }
         }
-        $unitGroupResults = $this->getUnitGroupResults($moduleEntry, $unitResultEntries);
+        $componentResults = $this->getComponentResults($moduleEntry, $unitResultEntries, $userResultEntries);
         $moduleResultEntry->setFieldValue('resultHours', $hours);
         $moduleResultEntry->setFieldValue('resultPoints', $points);
-        $moduleResultEntry->setFieldValue('resultUnitGroupResults', $unitGroupResults);
+        $moduleResultEntry->setFieldValue('resultComponentResults', $componentResults);
         Craft::$app->getElements()->saveElement($moduleResultEntry);
         ## update result status to complete or revert to active (if unit result was deleted)
         if ($this->isCompleteModuleResult($moduleResultEntry)) {
@@ -854,11 +864,13 @@ class Results extends Component
     /**
      * @param Entry $moduleEntry
      * @param $unitResultEntries
+     * @param array $userResultEntries
      * @return array
      */
-    public function getUnitGroupResults(Entry $moduleEntry, $unitResultEntries)
+    public function getComponentResults(Entry $moduleEntry, $unitResultEntries, $userResultEntries = [])
     {
         $rows = [];
+        // add unit group targets
         foreach($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
             $targetHours = (int) $unitGroup->cpdTargetHours;
             $targetPoints = (int) $unitGroup->cpdTargetPoints;
@@ -877,7 +889,36 @@ class Results extends Component
             ];
             $rows [] = $row;
         }
+        // add the achievements targets
+        if ($moduleEntry->achievementTargetHours) {
+            $endorsedHours = $this->getUserEndorsed($userResultEntries);
+            $rows [] = [
+                'col1' => '',
+                'col2' => $moduleEntry->achievementLabel ? $moduleEntry->achievementLabel : 'Achievements',
+                'col3' => $moduleEntry->achievementTargetHours,
+                'col4' => 0,
+                'col5' => $endorsedHours,
+                'col6' => 0,
+                'col7' => $endorsedHours >= $moduleEntry->achievementTargetHours ? 1 : 0,
+            ];
+        }
         return $rows;
+    }
+
+    /**
+     * @param $unitResultEntries
+     * @return int
+     */
+    private function getUserEndorsed($unitResultEntries)
+    {
+        $return = 0;
+        foreach ($unitResultEntries as $userResultEntry) {
+            if ($userResultEntry->resultStatus != 'endorsed') {
+                continue;
+            }
+            $return += (int) $userResultEntry->resultHours;
+        }
+        return $return;
     }
 
     /**
@@ -913,10 +954,10 @@ class Results extends Component
      * @param $moduleResult
      * @return bool
      */
-    function isCompleteUnitGroupResults($moduleResult)
+    function isCompleteComponentResults($moduleResult)
     {
-        foreach($moduleResult->resultUnitGroupResults as $unitGroupResult) {
-            if (!$unitGroupResult['complete']) {
+        foreach($moduleResult->resultComponentResults as $componentResult) {
+            if (!$componentResult['complete']) {
                 return false;
             }
         }
@@ -934,8 +975,8 @@ class Results extends Component
         }
         $moduleEntry = $moduleResult->resultModule->one();
         if ($moduleEntry->type == 'cpd') {
-            ## check unit group results
-            if (!$this->isCompleteUnitGroupResults($moduleResult)) {
+            ## check component results
+            if (!$this->isCompleteComponentResults($moduleResult)) {
                 return false;
             }
             $targetType = (string) $moduleEntry->targetType->value;
@@ -973,12 +1014,11 @@ class Results extends Component
             'text'    => '',
             'total'   => 0
         ];
-        $module = $moduleResult->resultModule->one();
-        $results = $this->getModuleUnitResults($module, $userId, false, $moduleResult->id, 'pending');
+        $pendingResults = $this->getModuleResultResults($moduleResult->id, null, false, 'both', 'pending');
 
         $pendingHours = 0;
         $pendingPoints = 0;
-        foreach($results as $result) {
+        foreach($pendingResults as $result) {
             $pendingHours = $pendingHours + (int) $result->resultHours;
             if (null != $resultUnit = $result->resultUnit->one()) {
                 $pendingPoints = $pendingPoints + (int)$result->resultUnit->one()->unitPoints;

@@ -83,6 +83,15 @@ class RecordItem extends Model
      */
     public function unitIds()
     {
+        if ($this->itemType == 'moduleGroup') {
+            $ids = [];
+            foreach ($this->items as $moduleItem) {
+                foreach ($moduleItem->items as $unitGroupItem) {
+                    $ids = array_merge($ids, array_keys($unitGroupItem->items));
+                }
+            }
+            return $ids;
+        }
         return isset($this->data['unitIds']) ? $this->data['unitIds'] : [];
     }
 

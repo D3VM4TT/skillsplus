@@ -30,14 +30,14 @@
 
             {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
             {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
-            {% for unitGroupRow in moduleResultEntry.resultUnitGroupResults %}
-                {% if not unitGroupRow.complete and unitGroupRow.targetHours %}
-                    {% set unitGroupRemaining = unitGroupRow.targetHours - unitGroupRow.endorsedHours %}
-                    <br />You need {{ unitGroupRemaining }} hours in {{ unitGroupRow.title }}.
+            {% for componentRow in moduleResultEntry.resultComponentResults %}
+                {% if not componentRow.complete and componentRow.targetHours %}
+                    {% set componentRemaining = componentRow.targetHours - componentRow.endorsedHours %}
+                    <br />You need {{ componentRemaining }} hours in {{ componentRow.title }}.
                 {% endif %}
-                {% if not unitGroupRow.complete and unitGroupRow.targetPoints %}
-                    {% set unitGroupRemaining = unitGroupRow.targetPoints - unitGroupRow.endorsedPoints %}
-                    <br />You need {{ unitGroupRemaining }} points in {{ unitGroupRow.title }}.
+                {% if not componentRow.complete and componentRow.targetPoints %}
+                    {% set componentRemaining = componentRow.targetPoints - componentRow.endorsedPoints %}
+                    <br />You need {{ componentRemaining }} points in {{ componentRow.title }}.
                 {% endif %}
             {% endfor %}
 
