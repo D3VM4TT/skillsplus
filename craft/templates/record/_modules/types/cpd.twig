@@ -32,7 +32,7 @@
             {% if remaining.hoursScore  %}{{ remaining.hoursScore }} Hours{% endif %}
         </p>
 
-        {% if moduleResultEntry.resultComponentResults.length %}
+        {% if moduleResultEntry.resultComponentResults|length %}
         <p style="padding-left:40px;">
         {% for componentRow in moduleResultEntry.resultComponentResults %}
             {% if componentRow.targetHours or componentRow.targetPoints %}
