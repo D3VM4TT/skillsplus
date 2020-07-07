@@ -27,22 +27,39 @@
             {% endif %}
 
             <span class="status-{{ status }}"></span>
+            Overall:
+            {% if remaining.pointsScore %}{{ remaining.pointsScore }} Points{% endif %}
+            {% if remaining.hoursScore  %}{{ remaining.hoursScore }} Hours{% endif %}
+        </p>
 
-            {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
-            {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
-            {% for componentRow in moduleResultEntry.resultComponentResults %}
-                {% if not componentRow.complete and componentRow.targetHours %}
-                    {% set componentRemaining = componentRow.targetHours - componentRow.endorsedHours %}
-                    <br />You need {{ componentRemaining }} hours in {{ componentRow.title }}.
+        {% if moduleResultEntry.resultComponentResults.length %}
+        <p style="padding-left:40px;">
+        {% for componentRow in moduleResultEntry.resultComponentResults %}
+            {% if componentRow.targetHours or componentRow.targetPoints %}
+                {% set status = 'inprogress' %}
+                {% if (componentRow.targetHours and componentRow.endorsedHours < componentRow.targetHours) or (componentRow.targetPoints and componentRow.endorsedPoints < componentRow.targetPoints) %}
+                    {% set status = 'expired' %}
                 {% endif %}
-                {% if not componentRow.complete and componentRow.targetPoints %}
-                    {% set componentRemaining = componentRow.targetPoints - componentRow.endorsedPoints %}
-                    <br />You need {{ componentRemaining }} points in {{ componentRow.title }}.
+                <span class="status-{{ status }}"></span>
+                {{ componentRow.title }}:
+                {% if componentRow.targetHours %}
+                    {{ componentRow.endorsedHours }}/{{ componentRow.targetHours }} Hours
                 {% endif %}
-            {% endfor %}
+                {% if componentRow.targetPoints %}
+                    {{ componentRow.endorsedPoints }}/{{ componentRow.targetPoints }} Points
+                {% endif %}
+                <br />
+            {% endif %}
+        {% endfor %}
+        </p>
+        {% endif %}
 
-            <br />You need a total of {{ remaining.text }} to complete this module.
-            {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.{% endif %}<br />
+        {% if pending.total %}
+        <p>
+            You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.{% endif %}
+        </p>
+        {% endif %}
+        <p>
             Result ID: {{ moduleResultEntry.id }}
         </p>
 {% endif %}
