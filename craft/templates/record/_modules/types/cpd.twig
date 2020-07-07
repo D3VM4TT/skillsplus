@@ -36,9 +36,9 @@
         <p style="padding-left:40px;">
         {% for componentRow in moduleResultEntry.resultComponentResults %}
             {% if componentRow.targetHours or componentRow.targetPoints %}
-                {% set status = 'inprogress' %}
+                {% set status = 'complete' %}
                 {% if (componentRow.targetHours and componentRow.endorsedHours < componentRow.targetHours) or (componentRow.targetPoints and componentRow.endorsedPoints < componentRow.targetPoints) %}
-                    {% set status = 'expired' %}
+                    {% set status = 'inprogress' %}
                 {% endif %}
                 <span class="status-{{ status }}"></span>
                 {{ componentRow.title }}:
