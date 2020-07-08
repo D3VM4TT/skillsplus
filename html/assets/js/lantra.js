@@ -582,6 +582,10 @@ $(document).ready(function(){
 
     $('.module-group-tabs ul.tabs li:first-child a').click();
 
+    $('select.module-menu').change(function(){
+        $('a[href="' + $(this).val() + '"]').click();
+    });
+
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {

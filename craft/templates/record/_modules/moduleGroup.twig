@@ -11,15 +11,17 @@
         {% endif %}
     {% endif %}
     <div class="module-tabs">
-        <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}">
+        <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}" {% if moduleGroup.moduleGroupMenu == 'dropdown' %}style="display:none"{% endif %}>
             <div class="tabs-group">
                 {% if not moduleGroupItem.modules|length %}
                     No modules have been added to this module group.
                 {% endif %}
+                {% set options = '' %}
                 {% for moduleItem in moduleGroupItem.modules %}
                     {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
                     {% set moduleElementId = moduleGroupElementId ~ module.id %}
                     {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
+                    {% set options = options ~ '<option value="#module' ~ moduleElementId ~ '">' ~ module.title ~ '</option>' %}
                     <li>
                         <a href="#module{{ moduleElementId }}" class="module-status">
                             <span class="status-active"></span>
@@ -33,6 +35,13 @@
                 {% endfor %}
             </div>
         </ul>
+        {% if moduleGroup.moduleGroupMenu == 'dropdown' and options %}
+            <div class="field--wrapper" style="margin-top:30px;">
+                <select class="module-menu" id="module-select-{{ moduleGroup.id }}">
+                    {{ options|raw }}
+                </select>
+            </div>
+        {% endif %}
     </div>
     <div id="tab-group-{{ moduleGroup.id }}" class="tabgroup module-wrapper">
         {% for moduleItem in moduleGroupItem.modules %}

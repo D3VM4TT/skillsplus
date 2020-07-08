@@ -17,6 +17,9 @@ categoryGroups:
               c3c65d33-35c6-416d-9e88-c5a678f09161:
                 required: false
                 sortOrder: 3
+              fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+                required: false
+                sortOrder: 5
             name: Settings
             sortOrder: 1
           -
@@ -78,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1593697889
+dateModified: 1594222350
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -3791,6 +3794,41 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: robuust\reverserelations\fields\ReverseEntries
+  fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+    contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleGroupMenu
+    instructions: ''
+    name: 'Module Group Menu'
+    searchable: true
+    settings:
+      optgroups: true
+      options:
+        -
+          __assoc__:
+            -
+              - label
+              - Menu
+            -
+              - value
+              - menu
+            -
+              - default
+              - '1'
+        -
+          __assoc__:
+            -
+              - label
+              - Dropdown
+            -
+              - value
+              - dropdown
+            -
+              - default
+              - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Dropdown
   fbb9f4ca-eb83-49d9-a5f0-b1a7996bf39c:
     contentColumnType: boolean
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
