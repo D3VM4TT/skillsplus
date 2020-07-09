@@ -566,17 +566,24 @@ $(document).ready(function(){
 
     $('.tabs a').click(function(e){
         e.preventDefault();
-        var $this = $(this),
-        tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
-        others = $this.closest('ul').find('a'),
-        target = $this.attr('href');
+        var a = $(this),
+            ul = a.closest('ul'),
+            select = $('#module-select-' + ul.data('module-group')),
+            tabgroup = '#' + a.parents('.tabs').data('tabgroup'),
+            others = ul.find('a'),
+            target = a.attr('href');
+
         others.removeClass('active');
-        $this.addClass('active');
+        a.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
         // make sure first unit group is shown
         if (target.match("^#tab")) {
             $(target).find('ul.tabs').eq(0).find('a').eq(0).click();
+        }
+        // update select if present
+        if(select) {
+            select.val(target);
         }
     });
 
@@ -589,16 +596,16 @@ $(document).ready(function(){
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
+        console.log('test');
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
-            jobRoleDiv = moduleGroupLink.closest('div.job-role');
-        if (jobRoleDiv.length) {
-            var jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
-            jobRoleLink.click();
+            tabContainer = moduleGroupLink.closest('div.tab-container');
+        if (tabContainer.length) {
+            tabContainer.find('a.jobroleEndorseExpand').click();
             moduleGroupLink.click();
             moduleLink.click();
             $('html, body').animate({
-                scrollTop: jobRoleDiv.offset().top - 200
+                scrollTop: tabContainer.offset().top - 200
             }, 500, function () {
             });
         }

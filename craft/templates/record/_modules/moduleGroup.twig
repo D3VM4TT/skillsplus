@@ -11,7 +11,7 @@
         {% endif %}
     {% endif %}
     <div class="module-tabs">
-        <ul class="tabs clearfix" data-tabgroup="tab-group-{{ moduleGroup.id }}" {% if moduleGroup.moduleGroupMenu == 'dropdown' %}style="display:none"{% endif %}>
+        <ul class="tabs clearfix" data-module-group="{{ moduleGroup.id }}" data-tabgroup="tab-group-{{ moduleGroup.id }}" {% if moduleGroup.moduleGroupMenu == 'dropdown' %}style="display:none"{% endif %}>
             <div class="tabs-group">
                 {% if not moduleGroupItem.modules|length %}
                     No modules have been added to this module group.
