@@ -44,6 +44,9 @@
                         {# url format cpd/<userId>/<moduleId>/<unitId>/<resultId> #}
                         {% set baseUrl = '/cpd/' ~ cpdUser.id ~ '/' ~ module.id ~ '/' ~ unit.id ~ '/' %}
                         {% set params = '?ref=module' ~ moduleElementId ~ '&moduleResultId=' ~ moduleResultEntry.id %}
+                        {%  if package is defined %}
+                            {% set params = params ~ '&packageId=' ~ package.id %}
+                        {% endif %}
                         {% set newUrl = baseUrl ~ 'new' ~ params %}
                         {% set editUrl = baseUrl ~ params %}
 
