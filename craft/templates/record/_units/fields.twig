@@ -118,9 +118,6 @@
             {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
 
             <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label|raw }}</label>
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
 
             {% if row.fieldCustomType == 'text' %}
                 <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
@@ -133,6 +130,9 @@
                     {% endfor %}
                 </select>
             {% endif %}
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
             {# increment new1, new2 #}
             {% set customNew = customNew + 1 %}
         </div>

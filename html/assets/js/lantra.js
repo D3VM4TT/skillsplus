@@ -105,7 +105,13 @@ $(document).ready(function(){
         $('body').addClass('loading');
         var f = $(this),
             v = true,
+            s = f.find('input[name="fields[resultStatus]"]').val(),
             message = $('<span>').addClass('error').text('This field is required!');
+
+        // draft status ignores required
+        if (s === 'draft') {
+            return true;
+        }
 
         f.find('div.field--wrapper').removeClass('error');
         f.find('span.error').remove();
