@@ -27,6 +27,23 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @return string
+     */
+    public static function returnRef($url = null)
+    {
+        if (!$url) {
+            $url = Craft::$app->request->getReferrer();
+        }
+        // strip out existing ref
+        $url = strtok($url, '?');
+        // append ref
+        if (false != $ref = Craft::$app->request->getParam('ref')) {
+            $url .= '?ref=' . $ref;
+        }
+        return $url;
+    }
+
+    /**
      * @param $field
      * @return null
      */

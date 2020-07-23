@@ -13,6 +13,7 @@ use Craft;
 use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class EntriesController extends BaseController {
@@ -73,7 +74,7 @@ class EntriesController extends BaseController {
     public function actionDeleteEntry()
     {
         $this->requirePostRequest();
-          $return = $this->_returnRef(Craft::$app->request->getReferrer());
+        $return = LantraHelper::returnRef();
         ## get the posted entryId
         $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
@@ -101,7 +102,7 @@ class EntriesController extends BaseController {
     public function actionEndorseEvidence()
     {
         $this->requirePostRequest();
-        $return = $this->_returnRef(Craft::$app->request->getReferrer());
+        $return = LantraHelper::returnRef();
         ## get all the posted entryId(s)
         if (false != $entryId = Craft::$app->request->getParam('entryId')) {
             $results = [['entryId' => $entryId]];
@@ -121,20 +122,6 @@ class EntriesController extends BaseController {
         $this->_returnMessage($count . ' results endorsed.', true, $return);
     }
 
-    /**
-     * Append the ref back onto the return url
-     *
-     * @param $url
-     * @return string
-     */
-    private function _returnRef($url)
-    {
-        if (false != $ref = Craft::$app->request->getParam('ref')) {
-            $refString = '?ref=' . $ref;
-            $url = str_replace($refString, '', $url) . $refString;
-        }
-        return $url;
-    }
     /**
      * @param $entry
      * @throws mixed
