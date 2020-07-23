@@ -1,3 +1,6 @@
+{% if not craft.lantra.setting('taskbooks')  %}
+    {% exit 404 %}
+{% endif %}
 {% do craft.lantra.requirePermission('editTaskbooks') %}
 {% extends "_layout" %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}

@@ -10,7 +10,7 @@
                 <a class="secondary-bg-hover " href="/">My Dashboard</a>
             </li>
         {% endif %}
-        {% if craft.lantra.setting('themeMyTaskbooks') %}
+        {% if craft.lantra.setting('taskbooks') and craft.lantra.setting('themeMyTaskbooks') %}
             <li class="{% if craft.app.request.getSegment(3) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
                 <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
             </li>

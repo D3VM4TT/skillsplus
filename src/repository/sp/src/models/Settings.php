@@ -40,6 +40,7 @@ class Settings extends Model
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
 
+    public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
     public $taskbookIntro                       = [];
     public $taskbookLevels                      = false;

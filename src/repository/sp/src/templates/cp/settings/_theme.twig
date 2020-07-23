@@ -38,20 +38,6 @@
     value:		    settings.themeColorSecondary,
 }) }}
 
-{{ forms.lightswitchField ({
-    label:			"Enable Menu My Dashboard",
-    id:				"themeMyDashboard",
-    name:			"themeMyDashboard",
-    on:		        settings.themeMyDashboard == 1
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Enable Menu My Taskbooks",
-    id:				"themeMyTaskbooks",
-    name:			"themeMyTaskbooks",
-    on:		        settings.themeMyTaskbooks == 1
-}) }}
-
 {{ forms.elementSelectField ({
     label:			    "Theme Navigation Public",
     id:				    "themeNavigationPublic",
@@ -140,3 +126,18 @@
     name:			"labelJobRole",
     value:		    settings.labelJobRole
 }) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Job Roles on Dashboard?",
+    id:				"enableJobRoles",
+    name:			"enableJobRoles",
+    on:		        settings.enableJobRoles == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Dashboard",
+    id:				"themeMyDashboard",
+    name:			"themeMyDashboard",
+    on:		        settings.themeMyDashboard == 1
+}) }}
+

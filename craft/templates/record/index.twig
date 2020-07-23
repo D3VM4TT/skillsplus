@@ -16,7 +16,7 @@
     {% set isManager = true %}
 {% endif %}
 
-{% set isTaskbooks = craft.request.getSegment(3) == 'taskbooks' %}
+{% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% set accountPhoto = account.getPhoto() %}
@@ -42,7 +42,7 @@
             {% endif %}
         {% endif %}
         <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
-        {% if isManager %}
+        {% if craft.lantra.setting('taskbooks') and isManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
                     {% if isTaskbooks %}

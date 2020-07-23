@@ -1,6 +1,13 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.textField ({
+    label:			"Enable Taskbooks",
+    id:				"taskbooks",
+    name:			"taskbooks",
+    value:		    settings.taskbooks
+}) }}
+
+{{ forms.textField ({
     label:			"Taskbook Label",
     id:				"taskbookLabel",
     name:			"taskbookLabel",
@@ -37,6 +44,34 @@
     criteria:           '',
     sourceElementId:    '',
     elements:           settings.taskbookJobRole ? settings.taskbookJobRole,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Taskbooks",
+    id:				"themeMyTaskbooks",
+    name:			"themeMyTaskbooks",
+    on:		        settings.themeMyTaskbooks == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Taskbooks on Dashboard?",
+    id:				"enableTaskbooks",
+    name:			"enableTaskbooks",
+    on:		        settings.enableTaskbooks == 1
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Workflow",
+    id:				    "defaultWorkflow",
+    name:			    "defaultWorkflow",
+    elementType:        config.entryElementType,
+    sources:            config.workflowsSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.defaultWorkflow ? settings.defaultWorkflow,
     storageKey:         '',
     viewMode:           'list',
     limit:              1
