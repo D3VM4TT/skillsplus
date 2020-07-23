@@ -50,8 +50,8 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/websites/skills-plus.net/',
-            '@assetsPath' => '/websites/skills-plus.net/craft-assets/',
+            '@basePath' => '~/sites/skills-plus.net/',
+            '@assetsPath' => '~/sites/skills-plus.net/craft-assets/',
         ],
     ],
     'dev' => [
