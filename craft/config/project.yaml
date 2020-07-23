@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1595505428
+dateModified: 1595514979
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -933,13 +933,6 @@ fields:
                   - ''
           -
             - 43c2a918-aa04-4759-bf4e-df7f7a51578a
-            -
-              __assoc__:
-                -
-                  - width
-                  - ''
-          -
-            - c344533c-3fba-4da5-9c4c-b04d1470eaf9
             -
               __assoc__:
                 -
@@ -6449,9 +6442,6 @@ superTableBlockTypes:
               b893071b-6c51-4812-b88c-dd1f60840ff5:
                 required: false
                 sortOrder: 3
-              c344533c-3fba-4da5-9c4c-b04d1470eaf9:
-                required: false
-                sortOrder: 7
               d4afcfe1-1ba1-4435-8a39-88a785af7535:
                 required: false
                 sortOrder: 1
@@ -6512,17 +6502,6 @@ superTableBlockTypes:
                 -
                   - value
                   - teamManagers
-                -
-                  - default
-                  - ''
-            -
-              __assoc__:
-                -
-                  - label
-                  - 'Job Role'
-                -
-                  - value
-                  - jobRole
                 -
                   - default
                   - ''
@@ -6661,28 +6640,6 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
-      c344533c-3fba-4da5-9c4c-b04d1470eaf9:
-        contentColumnType: string
-        fieldGroup: null
-        handle: stepAssignJobRole
-        instructions: 'Select the job role for who can assign the manager for this step. '
-        name: 'Step Assign Job Role'
-        searchable: true
-        settings:
-          allowLimit: false
-          allowMultipleSources: false
-          branchLimit: ''
-          limit: null
-          localizeRelations: false
-          selectionLabel: 'Add job role'
-          source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
-          sources: '*'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Categories
       d4afcfe1-1ba1-4435-8a39-88a785af7535:
         contentColumnType: text
         fieldGroup: null
