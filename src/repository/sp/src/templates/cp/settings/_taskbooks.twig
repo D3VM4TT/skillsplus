@@ -1,10 +1,10 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField ({
+{{ forms.lightswitchField ({
     label:			"Enable Taskbooks",
     id:				"taskbooks",
     name:			"taskbooks",
-    value:		    settings.taskbooks
+    on:		        settings.taskbooks == 1
 }) }}
 
 {{ forms.textField ({
