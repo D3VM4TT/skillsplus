@@ -27,6 +27,9 @@
 {% set addNew = craft.app.request.getSegment(5) == 'new' %}
 {% set resultEntry = false %}
 
+{% set packageId = craft.app.request.getParam('moduleResultId') %}
+{% set isPackage = packageId ? true : false %}
+
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}

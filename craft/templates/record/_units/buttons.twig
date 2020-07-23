@@ -19,7 +19,7 @@
         <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
     </div>
 {% else %}
-    {% if not craft.lantra.setting('jobRoleEndorse', false) %}
+    {% if not isPackage and not craft.lantra.setting('jobRoleEndorse', false) %}
         <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
         <div class="container-btn">
             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
