@@ -9,11 +9,14 @@
             you wish to purchase:</label>
         <select class="package-module-group" name="fields[packageModuleGroup][]">
             {% for moduleGroup in modulesGroups %}
+                {% set packageExists = craft.lantra.packageExists(currentUser.id, moduleGroup.id) %}
                 <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
                         data-minimum="{{ moduleGroup.moduleMinimumOptional }}"
-                        value="{{ moduleGroup.id }}">{{ moduleGroup.title }}</option>
+                        data-revision="{{ packageExists ? 1 : 0 }}"
+                        value="{{ moduleGroup.id }}">{{ moduleGroup.title }}{{ packageExists ? ' (revision)' : '' }}</option>
             {% endfor %}
         </select>
+        <input id="package-revision" type="hidden" name="fields[packageRevision]" value="0" />
     </div>
     {% if craft.lantra.setting('taskbookLevels') %}
         <div class="field--wrapper">

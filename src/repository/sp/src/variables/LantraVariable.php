@@ -565,6 +565,16 @@ class LantraVariable
     }
 
     /**
+     * @param $userId
+     * @param $moduleGroupId
+     * @return bool
+     */
+    public function packageExists($userId, $moduleGroupId)
+    {
+        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $moduleGroupId);
+    }
+
+    /**
      * Return criteria based on company name and location
      *
      * @param $search

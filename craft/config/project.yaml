@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1594222350
+dateModified: 1595505428
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -967,6 +967,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  33d71c63-d5f5-42bb-a731-3a8df1f1759f:
+    contentColumnType: boolean
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageRevision
+    instructions: ''
+    name: 'Package Revision'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   3455bcb3-f959-4b7a-a64d-b0138268b594:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -1036,6 +1048,17 @@ fields:
             -
               - default
               - '1'
+        -
+          __assoc__:
+            -
+              - label
+              - Revision
+            -
+              - value
+              - revision
+            -
+              - default
+              - ''
         -
           __assoc__:
             -
@@ -4786,15 +4809,18 @@ sections:
                   164fe93f-d610-4819-8ca4-77cc4a88112e:
                     required: true
                     sortOrder: 2
-                  534ba9ca-50bd-4b63-a843-b3358f1bc352:
-                    required: false
-                    sortOrder: 5
-                  5e4e967d-f646-4378-aedf-9f6ef84c1e28:
+                  33d71c63-d5f5-42bb-a731-3a8df1f1759f:
                     required: false
                     sortOrder: 3
-                  edcdcb64-8b0b-4f31-ab57-106c9e252317:
+                  534ba9ca-50bd-4b63-a843-b3358f1bc352:
+                    required: false
+                    sortOrder: 6
+                  5e4e967d-f646-4378-aedf-9f6ef84c1e28:
                     required: false
                     sortOrder: 4
+                  edcdcb64-8b0b-4f31-ab57-106c9e252317:
+                    required: false
+                    sortOrder: 5
                 name: Modules
                 sortOrder: 1
               -

@@ -434,13 +434,16 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function countUnitResults($userId, $unitIds)
+    function countUnitResults($userId, $unitIds, $resultStatus = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
         $criteria->status = ['live', 'expired'];
+        if ($resultStatus) {
+            $criteria->resultStatus = $resultStatus;
+        }
         $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
         return $criteria->count();
     }
@@ -1251,11 +1254,11 @@ class Results extends Component
 
     /**
      * @param $packageId
-     * @param $userId
-     * @return array
-     * @throws Exception
+     * @param null $userId
+     * @param string $results
+     * @return array|string
      */
-    public function getPackageUserResults($packageId, $userId = null)
+    public function getPackageUserResults($packageId, $userId = null, $type = 'both')
     {
         if (null == $user = LantraHelper::getUser($userId)) {
             return [];
@@ -1266,11 +1269,16 @@ class Results extends Component
         if ($package) {
             $modules = Lantra::$app->packages->getPackageModuleEntries($package);
             foreach ($modules as $moduleEntry) {
-                // get unit results relating to module
-                $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
-                // get user results relating to module
-                $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
-                $results = array_merge($results, $unitResults, $userResults);
+                if ($type == 'unit' || $type == 'both') {
+                    // get unit results relating to module
+                    $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+                    $results = array_merge($results, $unitResults);
+                }
+                if ($type == 'user' || $type == 'both') {
+                    // get user results relating to module
+                    $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+                    $results = array_merge($results, $userResults);
+                }
             }
         }
         return $results;

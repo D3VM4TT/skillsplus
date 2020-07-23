@@ -162,6 +162,10 @@ class Packages extends Component
         if (!$entry->packageAssessment->count()) {
             $this->applyPackageAssessment($entry);
         }
+        if (Craft::$app->request->isSiteRequest && $event->isNew && $entry->packageRevision) {
+            // set existing unit results to revision
+            $this->revisionPackageUnits($entry);
+        }
     }
 
     /**
@@ -494,6 +498,22 @@ class Packages extends Component
 
     /**
      * @param $package
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function revisionPackageUnits($package)
+    {
+        ## set unit results as revision
+        $unitResults = Lantra::$app->results->getPackageUserResults($package->id, $package->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $resultEntry->setFieldValue('resultStatus', 'revision');
+            Craft::$app->elements->saveElement($resultEntry);
+        }
+    }
+
+    /**
+     * @param $package
      * @param $step
      * @param $sortOrder
      * @throws \Throwable
@@ -607,8 +627,8 @@ class Packages extends Component
 
     /**
      * @param $packageId
-     * @param $user
-     * @return null
+     * @param User $user
+     * @return array|\craft\base\ElementInterface|Entry|null
      */
     public function getUserPackage($packageId, User $user)
     {
@@ -616,6 +636,22 @@ class Packages extends Component
         $criteria->id = $packageId;
         $criteria->authorId = $user->id;
         return $criteria->count() ? $criteria->one() : null;
+    }
+
+    /**
+     * @param User $user
+     * @param null $moduleGroupId
+     * @return int|string
+     */
+    public function userPackageExists(User $user, $moduleGroupId = null)
+    {
+        $criteria = Entry::find();
+        $criteria->authorId = $user->id;
+        $criteria->relatedTo = [
+            'targetElement' => $moduleGroupId,
+            'field' => 'packageModuleGroup'
+        ];
+        return $criteria->count();
     }
 
     /**
@@ -659,20 +695,18 @@ class Packages extends Component
      * @param null $type
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null)
+    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';
         $criteria->limit = $limit;
         $criteria->orderBy = $order;
-
         if ($search) {
             $criteria->search = 'title:' . $search;
         }
         if ($packageStatus != 'all') {
             $criteria->packageStatus = $packageStatus;
         }
-
         if ($assessor->admin || $assessor->isInGroup('schemeManagers')) {
             $criteria->authorId = 'not ' . $assessor->id;
         } else {
@@ -682,7 +716,6 @@ class Packages extends Component
             }
             $criteria->id = $ids;
         }
-
         return $criteria;
     }
 

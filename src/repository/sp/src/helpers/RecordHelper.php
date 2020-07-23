@@ -67,6 +67,6 @@ class RecordHelper
      */
     public static function totalComplete(RecordItem $recordItem, User $user)
     {
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds());
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['not', 'revision']);
     }
 }

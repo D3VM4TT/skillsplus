@@ -1,9 +1,11 @@
 $(document).ready(function(){
 
     $('select.package-module-group').change(function(){
-        var moduleGroupId = $(this).val();
+        var moduleGroupId = $(this).val(),
+            revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
         $('div.taskbook-optional').hide();
         $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
+        $('input#package-revision').val(revision);
     }).change();
 
     $('select.package-level').change(function(){
