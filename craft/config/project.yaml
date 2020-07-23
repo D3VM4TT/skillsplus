@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1595516967
+dateModified: 1595518379
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -5491,6 +5491,48 @@ sections:
         template: null
         uriFormat: ''
     type: channel
+  d87a0468-94af-4371-a7d8-59f8f3664b84:
+    enableVersioning: true
+    entryTypes:
+      9e4f32de-898b-4f03-b31a-af2c18541d54:
+        fieldLayouts:
+          f25eb30c-c5e3-4262-b50c-70c39a698aa3:
+            tabs:
+              -
+                fields:
+                  f16d7384-1325-4296-8acb-e213c2765770:
+                    required: false
+                    sortOrder: 1
+                name: Content
+                sortOrder: 1
+        handle: dashboard
+        hasTitleField: false
+        name: Dashboard
+        sortOrder: 1
+        titleFormat: '{section.name|raw}'
+        titleLabel: ''
+    handle: dashboard
+    name: Dashboard
+    previewTargets:
+      -
+        __assoc__:
+          -
+            - label
+            - 'Primary entry page'
+          -
+            - urlFormat
+            - '{url}'
+          -
+            - refresh
+            - '1'
+    propagationMethod: all
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: true
+        template: ''
+        uriFormat: dashboard
+    type: single
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     enableVersioning: false
     entryTypes:

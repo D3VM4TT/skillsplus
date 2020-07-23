@@ -22,9 +22,7 @@
             <p class="welcome-back">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
         </div>
         <div class="page-content">
-            {% if craft.lantra.canManage() %}
-                {% include '_includes/scheme' %}
-            {% endif %}
+            {% include '_includes/dashboard' %}
             {% include 'record/_modules' with{cpdUser:currentUser} %}
              {% if craft.lantra.canManage() %}
                 {% set pendingEntryCount = craft.lantra.managerCountEndorsementUsers() %}
