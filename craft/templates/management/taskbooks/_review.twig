@@ -22,10 +22,10 @@
     {% endfor %}
     </tbody>
 </table>
-
-{% if nextStep %}
-    <h2 for="result">{{ nextStep.reviewStepName }}</h2>
-    {% if package.isReviewUser(currentUser, nextStep, true) %}
+{% for step in package.packageReviews %}
+    {% set workflowStep = package.getPackageWorkflowStep(step.reviewStepId) %}
+    {% if nextStep and step.id == nextStep.id and package.isReviewUser(currentUser, nextStep, true) %}
+        <h2>{{ step.reviewStepName }}</h2>
         <div class="field--wrapper">
             <label for="result">Review Step Result:</label>
             <select id="result" name="steps[{{ nextStep.id }}][result]">
@@ -38,12 +38,25 @@
             <label for="comment">Comment:</label>
             <textarea name="steps[{{ nextStep.id }}][comment]"></textarea>
         </div>
+        <div class="field--wrapper">
+            {{ workflowStep ? workflowStep.stepMessage : '' }}
+        </div>
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Submit Result</button>
         </div>
-    {% else %}
-        <p style="color:red"><strong>You are not allowed to review the next step.</strong></p>
+    {% elseif step.reviewDate|length %}
+        <h2>{{ step.reviewStepName }}</h2>
+        <div class="field--wrapper">
+            <label for="result">Review Step Result:</label>
+            <select disabled id="result" name="steps[{{ step.id }}][result]">
+                <option{% if step.reviewPassed == '' %} selected{% endif %} value="">Please select:</option>
+                <option{% if step.reviewPassed == 1 %} selected{% endif %}  value="1">Complete</option>
+                <option{% if step.reviewPassed == 0 %} selected{% endif %}  value="0">Retry</option>
+            </select>
+        </div>
+        <div class="field--wrapper">
+            <label for="comment">Comment:</label>
+            <textarea disabled name="steps[{{ step.id }}][comment]"> {{ step.reviewComment }}</textarea>
+        </div>
     {% endif %}
-{% else %}
-    <p style="color:red"><strong>There are no steps to complete on this package.</strong></p>
-{% endif %}
+{% endfor %}

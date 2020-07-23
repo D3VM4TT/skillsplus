@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1595514979
+dateModified: 1595516967
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -938,8 +938,15 @@ fields:
                 -
                   - width
                   - ''
+          -
+            - 4c81c4c4-4ce4-4d59-aae5-409187760100
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
       contentTable: '{{%stc_workflow}}'
-      fieldLayout: table
+      fieldLayout: row
       maxRows: ''
       minRows: ''
       propagationMethod: all
@@ -6433,6 +6440,9 @@ superTableBlockTypes:
               43c2a918-aa04-4759-bf4e-df7f7a51578a:
                 required: false
                 sortOrder: 6
+              4c81c4c4-4ce4-4d59-aae5-409187760100:
+                required: false
+                sortOrder: 7
               703cc741-3177-4d42-88f9-c3c0f4ce9249:
                 required: false
                 sortOrder: 4
@@ -6508,6 +6518,29 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
+      4c81c4c4-4ce4-4d59-aae5-409187760100:
+        contentColumnType: text
+        fieldGroup: null
+        handle: stepMessage
+        instructions: ''
+        name: 'Step Message'
+        searchable: true
+        settings:
+          availableTransforms: '*'
+          availableVolumes: '*'
+          cleanupHtml: true
+          columnType: text
+          purifierConfig: ''
+          purifyHtml: '1'
+          redactorConfig: Simple.json
+          removeEmptyTags: '1'
+          removeInlineStyles: '1'
+          removeNbsp: '1'
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\redactor\Field
       703cc741-3177-4d42-88f9-c3c0f4ce9249:
         contentColumnType: string
         fieldGroup: null
