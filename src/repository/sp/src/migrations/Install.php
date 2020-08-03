@@ -10,6 +10,7 @@ namespace lantra\sp\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\elements\User;
 use craft\services\Routes as RoutesService;
 use lantra\sp\Plugin as Lantra;
 
@@ -25,24 +26,56 @@ class Install extends Migration
     {
         ## sort tables
         $this->_updateTables();
-        $this->_removeLantraUsersTable();
 
         ## fix stuff
-        $this->_fixSections();
-        $this->_fixModulesSection();
-        $this->_fixLantraResultsCache();
+        # $this->_removeLantraUsersTable();
+        # $this->_fixSections();
+        # $this->_fixModulesSection();
+        # $this->_fixLantraResultsCache();
 
         ## update config
-        $this->_updateStatusField();
-        $this->_deleteRoutes();
+        # $this->_updateStatusField();
+        # $this->_deleteRoutes();
 
         ## sort other plugins
-        $this->_removePlugins();
+        # $this->_removePlugins();
         Craft::$app->plugins->installPlugin('redactor');
+        Craft::$app->plugins->installPlugin('super-table');
 
         ## $this->_fixConfig();
+
+        $this->_createAdmins();
         
         return true;
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    private function _createAdmins()
+    {
+        $admins = [
+          'robin@coffeebean.design' => 'Robin Willmott',
+          'jason@thisistraffic.co.uk' => 'Jason Church'
+        ];
+
+        echo "create default Skills+ admin users:";
+
+        foreach ($admins as $email => $fullname) {
+
+            $names = explode(' ', $fullname);
+            $user = new User();
+            $user->firstName = $names[0];
+            $user->lastName = $names[1];
+            $user->email = $user->username = $email;
+            if (!Craft::$app->elements->saveElement($user)) {
+                echo "could not create account for {$fullname}!";
+                continue;
+            }
+            echo "successfully created account for {$fullname}!";
+        }
     }
 
     /**

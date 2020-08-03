@@ -266,7 +266,7 @@ class Plugin extends BasePlugin
                 ];
             });
 
-        $this->_runMigrations();
+        # $this->_runMigrations();
     }
 
     /**

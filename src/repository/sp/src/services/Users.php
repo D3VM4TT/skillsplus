@@ -52,6 +52,11 @@ class Users extends Component
      */
     public function onActivateUser(UserEvent $event, User $user)
     {
+        ## skip if cli (i.e. install)
+        if (Craft::$app->request->isConsoleRequest) {
+            return;
+        }
+
         if (Craft::$app->request->getParam('taskbook')) {
             ## add user to users group
             $group = Craft::$app->userGroups->getGroupByHandle('usersTaskbookPending');
@@ -65,6 +70,11 @@ class Users extends Component
      */
     public function onBeforeSaveUser(ModelEvent $event, User $user)
     {
+        ## skip if cli (i.e. install)
+        if (Craft::$app->request->isConsoleRequest) {
+            return;
+        }
+
         ## automatically set userType for reports
         ## $user->setFieldValue('userType', Lantra::$app->users->canManage($user) ? 'manager' : 'member');
 
