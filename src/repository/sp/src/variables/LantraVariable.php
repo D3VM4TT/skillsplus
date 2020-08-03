@@ -24,6 +24,67 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $url
+     * @return string
+     */
+    public function returnRef($url = null)
+    {
+        return LantraHelper::returnRef($url);;
+    }
+
+    /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function userProfileFields($type, $limit = 0)
+    {
+        $fields = LantraHelper::setting('userProfileFields', []);
+        $return = [];
+        foreach($fields as $row) {
+            if ($limit && count($return) == $limit) {
+                return $return;
+            }
+            if ($row[$type]) {
+                $return[] = $row;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $field
+     * @param $type
+     * @return bool
+     */
+    public function userProfileField($field, $type)
+    {
+        $field = LantraHelper::userProfileField($field);
+        return $field ? $field[$type] : false;
+    }
+
+    /**
+     * @param $field
+     * @param string $default
+     * @return string
+     */
+    public function userProfileLabel($field, $default = '')
+    {
+        $field = LantraHelper::userProfileField($field);
+        return $field ? $field['label'] : $default;
+    }
+
+    /**
+     * @param $userId
+     * @param $packageId
+     * @return string
+     */
+    public function packageUrl($userId, $packageId = null)
+    {
+        return LantraHelper::packageUrl($userId, $packageId);
+    }
+
+    /**
      * @param null $userId
      * @return array
      */
@@ -33,6 +94,18 @@ class LantraVariable
             return;
         }
         return Lantra::$app->packages->getOptionalModuleGroups($user);
+    }
+
+    /**
+     * @param null $userId
+     * @return array
+     */
+    public function getResitModuleGroups($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return Lantra::$app->packages->getResitModuleGroups($user);
     }
 
     /**
@@ -478,14 +551,16 @@ class LantraVariable
     }
 
     /**
+     * @param $search
+     * @param string $taskbookStatus
      * @param null $limit
      * @param string $order
      * @param null $managerId
-     * @return mixed
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($search, $packageStatus = 'locked', $limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $limit, $order, $this->getUser($managerId));
     }
 
     /**
@@ -494,8 +569,18 @@ class LantraVariable
      */
     public function packagesCount($managerId = null)
     {
-        $criteria = $this->packagesCriteria(null, 'lastName', $this->getUser($managerId));
+        $criteria = $this->packagesCriteria('', 'all',null, 'lastName', $this->getUser($managerId));
         return $criteria ? $criteria->count() : 0;
+    }
+
+    /**
+     * @param $userId
+     * @param $moduleGroupId
+     * @return bool
+     */
+    public function packageExists($userId, $moduleGroupId)
+    {
+        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $moduleGroupId);
     }
 
     /**
@@ -1080,7 +1165,18 @@ class LantraVariable
      */
     public function getModuleResultUnitResults($moduleResultId = null, $status = null, $count = false)
     {
-        return Lantra::$app->results->getModuleResultUnitResults($moduleResultId, $status, $count);
+        return Lantra::$app->results->getModuleResultResults($moduleResultId, $status, $count, 'unitResult');
+    }
+
+    /**
+     * @param null $moduleResultId
+     * @param $status
+     * @param $count
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getModuleResultUserResults($moduleResultId = null, $status = null, $count = false)
+    {
+        return Lantra::$app->results->getModuleResultResults($moduleResultId, $status, $count, 'userResult');
     }
 
     /**

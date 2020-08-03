@@ -1,3 +1,7 @@
+{% if not craft.lantra.setting('taskbooks')  %}
+    {% exit 404 %}
+{% endif %}
+
 {% requireLogin %}
 
 {% extends "_layout" %}
@@ -6,7 +10,13 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packages = craft.entries.section('packages').authorId(currentUser.id) %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set unpaidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('not 1') %}
+{% set paidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('1') %}
+
+{% set isTaskbooks = true %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}
 <section class="page dashboard">
@@ -18,51 +28,100 @@
             <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
         </a>
         {{ currentUserCompany|default('') }}
-        <h2>My taskbooks</h2>
-        <p>Manage your taskbook packages.</p>
+        <h2>Manage {{ taskbookLabel|pluralize }}</h2>
+        <p>Manage your {{ taskbookLabel|lower }} packages.</p>
     </div>
     <div class="page-content">
-        {% if packages.count %}
-        <table class="data">
+        {% if unpaidPackages.count %}
+            <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
+            {% for package in unpaidPackages.all %}
+                {% set packageTitle = package.moduleGroup.title %}
+                {% if craft.lantra.setting('taskbookLevels') %}
+                    {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
+                {% endif %}
+                <h3>{{ packageTitle }} </h3>
+                <p>Date Created: {{ package.dateCreated|date(dateFormat) }}</p>
+                {% if package.packageOptionalModuleGroups.count %}
+                    <p>
+                    {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+                        {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
+                        {{ moduleGroup.title }}
+                        {% if craft.lantra.setting('taskbookLevels') %}
+                            ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})
+                        {% endif %}
+                        <br />
+                    {% endfor %}
+                    </p>
+                {% endif %}
+                <p>&nbsp;</p>
+                {{ craft.lantra.payPalButton(packageTitle, package.packageCost, 'Pay £' ~ package.packageCost, siteUrl('sp/packages/pay/' ~ package.id), {'packageId':package.id})|raw }}
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            {% endfor %}
+        {% endif %}
+
+        {% if paidPackages.count %}
+        <h2>Purchased {{ taskbookLabel|pluralize }}</h2>
+        <table class="data taskbooks">
             <thead>
                 <tr>
                     <th>Date Created</th>
                     <th>Module Group</th>
-                    <th>Level</th>
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        <th>Level</th>
+                    {% endif %}
                     <th>Optional Module Groups</th>
                     <th>Cost</th>
-                    <th>Paid</th>
+                    <th>PayPal Email</th>
+                    <th>Reference</th>
                 <tr>
             </thead>
             <tbody>
-                {% for package in packages.all %}
+                {% for package in paidPackages.all %}
+                    {% set packageTitle = package.moduleGroup.title %}
+                    {% set payment = package.userPayments.one %}
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
+                    {% endif %}
                     <tr>
-                        <td>{{ package.dateCreated|date('d/m/y') }}</td>
+                        <td>{{ package.dateCreated|date(dateFormat) }}</td>
                         {% if not package.moduleGroup %}
                             <td style="color:red">Invalid Module Group</td>
                         {% else %}
-                            <td><a href="/profile/taskbooks/view/{{ package.id }}">{{ package.moduleGroup.title }}</a></td>
+                            <td>
+                                <a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">{{ packageTitle }}</a>
+                            </td>
                         {% endif %}
-                        <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
+                        {% if craft.lantra.setting('taskbookLevels') %}
+                            <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
+                        {% endif %}
                         <td>
                             {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
-                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.one %}
+                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
                                 {% if not moduleGroup %}
                                     Invalid Optional Module Group<br />
                                 {% else %}
-                                    {{ moduleGroup.title }} ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                    {{ moduleGroup.title }}
+                                    {% if craft.lantra.setting('taskbookLevels') %}
+                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </td>
                         <td>£{{ package.packageCost }}</td>
-                        <td>{{ package.packagePaid ? 'Yes' : 'No' }}</td>
+                        <td>
+                           {{ payment ? payment.payer_email : 'unknown' }}
+                        </td>
+                        <td>
+                            {{ payment ? payment.txn_id : 'unknown' }}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% endif %}
         <div class="container-btn">
-            <p><a href="/profile/taskbooks/new" class="button primary-bg">Add New Taskbook</a></p>
+            <p><a href="/profile/taskbooks/new" class="button primary-bg">Purchase {{ taskbookLabel }}</a></p>
         </div>
     </div>
 </section>

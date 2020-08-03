@@ -17,6 +17,9 @@ categoryGroups:
               c3c65d33-35c6-416d-9e88-c5a678f09161:
                 required: false
                 sortOrder: 3
+              fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+                required: false
+                sortOrder: 5
             name: Settings
             sortOrder: 1
           -
@@ -24,6 +27,9 @@ categoryGroups:
               294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
                 required: false
                 sortOrder: 5
+              5bdda926-785f-4d89-aebe-9a805b3dab29:
+                required: false
+                sortOrder: 6
               680431de-8445-48e9-8acf-e32d867f73dd:
                 required: false
                 sortOrder: 3
@@ -33,6 +39,9 @@ categoryGroups:
               da81a368-f84c-47f8-9e3a-b83346be0865:
                 required: false
                 sortOrder: 2
+              dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
+                required: false
+                sortOrder: 7
               e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
                 required: false
                 sortOrder: 4
@@ -72,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1592232749
+dateModified: 1595518379
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -615,6 +624,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
+  2347e1b1-c7d8-4870-9904-36bd73538d1a:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: achievementTargetHours
+    instructions: ''
+    name: 'Achievement Target Hours'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   2722a41a-2635-4f3b-8ecb-d39db9efa049:
     contentColumnType: text
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -912,14 +939,14 @@ fields:
                   - width
                   - ''
           -
-            - c344533c-3fba-4da5-9c4c-b04d1470eaf9
+            - 4c81c4c4-4ce4-4d59-aae5-409187760100
             -
               __assoc__:
                 -
                   - width
                   - ''
       contentTable: '{{%stc_workflow}}'
-      fieldLayout: table
+      fieldLayout: row
       maxRows: ''
       minRows: ''
       propagationMethod: all
@@ -934,6 +961,18 @@ fields:
     handle: dataCleanManagersChildren
     instructions: ''
     name: 'Data Clean Managers Children'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  33d71c63-d5f5-42bb-a731-3a8df1f1759f:
+    contentColumnType: boolean
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageRevision
+    instructions: ''
+    name: 'Package Revision'
     searchable: true
     settings:
       default: ''
@@ -1009,6 +1048,17 @@ fields:
             -
               - default
               - '1'
+        -
+          __assoc__:
+            -
+              - label
+              - Revision
+            -
+              - value
+              - revision
+            -
+              - default
+              - ''
         -
           __assoc__:
             -
@@ -1250,6 +1300,30 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Matrix
+  4bb00585-cc77-465a-add8-7acdffe931ce:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: unitIntro
+    instructions: ''
+    name: 'Unit Intro'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes:
+        - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   534ba9ca-50bd-4b63-a843-b3358f1bc352:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -1410,6 +1484,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  5bdda926-785f-4d89-aebe-9a805b3dab29:
+    contentColumnType: integer(10)
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleResitCost
+    instructions: ''
+    name: 'Module Group Resit Cost'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   5cee14f9-7873-40b9-b788-aab8210d1e0e:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -1819,6 +1911,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  6b856e7c-77f4-4646-9dc9-81cd812d3919:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: achievementLabel
+    instructions: 'Label for add button and title for the table.'
+    name: 'Achievement Label'
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   6cb9aa27-e25b-4a44-8dca-f20fca5f3588:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -1923,6 +2033,135 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Entries
+  77c7c383-632e-462f-984c-7ab34eb2cd1e:
+    contentColumnType: text
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+    handle: resultComponentResults
+    instructions: ''
+    name: 'Result Component Results'
+    searchable: true
+    settings:
+      addRowLabel: 'Add a row'
+      columnType: text
+      columns:
+        __assoc__:
+          -
+            - col1
+            -
+              __assoc__:
+                -
+                  - heading
+                  - ID
+                -
+                  - handle
+                  - id
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col2
+            -
+              __assoc__:
+                -
+                  - heading
+                  - Title
+                -
+                  - handle
+                  - title
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - singleline
+          -
+            - col3
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Target Hours'
+                -
+                  - handle
+                  - targetHours
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col4
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Target Points'
+                -
+                  - handle
+                  - targetPoints
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col5
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Endorsed Hours'
+                -
+                  - handle
+                  - endorsedHours
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col6
+            -
+              __assoc__:
+                -
+                  - heading
+                  - 'Endorsed Points'
+                -
+                  - handle
+                  - endorsedPoints
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - number
+          -
+            - col7
+            -
+              __assoc__:
+                -
+                  - heading
+                  - Complete
+                -
+                  - handle
+                  - complete
+                -
+                  - width
+                  - ''
+                -
+                  - type
+                  - lightswitch
+      maxRows: ''
+      minRows: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Table
   7b7af1dc-c01f-4f73-b3f4-a83ff572e941:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -2248,14 +2487,16 @@ fields:
     contentColumnType: text
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: unitDescription
-    instructions: 'Add a short description of this unit'
-    name: 'Unit Description'
+    instructions: 'Shown as tooltip with [i] icon in the record table.'
+    name: 'Unit Tootlip'
     searchable: true
     settings:
-      charLimit: ''
+      byteLimit: null
+      charLimit: null
+      code: ''
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: '2'
+      multiline: '1'
       placeholder: ''
     translationKeyFormat: null
     translationMethod: none
@@ -3170,6 +3411,54 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
+  df065216-2242-4a91-8b81-fa97ca27d449:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageAssessment
+    instructions: ''
+    name: 'Package Assessment'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - 32c6ef2b-26dd-41c1-818c-411a8164e1f0
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 22c29753-9e14-4e97-9291-ca025bc83380
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 3ffef8f2-5599-4a8c-b8e7-ce6b7113d648
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - feebdaae-888d-4c75-b0ed-d99114744179
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_packageassessment}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   e05af851-b6aa-4f59-a43b-0ac897b54887:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -3379,16 +3668,19 @@ fields:
     contentColumnType: text
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: unitHeading
-    instructions: null
+    instructions: 'Appended to unit title in record table.'
     name: 'Unit Heading'
     searchable: true
     settings:
+      byteLimit: null
       charLimit: null
+      code: ''
       columnType: text
-      initialRows: 4
-      multiline: 1
+      initialRows: '2'
+      multiline: '1'
+      placeholder: ''
     translationKeyFormat: null
-    translationMethod: site
+    translationMethod: none
     type: craft\fields\PlainText
   f56275dc-26a8-46e7-bfb5-061917775684:
     contentColumnType: string
@@ -3525,6 +3817,41 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: robuust\reverserelations\fields\ReverseEntries
+  fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+    contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleGroupMenu
+    instructions: ''
+    name: 'Module Group Menu'
+    searchable: true
+    settings:
+      optgroups: true
+      options:
+        -
+          __assoc__:
+            -
+              - label
+              - Menu
+            -
+              - value
+              - menu
+            -
+              - default
+              - '1'
+        -
+          __assoc__:
+            -
+              - label
+              - Dropdown
+            -
+              - value
+              - dropdown
+            -
+              - default
+              - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Dropdown
   fbb9f4ca-eb83-49d9-a5f0-b1a7996bf39c:
     contentColumnType: boolean
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -3890,6 +4217,12 @@ matrixBlockTypes:
               46656fa8-cf4d-4c7e-93d0-800132d01aa2:
                 required: false
                 sortOrder: 4
+              64769feb-a327-4c92-8224-bfd94a529f1a:
+                required: false
+                sortOrder: 6
+              7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+                required: false
+                sortOrder: 5
               a773e69f-0bf1-46fd-ae75-5182be37772c:
                 required: false
                 sortOrder: 2
@@ -3916,7 +4249,8 @@ matrixBlockTypes:
         name: Name
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: ''
           columnType: text
           initialRows: '4'
@@ -3940,6 +4274,42 @@ matrixBlockTypes:
           prefix: ''
           size: null
           suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      64769feb-a327-4c92-8224-bfd94a529f1a:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: cpdTargetHours
+        instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+        name: 'CPD Target Hours'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: '0'
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: Hours
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: cpdTargetPoints
+        instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+        name: 'CPD Target Points'
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: Points
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Number
@@ -4266,7 +4636,9 @@ matrixBlockTypes:
         name: Title
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4289,6 +4661,11 @@ matrixBlockTypes:
           purifierConfig: ''
           purifyHtml: ''
           redactorConfig: Standard.json
+          removeEmptyTags: true
+          removeInlineStyles: true
+          removeNbsp: true
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: true
         translationKeyFormat: null
         translationMethod: none
         type: craft\redactor\Field
@@ -4327,6 +4704,10 @@ plugins:
     licenseKey: null
     schemaVersion: 2.2.1
     settings: null
+  wordsmith:
+    edition: standard
+    enabled: true
+    schemaVersion: 0.0.0.0
 sections:
   090b3c24-a9ac-4935-a919-c4fc8a3099b0:
     enableVersioning: false
@@ -4339,28 +4720,31 @@ sections:
                 fields:
                   1e5a2205-0d2d-4f4c-b087-a5f706ac0449:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 8
                   28e570b6-14a0-4b5e-be07-37e03f6b9b8f:
                     required: false
-                    sortOrder: 2
+                    sortOrder: 9
+                  4bb00585-cc77-465a-add8-7acdffe931ce:
+                    required: false
+                    sortOrder: 7
                   6616a98b-5530-40e0-93db-6e73e439e274:
                     required: false
                     sortOrder: 6
                   98e01bd1-bcac-4523-8399-0c55010d13b6:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 2
                   995ba33c-928b-43a5-8d39-53c4c36782ed:
                     required: false
-                    sortOrder: 1
+                    sortOrder: 3
                   c708fb49-2ead-4372-bb3f-c925d3ab9f41:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                   d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   f2ab3047-5922-481b-a6bc-d1ced215dc10:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 1
                 name: Unit
                 sortOrder: 1
               -
@@ -4425,15 +4809,18 @@ sections:
                   164fe93f-d610-4819-8ca4-77cc4a88112e:
                     required: true
                     sortOrder: 2
-                  534ba9ca-50bd-4b63-a843-b3358f1bc352:
-                    required: false
-                    sortOrder: 5
-                  5e4e967d-f646-4378-aedf-9f6ef84c1e28:
+                  33d71c63-d5f5-42bb-a731-3a8df1f1759f:
                     required: false
                     sortOrder: 3
-                  edcdcb64-8b0b-4f31-ab57-106c9e252317:
+                  534ba9ca-50bd-4b63-a843-b3358f1bc352:
+                    required: false
+                    sortOrder: 6
+                  5e4e967d-f646-4378-aedf-9f6ef84c1e28:
                     required: false
                     sortOrder: 4
+                  edcdcb64-8b0b-4f31-ab57-106c9e252317:
+                    required: false
+                    sortOrder: 5
                 name: Modules
                 sortOrder: 1
               -
@@ -4445,6 +4832,13 @@ sections:
                 sortOrder: 2
               -
                 fields:
+                  df065216-2242-4a91-8b81-fa97ca27d449:
+                    required: false
+                    sortOrder: 1
+                name: Assessment
+                sortOrder: 3
+              -
+                fields:
                   3455bcb3-f959-4b7a-a64d-b0138268b594:
                     required: false
                     sortOrder: 1
@@ -4452,7 +4846,7 @@ sections:
                     required: false
                     sortOrder: 2
                 name: Reviews
-                sortOrder: 3
+                sortOrder: 4
               -
                 fields:
                   1e03a0c1-334b-4517-9560-d95c13db8a99:
@@ -4465,7 +4859,7 @@ sections:
                     required: false
                     sortOrder: 2
                 name: Payments
-                sortOrder: 4
+                sortOrder: 5
         handle: package
         hasTitleField: true
         name: Package
@@ -4934,6 +5328,9 @@ sections:
                   73b12e48-7a9e-496f-b91e-01fad8e389d1:
                     required: false
                     sortOrder: 1
+                  77c7c383-632e-462f-984c-7ab34eb2cd1e:
+                    required: false
+                    sortOrder: 6
                   a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec:
                     required: false
                     sortOrder: 5
@@ -4960,6 +5357,9 @@ sections:
                   14b8c677-a8a8-4df3-a74e-a30106bd5398:
                     required: false
                     sortOrder: 1
+                  2c8efd67-eb2c-40fd-b9d3-f660cc251a99:
+                    required: false
+                    sortOrder: 5
                   3ccae116-4500-45d0-a56a-024f2e8d4d03:
                     required: false
                     sortOrder: 2
@@ -5091,6 +5491,48 @@ sections:
         template: null
         uriFormat: ''
     type: channel
+  d87a0468-94af-4371-a7d8-59f8f3664b84:
+    enableVersioning: true
+    entryTypes:
+      9e4f32de-898b-4f03-b31a-af2c18541d54:
+        fieldLayouts:
+          f25eb30c-c5e3-4262-b50c-70c39a698aa3:
+            tabs:
+              -
+                fields:
+                  f16d7384-1325-4296-8acb-e213c2765770:
+                    required: false
+                    sortOrder: 1
+                name: Content
+                sortOrder: 1
+        handle: dashboard
+        hasTitleField: false
+        name: Dashboard
+        sortOrder: 1
+        titleFormat: '{section.name|raw}'
+        titleLabel: ''
+    handle: dashboard
+    name: Dashboard
+    previewTargets:
+      -
+        __assoc__:
+          -
+            - label
+            - 'Primary entry page'
+          -
+            - urlFormat
+            - '{url}'
+          -
+            - refresh
+            - '1'
+    propagationMethod: all
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: true
+        template: ''
+        uriFormat: dashboard
+    type: single
   e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a:
     enableVersioning: false
     entryTypes:
@@ -5130,6 +5572,9 @@ sections:
             tabs:
               -
                 fields:
+                  2347e1b1-c7d8-4870-9904-36bd73538d1a:
+                    required: false
+                    sortOrder: 6
                   3bfea235-c57e-4998-b079-8c15a1ebbf0e:
                     required: false
                     sortOrder: 4
@@ -5139,9 +5584,12 @@ sections:
                   6b431a5f-e1ee-4520-ab30-89ca72993c00:
                     required: false
                     sortOrder: 2
-                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
                     required: false
                     sortOrder: 5
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 7
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: false
                     sortOrder: 1
@@ -5229,9 +5677,12 @@ sections:
                   6b431a5f-e1ee-4520-ab30-89ca72993c00:
                     required: false
                     sortOrder: 2
-                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
                     required: false
                     sortOrder: 5
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 6
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
                     sortOrder: 1
@@ -5392,6 +5843,94 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\PlainText
+  64f6e8d9-8f65-4148-be7f-1b67d29b6d5f:
+    field: df065216-2242-4a91-8b81-fa97ca27d449
+    fieldLayouts:
+      4981846d-1413-471c-89c7-fa2229aabff6:
+        tabs:
+          -
+            fields:
+              22c29753-9e14-4e97-9291-ca025bc83380:
+                required: false
+                sortOrder: 2
+              32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+                required: false
+                sortOrder: 1
+              3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+                required: false
+                sortOrder: 3
+              feebdaae-888d-4c75-b0ed-d99114744179:
+                required: false
+                sortOrder: 4
+            name: Content
+            sortOrder: 1
+    fields:
+      22c29753-9e14-4e97-9291-ca025bc83380:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: assessmentPassed
+        instructions: ''
+        name: Passed
+        searchable: true
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+        contentColumnType: string
+        fieldGroup: null
+        handle: assessmentModuleGroup
+        instructions: ''
+        name: 'Module Group'
+        searchable: true
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          branchLimit: ''
+          limit: null
+          localizeRelations: false
+          selectionLabel: ''
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+      3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+        contentColumnType: text
+        fieldGroup: null
+        handle: assessmentComment
+        instructions: ''
+        name: Comment
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
+      feebdaae-888d-4c75-b0ed-d99114744179:
+        contentColumnType: datetime
+        fieldGroup: null
+        handle: assessmentDate
+        instructions: ''
+        name: Date
+        searchable: true
+        settings:
+          minuteIncrement: '30'
+          showDate: true
+          showTime: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Date
   677982c1-5077-4256-905d-8d01ee013e15:
     field: 7f722e30-ba1b-49e0-a5f4-e7070b600311
     fieldLayouts:
@@ -5943,6 +6482,9 @@ superTableBlockTypes:
               43c2a918-aa04-4759-bf4e-df7f7a51578a:
                 required: false
                 sortOrder: 6
+              4c81c4c4-4ce4-4d59-aae5-409187760100:
+                required: false
+                sortOrder: 7
               703cc741-3177-4d42-88f9-c3c0f4ce9249:
                 required: false
                 sortOrder: 4
@@ -5952,9 +6494,6 @@ superTableBlockTypes:
               b893071b-6c51-4812-b88c-dd1f60840ff5:
                 required: false
                 sortOrder: 3
-              c344533c-3fba-4da5-9c4c-b04d1470eaf9:
-                required: false
-                sortOrder: 7
               d4afcfe1-1ba1-4435-8a39-88a785af7535:
                 required: false
                 sortOrder: 1
@@ -6018,20 +6557,32 @@ superTableBlockTypes:
                 -
                   - default
                   - ''
-            -
-              __assoc__:
-                -
-                  - label
-                  - 'Job Role'
-                -
-                  - value
-                  - jobRole
-                -
-                  - default
-                  - ''
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
+      4c81c4c4-4ce4-4d59-aae5-409187760100:
+        contentColumnType: text
+        fieldGroup: null
+        handle: stepMessage
+        instructions: ''
+        name: 'Step Message'
+        searchable: true
+        settings:
+          availableTransforms: '*'
+          availableVolumes: '*'
+          cleanupHtml: true
+          columnType: text
+          purifierConfig: ''
+          purifyHtml: '1'
+          redactorConfig: Simple.json
+          removeEmptyTags: '1'
+          removeInlineStyles: '1'
+          removeNbsp: '1'
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\redactor\Field
       703cc741-3177-4d42-88f9-c3c0f4ce9249:
         contentColumnType: string
         fieldGroup: null
@@ -6164,28 +6715,6 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
-      c344533c-3fba-4da5-9c4c-b04d1470eaf9:
-        contentColumnType: string
-        fieldGroup: null
-        handle: stepAssignJobRole
-        instructions: 'Select the job role for who can assign the manager for this step. '
-        name: 'Step Assign Job Role'
-        searchable: true
-        settings:
-          allowLimit: false
-          allowMultipleSources: false
-          branchLimit: ''
-          limit: null
-          localizeRelations: false
-          selectionLabel: 'Add job role'
-          source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
-          sources: '*'
-          targetSiteId: null
-          validateRelatedElements: ''
-          viewMode: null
-        translationKeyFormat: null
-        translationMethod: site
-        type: craft\fields\Categories
       d4afcfe1-1ba1-4435-8a39-88a785af7535:
         contentColumnType: text
         fieldGroup: null
@@ -6323,8 +6852,8 @@ tagGroups:
     handle: default
     name: Default
 users:
-  allowPublicRegistration: 1
-  defaultGroup: 32ed3edf-a621-4c98-8c9f-785e45ed329f
+  allowPublicRegistration: true
+  defaultGroup: 9bbb42a9-a0e6-4d9b-8029-3d0c95243dae
   fieldLayouts:
     e313cedf-8c04-4fa5-989a-e087a1432495:
       tabs:
@@ -6680,6 +7209,13 @@ users:
         - 'editpeerimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
+    9bbb42a9-a0e6-4d9b-8029-3d0c95243dae:
+      handle: usersTaskbookPending
+      name: 'Users [Taskbook Pending]'
+      permissions:
+        - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024'
+        - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024'
+        - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024'
     ab9197b3-7032-4015-ba4e-4939118952dd:
       handle: users
       name: Users
@@ -6720,7 +7256,7 @@ users:
         - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
   photoSubpath: ''
   photoVolumeUid: c56fc71b-f1b7-47ac-935c-9ad07177edae
-  requireEmailVerification: 0
+  requireEmailVerification: false
 volumes:
   a6dafdf7-e4c0-4943-aff3-e481bbdf23fc:
     handle: evidence

@@ -7,9 +7,10 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageCoreModuleGroup = entry is defined and entry.packageCoreModuleGroup ? entry.packageCoreModuleGroup.one : null %}
-
+{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
 {% set section = craft.sections.getSectionByHandle('packages') %}
+{% set isTaskbooks = true %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}
     <section class="page dashboard">
@@ -21,8 +22,8 @@
                 <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
             </a>
             {{ currentUserCompany|default('') }}
-            <h2>My taskbooks</h2>
-            <p>Manage your taskbook packages.</p>
+            <h2>Create {{ taskbookLabel }}</h2>
+            <p>Purchase a package of module groups.</p>
         </div>
         <div class="page-content">
             {% set levelsOptions = '' %}
@@ -30,7 +31,7 @@
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
             {% endfor %}
 
-            {% set modulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
+
 
             {% if entry is defined %}
                 {{ ui.errorList(entry.getFirstErrors()) }}
@@ -41,91 +42,14 @@
                 {{ actionInput('entries/save-entry') }}
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('profile/taskbooks/view/{id}') }}
-                {% if not modulesGroups|length %}
-                    <div class="field--wrapper">
-                        <p style="color:red;">There are currently no module groups available.</p>
-                    </div>
-                {% else %}
-                    <div class="field--wrapper">
-                        <label for="packageModuleGroup" class="no-float">Module Group:</label>
-                        <select class="package-module-group" name="fields[packageModuleGroup][]">
-                            {% for moduleGroup in modulesGroups %}
-                                <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
-                                        data-minimum="{{ moduleGroup.moduleMinimumOptional }}" value="{{ moduleGroup.id }}">{{ moduleGroup.title }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="field--wrapper">
-                        <label for="packageLevel" class="no-float">Level:</label>
-                        <select class="package-level" name="fields[packageLevel]">
-                            {% for option in craft.lantra.taskbookLevels() %}
-                                <option {% if entry is defined and entry.packageLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                        {% for moduleGroup in modulesGroups %}
-                            {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(moduleGroup).level(2).all() %}
-                            {% if optionalModuleGroups|length %}
-                                {% include 'profile/taskbooks/_optionalModuleGroups' with {optionalModuleGroups: optionalModuleGroups, moduleGroup: moduleGroup, entry: entry is defined ? entry} %}
-                            {% endif %}
-                        {% endfor %}
-                {% endif %}
+                {{ redirectInput('profile/taskbooks') }}
+
+                {% include '_forms/taskbook' %}
+
                 <div class="container-btn">
-                    <button type="submit" class="button primary-bg">Add Package</button>
+                    <button type="submit" class="button primary-bg">Continue</button>
                 </div>
             </form>
         </div>
     </section>
-    <script id="input-template" type="text/template">
-        {% set blocktype = craft.lantra.spBlockType('packageOptionalModuleGroups') %}
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][type]" value="{{ blocktype.id }}" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][enabled]" value="1" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalModuleGroup][]" value="{optionalModuleGroupId}" />
-        <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}" />
-    </script>
-{% endblock %}
-
-{% block js %}
-<script>
-    $('select.package-module-group').change(function(){
-        var moduleGroupId = $(this).val();
-        $('div.taskbook-optional').hide();
-        $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
-    }).change();
-
-    $('select.package-level').change(function(){
-        var level = $(this).val(),
-            optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
-        if (level == 5) {
-           optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
-        }
-        else {
-            optionalSelectInputs.prop('disabled', false).css('opacity', 1);
-        }
-    }).change();
-
-    updateOptional = function() {
-        var n = 1;
-        $('form#taskbooks').find('.optional-hidden').remove();
-        $('tr.optional-module').each(function(){
-            var c = $(this).find('input[type=checkbox]'),
-                l = $(this).find('select').val(),
-                t = $('#input-template').clone().html();
-            if (c.is(':checked')) {
-                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
-                $('form#taskbooks').prepend($(t));
-                n ++;
-            }
-        });
-    };
-
-    $('select.optional-level').change(function(){
-        updateOptional();
-    });
-    $('input.optional').change(function(){
-        updateOptional();
-    }).change();
-
-</script>
 {% endblock %}

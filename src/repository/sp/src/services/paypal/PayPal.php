@@ -160,11 +160,11 @@ class PayPal extends Component
     private function _checkSettings()
     {
         if (!$this->business) {
-            throw new \Exception('No PayPal business has not been setup.');
+            # throw new \Exception('No PayPal business has not been setup.');
             return false;
         }
         if (!is_file($this->payPalCertPath) || !is_file($this->lantraCertPath) || !is_file($this->lantraKeyPath)) {
-            throw new \Exception('PayPal certificates not found. Check access to ' . $this->certStorage);
+            # throw new \Exception('PayPal certificates not found. Check access to ' . $this->certStorage);
             return false;
         }
         return true;

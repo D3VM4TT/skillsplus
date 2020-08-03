@@ -37,6 +37,14 @@ class Settings extends Model
     public $themeColorSecondary                 = '#2e338f';
     public $themeNavigationPublic               = ["1090","3618"];
     public $themeNavigationPrivate              = ["1090","3618"];
+    public $themeMyDashboard                    = true;
+    public $themeMyTaskbooks                    = false;
+
+    public $taskbooks                           = false;
+    public $taskbookLabel                       = 'Taskbook';
+    public $taskbookIntro                       = [];
+    public $taskbookLevels                      = false;
+    public $taskbookJobRole                     = [];
 
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;
@@ -78,12 +86,20 @@ class Settings extends Model
     public $notifySubjectCycleReminder          = '';
     public $notifyCycleReminder                 = '';
 
+    public $notifySubjectStepUnassigned         = '';
+    public $notifyStepUnassigned                = '';
     public $notifySubjectStepAssign             = '';
     public $notifyStepAssign                    = '';
     public $notifySubjectStepUpdate             = '';
     public $notifyStepUpdate                    = '';
     public $notifySubjectStepRequest            = '';
     public $notifyStepRequest                   = '';
+
+    public $notifySubjectAssessment             = '';
+    public $notifyAssessment                    = '';
+
+    public $notifySubjectNewPackage             = '';
+    public $notifyNewPackage                    = '';
 
     public $disableEndorsementNotify            = false;
 
@@ -110,7 +126,6 @@ class Settings extends Model
             'managerCompanies'  => ''
     ];
     public $labelJobRole                        = '';
-    public $labelTaskbook                       = '';
     public $queue                               = [];
     public $disableResultCache                  = false;
     public $customReports                       = [
@@ -138,11 +153,13 @@ class Settings extends Model
         'themeNavigationPublic',
         'themeNavigationPrivate',
         'individualCompany',
-        'defaultWorkflow'
+        'defaultWorkflow',
+        'taskbookIntro'
     ];
 
     private $categoryFields = [
         'individualJobRole',
+        'taskbookJobRole'
     ];
 
     private $dateFields = [

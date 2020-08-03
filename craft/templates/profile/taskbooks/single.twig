@@ -1,0 +1,86 @@
+{% requireLogin %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+
+{% set account = currentUser %}
+{% set accountPhoto = account.getPhoto() %}
+{% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.last : null %}
+
+{% set section = craft.sections.getSectionByHandle('packages') %}
+
+{% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
+{% set singleType = craft.request.getParam('type') %}
+
+{% set isTaskbooks = true %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <a href="/">
+                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            </a>
+            {{ currentUserCompany|default('') }}
+            <h2>Add {{ singleType }} module group</h2>
+        </div>
+        <div class="page-content">
+        {% if singleType == 'optional' %}
+            {% set singleModuleGroups = craft.lantra.getOptionalModuleGroups() %}
+        {% else %}
+            {% set singleModuleGroups = craft.lantra.getResitModuleGroups() %}
+        {% endif %}
+
+        {% if not singleModuleGroups|length %}
+            <div class="field--wrapper">
+                <p style="color:red;">There are currently no module groups available.</p>
+            </div>
+        {% else %}
+
+            {% set levelsOptions = '' %}
+            {% for option in craft.lantra.taskbookLevels() %}
+                {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+            {% endfor %}
+
+            {% if entry is defined %}
+                {{ ui.errorList(entry.getFirstErrors()) }}
+            {% endif %}
+            <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
+                {{ csrfInput() }}
+                {{ actionInput('entries/save-entry') }}
+                {{ hiddenInput('sectionId', section.id) }}
+                {{ hiddenInput('enabled', 1) }}
+                {{ redirectInput('profile/taskbooks') }}
+                {{ hiddenInput('singleType', singleType) }}
+                <div class="field--wrapper">
+                    <label for="packageModuleGroup" class="no-float">Module Group:</label>
+                    <select class="core-module" name="fields[packageModuleGroup][]">
+                        {% for moduleGroup in singleModuleGroups %}
+                            {% set cost = singleType == 'optional' ? moduleGroup.moduleSingleCost : moduleGroup.moduleResitCost %}
+                            <option {% if (entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id) or (moduleGroupId == moduleGroup.id) %}selected {% endif %}
+                                    value="{{ moduleGroup.id }}">{{ moduleGroup.title }} £{{ cost }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if craft.lantra.setting('taskbookLevels') %}
+                <div class="field--wrapper">
+                    <label for="packageLevel" class="no-float">Level:</label>
+                    <select class="core-level" name="fields[packageLevel]">
+                        {% for option in craft.lantra.taskbookLevels() %}
+                            <option {% if entry is defined and entry.packageLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <div class="container-btn">
+                    <button type="submit" class="button primary-bg">Add Module Group</button>
+                </div>
+            </form>
+        {% endif %}
+        </div>
+    </section>
+{% endblock %}

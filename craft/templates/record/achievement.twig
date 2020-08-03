@@ -30,19 +30,26 @@
     {% set moduleEntry = craft.entries.id(entryId).one %}
     {% if not moduleEntry %}{% exit 404 %}{% endif %}
     {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
+{# editing result #}
 {% elseif not resultEntry and craft.app.request.segment(3) == 'result' and entryId %}
     {% set resultEntry = craft.entries.id(entryId).status('live, expired').one %}
     {% if not resultEntry %}{% exit 404 %}{% endif %}
     {% set moduleEntry = resultEntry.resultModule.one %}
 {% endif %}
 
-{% set moduleResultEntry = false %}
+{% set achievementLabel = 'Achievement' %}
 
 {% if moduleEntry %}
     {% set moduleGroup = moduleEntry.moduleGroup.one %}
     {% if moduleEntry.type == 'cpd' %}
-        {% set moduleResultEntry = craft.lantra.resultCycle(moduleEntry.id) %}
+        {% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
+        {% if moduleResultId %}
+            {% set moduleResultEntry = craft.entries.id(moduleResultId).one() %}
+        {% else %}
+            {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleEntry.id) %}
+        {% endif %}
     {% endif %}
+    {% set achievementLabel = moduleEntry.achievementLabel ? moduleEntry.achievementLabel : 'achievement' %}
 {% endif %}
 
 {% set userModules = [] %}
@@ -55,7 +62,7 @@
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {# undo result locked #}
 {% set resultLocked = false %}
-{% set metaTitle = 'Achievements > ' ~ account.fullname %}
+{% set metaTitle = achievementLabel|pluralize ~ ' > ' ~ account.fullname %}
 
 {% block content %}
     <section class="page">
@@ -64,15 +71,15 @@
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <h2>Achievement for {{ account.fullname }}</h2>
-            <p>{% if moduleEntry %}{{ moduleEntry.title }}{% endif %}</p>
+            <h2>{{ achievementLabel }} for {{ account.fullname }}</h2>
+            <p>{% if moduleEntry %}{{ moduleEntry.title }} {{ moduleResultEntry ? moduleResultEntry.cycleName }}{% endif %}</p>
         </div>
         <div class="page-form">
             <div class="col-pd-btm">
             {% if resultEntry and resultEntry.id %}
-                <h3>Edit Achievement</h3>
+                <h3>Edit {{ achievementLabel }}</h3>
             {% else %}
-                <h3>Create a new achievement</h3>
+                <h3>Create new {{ achievementLabel }}</h3>
             {% endif %}
             </div>
             {% if resultEntry and resultEntry.hasErrors %}
@@ -97,7 +104,11 @@
                 {{ csrfInput() }}
                 <input type="hidden" name="action" value="entries/save-entry">
                 {{ redirectInput('cpd/' ~ account.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
-                <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry ? moduleResultEntry.id }}" />
+                {% if resultEntry %}
+                    <input type="hidden" name="fields[resultModuleResult][]" value="{{ resultEntry.resultModuleResult.one ? resultEntry.resultModuleResult.one.id }}" />
+                {% else %}
+                    <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry ? moduleResultEntry.id }}" />
+                {% endif %}
                 <input type="hidden" name="typeId" value="17">
                 <input type="hidden" name="sectionId" value="10">
                 <input type="hidden" name="enabled" value="1">

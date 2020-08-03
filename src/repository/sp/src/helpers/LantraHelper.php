@@ -27,6 +27,56 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @return string
+     */
+    public static function returnRef($url = null)
+    {
+        if (!$url) {
+            $url = Craft::$app->request->getReferrer();
+        }
+        // strip out existing ref
+        $url = strtok($url, '?');
+        // append ref
+        if (false != $ref = Craft::$app->request->getParam('ref')) {
+            $url .= '?ref=' . $ref;
+        }
+        return $url;
+    }
+
+    /**
+     * @param $field
+     * @return null
+     */
+    public static function userProfileField($field)
+    {
+        $fields = LantraHelper::setting('userProfileFields');
+        if ($fields) {
+            foreach ($fields as $row) {
+                if ($row['field'] == $field) {
+                    return $row;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $userId
+     * @param $packageId
+     * @return string
+     */
+    public static function packageUrl($userId, $packageId = null)
+    {
+        if (LantraHelper::setting('themeMyTaskbooks')) {
+            return '/cpd/' . $userId . '/taskbooks/' . $packageId;
+        }
+        if (LantraHelper::setting('themeMyDashboard')) {
+            return '/cpd/' . $userId;
+        }
+        return '/';
+    }
+
+    /**
      * @param $owner
      * @param $payerEmail
      * @param $paymentAmount

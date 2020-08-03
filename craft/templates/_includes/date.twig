@@ -6,7 +6,7 @@
 {% set ys = ys ? ys : 2050 %}
 <div class="date-selector">
     <input class="date" type="hidden" name="{{ name }}" value="{{ value ? value|date('Y-m-d H:i:s') : '' }}" />
-    <label for="date" class="">{{ label }}</label>
+    <label for="date" class="">{{ label|raw }}</label>
     <select class="day">
         <option{% if not value %} selected="selected"{% endif %}>-</option>
         {% for i in 1..31 %}

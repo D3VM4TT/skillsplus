@@ -26,6 +26,12 @@
         </div>
     {% endif %}
 {% endif %}
+{% if isPackage %}
+    <div class="col-pd-btm"><p>Click 'Save as complete' if you are ready to submit for endorsement.</p></div>
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="complete" type="button">Save as complete</button>
+    </div>
+{% endif %}
 <div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
 <div class="container-btn">
     <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>

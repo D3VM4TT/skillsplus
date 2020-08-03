@@ -1,20 +1,6 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
-    label:			"Enable Job Role CPD?",
-    id:				"enableJobRoles",
-    name:			"enableJobRoles",
-    on:		        settings.enableJobRoles == 1
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Enable Taskbooks CPD?",
-    id:				"enableTaskbooks",
-    name:			"enableTaskbooks",
-    on:		        settings.enableTaskbooks == 1
-}) }}
-
-{{ forms.lightswitchField ({
     label:			"Job Role Endorse",
     id:				"jobRoleEndorse",
     name:			"jobRoleEndorse",
@@ -28,16 +14,3 @@
     on:		        settings.disableResultCache == 1,
 }) }}
 
-{{ forms.elementSelectField ({
-    label:			    "Default Workflow",
-    id:				    "defaultWorkflow",
-    name:			    "defaultWorkflow",
-    elementType:        config.entryElementType,
-    sources:            config.workflowsSection,
-    criteria:           '',
-    sourceElementId:    '',
-    elements:           settings.defaultWorkflow ? settings.defaultWorkflow,
-    storageKey:         '',
-    viewMode:           'list',
-    limit:              1
-}) }}

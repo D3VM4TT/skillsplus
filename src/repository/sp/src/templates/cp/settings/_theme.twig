@@ -127,10 +127,17 @@
     value:		    settings.labelJobRole
 }) }}
 
-{{ forms.textField ({
-    instructions:   "Default: Taskbook",
-    label:			"Label Taskbook",
-    id:				"labelTaskbook",
-    name:			"labelTaskbook",
-    value:		    settings.labelTaskbook
+{{ forms.lightswitchField ({
+    label:			"Enable Job Roles on Dashboard?",
+    id:				"enableJobRoles",
+    name:			"enableJobRoles",
+    on:		        settings.enableJobRoles == 1
 }) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Dashboard",
+    id:				"themeMyDashboard",
+    name:			"themeMyDashboard",
+    on:		        settings.themeMyDashboard == 1
+}) }}
+

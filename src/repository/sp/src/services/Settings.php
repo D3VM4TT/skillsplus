@@ -86,6 +86,12 @@ class Settings extends Component
         if ($key == 'defaultWorkflow') {
             return $settings['defaultWorkflow'] ? $settings['defaultWorkflow'][0] : null;
         }
+        if ($key == 'taskbookIntro') {
+            return $settings['taskbookIntro'] ? $settings['taskbookIntro'][0] : null;
+        }
+        if ($key == 'taskbookJobRole') {
+            return $settings['taskbookJobRole'] ? $settings['taskbookJobRole'][0] : null;
+        }
         return isset($settings[$key]) ? $settings[$key] : $default;
     }
 

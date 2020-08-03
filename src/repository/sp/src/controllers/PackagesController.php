@@ -12,7 +12,9 @@ use Craft;
 
 use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
+use verbb\supertable\elements\SuperTableBlockElement;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class PackagesController extends BaseController
@@ -34,6 +36,7 @@ class PackagesController extends BaseController
 
     /**
      * @param $packageId
+     * @return \yii\web\Response
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -42,10 +45,32 @@ class PackagesController extends BaseController
      */
     public function actionPay($packageId)
     {
-        $spBlock = Craft::$app->elements->getElementById($packageId);
-        $spBlock->setFieldValue('packagePaid', 1);
-        Craft::$app->elements->saveElement($spBlock);
-        $this->_returnMessage('Package Paid', true, 'profile/taskbooks');
+        $packageEntry = Craft::$app->elements->getElementById($packageId);
+        $packageEntry->setFieldValue('packagePaid', 1);
+        Craft::$app->elements->saveElement($packageEntry);
+        $variables = [
+            'packageId' => $packageId,
+            'redirect' => '/profile/taskbooks'
+        ];
+        return $this->renderTemplate('profile/taskbooks/payment', $variables);
+    }
+
+    /**
+     * @param $packageId
+     * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionPayments()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        $packageId = Craft::$app->request->getParam('packageId');
+        if (!$packageId || null == $packageEntry = Craft::$app->elements->getElementById($packageId)) {
+            return $this->_returnError('Invalid Package ID');
+        }
+        return $this->_returnMessage($packageEntry->userPayments->count(), true);
     }
 
     /**
@@ -75,7 +100,7 @@ class PackagesController extends BaseController
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
 
-        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks/view/' . $package->id);
+        $this->_returnMessage('Please continue to PayPal to make payment.', 'true', 'profile/taskbooks');
     }
 
     /**
@@ -88,10 +113,13 @@ class PackagesController extends BaseController
         $this->requireLogin();
         $packageId = Craft::$app->request->getRequiredParam('packageId');
         $steps = Craft::$app->request->getRequiredParam('steps');
+        $assessments = Craft::$app->request->getParam('assessments');
         if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
             return $this->_returnError('Invalid params [packageId = ' . $packageId . '].');
         }
-
+        if ($assessments) {
+            Lantra::$app->packages->assessment($package, $assessments);
+        }
         foreach($package->packageReviews as $step) {
             if (isset($steps[$step->id])) {
                 $data = $steps[$step->id];
@@ -103,12 +131,10 @@ class PackagesController extends BaseController
                 }
             }
         }
-
         if (!Craft::$app->elements->saveElement($package)) {
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
-
-        $redirect = '/cpd/' . $package->authorId;
+        $redirect = LantraHelper::packageUrl($package->authorId, $packageId);
         $this->_returnMessage('Package has been updated', true, $redirect);
     }
 

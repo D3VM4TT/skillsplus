@@ -15,6 +15,7 @@ use craft\elements\Entry;
 use craft\mail\Message;
 use craft\web\View;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\Cycle;
 use lantra\sp\models\CyclePeriod;
@@ -23,6 +24,85 @@ use verbb\supertable\elements\SuperTableBlockElement;
 
 class Notify extends Component
 {
+    /**
+     * @param Entry $package
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendAssessment(Entry $package)
+    {
+        $user = $package->author;
+        $subject = $this->getNotifySetting('subjectAssessment', 'Taskbook Assessment');
+        $variables = [
+            'package'           => $package,
+            'assessmentText'    => $this->assessmentText($package),
+            'moduleGroup'       => $package->moduleGroup,
+            'user'              => $user,
+        ];
+        $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n{{ assessmentText }}");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $this->notify($user->email, $subject, $message);
+    }
+
+    /**
+     * @param $package
+     * @return string
+     */
+    private function assessmentText($package)
+    {
+        $text = "";
+        foreach ($package->packageAssessment as $row) {
+            $moduleGroup = $row->assessmentModuleGroup->last();
+            $text .= $moduleGroup->title . " - " . ($row->assessmentPassed ? 'Passed' : 'Failed') . "\n";
+        }
+        return $text;
+    }
+
+    /**
+     * @param Entry $packageEntry
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendNewPackage(Entry $packageEntry)
+    {
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectNewPackage', 'New ' . $taskbookLabel);
+        $variables = [
+            'package'       => $packageEntry,
+            'moduleGroup'   => $packageEntry->moduleGroup,
+            'user'          => $packageEntry->author,
+        ];
+        $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
+        $this->notify($schemeManagerEmails, $subject, $message);
+    }
+
+    /**
+     * @param SuperTableBlockElement $step
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendStepUnassigned(SuperTableBlockElement $step)
+    {
+        if ($step->reviewUser->one()) {
+            return;
+        }
+        $subject = $this->getNotifySetting('subjectStepUnassigned', 'Taskbook Review Unassigned');
+        $package = $step->owner;
+        $variables = [
+            'step'          => $step,
+            'package'       => $package,
+            'moduleGroup'   => $package->moduleGroup,
+            'user'          => $package->author,
+            'type'          => $step->reviewStepType,
+        ];
+        $template = $this->getNotifySetting('stepUnassigned', "Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
+        $this->notify($schemeManagerEmails, $subject, $message);
+    }
+
     /**
      * @param SuperTableBlockElement $step
      * @throws \Twig\Error\LoaderError
@@ -42,7 +122,7 @@ class Notify extends Component
             'user'          => $package->author,
             'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('subjectRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('stepRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($manager->email, $subject, $message);
     }

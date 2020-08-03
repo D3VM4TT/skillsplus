@@ -1,0 +1,78 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Taskbooks",
+    id:				"taskbooks",
+    name:			"taskbooks",
+    on:		        settings.taskbooks == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Taskbook Label",
+    id:				"taskbookLabel",
+    name:			"taskbookLabel",
+    value:		    settings.taskbookLabel
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Taskbook Intro",
+    id:				    "taskbookIntro",
+    name:			    "taskbookIntro",
+    elementType:        config.entryElementType,
+    sources:            config.pagesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.taskbookIntro ? settings.taskbookIntro,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              ''
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Taskbook Levels",
+    id:				"taskbookLevels",
+    name:			"taskbookLevels",
+    on:		        settings.taskbookLevels == 1
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Taskbook Job Role",
+    id:				    "taskbookJobRole",
+    name:			    "taskbookJobRole",
+    elementType:        config.categoryElementType,
+    sources:            config.jobRoleCategoryGroup,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.taskbookJobRole ? settings.taskbookJobRole,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Menu My Taskbooks",
+    id:				"themeMyTaskbooks",
+    name:			"themeMyTaskbooks",
+    on:		        settings.themeMyTaskbooks == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Taskbooks on Dashboard?",
+    id:				"enableTaskbooks",
+    name:			"enableTaskbooks",
+    on:		        settings.enableTaskbooks == 1
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Workflow",
+    id:				    "defaultWorkflow",
+    name:			    "defaultWorkflow",
+    elementType:        config.entryElementType,
+    sources:            config.workflowsSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.defaultWorkflow ? settings.defaultWorkflow,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}

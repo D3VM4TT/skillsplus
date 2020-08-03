@@ -21,5 +21,13 @@
             <option value="all"{% if filterUserStatus == 'all' %} selected="selected"{% endif %}>All Users</option>
         </select>
     {% endif %}
+    {% if filterPackageStatus is defined and filterPackageStatus %}
+        <select name="status" class="sp-select">
+            <option value="active"{% if filterPackageStatus == 'active' %} selected="selected"{% endif %}>Active</option>
+            <option value="locked"{% if filterPackageStatus == 'locked' %} selected="selected"{% endif %}>Locked</option>
+            <option value="complete"{% if filterPackageStatus == 'complete' %} selected="selected"{% endif %}>Complete</option>
+            <option value="all"{% if filterPackageStatus == 'all' %} selected="selected"{% endif %}>All Packages</option>
+        </select>
+    {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>
 </form>

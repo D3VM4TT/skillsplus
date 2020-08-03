@@ -1,3 +1,5 @@
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 {% if package.packageReviews|length %}
     <table class="data">
         <thead>
@@ -23,7 +25,7 @@
                 </td>
                 <td>{{ step.reviewDate ? (step.reviewPassed ? 'Yes' : 'No') : '' }}</td>
                 <th>{{ step.reviewComment }}</th>
-                <td>{{ step.reviewDate ? step.reviewDate|date('d/m/y') }}</td>
+                <td>{{ step.reviewDate ? step.reviewDate|date(dateFormat) }}</td>
             </tr>
         {% endfor %}
         </tbody>

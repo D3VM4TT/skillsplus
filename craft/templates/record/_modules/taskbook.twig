@@ -1,0 +1,115 @@
+{% set package = cpdUser.record.getElement(packageId) %}
+{% set availableModuleGroups = package.availableModuleGroupCategories %}
+{% set resitModuleGroups = package.resitModuleGroupCategories %}
+<div class="package tab-container" style="position: relative;">
+    <div class="align-vertical">
+        <div class="align-horizontal">
+            <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
+        </div>
+        <div class="align-horizontal">
+            <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
+            <div><h2>{{ package.moduleGroup.title }}</h2></div>
+            <p>
+                {% if package.isManager(currentUser, true) and package.hasNextStep %}
+                    Next Step: {{ package.nextStep.reviewStepName }}
+                {% else %}
+                    Status: {{ package.packageStatus  }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
+            {% set totalUnits = craft.lantra.totalUnits(packageItem) %}
+            {% set unitsComplete = craft.lantra.totalComplete(packageItem, cpdUser.id) %}
+            {% if unitsComplete >= totalUnits %}
+                {% if package.packageStatus == 'active' %}
+                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
+                    {% if package.isNextStepAssigned %}
+                        <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
+                    {% else %}
+                        Step reviewer not assigned
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
+            {% endif %}
+        </div>
+    </div>
+    <div id="j{{ package.id }}" class="open">
+        <div class="module-group-tabs">
+            <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
+                {% for row in package.moduleGroups %}
+                    {% set moduleGroup = row.category %}
+                    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                    <li>
+                        <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
+                            <h4>{{ moduleGroup.title }}</h4>
+                        </a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="#tab{{ package.id }}reviews" class="primary-bg">
+                        <h4>Reviews</h4>
+                    </a>
+                </li>
+                {% if package.packageLog|length %}
+                    <li>
+                        <a href="#tab{{ package.id }}log" class="primary-bg">
+                            <h4>Log</h4>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if not isManager %}
+                    {% if resitModuleGroups|length %}
+                        <li>
+                            <a href="#tab{{ package.id }}resits" class="primary-bg">
+                                <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if availableModuleGroups|length %}
+                        <li>
+                            <a href="#tab{{ package.id }}optional" class="primary-bg">
+                                <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+        <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
+            {% for row in package.moduleGroups %}
+                {% set moduleGroup = row.category %}
+                {% set level = row.level %}
+                {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
+                {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
+                {% include 'record/_modules/moduleGroup' %}
+            {% endfor %}
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
+                {% include '_includes/packageReviews' with {admin:false} %}
+                {% if package.isManager(currentUser, true) %}
+                    <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage Reviewers</a>
+                {% endif %}
+            </div>
+            {% if package.packageLog|length %}
+                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
+                    {% include '_includes/packageLog' with {admin:false} %}
+                </div>
+            {% endif %}
+            {% if not isManager %}
+                {% if resitModuleGroups|length %}
+                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
+                        {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
+                    </div>
+                {% endif %}
+                {% if availableModuleGroups|length %}
+                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
+                        {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </section>
+    </div>
+</div>

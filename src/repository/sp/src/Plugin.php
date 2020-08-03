@@ -18,7 +18,9 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\events\DefineBehaviorsEvent;
+use craft\events\UserEvent;
 use craft\web\View;
+use craft\services\Users;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
@@ -152,6 +154,14 @@ class Plugin extends BasePlugin
             function (ModelEvent $event) {
                 $user = $event->sender;
                 Lantra::$app->users->onBeforeDeleteUser($user, $event);
+            }
+        );
+
+        Event::on(
+            Users::class,
+            Users::EVENT_AFTER_ACTIVATE_USER,
+            function (UserEvent $event) {
+                Lantra::$app->users->onActivateUser($event, $event->user);
             }
         );
 
@@ -325,8 +335,14 @@ class Plugin extends BasePlugin
             'internal/<assetId>'                        => 'sp/assets/internal',
 
             ## cpd routes
-            'profile'                                   => ['template' => 'profile/index'],
+
+            ## taskbook routes
             'profile/taskbooks/view/<packageId>'        => ['template' => 'profile/taskbooks/view'],
+            'cpd/<userId>/taskbooks'                    => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>'          => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/pay'      => ['template' => 'record/index'],
+
+            'profile'                                   => ['template' => 'profile/index'],
             'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
             'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
             'cpd/<userId>/<moduleId>/<unitId>/add'      => ['template' => 'record/unit'],
@@ -371,6 +387,7 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/pay/<packageId>'               => 'sp/packages/pay',
+            'sp/packages/payments'                      => 'sp/packages/payments',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 

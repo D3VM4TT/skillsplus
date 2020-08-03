@@ -1,8 +1,9 @@
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 <div class="header" data-target="#m{{ role.id ~ module.id }}">
     {% set cycle = craft.lantra.resultCycle(moduleResultEntry) %}
     <h4 style="display:block">{{ module.title }}<span style="float: right">{{ cycle.name }}</span></h4>
     {% if cycle.isGrace %}
-        <h5 style="display:block;text-align:right;color:red">ACTIVE until {{ cycle.graceDate|date('d/m/y') }}</h5>
+        <h5 style="display:block;text-align:right;color:red">ACTIVE until {{ cycle.graceDate|date(dateFormat) }}</h5>
     {% endif %}
     {% if cycle.isLocked %}
         <h5 style="display:block;text-align:right;color:black">LOCKED</h5>
@@ -26,11 +27,39 @@
             {% endif %}
 
             <span class="status-{{ status }}"></span>
+            Overall:
+            {% if remaining.pointsScore %}{{ remaining.pointsScore }} Points{% endif %}
+            {% if remaining.hoursScore  %}{{ remaining.hoursScore }} Hours{% endif %}
+        </p>
 
-            {% if remaining.pointsScore  %}Points: {{ remaining.pointsScore }} {% endif %}
-            {% if remaining.hoursScore  %}Hours: {{ remaining.hoursScore }} {% endif %}<br />
-            <br />You need {{ remaining.text }} to complete this module.
-            {% if pending.total %}<br />You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.{% endif %}<br />
+        {% if moduleResultEntry.resultComponentResults|length %}
+        <p style="padding-left:40px;">
+        {% for componentRow in moduleResultEntry.resultComponentResults %}
+            {% if componentRow.targetHours or componentRow.targetPoints %}
+                {% set status = 'complete' %}
+                {% if (componentRow.targetHours and componentRow.endorsedHours < componentRow.targetHours) or (componentRow.targetPoints and componentRow.endorsedPoints < componentRow.targetPoints) %}
+                    {% set status = 'inprogress' %}
+                {% endif %}
+                <span class="status-{{ status }}"></span>
+                {{ componentRow.title }}:
+                {% if componentRow.targetHours %}
+                    {{ componentRow.endorsedHours }}/{{ componentRow.targetHours }} Hours
+                {% endif %}
+                {% if componentRow.targetPoints %}
+                    {{ componentRow.endorsedPoints }}/{{ componentRow.targetPoints }} Points
+                {% endif %}
+                <br />
+            {% endif %}
+        {% endfor %}
+        </p>
+        {% endif %}
+
+        {% if pending.total %}
+        <p>
+            You have {{ pending.total }} result{{ pending.total > 1 ? 's' : '' }} waiting for endorsement worth {{ pending.text }}.
+        </p>
+        {% endif %}
+        <p>
             Result ID: {{ moduleResultEntry.id }}
         </p>
 {% endif %}

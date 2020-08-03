@@ -13,7 +13,8 @@
     users: {label: 'Users', url: '#settings-tab-users' },
     reports: {label: 'Reports', url: '#settings-tab-reports' },
     config: {label: 'Config', url: '#settings-tab-config' },
-    paypal: {label: 'PayPal', url: '#settings-tab-paypal' }
+    paypal: {label: 'PayPal', url: '#settings-tab-paypal' },
+    taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' }
 } %}
 
 {% set saveButton %}
@@ -60,6 +61,11 @@
     <div id="tab-paypal" class="hidden">
         <div id="fields">
             {% include 'sp/cp/settings/_paypal.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-taskbooks" class="hidden">
+        <div id="fields">
+            {% include 'sp/cp/settings/_taskbooks.twig' with {settings:settings, config:config} %}
         </div>
     </div>
     {% endnamespace %}

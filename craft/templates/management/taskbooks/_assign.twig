@@ -1,3 +1,5 @@
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 {% if package.canAssign() %}
     {% set submitForm = false %}
     <h2>Assigned Managers</h2>
@@ -27,7 +29,7 @@
                                 <span style="color:red">Invalid</span>
                             {% endif %}
                         {% elseif step.reviewUser.count %}
-                            {{ step.reviewUser.one.fullname }} - {{ step.reviewDate|date('d/m/y') }} - {{ step.reviewPassed ? 'Passed' : 'Failed' }}
+                            {{ step.reviewUser.one.fullname }} - {{ step.reviewDate|date(dateFormat) }} - {{ step.reviewPassed ? 'Passed' : 'Failed' }}
                         {% else %}
                             Unassigned
                         {% endif %}

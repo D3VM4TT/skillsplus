@@ -1,0 +1,18 @@
+{% requireLogin %}
+{% extends "_layout" %}
+
+{% set isTaskbooks = true %}
+
+{% block content %}
+    <section class="page dashboard">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-content">
+        <div id="taskbook-payment" data-id="{{ packageId }}" data-redirect="{{ redirect }}">
+            <h1>Payment Received</h1>
+            <h2>Please wait while we confirm payment.</h2>
+        </div>
+        </div>
+    </section>
+{% endblock %}

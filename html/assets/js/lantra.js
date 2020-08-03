@@ -1,5 +1,48 @@
 $(document).ready(function(){
 
+    $('select.package-module-group').change(function(){
+        var moduleGroupId = $(this).val(),
+            revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
+        $('div.taskbook-optional').hide();
+        $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
+        $('input#package-revision').val(revision);
+    }).change();
+
+    $('select.package-level').change(function(){
+        var level = $(this).val(),
+            optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
+        if (level == 5) {
+            optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
+        }
+        else {
+            optionalSelectInputs.prop('disabled', false).css('opacity', 1);
+        }
+    }).change();
+
+    $('select.optional-level').change(function(){
+        updateOptional();
+    });
+
+    updateOptional = function() {
+        var n = 1;
+        $('form#taskbooks').find('.optional-hidden').remove();
+        $('tr.optional-module').each(function(){
+            var c = $(this).find('input[type=checkbox]'),
+                l = $(this).find('select').val(),
+                t = $('#input-template').clone().html();
+            if (c.is(':checked')) {
+                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                $('form#taskbooks').prepend($(t));
+                n ++;
+            }
+        });
+    };
+
+
+    $('input.optional').change(function(){
+        updateOptional();
+    }).change();
+
     $('.btn-toggle-small').on('click', function() {
         $('.sidebar').toggleClass('is-collapsed');
         $('.sidebar-not-sticky').toggleClass('hide');
@@ -62,7 +105,13 @@ $(document).ready(function(){
         $('body').addClass('loading');
         var f = $(this),
             v = true,
+            s = f.find('input[name="fields[resultStatus]"]').val(),
             message = $('<span>').addClass('error').text('This field is required!');
+
+        // draft status ignores required
+        if (s === 'draft') {
+            return true;
+        }
 
         f.find('div.field--wrapper').removeClass('error');
         f.find('span.error').remove();
@@ -525,35 +574,46 @@ $(document).ready(function(){
 
     $('.tabs a').click(function(e){
         e.preventDefault();
-        var $this = $(this),
-        tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
-        others = $this.closest('ul').find('a'),
-        target = $this.attr('href');
+        var a = $(this),
+            ul = a.closest('ul'),
+            select = $('#module-select-' + ul.data('module-group')),
+            tabgroup = '#' + a.parents('.tabs').data('tabgroup'),
+            others = ul.find('a'),
+            target = a.attr('href');
+
         others.removeClass('active');
-        $this.addClass('active');
+        a.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
         // make sure first unit group is shown
         if (target.match("^#tab")) {
             $(target).find('ul.tabs').eq(0).find('a').eq(0).click();
         }
+        // update select if present
+        if(select) {
+            select.val(target);
+        }
     });
 
     $('.module-group-tabs ul.tabs li:first-child a').click();
 
+    $('select.module-menu').change(function(){
+        $('a[href="' + $(this).val() + '"]').click();
+    });
+
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
+        console.log('test');
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
-            jobRoleDiv = moduleGroupLink.closest('div.job-role');
-        if (jobRoleDiv.length) {
-            var jobRoleLink = jobRoleDiv.find('a.jobroleEndorseExpand');
-            jobRoleLink.click();
+            tabContainer = moduleGroupLink.closest('div.tab-container');
+        if (tabContainer.length) {
+            tabContainer.find('a.jobroleEndorseExpand').click();
             moduleGroupLink.click();
             moduleLink.click();
             $('html, body').animate({
-                scrollTop: jobRoleDiv.offset().top - 200
+                scrollTop: tabContainer.offset().top - 200
             }, 500, function () {
             });
         }
@@ -583,5 +643,36 @@ $(document).ready(function(){
         choices.change(function(){
             input.val(ul.find('input[type=checkbox]:checked').map(function(){return $(this).val()}).get().join());
         });
-    })
+    });
+
+    if ($("#taskbook-payment").length) {
+        var tp = $("#taskbook-payment");
+        $('body').addClass('loading');
+        var loop = 0,
+            data = {'packageId': tp.data('id')},
+            paymentRedirect = tp.data('redirect'),
+            checkPayment = function(){
+                if (loop == 5) {
+                    alert('Payment not confirmed.  Contact support.');
+                    $('body').removeClass('loading');
+                    return;
+                }
+                data[window.csrfTokenName] = window.csrfTokenValue;
+                $.post("/sp/packages/payments", data, function(response) {
+                    if (!response.success) {
+                        alert(response.message);
+                        $('body').removeClass('loading');
+                        return;
+                    }
+                    if (response.message == '1') {
+                        window.location.replace(paymentRedirect);
+                        return;
+                    }
+                    console.log(response);
+                    loop++;
+                    setTimeout(function(){checkPayment();}, 2000);
+                });
+            }
+        checkPayment();
+    }
 });

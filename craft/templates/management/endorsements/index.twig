@@ -36,17 +36,15 @@
                         <th class="title">Name</th>
                         <th class="title">Company</th>
                         <th class="title">Location</th>
-                        <th></th>
                 </thead>
                 <tbody>
                 {% for user in endorseUsers %}
                     {% set company = craft.lantra.userCompany(user.id) %}
                     <tr>
                         <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
-                        <td><p class="td-title-responsive">Name: </p>{{ user.fullname }}</td>
+                        <td><p class="td-title-responsive">Name: </p><a href="/cpd/{{ user.id }}">{{ user.fullname }}</a></td>
                         <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                         <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
-                        <td style="text-align:right"><a href="/cpd/{{ user.id }}">dashboard</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -11,7 +11,7 @@
         <tr>
             <td>{{ categoryGroup.title }}</td>
             <td>£{{ categoryGroup.moduleSingleCost }}</td>
-            <td style="text-align: right;"><a href="/profile/taskbooks/optional?moduleGroupId={{ categoryGroup.id }}">Buy Now</a></td>
+            <td style="text-align: right;"><a href="/profile/taskbooks/single?type=optional&moduleGroupId={{ categoryGroup.id }}">Buy Now</a></td>
         </tr>
     {% endfor %}
     </tbody>

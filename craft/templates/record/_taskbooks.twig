@@ -1,0 +1,72 @@
+{% set packageId = craft.app.request.getSegment(4) %}
+
+{# only one package - redirect to package #}
+{% if not packageId and cpdUser.record.totalPackages == 1 %}
+    {% redirect craft.lantra.packageUrl(cpdUser.id, cpdUser.record.firstPackage.elementId) %}
+{% endif %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set isManager = false %}
+{% set isAssessor = false %}
+{% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
+{% if cpdUser.id != currentUser.id %}
+    {% set isManager = true %}
+    {% set readOnly = currentUser.managerReadOnly %}
+    {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
+{% endif %}
+
+{% set taskbookIntro = craft.lantra.setting('taskbookIntro') %}
+
+{% if packageId %}
+    {% set packageItem = cpdUser.record.getItem(packageId) %}
+    <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
+        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem} %}
+    </article>
+{% elseif cpdUser.record.totalPackages %}
+    <table class="data">
+        <thead>
+        <tr>
+            <th>Module Group</th>
+            {% if craft.lantra.setting('taskbookLevels') %}
+                <th>Level</th>
+            {% endif %}
+            <th>Next Step</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for packageItem in cpdUser.record.packages %}
+                {% set package = cpdUser.record.getElement(packageItem.elementId) %}
+                <tr>
+                    <td>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.moduleGroup.title }}</a>
+                    </td>
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                    <td>
+                        {{ craft.lantra.taskbookLevel(package.packageLevel) }}
+                    </td>
+                    {% endif %}
+                    <td>
+                        {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
+                    </td>
+                    <td>
+                        {{ package.packageStatus|title }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if taskbookIntro %}
+        <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel }} Details</a>
+    {% endif %}
+{% elseif taskbookIntro %}
+    {% for block in taskbookIntro.pageContent %}
+        <div class="content-col">
+            <h2>{{ block.columnTitle }}</h2>
+            <p>{{ block.columnHtml }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+

@@ -11,6 +11,14 @@
     {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
 {% endif %}
 
+{% set isManager = false %}
+{% if account.id != currentUser.id %}
+    {% set isManager = true %}
+{% endif %}
+
+{% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
@@ -18,24 +26,48 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
-    <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
-    <a class="back-link" href="/management/users">&laquo; back to Users</a>
+    {% if isManager %}
+        <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
+        <a class="back-link" href="/management/users">&laquo; back to Users</a>
+    {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
 <section class="page">
     <div class="page-header secondary-bg">
-        {% if hierarchyNode %}
-            <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
-        {% else %}
-            <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+        {% if isManager %}
+            {% if hierarchyNode %}
+                <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            {% else %}
+                <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+            {% endif %}
         {% endif %}
-        <h2>{{ account.fullname }}'s Dashboard</h2>
+        <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+        {% if craft.lantra.setting('taskbooks') and isManager %}
+            <div class="header-controls">
+                <div class="container-btn primary-bg" style="margin-left:0;">
+                    {% if isTaskbooks %}
+                        <a class="btn-add-new" href="/cpd/{{ account.id  }}">Dashboard</a>
+                    {% else %}
+                        <a class="btn-add-new" href="/cpd/{{ account.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% if not isManager and isTaskbooks %}
+            <div class="header-controls">
+                <div class="container-btn primary-bg" style="margin-left:0;">
+                    <a class="btn-add-new" href="/profile/taskbooks">Manage {{ taskbookLabel|pluralize }}</a>
+                </div>
+            </div>
+        {% endif %}
     </div>
-        {% if userId %}
-            {% include '_includes/account' with{cpdUser:account} %}
-        {% endif %}
+    {% include '_includes/account' with{cpdUser:account} %}
     <div class="page-content">
-        {% include 'record/_modules' with{cpdUser:account} %}
+        {% if isTaskbooks %}
+            {% include 'record/_taskbooks' with{cpdUser:account} %}
+        {% else %}
+            {% include 'record/_modules' with{cpdUser:account} %}
+        {% endif %}
     </div>
 </section>
 {% endblock %}

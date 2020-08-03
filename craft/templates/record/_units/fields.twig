@@ -27,6 +27,9 @@
     {% if row.fieldDisplay != 'table' %}
     {% set fieldDisabled = row.fieldManagerOnly and not isManager %}
     {% set label = row.fieldLabel|default(row.fieldType.label) %}
+    {% if row.fieldRequired %}
+        {% set label = '<span style="color:red;margin-right:10px;">*</span>' ~ label %}
+    {% endif %}
     {% if row.fieldType == 'resultExpiryDate' %}
         <div class="field--wrapper" data-type="date" data-required="{{ row.fieldRequired }}">
         {% include '_includes/date' with {label:label, name:'userExpiryDate', value: resultExists ? resultEntry.expiryDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
@@ -41,25 +44,25 @@
         </div>
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
-            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
+            <label for="resultLocation" class="">{{ label|raw }}</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultPoints' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
-            <label for="fields[resultPoints]" class="">{{ label }} (if applicable)</label>
+            <label for="fields[resultPoints]" class="">{{ label|raw }}</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
                     value="{{ resultExists ? resultEntry.resultPoints|default('') }}" />
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
-            <label for="resultLocation" class="">{{ label }} (if applicable)</label>
+            <label for="resultLocation" class="">{{ label|raw }}</label>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultNarrative' %}
         <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
-            <label for="resultNarrative" class="">{{ label }} (if applicable)</label>
+            <label for="resultNarrative" class="">{{ label|raw }}</label>
             <textarea{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultNarrative]" type="text" class="float-label redactor" placeholder="{{ label }}">
                 {{ resultExists ? resultEntry.resultNarrative|default('') }}
             </textarea>
@@ -114,10 +117,7 @@
             {% endif %}
             {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
 
-            <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label }}</label>
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
+            <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label|raw }}</label>
 
             {% if row.fieldCustomType == 'text' %}
                 <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
@@ -130,6 +130,9 @@
                     {% endfor %}
                 </select>
             {% endif %}
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
             {# increment new1, new2 #}
             {% set customNew = customNew + 1 %}
         </div>

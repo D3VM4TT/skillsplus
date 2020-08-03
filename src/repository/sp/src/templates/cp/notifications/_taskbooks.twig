@@ -1,6 +1,21 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.textField ({
+    label:			"Subject Step Unassigned",
+    id:				"notifySubjectStepUnassigned",
+    name:			"notifySubjectStepUnassigned",
+    value:		    settings.notifySubjectStepUnassigned
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    label:			"Message Step Unassigned",
+    id:				"notifyStepUnassigned",
+    name:			"notifyStepUnassigned",
+    value:		    settings.notifyStepUnassigned
+}) }}
+
+{{ forms.textField ({
     label:			"Subject Step Assign",
     id:				"notifySubjectStepAssign",
     name:			"notifySubjectStepAssign",
@@ -43,4 +58,19 @@
     id:				"notifyStepRequest",
     name:			"notifyStepRequest",
     value:		    settings.notifyStepRequest
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Assessment",
+    id:				"notifySubjectAssessment",
+    name:			"notifySubjectAssessment",
+    value:		    settings.notifySubjectAssessment
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Assessment for {{ moduleGroup.title }}. \n\n {{ assessmentText }}",
+    label:			"Message Assessment",
+    id:				"notifyAssessment",
+    name:			"notifyAssessment",
+    value:		    settings.notifyAssessment
 }) }}
