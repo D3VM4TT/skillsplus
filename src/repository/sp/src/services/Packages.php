@@ -65,10 +65,6 @@ class Packages extends Component
                 $step->addError('stepJobRole', 'Job role(s) required.');
                 $event->isValid = false;
             }
-            if ($step->stepAssignUserGroup == 'jobRole' && !$step->stepAssignJobRole->count()) {
-                $step->addError('stepAssignJobRole', 'Job role(s) required.');
-                $event->isValid = false;
-            }
             $i++;
         }
         if (!$assessment) {
