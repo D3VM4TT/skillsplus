@@ -203,7 +203,7 @@ class PackageBehavior extends Behavior
             return false;
         }
         ## check user group
-        return $manager->isInGroup($packageWorkflowStep->stepAssignUserGroup);
+        return $manager->isInGroup($packageWorkflowStep->stepAssignUserGroup->value);
     }
 
     /**
@@ -322,7 +322,7 @@ class PackageBehavior extends Behavior
 
         $criteria = User::find();
         if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->one()->id, 'field' => 'userRole'];
+            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole'];
         } else {
             $criteria->group = $packageWorkflowStep->stepUserGroup;
         }

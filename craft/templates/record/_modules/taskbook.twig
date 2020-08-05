@@ -89,7 +89,7 @@
             {% endfor %}
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/packageReviews' with {admin:false} %}
-                {% if package.isManager(currentUser, true) %}
+                {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
                     <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage Reviewers</a>
                 {% endif %}
             </div>
