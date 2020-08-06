@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1596465619
+dateModified: 1596726392
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4883,6 +4883,48 @@ sections:
         template: null
         uriFormat: ''
     type: channel
+  0db8b604-3d85-4638-bc64-f1d73e2e9aba:
+    enableVersioning: true
+    entryTypes:
+      aa0a1650-9855-4bd3-a399-b549a74c19be:
+        fieldLayouts:
+          e8d523cd-161e-4cf6-9d36-39e2d444cc43:
+            tabs:
+              -
+                fields:
+                  f16d7384-1325-4296-8acb-e213c2765770:
+                    required: false
+                    sortOrder: 1
+                name: Pages
+                sortOrder: 1
+        handle: taskbooks
+        hasTitleField: false
+        name: Taskbooks
+        sortOrder: 1
+        titleFormat: '{section.name|raw}'
+        titleLabel: ''
+    handle: taskbooks
+    name: Taskbooks
+    previewTargets:
+      -
+        __assoc__:
+          -
+            - label
+            - 'Primary entry page'
+          -
+            - urlFormat
+            - '{url}'
+          -
+            - refresh
+            - '1'
+    propagationMethod: all
+    siteSettings:
+      47b102e1-4aed-4206-8420-dfd6e6684f7c:
+        enabledByDefault: true
+        hasUrls: true
+        template: ''
+        uriFormat: taskbooks
+    type: single
   1d590683-b16e-4955-be62-315accb3e628:
     enableVersioning: false
     entryTypes:

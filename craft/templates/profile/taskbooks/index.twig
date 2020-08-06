@@ -32,6 +32,12 @@
         <p>Manage your {{ taskbookLabel|lower }} packages.</p>
     </div>
     <div class="page-content">
+
+        {% set entry = craft.entries.section('taskbooks').one() %}
+        {% if entry %}
+            {{ entry.pageBody }}
+        {% endif %}
+
         {% if unpaidPackages.count %}
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
             {% for package in unpaidPackages.all %}
