@@ -25,6 +25,7 @@ class Settings extends Model
     public $schemeEmailDomain                   = 'skills-plus.co.uk';
     public $schemeTestEmailAddress              = 'robin@coffeebean.design';
     public $jobRoleEndorse                      = false;
+    public $enableCreateAccount                 = false;
 
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;
