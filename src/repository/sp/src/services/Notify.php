@@ -99,8 +99,12 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('stepUnassigned', "Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
-        $this->notify($schemeManagerEmails, $subject, $message);
+        $emails = Lantra::$app->users->getSchemeManagersEmails();
+        $managers = Lantra::$app->users->getUserMangers($package->author);
+        foreach ($managers as $manager) {
+            $emails[] = $manager->email;
+        }
+        $this->notify($emails, $subject, $message);
     }
 
     /**
