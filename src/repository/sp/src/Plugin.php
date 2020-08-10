@@ -354,13 +354,14 @@ class Plugin extends BasePlugin
             'cpd/<userId>'                              => ['template' => 'record/index'],
             'result/<resultId>'                         => ['template' => 'result/_form'],
 
+            ## taskbook review
+            'management/taskbooks/manage/<elementId>/review' => ['template' => 'management/taskbooks/manage'],
+            'management/taskbooks/manage/<elementId>'   => ['template' => 'management/taskbooks/manage'],
+
             ## management routes
             'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
-
-            ## taskbook review
-            'management/<section>/edit/<elementId>/review' => ['template' => 'management/index'],
 
             ## reporting routes
             'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],

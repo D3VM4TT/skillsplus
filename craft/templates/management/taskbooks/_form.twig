@@ -1,38 +1,57 @@
 {% do craft.lantra.requirePermission('editTaskbooks') %}
-{% set packageId = craft.app.request.getSegment(4) %}
-{% if packageId and package is not defined %}
-    {% set package = craft.entries.id(packageId).one %}
-{% endif %}
-{% set review = craft.app.request.getSegment(5) == 'review' %}
 
-{% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-{% set nextStep = package.nextStep %}
+{% set authorId = craft.app.request.getRequiredParam('userId') %}
+{% set user = craft.app.users.getUserById(authorId) %}
+{% if not user %}{% exit 404 %}{% endif %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Taskbooks" %}
 
+{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
+{% set section = craft.sections.getSectionByHandle('packages') %}
+{% set isTaskbooks = true %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+
+{% set entryId = craft.app.request.getSegment(4) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).one %}
+    {% if not entry %}{% exit 404 %}{% endif %}
+{% endif %}
+
+{% set authorId = craft.app.request.getParam('userId') %}
+{% set user = craft.app.users.getUserById(authorId) %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
-        <a class="back-link" href="{{ craft.lantra.packageUrl(package.author.id, package.id) }}"><strong>&laquo; back</a>
+        <a class="back-link" href="/management/taskbooks"><strong>&laquo; back</a>
         {% include '_includes/topNavigation' %}
     </div>
     <div class="page-header secondary-bg">
-        <h2>Manage taskbook</h2>
-        <p>{{ package.author.fullName  }} - {{ package.moduleGroup.title }}</p>
+        <h2>{{ entryId ? 'Edit' : 'Create' }} {{ taskbookLabel }} for {{ user.fullname }}</h2>
     </div>
 
-    {{ ui.errorList(package.getFirstErrors()) }}
+    {% set levelsOptions = '' %}
+    {% for option in craft.lantra.taskbookLevels() %}
+        {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+    {% endfor %}
 
-    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {% if entry is defined %}
+        {{ ui.errorList(entry.getFirstErrors()) }}
+    {% endif %}
+
+    <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
         {{ csrfInput() }}
-        {{ actionInput('sp/packages/update-package') }}
-        <input type="hidden" name="packageId" value="{{ package.id }}">
-        {% if review  %}
-            {% include 'management/taskbooks/_review' %}
-        {% else %}
-            {% include 'management/taskbooks/_assign' %}
-        {% endif %}
-        {% include '_includes/packageLog' with {package:package, admin:true} %}
+        {{ actionInput('entries/save-entry') }}
+        {{ hiddenInput('sectionId', section.id) }}
+        {{ hiddenInput('enabled', 1) }}
+        {{ redirectInput('management/users/edit/' ~ authorId) }}
+        {{ hiddenInput('authors[]', authorId) }}
+
+        {% include '_forms/taskbook' %}
+
+        <div class="container-btn">
+            <button type="submit" class="button primary-bg">Continue</button>
+        </div>
     </form>
 {% endblock %}

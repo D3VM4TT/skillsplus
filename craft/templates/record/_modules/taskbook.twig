@@ -26,7 +26,7 @@
                        data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
                 {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
                     {% if package.isNextStepAssigned %}
-                        <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
+                        <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
                     {% else %}
                         Step reviewer not assigned
                     {% endif %}
@@ -90,7 +90,7 @@
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
-                    <a class="button no-shadow primary-bg" href="/management/taskbooks/edit/{{ package.id }}">Manage Reviewers</a>
+                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
                 {% endif %}
             </div>
             {% if package.packageLog|length %}

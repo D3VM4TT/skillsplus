@@ -259,5 +259,70 @@
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save user</button>
         </div>
+
+        {% if account.id and craft.lantra.setting('taskbooks') %}
+            {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+            {% set packages = craft.entries.section('packages').authorId(account.id)  %}
+            <h2>{{ taskbookLabel|pluralize }}</h2>
+            {% if packages|length %}
+            <table class="data taskbooks">
+                <thead>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Module Group</th>
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        <th>Level</th>
+                    {% endif %}
+                    <th>Optional Module Groups</th>
+                    <th>Cost</th>
+                    <th>Status</th>
+                <tr>
+                </thead>
+                <tbody>
+                {% for package in packages %}
+                    {% set packageTitle = package.moduleGroup.title %}
+                    <tr>
+                        <td>{{ package.dateCreated|date(dateFormat) }}</td>
+                        <td>
+                            {% if package.packagePaid %}
+                                <a href="/cpd/{{ package.authorId }}/taskbooks/{{ package.id }}">{{ packageTitle }}</a>
+                            {% else %}
+                                {{ packageTitle }}
+                            {% endif %}
+                        </td>
+                        {% if craft.lantra.setting('taskbookLevels') %}
+                            <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
+                        {% endif %}
+                        <td>
+                            {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
+                                {% if not moduleGroup %}
+                                    Invalid Optional Module Group<br />
+                                {% else %}
+                                    {{ moduleGroup.title }}
+                                    {% if craft.lantra.setting('taskbookLevels') %}
+                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if package.packageCost %}
+                                £{{ package.packageCost }} ({{ package.packagePaid ? 'paid' : 'unpaid' }})
+                            {% else %}
+                                FREE
+                            {% endif %}
+                        </td>
+                        <td>{{ package.packageStatus }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+            <div class="container-btn">
+                <a class="button primary-bg" href="/management/taskbooks/new/?userId={{ account.id }}">Create {{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</a>
+            </div>
+        {% endif %}
     </form>
 {% endblock %}

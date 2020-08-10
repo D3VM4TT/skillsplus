@@ -31,8 +31,6 @@
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
             {% endfor %}
 
-
-
             {% if entry is defined %}
                 {{ ui.errorList(entry.getFirstErrors()) }}
             {% endif %}
