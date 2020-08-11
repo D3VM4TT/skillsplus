@@ -38,6 +38,10 @@ return [
         'server' => getenv('DB_SERVER'),
         'database' => getenv('DB_DATABASE'),
     ],
+    'jason' => [
+        'server' => 'localhost',
+        'database' => getenv('DB_DATABASE'),
+    ],
     'dev' => [
         'server' => $dbServer,
         'database' => 'dev-' . getenv('SITE'),
