@@ -47,8 +47,9 @@
         {{ hiddenInput('enabled', 1) }}
         {{ redirectInput('management/users/edit/' ~ authorId) }}
         {{ hiddenInput('author[]', authorId) }}
+        {{ hiddenInput('fields[packagePaid]', 1) }}
 
-        {% include '_forms/taskbook' %}
+        {% include '_forms/taskbook' with {packageUserId:authorId} %}
 
         <div class="container-btn">
             <button type="submit" class="button primary-bg">Continue</button>

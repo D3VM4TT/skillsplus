@@ -1,4 +1,7 @@
 {% set modulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
+{% if packageUserId is not defined %}
+    {% set packageUserId = currentUser.id %}
+{% endif %}
 {% if not modulesGroups|length %}
     <div class="field--wrapper">
         <p style="color:red;">There are currently no module groups available.</p>
@@ -6,10 +9,10 @@
 {% else %}
     <div class="field--wrapper">
         <label for="packageModuleGroup" class="no-float">Please select which {{ taskbookLabel|lower }}
-            you wish to purchase:</label>
+            you wish to create:</label>
         <select class="package-module-group" name="fields[packageModuleGroup][]">
             {% for moduleGroup in modulesGroups %}
-                {% set packageExists = craft.lantra.packageExists(currentUser.id, moduleGroup.id) %}
+                {% set packageExists = craft.lantra.packageExists(packageUserId, moduleGroup.id) %}
                 <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
                         data-minimum="{{ moduleGroup.moduleMinimumOptional }}"
                         data-revision="{{ packageExists ? 1 : 0 }}"
