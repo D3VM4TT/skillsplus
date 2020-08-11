@@ -54,6 +54,15 @@ return [
             '@assetsPath' => '~/sites/skills-plus.net/craft-assets/',
         ],
     ],
+    'jason' => [
+        'siteUrl' => 'cpd.lantra.co.uk',
+        'devMode' => true,
+        'allowAdminChanges' => true,
+        'aliases' => [
+            '@basePath' => 'user/sites/cpd.lantra.co.uk/',
+            '@assetsPath' => 'user/sites/cpd.lantra.co.uk/craft-assets/',
+        ],
+    ],
     'dev' => [
         'devMode' => true,
         'allowAdminChanges' => true,
