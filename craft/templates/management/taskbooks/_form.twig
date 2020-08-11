@@ -46,7 +46,7 @@
         {{ hiddenInput('sectionId', section.id) }}
         {{ hiddenInput('enabled', 1) }}
         {{ redirectInput('management/users/edit/' ~ authorId) }}
-        {{ hiddenInput('authors[]', authorId) }}
+        {{ hiddenInput('author[]', authorId) }}
 
         {% include '_forms/taskbook' %}
 
