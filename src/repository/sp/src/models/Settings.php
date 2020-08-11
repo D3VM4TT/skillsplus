@@ -26,6 +26,7 @@ class Settings extends Model
     public $schemeTestEmailAddress              = 'robin@coffeebean.design';
     public $jobRoleEndorse                      = false;
     public $enableCreateAccount                 = false;
+    public $enableEditCredentials               = false;
 
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;
@@ -46,6 +47,7 @@ class Settings extends Model
     public $taskbookIntro                       = [];
     public $taskbookLevels                      = false;
     public $taskbookJobRole                     = [];
+    public $taskbookNew                         = true;
 
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;

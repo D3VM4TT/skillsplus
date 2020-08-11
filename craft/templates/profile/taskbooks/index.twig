@@ -126,9 +126,12 @@
             </tbody>
         </table>
         {% endif %}
-        <div class="container-btn">
-            <p><a href="/profile/taskbooks/new" class="button primary-bg">Purchase {{ taskbookLabel }}</a></p>
-        </div>
+
+        {% if craft.lantra.setting('taskbookNew') %}
+            <div class="container-btn">
+                <p><a href="/profile/taskbooks/new" class="button primary-bg">Purchase {{ taskbookLabel }}</a></p>
+            </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

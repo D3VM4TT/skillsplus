@@ -1,10 +1,17 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
-    label:			"Enable Taskbooks",
+    label:			"Enable Taskbooks?",
     id:				"taskbooks",
     name:			"taskbooks",
     on:		        settings.taskbooks == 1
+}) }}
+
+{{ forms.lightswitchField ({
+    label:			"Allow members to create new taskbook?",
+    id:				"taskbookNew",
+    name:			"taskbookNew",
+    on:		        settings.taskbookNew == 1
 }) }}
 
 {{ forms.textField ({

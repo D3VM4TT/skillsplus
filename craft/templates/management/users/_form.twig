@@ -241,7 +241,7 @@
             </div>
         </div>
         
-        {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+        {% if craft.lantra.setting('enableEditCredentials') or (currentUser.isInGroup('schemeManagers') or currentUser.admin) %}
             <h2>Advanced</h2>
             <div class="field--wrapper">
                 <label for="username" class="no-float">Username:</label>
@@ -256,6 +256,7 @@
                 <input type="password" autocomplete="off" id="password" name="confirmPassword" class="float-label" placeholder="Enter the password" value="">
             </div>
         {% endif %}
+
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save user</button>
         </div>
