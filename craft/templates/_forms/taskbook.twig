@@ -53,3 +53,14 @@
                name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}"/>
     {% endif %}
 </script>
+
+{% if options is defined and options %}
+    {{ hiddenInput('fields[packagePaid]', 0) }}
+    <div class="field--wrapper">
+        <label for="packagePaid">
+            <input type="checkbox" id="packagePaid" name="fields[packagePaid]" value="1"
+               {% if entry is not defined or entry.packagePaid %}checked="checked"{% endif %}>
+            <span>Set as paid?</span>
+        </label>
+    </div>
+{% endif %}
