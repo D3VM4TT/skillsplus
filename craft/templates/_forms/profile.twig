@@ -74,7 +74,10 @@
             {% case 'photo' %}
                 {% if craft.lantra.userProfileField('photo', 'userEdit') %}
                     <p class="profile">{{ row.label ?: 'Change your profile picture:' }}</p>
-                    <input id="photo" type="file" name="photo">
+                    {{ input('file', 'photo', null, {
+                        id: 'photo',
+                        accept: 'image/png,image/jpeg',
+                    }) }}
                 {% endif %}
         {% endswitch %}
     {% endfor %}

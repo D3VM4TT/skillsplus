@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1596726392
+dateModified: 1597341197
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -3948,6 +3948,17 @@ globalSets:
             sortOrder: 1
     handle: globalsTheme
     name: Theme
+imageTransforms:
+  1d7e1155-f678-423c-bfdb-a74218e031a9:
+    format: null
+    handle: thumb
+    height: 135
+    interlace: none
+    mode: crop
+    name: Thumb
+    position: center-center
+    quality: null
+    width: 135
 matrixBlockTypes:
   31396686-93c4-4dbe-a8c9-9328d191a511:
     field: 4a4bc5cd-115e-4309-a51a-3e5095ceea90
@@ -7291,7 +7302,7 @@ users:
         - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
-  photoSubpath: ''
+  photoSubpath: '{id}'
   photoVolumeUid: c56fc71b-f1b7-47ac-935c-9ad07177edae
   requireEmailVerification: false
 volumes:
@@ -7306,14 +7317,14 @@ volumes:
     type: craft\volumes\Local
     url: null
   c56fc71b-f1b7-47ac-935c-9ad07177edae:
-    handle: userPhotos
-    hasUrls: false
-    name: 'User Photos'
+    handle: photos
+    hasUrls: true
+    name: Photos
     settings:
-      path: '@storage/userphotos'
+      path: '@basePath/html/assets/photos'
     sortOrder: 5
     type: craft\volumes\Local
-    url: null
+    url: /assets/photos
   e1099881-d76d-4c4c-9b8b-607658d27413:
     handle: data
     hasUrls: false
@@ -7329,11 +7340,10 @@ volumes:
     hasUrls: true
     name: Theme
     settings:
-      path: '@basePath/assets/theme'
-      url: /assets/theme/
+      path: '@basePath/html/assets/theme'
     sortOrder: 4
     type: craft\volumes\Local
-    url: null
+    url: /assets/theme/
   f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9:
     handle: uploads
     hasUrls: true
