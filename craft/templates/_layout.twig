@@ -2,8 +2,8 @@
 {% if firstSegment != "actions" and firstSegment != "sp" and firstSegment != "public" %}
     {% if currentUser and craft.app.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
         {% redirect "public/licence" %}
-    {% elseif currentUser and craft.app.request.segment(2) != "taskbooks" and currentUser.isInGroup('usersTaskbookPending') %}
-        {% redirect "profile/taskbooks/new" %}
+    {% elseif currentUser and craft.app.request.segment(3) != "taskbooks" and currentUser.isInGroup('usersTaskbookPending') %}
+        {% redirect "cpd/" ~ currentUser.id ~ "/taskbooks/new" %}
     {% else %}
         {% requireLogin %}
     {% endif %}

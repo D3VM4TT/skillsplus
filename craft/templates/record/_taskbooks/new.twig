@@ -3,7 +3,14 @@
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 
-{% set account = currentUser %}
+{% set userId = craft.app.request.getSegment(2) %}
+{% if not userId or userId == currentUser.id %}
+    {% set account = currentUser %}
+{% else %}
+    {% set account = craft.users.id(userId).status(null).one %}
+    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+{% endif %}
+
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
@@ -40,7 +47,8 @@
                 {{ actionInput('entries/save-entry') }}
                 {{ hiddenInput('sectionId', section.id) }}
                 {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('profile/taskbooks') }}
+                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/manage') }}
+                {{ hiddenInput('author[]', account.id) }}
 
                 {% include '_forms/taskbook' %}
 

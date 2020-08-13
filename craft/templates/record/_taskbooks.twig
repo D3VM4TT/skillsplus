@@ -22,7 +22,7 @@
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
         {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem} %}
     </article>
-{% elseif cpdUser.record.totalPackages %}
+{% else %}
     <table class="data">
         <thead>
         <tr>
@@ -59,13 +59,6 @@
     {% if taskbookIntro %}
         <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel }} Details</a>
     {% endif %}
-{% elseif taskbookIntro %}
-    {% for block in taskbookIntro.pageContent %}
-        <div class="content-col">
-            <h2>{{ block.columnTitle }}</h2>
-            <p>{{ block.columnHtml }}</p>
-        </div>
-    {% endfor %}
 {% endif %}
 
 
