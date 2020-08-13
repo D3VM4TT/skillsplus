@@ -50,7 +50,7 @@ class PackagesController extends BaseController
         Craft::$app->elements->saveElement($packageEntry);
         $variables = [
             'packageId' => $packageId,
-            'redirect' => '/cpd/' . $packageEntry->authorId . ' /taskbooks/manage'
+            'redirect' => '/cpd/' . $packageEntry->authorId . '/taskbooks/manage'
         ];
         return $this->renderTemplate('_taskbooks/payment', $variables);
     }
