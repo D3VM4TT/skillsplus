@@ -227,6 +227,14 @@ class Plugin extends BasePlugin
             Entry::EVENT_AFTER_DELETE,
             function (Event $event) {
                 $entry = $event->sender;
+                ## ignore cli
+                if (Craft::$app->request->isConsoleRequest) {
+                    return;
+                }
+                ## ignore drafts and revisions
+                if (ElementHelper::isDraftOrRevision($entry)) {
+                    return;
+                }
                 if ($entry->sectionId == $this->sectionIdUnits) {
                     ## delete result cache unit column (if enabled)
                     Lantra::$app->results->removeUnitColumn($entry->id);
