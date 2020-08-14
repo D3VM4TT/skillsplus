@@ -5,19 +5,9 @@
 
 <form id="profile" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ csrfInput() }}
-    {{ actionInput('users/save-user') }}
+    {{ actionInput('sp/users/save-profile') }}
     {{ redirectInput('profile') }}
     {{ hiddenInput('userId', currentUser.id) }}
-
-    {% if formUser.hasErrors() %}
-        <div class="error-list">
-            <ul>
-                {% for error in formUser.getFirstErrors() %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
 
     {% for row in craft.lantra.userProfileFields('userEdit') %}
         {% switch row.field %}
