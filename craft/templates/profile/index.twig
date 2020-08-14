@@ -74,10 +74,9 @@
                 {% endswitch %}
             {% endfor %}
 
-            {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
-            {% for block in userCustomFields %}
-                {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).one() %}
-                <p>{{ block.label }}: {{ userCustomBlock.customValue|default('~') }}</p>
+            {% for row in craft.lantra.userCustomFields('profile') %}
+                {% set userCustomBlock = currentUser.userCustomFields.customName('='~row.name).one() %}
+                <p>{{ row.label }}: {{ userCustomBlock.customValue|default('~') }}</p>
             {% endfor %}
 
             {% set showUserCompany = craft.lantra.userProfileField('userCompany', 'profile') %}
