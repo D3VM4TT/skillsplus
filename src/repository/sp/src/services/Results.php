@@ -736,6 +736,7 @@ class Results extends Component
             return;
         }
         ## if cpd (specific module result entry) check the specific module result
+        $moduleResultEntry = null;
         if ($resultEntry->resultModuleResult) {
             $moduleResultEntry = $resultEntry->resultModuleResult->one();
             $moduleEntry = $this->getModuleResultModule($moduleResultEntry);
@@ -753,7 +754,7 @@ class Results extends Component
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
             if (in_array($resultUnitEntry->id, $unitIds)) {
-                $this->checkModuleResult($moduleEntry, $user->id);
+                $this->checkModuleResult($moduleEntry, $user->id, $moduleResultEntry);
             }
         }
         return;
@@ -960,7 +961,7 @@ class Results extends Component
     function isCompleteComponentResults($moduleResult)
     {
         foreach($moduleResult->resultComponentResults as $componentResult) {
-            if (!$componentResult['complete']) {
+            if (!isset($componentResult['complete']) || $componentResult['complete']) {
                 return false;
             }
         }
