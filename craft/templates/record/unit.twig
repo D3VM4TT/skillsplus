@@ -27,7 +27,8 @@
 {% set addNew = craft.app.request.getSegment(5) == 'new' %}
 {% set resultEntry = false %}
 
-{% set packageId = craft.app.request.getParam('moduleResultId') %}
+{% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
+{% set packageId = craft.app.request.getParam('packageId') %}
 {% set isPackage = packageId ? true : false %}
 
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
