@@ -712,8 +712,8 @@ class Results extends Component
         }
         ## check the moduleResult
         $user = $resultEntry->author;
-        ## if cpd (specific module result entry) check the specific module result
-        $this->checkModuleResult($resultModuleEntry, $user->id, $resultEntry->resultModuleResult->one());
+        $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
+        $this->checkModuleResult($resultModuleEntry, $user->id, $moduleResultEntry);
     }
 
     /**
