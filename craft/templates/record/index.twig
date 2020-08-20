@@ -39,12 +39,15 @@
 </div>
 <section class="page">
     <div class="page-header secondary-bg">
+    
         {% if isManager %}
             {% if hierarchyNode %}
                 <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
             {% else %}
                 <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
             {% endif %}
+        {% else %}
+            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
         {% endif %}
         <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
         {% if craft.lantra.setting('taskbooks') and isManager %}

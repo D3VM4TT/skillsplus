@@ -18,9 +18,6 @@
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="../">
-                <img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"
-                        width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             <h2>My profile</h2>
             <p>A snapshot of your personal information, Companies and Job roles.</p>
             <div class="header-controls">
@@ -35,7 +32,9 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="field--wrapper">
+        <a href="../">
+                <img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"class="rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <div class="field--wrapper border-btm">
                 <div class="col-3">
                     <h2>{{ currentUser.fullName }}</h2>
                 </div>

@@ -59,8 +59,8 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/user/sites/cpd.lantra.co.uk/',
-            '@assetsPath' => '/user/sites/cpd.lantra.co.uk/craft-assets/',
+            '@basePath' => 'user/sites/cpd.lantra.co.uk/',
+            '@assetsPath' => 'user/sites/cpd.lantra.co.uk/craft-assets/',
         ],
     ],
     'dev' => [
