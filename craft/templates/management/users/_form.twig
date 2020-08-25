@@ -48,7 +48,6 @@
         {% else %}
             {{ redirectInput('management/users') }}
         {% endif %}
-        <input type="hidden" name="fields[userDummyEmail]" value="{{ account.userDummyEmail|default(0) }}">
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
 
         {% if account is defined and account.id %}
@@ -76,6 +75,7 @@
         </div>
         <div class="col-6 field--wrapper">
             <label for="dummyEmail" class="no-float">Generate Dummy Email?</label>
+            <input type="hidden" name="fields[userDummyEmail]" value="0">
             <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
         </div>
         </div>

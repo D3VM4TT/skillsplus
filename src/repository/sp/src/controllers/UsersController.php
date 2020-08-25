@@ -153,11 +153,14 @@ class UsersController extends BaseController {
         ## set basic account fields
         $user->firstName = $request->getBodyParam('firstName', $user->firstName);
         $user->lastName = $request->getBodyParam('lastName', $user->lastName);
-        if ($fields['userDummyEmail']) {
+
+        ## set email
+        $postedEmail = Craft::$app->request->getParam('email');
+        if (isset($fields['userDummyEmail']) && $fields['userDummyEmail'] == 1 && !$postedEmail) {
             $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
         }
         else {
-            $user->email = Craft::$app->request->getParam('email');
+            $user->email = $postedEmail;
         }
 
         ## set custom fields
