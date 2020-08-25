@@ -102,13 +102,13 @@
         {%  set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
         {%  for block in userCustomFields %}
             <div class="field--wrapper">
-                <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
+                <label for="custom-{{ loop.index }}" class="no-float">{{ block.label }}:</label>
                 {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).one() : null %}
                 {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
                 <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
-                <input type="text" id="custom-{{ block.name }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+                <input type="text" id="custom-{{ loop.index }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
             </div>
         {%  endfor %}
         <h2>User settings</h2>
@@ -127,7 +127,7 @@
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
                     <option value="{{ roleCategory.id }}"
-                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected{% endif %}">{{ roleCategory.title }}</option>
+                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected"{% endif %}>{{ roleCategory.title }}</option>
                 {% endfor %}
             </select>
         </div>
