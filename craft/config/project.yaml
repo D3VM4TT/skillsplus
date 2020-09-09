@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1597341197
+dateModified: 1599653354
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1553,6 +1553,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date
+  5df92654-19a4-446e-a578-2b359d4bc88f:
+    contentColumnType: text
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: pageCreate
+    instructions: ''
+    name: 'Taskbook Page Create'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   5e4e967d-f646-4378-aedf-9f6ef84c1e28:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -2373,6 +2396,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Users
+  840f8f48-be42-4008-ae9e-1fa132183769:
+    contentColumnType: text
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: pageNew
+    instructions: ''
+    name: 'Taskbook Page New'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   84ec75d0-1dcf-408a-bce8-4ea7b5370c3b:
     contentColumnType: text
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -3682,6 +3728,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+    contentColumnType: text
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: pageCurrent
+    instructions: ''
+    name: 'Taskbook Page Current'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   f56275dc-26a8-46e7-bfb5-061917775684:
     contentColumnType: string
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -4903,9 +4972,15 @@ sections:
             tabs:
               -
                 fields:
-                  f16d7384-1325-4296-8acb-e213c2765770:
+                  5df92654-19a4-446e-a578-2b359d4bc88f:
                     required: false
                     sortOrder: 1
+                  840f8f48-be42-4008-ae9e-1fa132183769:
+                    required: false
+                    sortOrder: 2
+                  f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+                    required: false
+                    sortOrder: 3
                 name: Pages
                 sortOrder: 1
         handle: taskbooks

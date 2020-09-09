@@ -24,6 +24,7 @@
 
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set taskbookSingle = craft.entries.section('taskbooks').one() %}
 
 {% block content %}
 <section class="page dashboard">
@@ -42,7 +43,9 @@
 
         {% if unpaidPackages.count %}
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
-            <p>{{ craft.lantra.setting('taskbookIntroNew') }}</p>
+            {% if taskbookSingle and taskbookSingle.pageNew %}
+                {{ taskbookSingle.pageNew }}
+            {% endif %}
             {% for package in unpaidPackages.all %}
                 {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}
@@ -71,7 +74,9 @@
 
         {% if paidPackages.count %}
         <h2>Current {{ taskbookLabel|pluralize }}</h2>
-        <p>{{ craft.lantra.setting('taskbookIntroCurrent') }}</p>
+        {% if taskbookSingle and taskbookSingle.pageCurrent %}
+            {{ taskbookSingle.pageCurrent }}
+        {% endif %}
         <table class="data taskbooks">
             <thead>
                 <tr>
