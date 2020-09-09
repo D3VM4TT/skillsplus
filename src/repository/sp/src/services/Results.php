@@ -399,8 +399,7 @@ class Results extends Component
         $unread = 0;
         $comments = $result->resultComments->all();
         foreach($comments as $comment) {
-            $commentAuthorId = $comment->user->one()->id;
-            if ($commentAuthorId != $userId && ! $comment->read) {
+            if ($comment->user->one() && $comment->user->one()->id != $userId && !$comment->read) {
                 $unread++;
             }
         }
