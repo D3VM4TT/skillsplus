@@ -44,7 +44,8 @@ class Settings extends Model
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
-    public $taskbookIntro                       = [];
+    public $taskbookIntroNew                    = '';
+    public $taskbookIntroCurrent                = '';
     public $taskbookLevels                      = false;
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
@@ -156,8 +157,7 @@ class Settings extends Model
         'themeNavigationPublic',
         'themeNavigationPrivate',
         'individualCompany',
-        'defaultWorkflow',
-        'taskbookIntro'
+        'defaultWorkflow'
     ];
 
     private $categoryFields = [

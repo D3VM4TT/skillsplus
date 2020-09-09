@@ -33,6 +33,15 @@
             <p>Purchase a package of module groups.</p>
         </div>
         <div class="page-content">
+
+            {% set entry = craft.entries.section('taskbooks').one() %}
+            {% if entry %}
+                {{ entry.pageBody }}
+            {% endif %}
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}

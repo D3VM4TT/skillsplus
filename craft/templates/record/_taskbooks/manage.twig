@@ -40,16 +40,9 @@
     </div>
     <div class="page-content">
 
-        {% set entry = craft.entries.section('taskbooks').one() %}
-        {% if entry %}
-            {{ entry.pageBody }}
-        {% endif %}
-
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-
         {% if unpaidPackages.count %}
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
+            <p>{{ taskbookIntro }}</p>
             {% for package in unpaidPackages.all %}
                 {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}
@@ -78,6 +71,7 @@
 
         {% if paidPackages.count %}
         <h2>Current {{ taskbookLabel|pluralize }}</h2>
+        <p>{{ taskbookCurrent }}</p>
         <table class="data taskbooks">
             <thead>
                 <tr>
@@ -139,7 +133,7 @@
 
         {% if craft.lantra.setting('taskbookNew') %}
             <div class="container-btn">
-                <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">New {{ taskbookLabel }}</a></p>
+                <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
             </div>
         {% endif %}
     </div>
