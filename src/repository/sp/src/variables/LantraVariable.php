@@ -1260,13 +1260,13 @@ class LantraVariable
     }
 
     /**
-     * @param $default
+     * @param $unitEntry
      * @param null $moduleEntry
      * @return float|int|null
      */
-    public function unitPoints($default, $moduleEntry = null)
+    public function unitPoints($unitEntry, $moduleEntry = null)
     {
-        return Lantra::$app->results->getUnitPoints($default, $moduleEntry);
+        return Lantra::$app->results->getUnitPoints($unitEntry, $moduleEntry);
     }
 
     /**

@@ -845,24 +845,24 @@ class Results extends Component
     }
 
     /**
-     * @param int $default
+     * @param int $unitEntry
      * @param Entry|null $moduleEntry
      * @return float|int|null
      */
-    public function getUnitPoints($default, Entry $moduleEntry = null)
+    public function getUnitPoints($unitEntry, Entry $moduleEntry = null)
     {
         if ($moduleEntry) {
             foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
                 $unitIds = [];
-                foreach($unitGroup->unitEntries as $unitEntry) {
-                    $unitIds[] = $unitEntry->id;
+                foreach($unitGroup->unitEntries as $groupUnitEntry) {
+                    $unitIds[] = $groupUnitEntry->id;
                 }
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitIds)) {
                    return $unitGroup->unitPointsOverride;
                 }
             }
         }
-        return $default;
+        return $unitEntry->unitPoints;
     }
 
     /**
