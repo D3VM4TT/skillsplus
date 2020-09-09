@@ -6,14 +6,21 @@
 
 {% extends "_layout" %}
 
-{% set account = currentUser %}
+{% set userId = craft.app.request.getSegment(2) %}
+{% if not userId or userId == currentUser.id %}
+    {% set account = currentUser %}
+{% else %}
+    {% set account = craft.users.id(userId).status(null).one %}
+    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
+{% endif %}
+
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
-{% set unpaidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('not 1') %}
-{% set paidPackages = craft.entries.section('packages').authorId(currentUser.id).packagePaid('1') %}
+{% set unpaidPackages = craft.entries.section('packages').authorId(account.id).packagePaid('not 1') %}
+{% set paidPackages = craft.entries.section('packages').authorId(account.id).packagePaid('1') %}
 
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
@@ -33,13 +40,9 @@
     </div>
     <div class="page-content">
 
-        {% set entry = craft.entries.section('taskbooks').one() %}
-        {% if entry %}
-            {{ entry.pageBody }}
-        {% endif %}
-
         {% if unpaidPackages.count %}
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
+            <p>{{ taskbookIntro }}</p>
             {% for package in unpaidPackages.all %}
                 {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}
@@ -67,7 +70,8 @@
         {% endif %}
 
         {% if paidPackages.count %}
-        <h2>Purchased {{ taskbookLabel|pluralize }}</h2>
+        <h2>Current {{ taskbookLabel|pluralize }}</h2>
+        <p>{{ taskbookCurrent }}</p>
         <table class="data taskbooks">
             <thead>
                 <tr>
@@ -95,7 +99,7 @@
                             <td style="color:red">Invalid Module Group</td>
                         {% else %}
                             <td>
-                                <a href="/cpd/{{ currentUser.id }}/taskbooks/{{ package.id }}">{{ packageTitle }}</a>
+                                <a href="/cpd/{{ account.id }}/taskbooks/{{ package.id }}">{{ packageTitle }}</a>
                             </td>
                         {% endif %}
                         {% if craft.lantra.setting('taskbookLevels') %}
@@ -129,7 +133,7 @@
 
         {% if craft.lantra.setting('taskbookNew') %}
             <div class="container-btn">
-                <p><a href="/profile/taskbooks/new" class="button primary-bg">Purchase {{ taskbookLabel }}</a></p>
+                <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
             </div>
         {% endif %}
     </div>

@@ -3,6 +3,9 @@
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: currentUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (currentUser['userReadOnly'] is defined and currentUser.userReadOnly)) %}
+
+{% import "_macros" as ui %}
+
 {% extends "_layout" %}
 
 {% block content %}
@@ -12,9 +15,11 @@
         </div>
         <div class="page-header secondary-bg">
             <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
-            {{ currentUserCompany|default('') }}
             <h2>Edit profile</h2>
         </div>
+        {% if user is defined and user.hasErrors() %}
+            {{ ui.errorList(user.getFirstErrors()) }}
+        {% endif %}
         <div class="page-content">
             {% set currentUserCompany = craft.lantra.userCompany() %}
             {% if not readOnly %}

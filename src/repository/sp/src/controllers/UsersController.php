@@ -12,6 +12,8 @@ use Craft;
 use craft\elements\User;
 use craft\elements\MatrixBlock;
 use craft\elements\Entry;
+use craft\web\UploadedFile;
+use craft\helpers\Image;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -81,6 +83,42 @@ class UsersController extends BaseController {
     }
 
     /**
+     * Saves user from the edit profile form
+     *
+     * @throws mixed
+     */
+    public function actionSaveProfile()
+    {
+        $this->requirePostRequest();
+        ## get the posted userId
+        $request = Craft::$app->getRequest();
+        $userId = $request->getRequiredParam('userId');
+        $redirect = Craft::$app->getRequest()->getValidatedBodyParam('redirect');
+
+        if (null == $user = User::find()->id($userId)->one()) {
+            $this->_returnError('Invalid user ID ' . $userId . '.');
+        }
+
+        ## set basic account fields
+        $user->firstName = $request->getBodyParam('firstName', $user->firstName);
+        $user->lastName = $request->getBodyParam('lastName', $user->lastName);
+        $user->email = Craft::$app->request->getParam('email', $user->email);
+
+        ## set custom fields
+        $user->setFieldValuesFromRequest('fields');
+
+        ## did they upload a photo
+        $this->_processUserPhoto($user);
+
+        if (!Craft::$app->elements->saveElement($user)) {
+            Craft::$app->session->setError('Could not save profile.');
+            return Craft::$app->urlManager->setRouteParams(['user' => $user, 'saveUserError' => true]);
+        }
+
+        return $this->_returnMessage('Profile updated.', true, $redirect);
+    }
+
+    /**
      * Saves user from the management form
      *
      * @throws mixed
@@ -115,11 +153,14 @@ class UsersController extends BaseController {
         ## set basic account fields
         $user->firstName = $request->getBodyParam('firstName', $user->firstName);
         $user->lastName = $request->getBodyParam('lastName', $user->lastName);
-        if ($fields['userDummyEmail']) {
+
+        ## set email
+        $postedEmail = Craft::$app->request->getParam('email');
+        if (isset($fields['userDummyEmail']) && $fields['userDummyEmail'] == 1 && !$postedEmail) {
             $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
         }
         else {
-            $user->email = Craft::$app->request->getParam('email');
+            $user->email = $postedEmail;
         }
 
         ## set custom fields
@@ -163,9 +204,7 @@ class UsersController extends BaseController {
         $confirmPassword = (Craft::$app->request->getParam('confirmPassword') ?: null);
 
         ## did they upload a photo
-        if ($tempFilePath = LantraHelper::tempFilePath('photo')) {
-            Craft::$app->users->saveUserPhoto($tempFilePath, $user);
-        }
+        $this->_processUserPhoto($user);
 
         if ($user->newPassword && ($user->newPassword != $confirmPassword)) {
             $user->addErrors(['confirmPassword' => 'Passwords do not match']);
@@ -272,5 +311,29 @@ class UsersController extends BaseController {
             Lantra::$app->results->refreshResultCache($users);
         }
         $this->_returnMessage($total . ' users refreshed', true, 'management/' . ($companyId ? 'companies' : 'users'));
+    }
+
+    /**
+     * @param User $user
+     * @throws \craft\errors\ImageException
+     * @throws \craft\errors\VolumeException
+     * @throws \yii\base\Exception
+     */
+    private function _processUserPhoto(User $user)
+    {
+        if (null == $photo = UploadedFile::getInstanceByName('photo')) {
+            return;
+        }
+        if (!Image::canManipulateAsImage($photo->getExtension())) {
+            $user->addError('photo', 'The profile photo is not an image.');
+            return;
+        }
+        if (null == $tempFilePath = LantraHelper::tempFilePath('photo')) {
+            $user->addError('photo', 'Could not move profile photo.');
+            return;
+        }
+        if (!Craft::$app->users->saveUserPhoto($tempFilePath, $user, $user->id . '.' . $photo->extension))  {
+            $user->addError('photo', 'Could not save profile photo.');
+        }
     }
 }

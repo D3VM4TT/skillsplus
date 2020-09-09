@@ -2,8 +2,8 @@
 {% if firstSegment != "actions" and firstSegment != "sp" and firstSegment != "public" %}
     {% if currentUser and craft.app.request.segment(2) != "licence" and currentUser.isInGroup('individuals') and not currentUser.isInGroup('users') %}
         {% redirect "public/licence" %}
-    {% elseif currentUser and craft.app.request.segment(2) != "taskbooks" and currentUser.isInGroup('usersTaskbookPending') %}
-        {% redirect "profile/taskbooks/new" %}
+    {% elseif currentUser and craft.app.request.segment(3) != "taskbooks" and currentUser.isInGroup('usersTaskbookPending') %}
+        {% redirect "cpd/" ~ currentUser.id ~ "/taskbooks/new" %}
     {% else %}
         {% requireLogin %}
     {% endif %}
@@ -133,14 +133,7 @@
         <!-- Content
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <div class="content">
-            <button class="btn-toggle-small" id="btn-toggle">
-            <div class="btn-arrow">
-            <i class="arrow"></i>
-            </div>
-            <div class="btn-txt">
-            <h6 class="btn-close">close left menu</h6><h6 class="btn-open is-hidden">open left menu</h6>
-            </div>
-            </button>
+
 
             {% if craft.app.request.getSegment(1) != '' %}
                 {% include '_includes/notifications' %}

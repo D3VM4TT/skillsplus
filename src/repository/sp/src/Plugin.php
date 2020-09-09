@@ -345,8 +345,10 @@ class Plugin extends BasePlugin
             ## cpd routes
 
             ## taskbook routes
-            'profile/taskbooks/view/<packageId>'        => ['template' => 'profile/taskbooks/view'],
             'cpd/<userId>/taskbooks'                    => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/manage'             => ['template' => 'record/_taskbooks/manage'],
+            'cpd/<userId>/taskbooks/new'                => ['template' => 'record/_taskbooks/new'],
+            'cpd/<userId>/taskbooks/single'             => ['template' => 'record/_taskbooks/single'],
             'cpd/<userId>/taskbooks/<entryId>'          => ['template' => 'record/index'],
             'cpd/<userId>/taskbooks/<entryId>/pay'      => ['template' => 'record/index'],
 

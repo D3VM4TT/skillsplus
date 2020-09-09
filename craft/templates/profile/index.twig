@@ -18,97 +18,96 @@
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="../"><img
-                        src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"
-                        width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
-            {{ currentUserCompany|default('') }}
             <h2>My profile</h2>
             <p>A snapshot of your personal information, Companies and Job roles.</p>
+            <div class="header-controls">
+                {% if not readOnly %}
+                    <div class="container-btn primary-bg" style="margin-left:0;">
+                        <a class="btn-add-new" href="/profile/edit">Edit profile</a>
+                    </div>
+                {% endif %}
+                <div class="container-btn primary-bg">
+                    <a class="btn-add-new" href="/profile/password">Edit password</a>
+                </div>
+            </div>
         </div>
         <div class="page-content">
+        <a href="../">
+                <img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"class="rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <div class="field--wrapper border-btm">
+                <div class="col-3">
+                    <h2>{{ currentUser.fullName }}</h2>
+                </div>
+                <div class="col-9">
+                    {% set email = craft.lantra.userProfileField('email', 'profile') %}
+                    {% if email %}
+                           <h6 class="primary">email: {{ currentUser.userDummyEmail ? 'Not Specified' : currentUser.email }}</h6>
+                    {% endif %}
+                    {% set userId = craft.lantra.userProfileField('id', 'profile') %}
+                    {% if userId %}
+                        <h6 class="primary">user id: {{ currentUser.id }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h6>User Profile</h6>
+
             {% for row in craft.lantra.userProfileFields('profile') %}
                 {% switch row.field %}
-                    {% case 'fullName' %}
-                        <div class="field--wrapper">
-                            <h4>{{ currentUser.fullName }}</h4>
-                        </div>
-                    {% case 'email' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Email' }}</label>
-                            <h4>{{ currentUser.email }}</h4>
-                        </div>
                     {% case 'userStartDate' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Start Date' }}</label>
-                            <span class="label">{{ currentUser.userStartDate ? currentUser.userStartDate|date(dateFormat) : '~' }}</span>
-                        </div>
+                        <p>{{ row.label ?: 'Start Date' }}:  {{ currentUser.userStartDate ? currentUser.userStartDate|date(dateFormat) : '~' }}</p>
                     {% case 'userDateOfBirth' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Date of Birth' }}</label>
-                            <span class="label">{{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '~' }}</span>
-                        </div>
+                        <p>{{ row.label ?: 'Date of Birth' }}: {{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '~' }}</p>
                     {% case 'userAddress' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Address' }}</label>
-                            <span class="label">{{ currentUser.userAddress }}</span>
-                        </div>
+                        <p>{{ currentUser.userAddress }}</p>
                     {% case 'userTelephone' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Telephone' }}</label>
-                            <span class="label">{{ currentUser.userTelephone }}</span>
-                        </div>
+                        <p>{{ currentUser.userTelephone }}</p>
                     {% case 'userRole' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Role' }}</label>
+                        <p>
+                            {{ row.label ?: 'Job Role(s)' }}:
                             {% if not  currentUser.userRole.count %}~{% endif %}
                             {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
-                        </div>
-                    {% case 'userCompany' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'User Company' }}</label>
-                            <span class="label">{{ currentUserCompany  ? currentUserCompany : '~' }}</span>
-                        </div>
-                    {% case 'userManagers' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'User Managers' }}</label>
-                            {% if not currentUserManagers|length %}~{% endif %}
-                            {% for manager in currentUserManagers %}
-                                {{ manager.fullName }}{{ not loop.last ? ', ' }}
-                            {% endfor %}
-                            </span>
-                        </div>
-                    {% case 'managerCompanies' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Manager Companies' }}</label>
-                            {% if not managerCompanies|length %}~{% endif %}
-                            {% for company in managerCompanies %}
-                                {{ company.title }}{{ not loop.last ? ', ' }}
-                            {% endfor %}
-                        </div>
+                        </p>
                     {% case 'legacyId' %}
-                        <div class="field--wrapper">
-                            <label class="no-float primary-color">{{ row.label ?: 'Legacy ID' }}:</label>
-                            <span class="label">{{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</span>
-                        </div>
+                        <p>{{ row.label ?: 'Legacy ID' }}: {{ currentUser.legacyId == 0 ? '~' : currentUser.legacyId }}</p>
                 {% endswitch %}
             {% endfor %}
 
-            {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
-            {% for block in userCustomFields %}
-                {% set userCustomBlock = currentUser.userCustomFields.customName('='~block.name).one() %}
-                <div class="field--wrapper">
-                    <label class="no-float primary-color">{{ block.label }}</label>
-                    <span class="label">{{ userCustomBlock.customValue|default('~') }}</span>
-                </div>
+            {% for row in craft.lantra.userCustomFields('profile') %}
+                {% set userCustomBlock = currentUser.userCustomFields.customName('='~row.name).one() %}
+                <p>{{ row.label }}: {{ userCustomBlock.customValue|default('~') }}</p>
             {% endfor %}
-            {% if not readOnly %}
-                <div class="container-btn col-pd-top">
-                    <a class="button primary-bg" href="/profile/edit">Edit profile</a>
-                </div>
+
+            {% set showUserCompany = craft.lantra.userProfileField('userCompany', 'profile') %}
+            {% set showUserManagers = craft.lantra.userProfileField('userManagers', 'profile') %}
+
+            {% if showUserCompany or showUserManagers %}
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <h6>Company Profile</h6>
+                {% if currentUserCompany %}
+                    <h6 class="primary">{{ currentUserCompany }}</h6>
+                {% endif %}
+                {% if currentUserManagers|length %}
+                    <p>Manager(s):
+                    {% for manager in currentUserManagers %}
+                        {{ manager.fullName }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                    </p>
+                {% endif %}
             {% endif %}
-            <div class="container-btn col-pd-top">
-                <a class="button primary-bg" href="/profile/password">Edit password</a>
-            </div>
+
+            {% set showManagerCompanies = craft.lantra.userProfileField('managerCompanies', 'profile') %}
+            {% if showManagerCompanies and managerCompanies|length %}
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <h6>Company Management</h6>
+                <p>
+                    {% for company in managerCompanies %}
+                        {{ company.title }}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                </p>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

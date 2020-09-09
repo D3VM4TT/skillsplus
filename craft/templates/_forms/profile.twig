@@ -5,19 +5,9 @@
 
 <form id="profile" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
     {{ csrfInput() }}
-    {{ actionInput('users/save-user') }}
+    {{ actionInput('sp/users/save-profile') }}
     {{ redirectInput('profile') }}
     {{ hiddenInput('userId', currentUser.id) }}
-
-    {% if formUser.hasErrors() %}
-        <div class="error-list">
-            <ul>
-                {% for error in formUser.getFirstErrors() %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
 
     {% for row in craft.lantra.userProfileFields('userEdit') %}
         {% switch row.field %}
@@ -74,27 +64,27 @@
             {% case 'photo' %}
                 {% if craft.lantra.userProfileField('photo', 'userEdit') %}
                     <p class="profile">{{ row.label ?: 'Change your profile picture:' }}</p>
-                    <input id="photo" type="file" name="photo">
+                    {{ input('file', 'photo', null, {
+                        id: 'photo',
+                        accept: 'image/png,image/jpeg',
+                    }) }}
                 {% endif %}
         {% endswitch %}
     {% endfor %}
 
-    {% set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
-    {% for block in userCustomFields %}
-        {% if block.userEdit %}
-            <div class="field--wrapper">
-                <label for="custom-{{ block.name }}" class="no-float">{{ block.label }}:</label>
-                {% set userCustomBlock = formUser.userCustomFields.customName('='~block.name).one() %}
-                {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]"
-                       value="{{ block.name }}"/>
-                <input type="text" id="custom-{{ block.name }}" class="float-label"
-                       name="fields[userCustomFields][{{ fieldId }}][fields][customValue]"
-                       value="{{ userCustomBlock.customValue|default('') }}">
-            </div>
-        {% endif %}
+    {% for row in craft.lantra.userCustomFields('userEdit') %}
+        <div class="field--wrapper">
+            <label for="custom-{{ row.name }}" class="no-float">{{ row.label }}:</label>
+            {% set userCustomBlock = formUser.userCustomFields.customName('='~row.name).one() %}
+            {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]"
+                   value="{{ row.name }}"/>
+            <input type="text" id="custom-{{ row.name }}" class="float-label"
+                   name="fields[userCustomFields][{{ fieldId }}][fields][customValue]"
+                   value="{{ userCustomBlock.customValue|default('') }}">
+        </div>
     {% endfor %}
 
     <div class="container-btn">

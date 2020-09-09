@@ -33,13 +33,14 @@ class LantraVariable
     }
 
     /**
+     * @param $field
      * @param $type
-     * @param $limit
+     * @param int $limit
      * @return array
      */
-    public function userProfileFields($type, $limit = 0)
+    private function _userFields($field, $type, $limit = 0)
     {
-        $fields = LantraHelper::setting('userProfileFields', []);
+        $fields = LantraHelper::setting($field, []);
         $return = [];
         foreach($fields as $row) {
             if ($limit && count($return) == $limit) {
@@ -50,6 +51,26 @@ class LantraVariable
             }
         }
         return $return;
+    }
+
+    /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function userCustomFields($type, $limit = 0)
+    {
+        return $this->_userFields('userEditCustomFields', $type, $limit);
+    }
+
+    /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function userProfileFields($type, $limit = 0)
+    {
+        return $this->_userFields('userProfileFields', $type, $limit);
     }
 
     /**
