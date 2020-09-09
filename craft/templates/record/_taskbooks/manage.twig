@@ -42,7 +42,7 @@
 
         {% if unpaidPackages.count %}
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
-            <p>{{ taskbookIntro }}</p>
+            <p>{{ taskbookIntroNew }}</p>
             {% for package in unpaidPackages.all %}
                 {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}
@@ -71,7 +71,7 @@
 
         {% if paidPackages.count %}
         <h2>Current {{ taskbookLabel|pluralize }}</h2>
-        <p>{{ taskbookCurrent }}</p>
+        <p>{{ taskbookIntroCurrent }}</p>
         <table class="data taskbooks">
             <thead>
                 <tr>
