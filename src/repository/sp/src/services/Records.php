@@ -52,7 +52,6 @@ class Records extends Component
         $criteria = Category::find();
         $criteria->group = 'moduleGroups';
         $criteria->relatedTo($modules->ids());
-        $criteria->orderBy('title');
         $criteria->moduleGroupTaskbooks = $taskbooks;
         return $criteria;
     }

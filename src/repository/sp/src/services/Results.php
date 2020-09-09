@@ -218,7 +218,7 @@ class Results extends Component
     public function onDeleteResult(Event $event, Entry $entry)
     {
         ## check the cpd module result
-        if (null != $moduleResultEntry = $entry->resultModuleResult->one()) {
+        if ($entry->resultModuleResult && null != $moduleResultEntry = $entry->resultModuleResult->one()) {
             $moduleEntry = $moduleResultEntry->resultModule->one();
             if ($moduleEntry && $moduleEntry->type == 'cpd') {
                 $this->checkModuleResult($moduleEntry, $entry->authorId, $moduleResultEntry);
@@ -399,8 +399,7 @@ class Results extends Component
         $unread = 0;
         $comments = $result->resultComments->all();
         foreach($comments as $comment) {
-            $commentAuthorId = $comment->user->one()->id;
-            if ($commentAuthorId != $userId && ! $comment->read) {
+            if ($comment->user->one() && $comment->user->one()->id != $userId && !$comment->read) {
                 $unread++;
             }
         }
@@ -845,17 +844,17 @@ class Results extends Component
     }
 
     /**
-     * @param Entry $unitEntry
+     * @param int $unitEntry
      * @param Entry|null $moduleEntry
      * @return float|int|null
      */
-    public function getUnitPoints(Entry $unitEntry, Entry $moduleEntry = null)
+    public function getUnitPoints($unitEntry, Entry $moduleEntry = null)
     {
         if ($moduleEntry) {
             foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
                 $unitIds = [];
-                foreach($unitGroup->unitEntries as $unitEntry) {
-                    $unitIds[] = $unitEntry->id;
+                foreach($unitGroup->unitEntries as $groupUnitEntry) {
+                    $unitIds[] = $groupUnitEntry->id;
                 }
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitIds)) {
                    return $unitGroup->unitPointsOverride;
