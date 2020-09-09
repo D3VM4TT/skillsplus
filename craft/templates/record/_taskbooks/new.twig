@@ -18,6 +18,7 @@
 {% set section = craft.sections.getSectionByHandle('packages') %}
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set taskbookSingle = craft.entries.section('taskbooks').one() %}
 
 {% block content %}
     <section class="page dashboard">
@@ -34,9 +35,8 @@
         </div>
         <div class="page-content">
 
-            {% set entry = craft.entries.section('taskbooks').one() %}
-            {% if entry %}
-                {{ entry.pageBody }}
+            {% if taskbookSingle and taskbookSingle.pageCreate %}
+                {{ taskbookSingle.pageCreate }}
             {% endif %}
 
             <p>&nbsp;</p>

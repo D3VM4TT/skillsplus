@@ -15,8 +15,6 @@
     {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
 
-{% set taskbookIntro = craft.lantra.setting('taskbookIntro') %}
-
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
@@ -56,9 +54,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {% if taskbookIntro %}
-        <a href="{{ taskbookIntro.url }}" class="button primary-bg">{{ taskbookLabel }} Details</a>
-    {% endif %}
 {% endif %}
 
 

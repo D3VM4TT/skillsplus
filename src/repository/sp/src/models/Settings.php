@@ -44,8 +44,6 @@ class Settings extends Model
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
-    public $taskbookIntroNew                    = '';
-    public $taskbookIntroCurrent                = '';
     public $taskbookLevels                      = false;
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
