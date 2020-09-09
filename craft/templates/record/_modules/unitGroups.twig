@@ -27,7 +27,7 @@
                         {% set totalComments = 0 %}
 
                         {% set unitType = unit.unitType %}
-                        {% set unitPoints = unit.unitPoints %}
+                        {% set unitPoints = craft.lantra.unitPoints(unit, module) %}
                         {% if unit.unitRecurring %}
                             {# get or create results for recurring period #}
                             {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unit.id, cycle, moduleResultEntry.id) %}

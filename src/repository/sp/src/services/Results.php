@@ -858,7 +858,7 @@ class Results extends Component
                     $unitIds[] = $unitEntry->id;
                 }
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitIds)) {
-                   return $unitGroup->unitPointsOverride;
+                   return 1000 ; //$unitGroup->unitPointsOverride;
                 }
             }
         }
