@@ -218,7 +218,7 @@ class Results extends Component
     public function onDeleteResult(Event $event, Entry $entry)
     {
         ## check the cpd module result
-        if (null != $moduleResultEntry = $entry->resultModuleResult->one()) {
+        if ($entry->resultModuleResult && null != $moduleResultEntry = $entry->resultModuleResult->one()) {
             $moduleEntry = $moduleResultEntry->resultModule->one();
             if ($moduleEntry && $moduleEntry->type == 'cpd') {
                 $this->checkModuleResult($moduleEntry, $entry->authorId, $moduleResultEntry);
