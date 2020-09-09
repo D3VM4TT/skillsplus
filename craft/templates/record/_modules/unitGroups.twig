@@ -105,6 +105,7 @@
                             {% endif %}
                             {% include 'record/_modules/row' with {
                                 resultEntry: unitResultEntry,
+                                unitPoints: unitPoints,
                                 rowClass: rowClass,
                                 editLink: addResult ? newUrl : editUrl,
                                 newLink: not hasResult ? newUrl
