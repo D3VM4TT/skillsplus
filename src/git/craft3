@@ -128,7 +128,7 @@ else
 	fi
 
 	echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
-        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
+        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/photos' --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
 
 	echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times --delete $REPO_DIR git@$REMOTE_IP:$REMOTE_FOLDER/src/
