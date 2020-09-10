@@ -127,7 +127,7 @@ $(document).ready(function(){
             }
             // make sure input
             if (t == 'text' || t == 'number' || t == 'date') {
-                if (!$(this).find('input').eq(0).val()) {
+                if (!$(this).find(':input').eq(0).val()) {
                     e = true;
                 }
             }
