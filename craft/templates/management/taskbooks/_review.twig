@@ -1,3 +1,5 @@
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 <table class="data">
     <thead>
         <th>Module Group</th>
@@ -6,17 +8,18 @@
     </thead>
     <tbody>
     {% for assessment in package.packageAssessment %}
+        {% set enabled = not assessment.assessmentDate %}
         {% set moduleGroup = assessment.assessmentModuleGroup.last %}
         <tr>
             <td style="width:25%;">{{ moduleGroup.title }}</td>
             <td style="width:10%;">
-                <select id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
+                <select {% if not enabled %} disabled{% endif %} id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
                     <option value="1"{% if assessment.assessmentPassed %} selected{% endif %}>Passed</option>
                     <option value="0"{% if not assessment.assessmentPassed %} selected{% endif %}>Failed</option>
                 </select>
             </td>
             <td style="width:60%;">
-                <textarea rows="4" style="width:100%;" id="comment-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentComment]">{{ assessment.assessmentComment }}</textarea>
+                <textarea {% if not enabled %} disabled{% endif %} rows="4" style="width:100%;" id="comment-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentComment]">{{ assessment.assessmentComment }}</textarea>
             </td>
         </tr>
     {% endfor %}
@@ -46,6 +49,7 @@
         </div>
     {% elseif step.reviewDate|length %}
         <h2>{{ step.reviewStepName }}</h2>
+        <p>{{ step.reviewDate|date(dateFormat) }}</p>
         <div class="field--wrapper">
             <label for="result">Review Step Result:</label>
             <select disabled id="result" name="steps[{{ step.id }}][result]">
