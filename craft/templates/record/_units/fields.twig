@@ -51,13 +51,13 @@
     {% elseif row.fieldType == 'resultPoints' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="fields[resultPoints]" class="">{{ label|raw }}</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number"
                     value="{{ resultExists ? resultEntry.resultPoints|default('') }}" />
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="resultLocation" class="">{{ label|raw }}</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultNarrative' %}
