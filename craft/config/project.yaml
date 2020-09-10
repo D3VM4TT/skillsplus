@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1599735412
+dateModified: 1599748384
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -666,7 +666,7 @@ fields:
     name: Location
     searchable: true
     settings:
-      googleApiKey: AIzaSyDW6LkQ8zvs4iYX212Ws56UWm3_0JqZvq4
+      googleApiKey: $GOOGLE_API_KEY
     translationKeyFormat: null
     translationMethod: none
     type: nthmedia\entrygpscoordinates\fields\EntryCoordinates
