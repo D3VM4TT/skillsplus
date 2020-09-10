@@ -29,7 +29,9 @@
             <section id="groups-tab-group-{{ role.id }}" class="tabgroup">
                 {% for moduleGroupItem in roleItem.moduleGroups %}
                     {% set moduleGroup = cpdUser.record.getElement(moduleGroupItem.elementId) %}
-                    {% set readOnly = moduleGroup.moduleGroupReadOnly and cpdUser.id == currentUser.id %}
+                    {% if not readOnly %}
+                        {% set readOnly = moduleGroup.moduleGroupReadOnly and cpdUser.id == currentUser.id %}
+                    {% endif %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
                     {% include 'record/_modules/moduleGroup' with {moduleGroupItem:moduleGroupItem, moduleGroup:moduleGroup} %}
                 {% endfor %}
