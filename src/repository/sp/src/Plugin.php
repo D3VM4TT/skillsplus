@@ -11,6 +11,7 @@ namespace lantra\sp;
 use Craft;
 use craft\base\Plugin as BasePlugin;
 use craft\base\Element;
+use craft\elements\Asset;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
@@ -274,7 +275,23 @@ class Plugin extends BasePlugin
                 ];
             });
 
-        # $this->_runMigrations();
+        ## add geo location to assets
+        Event::on(
+            Asset::class,
+            Asset::EVENT_AFTER_SAVE,
+            function (ModelEvent $event) {
+                ## ignore cli
+                if (Craft::$app->request->isConsoleRequest) {
+                    return;
+                }
+                $asset = $event->sender;
+                $volume = $asset->getVolume();
+                ## add coordinates to evidence
+                if ($volume->handle == 'evidence') {
+                    Lantra::$app->evidence->onSaveEvidence($event, $asset);
+                }
+            }
+        );
     }
 
     /**

@@ -2332,3 +2332,23 @@ div.pages ol {
 div.pages p {
     margin-bottom:20px;
 }
+
+div#files {
+    display:block;
+    float:left;
+    width:100%;
+    margin-bottom:20px;
+}
+
+div#files p {
+    display:block;
+    min-width:200px;
+    float:left;
+    clear:both;
+    margin-bottom:10px;
+}
+
+div#files p a.icon {
+    display:inline;
+    float:right;
+}
