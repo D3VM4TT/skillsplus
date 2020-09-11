@@ -1,0 +1,59 @@
+{% do craft.lantra.requirePermission('editReports') %}
+{% extends "_layout" %}
+
+{% set metaTitle = "Reporting > Automated Reports > Recipients" %}
+{% set dateFormat = 'd-m-y H:i' %}
+
+{% set criteria = craft.lantra.reportCriteria(null, null, 'id desc', true) %}
+{% set reportEntries = criteria.all() %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Automated Reports Recipients</h2>
+        </div>
+    <div class="page-content">
+        <table class="data">
+            <thead>
+            <tr>
+                <th>Report ID</th>
+                <th class="title">Report Title</th>
+                <th>Recipient Company Name</th>
+                <th>Recipient Name</th>
+                <th>Recipient Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in reportEntries %}
+                {% if report.reportRecipients %}
+                    {% set users = report.reportRecipients.all() %}
+                    {% for user in users %}
+                        {% set userCompany = user.userCompany.one() %}
+                        <tr>
+                            <td>{{ report.id }}</td>
+                            <td>{{ report.title }}</td>
+                            <td>{{ userCompany ? userCompany.companyLabel : '~' }}</td>
+                            <td>{{ user.fullName }}</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                {% if report.reportEmails %}
+                    {% set emails = report.reportEmails|split(',') %}
+                    {% for email in emails %}
+                        <tr>
+                            <td>{{ report.id }}</td>
+                            <td>{{ report.title }}</td>
+                            <td>~</td>
+                            <td>~</td>
+                            <td>{{ email }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
