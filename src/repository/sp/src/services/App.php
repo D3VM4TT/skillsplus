@@ -16,6 +16,7 @@ use lantra\sp\services\paypal\PayPal;
  * Class App
  * @package lantra\sp\services
  *
+ * @property-read \lantra\sp\services\Evidence $evidence
  * @property-read \lantra\sp\services\Attempts $attempts
  * @property-read \lantra\sp\services\Deploy $deploy
  * @property-read \lantra\sp\services\Licences $licences
@@ -34,6 +35,7 @@ use lantra\sp\services\paypal\PayPal;
  */
 class App extends Component
 {
+    public $evidence;
     public $attempts;
     public $cycles;
     public $deploy;
@@ -56,6 +58,7 @@ class App extends Component
      */
     public function init()
     {
+        $this->evidence = new Evidence();
         $this->attempts = new Attempts();
         $this->cycles = new Cycles();
         $this->deploy = new Deploy();

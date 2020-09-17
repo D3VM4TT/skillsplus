@@ -45,25 +45,25 @@
     {% elseif row.fieldType == 'resultLocation' %}
         <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
             <label for="resultLocation" class="">{{ label|raw }}</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label" placeholder="{{ label }}"
-                   value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultLocation]" type="text" class="float-label"
+                    value="{{ resultExists ? resultEntry.resultLocation|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultPoints' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="fields[resultPoints]" class="">{{ label|raw }}</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %} name="fields[resultPoints]" type="number"
                     value="{{ resultExists ? resultEntry.resultPoints|default('') }}" />
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
             <label for="resultLocation" class="">{{ label|raw }}</label>
-            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label" placeholder="{{ label }}"
+            <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
     {% elseif row.fieldType == 'resultNarrative' %}
         <div class="field--wrapper" data-type="text" data-required="{{ row.fieldRequired }}">
             <label for="resultNarrative" class="">{{ label|raw }}</label>
-            <textarea{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultNarrative]" type="text" class="float-label redactor" placeholder="{{ label }}">
+            <textarea{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultNarrative]" type="text" class="float-label redactor">
                 {{ resultExists ? resultEntry.resultNarrative|default('') }}
             </textarea>
         </div>
@@ -100,6 +100,9 @@
                         <input type="hidden" name="fields[resultEvidence][]" value="{{ resultAsset.id }}" />
                         [<a href="#" class="delete-file" data-id="{{ resultAsset.id }}" style="color:#FF0000">x</a>]
                         <a target="_blank" href="/internal/{{ resultAsset.id }}">{{ resultAsset.filename }}</a>
+                        {% if resultAsset.location and resultAsset.location|coordinates %}
+                            <a class="icon" href="https://maps.google.co.uk?q={{ resultAsset.location|coordinates }}" target="_blank"><img src="/assets/img/marker.svg"></a>
+                        {% endif %}
                         <br /><span style="font-size: small">Uploaded {{ resultAsset.dateCreated|date('d/m/Y') }}</span>
                     </p>
                     {% endfor %}

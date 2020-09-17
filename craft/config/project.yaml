@@ -81,7 +81,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1599653354
+dateModified: 1599748384
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -658,6 +658,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  27ae4aac-8776-4581-9548-667541eefd7c:
+    contentColumnType: string
+    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
+    handle: location
+    instructions: ''
+    name: Location
+    searchable: true
+    settings:
+      googleApiKey: $GOOGLE_API_KEY
+    translationKeyFormat: null
+    translationMethod: none
+    type: nthmedia\entrygpscoordinates\fields\EntryCoordinates
   27e57a2d-2938-41e8-ab58-72f377ca20c1:
     contentColumnType: boolean
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -4753,6 +4765,10 @@ matrixBlockTypes:
     name: Columns
     sortOrder: 1
 plugins:
+  entry-gps-coordinates:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
   incognito-field:
     edition: standard
     enabled: true
@@ -7382,15 +7398,24 @@ users:
   requireEmailVerification: false
 volumes:
   a6dafdf7-e4c0-4943-aff3-e481bbdf23fc:
+    fieldLayouts:
+      d815e921-d4db-4003-be19-7818b9ae30ac:
+        tabs:
+          -
+            fields:
+              27ae4aac-8776-4581-9548-667541eefd7c:
+                required: false
+                sortOrder: 1
+            name: Location
+            sortOrder: 1
     handle: evidence
     hasUrls: false
     name: Evidence
     settings:
       path: '@assetsPath/evidence'
-      url: ''
     sortOrder: 1
     type: craft\volumes\Local
-    url: null
+    url: ''
   c56fc71b-f1b7-47ac-935c-9ad07177edae:
     handle: photos
     hasUrls: true

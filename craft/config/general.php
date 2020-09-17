@@ -27,6 +27,7 @@ return [
         'useProjectConfigFile' => true,
         'backupOnUpdate' => false,
         'autoLoginAfterAccountActivation' => true,
+        'preserveExifData' => true,
         'phpMaxMemoryLimit' => '4096M',
         'maxUploadFileSize' => '2147483648',
         'aliases' => [

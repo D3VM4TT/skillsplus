@@ -2,6 +2,8 @@
     {% include '_includes/navUser' %}
     {% if craft.lantra.canManage() %}
         {% include '_includes/navManager' %}
+    {% elseif craft.lantra.packagesCount() %}
+        {% include '_includes/navReviewer' %}
     {% endif %}
     {% include '_includes/navLinks' %}
 </nav>

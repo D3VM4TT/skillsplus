@@ -225,23 +225,37 @@
                     url: url,
                     dataType: 'json',
                     autoUpload: true,
+                    multiple: true,
                     formData: [{name: 'folderId', value: $('#fileupload').data('folderid')}],
+                    start: function (e) {
+                        $('body').addClass('loading');
+                    },
+                    stop: function (e) {
+                        $('body').removeClass('loading');
+                    },
                     done: function (e, data) {
+                        $('body').removeClass('loading');
                         if(data.result.success) {
                             var fileId = data.result.asset.id,
                                 fileName = data.result.asset.filename,
+                                coordinates = data.result.asset.location.coordinates,
                                 node = $('<p/>')
                                     .append('<input type="hidden" name="fields[resultEvidence][]" value="' + fileId + '" />')
                                     .append('[<a href="#" class="delete-file" data-id="' + fileId + '" style="color:#FF0000">delete</a>] ')
                                     .append('<a target="_blank" href="/internal/' + fileId + '">' + fileName + '</a>');
 
+                                if (coordinates) {
+                                    node.append('<a class="icon" href="https://maps.google.co.uk?q=' + coordinates + '" target="_blank"><img src="/assets/img/marker.svg"></a>');
+                                }
                             node.appendTo($('#files'));
                         }
                         else {
+                            $('body').removeClass('loading');
                             alert(data.result.message);
                         }
                     },
                     error: function (e, data) {
+                        $('body').removeClass('loading');
                         alert('Could not upload this file.');
                     }
                 }).on('fileuploadprogressall', function (e, data) {
