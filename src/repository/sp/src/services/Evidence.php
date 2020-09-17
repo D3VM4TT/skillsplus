@@ -10,8 +10,10 @@ namespace lantra\sp\services;
 
 use Craft;
 use craft\base\Component;
+use craft\base\Element;
 use craft\elements\Asset;
 use craft\events\ModelEvent;
+use craft\helpers\Json;
 
 use lantra\sp\Plugin as Lantra;
 
@@ -27,11 +29,8 @@ class Evidence extends Component
      */
     public function onSaveEvidence(ModelEvent $event, Asset $asset)
     {
-        if (isset($asset->location) && $asset->location->coordinates) {
+        if (!$asset->filename || (isset($asset->location) && !is_null($asset->location->coordinates))) {
              return;
-        }
-        if (!$asset->filename) {
-            return;
         }
         $volumePath = rtrim(Craft::getAlias($asset->getVolume()->settings['path']), '/') . '/';
         $folderPath = rtrim($asset->getFolder()->path, '/') . '/';
@@ -40,8 +39,11 @@ class Evidence extends Component
         if (isset($exifData["gps.GPSLatitude"]) && isset($exifData["gps.GPSLongitude"])) {
             $latitude = $this->getGps($exifData["gps.GPSLatitude"], $exifData['gps.GPSLatitudeRef']);
             $longitude = $this->getGps($exifData["gps.GPSLongitude"], $exifData['gps.GPSLongitudeRef']);
-            $asset->setFieldValue('location', ['coordinates' => $latitude . ',' . $longitude]);
-            Craft::$app->elements->saveElement($asset);
+            $asset->setScenario(ELEMENT::SCENARIO_DEFAULT);
+            $asset->setFieldValue('location', Json::encode(['coordinates' => $latitude . ',' . $longitude]));
+            if (!Craft::$app->elements->saveElement($asset)) {
+                die('COULD NOT SAVE LOCATION');
+            }
         }
     }
 
