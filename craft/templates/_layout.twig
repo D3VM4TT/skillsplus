@@ -230,6 +230,9 @@
                     start: function (e) {
                         $('body').addClass('loading');
                     },
+                    stop: function (e) {
+                        $('body').removeClass('loading');
+                    },
                     done: function (e, data) {
                         $('body').removeClass('loading');
                         if(data.result.success) {
@@ -247,10 +250,12 @@
                             node.appendTo($('#files'));
                         }
                         else {
+                            $('body').removeClass('loading');
                             alert(data.result.message);
                         }
                     },
                     error: function (e, data) {
+                        $('body').removeClass('loading');
                         alert('Could not upload this file.');
                     }
                 }).on('fileuploadprogressall', function (e, data) {
