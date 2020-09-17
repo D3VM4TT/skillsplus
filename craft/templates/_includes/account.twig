@@ -1,6 +1,6 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set currentUserCompany = craft.lantra.userCompany() %}
-{% set currentUserManagers = craft.lantra.userManagers(currentUser, 0 , false) %}
+{% set userCompany = craft.lantra.userCompany(cpdUser.id) %}
+{% set userManagers = craft.lantra.userManagers(cpdUser, 0 , false) %}
 {% set primaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companyPrimaryManagers'}).limit(null) %}
 {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: cpdUser, field: 'companySecondaryManagers'}).limit(null) %}
 {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
@@ -17,12 +17,12 @@
                 {% case 'fullName' %}
                 <div class="col">
                     <h5 class="primary-color">{{ row.label ?: 'Name' }}</h5>
-                    <p class="link-bold">{{ currentUser.fullName }}</p>
+                    <p class="link-bold">{{ cpdUser.fullName }}</p>
                 </div>
                 {% case 'email' %}
                 <div class="col">
                     <h5 class="primary-color">{{ row.label ?: 'Email' }}</h5>
-                    <p class="link-bold">{{ currentUser.email }}</p>
+                    <p class="link-bold">{{ cpdUser.email }}</p>
                 </div>
                 {% case 'userStartDate' %}
                     <div class="col">
@@ -50,21 +50,21 @@
                     <div class="col">
                         <h5 class="primary-color">{{ row.label ?: 'Role' }}</h5>
                         <p class="link-bold">
-                            {% if not currentUser.userRole|length %}~{% endif %}
-                            {% for role in currentUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                            {% if not cpdUser.userRole|length %}~{% endif %}
+                            {% for role in cpdUser.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
                         </p>
                     </div>
                 {% case 'userCompany' %}
                     <div class="col">
                         <h5 class="primary-color">{{ row.label ?: 'User Company' }}</h5>
-                        <p class="link-bold">{{ currentUserCompany ? currentUserCompany : '~' }}</p>
+                        <p class="link-bold">{{ userCompany ? userCompany : '~' }}</p>
                     </div>
                 {% case 'userManagers' %}
                     <div class="col">
                         <h5 class="primary-color">{{ row.label ?: 'User Managers' }}</h5>
                         <p class="link-bold">
-                            {% if not currentUserManagers|length %}~{% endif %}
-                            {% for manager in currentUserManagers %}
+                            {% if not userManagers|length %}~{% endif %}
+                            {% for manager in userManagers %}
                                 {{ manager.fullName }}{{ not loop.last ? ', ' }}
                             {% endfor %}
                         </p>
@@ -82,12 +82,12 @@
                 {% case 'legacyId' %}
                     <div class="col">
                         <h5 class="primary-color">{{ row.label ?: 'Legacy ID' }}:</h5>
-                        <p class="link-bold">{{ currentUser.legacyId ? currentUser.legacyId : '~' }}</p>
+                        <p class="link-bold">{{ cpdUser.legacyId ? cpdUser.legacyId : '~' }}</p>
                     </div>
                 {% case 'lastLogin' %}
                     <div class="col">
                         <h5 class="primary-color">{{ row.label ?: 'Last Login' }}:</h5>
-                        <p class="link-bold">{{ currentUser.lastLoginDate|date(dateFormat) }}</p>
+                        <p class="link-bold">{{ cpdUser.lastLoginDate|date(dateFormat) }}</p>
                     </div>
                 {% default  %}
                 <div class="col">
