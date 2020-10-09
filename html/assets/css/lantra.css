@@ -2352,3 +2352,11 @@ div#files p a.icon {
     display:inline;
     float:right;
 }
+
+table.data tr.type-member td:first-child {
+    color:#006600;
+}
+
+table.data tr.type-manager td:first-child {
+    color:#000066;
+}

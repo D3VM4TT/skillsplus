@@ -55,6 +55,7 @@
         <table class="data">
             <thead>
             <tr>
+                <th></th>
                 <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                 <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
                 <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
@@ -76,7 +77,8 @@
                     {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companySecondaryManagers'}).limit(null) %}
                     {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
                 {% endif %}
-                <tr>
+                <tr class="type-{{ user.userType }}">
+                    <td>{{ user.userType|ucwords }}</td>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
