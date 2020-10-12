@@ -783,7 +783,15 @@ class Results extends Component
     {
         ## linked module results
         if ($moduleResultEntry) {
-            $unitResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'unitResult');
+            $_unitResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'unitResult');
+            ## format as unitId => result
+            $unitResultEntries = [];
+            foreach($_unitResultEntries as $result)  {
+                $unitIds = $result->resultUnit->ids();
+                if (count($unitIds)) {
+                    $unitResultEntries[$unitIds[0]] = $result;
+                }
+            }
             $userResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'userResult');
         } else {
             $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
