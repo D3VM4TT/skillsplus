@@ -78,7 +78,7 @@
                     {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
                 {% endif %}
                 <tr class="type-{{ user.userType }}">
-                    <td>{% if user.userType == 'manager' %}Manager{% endif %}</td>
+                    <td>{% if user.userType == 'manager' %}<a class="icon" href="#"><img src="/assets/img/manager.svg"></a>{% endif %}</td>
                     <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                     <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
                     <td><p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
