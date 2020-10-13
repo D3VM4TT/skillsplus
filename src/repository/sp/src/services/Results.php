@@ -783,15 +783,7 @@ class Results extends Component
     {
         ## linked module results
         if ($moduleResultEntry) {
-            $_unitResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'unitResult');
-            ## format as unitId => result
-            $unitResultEntries = [];
-            foreach($_unitResultEntries as $result)  {
-                $unitIds = $result->resultUnit->ids();
-                if (count($unitIds)) {
-                    $unitResultEntries[$unitIds[0]] = $result;
-                }
-            }
+            $unitResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'unitResult');
             $userResultEntries = $this->getModuleResultResults($moduleResultEntry->id, null, false, 'userResult');
         } else {
             $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
@@ -815,8 +807,8 @@ class Results extends Component
         $hours = 0;
         foreach ($resultEntries as $resultEntry) {
             if ($resultEntry->resultStatus == 'endorsed') {
-                if ((int) $resultEntry->resultHours) {
-                    $hours += (int) $resultEntry->resultHours;
+                if ((float) $resultEntry->resultHours) {
+                    $hours += (float) $resultEntry->resultHours;
                 }
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
@@ -883,7 +875,7 @@ class Results extends Component
         $rows = [];
         // add unit group targets
         foreach($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
-            $targetHours = (int) $unitGroup->cpdTargetHours;
+            $targetHours = (float) $unitGroup->cpdTargetHours;
             $targetPoints = (int) $unitGroup->cpdTargetPoints;
             $endorsedHours = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'hours');
             $endorsedPoints = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'points');
@@ -942,19 +934,29 @@ class Results extends Component
     private function getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, $type)
     {
         $unitIds = $unitGroup->unitEntries->ids();
+        $_results = [];
+        ## reformat as unitId => [results];
+        foreach ($unitResultEntries as $resultEntry) {
+            if (!$resultEntry->resultUnit) {
+                continue;
+            }
+            $unitId = $resultEntry->resultUnit->ids()[0];
+            $_results[$unitId][] = $resultEntry;
+        }
         $return = 0;
         foreach ($unitIds as $id) {
-            if (isset($unitResultEntries[$id])) {
-                $unitResultEntry = $unitResultEntries[$id];
-                if ($unitResultEntry->resultStatus != 'endorsed') {
-                    continue;
-                }
-                if ($type == 'hours') {
-                    $return += (int) $unitResultEntry->resultHours;
-                }
-                else {
-                    $unitEntry = $unitResultEntry->resultUnit->one();
-                    $return += $this->getUnitPoints($unitEntry, $moduleEntry);
+            if (isset($_results[$id])) {
+                ## look through multiple results for each unit
+                foreach($_results[$id] as $unitResultEntry) {
+                    if ($unitResultEntry->resultStatus != 'endorsed') {
+                        continue;
+                    }
+                    if ($type == 'hours') {
+                        $return += (float)$unitResultEntry->resultHours;
+                    } else {
+                        $unitEntry = $unitResultEntry->resultUnit->one();
+                        $return += $this->getUnitPoints($unitEntry, $moduleEntry);
+                    }
                 }
             }
         }
@@ -1030,7 +1032,7 @@ class Results extends Component
         $pendingHours = 0;
         $pendingPoints = 0;
         foreach($pendingResults as $result) {
-            $pendingHours = $pendingHours + (int) $result->resultHours;
+            $pendingHours = $pendingHours + (float) $result->resultHours;
             if (null != $resultUnit = $result->resultUnit->one()) {
                 $pendingPoints = $pendingPoints + (int)$result->resultUnit->one()->unitPoints;
             }
@@ -1067,10 +1069,10 @@ class Results extends Component
             return $return;
         }
         $targetPoints = (int) $moduleEntry->targetPoints;
-        $targetHours = (int) $moduleEntry->targetHours;
+        $targetHours = (float) $moduleEntry->targetHours;
 
         $resultPoints = (int) $moduleResult->resultPoints;
-        $resultHours = (int) $moduleResult->resultHours;
+        $resultHours = (float) $moduleResult->resultHours;
 
         $remainingPoints = $targetPoints - $resultPoints;
         $remainingHours = $targetHours - $resultHours;
