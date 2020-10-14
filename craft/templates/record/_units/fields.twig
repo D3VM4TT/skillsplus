@@ -56,8 +56,8 @@
         </div>
     {% elseif row.fieldType == 'resultHours' %}
         <div class="field--wrapper" data-type="number" data-required="{{ row.fieldRequired }}">
-            <p style="color:#006600;font-weight:700">Enter hours as decimals i.e. 1.5 for an hour and a half or 1.75 an hour and 45 minutes.  Only enter number values (no words or explanation).</p>
             <label for="resultLocation" class="">{{ label|raw }}</label>
+            <p style="color:#000000;font-weight:700">Enter hours as decimals i.e. 1.5 for an hour and a half or 1.75 an hour and 45 minutes.  Only enter number values (no words or explanation).</p>
             <input{% if resultLocked or fieldDisabled %} disabled{% endif %}  name="fields[resultHours]" type="text" class="float-label"
                    value="{{ resultExists ? resultEntry.resultHours|default('') }}">
         </div>
