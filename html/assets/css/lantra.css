@@ -2371,5 +2371,5 @@ table.data tr.type-manager td:first-child {
 
 ul.tabs li.endorse a,
 table.data tr.endorse {
-    border:2px solid yellow;
+    border-bottom:3px solid yellow;
 }
