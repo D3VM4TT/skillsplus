@@ -870,7 +870,7 @@ class Results extends Component
      * @param array $userResultEntries
      * @return array
      */
-    public function getComponentResults(Entry $moduleEntry, $unitResultEntries, $userResultEntries = [])
+    public function getComponentResults(Entry $moduleEntry, $unitResultEntries = [], $userResultEntries = [])
     {
         $rows = [];
         // add unit group targets
@@ -1153,6 +1153,10 @@ class Results extends Component
         if ($postDate) {
             $resultEntry->postDate = $postDate;
         }
+        ## set default component results
+        $moduleEntry = Entry::findOne($moduleEntryId);
+        $componentResults = $this->getComponentResults($moduleEntry);
+        $resultEntry->setFieldValue('resultComponentResults', $componentResults);
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
         $resultEntry->setFieldValue('resultStatus',  'active');
         if (!Craft::$app->elements->saveElement($resultEntry)) {
