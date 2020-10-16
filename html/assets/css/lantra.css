@@ -1979,7 +1979,8 @@ body.print div.cpd-icons {
 }
 
 body.print div#account-details-expand,
-body.print div.groups-tab-group {
+body.print div.groups-tab-group,
+body.print div.module {
     display:block !important;
 }
 
@@ -2002,6 +2003,14 @@ body.print div.groups-tab-group {
 body.print a {
     text-decoration: none;
     cursor: text;
+}
+
+body.print article.cpd div.job-role {
+    border-bottom:none;
+}
+
+body.print div.job-role div.align-vertical {
+    padding-bottom:40px;
 }
 
 .date-selector select {
