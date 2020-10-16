@@ -675,4 +675,10 @@ $(document).ready(function(){
             }
         checkPayment();
     }
+
+    $('a.endorse').each(function(){
+        $(this).closest('tr').addClass('endorse');
+        var groupId = $(this).closest('.groups-tab-group').attr('id');
+        $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
+    });
 });

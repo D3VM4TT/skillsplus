@@ -2359,3 +2359,8 @@ table.data tr.type-member td:first-child {
 table.data tr.type-manager td:first-child {
     color:#000066;
 }
+
+ul.tabs li.endorse a,
+table.data tr.endorse {
+    border:2px solid yellow;
+}
