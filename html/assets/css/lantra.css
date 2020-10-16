@@ -2373,3 +2373,7 @@ ul.tabs li.endorse a,
 table.data tr.endorse {
     border-bottom:3px solid yellow;
 }
+
+ul.tabs li.endorse a h4 {
+    color:yellow!important;
+}
