@@ -246,8 +246,8 @@ class LantraVariable
     public function taskbookLevels()
     {
         return [
-            ['value' => 5, 'label' => 'Standard'],
-            ['value' => 10, 'label' => 'Senior'],
+            ['value' => 5, 'label' => 'Inspector'],
+            ['value' => 10, 'label' => 'Senior Inspector'],
         ];
     }
 
