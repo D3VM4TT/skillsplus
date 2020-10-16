@@ -32,8 +32,12 @@
 {% block content %}
 <div class="page-subHeader primary-bg">
     {% if isManager %}
-        <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
-        <a class="back-link" href="/management/users">&laquo; back to Users</a>
+        {% if craft.app.request.getSegment(3) == 'archive' %}
+            <a class="back-link" href="/cpd/{{ account.id }}">&laquo; back</a>
+        {% else %}
+            <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
+            <a class="back-link" href="/management/users">&laquo; back to Users</a>
+        {% endif %}
     {% endif %}
 {% include '_includes/topNavigation' %}
 </div>
