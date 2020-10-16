@@ -75,6 +75,10 @@
     </div>
     {% include '_includes/account' with{cpdUser:account} %}
     <div class="page-content">
+        <div id="endorsements" style="display:none;">
+            <h4>Endorsements</h4>
+            <table class="data"></table>
+        </div>
         {% if isTaskbooks %}
             {% include 'record/_taskbooks' with{cpdUser:account} %}
         {% else %}

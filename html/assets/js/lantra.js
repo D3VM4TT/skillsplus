@@ -677,8 +677,20 @@ $(document).ready(function(){
     }
 
     $('a.endorse').each(function(){
-        $(this).closest('tr').addClass('endorse');
+        var tr = $(this).closest('tr'),
+            e = $('#endorsements');
+
+        tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
+
+        var row = $('<tr />');
+        row.append(tr.find('td:first-child').clone());
+        tr.find('td.icons').each(function(){
+            row.append($(this).clone());
+        });
+        e.find('table').eq(0).append(row);
+        e.show();
+
     });
 });

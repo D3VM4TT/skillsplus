@@ -2371,9 +2371,25 @@ table.data tr.type-manager td:first-child {
 
 ul.tabs li.endorse a,
 table.data tr.endorse {
-    border-bottom:3px solid yellow;
+    border-bottom:3px solid #ffbf00;
 }
 
 ul.tabs li.endorse a h4 {
-    color:yellow!important;
+    color:#ffbf00!important;
+}
+
+div#endorsements {
+    border:2px solid #ffbf00;
+    padding:20px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+div#endorsements table.data {
+    width:auto;
+    margin:0;
+}
+
+div#endorsements table.data div.cpd-icons {
+    display:none;
 }
