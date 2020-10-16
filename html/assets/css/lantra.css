@@ -2334,8 +2334,7 @@ div.pages p {
 }
 
 div#files {
-    display:block;
-    float:left;
+    display:inline-block;
     width:100%;
     margin-bottom:20px;
 }
