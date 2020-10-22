@@ -25,9 +25,15 @@
 {% endif %}
 <p style="text-align:right">
     {% if craft.lantra.setting('themeResultHistoryLink') and resultArchive|length %}
-        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
-            <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
-        </a>
+        {% if craft.app.request.getSegment(3) == 'archive' %}
+            <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}">
+                <span>Dashboard</span>
+            </a>
+        {% else %}
+            <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
+                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
+            </a>
+        {% endif %}
     {% endif %}
     <a class="button no-shadow primary-bg" target="_blank" href="/cpd/{{ cpdUser.id }}/print">
         <span>Print Version</span>
