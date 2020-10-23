@@ -2374,6 +2374,10 @@ table.data tr.endorse {
     border-bottom:3px solid #ffbf00;
 }
 
+table.data tr.endorse {
+    border-top:3px solid #ffbf00;
+}
+
 ul.tabs li.endorse a h4 {
     color:#ffbf00!important;
 }
