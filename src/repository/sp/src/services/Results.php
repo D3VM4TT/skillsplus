@@ -1482,8 +1482,8 @@ class Results extends Component
         # add subordinates and level to query
         if ($onlySubordinates) {
             $mysql .= " 
-            AND c.field_unitEndorsementManagerLevel <= " . $level . "
-            AND authorId IN(" . implode(',', $subordinateIds) . ")";
+            AND (c.field_unitEndorsementManagerLevel IS NULL OR c.field_unitEndorsementManagerLevel <= " . $level . ")
+            AND authorId IN (" . implode(',', $subordinateIds) . ")";
         }
 
         if ($count) {
