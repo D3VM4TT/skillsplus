@@ -678,15 +678,18 @@ $(document).ready(function(){
 
     $('a.endorse').each(function(){
         var tr = $(this).closest('tr'),
+            pre = $(this).closest('.endorse-wrapper').data('label'),
             l =  $(this).data('label'),
             e = $('#endorsements');
+
+
 
         tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
         var row = $('<tr />');
-        row.append('<td>' + l + '</td>');
+        row.append('<td>' + pre + ' > ' + l + '</td>');
         tr.find('td.icons').each(function(){
             row.append($(this).clone());
         });

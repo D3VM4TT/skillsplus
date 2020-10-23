@@ -1,4 +1,4 @@
-<div class="groups-tab-group" id="tab{{ moduleGroupElementId }}">
+<div class="groups-tab-group endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
     {% if package is defined %}
         {% set assessment = package.moduleGroupAssessment(moduleGroup.id) %}
         {% if assessment and assessment.assessmentDate %}
