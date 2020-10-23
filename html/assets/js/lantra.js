@@ -678,23 +678,23 @@ $(document).ready(function(){
 
     $('a.endorse').each(function(){
         var tr = $(this).closest('tr'),
-            pre = $(this).closest('.endorse-wrapper').data('label'),
-            l =  $(this).data('label'),
+            moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
+            unitTitle =  $(this).data('label'),
             e = $('#endorsements');
-
-
 
         tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
         var row = $('<tr />');
-        row.append('<td>' + pre + ' > ' + l + '</td>');
+        row.append('<td>' + moduleGroup + '</td>');
+        row.append('<td>' + unitTitle + '</td>');
+        var icons = '';
         tr.find('td.icons').each(function(){
-            row.append($(this).clone());
+            icons += $(this).html()
         });
-        e.find('table').eq(0).append(row);
+        row.append('<td style="text-align: right">' + icons + '</td>');
+        e.find('table').eq(0).find('tbody').append(row);
         e.show();
-
     });
 });

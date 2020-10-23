@@ -77,7 +77,17 @@
     <div class="page-content">
         <div id="endorsements" style="display:none;">
             <h4>Endorsements</h4>
-            <table class="data"></table>
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Module Group</th>
+                        <th>Unit Title</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
         {% if isTaskbooks %}
             {% include 'record/_taskbooks' with{cpdUser:account} %}
