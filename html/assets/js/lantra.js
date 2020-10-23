@@ -678,6 +678,7 @@ $(document).ready(function(){
 
     $('a.endorse').each(function(){
         var tr = $(this).closest('tr'),
+            l =  $(this).data('label'),
             e = $('#endorsements');
 
         tr.addClass('endorse');
@@ -685,7 +686,7 @@ $(document).ready(function(){
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
         var row = $('<tr />');
-        row.append(tr.find('td:first-child').clone());
+        row.append('<td>' + l + '</td>');
         tr.find('td.icons').each(function(){
             row.append($(this).clone());
         });
