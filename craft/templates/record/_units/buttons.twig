@@ -19,17 +19,23 @@
         <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
     </div>
 {% else %}
-    {% if not isPackage and not craft.lantra.setting('jobRoleEndorse', false) %}
+    {% if autoEndorse %}
+        <div class="container-btn">
+            <button class="button primary-bg status" data-status="endorsed" type="button">Save Result</button>
+        </div>
+    {% elseif not isPackage and not craft.lantra.setting('jobRoleEndorse', false) %}
         <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
         <div class="container-btn">
             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
         </div>
     {% endif %}
 {% endif %}
-<div class="col-pd-btm"><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
-<div class="container-btn">
-    <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
-</div>
+{% if not autoEndorse %}
+    <div class="col-pd-btm"><p>&nbsp;</p></p><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
+    <div class="container-btn">
+        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
+    </div>
+{% endif %}
 {% if isPackage %}
     <div class="col-pd-btm"><p>Click 'Save as complete' if you are ready to submit for endorsement.</p></div>
     <div class="container-btn">

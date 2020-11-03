@@ -42,5 +42,5 @@
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
-    {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
+    {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
 </form>

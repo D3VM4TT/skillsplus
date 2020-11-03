@@ -21,6 +21,9 @@
     {% set resultEntry = false %}
 {% endif %}
 
+{% set moduleResultEntry = false %}
+{% set isPackage = false %}
+
 {% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
 {% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
 {% set optionalUnits = craft.entries.section('units').id(excludeString).orderBy('title') %}
@@ -149,7 +152,7 @@
                 {% if moduleEntry %}
                     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
                 {% endif %}
-                {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked} %}
+                {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
             </form>
         </div>
     </section>

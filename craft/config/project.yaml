@@ -11,6 +11,9 @@ categoryGroups:
               6b431a5f-e1ee-4520-ab30-89ca72993c00:
                 required: false
                 sortOrder: 2
+              b3bb5932-8ec6-48a5-af26-7d974a69e57a:
+                required: false
+                sortOrder: 6
               bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
                 required: false
                 sortOrder: 1
@@ -81,7 +84,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1599748384
+dateModified: 1604409375
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2849,6 +2852,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
+  b3bb5932-8ec6-48a5-af26-7d974a69e57a:
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleGroupAutoEndorse
+    instructions: ''
+    name: 'Auto Endorse?'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   b7d6d158-4e92-4be7-ab53-c7e655c7e062:
     contentColumnType: text
     fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8
