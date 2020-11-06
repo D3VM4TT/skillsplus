@@ -32,7 +32,7 @@ class PayPal extends Component
     public function __construct(array $config = [])
     {
         $this->ipn = new Ipn();
-        if (getenv('ENVIRONMENT') != 'production') {
+        if (getenv('ENVIRONMENT') != 'prod') {
             $this->useSandbox();
             $this->ipn->useSandbox();
         }
