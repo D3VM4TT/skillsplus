@@ -677,9 +677,6 @@ $(document).ready(function(){
     }
 
     $('a.endorse').each(function(){
-        if ($(this).hasClass('taskbooks')){
-            return;
-        }
         var tr = $(this).closest('tr'),
             moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
             unitTitle =  $(this).data('label'),
