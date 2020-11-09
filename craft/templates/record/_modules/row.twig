@@ -43,7 +43,7 @@
                 </a>
             {% endif %}
             {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
-                <a class="icon action endorse {{ craft.request.getSegment(3) == 'taskbooks' ?? 'taskbooks' }}" href="#" title="Endorse this result" data-tooltip
+                <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
                    data-label="{{ rowName|default(rowTitle)|trim }}"
                    {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
                    data-action="entries/endorse-evidence"
