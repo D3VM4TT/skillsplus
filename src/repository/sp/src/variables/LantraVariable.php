@@ -169,6 +169,12 @@ class LantraVariable
             $jobRoleResults = Lantra::$app->results->getJobRoleUserResults($jobRole->id, $user->id);
             $results = array_merge($results, $jobRoleResults);
         }
+        if ($user->record->packages()) {
+            foreach ($user->record->packages() as $packageItem) {
+                $packageResults = Lantra::$app->results->getPackageUserResults($packageItem->elementId, $user->id, 'both');
+                $results = array_merge($results, $packageResults);
+            }
+        }
         if ($return == 'results') {
             return $results;
         }
