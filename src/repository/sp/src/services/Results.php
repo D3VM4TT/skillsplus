@@ -60,6 +60,11 @@ class Results extends Component
                     $entry->setFieldValue('cycleFinishDate', $cycle->finishDate);
                 }
             }
+            ## set title to company name
+            if ($entry->resultCompany && $entry->resultCompany->one()) {
+                $company = $entry->resultCompany->one();
+                $entry->title = '[module ' . $moduleEntry->id . '] ' . $company->title;
+            }
         }
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
             ## set result owner as user
@@ -78,7 +83,13 @@ class Results extends Component
             }
             ## make sure title is correct
             if ($author && $entry->type == 'unitResult' && $entry->resultEvidence && $unitEntry) {
-                $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
+                ## set title to company name
+                if ($entry->resultCompany && $entry->resultCompany->one()) {
+                    $company = $entry->resultCompany->one();
+                    $entry->title = '[unit ' . $unitEntry->id . '] ' . $company->title;
+                } else {
+                    $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
+                }
             }
             $dateTime = new \DateTime();
             ## set comment
@@ -535,15 +546,18 @@ class Results extends Component
      * @param $unitId
      * @param int $limit
      * @param null $moduleResultId
+     * @param $companyId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null)
+    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->limit = $limit;
-        $criteria->authorId = $userId;
+        if (!$companyId) {
+            $criteria->authorId = $userId;
+        }
         $criteria->orderBy = 'resultRecurringCycleCode';
         if ($moduleResultId) {
             $criteria->relatedTo = [
@@ -588,29 +602,49 @@ class Results extends Component
     }
 
     /**
+     * @param $user
+     * @param $moduleId
+     * @param bool $create
+     * @return null
+     */
+    function getUserCompanyModuleResult($user, $moduleId, $create = false)
+    {
+        if (null == $company = Lantra::$app->users->userCompany($user)) {
+            return null;
+        }
+        return $this->getModuleResult($user->id, $moduleId, $create, null, (int) $company->id);
+    }
+
+    /**
      * Get a module result entry
      *
      * @param $userId
      * @param $moduleId
      * @param $create
      * @param $postDate
+     * @param $companyId
      * @return null
      * @throws Mixed
      */
-    function getModuleResult($userId, $moduleId, $create = false, $postDate = null) {
+    function getModuleResult($userId, $moduleId, $create = false, $postDate = null, $companyId = null) {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->limit = 1;
-        $criteria->authorId = $userId;
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        if ($companyId) {
+            $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+        }
+        else {
+            $criteria->authorId = $userId;
+        }
         ## postDate might be sent from Cycles
         if ($postDate) {
             $criteria->postDate = $postDate;
         }
         $existing = $criteria->one();
         if (!$existing && $create) {
-            return $this->createModuleResult($userId, $moduleId);
+            return $this->createModuleResult($userId, $moduleId, null, $companyId);
         }
         return $existing;
     }
@@ -1139,12 +1173,14 @@ class Results extends Component
     /**
      * @param $userId
      * @param $moduleEntryId
+     * @param $postDate
+     * @param $companyId
      * @return EntryModel|void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createModuleResult($userId, $moduleEntryId, $postDate = null) {
+    function createModuleResult($userId, $moduleEntryId, $postDate = null, $companyId = null) {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
@@ -1159,6 +1195,7 @@ class Results extends Component
         $resultEntry->setFieldValue('resultComponentResults', $componentResults);
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
         $resultEntry->setFieldValue('resultStatus',  'active');
+        $resultEntry->setFieldValue('resultCompany', [$companyId]);
         if (!Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }

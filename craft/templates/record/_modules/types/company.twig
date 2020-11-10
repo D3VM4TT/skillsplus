@@ -1,0 +1,7 @@
+{% set company = moduleResultEntry.resultCompany.one %}
+<div class="header" data-target="#m{{ moduleElementId }}">
+    <h4>{{ module.title }}</h4>
+
+    <h5 style="display:block;text-align:right;color:black">{{ company.title }} - Result ID: {{ moduleResultEntry.id }}</h5>
+</div>
+{% include 'record/_modules/unitGroups' with {'moduleResultEntry':moduleResultEntry}  %}

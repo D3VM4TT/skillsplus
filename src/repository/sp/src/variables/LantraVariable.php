@@ -1109,6 +1109,20 @@ class LantraVariable
      * @param null $userId
      * @return null
      */
+    public function companyModuleResult($moduleId, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getUserCompanyModuleResult($user, $moduleId, true);
+    }
+
+    /**
+     * @param $moduleId
+     * @param null $userId
+     * @param null $companyId
+     * @return null
+     */
     public function currentModuleResult($moduleId, $userId = null)
     {
         if (false == $user = $this->getUser($userId)) {
@@ -1176,12 +1190,13 @@ class LantraVariable
      * @param $userId
      * @param $unitId
      * @param null $moduleResultId
+     * @param $companyId
      * @param int $limit
      * @return mixed
      */
-    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null)
+    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null)
     {
-        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId);
+        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId, $companyId);
     }
 
     /**

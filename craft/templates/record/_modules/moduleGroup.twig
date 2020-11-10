@@ -20,7 +20,6 @@
                 {% for moduleItem in moduleGroupItem.modules %}
                     {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
                     {% set moduleElementId = moduleGroupElementId ~ module.id %}
-                    {% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(cpdUser.id).relatedTo(module).resultStatus('complete').status('live, expired').one() %}
                     {% set options = options ~ '<option value="#module' ~ moduleElementId ~ '">' ~ module.title ~ '</option>' %}
                     <li>
                         <a href="#module{{ moduleElementId }}" class="module-status">

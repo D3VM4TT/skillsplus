@@ -29,6 +29,9 @@
         </div>
     {% endif %}
     <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry.id }}" />
+    {% if moduleResultEntry.resultCompany %}
+        <input type="hidden" name="fields[resultCompany][]" value="{{ moduleResultEntry.resultCompany.one.id }}" />
+    {% endif %}
     <input type="hidden" name="typeId" value="10">
     <input type="hidden" name="sectionId" value="10">
     <input type="hidden" name="enabled" value="1">

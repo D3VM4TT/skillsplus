@@ -84,7 +84,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1604409375
+dateModified: 1605015501
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2864,6 +2864,26 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  b44b14bb-77d3-4e81-9d72-9a478aa97053:
+    contentColumnType: string
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+    handle: resultCompany
+    instructions: ''
+    name: 'Result Company'
+    searchable: true
+    settings:
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:86faf121-d218-4348-8ab8-de457b46aa63'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   b7d6d158-4e92-4be7-ab53-c7e655c7e062:
     contentColumnType: text
     fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8
@@ -3601,6 +3621,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  e510ee00-626f-454c-8022-6f855080c882:
+    contentColumnType: boolean
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleAllCompanies
+    instructions: 'Show this module to all companies?'
+    name: 'Module All Companies'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   e7ff470a-3e85-47be-9037-1508ea540121:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -3755,6 +3787,26 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  f2e34bbd-dc9f-4253-90fc-178dc6742141:
+    contentColumnType: string
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleCompanies
+    instructions: ''
+    name: 'Module Companies'
+    searchable: true
+    settings:
+      limit: ''
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:86faf121-d218-4348-8ab8-de457b46aa63'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
     contentColumnType: text
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -5358,28 +5410,31 @@ sections:
                     sortOrder: 1
                   20ebe212-6fe5-4cd3-8045-a82a1c462e88:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 9
                   2c8efd67-eb2c-40fd-b9d3-f660cc251a99:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 8
                   3103beed-feb4-4eed-b71a-68cb81d67f7e:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                   3ccae116-4500-45d0-a56a-024f2e8d4d03:
                     required: false
-                    sortOrder: 2
+                    sortOrder: 3
                   3cff7796-6519-48a5-97e7-e4dbb14befcc:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 6
                   5dd21124-5f28-49d6-8f3e-d70184415478:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
+                  b44b14bb-77d3-4e81-9d72-9a478aa97053:
+                    required: false
+                    sortOrder: 2
                   d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
                     required: false
-                    sortOrder: 6
+                    sortOrder: 7
                   fabb8307-8d88-4171-bfe1-3309efb0b71a:
                     required: false
-                    sortOrder: 9
+                    sortOrder: 10
                 name: Result
                 sortOrder: 1
               -
@@ -5458,13 +5513,16 @@ sections:
                 fields:
                   295e5043-483c-4ad9-bfaa-bac22b99dc19:
                     required: false
-                    sortOrder: 1
+                    sortOrder: 2
                   3ccae116-4500-45d0-a56a-024f2e8d4d03:
                     required: false
-                    sortOrder: 2
+                    sortOrder: 3
+                  b44b14bb-77d3-4e81-9d72-9a478aa97053:
+                    required: false
+                    sortOrder: 1
                   fad66cc6-a49e-4a7d-955e-448c48ed449e:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                 name: Result
                 sortOrder: 1
               -
@@ -5718,6 +5776,49 @@ sections:
         hasTitleField: true
         name: Taskbook
         sortOrder: 3
+        titleFormat: ''
+        titleLabel: Title
+      6940291e-051a-4dce-982b-14031f40c44e:
+        fieldLayouts:
+          3a1f919a-d644-47f8-96f3-821c238bb87b:
+            tabs:
+              -
+                fields:
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 2
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 3
+                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
+                    required: false
+                    sortOrder: 1
+                name: Module
+                sortOrder: 1
+              -
+                fields:
+                  e510ee00-626f-454c-8022-6f855080c882:
+                    required: false
+                    sortOrder: 2
+                  f08f684f-1af1-417b-94f2-5df2f3ac7da6:
+                    required: false
+                    sortOrder: 1
+                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
+                    required: false
+                    sortOrder: 3
+                name: 'Job Roles & Companies'
+                sortOrder: 2
+              -
+                fields:
+                  bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
+                    required: false
+                    sortOrder: 1
+                name: 'Column Layout'
+                sortOrder: 3
+        handle: company
+        hasTitleField: true
+        name: Company
+        sortOrder: 4
         titleFormat: ''
         titleLabel: Title
       a6165775-faf3-4cc0-b6d6-069095d3ca39:
