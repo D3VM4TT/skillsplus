@@ -104,12 +104,14 @@
                             {% set unitResultEntry = null %}
                             {% if hasResult %}
                                 {% set unitResultEntry = resultQuery.one() %}
+                                {# append this result id to url #}
+                                {% set resultUrl = baseUrl ~ unitResultEntry.id ~ '/' ~ params %}
                             {% endif %}
                             {% include 'record/_modules/row' with {
                                 resultEntry: unitResultEntry,
                                 unitPoints: unitPoints,
                                 rowClass: rowClass,
-                                editLink: addResult ? newUrl : editUrl,
+                                editLink: addResult ? newUrl : resultUrl,
                                 newLink: not hasResult ? newUrl
                             } %}
                         {% endif %}
