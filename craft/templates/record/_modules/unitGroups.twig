@@ -4,7 +4,7 @@
 {% endif %}
 <div id="m{{ moduleElementId }}" class="unit-groups">
     {% if module.isCompany %}
-      <h5 style="padding-left:30px;">Company Result {{ moduleResultCompany ? ' - ' ~ moduleResultCompany.title : null }}</h5>
+      <h5 style="padding-left:30px;">{{ moduleResultCompany ? moduleResultCompany.title ~ ' - ' : null }}Module Result ID: {{ moduleResultEntry.id }}</h5>
     {% endif %}
     {% for unitGroupItem in moduleItem.unitGroups %}
         {% set unitGroup = cpdUser.record.getElement(unitGroupItem.elementId) %}
