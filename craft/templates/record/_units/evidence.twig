@@ -10,6 +10,7 @@
 {% endif %}
 {# result is locked when a result entry is pending or endorsed #}
 {% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{% if resultCompany = moduleResultEntry and moduleResultEntry.resultCompany ? moduleResultEntry.resultCompany.one : null %}
 {# undo result locked #}
 {% set resultLocked = false %}
 <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
@@ -19,7 +20,7 @@
     {% if resultEntry is defined and resultEntry %}
         <div id="name-fields">
             <div class="col-6 field--wrapper">
-                <h3>Result ID: {{ resultEntry.id }}
+                <h3>{{ resultCompany ?? resultCompany.title }} Result ID: {{ resultEntry.id }}
                 {% if resultEntry.resultRecurringCycleCode %}
                     {% set cyclePeriod = craft.lantra.unitResultRecurringCycle(moduleResultEntry, resultEntry.resultRecurringCycleCode, unitEntry.unitRecurringPeriod) %}
                     {{ cyclePeriod.name }} {{ cyclePeriod.year }}
