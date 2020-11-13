@@ -565,6 +565,9 @@ class Results extends Component
                 ['targetElement' => $unitId, 'field' => 'resultUnit'],
                 ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult']
             ];
+            if ($companyId) {
+                $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+            }
         }
         else {
             $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
