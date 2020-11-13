@@ -70,6 +70,7 @@ class Install extends Migration
             $user->firstName = $names[0];
             $user->lastName = $names[1];
             $user->email = $user->username = $email;
+            $user->admin = true;
             if (!Craft::$app->elements->saveElement($user)) {
                 echo "could not create account for {$fullname}!";
                 continue;
