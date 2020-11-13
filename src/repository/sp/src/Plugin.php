@@ -35,6 +35,7 @@ use yii\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
+use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\UserRecordBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
@@ -251,6 +252,9 @@ class Plugin extends BasePlugin
             function(DefineBehaviorsEvent $event) {
                 if ($event->sender->sectionId == 15) {
                     $event->behaviors[] = PackageBehavior::class;
+                }
+                if ($event->sender->sectionId == 6) {
+                    $event->behaviors[] = ModuleBehavior::class;
                 }
             }
         );

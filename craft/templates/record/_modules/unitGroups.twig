@@ -1,6 +1,11 @@
-{% set moduleResultCompanyId = moduleResultEntry and moduleResultEntry.resultCompany ? moduleResultEntry.resultCompany.one.id : null %}
-
+{% set moduleResultCompany = null %}
+{% if moduleResultEntry and moduleResultEntry.resultCompany %}
+    {% set moduleResultCompany = moduleResultEntry.resultCompany.one %}
+{% endif %}
 <div id="m{{ moduleElementId }}" class="unit-groups">
+    {% if module.isCompany %}
+      <h5 style="padding-left:30px;">Company Result {{ moduleResultCompany ? ' - ' ~ moduleResultCompany.title : null }}</h5>
+    {% endif %}
     {% for unitGroupItem in moduleItem.unitGroups %}
         {% set unitGroup = cpdUser.record.getElement(unitGroupItem.elementId) %}
         {% set addResult = unitGroup.enableSubmissions %}
@@ -35,7 +40,7 @@
                             {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unit.id, cycle, moduleResultEntry.id) %}
                         {% else %}
                             {# get only results linked to this module result if a cpd type module #}
-                            {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unit.id, addResult ? null : 1, module.type == 'cpd' or module.type == 'company' ? moduleResultEntry.id : null, moduleResultCompanyId) %}
+                            {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unit.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null, moduleResultCompany ? moduleResultCompany.id : null) %}
                         {% endif %}
 
                         {% set hasResult = resultQuery.count() %}

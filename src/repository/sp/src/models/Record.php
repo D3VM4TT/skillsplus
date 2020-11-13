@@ -251,6 +251,10 @@ class Record extends Model
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
+                ## skip if user company does not match this module
+                if ($moduleEntry->isCompany() && !$moduleEntry->isUserCompany()) {
+                    continue;
+                }
                 $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);
                 $this->_data['moduleIds'][] = $moduleEntry->id;

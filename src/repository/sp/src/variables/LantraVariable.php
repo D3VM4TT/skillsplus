@@ -1120,7 +1120,6 @@ class LantraVariable
     /**
      * @param $moduleId
      * @param null $userId
-     * @param null $companyId
      * @return null
      */
     public function currentModuleResult($moduleId, $userId = null)

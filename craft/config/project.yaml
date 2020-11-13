@@ -84,7 +84,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1605015501
+dateModified: 1605274935
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4135,7 +4135,9 @@ matrixBlockTypes:
         name: Title
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4151,7 +4153,9 @@ matrixBlockTypes:
         name: Heading
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4175,13 +4179,18 @@ matrixBlockTypes:
           localizeRelations: false
           restrictFiles: '1'
           selectionLabel: ''
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: true
           singleUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
           singleUploadLocationSubpath: ''
+          source: null
           sources: '*'
-          useSingleFolder: '1'
+          targetSiteId: null
+          useSingleFolder: true
+          validateRelatedElements: false
           viewMode: list
         translationKeyFormat: null
-        translationMethod: none
+        translationMethod: site
         type: craft\fields\Assets
     handle: slide
     name: Slide
@@ -4213,7 +4222,9 @@ matrixBlockTypes:
         name: Question
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4229,6 +4240,8 @@ matrixBlockTypes:
         name: Answers
         searchable: true
         settings:
+          addRowLabel: 'Add a row'
+          columnType: text
           columns:
             __assoc__:
               -
@@ -4264,17 +4277,16 @@ matrixBlockTypes:
                       - type
                       - checkbox
           defaults:
-            __assoc__:
-              -
-                - row1
+            -
+              __assoc__:
                 -
-                  __assoc__:
-                    -
-                      - col1
-                      - ''
-                    -
-                      - col2
-                      - ''
+                  - col1
+                  - ''
+                -
+                  - col2
+                  - ''
+          maxRows: null
+          minRows: null
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Table
@@ -4286,19 +4298,25 @@ matrixBlockTypes:
         name: Asset
         searchable: true
         settings:
+          allowedKinds: null
           defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
           defaultUploadLocationSubpath: ''
           limit: ''
           localizeRelations: false
           restrictFiles: ''
           selectionLabel: ''
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: true
           singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
           singleUploadLocationSubpath: ''
+          source: null
           sources: 'folder:2'
-          useSingleFolder: ''
+          targetSiteId: null
+          useSingleFolder: false
+          validateRelatedElements: false
           viewMode: list
         translationKeyFormat: null
-        translationMethod: none
+        translationMethod: site
         type: craft\fields\Assets
     handle: choices
     name: Choices
@@ -4327,19 +4345,25 @@ matrixBlockTypes:
         name: Asset
         searchable: true
         settings:
-          defaultUploadLocationSource: 'folder:51799375-adaa-4f52-84d9-338008463d77'
+          allowedKinds: null
+          defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
           defaultUploadLocationSubpath: ''
           limit: ''
           localizeRelations: false
           restrictFiles: ''
           selectionLabel: ''
-          singleUploadLocationSource: 'folder:5568e8dd-7d3e-4d8d-8ced-5afeddb60ba8'
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: true
+          singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
           singleUploadLocationSubpath: ''
+          source: null
           sources: 'folder:2'
-          useSingleFolder: ''
+          targetSiteId: null
+          useSingleFolder: false
+          validateRelatedElements: false
           viewMode: list
         translationKeyFormat: null
-        translationMethod: none
+        translationMethod: site
         type: craft\fields\Assets
       74e30584-f92e-4d01-a638-7d173cc7b930:
         contentColumnType: text
@@ -4349,7 +4373,9 @@ matrixBlockTypes:
         name: Question
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4522,7 +4548,9 @@ matrixBlockTypes:
         name: 'Payment Amount'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4538,7 +4566,9 @@ matrixBlockTypes:
         name: 'Payer Email'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4554,7 +4584,9 @@ matrixBlockTypes:
         name: 'Transaction ID'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4595,7 +4627,9 @@ matrixBlockTypes:
         name: Question
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4611,9 +4645,13 @@ matrixBlockTypes:
         name: 'Question ID'
         searchable: true
         settings:
-          decimals: '0'
-          max: ''
+          decimals: 0
+          defaultValue: null
+          max: null
           min: '0'
+          prefix: null
+          size: null
+          suffix: null
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Number
@@ -4637,7 +4675,9 @@ matrixBlockTypes:
         name: Answer
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4675,7 +4715,9 @@ matrixBlockTypes:
         name: Question
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4691,19 +4733,25 @@ matrixBlockTypes:
         name: Asset
         searchable: true
         settings:
-          defaultUploadLocationSource: 'folder:51799375-adaa-4f52-84d9-338008463d77'
+          allowedKinds: null
+          defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
           defaultUploadLocationSubpath: ''
           limit: '1'
           localizeRelations: false
           restrictFiles: ''
           selectionLabel: ''
-          singleUploadLocationSource: 'folder:5568e8dd-7d3e-4d8d-8ced-5afeddb60ba8'
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: true
+          singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
           singleUploadLocationSubpath: ''
+          source: null
           sources: 'folder:2'
-          useSingleFolder: ''
+          targetSiteId: null
+          useSingleFolder: false
+          validateRelatedElements: false
           viewMode: list
         translationKeyFormat: null
-        translationMethod: none
+        translationMethod: site
         type: craft\fields\Assets
       9bb07531-d5ed-4c48-9a33-67ca0c17882b:
         contentColumnType: boolean
@@ -4744,7 +4792,9 @@ matrixBlockTypes:
         name: 'Custom Name'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4760,7 +4810,9 @@ matrixBlockTypes:
         name: 'Custom Value'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -5778,49 +5830,6 @@ sections:
         sortOrder: 3
         titleFormat: ''
         titleLabel: Title
-      6940291e-051a-4dce-982b-14031f40c44e:
-        fieldLayouts:
-          3a1f919a-d644-47f8-96f3-821c238bb87b:
-            tabs:
-              -
-                fields:
-                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
-                    required: false
-                    sortOrder: 2
-                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
-                    required: false
-                    sortOrder: 3
-                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
-                    required: false
-                    sortOrder: 1
-                name: Module
-                sortOrder: 1
-              -
-                fields:
-                  e510ee00-626f-454c-8022-6f855080c882:
-                    required: false
-                    sortOrder: 2
-                  f08f684f-1af1-417b-94f2-5df2f3ac7da6:
-                    required: false
-                    sortOrder: 1
-                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
-                    required: false
-                    sortOrder: 3
-                name: 'Job Roles & Companies'
-                sortOrder: 2
-              -
-                fields:
-                  bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
-                    required: false
-                    sortOrder: 1
-                name: 'Column Layout'
-                sortOrder: 3
-        handle: company
-        hasTitleField: true
-        name: Company
-        sortOrder: 4
-        titleFormat: ''
-        titleLabel: Title
       a6165775-faf3-4cc0-b6d6-069095d3ca39:
         fieldLayouts:
           89a1da50-2312-48cf-8d06-5c4168438cb9:
@@ -5852,10 +5861,16 @@ sections:
                 sortOrder: 1
               -
                 fields:
+                  e510ee00-626f-454c-8022-6f855080c882:
+                    required: false
+                    sortOrder: 2
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
-                name: 'Job Roles'
+                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
+                    required: false
+                    sortOrder: 3
+                name: 'Job Roles & Companies'
                 sortOrder: 2
               -
                 fields:
@@ -5945,10 +5960,16 @@ sections:
                 sortOrder: 1
               -
                 fields:
+                  e510ee00-626f-454c-8022-6f855080c882:
+                    required: false
+                    sortOrder: 2
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
-                name: 'Job Roles'
+                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
+                    required: false
+                    sortOrder: 3
+                name: 'Job Roles & Companies'
                 sortOrder: 2
               -
                 fields:
@@ -6058,13 +6079,13 @@ superTableBlockTypes:
           -
             fields:
               5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b:
-                required: '0'
-                sortOrder: '1'
+                required: false
+                sortOrder: 1
               70a4b8f2-f454-40e6-82d7-ff577995e2a4:
-                required: '0'
-                sortOrder: '2'
+                required: false
+                sortOrder: 2
             name: Content
-            sortOrder: '1'
+            sortOrder: 1
     fields:
       5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b:
         contentColumnType: text
@@ -6072,9 +6093,11 @@ superTableBlockTypes:
         handle: customKey
         instructions: ''
         name: 'Custom Key'
-        searchable: '1'
+        searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -6088,9 +6111,11 @@ superTableBlockTypes:
         handle: customValue
         instructions: ''
         name: 'Custom Value'
-        searchable: '1'
+        searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
+          code: false
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -6412,7 +6437,8 @@ superTableBlockTypes:
         name: 'Field Label'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: ''
           columnType: text
           initialRows: '4'
@@ -6476,7 +6502,8 @@ superTableBlockTypes:
         name: 'Field Custom Key'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: ''
           columnType: text
           initialRows: '4'
@@ -6672,7 +6699,8 @@ superTableBlockTypes:
         name: 'Field Custom Options'
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: ''
           columnType: text
           initialRows: '4'
@@ -7061,7 +7089,8 @@ superTableBlockTypes:
         name: Comment
         searchable: true
         settings:
-          charLimit: ''
+          byteLimit: null
+          charLimit: null
           code: false
           columnType: text
           initialRows: '4'
