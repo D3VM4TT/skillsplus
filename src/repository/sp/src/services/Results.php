@@ -559,18 +559,16 @@ class Results extends Component
             $criteria->authorId = $userId;
         }
         $criteria->orderBy = 'resultRecurringCycleCode';
+        $criteria->relatedTo = ['and'];
         if ($moduleResultId) {
-            $criteria->relatedTo = [
-                'and',
-                ['targetElement' => $unitId, 'field' => 'resultUnit'],
-                ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult']
-            ];
-            if ($companyId) {
-                $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
-            }
+            $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+            $criteria->relatedTo[] = ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult'];
         }
         else {
-            $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+            $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        }
+        if ($companyId) {
+            $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         }
         $criteria->status = ['live', 'expired'];
         return $criteria;
