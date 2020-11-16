@@ -3,9 +3,6 @@
     {% set moduleResultCompany = moduleResultEntry.resultCompany.one %}
 {% endif %}
 <div id="m{{ moduleElementId }}" class="unit-groups">
-    {% if moduleGroup.isCompany %}
-      <h5 style="padding-left:30px;">{{ moduleResultCompany ? moduleResultCompany.title ~ ' - ' : null }}Module Result ID: {{ moduleResultEntry.id }}</h5>
-    {% endif %}
     {% for unitGroupItem in moduleItem.unitGroups %}
         {% set unitGroup = cpdUser.record.getElement(unitGroupItem.elementId) %}
         {% set addResult = unitGroup.enableSubmissions %}
