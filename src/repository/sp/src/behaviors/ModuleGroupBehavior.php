@@ -13,34 +13,34 @@ use yii\base\Behavior;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
-class ModuleBehavior extends Behavior
+class ModuleGroupBehavior extends Behavior
 {
     /**
      * @return bool
      */
     public function isCompany()
     {
-        return $this->owner->moduleAllCompanies || $this->owner->moduleCompanies->count();
+        return $this->owner->moduleGroupAllCompanies || $this->owner->moduleGroupCompanies->count();
     }
 
     /**
      * @return bool
      */
-    public function isUserCompany()
+    public function isUserCompany($userId = null)
     {
         if (!$this->isCompany()) {
             return false;
         }
 
-        if ($this->owner->moduleAllCompanies) {
+        if ($this->owner->moduleGroupAllCompanies) {
             return true;
         }
 
-        $user = LantraHelper::getUser();
+        $user = LantraHelper::getUser($userId);
         if (null == $userCompany = $user->userCompany->one()) {
             return false;
         }
 
-        return in_array($userCompany->id, $this->owner->moduleCompanies->ids());
+        return in_array($userCompany->id, $this->owner->moduleGroupCompanies->ids());
     }
 }

@@ -182,6 +182,10 @@ class Record extends Model
                 $moduleGroupCategories = Lantra::$app->records->getModuleGroups($relatedModules);
                 $moduleGroups = [];
                 foreach ($moduleGroupCategories->all() as $moduleGroup) {
+                    ## skip if user company does not match this module group
+                    if ($moduleGroup->isCompany() && !$moduleGroup->isUserCompany($this->user->id)) {
+                        continue;
+                    }
                     $items = $this->_getModuleGroupModuleItems($moduleGroup, $relatedModules);
                     $moduleGroups[$moduleGroup->id] = $this->_addItem('moduleGroup', $moduleGroup, $items);
                 }
@@ -251,10 +255,6 @@ class Record extends Model
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
-                ## skip if user company does not match this module
-                if ($moduleEntry->isCompany() && !$moduleEntry->isUserCompany()) {
-                    continue;
-                }
                 $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);
                 $this->_data['moduleIds'][] = $moduleEntry->id;

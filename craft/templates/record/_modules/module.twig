@@ -12,7 +12,7 @@
         {% endif %}
     {% else %}
         {# get the current module result entry - create if none exists #}
-        {% if module.isCompany %}
+        {% if moduleGroup.isCompany %}
             {% set moduleResultEntry = craft.lantra.companyModuleResult(module.id, cpdUser.id) %}
         {% else %}
             {% set moduleResultEntry = craft.lantra.currentModuleResult(module.id, cpdUser.id) %}

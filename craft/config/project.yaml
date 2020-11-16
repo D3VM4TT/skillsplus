@@ -50,6 +50,16 @@ categoryGroups:
                 sortOrder: 4
             name: Taskbooks
             sortOrder: 2
+          -
+            fields:
+              e510ee00-626f-454c-8022-6f855080c882:
+                required: false
+                sortOrder: 1
+              f2e34bbd-dc9f-4253-90fc-178dc6742141:
+                required: false
+                sortOrder: 2
+            name: 'Company Results'
+            sortOrder: 3
     handle: moduleGroups
     name: 'Module Groups'
     siteSettings:
@@ -84,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1605274935
+dateModified: 1605532412
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -3624,9 +3634,9 @@ fields:
   e510ee00-626f-454c-8022-6f855080c882:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: moduleAllCompanies
-    instructions: 'Show this module to all companies?'
-    name: 'Module All Companies'
+    handle: moduleGroupAllCompanies
+    instructions: 'Select either All Companies or select Companies and results for modules in this group will be saved by the company rather than an individual user.  '
+    name: 'All Companies'
     searchable: true
     settings:
       default: ''
@@ -3790,9 +3800,9 @@ fields:
   f2e34bbd-dc9f-4253-90fc-178dc6742141:
     contentColumnType: string
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: moduleCompanies
+    handle: moduleGroupCompanies
     instructions: ''
-    name: 'Module Companies'
+    name: Companies
     searchable: true
     settings:
       limit: ''
@@ -5861,16 +5871,10 @@ sections:
                 sortOrder: 1
               -
                 fields:
-                  e510ee00-626f-454c-8022-6f855080c882:
-                    required: false
-                    sortOrder: 2
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
-                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
-                    required: false
-                    sortOrder: 3
-                name: 'Job Roles & Companies'
+                name: 'Job Roles'
                 sortOrder: 2
               -
                 fields:
@@ -5960,16 +5964,10 @@ sections:
                 sortOrder: 1
               -
                 fields:
-                  e510ee00-626f-454c-8022-6f855080c882:
-                    required: false
-                    sortOrder: 2
                   f08f684f-1af1-417b-94f2-5df2f3ac7da6:
                     required: false
                     sortOrder: 1
-                  f2e34bbd-dc9f-4253-90fc-178dc6742141:
-                    required: false
-                    sortOrder: 3
-                name: 'Job Roles & Companies'
+                name: 'Job Roles'
                 sortOrder: 2
               -
                 fields:

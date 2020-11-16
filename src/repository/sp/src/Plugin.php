@@ -12,6 +12,7 @@ use Craft;
 use craft\base\Plugin as BasePlugin;
 use craft\base\Element;
 use craft\elements\Asset;
+use craft\elements\Category;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
@@ -35,13 +36,12 @@ use yii\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
-use lantra\sp\behaviors\ModuleBehavior;
+use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserRecordBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
 use lantra\sp\assetbundles\SpCpAsset;
-use lantra\sp\migrations\m200128_160852_rename_unitValue;
 
 
 
@@ -253,8 +253,15 @@ class Plugin extends BasePlugin
                 if ($event->sender->sectionId == 15) {
                     $event->behaviors[] = PackageBehavior::class;
                 }
-                if ($event->sender->sectionId == 6) {
-                    $event->behaviors[] = ModuleBehavior::class;
+            }
+        );
+
+        Event::on(
+            Category::class,
+            Category::EVENT_DEFINE_BEHAVIORS,
+            function(DefineBehaviorsEvent $event) {
+                if ($event->sender->groupId == 2) {
+                    $event->behaviors[] = ModuleGroupBehavior::class;
                 }
             }
         );
@@ -440,11 +447,7 @@ class Plugin extends BasePlugin
      */
     private function _runMigrations()
     {
-        $exists = (new Query())->from('{{%stc_columnlayout}}')->where(['field_fieldType' => 'unitValue'])->count();
-        if ($exists) {
-            $migration = new m200128_160852_rename_unitValue();
-            $migration->safeUp();
-        }
+
     }
 }
 
