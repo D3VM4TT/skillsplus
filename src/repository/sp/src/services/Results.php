@@ -607,11 +607,21 @@ class Results extends Component
      * @param $moduleId
      * @param bool $create
      * @return null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     function getUserCompanyModuleResult($user, $moduleId, $create = false)
     {
         if (null == $company = Lantra::$app->users->userCompany($user)) {
             return null;
+        }
+        ## link existing module result to company
+        $userModuleResult = Lantra::$app->results->getModuleResult($user->id, $moduleId);
+        if ($userModuleResult && !$userModuleResult->resultCompany) {
+            $userModuleResult->setFieldValue('resultCompany', [$company->id]);
+            Craft::$app->elements->saveElement($userModuleResult, false);
+            return $userModuleResult;
         }
         return $this->getModuleResult($user->id, $moduleId, $create, null, (int) $company->id);
     }
@@ -645,9 +655,36 @@ class Results extends Component
         }
         $existing = $criteria->one();
         if (!$existing && $create) {
-            return $this->createModuleResult($userId, $moduleId, null, $companyId);
+            return $this->createModuleResult($userId, $moduleId, $postDate);
         }
+        ## update user result to company result
+        $moduleEntry = Entry::findOne($moduleId);
+        $this->_setResultUserCompany($existing, $moduleEntry, $userId);
         return $existing;
+    }
+
+    /**
+     * @param Entry $resultEntry
+     * @param Entry $moduleEntry
+     * @param $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    private function _setResultUserCompany(Entry $resultEntry, Entry $moduleEntry, $userId)
+    {
+        $user = User::findOne($userId);
+
+        if (!$moduleEntry->isCompany()) {
+            return;
+        }
+        if  (null == $company = Lantra::$app->users->userCompany($user)) {
+            return;
+        }
+        if (!$resultEntry->resultCompany->count()) {
+            $resultEntry->setFieldValue('resultCompany', [$company->id]);
+            Craft::$app->elements->saveElement($resultEntry);
+        }
     }
 
     /**
@@ -1175,13 +1212,12 @@ class Results extends Component
      * @param $userId
      * @param $moduleEntryId
      * @param $postDate
-     * @param $companyId
      * @return EntryModel|void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createModuleResult($userId, $moduleEntryId, $postDate = null, $companyId = null) {
+    function createModuleResult($userId, $moduleEntryId, $postDate = null) {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionIdResults;
         $resultEntry->typeId = $this->typeIdModuleResult;
@@ -1196,10 +1232,10 @@ class Results extends Component
         $resultEntry->setFieldValue('resultComponentResults', $componentResults);
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
         $resultEntry->setFieldValue('resultStatus',  'active');
-        $resultEntry->setFieldValue('resultCompany', [$companyId]);
         if (!Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
+        $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
         return $resultEntry;
     }
 

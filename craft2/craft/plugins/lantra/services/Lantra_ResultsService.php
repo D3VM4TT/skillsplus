@@ -392,7 +392,7 @@ class Lantra_ResultsService extends BaseApplicationComponent
             return;
         }
         // create module result
-        if ( ! $this->getModuleResult($userId, $moduleEntry->id)) {
+        if (!$this->getModuleResult($userId, $moduleEntry->id)) {
             $this->createModuleResult($userId, $moduleEntry->id);
         }
         $moduleResultExpiryTime = null;

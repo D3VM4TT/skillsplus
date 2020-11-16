@@ -36,6 +36,7 @@ use yii\db\Query;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
+use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserRecordBehavior;
 use lantra\sp\services\App;
@@ -66,6 +67,8 @@ class Plugin extends BasePlugin
     private $sectionIdAttempts  = 12;
     private $sectionIdPackages  = 15;
     private $sectionIdWorkflows = 16;
+
+    private $groupIdModuleGroups = 2;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -250,8 +253,11 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                if ($event->sender->sectionId == 15) {
+                if ($event->sender->sectionId == $this->sectionIdPackages) {
                     $event->behaviors[] = PackageBehavior::class;
+                }
+                if ($event->sender->sectionId == $this->sectionIdModules) {
+                    $event->behaviors[] = ModuleBehavior::class;
                 }
             }
         );
@@ -260,7 +266,7 @@ class Plugin extends BasePlugin
             Category::class,
             Category::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                if ($event->sender->groupId == 2) {
+                if ($event->sender->groupId == $this->groupIdModuleGroups) {
                     $event->behaviors[] = ModuleGroupBehavior::class;
                 }
             }
