@@ -403,6 +403,7 @@ class Plugin extends BasePlugin
             'management/taskbooks/manage/<elementId>'   => ['template' => 'management/taskbooks/manage'],
 
             ## management routes
+            'management/companies/results/<companyId>'  => ['template' => 'management/companies/results'],
             'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],

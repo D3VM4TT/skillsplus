@@ -1,8 +1,8 @@
 {% set recordResultIds = craft.lantra.recordResults(cpdUser.id, 'ids') %}
 {% if recordResultIds|length %}
-    {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').id('and, not ' ~ recordResultIds|join(', not ')) %}
+    {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').resultCompany(':empty:').id('and, not ' ~ recordResultIds|join(', not ')) %}
 {% else %}
-    {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired') %}
+    {% set resultArchive = craft.entries.section('results').type(['userResult', 'unitResult']).authorId(cpdUser.id).status('live, expired').resultCompany(':empty:') %}
 {% endif %}
 <div id="job-role-cpd">
     {% if not cpdUser.record.jobRoles|length %}

@@ -1,0 +1,68 @@
+{% do craft.lantra.requirePermission('editCompanies') %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > companies > results" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+
+{% set company = craft.entries.id(companyId).one() %}
+
+{% set criteria = craft.entries.section('results').type(['unitResult']).relatedTo({targetElement: company, field: 'resultCompany'}) %}
+{% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>{{ company.title }} Results</h2>
+    </div>
+    {% if resultEntries is defined and resultEntries|length %}
+    <div class="page-content">
+        <table class="data">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th class="title">Unit Title</th>
+                <th class="title">Module</th>
+                <th class="title">Status</th>
+                <th class=""></th>
+            </tr>
+            <tbody>
+            {% for result in resultEntries %}
+                {% set unit = result.resultUnit.one %}
+                {% set moduleResult = result.resultModuleResult.one %}
+                {% set module = moduleResult.resultModule.one %}
+                <tr>
+                    <td><p class="td-title-responsive">ID: </p>{{ result.id }}</td>
+                    <td><p class="td-title-responsive">Unit Title: </p>{{ unit.title }}</td>
+                    <td><p class="td-title-responsive">Module: </p>{{ module.title }}</td>
+                    <td><p class="td-title-responsive">Status: </p>{{ result.status }}</td>
+                    <td class="icons" style="width:140px;text-align:right">
+                    {% if not currentUser.managerReadOnly %}
+                        {% set baseUrl = '/cpd/' ~ result.authorId ~ '/' ~ module.id ~ '/' ~ unit.id ~ '/' %}
+                        {% set params = '?moduleResultId=' ~ moduleResult.id %}
+                        <a class="icon" href="{{ baseUrl ~ params}}">
+                            <img src="/assets/img/edit.svg" title="Edit" />
+                        </a>
+                        <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ result.id }}">
+                            <img src="/assets/img/delete.svg" title="Delete" />
+                        </a>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    </div>
+    {% else %}
+    <div class="page-content">
+        <h3>There are no results to display.</h3>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
