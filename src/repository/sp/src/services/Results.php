@@ -657,9 +657,11 @@ class Results extends Component
         if (!$existing && $create) {
             return $this->createModuleResult($userId, $moduleId, $postDate);
         }
-        ## update user result to company result
-        $moduleEntry = Entry::findOne($moduleId);
-        $this->_setResultUserCompany($existing, $moduleEntry, $userId);
+        if ($existing) {
+            ## update user result to company result
+            $moduleEntry = Entry::findOne($moduleId);
+            $this->_setResultUserCompany($existing, $moduleEntry, $userId);
+        }
         return $existing;
     }
 
