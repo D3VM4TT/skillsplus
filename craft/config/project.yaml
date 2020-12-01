@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1606830139
+dateModified: 1606831680
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -7464,6 +7464,7 @@ users:
         - 'deletepeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799'
         - 'editpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799'
         - 'editentries:8c1af673-0f01-4434-a6f0-86f01675d799'
+        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
         - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
