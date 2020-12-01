@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1606829569
+dateModified: 1606830139
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4894,6 +4894,10 @@ matrixBlockTypes:
     name: Columns
     sortOrder: 1
 plugins:
+  dashboard-begone:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
   entry-gps-coordinates:
     edition: standard
     enabled: true
