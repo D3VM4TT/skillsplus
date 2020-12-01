@@ -1,7 +1,7 @@
 <div class="groups-tab-group endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
     {% if moduleGroup.isCompany and cpdUser.userCompany %}
-        <div class="assessment passed">
-            <p>{{ cpdUser.userCompany.one.title }}</p>
+        <div class="assessment" style="border-color: {{ craft.lantra.setting('themeColorPrimary') }}">
+            <p>Company Name: {{ cpdUser.userCompany.one.title }}</p>
         </div>
     {% endif %}
     {% if package is defined %}
