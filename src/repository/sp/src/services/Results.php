@@ -118,9 +118,6 @@ class Results extends Component
                         $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
                     }
                 }
-                elseif ($oldEntry) {
-                    $entry->setFieldValue('resultStatus',$oldEntry->resultStatus);
-                }
             }
             ## force clear endorsed date if pending
             if ($entry->resultStatus != 'endorsed') {
@@ -134,7 +131,6 @@ class Results extends Component
                     Lantra::$app->notify->sendManagerEndorsementResult($entry);
                 }
             }
-
             $request = Craft::$app->getRequest();
             if (!$request->isCpRequest) {
                 $userStartDate = Craft::$app->request->getParam('userStartDate');
