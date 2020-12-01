@@ -33,7 +33,7 @@
 
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
-{% set columnLayout = moduleEntry.columnLayout ?  moduleEntry.columnLayout : moduleGroup.columnLayout %}
+{% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
 {% if resultId is defined and resultId %}
     {% set resultEntry = craft.entries.id(resultId).one() %}
 {% elseif not addNew %}
