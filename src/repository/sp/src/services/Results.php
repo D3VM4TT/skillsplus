@@ -118,8 +118,8 @@ class Results extends Component
                         $entry->setFieldValue('resultEndorsedUser', [$currentUser->id]);
                     }
                 }
-                else {
-                    $entry->setFieldValue('resultStatus',$oldEntry ? $oldEntry->resultStatus : 'pending');
+                elseif ($oldEntry) {
+                    $entry->setFieldValue('resultStatus',$oldEntry->resultStatus);
                 }
             }
             ## force clear endorsed date if pending
