@@ -1402,7 +1402,7 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->type = 'userResult';
         $criteria->authorId = $userId;
-        $criteria->status = null;
+        $criteria->status = 'live, expired';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
         if ($resultPoints) {
@@ -1424,7 +1424,7 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
-        $criteria->status = null;
+        $criteria->status = 'live, expired';
         $criteria->limit = null;
         if ($status) {
             $criteria->resultStatus = $status;
