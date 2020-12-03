@@ -57,6 +57,7 @@ class Plugin extends BasePlugin
      */
     public static $app;
     public static $plugin;
+    public $hasCpSection = true;
 
     public $schemaVersion = '0.0.1';
 

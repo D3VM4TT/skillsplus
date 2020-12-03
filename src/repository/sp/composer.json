@@ -3,6 +3,7 @@
     "description": "Lantra Skills Plus",
     "type": "craft-plugin",
     "version": "2.0.0",
+    "hasCpSection": true,
     "keywords": [
         "craft",
         "cms",

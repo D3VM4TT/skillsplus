@@ -26,7 +26,7 @@ class SettingsController extends Controller
      */
     public function actionIndex()
     {
-        $this->requireAdmin(false);
+        # $this->requireAdmin(false);
         $variables = [
             'config'    => $this->_config(),
             'settings'  => $this->_settings()
@@ -39,7 +39,7 @@ class SettingsController extends Controller
      */
     public function actionNotifications()
     {
-        $this->requireAdmin(false);
+        # $this->requireAdmin(false);
         $variables = [
             'config'    => $this->_config(),
             'settings'  => $this->_settings()
@@ -106,7 +106,7 @@ class SettingsController extends Controller
      */
     public function actionCache()
     {
-        $this->requireAdmin(false);
+        # $this->requireAdmin(false);
         $this->renderTemplate('sp/cp/cache');
     }
 
