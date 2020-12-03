@@ -259,8 +259,12 @@ class Results extends Component
                 $resultEntry->typeId = $this->typeIdUnitResult;
                 $resultEntry->enabled = true;
                 $resultEntry->authorId = $entry->authorId;
-                $resultEntry->resultUnit = [$unitEntry->id];
-                $resultEntry->resultStatus = 'active';
+                $resultEntry->setFieldValue('resultUnit', [$unitEntry->id]);
+                $resultEntry->setFieldValue('resultStatus', 'active');
+                ## make sure result is properly linked to module result
+                if (false != $moduleResultId = Craft::$app->request->post('moduleResultId')) {
+                    $resultEntry->setFieldValue('resultModuleResult', [$moduleResultId]);
+                }
                 if (!Craft::$app->elements->saveElement($resultEntry)) {
                     $event->isValid = false;
                     $entry->addError('attemptUnit', 'Could not save result entry.');
@@ -304,11 +308,11 @@ class Results extends Component
             $resultAttempts = $resultEntry->resultAttempts ? array_merge($resultEntry->resultAttempts->ids(), [$entry->id]) : [$entry->id];
             $resultEntry->setFieldValue('resultAttempts', $resultAttempts);
             if ($score > $resultEntry->resultScore) {
-                $resultEntry->resultStatus = $passed ? 'endorsed' : 'active';
-                $resultEntry->resultScore = $score;
+                $resultEntry->setFieldValue('resultStatus', $passed ? 'endorsed' : 'active');
+                $resultEntry->setFieldValue('resultScore', $score);
             }
             if ($passed) {
-                $resultEntry->resultEndorsedDate = time();
+                $resultEntry->setFieldValue('resultEndorsedDate', time());
             }
             Craft::$app->elements->saveElement($resultEntry, false);
         }
