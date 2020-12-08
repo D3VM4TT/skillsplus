@@ -617,9 +617,14 @@ class Results extends Component
         if ($userModuleResult && !$userModuleResult->resultCompany) {
             $userModuleResult->setFieldValue('resultCompany', [$company->id]);
             Craft::$app->elements->saveElement($userModuleResult, false);
-            return $userModuleResult;
+            $return = $userModuleResult;
         }
-        return $this->getModuleResult($user->id, $moduleId, $create, null, (int) $company->id);
+        else {
+            $return = $this->getModuleResult($user->id, $moduleId, $create, null, (int) $company->id);
+        }
+        ## link existing unit results to company @todo remove once all results updated.
+        $this->_setUnitResultsUserCompany($moduleId, $user->id);
+        return $return;
     }
 
     /**
@@ -653,12 +658,31 @@ class Results extends Component
         if (!$existing && $create) {
             return $this->createModuleResult($userId, $moduleId, $postDate);
         }
+        ## update user result to company result @todo remove once all results updated.
         if ($existing) {
-            ## update user result to company result
             $moduleEntry = Entry::findOne($moduleId);
             $this->_setResultUserCompany($existing, $moduleEntry, $userId);
         }
         return $existing;
+    }
+
+    /**
+     * @param int $moduleId
+     * @param $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    private function _setUnitResultsUserCompany($moduleId, $userId)
+    {
+        if (null == $moduleEntry = Entry::findOne($moduleId)) {
+            return;
+        }
+        $unitIds = $this->getModuleUnitIds($moduleEntry);
+        $unitResults = $this->getUnitResultsQuery($userId, $unitIds);
+        foreach($unitResults as $resultEntry) {
+            $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
+        }
     }
 
     /**
