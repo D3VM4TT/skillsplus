@@ -269,6 +269,36 @@ class UsersController extends BaseController {
     }
 
     /**
+     * Suspends users from the front end
+     *
+     * @throws mixed
+     */
+    public function actionSuspendCompanyUsers()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        // get the posted companyId
+        $companyId = Craft::$app->request->getParam('companyId');
+        $includeHierarchy = Craft::$app->request->getParam('includeHierarchy', false);
+        if (false == $company = Entry::findOne($companyId)) {
+            return $this->_returnError('Invalid company ID ' . $companyId . '.');
+        }
+        $redirect = '/management/companies/edit/' . $companyId;
+        $count = 0;
+        $errorIds = [];
+        $users = Lantra::$app->structure->getCompanyUsers($companyId, $includeHierarchy);
+        foreach($users as $user) {
+            if (!Craft::$app->users->suspendUser($user)) {
+                $errorIds[] = $user->id;
+            }
+            else {
+                $count++;
+            }
+        }
+        return $this->_returnMessage($count . ' users have been suspended.', true, $redirect);
+    }
+
+    /**
      * Restores user
      *
      * @throws mixed

@@ -310,6 +310,28 @@ class Structure extends Component
 
     }
 
+    /**
+     * @param $companyId
+     * @param bool $includeHierarchy
+     * @return array
+     */
+    public function getCompanyUsers($companyId, $includeHierarchy = false)
+    {
+        $companyIds = [];
+        if ($includeHierarchy) {
+            $companyIds = $this->getCompanyDescendants($companyId);
+        }
+        $companyIds[] = $companyId;
+
+        $users = [];
+        foreach($companyIds as $id) {
+            if (null != $companyUsers = Lantra::$app->users->getCompanyUsers($id)->all()) {
+                $users = array_merge($users, $companyUsers);
+            }
+        }
+        return $users;
+    }
+
     /* cache children */
     private $_companyDescendants = [];
 

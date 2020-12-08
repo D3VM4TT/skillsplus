@@ -19,13 +19,18 @@
     {% if hierarchyNode %}
         <a class="back-link" href="/management/hierarchy?node={{ hierarchyNode }}">&laquo; back</a>
     {% else %}
-        <a class="back-link" href="/management/companies"><strong>&laquo; back</a>
+        <a class="back-link" href="/management/companies">&laquo; back</a>
     {% endif %}  
     {% include '_includes/topNavigation' %}
 </div>
 <div class="page-header secondary-bg">
     {% if entry is defined and entry.id %}
         <h2>Edit company</h2>
+        <div class="header-controls">
+            <div style="margin-left:0;" class="container-btn primary-bg">
+                <a class="btn-add-new" href="/management/companies/results/{{ entry.id }}">Company Results</a>
+            </div>
+        </div>
     {% else %}
         <h2>Create a New Company</h2>
         <p>Create a new company, assign a parent company and add Primarty and Secondary managers.</p>
@@ -97,15 +102,23 @@
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Save company</button>
     </div>
-    {% if entry %}
-        <p>&nbsp;</p>
-        <div class="container-btn">
-            <a class="button primary-bg" href="/management/companies/results/{{ entry.id }}">Company Results</a>
-        </div>
-        <p>&nbsp;</p>
-        <div class="container-btn">
-            <a class="button primary-bg" href="/sp/results/refresh?companyId={{ entry.id }}">Refresh Result Cache</a>
-        </div>
-    {% endif %}
 </form>
+    {% if entry %}
+         <form id="suspend-users" class="page-form" method="post" role="form" accept-charset="UTF-8">
+            <h2>Manage Company Users</h2>
+            {{ csrfInput() }}
+            {{ actionInput('sp/users/suspend-company-users') }}
+            <input type="hidden" name="companyId" value="{{ entry.id }}">
+            <div class="container-btn">
+                <button class="button primary-bg" type="submit">Suspend All Users</button>
+            </div>
+            <div class="field--wrapper" style="margin-top:30px;">
+                <label for="includeHierarchy">
+                    <input type="hidden" name="includeHierarchy" value="0">
+                    <input type="checkbox" id="includeHierarchy" name="includeHierarchy" value="1" />
+                    <span>Include hierarchy users?</span>
+                </label>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}
