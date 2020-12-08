@@ -663,7 +663,7 @@ class Results extends Component
             return $this->createModuleResult($userId, $moduleId, $postDate);
         }
         ## update user result to company result @todo remove once all results updated.
-        if ($existing) {
+        if ($existing && !$existing->resultCompany->count()) {
             $moduleEntry = Entry::findOne($moduleId);
             $this->_setResultUserCompany($existing, $moduleEntry, $userId);
         }
@@ -683,9 +683,11 @@ class Results extends Component
             return;
         }
         $unitIds = $this->getModuleUnitIds($moduleEntry);
-        $unitResults = $this->getUnitResultsQuery($userId, $unitIds);
-        foreach($unitResults as $resultEntry) {
-            $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
+        $unitResults = $this->getUnitResultsQuery($userId, $unitIds, null);
+        foreach($unitResults->all() as $resultEntry) {
+            if (!$resultEntry->resultCompany->count()) {
+                $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
+            }
         }
     }
 
