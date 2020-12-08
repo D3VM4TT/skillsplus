@@ -7,9 +7,10 @@
         <form class="test" method="post" role="form" accept-charset="UTF-8">
             {{ csrfInput() }}
             {{ actionInput('entries/save-entry') }}
-            {{ redirectInput('/cpd/' ~ userId ~ '/' ~ moduleEntry.id ~ '/' ~ unitEntry.id ~ '/test') }}
+            {{ redirectInput('/cpd/' ~ userId ~ '?ref=' ~ craft.app.request.getParam('ref')) }}
             <input type="hidden" name="sectionId" value="12">
             <input type="hidden" name="enabled" value="1">
+            <input type="hidden" name="moduleResultId" value="{{ moduleResultId|default('') }}">
             {% if userId != currentUser.id %}
                 <input type="hidden" name="author[]" value="{{ userId }}">
             {% endif %}
