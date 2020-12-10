@@ -61,15 +61,8 @@ class Plugin extends BasePlugin
 
     public $schemaVersion = '0.0.1';
 
-    private $sectionIdCompanies = 3;
-    private $sectionIdModules   = 6;
-    private $sectionIdUnits     = 7;
-    private $sectionIdResults   = 10;
-    private $sectionIdAttempts  = 12;
-    private $sectionIdPackages  = 15;
-    private $sectionIdWorkflows = 16;
-
-    private $groupIdModuleGroups = 2;
+    private $_sectionIds;
+    private $_groupIds;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -184,17 +177,17 @@ class Plugin extends BasePlugin
                 if (ElementHelper::isDraftOrRevision($entry)) {
                     return;
                 }
-                if ($entry->sectionId == $this->sectionIdResults) {
+                if ($entry->sectionId == $this->sectionId('results')) {
                     Lantra::$app->results->onBeforeSaveResult($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdModules) {
+                } elseif ($entry->sectionId == $this->sectionId('modules')) {
                     Lantra::$app->modules->onBeforeSaveModule($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionId('attempts')) {
                     Lantra::$app->results->onBeforeSaveAttempt($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdCompanies) {
+                } elseif ($entry->sectionId == $this->sectionId('companies')) {
                     Lantra::$app->structure->onBeforeSaveCompany($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdPackages)
+                } elseif ($entry->sectionId == $this->sectionId('packages'))
                     Lantra::$app->packages->onBeforeSavePackage($event, $entry);
-                elseif ($entry->sectionId == $this->sectionIdWorkflows)
+                elseif ($entry->sectionId == $this->sectionId('workflows'))
                     Lantra::$app->packages->onBeforeSavePackageWorkflow($event, $entry);
             }
         );
@@ -212,18 +205,18 @@ class Plugin extends BasePlugin
                 if (ElementHelper::isDraftOrRevision($entry)) {
                     return;
                 }
-                if ($entry->sectionId == $this->sectionIdCompanies) {
+                if ($entry->sectionId == $this->sectionId('companies')) {
                     Lantra::$app->structure->onSaveCompany($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdResults) {
+                } elseif ($entry->sectionId == $this->sectionId('results')) {
                     Lantra::$app->results->onSaveResult($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdAttempts) {
+                } elseif ($entry->sectionId == $this->sectionId('attempts')) {
                     Lantra::$app->results->onSaveAttempt($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdUnits) {
+                } elseif ($entry->sectionId == $this->sectionId('units')) {
                     ## add result cache unit column (if enabled)
                     Lantra::$app->results->addUnitColumn($entry->id);
-                } elseif ($entry->sectionId == $this->sectionIdPackages) {
+                } elseif ($entry->sectionId == $this->sectionId('packages')) {
                     Lantra::$app->packages->onSavePackage($event, $entry);
-                } elseif ($entry->sectionId == $this->sectionIdWorkflows) {
+                } elseif ($entry->sectionId == $this->sectionId('workflows')) {
                     Lantra::$app->packages->onSavePackageWorkflow($event, $entry);
                 }
         });
@@ -241,11 +234,11 @@ class Plugin extends BasePlugin
                 if (ElementHelper::isDraftOrRevision($entry)) {
                     return;
                 }
-                if ($entry->sectionId == $this->sectionIdUnits) {
+                if ($entry->sectionId == $this->sectionId('units')) {
                     ## delete result cache unit column (if enabled)
                     Lantra::$app->results->removeUnitColumn($entry->id);
                 }
-                if ($entry->sectionId == $this->sectionIdResults) {
+                if ($entry->sectionId == $this->sectionId('results')) {
                     Lantra::$app->results->onDeleteResult($event, $entry);
                 }
             });
@@ -254,10 +247,10 @@ class Plugin extends BasePlugin
             Entry::class,
             Entry::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                if ($event->sender->sectionId == $this->sectionIdPackages) {
+                if ($event->sender->sectionId == $this->sectionId('packages')) {
                     $event->behaviors[] = PackageBehavior::class;
                 }
-                if ($event->sender->sectionId == $this->sectionIdModules) {
+                if ($event->sender->sectionId == $this->sectionId('modules')) {
                     $event->behaviors[] = ModuleBehavior::class;
                 }
             }
@@ -267,7 +260,7 @@ class Plugin extends BasePlugin
             Category::class,
             Category::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                if ($event->sender->groupId == $this->groupIdModuleGroups) {
+                if ($event->sender->groupId == $this->groupId('moduleGroups')) {
                     $event->behaviors[] = ModuleGroupBehavior::class;
                 }
             }
@@ -448,6 +441,36 @@ class Plugin extends BasePlugin
 
             'sp/paypal/ipn'                             => 'sp/paypal/ipn',
         ];
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    private function sectionId($handle)
+    {
+        if (!$this->_sectionIds) {
+            $sections = Craft::$app->sections->getAllSections();
+            foreach($sections as $section) {
+                $this->_sectionIds[$section->handle] = $section->id;
+            }
+        }
+        return isset($this->_sectionIds[$handle]) ? $this->_sectionIds[$handle] : null;
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    private function groupId($handle)
+    {
+        if (!$this->_groupIds) {
+            $groups = Craft::$app->categories->getAllGroups();
+            foreach($groups as $group) {
+                $this->_groupIds[$group->handle] = $group->id;
+            }
+        }
+        return isset($this->_groupIds[$handle]) ? $this->_groupIds[$handle] : null;
     }
 
     /**
