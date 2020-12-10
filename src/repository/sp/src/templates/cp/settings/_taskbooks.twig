@@ -14,6 +14,13 @@
     on:		        settings.taskbookNew == 1
 }) }}
 
+{{ forms.lightswitchField ({
+    label:			"Enable Create Taskbook?",
+    id:				"enableCreateAccount",
+    name:			"enableCreateAccount",
+    on:		        settings.enableCreateAccount == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Taskbook Label",
     id:				"taskbookLabel",

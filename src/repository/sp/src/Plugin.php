@@ -21,6 +21,7 @@ use craft\events\RegisterUserPermissionsEvent;
 use craft\events\TemplateEvent;
 use craft\events\DefineBehaviorsEvent;
 use craft\events\UserEvent;
+use craft\events\UserAssignGroupEvent;
 use craft\web\View;
 use craft\services\Users;
 use craft\services\UserPermissions;
@@ -161,6 +162,14 @@ class Plugin extends BasePlugin
             Users::EVENT_AFTER_ACTIVATE_USER,
             function (UserEvent $event) {
                 Lantra::$app->users->onActivateUser($event, $event->user);
+            }
+        );
+
+        Event::on(
+            Users::class,
+            Users::EVENT_AFTER_ASSIGN_USER_TO_DEFAULT_GROUP,
+            function(UserAssignGroupEvent $event) {
+                Lantra::$app->users->onAssignUser($event, $event->user);
             }
         );
 

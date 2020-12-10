@@ -74,6 +74,13 @@ class SettingsController extends Controller
         $config['entryElementType'] = Entry::class;
         $config['categoryElementType'] = Category::class;
 
+        ## job roles for registration dropdown
+        $jobRoles = Category::find()->group('roles')->all();
+        $config['jobRoleOptions'] = [];
+        foreach ($jobRoles as $jobRole) {
+            $config['jobRoleOptions'][$jobRole->id] = $jobRole->title;
+        }
+
         ## config for logo asset
         $volume = Craft::$app->volumes->getVolumeByHandle('theme');
         $themeFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);

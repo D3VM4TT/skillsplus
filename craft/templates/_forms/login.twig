@@ -31,8 +31,14 @@
         <a href="/public/password/reset" class="reset">Forgotten your password?</a>
     </div>
     {% if craft.lantra.setting('enableCreateAccount')  %}
-    <div class="container-sidebar-btn center">
-        <a href="/public/register" class="button primary-bg">Create account</a>
-    </div>
+        {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+        <div class="container-sidebar-btn center" style="margin-bottom:20px;">
+            <a href="/public/register/taskbook" class="button primary-bg">Create {{ taskbookLabel }}</a>
+        </div>
+    {% endif %}
+    {% if craft.lantra.setting('membershipEnable')  %}
+        <div class="container-sidebar-btn center">
+            <a href="/public/register/membership" class="button primary-bg">Register</a>
+        </div>
     {% endif %}
 </form>

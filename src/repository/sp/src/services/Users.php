@@ -13,6 +13,7 @@ use craft\base\Component;
 use craft\elements\User;
 use craft\elements\Entry;
 use craft\events\ModelEvent;
+use craft\events\UserAssignGroupEvent;
 use craft\events\UserEvent;
 use craft\elements\db\UserQuery;
 use craft\helpers\DateTimeHelper;
@@ -46,6 +47,23 @@ class Users extends Component
     /**
      * @param ModelEvent $event
      * @param User $user
+     */
+    public function onAssignUser(UserAssignGroupEvent $event, User $user)
+    {
+        if (Craft::$app->request->getParam('taskbook')) {
+            $group = Craft::$app->userGroups->getGroupByHandle('usersTaskbookPending');
+            Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+        }
+
+        if (Craft::$app->request->getParam('membership')) {
+            $group = Craft::$app->userGroups->getGroupByHandle('usersMembershipPending');
+            Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+        }
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param User $user
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -55,12 +73,6 @@ class Users extends Component
         ## skip if cli (i.e. install)
         if (Craft::$app->request->isConsoleRequest) {
             return;
-        }
-
-        if (Craft::$app->request->getParam('taskbook')) {
-            ## add user to users group
-            $group = Craft::$app->userGroups->getGroupByHandle('usersTaskbookPending');
-            Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
         }
     }
 
@@ -114,6 +126,13 @@ class Users extends Component
             }
         }
         $user->userLicenceSource = $licenceSource;
+
+        ## set company from register form
+        if (null != $companyId = Craft::$app->request->getParam('registerCompany')) {
+            if (null != $companyEntry = Entry::findOne($companyId)) {
+                $user->setFieldValue('userCompany', [$companyId]);
+            }
+        }
     }
 
     /**

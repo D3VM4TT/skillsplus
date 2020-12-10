@@ -4,6 +4,8 @@
         {% redirect "public/licence" %}
     {% elseif currentUser and craft.app.request.segment(3) != "taskbooks" and currentUser.isInGroup('usersTaskbookPending') %}
         {% redirect "cpd/" ~ currentUser.id ~ "/taskbooks/new" %}
+    {% elseif currentUser and craft.app.request.segment(3) != "membership" and currentUser.isInGroup('usersMembershipPending') %}
+        {% redirect "public/register/membership" %}
     {% else %}
         {% requireLogin %}
     {% endif %}

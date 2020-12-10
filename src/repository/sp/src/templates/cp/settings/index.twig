@@ -14,7 +14,8 @@
     reports: {label: 'Reports', url: '#settings-tab-reports' },
     config: {label: 'Config', url: '#settings-tab-config' },
     paypal: {label: 'PayPal', url: '#settings-tab-paypal' },
-    taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' }
+    taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' },
+    registration: {label: 'Registration', url: '#settings-tab-registration' }
 } %}
 
 {% set saveButton %}
@@ -66,6 +67,11 @@
     <div id="tab-taskbooks" class="hidden">
         <div id="fields">
             {% include 'sp/cp/settings/_taskbooks.twig' with {settings:settings, config:config} %}
+        </div>
+    </div>
+    <div id="tab-registration" class="hidden">
+        <div id="fields">
+            {% include 'sp/cp/settings/_registration.twig' with {settings:settings, config:config} %}
         </div>
     </div>
     {% endnamespace %}

@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1606994470
+dateModified: 1607636559
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2526,7 +2526,7 @@ fields:
     name: 'Manager Read Only'
     searchable: true
     settings:
-      default: '1'
+      default: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
@@ -7480,6 +7480,9 @@ users:
         - 'editcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68'
         - managejobroles
         - managemodules
+    6d8f4dc3-91b6-4057-b09b-e26f67a022ff:
+      handle: usersMembershipPending
+      name: 'Users [Membership Pending]'
     7765376d-5d95-4bb2-ad49-e9dbcd7acf4a:
       handle: teamManagers
       name: 'Team Managers'

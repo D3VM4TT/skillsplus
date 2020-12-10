@@ -1,0 +1,21 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Membership?",
+    id:				"membershipEnable",
+    name:			"membershipEnable",
+    on:		        settings.membershipEnable == 1
+}) }}
+
+{{ forms.editableTableField ({
+    label:			"Membership Options",
+    id:				"membershipOptions",
+    name:			"membershipOptions",
+    addRowLabel:    "Add a membership option",
+    cols:
+    {
+        jobRole:    {heading: "Job Role", type: "select", options:config.jobRoleOptions},
+        cost:       {heading: "Cost", type: "number"}
+    },
+    rows:           settings.membershipOptions
+}) }}

@@ -48,6 +48,9 @@ class Settings extends Model
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
 
+    public $membershipEnable                    = false;
+    public $membershipOptions                   = [];
+
     public $lantraDisableLicences               = false;
     public $schemeRemainingLicences             = 1000;
     public $schemeExpiryDate                    = null;

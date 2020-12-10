@@ -7,6 +7,23 @@
     {% else %}
         {{ redirectInput('') }}
     {% endif %}
+    {% if isMembership is defined %}
+        {{ hiddenInput('membership', 'true') }}
+        <div class="field--wrapper" style="">
+            <label for="userRole" class="no-float">Membership</label>
+            <select name="fields[userRole][]" id="userRole">
+                {% set options = craft.lantra.setting('membershipOptions') %}
+                {% for row in options %}
+                    {% set jobRole = craft.categories.id(row.jobRole).one() %}
+                    <option value="{{ jobRole.id }}">{{ jobRole.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field--wrapper" style="">
+            <label for="registerCompany" class="no-float">Company ID (if known)</label>
+            <input id="registerCompany" type="number" placeholder="Company ID" name="registerCompany" />
+        </div>
+    {% endif %}
     <div class="field--wrapper" style="">
         <label for="registerFirstName" class="no-float">First Name</label>
         <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {% if user is defined %} value="{{ user.firstName }}"{% endif %}>
