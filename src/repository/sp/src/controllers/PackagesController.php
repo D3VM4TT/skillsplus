@@ -92,8 +92,8 @@ class PackagesController extends BaseController
         $package = new Entry();
         $package->authorId = $userId;
         $package->enabled = true;
-        $package->sectionId = 15;
-        $package->typeId = 20;
+        $package->sectionId = LantraHelper::sectionId('packages');
+        $package->typeId = LantraHelper::entryTypeId('packages');
         $package->setFieldValues($fields);
 
         if (!Craft::$app->elements->saveElement($package)) {

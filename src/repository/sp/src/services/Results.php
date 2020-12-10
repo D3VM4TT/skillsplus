@@ -30,9 +30,6 @@ use verbb\supertable\elements\SuperTableBlockElement;
 
 class Results extends Component
 {
-    private $sectionIdResults = 10;
-    private $typeIdUnitResult = 10;
-    private $typeIdModuleResult = 14;
     private $dateFormat = 'd/m/y';
 
     /**
@@ -255,8 +252,8 @@ class Results extends Component
             ## create result entry
             if (false == $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
                 $resultEntry = new Entry();
-                $resultEntry->sectionId = $this->sectionIdResults;
-                $resultEntry->typeId = $this->typeIdUnitResult;
+                $resultEntry->sectionId = LantraHelper::sectionId('results');
+                $resultEntry->typeId = LantraHelper::entryTypeId('results', 'unitResult');
                 $resultEntry->enabled = true;
                 $resultEntry->authorId = $entry->authorId;
                 $resultEntry->setFieldValue('resultUnit', [$unitEntry->id]);
@@ -1213,10 +1210,11 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null) {
+    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null)
+    {
         $resultEntry = new Entry();
-        $resultEntry->sectionId = $this->sectionIdResults;
-        $resultEntry->typeId = $this->typeIdUnitResult;
+        $resultEntry->sectionId = LantraHelper::sectionId('results');
+        $resultEntry->typeId = LantraHelper::entryTypeId('results', 'unitResult');
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
         if ($cycle) {
@@ -1245,10 +1243,11 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createModuleResult($userId, $moduleEntryId, $postDate = null) {
+    function createModuleResult($userId, $moduleEntryId, $postDate = null)
+    {
         $resultEntry = new Entry();
-        $resultEntry->sectionId = $this->sectionIdResults;
-        $resultEntry->typeId = $this->typeIdModuleResult;
+        $resultEntry->sectionId = LantraHelper::sectionId('results');
+        $resultEntry->typeId = LantraHelper::entryTypeId('results', 'moduleResult');
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
         if ($postDate) {
@@ -1545,7 +1544,8 @@ class Results extends Component
      * @return array|int
      * @throws \yii\db\Exception
      */
-    public function getManagerEndorsementUserIds(User $manager, $directSubordinates = false, $count = false) {
+    public function getManagerEndorsementUserIds(User $manager, $directSubordinates = false, $count = false)
+    {
         $onlySubordinates = false;
         # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
@@ -1565,12 +1565,14 @@ class Results extends Component
             $mysql = "SELECT DISTINCT authorId";
         }
 
+        $sectionId = LantraHelper::sectionId('results');
+
         $mysql .= "
             FROM {{%entries}} e
             LEFT JOIN {{%content}} c ON c.elementId = e.id
             LEFT JOIN {{%elements}} el ON el.id = e.id
             LEFT JOIN {{%users}} u ON u.id = authorId
-            WHERE e.sectionId = 10
+            WHERE e.sectionId = " . $sectionId . "
             AND u.suspended = 0
             AND u.pending = 0 
             AND c.field_resultStatus = 'pending'

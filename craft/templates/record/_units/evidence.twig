@@ -33,8 +33,10 @@
     {% if moduleResultEntry.resultCompany.count %}
         <input type="hidden" name="fields[resultCompany][]" value="{{ moduleResultEntry.resultCompany.one.id }}" />
     {% endif %}
-    <input type="hidden" name="typeId" value="10">
-    <input type="hidden" name="sectionId" value="10">
+    {% set section = craft.app.sections.getSectionByHandle('results') %}
+    {% set entryType = craft.app.sections.getEntryTypesByHandle('unitResult')[0] %}
+    <input type="hidden" name="typeId" value="{{ entryType.id }}">
+    <input type="hidden" name="sectionId" value="{{ section.id }}">
     <input type="hidden" name="enabled" value="1">
     {% if resultEntry is defined and resultEntry and resultEntry.id %}
         <input type="hidden" name="entryId" value="{{ resultEntry.id }}">

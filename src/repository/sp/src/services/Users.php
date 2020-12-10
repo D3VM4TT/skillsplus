@@ -1350,11 +1350,14 @@ class Users extends Component
     public function getUsersByEntryId($entryId)
     {
         $entry = Craft::$app->entries->getEntryById($entryId);
-        if (!$entry || ($entry->sectionId != 3 && $entry->sectionId != 5)) {
+        $sectionIdCompanies = LantraHelper::sectionId('companies');
+        $sectionIdTeams = LantraHelper::sectionId('teams');
+
+        if (!$entry || ($entry->sectionId != $sectionIdCompanies && $entry->sectionId != $sectionIdTeams)) {
             return (object)[];
         }
         ## get company users
-        if ($entry->sectionId == 3) {
+        if ($entry->sectionId == $sectionIdCompanies) {
             return $this->getCompanyUsers($entryId, false, true);
         }
         ## get team users

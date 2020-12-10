@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\records\Queue as QueueRecord;
 
@@ -110,12 +111,13 @@ class Queue extends Component
      */
      public function run($elementId)
      {
+
         if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
             return;
         }
         try {
             ## only works with reports
-            if ($entry->sectionId == 13) {
+            if ($entry->sectionId == LantraHelper::sectionId('reports')) {
                 $response = Lantra::$app->reports->runCustomReport($entry);
             }
         }

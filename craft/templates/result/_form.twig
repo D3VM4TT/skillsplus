@@ -19,6 +19,8 @@
 
 {% if not currentUser.id == entry.authorId and not isManager %}{% exit 403 %}{% endif %}
 
+{% set section = craft.sections.getSectionByHandle('results') %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         {% include '_includes/topNavigation' %}
@@ -38,7 +40,7 @@
             {{ redirectInput(craft.app.request.referrer) }}
         {% endif %}
         <input type="hidden" name="action" value="entries/save-entry">
-        <input type="hidden" name="sectionId" value="3">
+        <input type="hidden" name="sectionId" value="{{ section.id }}">
         <input type="hidden" name="enabled" value="1">
         <input type="hidden" name="entryId" value="{{ entry.id }}">
 

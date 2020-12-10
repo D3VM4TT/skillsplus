@@ -14,6 +14,8 @@
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set hierarchyParent = craft.app.request.getParam('parent') %}
 
+{% set section = craft.sections.getSectionByHandle('companies') %}
+
 {% block content %}
 <div class="page-subHeader primary-bg">
     {% if hierarchyNode %}
@@ -49,7 +51,7 @@
     {% else %}
         {{ redirectInput('/management/companies') }}
     {% endif %}
-    <input type="hidden" name="sectionId" value="3">
+    <input type="hidden" name="sectionId" value="{{ section.id }}">
     <input type="hidden" name="enabled" value="1">
     <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
     <div class="field--wrapper">
