@@ -27,6 +27,48 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @param $handle
+     * @return null
+     */
+    public static function groupId($handle)
+    {
+        $group = Craft::$app->categories->getGroupByHandle($handle);
+        return $group ? $group->id : null;
+    }
+
+    /**
+     * @param $handle
+     * @return int|null
+     */
+    public static function sectionId($handle)
+    {
+        $section = Craft::$app->sections->getSectionByHandle($handle);
+        return $section ? $section->id : null;
+    }
+
+    /**
+     * @param $handle
+     * @param $typeHandle
+     * @return int|null
+     */
+    public static function entryTypeId($handle, $typeHandle = null)
+    {
+        if (null == $section = Craft::$app->sections->getSectionByHandle($handle)) {
+            return null;
+        }
+        $entryTypes = Craft::$app->sections->getEntryTypesBySectionId($section->id);
+        if (count($entryTypes) == 1) {
+            return $entryTypes[0]->id;
+        }
+        foreach ($entryTypes as $entryType) {
+            if ($entryType->handle == $typeHandle) {
+                return $entryType->id;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return string
      */
     public static function returnRef($url = null)

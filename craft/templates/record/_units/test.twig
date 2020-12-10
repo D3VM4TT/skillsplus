@@ -1,3 +1,4 @@
+    {% set section = craft.sections.getSectionByHandle('attempts') %}
     {% import "_macros" as ui %}
     {% if unitEntry is defined %}
         {{ ui.errorList(unitEntry.getFirstErrors()) }}
@@ -8,7 +9,7 @@
             {{ csrfInput() }}
             {{ actionInput('entries/save-entry') }}
             {{ redirectInput('/cpd/' ~ userId ~ '?ref=' ~ craft.app.request.getParam('ref')) }}
-            <input type="hidden" name="sectionId" value="12">
+            <input type="hidden" name="sectionId" value="{{ section.id }}">
             <input type="hidden" name="enabled" value="1">
             <input type="hidden" name="moduleResultId" value="{{ moduleResultId|default('') }}">
             {% if userId != currentUser.id %}

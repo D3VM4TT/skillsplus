@@ -364,11 +364,15 @@ class Structure extends Component
     /**
      * @return array
      */
-    public function getTopCompanyIds() {
+    public function getTopCompanyIds()
+    {
+        $section = Craft::$app->sections->getSectionByHandle('companies');
+        $field = Craft::$app->fields->getFieldByHandle('companyParent');
+
         $query = (new Query())
             ->from('{{%entries}} e')
-            ->where('sectionId=3')
-            ->andWhere('e.id NOT IN (SELECT DISTINCT sourceId from {{%relations}} WHERE fieldId = 4)')
+            ->where('sectionId=' . $section->id)
+            ->andWhere('e.id NOT IN (SELECT DISTINCT sourceId from {{%relations}} WHERE fieldId = ' . $field->id . ')')
             ->all();
 
         $return = [];

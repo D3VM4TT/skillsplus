@@ -16,6 +16,7 @@ use craft\web\Controller;
 use craft\web\UploadedFile;
 use DateTime;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\records\Import as ImportRecord;
 use lantra\sp\records\Import;
@@ -24,12 +25,6 @@ class ImportController extends Controller
 {
     private $success = 0;
     private $log = [];
-
-    private $sectionIdResults = 10;
-    private $sectionIdCompanies = 3;
-    private $typeIdCompany = 3;
-    private $categoryGroupIdJobRoles = 1;
-
     private $emails;
 
     ## temp array legacyId => id
@@ -680,7 +675,7 @@ class ImportController extends Controller
      */
     private function deleteCompanies()
     {
-        $this->deleteEntriesBySectionId(3);
+        $this->deleteEntriesBySectionId(LantraHelper::sectionId('companies'));
         Craft::$app->session->setNotice('All imported companies deleted.');
         $this->complete('#tab-import-delete');
     }
@@ -692,7 +687,7 @@ class ImportController extends Controller
      */
     private function deleteResults()
     {
-        $this->deleteEntriesBySectionId(10);
+        $this->deleteEntriesBySectionId(LantraHelper::sectionId('results'));
         Craft::$app->session->setNotice('All imported results deleted.');
         $this->complete('#tab-import-delete');
     }
@@ -843,8 +838,8 @@ class ImportController extends Controller
             $legacyParentId = (int)trim($company[2]);
 
             $entry = new Entry();
-            $entry->sectionId = $this->sectionIdCompanies;
-            $entry->typeId = $this->typeIdCompany;
+            $entry->sectionId = LantraHelper::sectionId('companies');
+            $entry->typeId = LantraHelper::entryTypeId('companies');
             $entry->enabled = true;
             $entry->title = $title;
             $entry->setAttributes([
@@ -876,7 +871,7 @@ class ImportController extends Controller
             $legacyId = (int)trim($jobRole[1]);
 
             $category = new Category();
-            $category->groupId = $this->categoryGroupIdJobRoles;
+            $category->groupId = LantraHelper::groupId('roles');
             $category->title = $title;
             $category->setAttributes([
                 'dataImported' => true,
@@ -1014,8 +1009,8 @@ class ImportController extends Controller
             $resultType = $unitEntry ? 'unitResult' : 'userResult';
 
             $entry = new Entry();
-            $entry->sectionId = $this->sectionIdResults;
-            $entry->typeId = $resultType == 'unitResult' ? 10 : 17;
+            $entry->sectionId = LantraHelper::sectionId('results');
+            $entry->typeId = $resultType == 'unitResult' ? LantraHelper::entryTypeId('results', 'unitResult') : LantraHelper::entryTypeId('results', 'userResult');
             $entry->enabled = true;
             $entry->authorId = $author->id;
             $entry->postDate = DateTime::createFromFormat('d/m/Y', $postDate);

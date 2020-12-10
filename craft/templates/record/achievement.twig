@@ -69,6 +69,9 @@
 {% set resultLocked = false %}
 {% set metaTitle = achievementLabel|pluralize ~ ' > ' ~ account.fullname %}
 
+{% set section = craft.app.sections.getSectionByHandle('results') %}
+{% set entryType = craft.app.sections.getEntryTypesByHandle('userResult')[0] %}
+
 {% block content %}
     <section class="page">
         <div class="page-subHeader primary-bg">
@@ -114,8 +117,8 @@
                 {% else %}
                     <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry ? moduleResultEntry.id }}" />
                 {% endif %}
-                <input type="hidden" name="typeId" value="17">
-                <input type="hidden" name="sectionId" value="10">
+                <input type="hidden" name="typeId" value="{{ entryType.id }}">
+                <input type="hidden" name="sectionId" value="{{ section.id }}">
                 <input type="hidden" name="enabled" value="1">
                 <input type="hidden" name="entryId" value="{{ resultEntry ? resultEntry.id : '' }}">
                 {% if userId %}

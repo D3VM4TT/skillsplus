@@ -19,15 +19,13 @@ use League\Csv\Writer;
 
 class Reports extends Component
 {
-    private $sectionIdReports = 13;
-    private $typeIdReport = 15;
-
     /**
-     * @param $search
-     * @param $limit
-     * @param $order
-     * @param $automated
-     * @return array
+     * @param string $search
+     * @param int $limit
+     * @param string $order
+     * @param bool $automated
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \yii\db\Exception
      */
     public function reportCriteria($search = '', $limit = 25, $order = 'title', $automated = false)
     {
@@ -185,8 +183,8 @@ class Reports extends Component
         }
         else {
             $reportEntry = new Entry();
-            $reportEntry->sectionId = $this->sectionIdReports;
-            $reportEntry->typeId = $this->typeIdReport;
+            $reportEntry->sectionId = LantraHelper::sectionId('reports');
+            $reportEntry->typeId = LantraHelper::entryTypeId('reports');
             $reportEntry->enabled = true;
             $reportEntry->authorId = $author->id;
         }
@@ -227,7 +225,8 @@ class Reports extends Component
      * @param $manager
      * @param $type
      * @param array $filter
-     * @return mixed
+     * @return array
+     * @throws \yii\db\Exception
      */
     public function getCustomReportData($manager, $type, $filter = [])
     {
