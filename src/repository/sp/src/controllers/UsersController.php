@@ -174,12 +174,17 @@ class UsersController extends BaseController {
            $user->username = $user->email;
         }
 
+        $usersId = LantraHelper::userGroupId('users');
+        $companyManagersId = LantraHelper::userGroupId('companyManagers');
+        $teamManagersId = LantraHelper::userGroupId('teamManagers');
+        $schemeManagersId = LantraHelper::userGroupId('schemeManagers');
+
         $companyManager = false;
         ## assign user to groups (always in 'user' group from front end)
-        $groupIds = [4];
+        $groupIds = [$usersId];
         $userCompany = isset($fields['userCompany']) ? $fields['userCompany'] : null;
         if ($fields['userType'] == 'manager') {
-            $groupIds[] = 2;
+            $groupIds[] = $companyManagersId;
             $companyManager = true;
         }
         ## remove as manager from all companies
@@ -189,11 +194,11 @@ class UsersController extends BaseController {
             }
         }
         if (Craft::$app->request->getParam('teamManagers')) {
-            $groupIds[] = 3;
+            $groupIds[] = $teamManagersId;
         }
         ## save scheme manager
-        if ($user->isInGroup(1)) {
-            $groupIds[] = 1;
+        if ($user->isInGroup($schemeManagersId)) {
+            $groupIds[] = $schemeManagersId;
         }
 
         ## mimic cp form for onSaveUser event

@@ -586,7 +586,7 @@ class ImportController extends Controller
             $this->jobRoleTemp[$jobRole->legacyId] = $jobRole->id;
         }
         $criteria = User::find();
-        $criteria->groupId = [2,3,4];
+        $criteria->groupId = LantraHelper::userGroupIds('users');
         $criteria->admin = false;
         $criteria->limit = $this->limit;
         $criteria->dataCleanJobRole = 0;
@@ -614,7 +614,7 @@ class ImportController extends Controller
     private function setUsernames()
     {
         $criteria = User::find();
-        $criteria->groupId = [2,3,4];
+        $criteria->groupId = LantraHelper::userGroupIds('users');
         $criteria->admin = false;
         $criteria->limit = $this->limit;
         $criteria->dataCleanUsername = 0;
@@ -649,7 +649,7 @@ class ImportController extends Controller
     private function setPasswords()
     {
         $criteria = User::find();
-        $criteria->groupId = [2,3,4];
+        $criteria->groupId = LantraHelper::userGroupIds('users');
         $criteria->admin = false;
         $criteria->limit = $this->limit;
         $criteria->dataCleanPassword = 0;
@@ -699,9 +699,10 @@ class ImportController extends Controller
      */
     private function deleteRoles()
     {
+        $rolesId = LantraHelper::groupId('roles');
         $mysql = "DELETE {{%categories}} FROM {{%categories}}
           JOIN {{%content}} ON {{%content}}.elementId = {{%categories}}.id
-          WHERE {{%categories}}.groupId = 1
+          WHERE {{%categories}}.groupId = " . $rolesId . "
           AND {{%content}}.field_dataImported = 1";
         Craft::$app->db->createCommand($mysql)->query();
         Craft::$app->session->setNotice('All imported roles deleted.');
@@ -1134,7 +1135,7 @@ class ImportController extends Controller
         }
         if ($type == 'users') {
             $criteria = User::find();
-            $criteria->groupId = [2,3,4];
+            $criteria->groupId = LantraHelper::userGroupIds('users');
             $criteria->admin = false;
         }
         $fieldName = 'dataClean' . $dataCleanKey;

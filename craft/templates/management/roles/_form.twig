@@ -10,6 +10,8 @@
     {% set category = craft.categories.id(categoryId).one %}
 {% endif %}
 
+{% set group = craft.app.categories.groupByHandle('roles') %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         <a class="back-link" href="/management/roles">&laquo; back</a>
@@ -25,7 +27,7 @@
         {{ csrfInput() }}
         {{ actionInput('categories/save-category') }}
         {{ redirectInput('/management/roles') }}
-        <input type="hidden" name="groupId" value="1">
+        <input type="hidden" name="groupId" value="{{ group.id }}">
         <input type="hidden" name="categoryId" value="{{ category.id|default('') }}">
         <div class="field--wrapper">
             <label for="title" class="no-float">Job role name:</label>

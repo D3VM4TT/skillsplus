@@ -38,6 +38,32 @@ class LantraHelper
 
     /**
      * @param $handle
+     * @return null
+     */
+    public static function userGroupId($handle)
+    {
+        $group = Craft::$app->userGroups->getGroupByHandle($handle);
+        return $group ? $group->id : null;
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    public static function userGroupIds($type = 'users')
+    {
+        $companyManagersId = self::userGroupId('companyManagers');
+        $teamManagersId = self::userGroupId('teamManagers');
+        $userIds = [$teamManagersId, $companyManagersId];
+        if ($type == 'users') {
+            $userIds[] = self::userGroupId('users');
+        }
+        return $userIds;
+    }
+
+
+    /**
+     * @param $handle
      * @return int|null
      */
     public static function sectionId($handle)

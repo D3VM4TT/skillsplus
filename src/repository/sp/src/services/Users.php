@@ -1164,7 +1164,7 @@ class Users extends Component
     function getSchemeManagers($first = false)
     {
         $criteria = User::find();
-        $criteria->groupId = 1;
+        $criteria->groupId = LantraHelper::userGroupId('schemeManagers');
         $criteria->limit = null;
         return $first ? $criteria->one() : $criteria->all();
     }
