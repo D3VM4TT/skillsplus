@@ -14,6 +14,7 @@ use craft\elements\User;
 use craft\web\Controller;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
 
 class ToolsController extends Controller
 {
@@ -58,9 +59,10 @@ class ToolsController extends Controller
      * @param bool $count
      * @return mixed
      */
-    private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
+    private function getManagers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false)
+    {
         $criteria = User::find();
-        $criteria->groupId = [2,3];
+        $criteria->groupId = LantraHelper::userGroupIds('managers');
         $criteria->admin = false;
         $criteria->limit = $limit;
         if ($dataCleanKey) {
@@ -112,7 +114,7 @@ class ToolsController extends Controller
      */
     private function getUsers($limit = null, $dataCleanKey = null, $dataCleanValue = false, $count = false) {
         $criteria = User::find();
-        $criteria->groupId = [2,3,4];
+        $criteria->groupId = LantraHelper::userGroupIds('users');
         $criteria->admin = false;
         $criteria->limit = $limit;
         $criteria->order = 'id';

@@ -9,8 +9,10 @@
 namespace lantra\sp\controllers;
 
 use Craft;
+use craft\elements\User;
 
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\helpers\LantraHelper;
 
 class CronController extends BaseController {
 
@@ -56,12 +58,13 @@ class CronController extends BaseController {
      *
      * @throws Exception
      */
-    function notifyManagerSummary() {
+    function notifyManagerSummary()
+    {
         $criteria = User::find();
         $criteria->limit = null;
-        $criteria->groupId = array(2, 3);
+        $criteria->groupId = LantraHelper::userGroupIds('managers');
         $managers = $criteria->all();
-        // loop managers and send notifications
+        ## loop managers and send notifications
         foreach($managers as $manager) {
             Lantra::$app->notify->sendManagerSummary($manager);
         }
@@ -71,7 +74,8 @@ class CronController extends BaseController {
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function notifyLicencesRemaining() {
+    function notifyLicencesRemaining()
+    {
         Lantra::$app->notify->sendLicencesRemaining();
     }
 
@@ -79,7 +83,8 @@ class CronController extends BaseController {
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function notifySchemeExpiry() {
+    function notifySchemeExpiry()
+    {
         $expiryDate = Lantra::$app->licences->getSchemeExpiryDate();
         $warningDate = strtotime("+4 weeks");
         if ($expiryDate && $expiryDate->getTimestamp() < $warningDate) {
@@ -90,7 +95,8 @@ class CronController extends BaseController {
     /**
      * @throws \Exception
      */
-    function expireIndividualUsers() {
+    function expireIndividualUsers()
+    {
         $users = Lantra::$app->users->getExpiredUsers();
         if ($users) {
             foreach($users as $user) {
@@ -103,7 +109,8 @@ class CronController extends BaseController {
      * Notify expiring users
      *
      */
-    function notifyUserExpiry() {
+    function notifyUserExpiry()
+    {
         $warningDate = strtotime("+4 weeks");
         Lantra::$app->notify->sendUserExpiry($warningDate);
     }
