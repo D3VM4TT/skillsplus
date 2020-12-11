@@ -171,6 +171,9 @@ class Users extends Component
             $criteria->group = ['users', 'teamManagers'];
             $criteria->relatedTo = ['targetElement' => $this->getManagerTeams($user, false, true), 'field' => 'userCompany'];
         }
+        else {
+            $criteria->group = ['users', 'companyManagers', 'teamManagers'];
+        }
         if ($companyId) {
             $criteria->relatedTo = ['targetElement' => [$companyId], 'field' => 'userCompany'];
         }
