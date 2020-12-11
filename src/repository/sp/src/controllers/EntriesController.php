@@ -81,12 +81,12 @@ class EntriesController extends BaseController {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         ## if removing a company, disable teams and children
-        if ($entry->section->id == 3) {
+        if ($entry->section->id == LantraHelper::sectionId('companies')) {
             $this->_disableTeams($entry);
             $this->_disableChildren($entry);
         }
         ## if a result update cache
-        if ($entry->section->id == 10 && $entry->type == 'unitResult') {
+        if ($entry->section->id == LantraHelper::sectionId('results') && $entry->type == 'unitResult') {
             Lantra::$app->results->deleteUserResultCache($entry);
         }
         ## save disabled entry
@@ -129,7 +129,7 @@ class EntriesController extends BaseController {
     private function _disableEntry($entry)
     {
         ## return company licences back to scheme
-        if ($entry->section->id == 3) {
+        if ($entry->section->id == LantraHelper::sectionId('companies')) {
             Lantra::$app->licences->addSchemeLicences($entry->companyRemainingLicences);
             $entry->companyRemainingLicences = 0;
         }

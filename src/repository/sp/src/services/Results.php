@@ -1566,6 +1566,8 @@ class Results extends Component
         }
 
         $sectionId = LantraHelper::sectionId('results');
+        $unitResultTypeId = LantraHelper::entryTypeId('results', 'unitResult');
+        $userResultTypeId = LantraHelper::entryTypeId('results', 'userResult');
 
         $mysql .= "
             FROM {{%entries}} e
@@ -1580,7 +1582,7 @@ class Results extends Component
             AND el.revisionId IS NULL
             AND el.draftId IS NULL
             AND el.dateDeleted IS NULL
-            AND (e.typeId = 10 OR e.typeId = 17)
+            AND (e.typeId = " . $unitResultTypeId . " OR e.typeId = " . $userResultTypeId . ")
             AND authorId != " . $manager->id;
 
         # add subordinates and level to query
