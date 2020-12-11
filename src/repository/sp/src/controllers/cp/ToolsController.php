@@ -439,7 +439,7 @@ class ToolsController extends Controller
     private function copyDatabase($target = null)
     {
         if (is_null($target)) {
-            $server = Craft::getAlias('server');
+            $server = Craft::getAlias('@server');
             if ($server == 'prod' || $server == 'dev' || $server == 'local') {
                 $target = 'uat';
             } else {
