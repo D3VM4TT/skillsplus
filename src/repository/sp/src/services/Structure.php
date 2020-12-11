@@ -92,7 +92,8 @@ class Structure extends Component
 
 
     /** more efficient way to search companies */
-    private function searchCompanyIds($search = '') {
+    private function searchCompanyIds($search = '')
+    {
         if (intval($search)) {
             $mysql = 'SELECT c.elementId as id FROM {{%content}} c                
                 WHERE c.elementId = "' . $search . '"
@@ -112,7 +113,8 @@ class Structure extends Component
         return $ids;
     }
 
-    public function getHierarchy($entryId = null, $type = 'companies') {
+    public function getHierarchy($entryId = null, $type = 'companies')
+    {
         if (! $entryId) {
             $return = $this->getJsTreeRoot();
         }
@@ -153,7 +155,8 @@ class Structure extends Component
         return $node;
     }
 
-    private function getJsTreeRoot() {
+    private function getJsTreeRoot()
+    {
         $user = Craft::$app->getUser()->getIdentity();
         if ($user->admin or $user->isInGroup('schemeManagers')) {
             $children[] = $this->createNode('scheme', 'managers', 's', 'Scheme Managers', 'group', true);
@@ -192,7 +195,8 @@ class Structure extends Component
         ];
     }
 
-    private function getJsTreeCompany($companyId) {
+    private function getJsTreeCompany($companyId)
+    {
         $company = $this->getCompanyById($companyId);
         $managerCount = $companyId ? Lantra::$app->users->getCompanyManagers($company, true) : 0;
         $memberCount = $companyId ? Lantra::$app->users->getCompanyMembers($companyId, true) : 0;
@@ -220,7 +224,8 @@ class Structure extends Component
         return $return;
     }
 
-    private function getJsTreeManagers($entryId) {
+    private function getJsTreeManagers($entryId)
+    {
         if ($entryId == 'scheme') {
             $managers = Lantra::$app->users->getSchemeManagers();
         }
@@ -246,7 +251,8 @@ class Structure extends Component
         return $return;
     }
 
-    private function getJsTreeTeam($teamId) {
+    private function getJsTreeTeam($teamId)
+    {
         $team =  Craft::$app->entries->getEntryById($teamId);
         $managerCount = Lantra::$app->users->getTeamManagers($team, true);
         $return[]  = $this->createNode($teamId, 'managers', $team->id . 'm', 'Managers (' . $managerCount . ')', 'group', true);
@@ -255,13 +261,14 @@ class Structure extends Component
         return $return;
     }
 
-    private function getJsTreeUsers($entryId) {
+    private function getJsTreeUsers($entryId)
+    {
         $entry =  Craft::$app->entries->getEntryById($entryId);
-        // company members
-        if ($entry->getSection()->id == 3) {
+        ## company members
+        if ($entry->getSection()->id == LantraHelper::sectionId('companies')) {
             $members = Lantra::$app->users->getCompanyMembers($entry->id);
         }
-        // team members
+        ## team members
         else {
             $members = Lantra::$app->users->getTeamMembers($entry->id);
         }
@@ -277,7 +284,8 @@ class Structure extends Component
         return $return;
     }
 
-    private function getJsTreeChildren($companyId = null) {
+    private function getJsTreeChildren($companyId = null)
+    {
         $companies = $this->getCompanyChildren($companyId);
         $return = [];
         foreach($companies as $company) {
@@ -293,8 +301,8 @@ class Structure extends Component
      * @throws Exception
      * @throws \CException
      */
-    public function getCompanyChildren($companyId = null, $count = false, $status = 'live') {
-
+    public function getCompanyChildren($companyId = null, $count = false, $status = 'live')
+    {
         $criteria = Entry::find();
         $criteria->section = 'companies';
         $criteria->limit = null;
@@ -313,7 +321,8 @@ class Structure extends Component
     /* cache children */
     private $_companyDescendants = [];
 
-    public function getCompanyDescendants($companyId = null) {
+    public function getCompanyDescendants($companyId = null)
+    {
         if (isset($this->_companyDescendants[$companyId])) {
             return $this->_companyDescendants[$companyId];
         }
@@ -335,7 +344,8 @@ class Structure extends Component
         return $company->companyParent->count() ? $company->companyParent->one() : null;
     }
 
-    public function getCompanyAncestors($companyId = null) {
+    public function getCompanyAncestors($companyId = null)
+    {
         if (isset($this->_companyAncestors[$companyId])) {
             return $this->_companyAncestors[$companyId];
         }
@@ -349,7 +359,8 @@ class Structure extends Component
         return $ancestors;
     }
 
-    public function appendCompanyDescendants($companyIds = []) {
+    public function appendCompanyDescendants($companyIds = [])
+    {
         $return = $companyIds;
         foreach($companyIds as $id) {
             foreach( $this->getCompanyDescendants($id) as $descendantId) {
@@ -415,8 +426,8 @@ class Structure extends Component
      * @return string
      * @throws mixed
      */
-    private function prependCompanyParent($company, $label) {
-
+    private function prependCompanyParent($company, $label)
+    {
         if ($company->companyParent->count())
         {
             $parent = $company->companyParent->one();
@@ -449,7 +460,7 @@ class Structure extends Component
      */
     private function structureCompanies()
     {
-        $companySection = Craft::$app->getSections()->getSectionById(3);
+        $companySection = Craft::$app->getSections()->getSectionByHandle('companies');
         $companySection->type = 'structure';
         Craft::$app->getSections()->saveSection($companySection);
 
