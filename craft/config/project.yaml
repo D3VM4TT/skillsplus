@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1607636559
+dateModified: 1608207379
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4405,20 +4405,23 @@ matrixBlockTypes:
             fields:
               1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9:
                 required: false
-                sortOrder: 3
+                sortOrder: 4
               45d289dd-249a-42e9-95ae-62ab979e8b02:
                 required: false
                 sortOrder: 1
               46656fa8-cf4d-4c7e-93d0-800132d01aa2:
                 required: false
-                sortOrder: 4
+                sortOrder: 5
               64769feb-a327-4c92-8224-bfd94a529f1a:
                 required: false
-                sortOrder: 6
+                sortOrder: 7
               7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
                 required: false
-                sortOrder: 5
+                sortOrder: 6
               a773e69f-0bf1-46fd-ae75-5182be37772c:
+                required: false
+                sortOrder: 3
+              de561917-2808-45e4-b7db-324c21a2aebf:
                 required: false
                 sortOrder: 2
             name: Content
@@ -4528,6 +4531,24 @@ matrixBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Entries
+      de561917-2808-45e4-b7db-324c21a2aebf:
+        contentColumnType: text
+        fieldGroup: null
+        handle: groupNotes
+        instructions: ''
+        name: Notes
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: '1'
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
     handle: unitGroup
     name: 'Unit Group'
     sortOrder: 1

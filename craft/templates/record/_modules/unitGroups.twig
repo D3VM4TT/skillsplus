@@ -8,6 +8,9 @@
         {% set addResult = unitGroup.enableSubmissions %}
         <div class="unit-group">
             <div class="header primary-bg" data-target="#u{{ moduleElementId ~ unitGroup.id }}">
+                {% if unitGroup.groupNotes %}
+                    <a href="#" data-tooltip title="{{ unitGroup.groupNotes }}"><img style="float:left;" src="/assets/img/help.svg" width="26" height="26" class="" alt=""></a>
+                {% endif %}
                 <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
                 <div class="status">
                     View status and Endorsements
