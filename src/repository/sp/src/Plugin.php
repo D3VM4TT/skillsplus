@@ -376,6 +376,9 @@ class Plugin extends BasePlugin
             'public/passport/<userId>'                  => ['template' => 'public/passport'],
             'public/licence/thanks'                     => ['template' => 'public/licence'],
 
+            ## membership routes
+            'public/register/membership/thanks'         => ['template' => 'public/register/membership'],
+
             ## internal assets
             'internal/<assetId>'                        => 'sp/assets/internal',
 

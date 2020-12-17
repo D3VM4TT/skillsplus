@@ -4,6 +4,10 @@
         <li class="nav-open">
             <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks/manage">My {{ taskbookLabel|pluralize }}</a>
         </li>
+    {% elseif currentUser.isInGroup('usersMembershipPending') %}
+        <li>
+            <a class="secondary-bg-hover" href="/public/register/membership">Register</a>
+        </li>
     {% else %}
         {% if craft.lantra.setting('themeMyDashboard') %}
             <li class="{% if craft.app.request.getSegment(1) == '' %}nav-open{% else %}nav-closed{% endif %}">

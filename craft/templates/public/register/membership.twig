@@ -1,19 +1,32 @@
 {% set sidebar = 'closed' %}
 {% extends "_layout" %}
 
+{% if currentUser %}
+    {% set membership = craft.lantra.membership(currentUser) %}
+{% endif %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         {% include '_includes/topNavigation' %}
     </div>
     <section class="page">
-        <div class="page-header secondary-bg">
-            <h2>Create account</h2>
-            <p>Enter your details below to create a new account.</p>
-        </div>
-        {% if currentUser %}
-            ## paypal ##
+        {% if craft.app.request.segment(4) == 'thanks' %}
+            <div class="page-header secondary-bg">
+                <h2>Thank You</h2>
+                <p>You will be redirected to your dashboard...</p>
+                <script>setTimeout(function () {window.location.href = "/";}, 3000);</script>
+            </div>
         {% else %}
-            {% include '_forms/register' with {isMembership:true} %}
+            <div class="page-header secondary-bg">
+                <h2>Create account</h2>
+            </div>
+            {% if currentUser %}
+                <div class="content-main">
+                    {{ craft.lantra.payPalButton(membership.title, membership.cost, 'Pay £' ~ membership.cost, siteUrl('public/register/membership/thanks'), {'isMembership':true})|raw }}
+                </div>
+            {% else %}
+                {% include '_forms/register' with {isMembership:true} %}
+            {% endif %}
         {% endif %}
     </section>
 {% endblock %}

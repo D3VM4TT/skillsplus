@@ -43,6 +43,12 @@ class PaypalController extends BaseController
             Craft::error('PayPal failed to validate user [' . ($custom ? $custom->userId : 'NULL') . ']', __METHOD__);
             return $this->asJson(['success' => 'false']);
         }
+        ## move pending users
+        if (isset($custom->isMembership) && $user->isInGroup('usersMembershipPending')) {
+            $group = Craft::$app->userGroups->getGroupByHandle('users');
+            Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+        }
+
         ## handle successful package payment
         if (isset($custom->packageId)) {
             if (null == $package = Entry::findOne($custom->packageId)) {
