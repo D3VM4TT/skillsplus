@@ -645,11 +645,11 @@ $(document).ready(function(){
         });
     });
 
-    if ($("#taskbook-payment").length) {
-        var tp = $("#taskbook-payment");
+    if ($("#pending-payment").length) {
+        var pp = $("#pending-payment");
         $('body').addClass('loading');
         var loop = 0,
-            data = {'packageId': tp.data('id')},
+            data = {'entryId': pp.data('id')},
             paymentRedirect = tp.data('redirect'),
             checkPayment = function(){
                 if (loop == 5) {
@@ -658,7 +658,7 @@ $(document).ready(function(){
                     return;
                 }
                 data[window.csrfTokenName] = window.csrfTokenValue;
-                $.post("/sp/packages/payments", data, function(response) {
+                $.post("/sp/paypal/verify-payment", data, function(response) {
                     if (!response.success) {
                         alert(response.message);
                         $('body').removeClass('loading');

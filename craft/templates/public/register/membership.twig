@@ -14,7 +14,7 @@
             <div class="page-header secondary-bg">
                 <h2>Thank You</h2>
                 <p>You will be redirected to your dashboard...</p>
-                <script>setTimeout(function () {window.location.href = "/";}, 3000);</script>
+                <script>setTimeout(function () {window.location.href = "/";}, 5000);</script>
             </div>
         {% else %}
             <div class="page-header secondary-bg">
@@ -22,7 +22,7 @@
             </div>
             {% if currentUser %}
                 <div class="content-main">
-                    {{ craft.lantra.payPalButton(membership.title, membership.cost, 'Pay £' ~ membership.cost, siteUrl('public/register/membership/thanks'), {'isMembership':true})|raw }}
+                    {{ craft.lantra.payPalButton(membership.title, membership.cost, 'Pay £' ~ membership.cost, siteUrl('sp/paypal/pay'), {'isMembership':true})|raw }}
                 </div>
             {% else %}
                 {% include '_forms/register' with {isMembership:true} %}

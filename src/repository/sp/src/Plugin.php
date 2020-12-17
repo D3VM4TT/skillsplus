@@ -438,7 +438,6 @@ class Plugin extends BasePlugin
 
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
-            'sp/packages/pay/<packageId>'               => 'sp/packages/pay',
             'sp/packages/payments'                      => 'sp/packages/payments',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
@@ -452,6 +451,8 @@ class Plugin extends BasePlugin
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
 
             'sp/paypal/ipn'                             => 'sp/paypal/ipn',
+            'sp/paypal/pay/<entryId>'                   => 'sp/paypal/pay',
+            'sp/paypal/pay/'                            => 'sp/paypal/pay',
         ];
     }
 

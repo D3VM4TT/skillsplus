@@ -43,8 +43,10 @@ class PaypalController extends BaseController
             Craft::error('PayPal failed to validate user [' . ($custom ? $custom->userId : 'NULL') . ']', __METHOD__);
             return $this->asJson(['success' => 'false']);
         }
-        ## move pending users
+        ## handle membership
         if (isset($custom->isMembership) && $user->isInGroup('usersMembershipPending')) {
+            ## add user payment
+            LantraHelper::addUserPayment($user, $payerEmail, $paymentAmount, $transactionId);
             $group = Craft::$app->userGroups->getGroupByHandle('users');
             Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
         }
@@ -76,6 +78,57 @@ class PaypalController extends BaseController
             Lantra::$app->notify->sendNewPackage($package);
         }
         return $this->asJson(['success' => 'true']);
+    }
+
+    /**
+     * @param null $entryId
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function actionPay($entryId = null)
+    {
+        if ($entryId) {
+            $entry = Craft::$app->entries->getEntryById($entryId);
+            if ($entry && $entry->section->handle == 'packages') {
+                $entry->setFieldValue('packagePaid', 1);
+                Craft::$app->elements->saveElement($entry);
+                $variables = [
+                    'isTaskbooks' => true,
+                    'entryId' => $entryId,
+                    'redirect' => '/cpd/' . $entry->authorId . '/taskbooks/manage'
+                ];
+            }
+        }
+        else {
+            $variables = [
+                'isMembership' => true,
+                'entryId' => null,
+                'redirect' => '/'
+            ];
+        }
+        return $this->renderTemplate('_paypal/payment', $variables);
+    }
+
+    /**
+     * @return \yii\web\Response
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionVerifyPayment()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        if (null == $entryId = Craft::$app->request->getParam('entryId')) {
+            $user = Craft::$app->getUser()->getIdentity();
+            return $this->_returnMessage($user->userPayments->count(), true);
+        }
+        if (null == $entry = Craft::$app->elements->getElementById($entryId)) {
+            return $this->_returnError('Invalid Entry ID');
+        }
+        return $this->_returnMessage($entry->userPayments->count(), true);
     }
 
     /**

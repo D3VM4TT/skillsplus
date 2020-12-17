@@ -35,45 +35,6 @@ class PackagesController extends BaseController
     }
 
     /**
-     * @param $packageId
-     * @return \yii\web\Response
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionPay($packageId)
-    {
-        $packageEntry = Craft::$app->elements->getElementById($packageId);
-        $packageEntry->setFieldValue('packagePaid', 1);
-        Craft::$app->elements->saveElement($packageEntry);
-        $variables = [
-            'packageId' => $packageId,
-            'redirect' => '/cpd/' . $packageEntry->authorId . '/taskbooks/manage'
-        ];
-        return $this->renderTemplate('_taskbooks/payment', $variables);
-    }
-
-    /**
-     * @param $packageId
-     * @return \yii\web\Response
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionPayments()
-    {
-        $this->requirePostRequest();
-        $this->requireLogin();
-        $packageId = Craft::$app->request->getParam('packageId');
-        if (!$packageId || null == $packageEntry = Craft::$app->elements->getElementById($packageId)) {
-            return $this->_returnError('Invalid Package ID');
-        }
-        return $this->_returnMessage($packageEntry->userPayments->count(), true);
-    }
-
-    /**
      * Saves user taskbook package
      *
      * @throws mixed
