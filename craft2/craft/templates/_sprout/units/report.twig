@@ -1,9 +1,0 @@
-{% set units = craft.entries.section('units') %}
-{% do craft.sproutReports.addHeaderRow(['ID', 'Legacy ID', 'Title']) %}
-{% for entry in units %}
-    {% do craft.sproutReports.addRow([
-        entry.id,
-        entry.legacyId,
-        entry.title
-    ]) %}
-{% endfor %}
