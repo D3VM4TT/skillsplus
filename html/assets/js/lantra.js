@@ -650,7 +650,7 @@ $(document).ready(function(){
         $('body').addClass('loading');
         var loop = 0,
             data = {'entryId': pp.data('id')},
-            paymentRedirect = tp.data('redirect'),
+            paymentRedirect = pp.data('redirect'),
             checkPayment = function(){
                 if (loop == 5) {
                     alert('Payment not confirmed.  Contact support.');
