@@ -59,6 +59,27 @@ class Notify extends Component
     }
 
     /**
+     * @param $user
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    function sendNewMembership($user)
+    {
+        $jobRole = $user->userRole->one();
+        $subject = $this->getNotifySetting('subjectNewMembership', 'New Membership');
+        $membership = LantraHelper::getMembership($user);
+        $variables = [
+            'user'          => $user,
+            'jobRole'       => $jobRole,
+            'membership'    => $membership
+        ];
+        $template = $this->getNotifySetting('newMembership', "New Membership for {{ user.fullname }} - {{ jobRole.title }} - £{{ membership.cost }}.");
+        $message = Craft::$app->view->renderString($template, $variables);
+        $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
+        $this->notify($schemeManagerEmails, $subject, $message);
+    }
+
+    /**
      * @param Entry $packageEntry
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError

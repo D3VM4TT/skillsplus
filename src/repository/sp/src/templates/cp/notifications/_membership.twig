@@ -1,0 +1,16 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField ({
+    label:			"Subject New Membership",
+    id:				"notifySubjectNewMembership",
+    name:			"notifySubjectNewMembership",
+    value:		    settings.notifySubjectNewMembership
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: New Membership for {{ user.fullname }} - {{ jobRole.title }} - £{{ membership.cost }}.",
+    label:			"Message New Membership",
+    id:				"notifyNewMembership",
+    name:			"notifyNewMembership",
+    value:		    settings.notifyNewMembership
+}) }}

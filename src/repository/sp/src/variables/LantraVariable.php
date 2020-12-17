@@ -133,17 +133,9 @@ class LantraVariable
      * @param $user
      * @return null
      */
-    public function membership($user)
+    public function membership($user = null)
     {
-        $jobRole = $user->userRole->one();
-        $membershipOptions = self::setting('membershipOptions');
-        foreach ($membershipOptions as $row) {
-            if ($row['jobRole'] == $jobRole->id) {
-                $row['title'] = $jobRole->title;
-                return $row;
-            }
-        }
-        return null;
+        return LantraHelper::getMembership($user);
     }
 
     /**

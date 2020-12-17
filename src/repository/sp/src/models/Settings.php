@@ -106,6 +106,9 @@ class Settings extends Model
     public $notifySubjectNewPackage             = '';
     public $notifyNewPackage                    = '';
 
+    public $notifySubjectNewMembership          = '';
+    public $notifyNewMembership                 = '';
+
     public $disableEndorsementNotify            = false;
 
     public $enableTaskbooks                     = false;

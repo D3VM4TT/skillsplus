@@ -362,4 +362,24 @@ class LantraHelper
 
         return (int) $userId > 0 ? Craft::$app->users->getUserById( (int) $userId) : null;
     }
+
+    /**
+     * @param null $user
+     * @return null
+     */
+    public static function getMembership($user = null)
+    {
+        if (null == $user = self::getUser($user)) {
+            return null;
+        }
+        $jobRole = $user->userRole->one();
+        $membershipOptions = self::setting('membershipOptions');
+        foreach ($membershipOptions as $row) {
+            if ($row['jobRole'] == $jobRole->id) {
+                $row['title'] = $jobRole->title;
+                return $row;
+            }
+        }
+        return null;
+    }
 }

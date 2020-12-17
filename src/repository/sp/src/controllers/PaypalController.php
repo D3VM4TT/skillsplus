@@ -49,6 +49,9 @@ class PaypalController extends BaseController
             LantraHelper::addUserPayment($user, $payerEmail, $paymentAmount, $transactionId);
             $group = Craft::$app->userGroups->getGroupByHandle('users');
             Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+
+            ## send notification to scheme managers
+            Lantra::$app->notify->sendNewMembership($user);
         }
 
         ## handle successful package payment

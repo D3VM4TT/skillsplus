@@ -13,7 +13,8 @@
     comments: {label: 'Reports', url: '#settings-tab-reports' },
     scheme: {label: 'Scheme', url: '#settings-tab-scheme' },
     cpd: {label: 'CPD', url: '#settings-tab-cpd' },
-    taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' }
+    taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' },
+    membership: {label: 'Membership', url: '#settings-tab-membership' }
 } %}
 
 {% set saveButton %}
@@ -60,6 +61,11 @@
         <div id="tab-taskbooks" class="hidden">
             <div id="fields">
                 {% include 'sp/cp/notifications/_taskbooks.twig' with {settings:settings, config:config} %}
+            </div>
+        </div>
+        <div id="tab-membership" class="hidden">
+            <div id="fields">
+                {% include 'sp/cp/notifications/_membership.twig' with {settings:settings, config:config} %}
             </div>
         </div>
     {% endnamespace %}
