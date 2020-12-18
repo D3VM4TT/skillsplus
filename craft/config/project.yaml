@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1606994470
+dateModified: 1608291153
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -7443,7 +7443,6 @@ users:
       handle: editors
       name: Editors
       permissions:
-        - accessplugin-sp
         - accesscp
         - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
         - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
@@ -7478,8 +7477,11 @@ users:
         - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5'
         - 'editcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+        - managecompanies
+        - manageteams
         - managejobroles
         - managemodules
+        - accessreports
     7765376d-5d95-4bb2-ad49-e9dbcd7acf4a:
       handle: teamManagers
       name: 'Team Managers'
