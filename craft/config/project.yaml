@@ -7464,7 +7464,6 @@ users:
       handle: editors
       name: Editors
       permissions:
-        - accessplugin-sp
         - accesscp
         - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
         - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
