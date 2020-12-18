@@ -111,15 +111,16 @@
             {{ csrfInput() }}
             {{ actionInput('sp/users/suspend-company-users') }}
             <input type="hidden" name="companyId" value="{{ entry.id }}">
+             <div class="field--wrapper" style="margin-top:30px;">
+                 <label for="includeHierarchy">
+                     <input type="hidden" name="includeHierarchy" value="0">
+                     <input type="checkbox" id="includeHierarchy" name="includeHierarchy" value="1" />
+                     <span>Include hierarchy?</span>
+                 </label>
+                 <span id="includeHierarchyWarning" style="display:none;color:#ff0000">Warning: suspend all users in this company and every company below in the hierarchy.</span>
+             </div>
             <div class="container-btn">
-                <button class="button primary-bg" type="submit">Suspend All Users</button>
-            </div>
-            <div class="field--wrapper" style="margin-top:30px;">
-                <label for="includeHierarchy">
-                    <input type="hidden" name="includeHierarchy" value="0">
-                    <input type="checkbox" id="includeHierarchy" name="includeHierarchy" value="1" />
-                    <span>Include hierarchy users?</span>
-                </label>
+                <button class="button primary-bg" type="submit">Suspend Company Users</button>
             </div>
         </form>
     {% endif %}

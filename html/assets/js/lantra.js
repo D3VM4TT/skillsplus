@@ -697,4 +697,9 @@ $(document).ready(function(){
         e.find('table').eq(0).find('tbody').append(row);
         e.show();
     });
+
+    $('#includeHierarchy').change(function(){
+        var s = $(this).is(':checked');
+        $('#includeHierarchyWarning').css('display', s ? 'block' : 'none');
+    });
 });
