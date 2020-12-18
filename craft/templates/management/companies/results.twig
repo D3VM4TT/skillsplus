@@ -34,17 +34,17 @@
             <tbody>
             {% for result in resultEntries %}
                 {% set unit = result.resultUnit.one %}
-                {% set moduleResult = result.resultModuleResult.one %}
-                {% set module = moduleResult.resultModule.one %}
+                {% set moduleResult = result.resultModuleResult.status(['live', 'expired']).one %}
+                {% set module = moduleResult ? moduleResult.resultModule.status(['live', 'expired']).one %}
                 <tr>
                     <td><p class="td-title-responsive">ID: </p>{{ result.id }}</td>
                     <td><p class="td-title-responsive">Unit Title: </p>{{ unit.title }}</td>
-                    <td><p class="td-title-responsive">Module: </p>{{ module.title }}</td>
-                    <td><p class="td-title-responsive">Status: </p>{{ result.status }}</td>
+                    <td><p class="td-title-responsive">Module: </p>{{ module ? module.title }}</td>
+                    <td><p class="td-title-responsive">Status: </p>{{ result.resultStatus|ucwords }}</td>
                     <td class="icons" style="width:140px;text-align:right">
                     {% if not currentUser.managerReadOnly %}
-                        {% set baseUrl = '/cpd/' ~ result.authorId ~ '/' ~ module.id ~ '/' ~ unit.id ~ '/' %}
-                        {% set params = '?moduleResultId=' ~ moduleResult.id %}
+                        {% set baseUrl = module ? '/cpd/' ~ result.authorId ~ '/' ~ module.id ~ '/' ~ unit.id ~ '/' : '/result/' ~ result.id %}
+                        {% set params = moduleResult ? '?moduleResultId=' ~ moduleResult.id %}
                         <a class="icon" href="{{ baseUrl ~ params}}">
                             <img src="/assets/img/edit.svg" title="Edit" />
                         </a>

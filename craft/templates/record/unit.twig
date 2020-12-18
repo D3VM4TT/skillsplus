@@ -19,7 +19,7 @@
 
 {% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
 {% if moduleResultId %}
-    {% set moduleResultEntry = craft.entries.status('live', 'expired').id(moduleResultId).one() %}
+    {% set moduleResultEntry = craft.entries.status(['live', 'expired']).id(moduleResultId).one() %}
 {% else %}
     {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleId) %}
 {% endif %}
@@ -34,7 +34,7 @@
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
 {% if resultId is defined and resultId %}
-    {% set resultEntry = craft.entries.status('live', 'expired').id(resultId).one() %}
+    {% set resultEntry = craft.entries.status(['live', 'expired']).id(resultId).one() %}
 {% elseif not addNew %}
     {% set resultQuery = craft.lantra.unitResultsQuery(account.id, unitEntry.id, 1, moduleEntry.type == 'cpd' ? moduleResultEntry.id : null) %}
     {% set resultEntry = resultQuery.one() %}
@@ -62,7 +62,7 @@
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
-                    {{ unitEntry.title }} {{ moduleResultEntry.cycleName }}<br />
+                    {{ unitEntry.title }} {{ moduleResultEntry ? moduleResultEntry.cycleName }}<br />
                     {{ unitEntry.unitHeading }}
                 </p>
             </div>
