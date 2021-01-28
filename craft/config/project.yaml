@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1611859605
+dateModified: 1611861142
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1289,11 +1289,12 @@ fields:
     name: 'Home Slider'
     searchable: true
     settings:
-      contentTable: '`craft_matrixcontent_homeslider`'
-      maxBlocks: null
+      contentTable: '{{%matrixcontent_homeslider_1}}'
+      maxBlocks: ''
+      minBlocks: ''
       propagationMethod: all
     translationKeyFormat: null
-    translationMethod: none
+    translationMethod: site
     type: craft\fields\Matrix
   4ac0fb06-5ba4-4129-ad0a-664727323d89:
     contentColumnType: string
@@ -4146,12 +4147,15 @@ matrixBlockTypes:
               111e6e76-917a-43f6-aa70-c659bd131921:
                 required: false
                 sortOrder: 1
+              2558296b-ca8b-4d67-b227-6310a19405da:
+                required: false
+                sortOrder: 3
               4978c00f-2afb-4601-83f2-12952bc08242:
                 required: false
                 sortOrder: 2
               89bc5035-7e58-43a7-a7e5-bcaa9de73d4a:
                 required: false
-                sortOrder: 3
+                sortOrder: 4
             name: Content
             sortOrder: 1
     fields:
@@ -4165,7 +4169,7 @@ matrixBlockTypes:
         settings:
           byteLimit: null
           charLimit: null
-          code: false
+          code: ''
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4173,6 +4177,29 @@ matrixBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\PlainText
+      2558296b-ca8b-4d67-b227-6310a19405da:
+        contentColumnType: text
+        fieldGroup: null
+        handle: slideContent
+        instructions: ''
+        name: Content
+        searchable: true
+        settings:
+          availableTransforms: '*'
+          availableVolumes: '*'
+          cleanupHtml: true
+          columnType: text
+          purifierConfig: ''
+          purifyHtml: '1'
+          redactorConfig: ''
+          removeEmptyTags: '1'
+          removeInlineStyles: '1'
+          removeNbsp: '1'
+          showUnpermittedFiles: false
+          showUnpermittedVolumes: false
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\redactor\Field
       4978c00f-2afb-4601-83f2-12952bc08242:
         contentColumnType: text
         fieldGroup: null
@@ -4183,7 +4210,7 @@ matrixBlockTypes:
         settings:
           byteLimit: null
           charLimit: null
-          code: false
+          code: ''
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -4215,7 +4242,7 @@ matrixBlockTypes:
           sources: '*'
           targetSiteId: null
           useSingleFolder: true
-          validateRelatedElements: false
+          validateRelatedElements: ''
           viewMode: list
         translationKeyFormat: null
         translationMethod: site
