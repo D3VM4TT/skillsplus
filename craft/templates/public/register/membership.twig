@@ -22,6 +22,7 @@
             </div>
             {% if currentUser %}
                 <div class="content-main">
+                    {{ globalsHtml.pageMembership }}
                     {{ craft.lantra.payPalButton(membership.title, membership.cost, 'Pay £' ~ membership.cost, siteUrl('sp/paypal/pay'), {'isMembership':true})|raw }}
                 </div>
             {% else %}

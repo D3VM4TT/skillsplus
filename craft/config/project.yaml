@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1611861142
+dateModified: 1611863214
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1426,6 +1426,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  54ffd21d-f058-4546-b582-9f8c03da2f65:
+    contentColumnType: text
+    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
+    handle: pageMembership
+    instructions: ''
+    name: 'Page Membership'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   556fe388-9b99-4cda-835a-bc491fa00273:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -2863,6 +2886,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
+  b18328e8-46a5-482e-b83f-2ccfba7d2f20:
+    contentColumnType: text
+    fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
+    handle: pageDashboard
+    instructions: ''
+    name: 'Page Dashboard'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   b3bb5932-8ec6-48a5-af26-7d974a69e57a:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -4096,19 +4142,39 @@ fields:
     translationMethod: none
     type: craft\fields\PlainText
 globalSets:
-  78c5a5fd-a2f0-4482-a20c-fde7866eb5c0:
+  7f4bb404-6c1a-4ec5-a311-25f912ea733a:
     fieldLayouts:
-      39078e5e-d586-4be0-ba74-6b91c89b1760:
+      12aee44f-6a97-442b-913a-6c6d8eda32e6:
         tabs:
           -
             fields:
-              31c31961-f4f1-4f09-9c8e-cbbd46d62e97:
+              5df92654-19a4-446e-a578-2b359d4bc88f:
                 required: false
                 sortOrder: 1
-            name: Workflow
+              840f8f48-be42-4008-ae9e-1fa132183769:
+                required: false
+                sortOrder: 3
+              f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+                required: false
+                sortOrder: 2
+            name: Taskbooks
             sortOrder: 1
-    handle: globalsPackage
-    name: Package
+          -
+            fields:
+              54ffd21d-f058-4546-b582-9f8c03da2f65:
+                required: false
+                sortOrder: 1
+            name: Membership
+            sortOrder: 2
+          -
+            fields:
+              b18328e8-46a5-482e-b83f-2ccfba7d2f20:
+                required: false
+                sortOrder: 1
+            name: Dashboard
+            sortOrder: 3
+    handle: globalsHtml
+    name: 'HTML Content'
   a1969b12-a29f-4cbc-ad95-96798d730775:
     fieldLayouts:
       106ab0fa-af71-4120-9080-283772fe2850:
