@@ -1,4 +1,7 @@
 <div class="header" data-target="#m{{ moduleElementId }}">
     <h4>{{ module.title }}</h4>
+    {% if module.moduleNotes %}
+        <p>{{ module.moduleNotes }}</p>
+    {% endif %}
 </div>
 {% include 'record/_modules/unitGroups' with {'moduleResultEntry':moduleResultEntry}  %}

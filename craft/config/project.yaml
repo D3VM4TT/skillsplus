@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1608207379
+dateModified: 1611859605
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -3377,6 +3377,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  d99d90fa-6251-4b71-9340-542bc9c3feb9:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: moduleNotes
+    instructions: ''
+    name: 'Module Notes'
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: '1'
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   da81a368-f84c-47f8-9e3a-b83346be0865:
     contentColumnType: integer(10)
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -5969,19 +5987,22 @@ sections:
                 fields:
                   3bfea235-c57e-4998-b079-8c15a1ebbf0e:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   646454e2-66f9-4f03-bac7-b94a89aba17a:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                   6b431a5f-e1ee-4520-ab30-89ca72993c00:
                     required: false
                     sortOrder: 2
                   6b856e7c-77f4-4646-9dc9-81cd812d3919:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 6
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 6
+                    sortOrder: 7
+                  d99d90fa-6251-4b71-9340-542bc9c3feb9:
+                    required: false
+                    sortOrder: 3
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
                     sortOrder: 1
