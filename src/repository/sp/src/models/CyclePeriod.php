@@ -183,7 +183,7 @@ class CyclePeriod extends Model
         }
         if ($type == 'monthly') {
             $duration = 1;
-            $nameFormat = 'F';
+            $nameFormat = 'F Y';
         } elseif ($type == 'quarterly') {
             $duration = 3;
             $nameFormat = 'F';
