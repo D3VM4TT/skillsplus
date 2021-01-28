@@ -1836,7 +1836,6 @@ class Results extends Component
             'User Name',
             'User Email',
             'User Job Title',
-            'User Birthday',
             'User Start Date',
             'User Address'
         ];
@@ -1873,7 +1872,6 @@ class Results extends Component
                 $user->fullName,
                 $user->email,
                 $role ? $role->title : 'unknown',
-                $user->userDateOfBirth,
                 $user->userStartDate,
                 $user->userAddress
             ];
