@@ -120,6 +120,8 @@
                 {% set customValue = craft.lantra.resultCustom(resultEntry.id, row.fieldCustomKey) %}
             {% endif %}
             {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
+            {% set field = craft.app.fields.getFieldByHandle('resultCustom') %}
+            {% set blocktype = craft.superTable.getSuperTableBlocks(field.id)[0] %}
 
             <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ label|raw }}</label>
 
@@ -134,7 +136,7 @@
                     {% endfor %}
                 </select>
             {% endif %}
-            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="4">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="{{ blocktype.id }}">
             <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
             <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.fieldCustomKey }}">
             {# increment new1, new2 #}
