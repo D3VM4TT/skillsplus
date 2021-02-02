@@ -56,6 +56,16 @@
             resultLocked:resultLocked,
             isManager:isManager
         } %}
+        {% if isManager %}
+            <div class="field--wrapper">
+                <label for="resultStatus" class="">Result Status</label>
+                <select name="fields[resultStatus]">
+                    <option value="draft"{% if entry.resultStatus == 'draft' %} selected{% endif %}>Draft</option>
+                    <option value="pending"{% if entry.resultStatus == 'pending' %} selected{% endif %}>Pending</option>
+                    <option value="endorsed"{% if entry.resultStatus == 'endorsed' %} selected{% endif %}>Endorsed</option>
+                </select>
+            </div>
+        {% endif %}
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save result</button>
         </div>
