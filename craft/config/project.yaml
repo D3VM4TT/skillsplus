@@ -1289,7 +1289,7 @@ fields:
     name: 'Home Slider'
     searchable: true
     settings:
-      contentTable: '{{%matrixcontent_homeslider_1}}'
+      contentTable: '{{%matrixcontent_homeslider}}'
       maxBlocks: ''
       minBlocks: ''
       propagationMethod: all
