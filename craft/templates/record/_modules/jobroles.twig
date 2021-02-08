@@ -6,7 +6,7 @@
 {% endif %}
 <div id="job-role-cpd">
     {% if not cpdUser.record.jobRoles|length %}
-        <h2>Job Role</h2>
+        <h2>{{ craft.lantra.setting('labelJobRole', 'Job Role') }}</h2>
         <div class="col-pd-btm col-flex">
             <img src="/assets/img/delete.svg" class="test-icon" alt="">
             <p>
