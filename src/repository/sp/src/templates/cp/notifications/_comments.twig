@@ -1,4 +1,12 @@
 {% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Comment?",
+    id:				"notifyEnableComment",
+    name:			"notifyEnableComment",
+    on:		        settings.notifyEnableComment == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Comment",
     id:				"notifySubjectComment",

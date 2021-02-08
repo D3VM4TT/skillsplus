@@ -31,6 +31,10 @@ class Notify extends Component
      */
     function sendAssessment(Entry $package)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('stepUnassigned')) {
+            return;
+        }
         $user = $package->author;
         $subject = $this->getNotifySetting('subjectAssessment', 'Taskbook Assessment');
         $variables = [
@@ -65,6 +69,10 @@ class Notify extends Component
      */
     function sendNewMembership($user)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('newMembership')) {
+            return;
+        }
         $jobRole = $user->userRole->one();
         $subject = $this->getNotifySetting('subjectNewMembership', 'New Membership');
         $membership = LantraHelper::getMembership($user);
@@ -86,6 +94,10 @@ class Notify extends Component
      */
     function sendNewPackage(Entry $packageEntry)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('newPackage')) {
+            return;
+        }
         $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
         $subject = $this->getNotifySetting('subjectNewPackage', 'New ' . $taskbookLabel);
         $variables = [
@@ -106,6 +118,10 @@ class Notify extends Component
      */
     function sendStepUnassigned(SuperTableBlockElement $step)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('stepUnassigned')) {
+            return;
+        }
         if ($step->reviewUser->one()) {
             return;
         }
@@ -135,6 +151,10 @@ class Notify extends Component
      */
     function sendStepRequest(SuperTableBlockElement $step)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('stepRequest')) {
+            return;
+        }
         if (null == $manager = $step->reviewUser->one()) {
             return;
         }
@@ -159,6 +179,10 @@ class Notify extends Component
      */
     function sendStepAssign(SuperTableBlockElement $step)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('stepAssign')) {
+            return;
+        }
         if (null == $manager = $step->reviewUser->one()) {
             return;
         }
@@ -183,6 +207,10 @@ class Notify extends Component
      */
     function sendStepUpdate(SuperTableBlockElement $step, $user)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('stepUpdate')) {
+            return;
+        }
         $result = $step->reviewPassed ? 'passed' : 'failed';
         $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->reviewStepName . ' (' . $result . ')');
         $manager = $step->reviewUser->one();
@@ -208,6 +236,10 @@ class Notify extends Component
      */
     function sendCycleStart(Entry $resultEntry)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('cycleStart')) {
+            return;
+        }
         $moduleEntry = $resultEntry->resultModule->one();
         if (!$moduleEntry || $moduleEntry->type != 'cpd') {
             return null;
@@ -238,6 +270,10 @@ class Notify extends Component
      */
     function sendCycleEnd(Entry $resultEntry, $moduleEntry, $cycle)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('cycleEnd')) {
+            return;
+        }
         if ($moduleEntry->type != 'cpd') {
             return null;
         }
@@ -265,6 +301,10 @@ class Notify extends Component
      */
     function sendCycleComplete(Entry $resultEntry)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('cycleComplete')) {
+            return;
+        }
         if ($resultEntry->resultStatus != 'complete') {
             return null;
         }
@@ -293,6 +333,10 @@ class Notify extends Component
      */
     function sendCycleReminder(Entry $resultEntry)
     {
+        ## notification is disabled
+        if (!$this->isEnabled('cycleReminder')) {
+            return;
+        }
         if ($resultEntry->resultStatus == 'complete') {
             return null;
         }
@@ -319,14 +363,19 @@ class Notify extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendSchemeExpiry($expiryDate) {
+    function sendSchemeExpiry($expiryDate)
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('schemeExpiry')) {
+            return;
+        }
         ## send scheme managers remaining scheme licences
         $criteria = User::find();
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectSchemeExpiry', 'Scheme Expiry Date');
         $variables = ['expiryDate' => $expiryDate];
-        $template = $this->getNotifySetting('userExpiry', "Your scheme expires on  {{ expiryDate|date('d-m-Y') }}.");
+        $template = $this->getNotifySetting('schemeExpiry', "Your scheme expires on  {{ expiryDate|date('d-m-Y') }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         foreach ($criteria->all() as $manager) {
             $this->notify($manager->email, $subject, $message);
@@ -338,7 +387,12 @@ class Notify extends Component
      * @param $expiryDate
      * @throws mixed
      */
-    function sendUserExpiry($expiryDate) {
+    function sendUserExpiry($expiryDate)
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('userExpiry')) {
+            return;
+        }
        $criteria = Lantra::$app->users->getExpiringUsers($expiryDate);
        if ($criteria->count()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
@@ -355,7 +409,12 @@ class Notify extends Component
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    function sendLicencesRemaining() {
+    function sendLicencesRemaining()
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('licencesRemaining')) {
+            return;
+        }
         ## send scheme managers remaining scheme licences
         $criteria = User::find();
         $criteria->groupId = 1;
@@ -397,7 +456,12 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function sendCommentUpdate(Entry $entry, $comment, $userId) {
+    function sendCommentUpdate(Entry $entry, $comment, $userId)
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('comment')) {
+            return;
+        }
         $user = Craft::$app->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
@@ -425,6 +489,10 @@ class Notify extends Component
         if (Craft::$app->request->isCpRequest){
             return;
         }
+        ## module notify is disabled
+        if (!$this->isEnabled('moduleResult')) {
+            return;
+        }
         $moduleEntry = $entry->resultModule->one();
         $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
@@ -443,7 +511,12 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function sendManagerBlockedResult(Entry $resultEntry) {
+    function sendManagerBlockedResult(Entry $resultEntry)
+    {
+        ## blocked notify is disabled
+        if (!$this->isEnabled('blockedResult')) {
+            return;
+        }
         $unitEntry = $resultEntry->resultUnit->one();
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
@@ -461,13 +534,14 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function sendManagerEndorsementResult(Entry $resultEntry, $level = 1) {
+    function sendManagerEndorsementResult(Entry $resultEntry, $level = 1)
+    {
         ## ignore endorsement notifications in CP
         if (Craft::$app->request->isCpRequest){
             return;
         }
         ## endorsement notify is disabled
-        if (Lantra::$app->settings->getSetting('disableEndorsementNotify', false)) {
+        if (!$this->isEnabled('endorsementResult')) {
             return;
         }
         $user = $resultEntry->getAuthor();
@@ -490,7 +564,12 @@ class Notify extends Component
      * @return null
      * @throws mixed
      */
-    function sendManagerSummary(User $manager, $days = 7) {
+    function sendManagerSummary(User $manager, $days = 7)
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('managerSummary')) {
+            return;
+        }
         $subject = $this->getNotifySetting('subjectManagerSummary', 'Manager Summary');
         $criteria = Lantra::$app->results->getManagerModuleExpiringResults($manager->id, $days, null);
         if ($criteria && $criteria->count()) {
@@ -535,7 +614,8 @@ class Notify extends Component
      * @param $message
      * @throws mixed
      */
-    function notifyManagers(User $user, $subject, $message) {
+    function notifyManagers(User $user, $subject, $message)
+    {
         $managers = Lantra::$app->users->getUserMangers($user);
         if ($managers && count($managers)) {
             foreach ($managers as $manager) {
@@ -580,6 +660,11 @@ class Notify extends Component
      */
     function notify($toEmail, $subject, $body, $attachments = [])
     {
+        ## all notifications are disabled
+        if (Lantra::$app->settings->getSetting('disableAllNotifications')) {
+            return;
+        }
+
         if (!is_array($toEmail)) {
             $toEmail = [$toEmail];
         }
@@ -635,11 +720,21 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    private function renderTemplate($template, $variables) {
+    private function renderTemplate($template, $variables)
+    {
         $oldMode = Craft::$app->view->getTemplateMode();
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
         $html = Craft::$app->view->renderTemplate($template, $variables);
         Craft::$app->view->setTemplateMode($oldMode);
         return $html;
+    }
+
+    /**
+     * @param $name
+     * @return mixed|null
+     */
+    private function isEnabled($name)
+    {
+        return Lantra::$app->settings->getSetting('notifyEnable' . ucwords($name) , true);
     }
 }

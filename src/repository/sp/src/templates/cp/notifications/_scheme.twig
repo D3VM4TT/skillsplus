@@ -1,5 +1,12 @@
 {% import "_includes/forms" as forms %}
 
+{{ forms.lightswitchField ({
+    label:			"Enable Scheme Expiry?",
+    id:				"notifyEnableSchemeExpiry",
+    name:			"notifyEnableSchemeExpiry",
+    on:		        settings.notifyEnableSchemeExpiry == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Scheme Expiry",
     id:				"notifySubjectSchemeExpiry",
@@ -15,6 +22,15 @@
     value:		    settings.notifySchemeExpiry
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable User Expiry?",
+    id:				"notifyEnableUserExpiry",
+    name:			"notifyEnableUserExpiry",
+    on:		        settings.notifyEnableUserExpiry == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject User Expiry",
     id:				"notifySubjectUserExpiry",
@@ -28,6 +44,15 @@
     id:				"notifyUserExpiry",
     name:			"notifyUserExpiry",
     value:		    settings.notifyUserExpiry
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Licences Remaining?",
+    id:				"notifyEnableLicencesRemaining",
+    name:			"notifyEnableLicencesRemaining",
+    on:		        settings.notifyEnableLicencesRemaining == 1
 }) }}
 
 {{ forms.textField ({

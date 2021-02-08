@@ -335,7 +335,7 @@ class Reports extends Component
         $reportEntry->setFieldValue('reportData', $reportData);
         Craft::$app->elements->saveElement($reportEntry);
         ## send notification if applicable
-        if ($reportEntry->reportSendFrequency != 'never') {
+        if ($reportEntry->reportSendFrequency != 'never' && Lantra::$app->settings->getSetting('notifyEnableCustomReport')) {
             $attachment = [
                 'path' => LantraHelper::assetPath($asset),
                 'filename' => $asset->fileName,

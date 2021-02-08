@@ -1,5 +1,12 @@
 {% import "_includes/forms" as forms %}
 
+{{ forms.lightswitchField ({
+    label:			"Enable New Membership?",
+    id:				"notifyEnableNewMembership",
+    name:			"notifyEnableNewMembership",
+    on:		        settings.notifyEnableNewMembership == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject New Membership",
     id:				"notifySubjectNewMembership",

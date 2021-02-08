@@ -1,5 +1,36 @@
 {% import "_includes/forms" as forms %}
 
+{{ forms.lightswitchField ({
+    label:			"Enable New Package?",
+    id:				"notifyEnableNewPackage",
+    name:			"notifyEnableNewPackage",
+    on:		        settings.notifyEnableNewPackage == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject New Package",
+    id:				"notifySubjectNewPackage",
+    name:			"notifySubjectNewPackage",
+    value:		    settings.notifySubjectNewPackage
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: New taskbook for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    label:			"Message New Package",
+    id:				"notifyNewPackage",
+    name:			"notifyNewPackage",
+    value:		    settings.notifyNewPackage
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Step Unassigned?",
+    id:				"notifyEnableStepUnassigned",
+    name:			"notifyEnableStepUnassigned",
+    on:		        settings.notifyEnableStepUnassigned == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Step Unassigned",
     id:				"notifySubjectStepUnassigned",
@@ -13,6 +44,15 @@
     id:				"notifyStepUnassigned",
     name:			"notifyStepUnassigned",
     value:		    settings.notifyStepUnassigned
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Step Assign?",
+    id:				"notifyEnableStepAssign",
+    name:			"notifyEnableStepAssign",
+    on:		        settings.notifyEnableStepAssign == 1
 }) }}
 
 {{ forms.textField ({
@@ -30,6 +70,15 @@
     value:		    settings.notifyStepAssign
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Step Update?",
+    id:				"notifyEnableStepUpdate",
+    name:			"notifyEnableStepUpdate",
+    on:		        settings.notifyEnableStepUpdate == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Step Update",
     id:				"notifySubjectStepUpdate",
@@ -45,6 +94,15 @@
     value:		    settings.notifyStepUpdate
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Step Request?",
+    id:				"notifyEnableStepRequest",
+    name:			"notifyEnableStepRequest",
+    on:		        settings.notifyEnableStepRequest == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Step Request",
     id:				"notifySubjectStepRequest",
@@ -58,6 +116,15 @@
     id:				"notifyStepRequest",
     name:			"notifyStepRequest",
     value:		    settings.notifyStepRequest
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Assessment?",
+    id:				"notifyEnableAssessment",
+    name:			"notifyEnableAssessment",
+    on:		        settings.notifyEnableAssessment == 1
 }) }}
 
 {{ forms.textField ({

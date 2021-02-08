@@ -1,18 +1,10 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField ({
-    label:			"Subject Blocked Result",
-    id:				"notifySubjectBlockedResult",
-    name:			"notifySubjectBlockedResult",
-    value:		    settings.notifySubjectBlockedResult
-}) }}
-
-{{ forms.textareaField ({
-    instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
-    label:			"Message Blocked Result",
-    id:				"notifyBlockedResult",
-    name:			"notifyBlockedResult",
-    value:		    settings.notifyBlockedResult
+{{ forms.lightswitchField ({
+    label:			"Enable Endorsement Result?",
+    id:				"notifyEnableEndorsementResult",
+    name:			"notifyEnableEndorsementResult",
+    on:		        settings.notifyEnableEndorsementResult == 1
 }) }}
 
 {{ forms.textField ({
@@ -28,6 +20,39 @@
     id:				"notifyEndorsementResult",
     name:			"notifyEndorsementResult",
     value:		    settings.notifyEndorsementResult
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Blocked Result?",
+    id:				"notifyEnableBlockedResult",
+    name:			"notifyEnableBlockedResult",
+    on:		        settings.notifyEnableBlockedResult == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Subject Blocked Result",
+    id:				"notifySubjectBlockedResult",
+    name:			"notifySubjectBlockedResult",
+    value:		    settings.notifySubjectBlockedResult
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.",
+    label:			"Message Blocked Result",
+    id:				"notifyBlockedResult",
+    name:			"notifyBlockedResult",
+    value:		    settings.notifyBlockedResult
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Module Result?",
+    id:				"notifyEnableModuleResult",
+    name:			"notifyEnableModuleResult",
+    on:		        settings.notifyEnableModuleResult == 1
 }) }}
 
 {{ forms.textField ({

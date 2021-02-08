@@ -1,5 +1,12 @@
 {% import "_includes/forms" as forms %}
 
+{{ forms.lightswitchField ({
+    label:			"Enable Custom Report?",
+    id:				"notifyEnableCustomReport",
+    name:			"notifyEnableCustomReport",
+    on:		        settings.notifyEnableCustomReport == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject Custom Report",
     id:				"notifySubjectCustomReport",

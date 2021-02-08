@@ -1,5 +1,12 @@
 {% import "_includes/forms" as forms %}
 
+{{ forms.lightswitchField ({
+    label:			"Enable Cycle Start?",
+    id:				"notifyEnableCycleStart",
+    name:			"notifyEnableCycleStart",
+    on:		        settings.notifyEnableCycleStart == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject CPD Cycle Start",
     id:				"notifySubjectCycleStart",
@@ -13,6 +20,15 @@
     id:				"notifyCycleStart",
     name:			"notifyCycleStart",
     value:		    settings.notifyCycleStart
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Cycle End?",
+    id:				"notifyEnableCycleEnd",
+    name:			"notifyEnableCycleEnd",
+    on:		        settings.notifyEnableCycleEnd == 1
 }) }}
 
 {{ forms.textField ({
@@ -30,6 +46,15 @@
     value:		    settings.notifyCycleEnd
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Cycle Complete?",
+    id:				"notifyEnableCycleComplete",
+    name:			"notifyEnableCycleComplete",
+    on:		        settings.notifyEnableCycleComplete == 1
+}) }}
+
 {{ forms.textField ({
     label:			"Subject CPD Cycle Complete",
     id:				"notifySubjectCycleComplete",
@@ -43,6 +68,15 @@
     id:				"notifyCycleComplete",
     name:			"notifyCycleComplete",
     value:		    settings.notifyCycleComplete
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    label:			"Enable Cycle Reminder?",
+    id:				"notifyEnableCycleReminder",
+    name:			"notifyEnableCycleReminder",
+    on:		        settings.notifyEnableCycleReminder == 1
 }) }}
 
 {{ forms.textField ({

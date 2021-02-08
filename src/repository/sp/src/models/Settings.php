@@ -61,55 +61,88 @@ class Settings extends Model
 
     public $notifyFromEmail                    = 'No-Reply@skills-plus.net';
     public $notifyFromName                     = 'Skills+';
-    public $notifyFooter                        = '';
+    public $notifyFooter                       = '';
+    public $disableAllNotifications            = false;
 
-    public $notifySubjectBlockedResult          = '';
+    public $notifyEnableEndorsementResult       = true;
     public $notifySubjectEndorsementResult      = '';
-    public $notifySubjectLicencesRemaining      = '';
-    public $notifySubjectManagerSummary         = '';
-    public $notifySubjectModuleResult           = '';
-    public $notifySubjectSchemeExpiry           = '';
-    public $notifySubjectUserExpiry             = '';
-    public $notifySubjectComment                = '';
-    public $notifyBlockedResult                 = '';
     public $notifyEndorsementResult             = '';
-    public $notifyLicencesRemaining             = '';
-    public $notifyManagerSummary                = '';
+
+    public $notifyEnableBlockedResult           = true;
+    public $notifySubjectBlockedResult          = '';
+    public $notifyBlockedResult                 = '';
+
+    public $notifyEnableModuleResult            = true;
+    public $notifySubjectModuleResult           = '';
     public $notifyModuleResult                  = '';
-    public $notifySchemeExpiry                  = '';
-    public $notifyUserExpiry                    = '';
-    public $notifyComment                       = '';
+
+    public $notifyEnableCustomReport            = true;
     public $notifySubjectCustomReport           = '';
     public $notifyCustomReport                  = '';
 
-    public $notifySubjectCycleStart             = '';
-    public $notifyCycleStart                    = '';
-    public $notifySubjectCycleEnd               = '';
-    public $notifyCycleEnd                      = '';
-    public $notifySubjectCycleComplete          = '';
-    public $notifyCycleComplete                 = '';
-    public $notifySubjectCycleReminder          = '';
-    public $notifyCycleReminder                 = '';
+    public $notifyEnableSchemeExpiry            = true;
+    public $notifySubjectSchemeExpiry           = '';
+    public $notifySchemeExpiry                  = '';
 
-    public $notifySubjectStepUnassigned         = '';
-    public $notifyStepUnassigned                = '';
-    public $notifySubjectStepAssign             = '';
-    public $notifyStepAssign                    = '';
-    public $notifySubjectStepUpdate             = '';
-    public $notifyStepUpdate                    = '';
-    public $notifySubjectStepRequest            = '';
-    public $notifyStepRequest                   = '';
+    public $notifyEnableUserExpiry              = true;
+    public $notifySubjectUserExpiry             = '';
+    public $notifyUserExpiry                    = '';
 
-    public $notifySubjectAssessment             = '';
-    public $notifyAssessment                    = '';
+    public $notifyEnableLicencesRemaining       = true;
+    public $notifySubjectLicencesRemaining      = '';
+    public $notifyLicencesRemaining             = '';
 
+    public $notifyEnableNewPackage              = true;
     public $notifySubjectNewPackage             = '';
     public $notifyNewPackage                    = '';
 
+    public $notifyEnableCycleStart              = true;
+    public $notifySubjectCycleStart             = '';
+    public $notifyCycleStart                    = '';
+
+    public $notifyEnableCycleEnd                = true;
+    public $notifySubjectCycleEnd               = '';
+    public $notifyCycleEnd                      = '';
+
+    public $notifyEnableCycleComplete           = true;
+    public $notifySubjectCycleComplete          = '';
+    public $notifyCycleComplete                 = '';
+
+    public $notifyEnableCycleReminder           = true;
+    public $notifySubjectCycleReminder          = '';
+    public $notifyCycleReminder                 = '';
+
+    public $notifyEnableStepUnassigned          = true;
+    public $notifySubjectStepUnassigned         = '';
+    public $notifyStepUnassigned                = '';
+
+    public $notifyEnableStepAssign              = true;
+    public $notifySubjectStepAssign             = '';
+    public $notifyStepAssign                    = '';
+
+    public $notifyEnableStepUpdate              = true;
+    public $notifySubjectStepUpdate             = '';
+    public $notifyStepUpdate                    = '';
+
+    public $notifyEnableStepRequest             = true;
+    public $notifySubjectStepRequest            = '';
+    public $notifyStepRequest                   = '';
+
+    public $notifyEnableAssessment              = true;
+    public $notifySubjectAssessment             = '';
+    public $notifyAssessment                    = '';
+
+    public $notifyEnableNewMembership           = true;
     public $notifySubjectNewMembership          = '';
     public $notifyNewMembership                 = '';
 
-    public $disableEndorsementNotify            = false;
+    public $notifyEnableComment                 = true;
+    public $notifySubjectComment                = '';
+    public $notifyComment                       = '';
+
+    public $notifyEnableManagerSummary          = true;
+    public $notifySubjectManagerSummary         = '';
+    public $notifyManagerSummary                = '';
 
     public $enableTaskbooks                     = false;
     public $enableJobRoles                      = true;

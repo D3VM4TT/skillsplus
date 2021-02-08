@@ -1,4 +1,19 @@
 {% import "_includes/forms" as forms %}
+{{ forms.lightswitchField ({
+    label:			"Disable All Notifications?",
+    id:				"disableAllNotifications",
+    name:			"disableAllNotifications",
+    on:		        settings.disableAllNotifications == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Test Email Address",
+    instructions:   "For all servers other than <b>PRODUCTION</b>. Separate emails with commas.",
+    id:				"schemeTestEmailAddress",
+    name:			"schemeTestEmailAddress",
+    value:		    settings.schemeTestEmailAddress
+}) }}
+
 {{ forms.textField ({
     instructions:   "Default: No-Reply@skills-plus.net",
     label:			"Notify From Email",
@@ -23,9 +38,3 @@
     value:		    settings.notifyFooter
 }) }}
 
-{{ forms.lightswitchField ({
-    label:			"Disable Endorsement Notification?",
-    id:				"disableEndorsementNotify",
-    name:			"disableEndorsementNotify",
-    on:		        settings.disableEndorsementNotify == 1
-}) }}
