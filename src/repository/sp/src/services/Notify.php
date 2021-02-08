@@ -560,12 +560,16 @@ class Notify extends Component
         $start = new \DateTime();
         $start->modify($when . $days. ' days');
         $start->setTime(00, 00, 00);
+
         $end = new \DateTime($start->format('Y-m-d'));
         $end->modify('+ 1 day');
 
+        $startAtom = $start->format(\DateTime::ATOM);
+        $endAtom = $end->format(\DateTime::ATOM);
+
         $resultEntries = Entry::find()
             ->anyStatus()
-            ->expiryDate(['and', ">= ${start}", "< ${end}"])
+            ->expiryDate(['and', ">= ${$startAtom}", "< ${$endAtom}"])
             ->all();
 
         foreach ($resultEntries as $resultEntry) {
