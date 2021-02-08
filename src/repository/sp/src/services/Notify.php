@@ -569,7 +569,7 @@ class Notify extends Component
 
         $resultEntries = Entry::find()
             ->anyStatus()
-            ->expiryDate(['and', ">= ${$startAtom}", "< ${$endAtom}"])
+            ->expiryDate(['and', ">= $startAtom", "< $endAtom"])
             ->all();
 
         foreach ($resultEntries as $resultEntry) {
