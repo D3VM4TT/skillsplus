@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user at start of cycle.",
     label:			"Enable Cycle Start?",
     id:				"notifyEnableCycleStart",
     name:			"notifyEnableCycleStart",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: CPD Cycle Start",
     label:			"Subject CPD Cycle Start",
     id:				"notifySubjectCycleStart",
     name:			"notifySubjectCycleStart",
@@ -15,7 +17,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "{{ user }} {{ module }} {{ cycle }}",
+    instructions:   "Default: {{ module.title }} {{ cycle.name }} starts today.",
     label:			"Message CPD Cycle Start",
     id:				"notifyCycleStart",
     name:			"notifyCycleStart",
@@ -25,6 +27,7 @@
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user at end of cycle.",
     label:			"Enable Cycle End?",
     id:				"notifyEnableCycleEnd",
     name:			"notifyEnableCycleEnd",
@@ -32,6 +35,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: CPD Cycle End",
     label:			"Subject CPD Cycle End",
     id:				"notifySubjectCycleEnd",
     name:			"notifySubjectCycleEnd",
@@ -39,7 +43,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "{{ user }} {{ module }} {{ result }} {{ cycle }}",
+    instructions:   "Default: {{ module.title }} {{ cycle.name }} has ended.",
     label:			"Message CPD Cycle End",
     id:				"notifyCycleEnd",
     name:			"notifyCycleEnd",
@@ -49,6 +53,7 @@
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user when they complete module.",
     label:			"Enable Cycle Complete?",
     id:				"notifyEnableCycleComplete",
     name:			"notifyEnableCycleComplete",
@@ -56,6 +61,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: CPD Cycle Complete",
     label:			"Subject CPD Cycle Complete",
     id:				"notifySubjectCycleComplete",
     name:			"notifySubjectCycleComplete",
@@ -63,7 +69,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "{{ user }} {{ module }} {{ result }} {{ cycle }}",
+    instructions:   "Default: {{ module.title }} {{ cycle.name }} has been completed.",
     label:			"Message CPD Cycle Complete",
     id:				"notifyCycleComplete",
     name:			"notifyCycleComplete",
@@ -73,6 +79,7 @@
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user as per reminder frequency on module.",
     label:			"Enable Cycle Reminder?",
     id:				"notifyEnableCycleReminder",
     name:			"notifyEnableCycleReminder",
@@ -80,6 +87,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: CPD Cycle Reminder",
     label:			"Subject CPD Cycle Reminder",
     id:				"notifySubjectCycleReminder",
     name:			"notifySubjectCycleReminder",
@@ -87,7 +95,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "{{ user }} {{ module }} {{ result }} {{ remaining }} {{ cycle }}",
+    instructions:   "Default: {{ module.title }} {{ cycle.name }} {{ remaining.text }}",
     label:			"Message CPD Cycle Reminder",
     id:				"notifyCycleReminder",
     name:			"notifyCycleReminder",

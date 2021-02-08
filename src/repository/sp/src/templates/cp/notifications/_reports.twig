@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to report recipeints if report frequency is set.",
     label:			"Enable Custom Report?",
     id:				"notifyEnableCustomReport",
     name:			"notifyEnableCustomReport",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: {{ entry.title }}.",
     label:			"Subject Custom Report",
     id:				"notifySubjectCustomReport",
     name:			"notifySubjectCustomReport",

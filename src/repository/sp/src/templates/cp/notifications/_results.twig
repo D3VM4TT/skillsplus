@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user manager when pending result is saved.",
     label:			"Enable Endorsement Result?",
     id:				"notifyEnableEndorsementResult",
     name:			"notifyEnableEndorsementResult",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: Endorsement Required",
     label:			"Subject Endorsement Result",
     id:				"notifySubjectEndorsementResult",
     name:			"notifySubjectEndorsementResult",
@@ -25,6 +27,7 @@
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user manager when user hits max attempts for unit test.",
     label:			"Enable Blocked Result?",
     id:				"notifyEnableBlockedResult",
     name:			"notifyEnableBlockedResult",
@@ -32,6 +35,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: Result Blocked",
     label:			"Subject Blocked Result",
     id:				"notifySubjectBlockedResult",
     name:			"notifySubjectBlockedResult",
@@ -46,9 +50,12 @@
     value:		    settings.notifyBlockedResult
 }) }}
 
+<!--
+
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user when module complete.",
     label:			"Enable Module Result?",
     id:				"notifyEnableModuleResult",
     name:			"notifyEnableModuleResult",
@@ -56,6 +63,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Module Completed",
     label:			"Subject Module Result",
     id:				"notifySubjectModuleResult",
     name:			"notifySubjectModuleResult",
@@ -63,9 +71,11 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: {{ user.fullName}} has completed {{ entry.title }}.",
+    instructions:   "Default: {{ user.fullName }} has completed {{ entry.title }}",
     label:			"Message Module Result",
     id:				"notifyModuleResult",
     name:			"notifyModuleResult",
     value:		    settings.notifyModuleResult
 }) }}
+
+-->

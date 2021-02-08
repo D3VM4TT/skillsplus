@@ -36,7 +36,8 @@ class Notify extends Component
             return;
         }
         $user = $package->author;
-        $subject = $this->getNotifySetting('subjectAssessment', 'Taskbook Assessment');
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectAssessment', ucwords($taskbookLabel) . ' Assessment');
         $variables = [
             'package'           => $package,
             'assessmentText'    => $this->assessmentText($package),
@@ -125,7 +126,8 @@ class Notify extends Component
         if ($step->reviewUser->one()) {
             return;
         }
-        $subject = $this->getNotifySetting('subjectStepUnassigned', 'Taskbook Review Unassigned');
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectStepUnassigned', ucwords($taskbookLabel) . ' Review Unassigned');
         $package = $step->owner;
         $variables = [
             'step'          => $step,
@@ -158,7 +160,8 @@ class Notify extends Component
         if (null == $manager = $step->reviewUser->one()) {
             return;
         }
-        $subject = $this->getNotifySetting('subjectStepRequest' . ucwords($step->reviewStepType), 'Taskbook Review Request');
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectStepRequest' . ucwords($step->reviewStepType), ucwords($taskbookLabel) . ' Review Request');
         $package = $step->owner;
         $variables = [
             'step'          => $step,
@@ -186,7 +189,8 @@ class Notify extends Component
         if (null == $manager = $step->reviewUser->one()) {
             return;
         }
-        $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->reviewStepType), 'Taskbook Review Assignment');
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectStepAssign' . ucwords($step->reviewStepType), ucwords($taskbookLabel) . ' Review Assignment');
         $package = $step->owner;
         $variables = [
             'step'          => $step,
@@ -212,7 +216,8 @@ class Notify extends Component
             return;
         }
         $result = $step->reviewPassed ? 'passed' : 'failed';
-        $subject = $this->getNotifySetting('subjectStepUpdate', 'Taskbook Update ' . $step->reviewStepName . ' (' . $result . ')');
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'taskbook');
+        $subject = $this->getNotifySetting('subjectStepUpdate', ucwords($taskbookLabel) . ' Update ' . $step->reviewStepName . ' (' . $result . ')');
         $manager = $step->reviewUser->one();
         $package = $step->owner;
         $variables = [
@@ -353,7 +358,7 @@ class Notify extends Component
             'remaining' => Lantra::$app->results->remaining($resultEntry),
             'cycle'     => $cycle
         ];
-        $template = $this->getNotifySetting('cycleReminder', "{{ module.title }} {{ cycle.name }} {{ remaining.text }} ");
+        $template = $this->getNotifySetting('cycleReminder', "{{ module.title }} {{ cycle.name }} {{ remaining.text }}");
         $message = Craft::$app->view->renderString($template, $variables);
         $this->notify($resultEntry->author->email, $subject, $message);
     }
@@ -484,12 +489,13 @@ class Notify extends Component
     * @return null
     * @throws mixed
     */
-    function sendModuleResult(Entry $entry) {
+    function sendModuleResult(Entry $entry)
+    {
         ## ignore endorsement notifications in CP
         if (Craft::$app->request->isCpRequest){
             return;
         }
-        ## module notify is disabled
+        ## notification is disabled
         if (!$this->isEnabled('moduleResult')) {
             return;
         }
@@ -513,7 +519,7 @@ class Notify extends Component
      */
     function sendManagerBlockedResult(Entry $resultEntry)
     {
-        ## blocked notify is disabled
+        ## notification is disabled
         if (!$this->isEnabled('blockedResult')) {
             return;
         }
@@ -540,7 +546,7 @@ class Notify extends Component
         if (Craft::$app->request->isCpRequest){
             return;
         }
-        ## endorsement notify is disabled
+        ## notification is disabled
         if (!$this->isEnabled('endorsementResult')) {
             return;
         }

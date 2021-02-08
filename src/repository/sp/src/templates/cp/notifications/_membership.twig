@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to scheme managers when ipn received from PayPal.",
     label:			"Enable New Membership?",
     id:				"notifyEnableNewMembership",
     name:			"notifyEnableNewMembership",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: New Membership",
     label:			"Subject New Membership",
     id:				"notifySubjectNewMembership",
     name:			"notifySubjectNewMembership",

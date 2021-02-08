@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to all user managers when comment submitted (replies sent to user).",
     label:			"Enable Comment?",
     id:				"notifyEnableComment",
     name:			"notifyEnableComment",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: New Comment",
     label:			"Subject Comment",
     id:				"notifySubjectComment",
     name:			"notifySubjectComment",

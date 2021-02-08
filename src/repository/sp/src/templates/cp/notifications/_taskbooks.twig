@@ -1,6 +1,7 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to scheme managers when ipn received from PayPal.",
     label:			"Enable New Package?",
     id:				"notifyEnableNewPackage",
     name:			"notifyEnableNewPackage",
@@ -8,6 +9,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: New taskbook",
     label:			"Subject New Package",
     id:				"notifySubjectNewPackage",
     name:			"notifySubjectNewPackage",
@@ -25,78 +27,7 @@
 <hr />
 
 {{ forms.lightswitchField ({
-    label:			"Enable Step Unassigned?",
-    id:				"notifyEnableStepUnassigned",
-    name:			"notifyEnableStepUnassigned",
-    on:		        settings.notifyEnableStepUnassigned == 1
-}) }}
-
-{{ forms.textField ({
-    label:			"Subject Step Unassigned",
-    id:				"notifySubjectStepUnassigned",
-    name:			"notifySubjectStepUnassigned",
-    value:		    settings.notifySubjectStepUnassigned
-}) }}
-
-{{ forms.textareaField ({
-    instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
-    label:			"Message Step Unassigned",
-    id:				"notifyStepUnassigned",
-    name:			"notifyStepUnassigned",
-    value:		    settings.notifyStepUnassigned
-}) }}
-
-<hr />
-
-{{ forms.lightswitchField ({
-    label:			"Enable Step Assign?",
-    id:				"notifyEnableStepAssign",
-    name:			"notifyEnableStepAssign",
-    on:		        settings.notifyEnableStepAssign == 1
-}) }}
-
-{{ forms.textField ({
-    label:			"Subject Step Assign",
-    id:				"notifySubjectStepAssign",
-    name:			"notifySubjectStepAssign",
-    value:		    settings.notifySubjectStepAssign
-}) }}
-
-{{ forms.textareaField ({
-    instructions:   "Default: You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
-    label:			"Message Step Assign",
-    id:				"notifyStepAssign",
-    name:			"notifyStepAssign",
-    value:		    settings.notifyStepAssign
-}) }}
-
-<hr />
-
-{{ forms.lightswitchField ({
-    label:			"Enable Step Update?",
-    id:				"notifyEnableStepUpdate",
-    name:			"notifyEnableStepUpdate",
-    on:		        settings.notifyEnableStepUpdate == 1
-}) }}
-
-{{ forms.textField ({
-    label:			"Subject Step Update",
-    id:				"notifySubjectStepUpdate",
-    name:			"notifySubjectStepUpdate",
-    value:		    settings.notifySubjectStepUpdate
-}) }}
-
-{{ forms.textareaField ({
-    instructions:   "Default: Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}",
-    label:			"Message Step Update",
-    id:				"notifyStepUpdate",
-    name:			"notifyStepUpdate",
-    value:		    settings.notifyStepUpdate
-}) }}
-
-<hr />
-
-{{ forms.lightswitchField ({
+    instructions:   "Sent to user managers when a user requests review.",
     label:			"Enable Step Request?",
     id:				"notifyEnableStepRequest",
     name:			"notifyEnableStepRequest",
@@ -104,6 +35,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: $taskbookLabel Review Request",
     label:			"Subject Step Request",
     id:				"notifySubjectStepRequest",
     name:			"notifySubjectStepRequest",
@@ -121,6 +53,85 @@
 <hr />
 
 {{ forms.lightswitchField ({
+    instructions:   "Sent to user managers when a user requests review but no reveiwer has been assigned.",
+    label:			"Enable Step Unassigned?",
+    id:				"notifyEnableStepUnassigned",
+    name:			"notifyEnableStepUnassigned",
+    on:		        settings.notifyEnableStepUnassigned == 1
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: $taskbookLabel Review Unassigned",
+    label:			"Subject Step Unassigned",
+    id:				"notifySubjectStepUnassigned",
+    name:			"notifySubjectStepUnassigned",
+    value:		    settings.notifySubjectStepUnassigned
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    label:			"Message Step Unassigned",
+    id:				"notifyStepUnassigned",
+    name:			"notifyStepUnassigned",
+    value:		    settings.notifyStepUnassigned
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to reviewer (manager) when they are assigned to a workflow step.",
+    label:			"Enable Step Assign?",
+    id:				"notifyEnableStepAssign",
+    name:			"notifyEnableStepAssign",
+    on:		        settings.notifyEnableStepAssign == 1
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: $taskbookLabel Review Assignment",
+    label:			"Subject Step Assign",
+    id:				"notifySubjectStepAssign",
+    name:			"notifySubjectStepAssign",
+    value:		    settings.notifySubjectStepAssign
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    label:			"Message Step Assign",
+    id:				"notifyStepAssign",
+    name:			"notifyStepAssign",
+    value:		    settings.notifyStepAssign
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to reviewer (manager) or user when a step has been reviewed.",
+    label:			"Enable Step Update?",
+    id:				"notifyEnableStepUpdate",
+    name:			"notifyEnableStepUpdate",
+    on:		        settings.notifyEnableStepUpdate == 1
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: $taskbookLabel Update $step->reviewStepName ($result)",
+    label:			"Subject Step Update",
+    id:				"notifySubjectStepUpdate",
+    name:			"notifySubjectStepUpdate",
+    value:		    settings.notifySubjectStepUpdate
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}",
+    label:			"Message Step Update",
+    id:				"notifyStepUpdate",
+    name:			"notifyStepUpdate",
+    value:		    settings.notifyStepUpdate
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to user when an assesment is completed.",
     label:			"Enable Assessment?",
     id:				"notifyEnableAssessment",
     name:			"notifyEnableAssessment",
@@ -128,6 +139,7 @@
 }) }}
 
 {{ forms.textField ({
+    instructions:   "Default: $taskbookLabel Assessment",
     label:			"Subject Assessment",
     id:				"notifySubjectAssessment",
     name:			"notifySubjectAssessment",
