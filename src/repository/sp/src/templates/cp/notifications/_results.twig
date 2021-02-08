@@ -50,6 +50,106 @@
     value:		    settings.notifyBlockedResult
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to user when result will expire or has expired.",
+    label:			"Enable Result Expiry One?",
+    id:				"notifyEnableResultExpiryOne",
+    name:			"notifyEnableResultExpiryOne",
+    on:		        settings.notifyEnableResultExpiryOne == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Send Notification Days",
+    id:				"notifyResultExpiryDaysOne",
+    name:			"notifyResultExpiryDaysOne",
+    value:		    settings.notifyResultExpiryDaysOne
+}) }}
+
+{{ forms.selectField({
+    label: "Send Notification When",
+    id: 'notifyResultExpiryWhenOne',
+    name: 'notifyResultExpiryWhenOne',
+    value: settings.notifyResultExpiryWhenOne,
+    options: [
+        {
+            label: 'Before',
+            value: '-'
+        },
+        {
+            label: 'After',
+            value: '+'
+        }
+    ]
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Result Expiry",
+    label:			"Subject Result Expiry One",
+    id:				"notifySubjectResultExpiryOne",
+    name:			"notifySubjectResultExpiryOne",
+    value:		    settings.notifySubjectResultExpiryOne
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ entry.title}} expired/expires on {{ entry.expiryDate|date('d-m-Y') }}.",
+    label:			"Message Result Expiry One",
+    id:				"notifyResultExpiryOne",
+    name:			"notifyResultExpiryOne",
+    value:		    settings.notifyResultExpiryOne
+}) }}
+
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to user when result will expire or has expired.",
+    label:			"Enable Result Expiry Two?",
+    id:				"notifyEnableResultExpiryTwo",
+    name:			"notifyEnableResultExpiryTwo",
+    on:		        settings.notifyEnableResultExpiryTwo == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Send Notification Days",
+    id:				"notifyResultExpiryDaysTwo",
+    name:			"notifyResultExpiryDaysTwo",
+    value:		    settings.notifyResultExpiryDaysTwo
+}) }}
+
+{{ forms.selectField({
+    label: "Send Notification When",
+    id: 'notifyResultExpiryWhenTwo',
+    name: 'notifyResultExpiryWhenTwo',
+    value: settings.notifyResultExpiryWhenTwo,
+    options: [
+        {
+            label: 'Before',
+            value: '-'
+        },
+        {
+            label: 'After',
+            value: '+'
+        }
+    ]
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Result Expiry",
+    label:			"Subject Result Expiry Two",
+    id:				"notifySubjectResultExpiryTwo",
+    name:			"notifySubjectResultExpiryTwo",
+    value:		    settings.notifySubjectResultExpiryTwo
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ entry.title}} expired/expires on {{ entry.expiryDate|date('d-m-Y') }}.",
+    label:			"Message Result Expiry Two",
+    id:				"notifyResultExpiryTwo",
+    name:			"notifyResultExpiryTwo",
+    value:		    settings.notifyResultExpiryTwo
+}) }}
+
 <!--
 
 <hr />

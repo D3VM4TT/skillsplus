@@ -534,6 +534,51 @@ class Notify extends Component
     }
 
     /**
+     *
+     */
+    function sendResultExpiry()
+    {
+        $this->executeResultExpiry('One');
+        $this->executeResultExpiry('Two');
+    }
+
+    /**
+     * @param string $number
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function executeResultExpiry($number = 'One')
+    {
+        ## notification is disabled
+        if (!$this->isEnabled('resultExpiry' . $number)) {
+            return;
+        }
+        $when = $this->getNotifySetting('resultExpiryWhen' . $number, '-');
+        $days = (int) $this->getNotifySetting('resultExpiryDays' . $number, 1);
+
+        $start = new \DateTime();
+        $start->modify($when . $days. ' days');
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($start->format('Y-m-d'));
+        $end->modify('+ 1 day');
+
+        $resultEntries = Entry::find()
+            ->anyStatus()
+            ->expiryDate(['and', ">= ${start}", "< ${end}"])
+            ->all();
+
+        foreach ($resultEntries as $resultEntry) {
+            $user = $resultEntry->getAuthor();
+            $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
+            $variables = ['entry' => $resultEntry, 'user' => $user];
+            $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
+            $message = Craft::$app->view->renderString($template, $variables);
+            $this->notify($user->email, $subject, $message);
+        }
+    }
+
+    /**
      * @param Entry $resultEntry
      * @param int $level
      * @throws \Twig\Error\LoaderError
