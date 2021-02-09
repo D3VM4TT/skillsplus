@@ -144,13 +144,13 @@ class Settings extends Model
     public $notifySubjectManagerSummary         = '';
     public $notifyManagerSummary                = '';
 
-    public $notifyEnableResultExpiryOne         = true;
+    public $notifyEnableResultExpiryOne         = false;
     public $notifyResultExpiryWhenOne           = '-';
     public $notifyResultExpiryDaysOne           = '';
     public $notifySubjectResultExpiryOne        = '';
     public $notifyResultExpiryOne               = '';
 
-    public $notifyEnableResultExpiryTwo         = true;
+    public $notifyEnableResultExpiryTwo         = false;
     public $notifyResultExpiryWhenTwo           = '-';
     public $notifyResultExpiryDaysTwo           = '';
     public $notifySubjectResultExpiryTwo        = '';

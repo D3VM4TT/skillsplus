@@ -555,10 +555,12 @@ class Notify extends Component
             return;
         }
         $when = $this->getNotifySetting('resultExpiryWhen' . $number, '-');
-        $days = (int) $this->getNotifySetting('resultExpiryDays' . $number, 1);
+        $days = (int) $this->getNotifySetting('resultExpiryDays' . $number, 0);
 
         $start = new \DateTime();
-        $start->modify($when . $days. ' days');
+        if ($days) {
+            $start->modify($when . $days . ' days');
+        }
         $start->setTime(00, 00, 00);
 
         $end = new \DateTime($start->format('Y-m-d'));
@@ -790,6 +792,6 @@ class Notify extends Component
      */
     private function isEnabled($name)
     {
-        return Lantra::$app->settings->getSetting('notifyEnable' . ucwords($name) , true);
+        return (bool) Lantra::$app->settings->getSetting('notifyEnable' . ucwords($name));
     }
 }
