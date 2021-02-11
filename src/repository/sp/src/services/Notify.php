@@ -791,7 +791,7 @@ class Notify extends Component
                 $message->setCc($cc);
             }
             try {
-                if (count($attachments)) {
+                if (is_countable($attachments) && count($attachments)) {
                     foreach($attachments as $attachment) {
                         $message->attach($attachment['path'], [
                             'fileName'      => $attachment['filename'],
