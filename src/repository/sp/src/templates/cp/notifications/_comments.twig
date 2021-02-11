@@ -16,6 +16,13 @@
     value:		    settings.notifySubjectComment
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Comment",
+    id:				"notifyCcComment",
+    name:			"notifyCcComment",
+    value:		    settings.notifyCcComment
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ entry.title }} - {{ user.fullName}}: {{ comment }}",
     label:			"Message Comment",

@@ -16,6 +16,13 @@
     value:		    settings.notifySubjectNewMembership
 }) }}
 
+{{ forms.textField ({
+    label:			"CC New Memebership",
+    id:				"notifyCcNewMembership",
+    name:			"notifyCcNewMembership",
+    value:		    settings.notifyCcNewMembership
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: New Membership for {{ user.fullname }} - {{ jobRole.title }} - £{{ membership.cost }}.",
     label:			"Message New Membership",

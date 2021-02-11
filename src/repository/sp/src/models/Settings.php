@@ -66,94 +66,116 @@ class Settings extends Model
 
     public $notifyEnableEndorsementResult       = true;
     public $notifySubjectEndorsementResult      = '';
+    public $notifyCcEndorsementResult           = '';
     public $notifyEndorsementResult             = '';
 
     public $notifyEnableBlockedResult           = true;
     public $notifySubjectBlockedResult          = '';
+    public $notifyCcBlockedResult               = '';
     public $notifyBlockedResult                 = '';
 
     public $notifyEnableModuleResult            = true;
     public $notifySubjectModuleResult           = '';
+    public $notifyCcModuleResult                = '';
     public $notifyModuleResult                  = '';
 
     public $notifyEnableCustomReport            = true;
     public $notifySubjectCustomReport           = '';
+    public $notifyCcCustomReport                = '';
     public $notifyCustomReport                  = '';
 
     public $notifyEnableSchemeExpiry            = true;
     public $notifySubjectSchemeExpiry           = '';
+    public $notifyCcSchemeExpiry                = '';
     public $notifySchemeExpiry                  = '';
 
     public $notifyEnableUserExpiry              = true;
     public $notifySubjectUserExpiry             = '';
+    public $notifyCcUserExpiry                  = '';
     public $notifyUserExpiry                    = '';
 
     public $notifyEnableLicencesRemaining       = true;
     public $notifySubjectLicencesRemaining      = '';
+    public $notifyCcLicencesRemaining           = '';
     public $notifyLicencesRemaining             = '';
 
     public $notifyEnableNewPackage              = true;
     public $notifySubjectNewPackage             = '';
+    public $notifyCcNewPackage                  = '';
     public $notifyNewPackage                    = '';
 
     public $notifyEnableCycleStart              = true;
     public $notifySubjectCycleStart             = '';
+    public $notifyCcCycleStart                  = '';
     public $notifyCycleStart                    = '';
 
     public $notifyEnableCycleEnd                = true;
     public $notifySubjectCycleEnd               = '';
+    public $notifyCcCycleEnd                    = '';
     public $notifyCycleEnd                      = '';
 
     public $notifyEnableCycleComplete           = true;
     public $notifySubjectCycleComplete          = '';
+    public $notifyCcCycleComplete               = '';
     public $notifyCycleComplete                 = '';
 
     public $notifyEnableCycleReminder           = true;
     public $notifySubjectCycleReminder          = '';
+    public $notifyCcCycleReminder               = '';
     public $notifyCycleReminder                 = '';
 
     public $notifyEnableStepUnassigned          = true;
     public $notifySubjectStepUnassigned         = '';
+    public $notifyCcStepUnassigned              = '';
     public $notifyStepUnassigned                = '';
 
     public $notifyEnableStepAssign              = true;
     public $notifySubjectStepAssign             = '';
+    public $notifyCcStepAssign                  = '';
     public $notifyStepAssign                    = '';
 
     public $notifyEnableStepUpdate              = true;
     public $notifySubjectStepUpdate             = '';
+    public $notifyCcStepUpdate                  = '';
     public $notifyStepUpdate                    = '';
 
     public $notifyEnableStepRequest             = true;
     public $notifySubjectStepRequest            = '';
+    public $notifyCcStepRequest                 = '';
     public $notifyStepRequest                   = '';
 
     public $notifyEnableAssessment              = true;
     public $notifySubjectAssessment             = '';
+    public $notifyCcAssessment                  = '';
     public $notifyAssessment                    = '';
 
     public $notifyEnableNewMembership           = true;
     public $notifySubjectNewMembership          = '';
+    public $notifyCcNewMembership               = '';
     public $notifyNewMembership                 = '';
 
     public $notifyEnableComment                 = true;
     public $notifySubjectComment                = '';
+    public $notifyCcComment                     = '';
     public $notifyComment                       = '';
 
     public $notifyEnableManagerSummary          = true;
     public $notifySubjectManagerSummary         = '';
+    public $notifyCcManagerSummary              = '';
     public $notifyManagerSummary                = '';
 
     public $notifyEnableResultExpiryOne         = false;
     public $notifyResultExpiryWhenOne           = '-';
     public $notifyResultExpiryDaysOne           = '';
     public $notifySubjectResultExpiryOne        = '';
+    public $notifyCcResultExpiryOne             = '';
     public $notifyResultExpiryOne               = '';
 
     public $notifyEnableResultExpiryTwo         = false;
     public $notifyResultExpiryWhenTwo           = '-';
     public $notifyResultExpiryDaysTwo           = '';
     public $notifySubjectResultExpiryTwo        = '';
+    public $notifyCcResultExpiryTwo             = '';
     public $notifyResultExpiryTwo               = '';
 
     public $enableTaskbooks                     = false;

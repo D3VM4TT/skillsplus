@@ -16,6 +16,13 @@
     value:		    settings.notifySubjectNewPackage
 }) }}
 
+{{ forms.textField ({
+    label:			"CC New Package",
+    id:				"notifyCcNewPackage",
+    name:			"notifyCcNewPackage",
+    value:		    settings.notifyCcNewPackage
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: New taskbook for {{ user.fullname }} - {{ moduleGroup.title }}.",
     label:			"Message New Package",
@@ -40,6 +47,13 @@
     id:				"notifySubjectStepRequest",
     name:			"notifySubjectStepRequest",
     value:		    settings.notifySubjectStepRequest
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Step Request",
+    id:				"notifyCcStepRequest",
+    name:			"notifyCcStepRequest",
+    value:		    settings.notifyCcStepRequest
 }) }}
 
 {{ forms.textareaField ({
@@ -68,6 +82,13 @@
     value:		    settings.notifySubjectStepUnassigned
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Step Unassigned",
+    id:				"notifyCcStepUnassigned",
+    name:			"notifyCcStepUnassigned",
+    value:		    settings.notifyCcStepUnassigned
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
     label:			"Message Step Unassigned",
@@ -92,6 +113,13 @@
     id:				"notifySubjectStepAssign",
     name:			"notifySubjectStepAssign",
     value:		    settings.notifySubjectStepAssign
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Step Assign",
+    id:				"notifyCcStepAssign",
+    name:			"notifyCcStepAssign",
+    value:		    settings.notifyCcStepAssign
 }) }}
 
 {{ forms.textareaField ({
@@ -120,6 +148,13 @@
     value:		    settings.notifySubjectStepUpdate
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Step Update",
+    id:				"notifyCcStepUpdate",
+    name:			"notifyCcStepUpdate",
+    value:		    settings.notifyCcStepUpdate
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}",
     label:			"Message Step Update",
@@ -144,6 +179,13 @@
     id:				"notifySubjectAssessment",
     name:			"notifySubjectAssessment",
     value:		    settings.notifySubjectAssessment
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Assessment",
+    id:				"notifyCcAssessment",
+    name:			"notifyCcAssessment",
+    value:		    settings.notifyCcAssessment
 }) }}
 
 {{ forms.textareaField ({

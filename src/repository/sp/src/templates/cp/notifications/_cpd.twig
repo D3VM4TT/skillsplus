@@ -1,5 +1,7 @@
 {% import "_includes/forms" as forms %}
 
+<p><strong>NOTE</strong> All CPD notifications must be enabled here and on the module entry form.</p>
+
 {{ forms.lightswitchField ({
     instructions:   "Sent to user at start of cycle.",
     label:			"Enable Cycle Start?",
@@ -14,6 +16,13 @@
     id:				"notifySubjectCycleStart",
     name:			"notifySubjectCycleStart",
     value:		    settings.notifySubjectCycleStart
+}) }}
+
+{{ forms.textField ({
+    label:			"CC CPD Cycle Start",
+    id:				"notifyCcCycleStart",
+    name:			"notifyCcCycleStart",
+    value:		    settings.notifyCcCycleStart
 }) }}
 
 {{ forms.textareaField ({
@@ -42,6 +51,13 @@
     value:		    settings.notifySubjectCycleEnd
 }) }}
 
+{{ forms.textField ({
+    label:			"CC CPD Cycle End",
+    id:				"notifyCcCycleEnd",
+    name:			"notifyCcCycleEnd",
+    value:		    settings.notifyCcCycleEnd
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ module.title }} {{ cycle.name }} has ended.",
     label:			"Message CPD Cycle End",
@@ -68,6 +84,13 @@
     value:		    settings.notifySubjectCycleComplete
 }) }}
 
+{{ forms.textField ({
+    label:			"CC CPD Cycle Complete",
+    id:				"notifyCcCycleComplete",
+    name:			"notifyCcCycleComplete",
+    value:		    settings.notifyCcCycleComplete
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ module.title }} {{ cycle.name }} has been completed.",
     label:			"Message CPD Cycle Complete",
@@ -92,6 +115,13 @@
     id:				"notifySubjectCycleReminder",
     name:			"notifySubjectCycleReminder",
     value:		    settings.notifySubjectCycleReminder
+}) }}
+
+{{ forms.textField ({
+    label:			"CC CPD Cycle Reminder",
+    id:				"notifyCcCycleReminder",
+    name:			"notifyCcCycleReminder",
+    value:		    settings.notifyCcCycleReminder
 }) }}
 
 {{ forms.textareaField ({

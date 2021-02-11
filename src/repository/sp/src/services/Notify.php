@@ -32,7 +32,7 @@ class Notify extends Component
     function sendAssessment(Entry $package)
     {
         ## notification is disabled
-        if (!$this->isEnabled('stepUnassigned')) {
+        if (!$this->isEnabled('assessment')) {
             return;
         }
         $user = $package->author;
@@ -46,7 +46,8 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n{{ assessmentText }}");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($user->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccAssessment');
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -85,7 +86,8 @@ class Notify extends Component
         $template = $this->getNotifySetting('newMembership', "New Membership for {{ user.fullname }} - {{ jobRole.title }} - £{{ membership.cost }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
-        $this->notify($schemeManagerEmails, $subject, $message);
+        $cc = $this->getNotifySetting('ccNewMembership');
+        $this->notify($schemeManagerEmails, $subject, $message, null, null, $cc);
     }
 
     /**
@@ -109,7 +111,8 @@ class Notify extends Component
         $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
-        $this->notify($schemeManagerEmails, $subject, $message);
+        $cc = $this->getNotifySetting('ccNewPackage');
+        $this->notify($schemeManagerEmails, $subject, $message, null, null, $cc);
     }
 
     /**
@@ -140,10 +143,10 @@ class Notify extends Component
         $message = Craft::$app->view->renderString($template, $variables);
         $emails = Lantra::$app->users->getSchemeManagersEmails();
         $managers = Lantra::$app->users->getUserMangers($package->author);
+        $cc = $this->getNotifySetting('ccStepUnassigned');
         foreach ($managers as $manager) {
-            $emails[] = $manager->email;
+            $this->notify($manager->email, $subject, $message, null, $manager, $cc);
         }
-        $this->notify($emails, $subject, $message);
     }
 
     /**
@@ -172,7 +175,8 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('stepRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($manager->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccStepRequest');
+        $this->notify($manager->email, $subject, $message, null, $manager, $cc);
     }
 
     /**
@@ -201,7 +205,8 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($manager->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccStepAssign');
+        $this->notify($manager->email, $subject, $message, null, $manager, $cc);
     }
 
     /**
@@ -230,7 +235,8 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('stepUpdate', "Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($user->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccStepUpdate');
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -262,7 +268,9 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('cycleStart', "{{ module.title }} {{ cycle.name }} starts today.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($resultEntry->author->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccCycleStart');
+        $user = $resultEntry->author;
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -295,7 +303,9 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('cycleStart', "{{ module.title }} {{ cycle.name }} has ended.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($resultEntry->author->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccCycleEnd');
+        $user = $resultEntry->author;
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -327,7 +337,9 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('cycleComplete', "{{ module.title }} {{ cycle.name }} has been completed.");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($resultEntry->author->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccCycleComplete');
+        $user = $resultEntry->author;
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -360,7 +372,9 @@ class Notify extends Component
         ];
         $template = $this->getNotifySetting('cycleReminder', "{{ module.title }} {{ cycle.name }} {{ remaining.text }}");
         $message = Craft::$app->view->renderString($template, $variables);
-        $this->notify($resultEntry->author->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccCycleReminder');
+        $user = $resultEntry->author;
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
     }
 
     /**
@@ -382,8 +396,9 @@ class Notify extends Component
         $variables = ['expiryDate' => $expiryDate];
         $template = $this->getNotifySetting('schemeExpiry', "Your scheme expires on  {{ expiryDate|date('d-m-Y') }}.");
         $message = Craft::$app->view->renderString($template, $variables);
+        $cc = $this->getNotifySetting('ccSchemeExpiry');
         foreach ($criteria->all() as $manager) {
-            $this->notify($manager->email, $subject, $message);
+            $this->notify($manager->email, $subject, $message, null, $manager, $cc);
         }
     }
     /**
@@ -401,11 +416,12 @@ class Notify extends Component
        $criteria = Lantra::$app->users->getExpiringUsers($expiryDate);
        if ($criteria->count()) {
            $subject = $this->getNotifySetting('subjectUserExpiry', 'User Expiry Date');
+           $cc = $this->getNotifySetting('ccUserExpiry');
            foreach ($criteria->all() as $user) {
                $variables = ['user' => $user];
                $template = $this->getNotifySetting('userExpiry', "Your individual licence expires on {{ user.userExpiryDate|date('d-m-Y') }}.");
                $message = Craft::$app->view->renderString($template, $variables);
-               $this->notify($user->email, $subject, $message);
+               $this->notify($user->email, $subject, $message, null, $user, $cc);
            }
        }
     }
@@ -425,13 +441,14 @@ class Notify extends Component
         $criteria->groupId = 1;
         $criteria->limit = null;
         $subject = $this->getNotifySetting('subjectLicencesRemaining', 'Licences Remaining');
+        $cc = $this->getNotifySetting('ccLicencesRemaining');
         foreach ($criteria->all() as $manager) {
             $remainingLicences = Lantra::$app->licences->getSchemeLicences();
             if ($remainingLicences <= 10) {
                 $variables = ['title' =>  Craft::$app->config->general->siteName, 'licences' => Lantra::$app->licences->getSchemeLicences()];
                 $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
                 $message = Craft::$app->view->renderString($template, $variables);
-                $this->notify($manager->email, $subject, $message);
+                $this->notify($manager->email, $subject, $message, null, $manager, $cc);
             }
         }
         ## send company managers remaining company licences
@@ -448,7 +465,7 @@ class Notify extends Component
                 $variables = ['title' =>  $company->title, 'licences' => $remainingLicences];
                 $template = $this->getNotifySetting('licencesRemaining', "{{ title }} has {{ licences}} remaining.");
                 $message = Craft::$app->view->renderString($template, $variables);
-                $this->notify($emails, $subject, $message);
+                $this->notify($emails, $subject, $message, null, null, $cc);
             }
         }
     }
@@ -470,15 +487,17 @@ class Notify extends Component
         $user = Craft::$app->users->getUserById($userId);
         $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
+        $cc = $this->getNotifySetting('ccComment');
         $template = $this->getNotifySetting('comment', "{{ entry.title }} - {{ user.fullName}}: {{ comment }}");
         $message = Craft::$app->view->renderString($template, $variables);
+        $user = $entry->getAuthor();
         ## manager commenting - notify user
         if ($userId != $entry->authorId) {
-            $this->notify($entry->getAuthor()->email, $subject, $message);
+            $this->notify($user->email, $subject, $message, null, $user, $cc);
         }
         ## user commenting - notify managers
         else {
-            $this->notifyManagers($entry->getAuthor(), $subject, $message);
+            $this->notifyManagers($user, $subject, $message, null, $cc);
         }
     }
 
@@ -502,13 +521,14 @@ class Notify extends Component
         $moduleEntry = $entry->resultModule->one();
         $user = $entry->getAuthor();
         $subject = $this->getNotifySetting('subjectModuleResult', 'Module Completed');
+        $cc = $this->getNotifySetting('ccModuleResult');
         $variables = ['entry' => $moduleEntry, 'user' => $user];
         $template = $this->getNotifySetting('moduleResult', "{{ user.fullName}} has completed {{ entry.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
 
         ## send the emails to managers
-        $this->notify($user->email, $subject, $message);
-        $this->notifyManagers($user, $subject, $message);
+        $this->notify($user->email, $subject, $message, null, $user, $cc);
+        $this->notifyManagers($user, $subject, $message, null, $cc);
     }
 
     /**
@@ -526,11 +546,12 @@ class Notify extends Component
         $unitEntry = $resultEntry->resultUnit->one();
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectBlockedResult', 'Result Blocked');
+        $cc = $this->getNotifySetting('ccBlockedResult');
         $variables = ['entry' => $unitEntry, 'user' => $user];
         $template = $this->getNotifySetting('blockedResult', "{{ user.fullName}} has run out of attempts for unit {{ entry.title }} and the result is blocked.");
         $message = Craft::$app->view->renderString($template, $variables);
         ## send the emails to managers
-        $this->notifyManagers($user, $subject, $message);
+        $this->notifyManagers($user, $subject, $message, null, $cc);
     }
 
     /**
@@ -577,10 +598,11 @@ class Notify extends Component
         foreach ($resultEntries as $resultEntry) {
             $user = $resultEntry->getAuthor();
             $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
+            $cc = $this->getNotifySetting('ccResultExpiry');
             $variables = ['entry' => $resultEntry, 'user' => $user];
             $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
             $message = Craft::$app->view->renderString($template, $variables);
-            $this->notify($user->email, $subject, $message);
+            $this->notify($user->email, $subject, $message, null, $user, $cc);
         }
     }
 
@@ -603,13 +625,14 @@ class Notify extends Component
         }
         $user = $resultEntry->getAuthor();
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
+        $cc = $this->getNotifySetting('ccEndorsementResult');
         $variables = ['entry' => $resultEntry, 'user' => $user];
         $template = $this->getNotifySetting('endorsementResult', "{{ user.fullName}} has submitted a result {{ entry.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         ## send the emails to managers
         $manager = Lantra::$app->users->getUserManagerByLevel($user, $level);
         if ($manager) {
-            $this->notify($manager->email, $subject, $message);
+            $this->notify($manager->email, $subject, $message, null, $manager, $cc);
         }
     }
 
@@ -660,7 +683,8 @@ class Notify extends Component
             $message = "There are no expiring results in the next " . $days . " days:\n\n";
         }
         ## send the emails to managers
-        $this->notify($manager->email, $subject, $message);
+        $cc = $this->getNotifySetting('ccManagerSummary');
+        $this->notify($manager->email, $subject, $message, $manager, $cc);
     }
 
     /**
@@ -669,14 +693,16 @@ class Notify extends Component
      * @param $user
      * @param $subject
      * @param $message
+     * @param $attachments
+     * @param $cc
      * @throws mixed
      */
-    function notifyManagers(User $user, $subject, $message)
+    function notifyManagers(User $user, $subject, $message, $attachments = [], $cc = null)
     {
         $managers = Lantra::$app->users->getUserMangers($user);
         if ($managers && count($managers)) {
             foreach ($managers as $manager) {
-                $this->notify($manager->email, $subject, $message);
+                $this->notify($manager->email, $subject, $message, $attachments, $manager, $cc);
             }
         }
     }
@@ -712,24 +738,33 @@ class Notify extends Component
      * @param $subject
      * @param $body
      * @param $attachments
+     * @param $user
+     * @param $cc
      * @return mixed
      * @throws mixed
      */
-    function notify($toEmail, $subject, $body, $attachments = [])
+    function notify($toEmail, $subject, $body, $attachments = [], $user = null, $cc = null)
     {
         ## all notifications are disabled
         if (Lantra::$app->settings->getSetting('disableAllNotifications')) {
             return;
         }
 
+        ## disable notifications for dummy users
+        if ($user && $user->userDummyEmail) {
+            return;
+        }
+
         if (!is_array($toEmail)) {
             $toEmail = [$toEmail];
         }
+
         ## all notifications sent to test email address
         $server = getenv('ENVIRONMENT');
         if ($server != 'prod') {
+            $userString = $user ? $user->fullName : 'unknown';
             $subject = '[' . $server . '] ' . $subject;
-            $body .= "\n\n\nNotification for: " . implode(', ', $toEmail);
+            $body .= "\n\n\nNotification for: " . implode(', ', $toEmail) . " (" . $userString . ")";
             $schemeTestEmails = explode(',', Lantra::$app->settings->getSetting('schemeTestEmailAddress'));
             $siteEmailAddress = Craft::$app->getProjectConfig()->get('email', 'emailAddress');
             $toEmail = count($schemeTestEmails) ? $schemeTestEmails : [$siteEmailAddress];
@@ -744,6 +779,9 @@ class Notify extends Component
 
         foreach($toEmail as $address) {
             $message->setTo(trim($address));
+            if ($cc) {
+                $message->setCc($cc);
+            }
             try {
                 if (count($attachments)) {
                     foreach($attachments as $attachment) {

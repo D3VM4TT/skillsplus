@@ -16,6 +16,13 @@
     value:		    settings.notifySubjectSchemeExpiry
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Scheme Expiry",
+    id:				"notifyCcSchemeExpiry",
+    name:			"notifyCcSchemeExpiry",
+    value:		    settings.notifyCcSchemeExpiry
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: Your scheme expires on  {{ expiryDate|date('d-m'Y') }}.",
     label:			"Message Scheme Expiry",
@@ -39,6 +46,13 @@
     id:				"notifySubjectUserExpiry",
     name:			"notifySubjectUserExpiry",
     value:		    settings.notifySubjectUserExpiry
+}) }}
+
+{{ forms.textField ({
+    label:			"CC User Expiry",
+    id:				"notifyCcUserExpiry",
+    name:			"notifyCcUserExpiry",
+    value:		    settings.notifyCcUserExpiry
 }) }}
 
 {{ forms.textareaField ({

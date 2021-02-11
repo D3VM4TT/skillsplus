@@ -16,6 +16,13 @@
     value:		    settings.notifySubjectEndorsementResult
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Endorsement Result",
+    id:				"notifyCcEndorsementResult",
+    name:			"notifyCcEndorsementResult",
+    value:		    settings.notifyCcEndorsementResult
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ user.fullName}} has submitted a result {{ entry.title }}.",
     label:			"Message Endorsement Result",
@@ -40,6 +47,13 @@
     id:				"notifySubjectBlockedResult",
     name:			"notifySubjectBlockedResult",
     value:		    settings.notifySubjectBlockedResult
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Blocked Result",
+    id:				"notifyCcBlockedResult",
+    name:			"notifyCcBlockedResult",
+    value:		    settings.notifyCcBlockedResult
 }) }}
 
 {{ forms.textareaField ({
@@ -92,6 +106,13 @@
     value:		    settings.notifySubjectResultExpiryOne
 }) }}
 
+{{ forms.textField ({
+    label:			"CC Result Expiry One",
+    id:				"notifyCcResultExpiryOne",
+    name:			"notifyCcResultExpiryOne",
+    value:		    settings.notifyCcResultExpiryOne
+}) }}
+
 {{ forms.textareaField ({
     instructions:   "Default: {{ entry.title}} expired/expires on {{ entry.expiryDate|date('d-m-Y') }}.",
     label:			"Message Result Expiry One",
@@ -140,6 +161,13 @@
     id:				"notifySubjectResultExpiryTwo",
     name:			"notifySubjectResultExpiryTwo",
     value:		    settings.notifySubjectResultExpiryTwo
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Result Expiry Two",
+    id:				"notifyCcResultExpiryTwo",
+    name:			"notifyCcResultExpiryTwo",
+    value:		    settings.notifyCcResultExpiryTwo
 }) }}
 
 {{ forms.textareaField ({
