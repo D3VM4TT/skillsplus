@@ -608,8 +608,7 @@ class Notify extends Component
             $variables = ['entry' => $resultEntry, 'user' => $user];
             $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
             $message = Craft::$app->view->renderString($template, $variables);
-            $this->notify($user->email, $subject, $message, null, $user, $cc);
-            $details[] = ['email' => 'Result Expiry ' . $number, 'userId' => $user->id];
+            $details[] = $this->notify($user->email, $subject, $message, null, $user, $cc);
         }
 
         return $details;
@@ -756,12 +755,12 @@ class Notify extends Component
     {
         ## all notifications are disabled
         if (Lantra::$app->settings->getSetting('disableAllNotifications')) {
-            return;
+            return ['emails disabled'];
         }
 
         ## disable notifications for dummy users
         if ($user && $user->userDummyEmail) {
-            return;
+            return ['user dummy email'];
         }
 
         if (!is_array($toEmail)) {
@@ -812,7 +811,7 @@ class Notify extends Component
                 return false;
             }
         }
-        return true;
+        return [$subject . ' message(s) sent'];
     }
 
     /**
