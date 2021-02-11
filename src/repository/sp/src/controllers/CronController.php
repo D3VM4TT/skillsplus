@@ -28,6 +28,7 @@ class CronController extends BaseController {
         # mock the week 1-7 or month 1-31
         $weekValue = Craft::$app->request->getParam('week');
         $monthValue = Craft::$app->request->getParam('month');
+        $details = [];
         if ($frequency == 'queue') {
             # run the next 2 jobs (reports) in the queue
             Lantra::$app->queue->next();
@@ -39,7 +40,7 @@ class CronController extends BaseController {
             # $this->notifyUserExpiry();
             # $this->expireIndividualUsers();
             Lantra::$app->reports->sendDailyReports($weekValue, $monthValue);
-            Lantra::$app->notify->sendResultExpiry();
+            $details[] = Lantra::$app->notify->sendResultExpiry();
             Lantra::$app->cycles->sendCycleEnds();
             Lantra::$app->cycles->createCycleResults();
             Lantra::$app->cycles->sendCycleReminders();
@@ -51,7 +52,7 @@ class CronController extends BaseController {
             # $this->notifyLicencesRemaining();
             # $this->notifySchemeExpiry();
         }
-        return $this->asJson(['cron'=> $frequency]);
+        return $this->asJson(['cron'=> $frequency, 'details' => $details]);
     }
 
     /**

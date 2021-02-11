@@ -555,12 +555,16 @@ class Notify extends Component
     }
 
     /**
-     *
+     * @return array
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\InvalidConfigException
      */
     function sendResultExpiry()
     {
-        $this->executeResultExpiry('One');
-        $this->executeResultExpiry('Two');
+        $details[] = $this->executeResultExpiry('One');
+        $details[] = $this->executeResultExpiry('Two');
+        return $details;
     }
 
     /**
@@ -595,6 +599,8 @@ class Notify extends Component
             ->expiryDate(['and', ">= $startAtom", "< $endAtom"])
             ->all();
 
+        $details = [];
+
         foreach ($resultEntries as $resultEntry) {
             $user = $resultEntry->getAuthor();
             $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
@@ -603,7 +609,10 @@ class Notify extends Component
             $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
             $message = Craft::$app->view->renderString($template, $variables);
             $this->notify($user->email, $subject, $message, null, $user, $cc);
+            $details[] = ['email' => 'Result Expiry ' . $number, 'userId' => $user->id];
         }
+
+        return $details;
     }
 
     /**
