@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
     $('select.package-module-group').change(function(){
         var moduleGroupId = $(this).val(),
             revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
@@ -701,5 +702,14 @@ $(document).ready(function(){
     $('#includeHierarchy').change(function(){
         var s = $(this).is(':checked');
         $('#includeHierarchyWarning').css('display', s ? 'block' : 'none');
+    });
+
+    $("form.read-only :input").prop("disabled", true);
+    $("form.read-only .fileinput-button").hide();
+    $("form.read-only .date-selector span.clear").hide();
+    $("form.read-only .delete-file").click(function(e){
+        e.preventDefault();
+        alert('Read Only Manager');
+        return false;
     });
 });

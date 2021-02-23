@@ -55,17 +55,15 @@
         {% endif %}
     </td>
     <td class="icons">
-        {% if not readOnly %}
-            {% if editLink is defined and editLink and resultEntry %}
-                <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result">
-                    <img src="/assets/img/edit.svg" title="Edit" />
-                </a>
-            {% endif %}
-            {% if newLink is defined and newLink %}
-                <a class="icon" href="{{ newLink }}" data-tooltip title="Add new result">
-                    <img src="/assets/img/add.svg" title="Add" />
-                </a>
-            {% endif %}
+        {% if editLink is defined and editLink and resultEntry %}
+            <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result">
+                <img src="/assets/img/edit.svg" title="Edit" />
+            </a>
+        {% endif %}
+        {% if not readOnly and newLink is defined and newLink %}
+            <a class="icon" href="{{ newLink }}" data-tooltip title="Add new result">
+                <img src="/assets/img/add.svg" title="Add" />
+            </a>
         {% endif %}
     </td>
 </tr>

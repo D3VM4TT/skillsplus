@@ -13,7 +13,7 @@
 {% set resultCompany = moduleResultEntry and moduleResultEntry.resultCompany ? moduleResultEntry.resultCompany.one : null %}
 {# undo result locked #}
 {% set resultLocked = false %}
-<form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
+<form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading {{ readOnly ? 'read-only' : '' }}">
     {{ csrfInput() }}
     <input type="hidden" name="action" value="entries/save-entry">
     {{ redirectInput(craft.lantra.returnRef()) }}
@@ -48,5 +48,7 @@
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
-    {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
+    {% if not readOnly %}
+        {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
+    {% endif %}
 </form>

@@ -9,6 +9,8 @@
     {% set isManager = false %}
 {% endif %}
 
+{% set readOnly = currentUser.managerReadOnly %}
+
 {% set dashboardUri = '/cpd/' ~ account.id %}
 
 {# if save-entry fails #}
@@ -99,7 +101,7 @@
                     </ul>
                 </div>
             {% endif %}
-            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading">
+            <form method="post" role="form" accept-charset="UTF-8" enctype="multipart/form-data" class="result no-loading {{ readOnly ? 'read-only' : '' }}">
 
                 {% if resultEntry is defined and resultEntry %}
                     <div id="name-fields">
@@ -157,7 +159,9 @@
                 {% if moduleEntry %}
                     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
                 {% endif %}
-                {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
+                {% if not readOnly %}
+                    {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
+                {% endif %}
             </form>
         </div>
     </section>

@@ -12,6 +12,8 @@
     {% set isManager = false %}
 {% endif %}
 
+{% set readOnly = currentUser.managerReadOnly %}
+
 {% set moduleEntry = craft.entries.id(moduleId).one() %}
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
 {% set unitEntry = craft.entries.id(unitId).one() %}
@@ -161,7 +163,7 @@
                         <h5>{{ unitEntry.unitPoints }} points</h5>
                     </div>
                 {% endif %}
-                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry} %}
+                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry, readOnly:readOnly} %}
             </div>
         </section>
     {% endif %}
