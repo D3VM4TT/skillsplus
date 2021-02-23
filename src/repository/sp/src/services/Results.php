@@ -32,6 +32,9 @@ class Results extends Component
 {
     private $dateFormat = 'd/m/y';
 
+    private $sectionIds = [];
+    private $entryTypeIds = [];
+
     /**
      * @param $event
      * @param Entry $entry
@@ -252,8 +255,8 @@ class Results extends Component
             ## create result entry
             if (false == $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
                 $resultEntry = new Entry();
-                $resultEntry->sectionId = LantraHelper::sectionId('results');
-                $resultEntry->typeId = LantraHelper::entryTypeId('results', 'unitResult');
+                $resultEntry->sectionId = $this->sectionId('results');
+                $resultEntry->typeId = $this->entryTypeId('results', 'unitResult');
                 $resultEntry->enabled = true;
                 $resultEntry->authorId = $entry->authorId;
                 $resultEntry->setFieldValue('resultUnit', [$unitEntry->id]);
@@ -499,9 +502,11 @@ class Results extends Component
             $validCodes[] = $recurringCycle->code;
         }
 
+        $criteria = $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
+
         if (count($validCodes)) {
             ## delete incomplete results that are no longer needed for this cycle (if cycle changed)
-            $allResults = $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId)->all();
+            $allResults = $criteria->all();
             foreach ($allResults as $result) {
                 if (!in_array($result->resultRecurringCycleCode, $validCodes) && $result->resultStatus == 'incomplete') {
                     Craft::$app->elements->deleteElementById($result->id);
@@ -510,16 +515,21 @@ class Results extends Component
         }
 
         $startDate = $cycle->startDate;
-        foreach($recurringCycles as $recurringCycle) {
-            ## make sure the recurring results exist
-            if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
-                $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
+
+        ## make sure the correct number of results exist
+        if ($criteria->count() != count($recurringCycles)) {
+            foreach ($recurringCycles as $recurringCycle) {
+                if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
+                    $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
+                }
+                if ($resultEntry->resultModuleResult != $moduleResultId) {
+                    ## fix to update resultModuleResult if cycle has changed
+                    $this->setResultModuleResult($resultEntry, $moduleResultId);
+                }
             }
-            ## fix to update resultModuleResult if cycle has changed
-            $this->setResultModuleResult($resultEntry, $moduleResultId);
         }
 
-        return $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
+        return $criteria;
     }
 
     /**
@@ -549,8 +559,8 @@ class Results extends Component
     function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null)
     {
         $criteria = Entry::find();
-        $criteria->section = 'results';
-        $criteria->type = 'unitResult';
+        $criteria->sectionId = $this->sectionId('results');
+        $criteria->typeId = $this->entryTypeId('results', 'unitResult');
         $criteria->limit = $limit;
         if (!$companyId) {
             $criteria->authorId = $userId;
@@ -583,6 +593,7 @@ class Results extends Component
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
+        $criteria->structureId = false;
         if ($type == 'both') {
             $type = ['userResult', 'unitResult'];
         }
@@ -643,6 +654,7 @@ class Results extends Component
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
+        $criteria->structureId = false;
         $criteria->limit = 1;
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
         if ($companyId) {
@@ -1213,8 +1225,8 @@ class Results extends Component
     function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null)
     {
         $resultEntry = new Entry();
-        $resultEntry->sectionId = LantraHelper::sectionId('results');
-        $resultEntry->typeId = LantraHelper::entryTypeId('results', 'unitResult');
+        $resultEntry->sectionId = $this->sectionId('results');
+        $resultEntry->typeId = $this->entryTypeId('results', 'unitResult');
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
         if ($cycle) {
@@ -1246,8 +1258,8 @@ class Results extends Component
     function createModuleResult($userId, $moduleEntryId, $postDate = null)
     {
         $resultEntry = new Entry();
-        $resultEntry->sectionId = LantraHelper::sectionId('results');
-        $resultEntry->typeId = LantraHelper::entryTypeId('results', 'moduleResult');
+        $resultEntry->sectionId = $this->sectionId('results');
+        $resultEntry->typeId = $this->entryTypeId('results', 'moduleResult');
         $resultEntry->enabled = true;
         $resultEntry->authorId = $userId;
         if ($postDate) {
@@ -1565,9 +1577,9 @@ class Results extends Component
             $mysql = "SELECT DISTINCT authorId";
         }
 
-        $sectionId = LantraHelper::sectionId('results');
-        $unitResultTypeId = LantraHelper::entryTypeId('results', 'unitResult');
-        $userResultTypeId = LantraHelper::entryTypeId('results', 'userResult');
+        $sectionId = $this->sectionId('results');
+        $unitResultTypeId = $this->entryTypeId('results', 'unitResult');
+        $userResultTypeId = $this->entryTypeId('results', 'userResult');
 
         $mysql .= "
             FROM {{%entries}} e
@@ -2882,4 +2894,31 @@ class Results extends Component
             'finishDate' => $finishDate
         ]);
     }
+
+    /**
+     * @param $handle
+     * @return mixed
+     */
+    public function sectionId($handle)
+    {
+        if (!isset($this->sectionIds[$handle])) {
+            $this->sectionIds[$handle] = LantraHelper::sectionId($handle);
+        }
+        return $this->sectionIds[$handle];
+    }
+
+    /**
+     * @param $handle
+     * @param null $typeHandle
+     * @return mixed
+     */
+    public function entryTypeId($handle, $typeHandle = null)
+    {
+        if (!isset($this->entryTypeIds[$handle.$typeHandle])) {
+            $this->entryTypeIds[$handle.$typeHandle] = LantraHelper::entryTypeId($handle, $typeHandle);
+        }
+        return $this->entryTypeIds[$handle.$typeHandle];
+    }
+
+
 }
