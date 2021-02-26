@@ -522,7 +522,7 @@ class Results extends Component
                 if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
                     $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
                 }
-                if ($resultEntry->resultModuleResult != $moduleResultId) {
+                if (!$resultEntry->resultModuleResult || $resultEntry->resultModuleResult->one()->id != $moduleResultId) {
                     ## fix to update resultModuleResult if cycle has changed
                     $this->setResultModuleResult($resultEntry, $moduleResultId);
                 }
