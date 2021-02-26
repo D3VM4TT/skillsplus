@@ -704,7 +704,7 @@ $(document).ready(function(){
         $('#includeHierarchyWarning').css('display', s ? 'block' : 'none');
     });
 
-    $("form.read-only :input").not('#resultComment').not('#resultCommentButton').prop("disabled", true);
+    $("form.read-only :input").not('[type="hidden"]').not('#resultComment').not('#resultCommentButton').prop("disabled", true);
     $("form.read-only .fileinput-button").hide();
     $("form.read-only .date-selector span.clear").hide();
     $("form.read-only .delete-file").click(function(e){
