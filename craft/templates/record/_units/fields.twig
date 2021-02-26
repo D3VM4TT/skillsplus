@@ -163,11 +163,11 @@
     {% endif %}
     {% if not resultLocked %}
         <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
-        {% if readOnly %}
-            <div class="container-btn">
-                <input type="hidden" name="readOnly" value="1" />
-                <button class="button primary-bg" type="submit">Save Comment</button>
-            </div>
-        {% endif %}
     {% endif %}
 </div>
+{% if readOnly and not resultLocked %}
+    <div class="container-btn">
+        <input type="hidden" name="readOnly" value="1" />
+        <button id="resultCommentButton" class="button primary-bg" type="submit">Save Comment</button>
+    </div>
+{% endif %}
