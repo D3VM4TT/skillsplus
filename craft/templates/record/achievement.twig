@@ -157,7 +157,7 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
+                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager, readOnly:readOnly} %}
                 {% endif %}
                 {% if not readOnly %}
                     {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
