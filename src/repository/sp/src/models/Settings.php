@@ -178,6 +178,13 @@ class Settings extends Model
     public $notifyCcResultExpiryTwo             = '';
     public $notifyResultExpiryTwo               = '';
 
+    public $notifyEnableResultExpiryThree       = false;
+    public $notifyResultExpiryWhenThree         = '-';
+    public $notifyResultExpiryDaysThree         = '';
+    public $notifySubjectResultExpiryThree      = '';
+    public $notifyCcResultExpiryThree           = '';
+    public $notifyResultExpiryThree             = '';
+
     public $enableTaskbooks                     = false;
     public $enableJobRoles                      = true;
 

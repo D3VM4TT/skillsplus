@@ -564,6 +564,7 @@ class Notify extends Component
     {
         $details[] = $this->executeResultExpiry('One');
         $details[] = $this->executeResultExpiry('Two');
+        $details[] = $this->executeResultExpiry('Three');
         return $details;
     }
 

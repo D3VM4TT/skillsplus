@@ -178,6 +178,63 @@
     value:		    settings.notifyResultExpiryTwo
 }) }}
 
+<hr />
+
+{{ forms.lightswitchField ({
+    instructions:   "Sent to user when result will expire or has expired.",
+    label:			"Enable Result Expiry Three?",
+    id:				"notifyEnableResultExpiryThree",
+    name:			"notifyEnableResultExpiryThree",
+    on:		        settings.notifyEnableResultExpiryThree == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Send Notification Days",
+    id:				"notifyResultExpiryDaysThree",
+    name:			"notifyResultExpiryDaysThree",
+    value:		    settings.notifyResultExpiryDaysThree
+}) }}
+
+{{ forms.selectField({
+    label: "Send Notification When",
+    id: 'notifyResultExpiryWhenThree',
+    name: 'notifyResultExpiryWhenThree',
+    value: settings.notifyResultExpiryWhenThree,
+    options: [
+        {
+            label: 'Before',
+            value: '+'
+        },
+        {
+            label: 'After',
+            value: '-'
+        }
+    ]
+}) }}
+
+{{ forms.textField ({
+    instructions:   "Default: Result Expiry",
+    label:			"Subject Result Expiry Three",
+    id:				"notifySubjectResultExpiryThree",
+    name:			"notifySubjectResultExpiryThree",
+    value:		    settings.notifySubjectResultExpiryThree
+}) }}
+
+{{ forms.textField ({
+    label:			"CC Result Expiry Three",
+    id:				"notifyCcResultExpiryThree",
+    name:			"notifyCcResultExpiryThree",
+    value:		    settings.notifyCcResultExpiryThree
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "Default: {{ entry.title}} expired/expires on {{ entry.expiryDate|date('d-m-Y') }}.",
+    label:			"Message Result Expiry Three",
+    id:				"notifyResultExpiryThree",
+    name:			"notifyResultExpiryThree",
+    value:		    settings.notifyResultExpiryThree
+}) }}
+
 <!--
 
 <hr />
