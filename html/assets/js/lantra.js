@@ -239,10 +239,22 @@ $(document).ready(function(){
         }
         ul.slideUp(function(){li.attr('class', 'nav-closed')});
     });
-    // toggle accordion
-    $('[data-target]').click(function(e){
+    $('a.notes').click(function(e){
         e.preventDefault();
-        var t = $($(this).data('target'));
+        var n = $(this).closest('.header').find('div.notes');
+        if (n.hasClass('open')) {
+            n.hide();
+            n.removeClass('open');
+            return;
+        }
+        n.slideDown('fast', function () {
+            n.addClass('open');
+        });
+    });
+    // toggle accordion
+    $('[data-target] > div.status').click(function(e){
+        e.preventDefault();
+        var t = $($(this).closest('[data-target]').data('target'));
         if (t.hasClass('closed')) {
             t.slideDown(function(){t.removeClass('closed')});
             return;
