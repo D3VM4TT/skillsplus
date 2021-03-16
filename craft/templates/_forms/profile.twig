@@ -14,18 +14,18 @@
             {% case 'fullName' %}
                 <div class="field--wrapper">
                     <label for="firstName" class="no-float">First Name</label>
-                    <input name="firstName" type="text" class="float-label" placeholder="Enter your first name"
+                    <input {{ row.required ? 'required' }} name="firstName" type="text" class="float-label" placeholder="Enter your first name"
                            value="{{ formUser.firstName }}">
                 </div>
                 <div class="field--wrapper">
                     <label for="lastName" class="no-float">Last Name</label>
-                    <input name="lastName" type="text" class="float-label" placeholder="Enter your last name"
+                    <input {{ row.required ? 'required' }} name="lastName" type="text" class="float-label" placeholder="Enter your last name"
                            value="{{ formUser.lastName }}">
                 </div>
             {% case 'email' %}
                 <div class="field--wrapper">
                     <label for="email" class="no-float">{{ row.label ?: 'Email'  }}</label>
-                    <input name="email" type="text" class="float-label" placeholder="Enter your email"
+                    <input {{ row.required ? 'required' }} name="email" type="text" class="float-label" placeholder="Enter your email"
                            value="{{ formUser.email }}">
                 </div>
             {% case 'userStartDate' %}
@@ -39,13 +39,13 @@
             {% case 'userAddress' %}
                 <div class="field--wrapper">
                     <label for="address" class="no-float">{{ row.label ?: 'Address' }}</label>
-                    <textarea id="address" name="fields[userAddress]" class="float-label"
+                    <textarea {{ row.required ? 'required' }} id="address" name="fields[userAddress]" class="float-label"
                               placeholder="Enter the address">{{ formUser.userAddress|default('') }}</textarea>
                 </div>
             {% case 'userTelephone' %}
                 <div class="field--wrapper">
                     <label for="telephone" class="no-float">{{ row.label ?: 'Telephone' }}</label>
-                    <input type="text" id="telephone" name="fields[userTelephone]" class="float-label"
+                    <input {{ row.required ? 'required' }} type="text" id="telephone" name="fields[userTelephone]" class="float-label"
                            placeholder="Enter the telephone" value="{{ formUser.userTelephone|default('') }}">
                 </div>
             {% case 'userRole' %}
@@ -81,7 +81,7 @@
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
             <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]"
                    value="{{ row.name }}"/>
-            <input type="text" id="custom-{{ row.name }}" class="float-label"
+            <input {{ row.required ? 'required' }} type="text" id="custom-{{ row.name }}" class="float-label"
                    name="fields[userCustomFields][{{ fieldId }}][fields][customValue]"
                    value="{{ userCustomBlock.customValue|default('') }}">
         </div>
