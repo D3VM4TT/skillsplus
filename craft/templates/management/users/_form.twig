@@ -1,6 +1,8 @@
 {% requirePermission 'editUsers' %}
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 
+{% set isTaskbooks = craft.lantra.setting('taskbooks') %}
+
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
@@ -261,7 +263,8 @@
             <button class="button primary-bg" type="submit">Save user</button>
         </div>
 
-        {% if account.id and craft.lantra.setting('taskbooks') %}
+        {% if craft.lantra.setting('taskbooks') %}
+        {% if account is defined and account.id  %}
             {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
             {% set packages = craft.entries.section('packages').authorId(account.id)  %}
             <h2>{{ taskbookLabel|pluralize }}</h2>
@@ -324,6 +327,12 @@
             <div class="container-btn">
                 <a class="button primary-bg" href="/management/taskbooks/new/?userId={{ account.id }}">Create {{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</a>
             </div>
+        {% else %}
+            <div class="container-btn" style="margin-top:20px;">
+                <input type="hidden" name="taskbook" value="0" />
+                <button class="button primary-bg taskbook-create" type="submit">Save user and create {{ craft.lantra.setting('taskbookLabel', 'taskbook')|lower }}</button>
+            </div>
+        {% endif %}
         {% endif %}
     </form>
 {% endblock %}

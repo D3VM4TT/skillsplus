@@ -712,4 +712,10 @@ $(document).ready(function(){
         alert('Read Only Manager');
         return false;
     });
+
+    $('button.taskbook-create').click(function(e){
+        e.preventDefault();
+        $('input[name="taskbook"]').val(1);
+        $(this).closest('form').submit();
+    });
 });
