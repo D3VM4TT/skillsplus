@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1611863214
+dateModified: 1615912102
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2965,11 +2965,12 @@ fields:
     name: Content
     searchable: true
     settings:
-      contentTable: '`craft_matrixcontent_pagecontent`'
-      maxBlocks: null
+      contentTable: '{{%matrixcontent_pagecontent}}'
+      maxBlocks: ''
+      minBlocks: ''
       propagationMethod: all
     translationKeyFormat: null
-    translationMethod: none
+    translationMethod: site
     type: craft\fields\Matrix
   bb511299-1a44-4db4-b8f0-32035ca24b2d:
     contentColumnType: integer(10)
@@ -4991,7 +4992,7 @@ matrixBlockTypes:
         settings:
           byteLimit: null
           charLimit: null
-          code: false
+          code: ''
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -5008,17 +5009,18 @@ matrixBlockTypes:
         searchable: true
         settings:
           availableTransforms: '*'
-          availableVolumes: '*'
-          cleanupHtml: ''
+          availableVolumes:
+            - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+          cleanupHtml: true
           columnType: text
           purifierConfig: ''
           purifyHtml: ''
           redactorConfig: Standard.json
-          removeEmptyTags: true
-          removeInlineStyles: true
-          removeNbsp: true
+          removeEmptyTags: '1'
+          removeInlineStyles: '1'
+          removeNbsp: '1'
           showUnpermittedFiles: false
-          showUnpermittedVolumes: true
+          showUnpermittedVolumes: false
         translationKeyFormat: null
         translationMethod: none
         type: craft\redactor\Field
