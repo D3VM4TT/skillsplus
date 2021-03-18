@@ -5,7 +5,6 @@ let idleMax = (60 * idleMinutes),
 
 function intervalTimer() {
     idleTime = idleTime + 1;
-    console.log(idleTime + '/' + idleMax);
     if (idleTime >= idleMax) {
         clearTimeout(idleTimer);
         $('body').removeClass('auto-logout');
