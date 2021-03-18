@@ -108,7 +108,10 @@
             <div id="server">server: {{ server }}</div>
         {% endif %}
 
-        <div class="loading"><div class="spinner"></div></div>
+        <div class="loading">
+            <div class="spinner"></div>
+            <div id="auto-logout">You will be logged out automatically after <span></span> seconds..!</div>
+        </div>
 
         <!-- Main Container
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -270,5 +273,9 @@
             });
         </script>
 
+        {% if currentUser %}
+            <script>let idleMinutes = {{ craft.lantra.setting('idleMinutes', 15) }};</script>
+            <script src="/assets/js/logout.js"></script>
+        {% endif %}
 </body>
 </html>

@@ -1943,6 +1943,18 @@ body.loading div.loading {
     display:block;
 }
 
+div.loading #auto-logout {
+    margin-top:10vh;
+    display: none;
+    width: 100%;
+    text-align: center;
+    color:#FFF;
+}
+
+body.auto-logout div.loading #auto-logout {
+    display:block;
+}
+
 #server {
     position: fixed;
     top:0;

@@ -41,6 +41,7 @@ class Settings extends Model
     public $themeNavigationPrivate              = ["1090","3618"];
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
+    public $idleMinutes                         = 15;
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
