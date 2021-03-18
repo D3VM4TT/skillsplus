@@ -33,5 +33,8 @@ $(document).ready(function(){
     $('*').bind('mousemove keydown scroll', function () {
         idleTime = 0;
         resetTimer();
+        if ($('body').hasClass('auto-logout')) {
+            $('body').removeClass('loading auto-logout');
+        }
     });
 });
