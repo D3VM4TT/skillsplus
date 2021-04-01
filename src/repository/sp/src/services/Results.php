@@ -2145,6 +2145,9 @@ class Results extends Component
      * @throws Exception
      */
     private function getSubordinateResults($subordinateIds, $resultFilter = []) {
+        if (!$subordinateIds || !count($subordinateIds)) {
+            return [];
+        }
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->limit = null;
