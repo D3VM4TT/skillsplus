@@ -220,6 +220,44 @@ class Settings extends Model
     ];
     public $standardReports                     = false;
 
+    public $reports                             = [
+        'users'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'results'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'expired'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'required'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'cpd'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'payments'  => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'sm'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+    ];
+
     public $payPalBusiness                      = '';
     public $payPalLantraCert                    = '';
     public $payPalLantraKey                     = '';

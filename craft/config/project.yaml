@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1615912102
+dateModified: 1617715507
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -396,6 +396,7 @@ fields:
     name: 'Report Type'
     searchable: true
     settings:
+      optgroups: true
       options:
         -
           __assoc__:
@@ -438,6 +439,39 @@ fields:
             -
               - value
               - expired
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - CPD
+            -
+              - value
+              - cpd
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - Payments
+            -
+              - value
+              - payments
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Scheme Manager'
+            -
+              - value
+              - sm
             -
               - default
               - ''
