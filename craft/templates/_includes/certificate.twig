@@ -1,6 +1,87 @@
-<div id="main">
-    <h1 style="text-align: center">{{ resultUserFullName}}</h1>
-    <h2 style="text-align: center">has completed</h2>
-    <h2 style="text-align: center">{{ moduleTitle }}</h2>
-    <h2 style="text-align: center">on {{ resultDate }}</h2>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        @font-face {
+            src: url("/assets/fonts/OpenSans-Regular.ttf") format("truetype");
+            font-family: "Open Sans";
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            src: url("/assets/fonts/OpenSans-Bold.ttf") format("truetype");
+            font-family: "Open Sans";
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @page {
+            margin: 0;
+        }
+
+        html {
+            margin: 0 30px 0 30px;
+        }
+
+        html, body {
+            color: #000;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        header, footer, section#main {
+            text-align: center;
+        }
+
+        header {
+            border-bottom:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
+            padding-top: 5%;
+            padding-bottom:5px;
+        }
+
+        header img {
+            width: 25%;
+        }
+
+        header h2 {
+            color: {{ craft.lantra.setting('themeColorPrimary') }}
+        }
+
+        footer {
+            border-top:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
+            position: absolute;
+            width: 100%;
+            bottom: 20px;
+        }
+
+        footer p {
+            font-size: small;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    {% if certLogo %}
+        <img src="{{ certLogo.url|trim('/', 'left') }}">
+    {% endif %}
+    <h2>CERTIFICATE</h2>
+    {% if certHeader %}
+        <h3>{{ certHeader }}</h3>
+    {% endif %}
+</header>
+<section id="main">
+    <h1>{{ certFullName }}</h1>
+    <h2>{{ certTitle }}</h2>
+    <h2>{{ certDate }}</h2>
+</section>
+<footer>
+    {% if certFooter %}
+        <h3>{{ certFooter }}</h3>
+    {% endif %}
+</footer>
+</body>
+</html>

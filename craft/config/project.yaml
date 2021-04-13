@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1617715507
+dateModified: 1618325918
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -5091,6 +5091,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 0.0.1
+  super-pdf:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.4
   super-table:
     enabled: '1'
     licenseKey: null

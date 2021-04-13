@@ -28,6 +28,10 @@ class Settings extends Model
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
 
+    public $certificateLogo                     = null;
+    public $certificateHeader                   = '';
+    public $certificateFooter                   = '';
+
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;
     public $themeLoginMessage                   = '';
@@ -267,7 +271,8 @@ class Settings extends Model
      * modified values
      */
     private $assetFields = [
-        'schemeLogo'
+        'schemeLogo',
+        'certificateLogo'
     ];
 
     private $entryFields = [

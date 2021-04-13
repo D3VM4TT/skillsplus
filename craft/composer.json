@@ -11,7 +11,8 @@
     "verbb/super-table": "2.4.9",
     "vlucas/phpdotenv": "^3.0",
     "nthmedia/entry-gps-coordinates": "^1.3.0",
-    "putyourlightson/craft-dashboard-begone": "^1.0.1"
+    "putyourlightson/craft-dashboard-begone": "^1.0.1",
+    "amici/craft-super-pdf": "^1.0"
   },
   "autoload": {
     "psr-4": {

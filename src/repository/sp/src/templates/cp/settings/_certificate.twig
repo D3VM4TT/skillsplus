@@ -1,0 +1,30 @@
+{% import "_includes/forms" as forms %}
+{{ forms.elementSelectField ({
+    label:			    "Certificate Logo",
+    id:				    "certificateLogo",
+    name:			    "certificateLogo",
+    elementType:        config.assetsElementType,
+    elements:           settings.certificateLogo ? settings.certificateLogo,
+    sources:            config.themeFolder,
+    limit:              1,
+    criteria:           {"kind":[],"localeEnabled":'null'},
+    instructions:       "WARNING: JPG format only"
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Certificate Header",
+    id:				"certificateHeader",
+    name:			"certificateHeader",
+    value:		    settings.certificateHeader,
+    rows:           2,
+    cols:           50
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Certificate Footer",
+    id:				"certificateFooter",
+    name:			"certificateFooter",
+    value:		    settings.certificateFooter,
+    rows:           2,
+    cols:           50
+}) }}

@@ -1,15 +1,24 @@
-{% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
-{% if not moduleResultEntry %}{% exit 404 %}{% endif %}
+{% set resultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
+{% if not resultEntry %}{% exit 404 %}{% endif %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-
-{% set vars = {
-    moduleTitle: moduleResultEntry.resultModule.one.title,
-    resultDate: moduleResultEntry.postDate|date(dateFormat),
-    resultUserFullName: moduleResultEntry.author.fullName,
-} %}
 {% set settings = {
-    orientation:'portrait',
-    filename:userId ~ '-' ~ resultId,
+    type: 'render',
+    compress: true,
+    filename: userId ~ '-' ~ resultId,
+    isHtml5ParserEnabled: false,
+    isRemoteEnabled: true,
+    fontDir: "/tmp",
+    tempDir: "/tmp"
 } %}
-{{ craft.printmaker.pdfFromTemplate('_includes/certificate', vars, settings).download }}
+{% set vars = {
+    certLogo: craft.lantra.setting('certificateLogo', craft.lantra.setting('schemeLogo')),
+    certHeader: craft.lantra.setting('certificateHeader'),
+    certFooter: craft.lantra.setting('certificateFooter'),
+    certTitle: resultEntry.resultModule.one.title,
+    certDate: resultEntry.postDate|date(dateFormat),
+    certFullName: resultEntry.author.fullName,
+    nowDate: now|date(dateFormat)
+} %}
+{{ craft.superpdf.template('_includes/certificate', settings, vars) }}
+{# {% include '_includes/certificate' with vars %} #}
