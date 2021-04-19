@@ -30,6 +30,9 @@ class Settings extends Model
 
     public $certificateLogo                     = null;
     public $certificateHeader                   = '';
+    public $certificateSubheader                = '';
+    public $certificateTextOne                  = '';
+    public $certificateTextTwo                  = '';
     public $certificateFooter                   = '';
 
     public $themeDateFormat                     = 'd-m-Y';

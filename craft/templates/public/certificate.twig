@@ -1,7 +1,19 @@
-{% set resultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
-{% if not resultEntry %}{% exit 404 %}{% endif %}
+{% set resultEntry = craft.entries.section('results').authorId(userId).id(resultId).one() %}
+
+{% if not resultEntry or (resultEntry.type == 'moduleResult' and resultEntry.resultStatus != 'complete' or (resultEntry.type == 'unitResult' and resultEntry.resultStatus != 'endorsed')) %}
+    {% exit 404 %}
+{% endif %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% if resultEntry.type == 'moduleResult' %}
+    {% set certTitle = resultEntry.resultModule.one.title %}
+    {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
+{% else %}
+    {% set certTitle = resultEntry.resultUnit.one.title %}
+    {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
+{% endif %}
+
 {% set settings = {
     type: 'render',
     compress: true,
@@ -9,14 +21,18 @@
     isHtml5ParserEnabled: false,
     isRemoteEnabled: true,
     fontDir: "/tmp",
-    tempDir: "/tmp"
+    tempDir: "/tmp",
+    defaultPaperOrientation: "landscape"
 } %}
 {% set vars = {
     certLogo: craft.lantra.setting('certificateLogo', craft.lantra.setting('schemeLogo')),
     certHeader: craft.lantra.setting('certificateHeader'),
+    certSubheader: craft.lantra.setting('certificateSubheader'),
+    certTextOne: craft.lantra.setting('certificateTextOne'),
+    certTextTwo: craft.lantra.setting('certificateTextTwo'),
     certFooter: craft.lantra.setting('certificateFooter'),
-    certTitle: resultEntry.resultModule.one.title,
-    certDate: resultEntry.postDate|date(dateFormat),
+    certTitle: certTitle,
+    certDate: certDate,
     certFullName: resultEntry.author.fullName,
     nowDate: now|date(dateFormat)
 } %}

@@ -23,7 +23,7 @@
         }
 
         html {
-            margin: 0 30px 0 30px;
+            margin: 0;
         }
 
         html, body {
@@ -31,29 +31,35 @@
             font-family: "Open Sans", sans-serif;
         }
 
+        body {
+            margin:30px;
+            padding:30px;
+            border:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
+        }
         header, footer, section#main {
             text-align: center;
         }
 
         header {
-            border-bottom:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
             padding-top: 5%;
-            padding-bottom:5px;
+            padding-bottom:0;
         }
 
         header img {
-            width: 25%;
+            max-height: 150px;
+            margin:0;
         }
 
         header h2 {
+            margin:0;
+            font-size: 50px;
             color: {{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         footer {
-            border-top:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
             position: absolute;
             width: 100%;
-            bottom: 20px;
+            bottom: 0;
         }
 
         footer p {
@@ -68,14 +74,16 @@
     {% if certLogo %}
         <img src="{{ certLogo.url|trim('/', 'left') }}">
     {% endif %}
-    <h2>CERTIFICATE</h2>
-    {% if certHeader %}
-        <h3>{{ certHeader }}</h3>
+    <h2>{{ certHeader }}</h2>
+    {% if certSubheader %}
+        <h3>{{ certSubheader }}</h3>
     {% endif %}
 </header>
 <section id="main">
     <h1>{{ certFullName }}</h1>
+    <p>{{ certTextOne }}</p>
     <h2>{{ certTitle }}</h2>
+    <p>{{ certTextTwo }}</p>
     <h2>{{ certDate }}</h2>
 </section>
 <footer>

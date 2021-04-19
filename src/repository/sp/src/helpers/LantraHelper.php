@@ -27,6 +27,24 @@ use lantra\sp\Plugin as Lantra;
 class LantraHelper
 {
     /**
+     * @param $resultEntry
+     * @return null
+     */
+    public static function certificateUrl($resultEntry = null)
+    {
+        if (! $resultEntry) {
+            return '';
+        }
+        if ($resultEntry->type == 'unitResult' && (!$resultEntry->resultUnit || !$resultEntry->resultUnit->one()->certificate || $resultEntry->resultStatus != 'endorsed')) {
+            return null;
+        }
+        if ($resultEntry->type == 'moduleResult' && (!$resultEntry->resultModule || !$resultEntry->resultModule->one()->certificate || $resultEntry->resultStatus != 'complete')) {
+            return null;
+        }
+        return '/public/certificate/' . $resultEntry->author->id . '/' . $resultEntry->id;
+    }
+
+    /**
      * @param $handle
      * @return null
      */

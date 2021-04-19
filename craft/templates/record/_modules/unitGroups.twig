@@ -95,6 +95,7 @@
                                 {% endif %}
                                 {% include 'record/_modules/row' with {
                                     resultEntry: unitResultEntry,
+                                    unit: unit,
                                     unitPoints: unitPoints,
                                     rowClass: rowClass,
                                     editLink: editLink,
@@ -106,6 +107,7 @@
                         {% if addResult %}
                             {% set rowTitle = hasResult ? '' : rowName %}
                             {% include 'record/_modules/row' with {
+                                unit: unit,
                                 unitPoints: unitPoints,
                                 rowClass: rowClass,
                                 newLink: newUrl
@@ -120,6 +122,7 @@
                                 {% set editUrl = baseUrl ~ unitResultEntry.id ~ '/' ~ params %}
                             {% endif %}
                             {% include 'record/_modules/row' with {
+                                unit: unit,
                                 resultEntry: unitResultEntry,
                                 unitPoints: unitPoints,
                                 rowClass: rowClass,

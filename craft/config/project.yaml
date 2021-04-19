@@ -94,7 +94,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1618325918
+dateModified: 1618834834
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -492,6 +492,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date
+  1d522b30-9aa0-4fc8-afd1-84e738233479:
+    contentColumnType: boolean
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+    handle: certificate
+    instructions: ''
+    name: Certificate
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   1e03a0c1-334b-4517-9560-d95c13db8a99:
     contentColumnType: integer(10)
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -5114,6 +5126,9 @@ sections:
             tabs:
               -
                 fields:
+                  1d522b30-9aa0-4fc8-afd1-84e738233479:
+                    required: false
+                    sortOrder: 10
                   1e5a2205-0d2d-4f4c-b087-a5f706ac0449:
                     required: false
                     sortOrder: 8

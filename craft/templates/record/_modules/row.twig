@@ -65,5 +65,13 @@
                 <img src="/assets/img/add.svg" title="Add" />
             </a>
         {% endif %}
+        {% if resultEntry %}
+            {% set certificateUrl = craft.lantra.certificateUrl(resultEntry)  %}
+            {% if certificateUrl %}
+                <a target="_blank" class="icon" href="{{ certificateUrl }}" data-tooltip title="Download certificate">
+                    <img src="/assets/img/certificate.svg" title="Download certificate" />
+                </a>
+            {% endif %}
+        {% endif %}
     </td>
 </tr>

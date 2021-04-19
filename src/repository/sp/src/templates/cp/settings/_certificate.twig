@@ -11,13 +11,38 @@
     instructions:       "WARNING: JPG format only"
 }) }}
 
-{{ forms.textareaField ({
+{{ forms.textField ({
+    instructions:   "i.e. CERTIFICATE",
     label:			"Certificate Header",
     id:				"certificateHeader",
     name:			"certificateHeader",
     value:		    settings.certificateHeader,
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "after header i.e. We are proud to certify that",
+    label:			"Certificate Subheader",
+    id:				"certificateSubheader",
+    name:			"certificateSubheader",
+    value:		    settings.certificateSubheader,
     rows:           2,
     cols:           50
+}) }}
+
+{{ forms.textField ({
+    instructions:   "after name i.e. has completed",
+    label:			"Certificate Text One",
+    id:				"certificateTextOne",
+    name:			"certificateTextOne",
+    value:		    settings.certificateTextOne,
+}) }}
+
+{{ forms.textField ({
+    instructions:   "before date i.e. on",
+    label:			"Certificate Text Two",
+    id:				"certificateTextTwo",
+    name:			"certificateTextTwo",
+    value:		    settings.certificateTextTwo,
 }) }}
 
 {{ forms.textareaField ({
