@@ -26,6 +26,23 @@
 <script>
     $(function () {
 
+        // copy hover effect to parent li
+        $("#jstree").on('mouseenter', '.jstree-anchor', function() {
+            if ($(this).attr('id') != 'j1_1_anchor') {
+                $(this).closest('li').addClass('row-hover');
+            }
+        });
+        $("#jstree").on('mouseleave', '.jstree-anchor', function() {
+            if ($(this).attr('id') != 'j1_1_anchor') {
+                $(this).closest('li').removeClass('row-hover');
+            }
+        });
+        $("#jstree").on("select_node.jsTree", function (evt, data) {
+            if (data.node.a_attr.href != "#" & data.event.bubbles) {
+                window.open(data.node.a_attr.href, data.node.a_attr.target);
+            }
+        });
+        // load hierarchy
         $('body').addClass('loading');
         $('#jstree').jstree({
             'plugins' : ['actions', 'json_data'],
@@ -52,6 +69,7 @@
             {%  endif %}
         });
 
+        /*
         $('#jstree').jstree(true).add_action("all", {
             "id"        : "action_dashboard",
             "class"     : "button-hierarchy button-dashboard pull-right",
@@ -66,6 +84,7 @@
                 location.href="/cpd/" + elementId;
             }
         });
+        */
 
         {% if not currentUser.managerReadOnly %}
 
@@ -73,7 +92,7 @@
             "id"        : "action_edit",
             "class"     : "button-hierarchy button-edit pull-right",
             "title"     : "Edit",
-            "text"      : "Edit",
+            "text"      : "",
             "after"     : true,
             "selector"  : "a",
             "event"     : "click",
@@ -97,7 +116,7 @@
             "id"        : "action_company",
             "class"     : "button-hierarchy button-company pull-right",
             "title"     : "Add Company",
-            "text"      : "Add Company",
+            "text"      : "",
             "after"     : true,
             "selector"  : "a",
             "event"     : "click",
@@ -112,7 +131,7 @@
             "id"        : "action_team",
             "class"     : "button-hierarchy button-team pull-right",
             "title"     : "Add Team",
-            "text"      : "Add Team",
+            "text"      : "",
             "after"     : true,
             "selector"  : "a",
             "event"     : "click",
@@ -127,7 +146,7 @@
             "id"        : "action_user",
             "class"     : "button-hierarchy button-user pull-right",
             "title"     : "Add User",
-            "text"      : "Add User",
+            "text"      : "",
             "after"     : true,
             "selector"  : "a",
             "event"     : "click",
@@ -175,10 +194,16 @@
     }{
         display:none !important;
     }
-    .jstree-default .jstree-clicked {
-        background: #c3e2ff;
-        border-radius: 2px;
-        box-shadow: none;
+    .jstree-default .jstree-hovered {
+        background: none!important;
+    }
+    li.type-user.row-hover,
+    li.type-company.row-hover {
+        background-color: #f7f7fa!important;
+    }
+    li.row-hover ul.jstree-children,
+    .jstree .jstree-open > .jstree-children {
+        background-color: #FFF!important;
     }
     </style>
 {% endblock %}
