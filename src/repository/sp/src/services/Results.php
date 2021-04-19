@@ -1381,6 +1381,34 @@ class Results extends Component
 
     /**
      * @param $packageId
+     * @throws \Throwable
+     */
+    public function deletePackageResults($packageId)
+    {
+        if (null == $package = Entry::findOne($packageId)) {
+            return;
+        }
+        $user = $package->author;
+        $modules = Lantra::$app->packages->getPackageModuleEntries($package);
+        $results = [];
+        foreach ($modules as $moduleEntry) {
+            $results = $this->getUserModuleResults($moduleEntry->id);
+            $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+            $results = array_merge($results, $unitResults);
+            $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+            $results = array_merge($results, $userResults);
+        }
+
+        $ids = [];
+
+        foreach ($results as $result) {
+            $ids[] = $result->id;
+            Craft::$app->elements->deleteElementById($result->id);
+        }
+    }
+
+    /**
+     * @param $packageId
      * @param null $userId
      * @param string $results
      * @return array|string

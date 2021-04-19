@@ -267,7 +267,7 @@
         {% if account is defined and account.id  %}
             {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
             {% set packages = craft.entries.section('packages').authorId(account.id)  %}
-            <h2>{{ taskbookLabel|pluralize }}</h2>
+            <h2 style="margin-top:20px;">{{ taskbookLabel|pluralize }}</h2>
             {% if packages|length %}
             <table class="data taskbooks">
                 <thead>
@@ -280,12 +280,13 @@
                     <th>Optional Module Groups</th>
                     <th>Cost</th>
                     <th>Status</th>
+                    <th></th>
                 <tr>
                 </thead>
                 <tbody>
                 {% for package in packages %}
                     {% set packageTitle = package.moduleGroup.title %}
-                    <tr>
+                    <tr class="item">
                         <td>{{ package.dateCreated|date(dateFormat) }}</td>
                         <td>
                             {% if package.packagePaid %}
@@ -318,6 +319,14 @@
                             {% endif %}
                         </td>
                         <td>{{ package.packageStatus }}</td>
+                        <td>
+                            <a class="icon action delete" href="#">
+                               data-action="packages/delete-results"
+                               data-id="{{ package.id }}"
+                            >
+                                <img src="/assets/img/delete.svg" alt="Delete this {{ taskbookLabel }} and all results">
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

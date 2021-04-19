@@ -365,6 +365,13 @@ $(document).ready(function(){
             var data = {id: $(this).data('id'), userId: $(this).data('userid')};
             reload = true;
         }
+        else if (action == 'packages/delete-results') {
+            if ( ! confirm('Are you sure you want to delete all results?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+            deleteRow = true;
+        }
         else {
             alert('Invalid action ' + action);
         }
