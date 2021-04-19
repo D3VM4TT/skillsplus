@@ -46,7 +46,7 @@ class LantraVariable
             if ($limit && count($return) == $limit) {
                 return $return;
             }
-            if ($row[$type]) {
+            if (isset($row[$type]) && $row[$type]) {
                 $return[] = $row;
             }
         }

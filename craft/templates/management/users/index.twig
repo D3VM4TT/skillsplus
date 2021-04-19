@@ -56,15 +56,24 @@
             <thead>
             <tr>
                 <th></th>
-                <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
-                <th><a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a></th>
-                <th class="title"><a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a></th>
-                <th><a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a></th>
-                <th>Location</th>
-                {% if craft.lantra.setting('schemeTeams', false) %}
-                    <th>Team</th>
-                {% endif %}
-                <th>Last Login</th>
+                {% for row in craft.lantra.userProfileFields('tableColumn') %}
+                <th>
+                {% switch row.field %}
+                {% case 'id' %}
+                    <a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a>
+                {% case 'legacyId' %}
+                    <a href="?sort=legacyId&order={{ order == 'desc' ? 'asc' : 'desc' }}">Legacy ID</a>
+                {% case 'fullName' %}
+                    <a href="?sort=lastName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a>
+                {% case 'userCompany' %}
+                    <a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a>
+                {% case 'userLocation' %}
+                    <a href="?sort=userLocation&order={{ order == 'desc' ? 'asc' : 'desc' }}">Location</a>
+                {% case 'lastLogin' %}
+                    Last Login
+                {% endswitch %}
+                </th>
+                {% endfor %}
                 <th>&nbsp;</th>
             </tr>
             </thead>
@@ -79,16 +88,24 @@
                 {% endif %}
                 <tr class="type-{{ user.userType }}">
                     <td>{% if user.userType == 'manager' %}<a class="icon" href="#"><img src="/assets/img/manager.svg"></a>{% endif %}</td>
-                    <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
-                    <td><p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}</td>
-                    <td><p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}</td>
-                    <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
-                    <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
-                    {% if craft.lantra.setting('schemeTeams', false) %}
-                        {% set team = user.userTeam.one() %}
-                        <td>{{ team.title|default('') }}</td>
-                    {%  endif %}
-                    <td><p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}</td>
+                    {% for row in craft.lantra.userProfileFields('tableColumn') %}
+                        <td>
+                            {% switch row.field %}
+                            {% case 'id' %}
+                                <p class="td-title-responsive">ID: </p>{{ user.id }}
+                            {% case 'legacyId' %}
+                                <p class="td-title-responsive">Legacy ID: </p>{{ user.legacyId == 0 ? '~' : user.legacyId }}
+                            {% case 'fullName' %}
+                                <p class="td-title-responsive">Name: </p><a title="Dashboard" href="/cpd/{{ user.id }}">{{ user.fullname }}</a> {% if user.status == 'suspended' %}(suspended){% endif %}
+                            {% case 'userCompany' %}
+                                <p class="td-title-responsive">Company: </p>{{ company ? company.title }}
+                            {% case 'userLocation' %}
+                                <p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}
+                            {% case 'lastLogin' %}
+                                <p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}
+                            {% endswitch %}
+                        </td>
+                    {% endfor %}
                     <td class="icons" style="width:140px;text-align:right">
                         {% if not user.userDummyEmail %}
                             <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
