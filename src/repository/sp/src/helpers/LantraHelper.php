@@ -30,18 +30,21 @@ class LantraHelper
      * @param $resultEntry
      * @return null
      */
-    public static function certificateUrl($resultEntry = null)
+    public static function certificateUrl($entry = null)
     {
-        if (! $resultEntry) {
+        if (! $entry) {
             return '';
         }
-        if ($resultEntry->type == 'unitResult' && (!$resultEntry->resultUnit || !$resultEntry->resultUnit->one()->certificate || $resultEntry->resultStatus != 'endorsed')) {
+        if ($entry->section->handle == 'packages' && (!$entry->moduleGroup || !$entry->moduleGroup->certificate || $entry->packageStatus != 'complete')) {
             return null;
         }
-        if ($resultEntry->type == 'moduleResult' && (!$resultEntry->resultModule || !$resultEntry->resultModule->one()->certificate || $resultEntry->resultStatus != 'complete')) {
+        elseif ($entry->type == 'unitResult' && (!$entry->resultUnit || !$entry->resultUnit->one()->certificate || $entry->resultStatus != 'endorsed')) {
             return null;
         }
-        return '/public/certificate/' . $resultEntry->author->id . '/' . $resultEntry->id;
+        elseif ($entry->type == 'moduleResult' && (!$entry->resultModule || !$entry->resultModule->one()->certificate || $entry->resultStatus != 'complete')) {
+            return null;
+        }
+        return '/public/certificate/' . $entry->section->handle . '/' . $entry->author->id . '/' . $entry->id;
     }
 
     /**

@@ -5,6 +5,9 @@ categoryGroups:
         tabs:
           -
             fields:
+              1d522b30-9aa0-4fc8-afd1-84e738233479:
+                required: false
+                sortOrder: 7
               48909e73-b939-470f-b472-53ee709db6e4:
                 required: false
                 sortOrder: 4
@@ -94,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1618834834
+dateModified: 1618838162
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages

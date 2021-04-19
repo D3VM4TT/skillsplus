@@ -16,6 +16,10 @@
                     Status: {{ package.packageStatus  }}
                 {% endif %}
             </p>
+            {% set certificateUrl = craft.lantra.certificateUrl(package) %}
+            {% if certificateUrl %}
+                <p><a href="{{ certificateUrl }}">Download Certificate</a></p>
+            {% endif %}
         </div>
         <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
             {% set totalUnits = craft.lantra.totalUnits(packageItem) %}
