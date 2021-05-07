@@ -55,7 +55,7 @@
         <table class="data">
             <thead>
             <tr>
-                <th></th>
+                <th style="width:30px;"></th>
                 {% for row in craft.lantra.userProfileFields('tableColumn') %}
                 <th>
                 {% switch row.field %}
@@ -69,6 +69,8 @@
                     <a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Name</a>
                 {% case 'userLocation' %}
                     <a href="?sort=userLocation&order={{ order == 'desc' ? 'asc' : 'desc' }}">Location</a>
+                {% case 'role' %}
+                    <a href="?sort=role&order={{ order == 'desc' ? 'asc' : 'desc' }}">Role</a>
                 {% case 'lastLogin' %}
                     Last Login
                 {% endswitch %}
@@ -101,6 +103,13 @@
                                 <p class="td-title-responsive">Company: </p>{{ company ? company.title }}
                             {% case 'userLocation' %}
                                 <p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}
+                            {% case 'role' %}
+                                <p class="td-title-responsive">Role: </p>
+                                {% if user.userRole.count %}
+                                    {% for role in user.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                                {% else %}
+                                    ~
+                                {% endif %}
                             {% case 'lastLogin' %}
                                 <p class="td-title-responsive">Last Login:</p>{{ user.lastLoginDate ? user.lastLoginDate|date('d/m/y H:i') : 'Never' }}
                             {% endswitch %}
