@@ -16,7 +16,7 @@
     {% set certTitle = resultEntry.resultModule.one.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
 {% else %}
-    {% set certTitle = resultEntry.resultUnit.one.title %}
+    {% set certTitle = resultEntry.resultUnit.count ? resultEntry.resultUnit.one.title : resultEntry.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
 {% endif %}
 
@@ -28,7 +28,7 @@
     isRemoteEnabled: true,
     fontDir: "/tmp",
     tempDir: "/tmp",
-    defaultPaperOrientation: "landscape"
+    defaultPaperOrientation: "portrait"
 } %}
 {% set vars = {
     certLogo: craft.lantra.setting('certificateLogo', craft.lantra.setting('schemeLogo')),
