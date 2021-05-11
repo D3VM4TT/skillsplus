@@ -158,6 +158,13 @@
             }
         });
 
+        $('#jstree').on('activate_node.jstree', function (e, data) {
+            if (data == undefined || data.node == undefined || data.node.id == undefined)
+                return;
+            if (data.node.original.nodeType == 'user')
+                location.href="/cpd/" + data.node.original.elementId;
+        });
+
         {%  endif %}
     });
 
