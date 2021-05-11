@@ -9,12 +9,18 @@
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
+{% set cpdResultEntry = false %}
+
 {% if resultEntry.section.handle == 'packages' %}
     {% set certTitle = resultEntry.moduleGroup.title %}
     {% set certDate = resultEntry.getCompleteDate()|date(dateFormat) %}
 {% elseif resultEntry.type == 'moduleResult' %}
-    {% set certTitle = resultEntry.resultModule.one.title %}
+    {% set moduleEntry = resultEntry.resultModule.one %}
+    {% set certTitle = moduleEntry.one.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
+    {% if moduleEntry.type == 'cpd' %}
+        {% set cpdResultEntry = resultEntry %}
+    {% endif %}
 {% else %}
     {% set certTitle = resultEntry.resultUnit.count ? resultEntry.resultUnit.one.title : resultEntry.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
@@ -40,6 +46,7 @@
     certTitle: certTitle,
     certDate: certDate,
     certFullName: resultEntry.author.fullName,
+    cpdResultEntry: cpdResultEntry,
     nowDate: now|date(dateFormat)
 } %}
 {{ craft.superpdf.template('_includes/certificate', settings, vars) }}

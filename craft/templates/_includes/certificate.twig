@@ -87,7 +87,7 @@
 </head>
 <body>
 {% if certLogo %}
-    <div id="watermark" style="background-image: url('{{ certLogo.url }}');"></div>
+    <!-- <div id="watermark" style="background-image: url('{{ certLogo.url }}');"></div> -->
 {% endif %}
 <header>
     {% if certLogo %}
@@ -102,6 +102,9 @@
     <h1>{{ certFullName }}</h1>
     <p>{{ certTextOne }}</p>
     <h2>{{ certTitle }}</h2>
+    {% if cpdDetails %}
+        {% include '_includes/certificateCpdDetails' with {moduleResultEntry:cpdResultEntry} %}
+    {% endif %}
     <p>{{ certTextTwo }}</p>
     <h2>{{ certDate }}</h2>
 </section>
