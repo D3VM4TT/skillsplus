@@ -19,7 +19,7 @@
     {% set certTitle = moduleEntry.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
     {% if moduleEntry.type == 'cpd' %}
-        {% set certTitle = certTitle ~ '<br />' ~ resultEntry.cycleName %}
+        {% set certTitle = certTitle ~ "<br />" ~ resultEntry.cycleName %}
         {% set cpdResultEntry = resultEntry %}
     {% endif %}
 {% else %}
@@ -44,9 +44,10 @@
     certTextOne: craft.lantra.setting('certificateTextOne'),
     certTextTwo: craft.lantra.setting('certificateTextTwo'),
     certFooter: craft.lantra.setting('certificateFooter'),
-    certTitle: certTitle,
+    certTitle: certTitle|raw,
     certDate: certDate,
     certFullName: resultEntry.author.fullName,
+    cpdResultEntry: cpdResultEntry,
     cpdResultEntry: cpdResultEntry,
     nowDate: now|date(dateFormat)
 } %}
