@@ -16,7 +16,7 @@
     {% set certDate = resultEntry.getCompleteDate()|date(dateFormat) %}
 {% elseif resultEntry.type == 'moduleResult' %}
     {% set moduleEntry = resultEntry.resultModule.one %}
-    {% set certTitle = moduleEntry.one.title %}
+    {% set certTitle = moduleEntry.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
     {% if moduleEntry.type == 'cpd' %}
         {% set cpdResultEntry = resultEntry %}

@@ -820,7 +820,12 @@ class Results extends Component
         }
         ## check the moduleResult
         $user = $resultEntry->author;
-        $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
+        if ($resultEntry->resultModuleResult) {
+            $moduleResultEntry = $resultEntry->resultModuleResult->one();
+        }
+        else {
+            $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
+        }
         $this->checkModuleResult($resultModuleEntry, $user->id, $moduleResultEntry);
     }
 
@@ -1079,7 +1084,7 @@ class Results extends Component
     function isCompleteComponentResults($moduleResult)
     {
         foreach($moduleResult->resultComponentResults as $componentResult) {
-            if (!isset($componentResult['complete']) || $componentResult['complete']) {
+            if (!isset($componentResult['complete']) || !$componentResult['complete']) {
                 return false;
             }
         }

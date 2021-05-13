@@ -11,6 +11,10 @@
     {% if moduleResultEntry.resultStatus == 'complete' %}
         <p style="color:green;">
         <span class="status-complete"></span>Congratulations, this module is complete!</p>
+        {% set certificateUrl = craft.lantra.certificateUrl(moduleResultEntry) %}
+        {% if certificateUrl %}
+            <p><a target="_blank" href="{{ certificateUrl }}">Download Certificate</a></p>
+        {% endif %}
     {% else %}
         <p>
             {% set unitResultCount = craft.lantra.getModuleResultUnitResults(moduleResultEntry.id, null, true) %}

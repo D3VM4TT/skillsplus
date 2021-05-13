@@ -5,17 +5,17 @@
     {% if remaining.hoursScore  %}{{ remaining.hoursScore }} Hours{% endif %}
 </p>
 {% if moduleResultEntry.resultComponentResults|length %}
-    <p>
-        {% for componentRow in moduleResultEntry.resultComponentResults %}
-            {% if componentRow.targetHours or componentRow.targetPoints %}
-                {{ componentRow.title }}:
-                {% if componentRow.targetHours %}
-                    {{ componentRow.endorsedHours }}/{{ componentRow.targetHours }} Hours
-                {% endif %}
-                {% if componentRow.targetPoints %}
-                    {{ componentRow.endorsedPoints }}/{{ componentRow.targetPoints }} Points
-                {% endif %}
+    {% for componentRow in moduleResultEntry.resultComponentResults %}
+        <p>
+        {% if componentRow.targetHours or componentRow.targetPoints %}
+            {{ componentRow.title }}:
+            {% if componentRow.targetHours %}
+                {{ componentRow.endorsedHours }}/{{ componentRow.targetHours }} Hours
             {% endif %}
-        {% endfor %}
-    </p>
+            {% if componentRow.targetPoints %}
+                {{ componentRow.endorsedPoints }}/{{ componentRow.targetPoints }} Points
+            {% endif %}
+        {% endif %}
+        </p>
+    {% endfor %}
 {% endif %}

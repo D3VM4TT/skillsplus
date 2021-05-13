@@ -41,7 +41,10 @@ class LantraHelper
         elseif ($entry->type == 'unitResult' && (!$entry->resultUnit || !$entry->resultUnit->one()->certificate || $entry->resultStatus != 'endorsed')) {
             return null;
         }
-        elseif ($entry->type == 'moduleResult' && (!$entry->resultModule || !$entry->resultModule->one()->certificate || $entry->resultStatus != 'complete')) {
+        elseif ($entry->type == 'moduleResult' && (!$entry->resultModule || !$entry->resultModule->one()->moduleGroup->one()->certificate || $entry->resultStatus != 'complete')) {
+            return null;
+        }
+        elseif ($entry->type == 'userResult') {
             return null;
         }
         return '/public/certificate/' . $entry->section->handle . '/' . $entry->author->id . '/' . $entry->id;
