@@ -19,6 +19,7 @@
     {% set certTitle = moduleEntry.title %}
     {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
     {% if moduleEntry.type == 'cpd' %}
+        {% set certTitle = certTitle ~ '<br />' ~ resultEntry.cycleName %}
         {% set cpdResultEntry = resultEntry %}
     {% endif %}
 {% else %}
