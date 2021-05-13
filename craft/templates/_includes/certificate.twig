@@ -101,7 +101,7 @@
 <section id="main">
     <h1>{{ certFullName }}</h1>
     <p>{{ certTextOne }}</p>
-    <h2>{{ certTitle }}</h2>
+    <h2>{{ certTitle|raw }}</h2>
     {% if cpdResultEntry %}
         {% include '_includes/certificateCpdDetails' with {moduleResultEntry:cpdResultEntry} %}
     {% endif %}
