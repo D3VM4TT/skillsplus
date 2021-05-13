@@ -1014,7 +1014,6 @@ article.cpd div.module-wrapper div.module {
 }
 
 article.cpd div.header {
-    cursor:pointer;
     padding: 10px 30px;
     transition: background-color 200ms ease-out;
 }
@@ -1036,6 +1035,13 @@ article.cpd div.header h5 {
 
 article.cpd div.unit-group div.status {
     padding-top: 0px;
+    cursor:pointer;
+}
+
+article.cpd div.unit-group div.notes {
+    font-style: italic;
+    color:#FFF;
+    font-size: 12px;
 }
 
 article.cpd div.status {
@@ -1854,7 +1860,7 @@ table.data tbody tr td p.td-title-responsive, table.data thead th p.td-title-res
     background-position: -132px -5px !important;
 }
 .jstree-default .jstree-hovered {
-    background: #f7f7fa !important;
+    background: none !important;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0px !important;
@@ -1862,7 +1868,7 @@ table.data tbody tr td p.td-title-responsive, table.data thead th p.td-title-res
 
 .jstree-default .jstree-clicked {
     font-weight: 600;
-    background: #f7f7fa !important;
+    background: none !important;
     border-radius: 0 !important;
 }
 .jstree-default .jstree-icon:empty {
@@ -1892,6 +1898,27 @@ table.data tbody tr td p.td-title-responsive, table.data thead th p.td-title-res
 }
 .jstree-themeicon-custom {
     background-position: top center !important;
+}
+
+.button-edit,
+.button-company,
+.button-user {
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    width:24px !important;
+    height:24px !important;
+    line-height:24px !important;
+    padding:0 !important;
+    margin:20px 12px 0 0!important;
+}
+.button-edit {
+    background-image: url('/assets/img/edit.svg') !important;
+}
+.button-company {
+    background-image: url('/assets/img/company.svg') !important;
+}
+.button-user {
+    background-image: url('/assets/img/person.svg') !important;
 }
 
 div.loading {
@@ -1934,6 +1961,18 @@ div.loading .spinner:after {
 }
 
 body.loading div.loading {
+    display:block;
+}
+
+div.loading #auto-logout {
+    margin-top:10vh;
+    display: none;
+    width: 100%;
+    text-align: center;
+    color:#FFF;
+}
+
+body.auto-logout div.loading #auto-logout {
     display:block;
 }
 

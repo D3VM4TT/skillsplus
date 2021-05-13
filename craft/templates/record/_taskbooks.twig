@@ -30,6 +30,7 @@
             {% endif %}
             <th>Next Step</th>
             <th>Status</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -49,6 +50,14 @@
                     </td>
                     <td>
                         {{ package.packageStatus|title }}
+                    </td>
+                    <td>
+                        {% set certificateUrl = craft.lantra.certificateUrl(package) %}
+                        {% if certificateUrl %}
+                            <a target="_blank" class="icon" href="{{ certificateUrl }}" data-tooltip title="Download certificate">
+                                <img src="/assets/img/certificate.svg" title="Download certificate" />
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

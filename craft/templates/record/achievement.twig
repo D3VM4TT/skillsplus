@@ -49,11 +49,15 @@
 {% if moduleEntry %}
     {% set moduleGroup = moduleEntry.moduleGroup.one %}
     {% if moduleEntry.type == 'cpd' %}
-        {% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
-        {% if moduleResultId %}
-            {% set moduleResultEntry = craft.entries.id(moduleResultId).one() %}
+        {% if resultEntry and resultEntry.resultModuleResult.count %}
+            {% set moduleResultEntry = resultEntry.resultModuleResult.one() %}
         {% else %}
-            {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleEntry.id) %}
+            {% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
+            {% if moduleResultId %}
+                {% set moduleResultEntry = craft.entries.id(moduleResultId).one() %}
+            {% else %}
+                {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleEntry.id) %}
+            {% endif %}
         {% endif %}
     {% endif %}
     {% set achievementLabel = moduleEntry.achievementLabel ? moduleEntry.achievementLabel : 'achievement' %}
@@ -73,6 +77,8 @@
 
 {% set section = craft.app.sections.getSectionByHandle('results') %}
 {% set entryType = craft.app.sections.getEntryTypesByHandle('userResult')[0] %}
+
+{% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
 
 {% block content %}
     <section class="page">

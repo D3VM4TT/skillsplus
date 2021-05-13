@@ -1,15 +1,55 @@
-{% set moduleResultEntry = craft.entries.section('results').type('moduleResult').authorId(userId).resultStatus('complete').id(resultId).one %}
-{% if not moduleResultEntry %}{% exit 404 %}{% endif %}
+{% set resultEntry = craft.entries.section(section).authorId(userId).id(resultId).one() %}
+
+{% if not resultEntry or (
+        (resultEntry.section.handle == 'packages' and resultEntry.packageStatus != 'complete') or
+        (resultEntry.type == 'moduleResult' and resultEntry.resultStatus != 'complete') or
+        (resultEntry.type == 'unitResult' and resultEntry.resultStatus != 'endorsed')) %}
+    {% exit 404 %}
+{% endif %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
-{% set vars = {
-    moduleTitle: moduleResultEntry.resultModule.one.title,
-    resultDate: moduleResultEntry.postDate|date(dateFormat),
-    resultUserFullName: moduleResultEntry.author.fullName,
-} %}
+{% set cpdResultEntry = false %}
+
+{% if resultEntry.section.handle == 'packages' %}
+    {% set certTitle = resultEntry.moduleGroup.title %}
+    {% set certDate = resultEntry.getCompleteDate()|date(dateFormat) %}
+{% elseif resultEntry.type == 'moduleResult' %}
+    {% set moduleEntry = resultEntry.resultModule.one %}
+    {% set certTitle = moduleEntry.title %}
+    {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
+    {% if moduleEntry.type == 'cpd' %}
+        {% set certTitle = certTitle ~ "<br />" ~ resultEntry.cycleName %}
+        {% set cpdResultEntry = resultEntry %}
+    {% endif %}
+{% else %}
+    {% set certTitle = resultEntry.resultUnit.count ? resultEntry.resultUnit.one.title : resultEntry.title %}
+    {% set certDate = resultEntry.resultEndorsedDate|date(dateFormat) %}
+{% endif %}
+
 {% set settings = {
-    orientation:'portrait',
-    filename:userId ~ '-' ~ resultId,
+    type: 'render',
+    compress: true,
+    filename: userId ~ '-' ~ resultId,
+    isHtml5ParserEnabled: false,
+    isRemoteEnabled: true,
+    fontDir: "/tmp",
+    tempDir: "/tmp",
+    defaultPaperOrientation: "portrait"
 } %}
-{{ craft.printmaker.pdfFromTemplate('_includes/certificate', vars, settings).download }}
+{% set vars = {
+    certLogo: craft.lantra.setting('certificateLogo', craft.lantra.setting('schemeLogo')),
+    certHeader: craft.lantra.setting('certificateHeader'),
+    certSubheader: craft.lantra.setting('certificateSubheader'),
+    certTextOne: craft.lantra.setting('certificateTextOne'),
+    certTextTwo: craft.lantra.setting('certificateTextTwo'),
+    certFooter: craft.lantra.setting('certificateFooter'),
+    certTitle: certTitle|raw,
+    certDate: certDate,
+    certFullName: resultEntry.author.fullName,
+    cpdResultEntry: cpdResultEntry,
+    cpdResultEntry: cpdResultEntry,
+    nowDate: now|date(dateFormat)
+} %}
+{{ craft.superpdf.template('_includes/certificate', settings, vars) }}
+{# {% include '_includes/certificate' with vars %} #}

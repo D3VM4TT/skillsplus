@@ -331,6 +331,21 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Get the complete date
+     *
+     * @return null
+     */
+    public function getCompleteDate()
+    {
+        foreach ($this->owner->packageReviews as $step) {
+            if ($step->stepType == 'complete' && $step->reviewDate) {
+                return $step->reviewDate;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get the next step that can be reviewed (has user)
      *
      * @return null

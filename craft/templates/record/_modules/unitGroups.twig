@@ -9,7 +9,7 @@
         <div class="unit-group">
             <div class="header primary-bg" data-target="#u{{ moduleElementId ~ unitGroup.id }}">
                 {% if unitGroup.groupNotes %}
-                    <a href="#" data-tooltip title="{{ unitGroup.groupNotes }}">
+                    <a href="#" class="notes">
                         <img style="float:left;margin-right:20px;" src="/assets/img/help.svg" width="26" height="26" class="" alt="">
                     </a>
                 {% endif %}
@@ -18,6 +18,11 @@
                     View status and Endorsements
                     <img src="/assets/img/img-arrow-down-white-trans.png">
                 </div>
+                {% if unitGroup.groupNotes %}
+                <div class="notes" style="display:block;margin-top:10px;display:none;">
+                    {{ unitGroup.groupNotes }}
+                </div>
+                {% endif %}
             </div>
             <div id="u{{ moduleElementId ~ unitGroup.id }}" class="units">
                 <table class="data">
@@ -90,6 +95,7 @@
                                 {% endif %}
                                 {% include 'record/_modules/row' with {
                                     resultEntry: unitResultEntry,
+                                    unit: unit,
                                     unitPoints: unitPoints,
                                     rowClass: rowClass,
                                     editLink: editLink,
@@ -101,6 +107,7 @@
                         {% if addResult %}
                             {% set rowTitle = hasResult ? '' : rowName %}
                             {% include 'record/_modules/row' with {
+                                unit: unit,
                                 unitPoints: unitPoints,
                                 rowClass: rowClass,
                                 newLink: newUrl
@@ -115,6 +122,7 @@
                                 {% set editUrl = baseUrl ~ unitResultEntry.id ~ '/' ~ params %}
                             {% endif %}
                             {% include 'record/_modules/row' with {
+                                unit: unit,
                                 resultEntry: unitResultEntry,
                                 unitPoints: unitPoints,
                                 rowClass: rowClass,
@@ -172,7 +180,7 @@
         </div>
     {% endif %}
     {% if moduleGroup is defined and moduleGroup.addAchievement and not module.addAchievementHide and not readOnly %}
-        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}?moduleResultEntry={{ moduleResultEntry.id }}">
+        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/achievement/{{ module.id }}?moduleResultId={{ moduleResultEntry.id }}">
             <span>Add {{ achievementLabel }}</span>
         </a>
     {% endif %}

@@ -1,0 +1,21 @@
+{% set remaining = craft.lantra.remaining(moduleResultEntry) %}
+<p>
+    Overall:
+    {% if remaining.pointsScore %}{{ remaining.pointsScore }} Points{% endif %}
+    {% if remaining.hoursScore  %}{{ remaining.hoursScore }} Hours{% endif %}
+</p>
+{% if moduleResultEntry.resultComponentResults|length %}
+    {% for componentRow in moduleResultEntry.resultComponentResults %}
+        <p>
+        {% if componentRow.targetHours or componentRow.targetPoints %}
+            {{ componentRow.title }}:
+            {% if componentRow.targetHours %}
+                {{ componentRow.endorsedHours }}/{{ componentRow.targetHours }} Hours
+            {% endif %}
+            {% if componentRow.targetPoints %}
+                {{ componentRow.endorsedPoints }}/{{ componentRow.targetPoints }} Points
+            {% endif %}
+        {% endif %}
+        </p>
+    {% endfor %}
+{% endif %}

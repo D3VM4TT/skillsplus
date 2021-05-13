@@ -35,6 +35,25 @@ class PackagesController extends BaseController
     }
 
     /**
+     * Deletes all results user results
+     *
+     * @throws mixed
+     */
+    public function actionDeleteResults()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        $taskbookLabel = LantraHelper::setting('taskbookLabel', 'Taskbook');
+        ## get the posted id
+        if (null == $id = Craft::$app->request->getParam('entryId')) {
+            return $this->_returnError('Invalid ' . $taskbookLabel . ' ID!');
+        }
+        Lantra::$app->results->deletePackageResults($id);
+        Craft::$app->elements->deleteElementById($id);
+        return $this->_returnMessage($taskbookLabel . ' and all results deleted.', true);
+    }
+
+    /**
      * Saves user taskbook package
      *
      * @throws mixed

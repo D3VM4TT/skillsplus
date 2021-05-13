@@ -1,0 +1,55 @@
+{% import "_includes/forms" as forms %}
+{{ forms.elementSelectField ({
+    label:			    "Certificate Logo",
+    id:				    "certificateLogo",
+    name:			    "certificateLogo",
+    elementType:        config.assetsElementType,
+    elements:           settings.certificateLogo ? settings.certificateLogo,
+    sources:            config.themeFolder,
+    limit:              1,
+    criteria:           {"kind":[],"localeEnabled":'null'},
+    instructions:       "WARNING: JPG format only"
+}) }}
+
+{{ forms.textField ({
+    instructions:   "i.e. CERTIFICATE",
+    label:			"Certificate Header",
+    id:				"certificateHeader",
+    name:			"certificateHeader",
+    value:		    settings.certificateHeader,
+}) }}
+
+{{ forms.textareaField ({
+    instructions:   "after header i.e. We are proud to certify that",
+    label:			"Certificate Subheader",
+    id:				"certificateSubheader",
+    name:			"certificateSubheader",
+    value:		    settings.certificateSubheader,
+    rows:           2,
+    cols:           50
+}) }}
+
+{{ forms.textField ({
+    instructions:   "after name i.e. has completed",
+    label:			"Certificate Text One",
+    id:				"certificateTextOne",
+    name:			"certificateTextOne",
+    value:		    settings.certificateTextOne,
+}) }}
+
+{{ forms.textField ({
+    instructions:   "before date i.e. on",
+    label:			"Certificate Text Two",
+    id:				"certificateTextTwo",
+    name:			"certificateTextTwo",
+    value:		    settings.certificateTextTwo,
+}) }}
+
+{{ forms.textareaField ({
+    label:			"Certificate Footer",
+    id:				"certificateFooter",
+    name:			"certificateFooter",
+    value:		    settings.certificateFooter,
+    rows:           2,
+    cols:           50
+}) }}

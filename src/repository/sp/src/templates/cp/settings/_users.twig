@@ -1,5 +1,8 @@
 {% import "_includes/forms" as forms %}
 
+<p>Note: First Name, Last Name and Email are always included in register form.  In addition, Date of Birth, Address, Phone and Custom Fields can be added. </p>
+<p>Table Column can include id, legacyId, fullName, userCompany, userLocation, role and lastLogin.</p>
+
 {% set profileFieldOptions =  {
     'fullName':' Name',
     'email':'Email',
@@ -12,6 +15,7 @@
 
     'id': 'User ID',
     'userCompany': 'User Company',
+    'userLocation': 'User Location',
     'userManager': 'User Manager',
     'managerCompanies': 'Manager Companies',
     'lastLogin': 'Last Login',
@@ -28,10 +32,13 @@
     {
         field:       {heading: "Field", type: "select", options:profileFieldOptions},
         label:       {heading: "Label", type: "text"},
+        tableColumn:   {heading: "Table Column?", type: "checkbox"},
         accountInformation:   {heading: "Account Information?", type: "checkbox"},
         profile:   {heading: "Profile Page?", type: "checkbox"},
         userEdit:   {heading: "User Edit?", type: "checkbox"},
-        managerEdit:   {heading: "Manager Edit?", type: "checkbox"}
+        managerEdit:   {heading: "Manager Edit?", type: "checkbox"},
+        register:   {heading: "Register Form?", type: "checkbox"},
+        required:   {heading: "Required", type: "checkbox"}
     },
     rows:           settings.userProfileFields
 }) }}
@@ -47,95 +54,10 @@
         name:       {heading: "Name", type: "singleline"},
         label:      {heading: "Label", type: "singleline"},
         profile:   {heading: "Profile Page?", type: "checkbox"},
-        userEdit:   {heading: "User Edit?", type: "checkbox"}
+        userEdit:   {heading: "User Edit?", type: "checkbox"},
+        register:   {heading: "Register Form?", type: "checkbox"},
+        required:   {heading: "Required", type: "checkbox"}
     },
     rows:           settings.userEditCustomFields
 }) }}
 
-<h3>NO LONGER USED</h3>
-
-{{ forms.lightswitchField ({
-    label:			"Edit Name?",
-    id:				"userEditName",
-    name:			"userEditName",
-    on:		        settings.userEditName == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Email?",
-    id:				"userEditEmail",
-    name:			"userEditEmail",
-    on:		        settings.userEditEmail == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Address?",
-    id:				"userEditAddress",
-    name:			"userEditAddress",
-    on:		        settings.userEditAddress == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Telephone?",
-    id:				"userEditTelephone",
-    name:			"userEditTelephone",
-    on:		        settings.userEditTelephone == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Date of Birth?",
-    id:				"userEditDob",
-    name:			"userEditDob",
-    on:		        settings.userEditDob == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Date of Start Date?",
-    id:				"userEditStartDate",
-    name:			"userEditStartDate",
-    on:		        settings.userEditStartDate == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Role?",
-    id:				"userEditRole",
-    name:			"userEditRole",
-    on:		        settings.userEditRole == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Edit Photo?",
-    id:				"userEditPhoto",
-    name:			"userEditPhoto",
-    on:		        settings.userEditPhoto == 1,
-}) }}
-
-<h3>Account Information</h3>
-
-{{ forms.lightswitchField ({
-    label:			"User ID",
-    id:				"userAccountInformationId",
-    name:			"userAccountInformation[userId]",
-    on:		        settings.userAccountInformation.userId is defined and settings.userAccountInformation.userId == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Start Date",
-    id:				"userAccountInformationIdUserStartDate",
-    name:			"userAccountInformation[userStartDate]",
-    on:		        settings.userAccountInformation.userStartDate is defined and settings.userAccountInformation.userStartDate == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"User Company",
-    id:				"userAccountInformationUserCompany",
-    name:			"userAccountInformation[userCompany]",
-    on:		        settings.userAccountInformation.userCompany is defined and settings.userAccountInformation.userCompany == 1,
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Manager Companies",
-    id:				"userAccountInformationManagerCompanies",
-    name:			"userAccountInformation[managerCompanies]",
-    on:		        settings.userAccountInformation.managerCompanies is defined and settings.userAccountInformation.managerCompanies == 1,
-}) }}

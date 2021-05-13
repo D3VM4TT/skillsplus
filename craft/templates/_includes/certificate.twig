@@ -1,6 +1,117 @@
-<div id="main">
-    <h1 style="text-align: center">{{ resultUserFullName}}</h1>
-    <h2 style="text-align: center">has completed</h2>
-    <h2 style="text-align: center">{{ moduleTitle }}</h2>
-    <h2 style="text-align: center">on {{ resultDate }}</h2>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        @font-face {
+            src: url("/assets/fonts/OpenSans-Regular.ttf") format("truetype");
+            font-family: "Open Sans";
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            src: url("/assets/fonts/OpenSans-Bold.ttf") format("truetype");
+            font-family: "Open Sans";
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @page {
+            margin: 0;
+        }
+
+        html {
+            margin: 0;
+        }
+
+        html, body {
+            color: #000;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        body {
+            margin:30px;
+            padding:30px;
+            border:2px solid {{ craft.lantra.setting('themeColorSecondary') }};
+            overflow: hidden;
+        }
+        header, footer, section#main {
+            text-align: center;
+        }
+
+        header {
+            padding-top: 5%;
+            padding-bottom:0;
+        }
+
+        header img {
+            max-height: 150px;
+            margin:0;
+        }
+
+        header h2 {
+            margin:0;
+            font-size: 50px;
+            color: {{ craft.lantra.setting('themeColorPrimary') }}
+        }
+
+        footer {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            font-size: small;
+            margin: 0;
+            padding: 0;
+        }
+        #watermark {
+            position: absolute;
+            z-index: -10;
+            background-repeat: repeat;
+            background-size: 10vw;
+            opacity: 0.1;
+
+            top: -100vh;
+            left: -100vw;
+            height: 300vh;
+            width: 300vw;
+
+            transform: rotate(-45deg);
+            filter: grayscale(100%);
+        }
+    </style>
+</head>
+<body>
+{% if certLogo %}
+    <!-- <div id="watermark" style="background-image: url('{{ certLogo.url }}');"></div> -->
+{% endif %}
+<header>
+    {% if certLogo %}
+        <img src="{{ certLogo.url }}">
+    {% endif %}
+    <h2>{{ certHeader }}</h2>
+    {% if certSubheader %}
+        <h3>{{ certSubheader }}</h3>
+    {% endif %}
+</header>
+<section id="main">
+    <h1>{{ certFullName }}</h1>
+    <p>{{ certTextOne }}</p>
+    <h2>{{ certTitle|raw }}</h2>
+    {% if cpdResultEntry %}
+        {% include '_includes/certificateCpdDetails' with {moduleResultEntry:cpdResultEntry} %}
+    {% endif %}
+    <p>{{ certTextTwo }}</p>
+    <h2>{{ certDate }}</h2>
+</section>
+<footer>
+    {% if certFooter %}
+        <h3>{{ certFooter }}</h3>
+    {% endif %}
+</footer>
+</body>
+</html>

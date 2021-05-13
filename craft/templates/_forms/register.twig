@@ -26,17 +26,53 @@
     {% endif %}
     <div class="field--wrapper" style="">
         <label for="registerFirstName" class="no-float">First Name</label>
-        <input id="registerFirstName" type="text" placeholder="First Name" name="firstName" {% if user is defined %} value="{{ user.firstName }}"{% endif %}>
+        <input required id="registerFirstName" type="text" placeholder="First Name" name="firstName" {% if user is defined %} value="{{ user.firstName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
         <label for="registerLastName" class="no-float">Last Name</label>
-        <input id="registerLastName" type="text" placeholder="Last Name"
+        <input required id="registerLastName" type="text" placeholder="Last Name"
                name="lastName" {% if user is defined %} value="{{ user.lastName }}"{% endif %}>
     </div>
     <div class="field--wrapper">
         <label for="registerEmail" class="no-float">Email</label>
-        <input id="registerEmail" type="text" placeholder="Email" name="email" {% if user is defined %} value="{{ user.email }}"{% endif %}>
+        <input required id="registerEmail" type="text" placeholder="Email" name="email" {% if user is defined %} value="{{ user.email }}"{% endif %}>
     </div>
+    {% for row in craft.lantra.userProfileFields('register') %}
+        {% switch row.field %}
+        {% case 'userDateOfBirth' %}
+            <div class="field--wrapper">
+                {% include '_includes/date' with {label: row.label ?: 'Date of birth', name:'fields[userDateOfBirth]', value: user is defined ? user.userDateOfBirth, ys: now.year - 10, ye: now.year - 100} %}
+            </div>
+        {% case 'userAddress' %}
+            <div class="field--wrapper">
+                <label for="address" class="no-float">{{ row.label ?: 'Address' }}</label>
+                <textarea {{ row.required ? 'required' }} id="address" name="fields[userAddress]" class="float-label"
+                placeholder="Enter the address">{{ user is defined ? user.userAddress|default('') }}</textarea>
+            </div>
+        {% case 'userTelephone' %}
+            <div class="field--wrapper">
+                <label for="telephone" class="no-float">{{ row.label ?: 'Telephone' }}</label>
+                <input {{ row.required ? 'required' }} type="text" id="telephone" name="fields[userTelephone]" class="float-label"
+                placeholder="Enter the telephone" value="{{ user is defined ? user.userTelephone|default('') }}">
+            </div>
+        {% endswitch %}
+    {% endfor %}
+
+    {% for row in craft.lantra.userCustomFields('register') %}
+        <div class="field--wrapper">
+            <label for="custom-{{ row.name }}" class="no-float">{{ row.label }}:</label>
+            {% set userCustomBlock = user is defined ? user.userCustomFields.customName('='~row.name).one() : [] %}
+            {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
+            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]"
+                   value="{{ row.name }}"/>
+            <input {{ row.required ? 'required' }} type="text" id="custom-{{ row.name }}" class="float-label"
+            name="fields[userCustomFields][{{ fieldId }}][fields][customValue]"
+            value="{{ userCustomBlock|length ? userCustomBlock.customValue|default('') }}">
+        </div>
+    {% endfor %}
+
     <div class="field--wrapper">
         <label for="registerPassword" class="no-float">Password</label>
         <input id="registerPassword" type="password" name="password" placeholder="Password">

@@ -1,4 +1,185 @@
 {% import "_includes/forms" as forms %}
+
+{% set groupOptions = [
+    {
+        label: 'Scheme Managers',
+        value: 'schemeManagers'
+    },
+    {
+        label: 'Company Managers',
+        value: 'companyManagers'
+    }
+] %}
+
+<table class="data fullwidth fixed-layout">
+    <thead>
+        <tr>
+            <th width="15%">Report</th>
+            <th width="15%">Active</th>
+            <th width="30%">Group</th>
+            <th width="30%">Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Users</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-users-active",
+                    name:			"reports[users][active]",
+                    on:		        settings.reports.users.active
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-users-group',
+                    name: 'reports[users][group]',
+                    value: settings.reports.users.group,
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-users-roles",
+                    name:			    "reports[users][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.users.roles ? settings.reports.users.roles,
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Results</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-results-active",
+                    name:			"reports[results][active]",
+                    on:		        settings.reports.results.active
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-results-group',
+                    name: 'reports[results][group]',
+                    value: settings.reports.results.group,
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-results-roles",
+                    name:			    "reports[results][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.results.roles ? settings.reports.results.roles,
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>CPD</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-cpd-active",
+                    name:			"reports[cpd][active]",
+                    on:		        settings.reports.cpd.active
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-cpd-group',
+                    name: 'reports[cpd][group]',
+                    value: settings.reports.cpd.group,
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-cpd-roles",
+                    name:			    "reports[cpd][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.cpd.roles ? settings.reports.cpd.roles,
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Payments</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-payments-active",
+                    name:			"reports[payments][active]",
+                    on:		        settings.reports.payments.active
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-payments-group',
+                    name: 'reports[payments][group]',
+                    value: settings.reports.payments.group,
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-payments-roles",
+                    name:			    "reports[payments][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.payments.roles ? settings.reports.payments.roles,
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Scheme Manager</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-sm-active",
+                    name:			"reports[sm][active]",
+                    on:		        settings.reports.sm.active
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-sm-group',
+                    name: 'reports[sm][group]',
+                    value: settings.reports.sm.group,
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-sm-roles",
+                    name:			    "reports[sm][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.sm.roles ? settings.reports.sm.roles,
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 {{ forms.lightswitchField ({
     label:			"Show Standard Reports?",
     id:				"standardReports",

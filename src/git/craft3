@@ -107,9 +107,14 @@ else
     # loop through domains and copy to server
     for SITE in $SITES;
     do
-	REMOTE_FOLDER="/datadisk/sites/$SITE"
+	    REMOTE_FOLDER="/datadisk/sites/$SITE"
 
         echo "starting deployment of $SITE to $SERVER [$REMOTE_IP]"
+
+        if [[ "$SERVER" == "prod" ]] ; then
+            echo "backing up database"
+            mysqldump -u $DB_USER -p$DB_PASS prod-$SITE | gzip -9 -c > /git/sql/$SITE.sql.gz
+        fi
 
         # set .env properties
         cp /git/config/.env $CRAFT_DIR

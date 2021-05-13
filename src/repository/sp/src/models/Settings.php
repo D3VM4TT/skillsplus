@@ -28,6 +28,13 @@ class Settings extends Model
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
 
+    public $certificateLogo                     = null;
+    public $certificateHeader                   = '';
+    public $certificateSubheader                = '';
+    public $certificateTextOne                  = '';
+    public $certificateTextTwo                  = '';
+    public $certificateFooter                   = '';
+
     public $themeDateFormat                     = 'd-m-Y';
     public $themeDefaultLimit                   = 10;
     public $themeLoginMessage                   = '';
@@ -41,6 +48,7 @@ class Settings extends Model
     public $themeNavigationPrivate              = ["1090","3618"];
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
+    public $idleMinutes                         = 60;
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
@@ -219,6 +227,44 @@ class Settings extends Model
     ];
     public $standardReports                     = false;
 
+    public $reports                             = [
+        'users'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'results'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'expired'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'required'   => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'cpd'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'payments'  => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'sm'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+    ];
+
     public $payPalBusiness                      = '';
     public $payPalLantraCert                    = '';
     public $payPalLantraKey                     = '';
@@ -228,7 +274,8 @@ class Settings extends Model
      * modified values
      */
     private $assetFields = [
-        'schemeLogo'
+        'schemeLogo',
+        'certificateLogo'
     ];
 
     private $entryFields = [

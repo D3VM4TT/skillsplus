@@ -146,6 +146,7 @@ class Structure extends Component
             'nodeType'  => $nodeType,
             'nodeId'    => $nodeId,
             'text'      => $title,
+            "a_attr"    => ['href' => '/cpd/' . $elementId],
             'icon'      => '/assets/img/' . $icon . '.svg',
             "li_attr"   => ['class' => 'type-' . $nodeType, 'id' => 'node-' . $nodeId],
         ];

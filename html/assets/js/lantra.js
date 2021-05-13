@@ -239,10 +239,22 @@ $(document).ready(function(){
         }
         ul.slideUp(function(){li.attr('class', 'nav-closed')});
     });
-    // toggle accordion
-    $('[data-target]').click(function(e){
+    $('a.notes').click(function(e){
         e.preventDefault();
-        var t = $($(this).data('target'));
+        var n = $(this).closest('.header').find('div.notes');
+        if (n.hasClass('open')) {
+            n.hide();
+            n.removeClass('open');
+            return;
+        }
+        n.slideDown('fast', function () {
+            n.addClass('open');
+        });
+    });
+    // toggle accordion
+    $('[data-target] > div.status').click(function(e){
+        e.preventDefault();
+        var t = $($(this).closest('[data-target]').data('target'));
         if (t.hasClass('closed')) {
             t.slideDown(function(){t.removeClass('closed')});
             return;
@@ -352,6 +364,13 @@ $(document).ready(function(){
             }
             var data = {id: $(this).data('id'), userId: $(this).data('userid')};
             reload = true;
+        }
+        else if (action == 'packages/delete-results') {
+            if ( ! confirm('Are you sure you want to delete all results?')) {
+                return false;
+            }
+            var data = {entryId: $(this).data('id')};
+            deleteRow = true;
         }
         else {
             alert('Invalid action ' + action);
@@ -711,5 +730,11 @@ $(document).ready(function(){
         e.preventDefault();
         alert('Read Only Manager');
         return false;
+    });
+
+    $('button.taskbook-create').click(function(e){
+        e.preventDefault();
+        $('input[name="taskbook"]').val(1);
+        $(this).closest('form').submit();
     });
 });

@@ -820,7 +820,12 @@ class Results extends Component
         }
         ## check the moduleResult
         $user = $resultEntry->author;
-        $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
+        if ($resultEntry->resultModuleResult) {
+            $moduleResultEntry = $resultEntry->resultModuleResult->one();
+        }
+        else {
+            $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
+        }
         $this->checkModuleResult($resultModuleEntry, $user->id, $moduleResultEntry);
     }
 
@@ -1079,7 +1084,7 @@ class Results extends Component
     function isCompleteComponentResults($moduleResult)
     {
         foreach($moduleResult->resultComponentResults as $componentResult) {
-            if (!isset($componentResult['complete']) || $componentResult['complete']) {
+            if (!isset($componentResult['complete']) || !$componentResult['complete']) {
                 return false;
             }
         }
@@ -1377,6 +1382,34 @@ class Results extends Component
         $criteria->status = null;
         $criteria->limit = null;
         return $criteria;
+    }
+
+    /**
+     * @param $packageId
+     * @throws \Throwable
+     */
+    public function deletePackageResults($packageId)
+    {
+        if (null == $package = Entry::findOne($packageId)) {
+            return;
+        }
+        $user = $package->author;
+        $modules = Lantra::$app->packages->getPackageModuleEntries($package);
+        $results = [];
+        foreach ($modules as $moduleEntry) {
+            $results = $this->getUserModuleResults($moduleEntry->id);
+            $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+            $results = array_merge($results, $unitResults);
+            $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+            $results = array_merge($results, $userResults);
+        }
+
+        $ids = [];
+
+        foreach ($results as $result) {
+            $ids[] = $result->id;
+            Craft::$app->elements->deleteElementById($result->id);
+        }
     }
 
     /**

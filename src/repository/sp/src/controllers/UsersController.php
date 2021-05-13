@@ -233,6 +233,11 @@ class UsersController extends BaseController {
         ## delete hierarchy cache
         Lantra::$app->structure->clearHierarchyCache();
 
+        ## override redirect
+        if ($request->getParam('taskbook')) {
+            $redirect = '/management/taskbooks/new/?userId=' . $user->id;
+        }
+
         $this->_returnMessage('User has been saved.', true, $redirect);
     }
 

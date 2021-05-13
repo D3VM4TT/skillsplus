@@ -5,6 +5,9 @@ categoryGroups:
         tabs:
           -
             fields:
+              1d522b30-9aa0-4fc8-afd1-84e738233479:
+                required: false
+                sortOrder: 7
               48909e73-b939-470f-b472-53ee709db6e4:
                 required: false
                 sortOrder: 4
@@ -94,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1611863214
+dateModified: 1618838162
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -396,6 +399,7 @@ fields:
     name: 'Report Type'
     searchable: true
     settings:
+      optgroups: true
       options:
         -
           __assoc__:
@@ -441,6 +445,39 @@ fields:
             -
               - default
               - ''
+        -
+          __assoc__:
+            -
+              - label
+              - CPD
+            -
+              - value
+              - cpd
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - Payments
+            -
+              - value
+              - payments
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Scheme Manager'
+            -
+              - value
+              - sm
+            -
+              - default
+              - ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
@@ -458,6 +495,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date
+  1d522b30-9aa0-4fc8-afd1-84e738233479:
+    contentColumnType: boolean
+    fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+    handle: certificate
+    instructions: ''
+    name: Certificate
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   1e03a0c1-334b-4517-9560-d95c13db8a99:
     contentColumnType: integer(10)
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -2965,11 +3014,12 @@ fields:
     name: Content
     searchable: true
     settings:
-      contentTable: '`craft_matrixcontent_pagecontent`'
-      maxBlocks: null
+      contentTable: '{{%matrixcontent_pagecontent}}'
+      maxBlocks: ''
+      minBlocks: ''
       propagationMethod: all
     translationKeyFormat: null
-    translationMethod: none
+    translationMethod: site
     type: craft\fields\Matrix
   bb511299-1a44-4db4-b8f0-32035ca24b2d:
     contentColumnType: integer(10)
@@ -4991,7 +5041,7 @@ matrixBlockTypes:
         settings:
           byteLimit: null
           charLimit: null
-          code: false
+          code: ''
           columnType: text
           initialRows: '4'
           multiline: ''
@@ -5008,17 +5058,18 @@ matrixBlockTypes:
         searchable: true
         settings:
           availableTransforms: '*'
-          availableVolumes: '*'
-          cleanupHtml: ''
+          availableVolumes:
+            - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+          cleanupHtml: true
           columnType: text
           purifierConfig: ''
           purifyHtml: ''
           redactorConfig: Standard.json
-          removeEmptyTags: true
-          removeInlineStyles: true
-          removeNbsp: true
+          removeEmptyTags: '1'
+          removeInlineStyles: '1'
+          removeNbsp: '1'
           showUnpermittedFiles: false
-          showUnpermittedVolumes: true
+          showUnpermittedVolumes: false
         translationKeyFormat: null
         translationMethod: none
         type: craft\redactor\Field
@@ -5055,6 +5106,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 0.0.1
+  super-pdf:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.4
   super-table:
     enabled: '1'
     licenseKey: null
@@ -5074,6 +5129,9 @@ sections:
             tabs:
               -
                 fields:
+                  1d522b30-9aa0-4fc8-afd1-84e738233479:
+                    required: false
+                    sortOrder: 10
                   1e5a2205-0d2d-4f4c-b087-a5f706ac0449:
                     required: false
                     sortOrder: 8

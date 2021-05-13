@@ -24,6 +24,15 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $resultEntry
+     * @return string|null
+     */
+    public function certificateUrl($resultEntry = null)
+    {
+        return LantraHelper::certificateUrl($resultEntry);
+    }
+
+    /**
      * @param null $url
      * @return string
      */
@@ -46,7 +55,7 @@ class LantraVariable
             if ($limit && count($return) == $limit) {
                 return $return;
             }
-            if ($row[$type]) {
+            if (isset($row[$type]) && $row[$type]) {
                 $return[] = $row;
             }
         }

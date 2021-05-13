@@ -52,8 +52,8 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@basePath' => '/home/ubuntu/sites/skills-plus.net/',
-            '@assetsPath' => '/home/ubuntu/sites/skills-plus.net/craft-assets/',
+            '@basePath' => '/app/',
+            '@assetsPath' => '/app/craft-assets/',
         ],
     ],
     'jason' => [

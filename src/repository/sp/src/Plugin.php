@@ -372,7 +372,7 @@ class Plugin extends BasePlugin
     {
         return [
             ## public routes
-            'public/certificate/<userId>/<resultId>'    => ['template' => 'public/certificate'],
+            'public/certificate/<section>/<userId>/<resultId>'    => ['template' => 'public/certificate'],
             'public/passport/<userId>'                  => ['template' => 'public/passport'],
             'public/licence/thanks'                     => ['template' => 'public/licence'],
 
@@ -438,6 +438,7 @@ class Plugin extends BasePlugin
 
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
+            'sp/packages/delete-results'                => 'sp/packages/delete-results',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
