@@ -25,28 +25,28 @@
             <td>Users</td>
             <td>
                 {{ forms.lightswitchField ({
-                    id:				"reports-users-active",
-                    name:			"reports[users][active]",
-                    on:		        settings.reports.users.active
+                    id:				"reports-standardUsers-active",
+                    name:			"reports[standardUsers][active]",
+                    on:		        settings.reports.standardUsers.active|default(false)
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
-                    id: 'reports-users-group',
-                    name: 'reports[users][group]',
-                    value: settings.reports.users.group,
+                    id: 'reports-standardUsers-group',
+                    name: 'reports[standardUsers][group]',
+                    value: settings.reports.standardUsers.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
             <td>
                 {{ forms.elementSelectField ({
-                    id:				    "reports-users-roles",
-                    name:			    "reports[users][roles]",
+                    id:				    "reports-standardUsers-roles",
+                    name:			    "reports[standardUsers][roles]",
                     elementType:        config.categoryElementType,
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.users.roles ? settings.reports.users.roles,
+                    elements:           settings.reports.standardUsers.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
@@ -56,16 +56,140 @@
             <td>Results</td>
             <td>
                 {{ forms.lightswitchField ({
-                    id:				"reports-results-active",
-                    name:			"reports[results][active]",
-                    on:		        settings.reports.results.active
+                    id:				"reports-standardResults-active",
+                    name:			"reports[standardResults][active]",
+                    on:		        settings.reports.standardResults.active|default(false)
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
-                    id: 'reports-results-group',
-                    name: 'reports[results][group]',
-                    value: settings.reports.results.group,
+                    id: 'reports-standardResults-group',
+                    name: 'reports[standardResults][group]',
+                    value: settings.reports.standardResults.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardResults-roles",
+                    name:			    "reports[standardResults][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardResults.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>CPD</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardCpd-active",
+                    name:			"reports[standardCpd][active]",
+                    on:		        settings.reports.standardCpd.active|default(false)
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardCpd-group',
+                    name: 'reports[standardCpd][group]',
+                    value: settings.reports.standardCpd.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardCpd-roles",
+                    name:			    "reports[standardCpd][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardCpd.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Payments</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardPayments-active",
+                    name:			"reports[standardPayments][active]",
+                    on:		        settings.reports.standardPayments.active|default(false)
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardPayments-group',
+                    name: 'reports[standardPayments][group]',
+                    value: settings.reports.standardPayments.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardPayments-roles",
+                    name:			    "reports[standardPayments][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardPayments.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Scheme Manager</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardSm-active",
+                    name:			"reports[standardSm][active]",
+                    on:		        settings.reports.standardSm.active|default(false)
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardSm-group',
+                    name: 'reports[standardSm][group]',
+                    value: settings.reports.standardSm.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardSm-roles",
+                    name:			    "reports[standardSm][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardSm.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Custom User (hierarchy)</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-users-active",
+                    name:			"reports[users][active]",
+                    on:		        settings.reports.users.active|default(false)
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-users-group',
+                    name: 'reports[users][group]',
+                    value: settings.reports.users.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
@@ -77,193 +201,69 @@
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.results.roles ? settings.reports.results.roles,
+                    elements:           settings.reports.users.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
             </td>
         </tr>
         <tr>
-            <td>CPD</td>
+            <td>Custom Results (qual user)</td>
             <td>
                 {{ forms.lightswitchField ({
-                    id:				"reports-cpd-active",
-                    name:			"reports[cpd][active]",
-                    on:		        settings.reports.cpd.active
+                    id:				"reports-results-active",
+                    name:			"reports[results][active]",
+                    on:		        settings.reports.results.active|default(false)
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
-                    id: 'reports-cpd-group',
-                    name: 'reports[cpd][group]',
-                    value: settings.reports.cpd.group,
+                    id: 'reports-results-group',
+                    name: 'reports[results][group]',
+                    value: settings.reports.results.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
             <td>
                 {{ forms.elementSelectField ({
-                    id:				    "reports-cpd-roles",
-                    name:			    "reports[cpd][roles]",
+                    id:				    "reports-results-roles",
+                    name:			    "reports[results][roles]",
                     elementType:        config.categoryElementType,
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.cpd.roles ? settings.reports.cpd.roles,
+                    elements:           settings.reports.results.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
             </td>
         </tr>
         <tr>
-            <td>Payments</td>
+            <td>Custom Expired (required training)</td>
             <td>
                 {{ forms.lightswitchField ({
-                    id:				"reports-payments-active",
-                    name:			"reports[payments][active]",
-                    on:		        settings.reports.payments.active
+                    id:				"reports-expired-active",
+                    name:			"reports[expired][active]",
+                    on:		        settings.reports.expired.active|default(false)
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
-                    id: 'reports-payments-group',
-                    name: 'reports[payments][group]',
-                    value: settings.reports.payments.group,
+                    id: 'reports-expired-group',
+                    name: 'reports[expired][group]',
+                    value: settings.reports.expired.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
             <td>
                 {{ forms.elementSelectField ({
-                    id:				    "reports-payments-roles",
-                    name:			    "reports[payments][roles]",
+                    id:				    "reports-expired-roles",
+                    name:			    "reports[expired][roles]",
                     elementType:        config.categoryElementType,
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.payments.roles ? settings.reports.payments.roles,
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Scheme Manager</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-sm-active",
-                    name:			"reports[sm][active]",
-                    on:		        settings.reports.sm.active
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-sm-group',
-                    name: 'reports[sm][group]',
-                    value: settings.reports.sm.group,
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-sm-roles",
-                    name:			    "reports[sm][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.sm.roles ? settings.reports.sm.roles,
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Custom Users (Hierarchy)</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-customUsers-active",
-                    name:			"reports[customUsers][active]",
-                    on:		        settings.reports.customUsers.active|default(false)
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-customUsers-group',
-                    name: 'reports[customUsers][group]',
-                    value: settings.reports.customUsers.group|default('schemeManagers'),
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-customUsers-roles",
-                    name:			    "reports[customUsers][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.customUsers.roles|default([]),
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Custom Results (Qual User)</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-customResults-active",
-                    name:			"reports[customResults][active]",
-                    on:		        settings.reports.customResults.active|default(false)
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-customResults-group',
-                    name: 'reports[customResults][group]',
-                    value: settings.reports.customResults.group|default('schemeManagers'),
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-customResults-roles",
-                    name:			    "reports[customResults][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.customResults.roles|default([]),
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Custom Expired (Expired Training)</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-customExpired-active",
-                    name:			"reports[customExpired][active]",
-                    on:		        settings.reports.customExpired.active|default(false)
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-customExpired-group',
-                    name: 'reports[customExpired][group]',
-                    value: settings.reports.customExpired.group|default('schemeManagers'),
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-customExpired-roles",
-                    name:			    "reports[customExpired][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.customExpired.roles|default([]),
+                    elements:           settings.reports.expired.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}

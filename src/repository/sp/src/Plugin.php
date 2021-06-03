@@ -415,10 +415,10 @@ class Plugin extends BasePlugin
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
 
             ## reporting routes
-            'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],
-            'reporting/custom/new'                      => ['template' => 'reporting/custom/_form'],
+            'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],
+            'reporting/data/<reportId>'                 => ['template' => 'reporting/_data'],
+            'reporting/new'                             => ['template' => 'reporting/_form'],
             'reporting/user/<userId>'                   => ['template' => 'reporting/user'],
-            'reporting/standard/<reportSlug>'           => ['template' => 'reporting/standard'],
 
             ## action routes
             'sp/users/hierarchy'                        => 'sp/users/hierarchy',

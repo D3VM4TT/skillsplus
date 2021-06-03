@@ -228,6 +228,31 @@ class Settings extends Model
     public $standardReports                     = false;
 
     public $reports                             = [
+        'standardUsers'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'standardResults'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'standardCpd'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'standardPayments'  => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'standardSm'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
         'users'     => [
             'active' => true,
             'group'  => 'schemeManagers',
@@ -238,36 +263,11 @@ class Settings extends Model
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
-        'cpd'       => [
+        'expired'     => [
             'active' => true,
             'group'  => 'schemeManagers',
             'roles'  => []
-        ],
-        'payments'  => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'sm'       => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'customUsers'     => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'customResults'     => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'customExpired'     => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
+        ]
     ];
 
     public $payPalBusiness                      = '';

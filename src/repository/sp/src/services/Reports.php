@@ -199,7 +199,7 @@ class Reports extends Component
      * @param $reportEntry
      * @return array
      */
-    public function getCustomReportFilter($reportEntry)
+    public function getReportFilter($reportEntry)
     {
         $filter = [
             'reportResultType'          => $reportEntry->reportResultType->value,
@@ -230,31 +230,9 @@ class Reports extends Component
      */
     public function getCustomReportData($manager, $type, $filter = [])
     {
-        $userFilter = [];
-        $resultFilter = [];
-        if ($filter['reportResultType'] != 'all') {
-            $resultFilter['resultType'] = $filter['reportResultType'];
-        }
-        ## clear report units if non mandatory
-        if ($filter['reportResultType'] != 'unitResult') {
-            $filter['reportUnits'] = [];
-        }
-        if (count($filter['reportCompanies'])) {
-            if ($filter['reportIncludeHierarchy']) {
-                $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
-            }
-            $userFilter['relatedTo'] = [
-                'targetElement' => $filter['reportCompanies'],
-                'field' => 'userCompany'
-            ];
-        }
-        if (count($filter['reportUnits'])) {
-            $resultFilter['relatedTo'] = [
-                'targetElement' => $filter['reportUnits'],
-                'field' => 'resultUnit'
-            ];
-            $resultFilter['unitIds'] = $filter['reportUnits'];
-        }
+        $userFilter = $this->_parseUserFilter($filter);
+        $resultFilter = $this->_parseResultFilter($filter);
+
         if ($type == 'users') {
             $values = Lantra::$app->results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
@@ -299,6 +277,72 @@ class Reports extends Component
     }
 
     /**
+     * @param Entry $reportEntry
+     * @return ElementCriteriaModel|null
+     */
+    public function reportDataCriteria(Entry $reportEntry)
+    {
+        $filter = $this->getReportFilter($reportEntry);
+        $userFilter = $this->_parseUserFilter($filter);
+        $resultFilter = $this->_parseResultFilter($filter);
+
+        if ($reportEntry->reportType == 'users') {
+            return Lantra::$app->users->getManagerUsers($reportEntry->authorId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        }
+    }
+
+    /**
+     * @param $filter
+     * @return array
+     */
+    private function _parseUserFilter($filter)
+    {
+        $defaults = [
+            'limit'      => null,
+            'search'     => '',
+            'relatedTo'  => []
+        ];
+
+        $userFilter = [];
+        if (count($filter['reportCompanies'])) {
+            if ($filter['reportIncludeHierarchy']) {
+                $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
+            }
+            $userFilter['relatedTo'] = [
+                'targetElement' => $filter['reportCompanies'],
+                'field' => 'userCompany'
+            ];
+        }
+
+        return array_merge($defaults, $filter);
+    }
+
+    /**
+     * @param $filter
+     * @return array
+     */
+    private function _parseResultFilter($filter)
+    {
+        $resultFilter = [];
+        if ($filter['reportResultType'] != 'all') {
+            $resultFilter['resultType'] = $filter['reportResultType'];
+        }
+        ## clear report units if non mandatory
+        if ($filter['reportResultType'] != 'unitResult') {
+            $filter['reportUnits'] = [];
+        }
+
+        if (count($filter['reportUnits'])) {
+            $resultFilter['relatedTo'] = [
+                'targetElement' => $filter['reportUnits'],
+                'field' => 'resultUnit'
+            ];
+            $resultFilter['unitIds'] = $filter['reportUnits'];
+        }
+        return $resultFilter;
+    }
+
+    /**
      * Get all reports
      *
      * @param object
@@ -312,7 +356,7 @@ class Reports extends Component
             'total'     => 0,
             'message'   => ''
         ];
-        $filter = $this->getCustomReportFilter($reportEntry);
+        $filter = $this->getReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
         $response['total'] = count($values) - 1;
         if (!$response['total']) {

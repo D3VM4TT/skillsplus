@@ -38,46 +38,18 @@
             {%  endif %}
         </ul>
     </li>
-    {% if craft.lantra.settingCustomReports() or craft.lantra.setting('standardReports') %}
+    {% if craft.lantra.settingReports() %}
         <li class="{% if craft.app.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">Reporting</a>
             <ul>
-                {% if craft.lantra.settingCustomReports() %}
-                    <li>
-                        <a class="{% if craft.app.request.getSegment(2) == 'custom' %}active{% endif %}" href="/reporting/custom">Custom Reports</a>
-                    </li>
-                    {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-                        <li>
-                            <a class="{% if craft.app.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
-                {% if craft.lantra.setting('standardReports') and currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-                    <li>
-                        <a class="{% if craft.app.request.getSegment(2) == 'standard' %}active{% endif %}" href="/reporting/standard">Standard Reports</a>
-                        {% if craft.app.request.getSegment(2) == 'standard' %}
-                            <ul class="secondary">
-                                <li>
-                                    <a class="{% if craft.app.request.getSegment(3) == 'users' %}active{% endif %}" href="/reporting/standard/users">Scheme Users</a>
-                                </li>
-                                <li>
-                                    <a class="{% if craft.app.request.getSegment(3) == 'units-blocked' %}active{% endif %}" href="/reporting/standard/units-blocked">Units Blocked</a>
-                                </li>
-                                <li>
-                                    <a class="{% if craft.app.request.getSegment(3) == 'units-endorsed' %}active{% endif %}" href="/reporting/standard/units-endorsed">Units Endorsed</a>
-                                </li>
-                                <li>
-                                    <a class="{% if craft.app.request.getSegment(3) == 'units-expiring' %}active{% endif %}" href="/reporting/standard/units-expiring">Units Expiring</a>
-                                </li>
-                            </ul>
-                        {% endif %}
-                    </li>
-                {% endif %}
-                <!--
                 <li>
-                    <a class="{% if craft.app.request.getSegment(2) == 'dynamic' %}active{% endif %}" href="/reporting/dynamic">Dynamic Reports</a>
+                    <a class="{% if craft.app.request.getSegment(2) == '' %}active{% endif %}" href="/reporting/">My Reports</a>
                 </li>
-                -->
+                {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+                    <li>
+                        <a class="{% if craft.app.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
+                    </li>
+                {% endif %}
             </ul>
         </li>
     {% endif %}

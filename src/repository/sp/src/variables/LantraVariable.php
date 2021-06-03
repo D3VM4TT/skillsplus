@@ -384,21 +384,41 @@ class LantraVariable
     }
 
     /**
-     * @param $key
+     * @param null $key
      * @return bool
      */
-    public function settingCustomReports($key = null)
+    public function settingReports($key = null)
     {
-        $customReports = Lantra::$app->settings->getSetting('customReports');
-        if (is_null($key)) {
-            foreach($customReports as $key => $customReport) {
-                if ($customReport) {
-                    return true;
-                }
+        $reports = Lantra::$app->settings->getSetting('reports');
+        $active = [];
+        foreach($reports as $k => $report) {
+            if ($report['active'] && $this->canAccessReport($report)) {
+                $active[$k] = $report;
             }
-            return false;
         }
-        return isset($customReports[$key]) && $customReports[$key];
+        if (is_null($key)) {
+            return count($active);
+        }
+        return isset($active[$key]) ? $active[$key] : null;
+    }
+
+    /**
+     * @param null $report
+     * @return bool
+     */
+    private function canAccessReport($report = null)
+    {
+        $user = $this->getUser();
+        if ($user->admin) {
+            return true;
+        }
+        if ($user->isInGroup('schemeManagers') && in_array($report['group'], ['schemeManagers', 'companyManagers'])) {
+            return true;
+        }
+        if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
+            return true;
+        }
+
     }
 
     /**
@@ -642,17 +662,25 @@ class LantraVariable
     }
 
     /**
-     * Return criteria based on report name
-     *
      * @param $search
      * @param $limit
      * @param $order
-     * @param $automated
-     * @return mixed
+     * @param bool $automated
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \yii\db\Exception
      */
     public function reportCriteria($search, $limit, $order, $automated = false)
     {
         return Lantra::$app->reports->reportCriteria($search, $limit, $order, $automated);
+    }
+
+    /**
+     * @param $reportEntry
+     * @return \lantra\sp\services\ElementCriteriaModel|null
+     */
+    public function reportDataCriteria($reportEntry)
+    {
+        return Lantra::$app->reports->reportDataCriteria($reportEntry);
     }
 
     /**

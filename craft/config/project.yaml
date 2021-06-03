@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1621869301
+dateModified: 1622725867
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -408,7 +408,7 @@ fields:
               - Users
             -
               - value
-              - users
+              - standardUsers
             -
               - default
               - ''
@@ -416,32 +416,10 @@ fields:
           __assoc__:
             -
               - label
-              - Results
+              - 'Results '
             -
               - value
-              - results
-            -
-              - default
-              - ''
-        -
-          __assoc__:
-            -
-              - label
-              - Required
-            -
-              - value
-              - required
-            -
-              - default
-              - ''
-        -
-          __assoc__:
-            -
-              - label
-              - Expired
-            -
-              - value
-              - expired
+              - standardResults
             -
               - default
               - ''
@@ -452,7 +430,7 @@ fields:
               - CPD
             -
               - value
-              - cpd
+              - standardCpd
             -
               - default
               - ''
@@ -463,7 +441,7 @@ fields:
               - Payments
             -
               - value
-              - payments
+              - standardPayments
             -
               - default
               - ''
@@ -474,7 +452,40 @@ fields:
               - 'Scheme Manager'
             -
               - value
-              - sm
+              - standardSm
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Users (Hierarchy)'
+            -
+              - value
+              - users
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Results (Qual User)'
+            -
+              - value
+              - results
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Expired (Required Training)'
+            -
+              - value
+              - expired
             -
               - default
               - ''
