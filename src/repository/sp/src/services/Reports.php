@@ -97,6 +97,33 @@ class Reports extends Component
     }
 
     /**
+     * @param Entry $reportEntry
+     * @param null $limit
+     * @param string $search
+     * @param bool $count
+     * @return ElementCriteriaModel|null
+     */
+    public function reportDataCriteria(Entry $reportEntry, $limit = null, $search = '', $count = false)
+    {
+        $filter = $this->getReportFilter($reportEntry);
+        $userFilter = $this->_parseUserFilter($filter);
+        $resultFilter = $this->_parseResultFilter($filter);
+
+        $userId = $reportEntry->authorId;
+
+        $criteria = null;
+        switch ($reportEntry->reportType) {
+            case 'standardUsers':
+                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
+                break;
+        }
+        if ($criteria) {
+            return ($count) ? $criteria->count() : $criteria;
+        }
+        return null;
+    }
+
+    /**
      * Return a manager report
      *
      * @param string $reportType
@@ -274,21 +301,6 @@ class Reports extends Component
             $values = Lantra::$app->results->getManagerCpdResults($manager->id, $userFilter, $resultFilter);
         }
         return $values;
-    }
-
-    /**
-     * @param Entry $reportEntry
-     * @return ElementCriteriaModel|null
-     */
-    public function reportDataCriteria(Entry $reportEntry)
-    {
-        $filter = $this->getReportFilter($reportEntry);
-        $userFilter = $this->_parseUserFilter($filter);
-        $resultFilter = $this->_parseResultFilter($filter);
-
-        if ($reportEntry->reportType == 'users') {
-            return Lantra::$app->users->getManagerUsers($reportEntry->authorId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        }
     }
 
     /**

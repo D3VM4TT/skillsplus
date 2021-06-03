@@ -2,53 +2,42 @@
 {% extends "_layout" %}
 
 {% set entryId = craft.app.request.getSegment(4) %}
-{% set report = craft.entries.id(entryId).one %}
+{% set reportEntry = craft.entries.id(entryId).one %}
 
+{% set filterDays = craft.app.request.getParam('days')|default(28) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
 
 {% set metaTitle = "Reporting > Data" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 
-{% set criteria = craft.lantra.reportDataCriteria(report) %}
+{% set criteria = craft.lantra.reportDataCriteria(reportEntry, pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, elements %}{% endif %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
         {% include '_includes/topNavigation' %}
     </div>
-    <section class="page">
-        <div class="page-header secondary-bg">
-            <h2>{{ report.title }}</h2>
-            <div class="header-controls">
-                <div class="header-search">
-                    <a href="/reporting/edit/{{ report.id }}" class="button primary-bg">Edit Report</a>
-                </div>
+    <div class="page-header secondary-bg">
+        <h2>{{ reportEntry.title }}</h2>
+        <div class="header-controls">
+            <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
+            <div class="container-btn primary-bg">
+                <a class="btn-add-new" href="/reporting/edit/{{ reportEntry.id }}">Edit Report</a>
             </div>
         </div>
-        {% if elements is defined and elements|length %}
-            <div class="page-content">
-                <table class="data">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th class="title">Title</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for element in elements %}
-                        <tr class="item">
-                            <td>{{ element.id }}</td>
-                            <td>{{ element.fullName }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    </div>
+    <section class="page">
+        <div class="page-content">
+        {% if elements|length %}
+            {% include 'reporting/_tables/' ~ reportEntry.reportType with{reportType:reportEntry.reportType, elements:elements} %}
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-        {% else %}
-            <div class="page-content">
-                <h3>This report contains no data.</h3>
+            <div class="container-btn">
+                <a class="button primary-bg" href="/sp/reports/standard-report/{{ reportEntry.reportType }}?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
             </div>
+        {% else %}
+                <h3>There are no results to display.</h3>
         {% endif %}
+        </div>
     </section>
 {% endblock %}

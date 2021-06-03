@@ -112,12 +112,22 @@
         </label>
     </div>
 
-    <div class="field--wrapper fields fields-users">
-
+    <div class="field--wrapper fields fields-standardUsers">
 
     </div>
+    <div class="field--wrapper fields fields-standardResults">
 
-    <div class="field--wrapper fields fields-results">
+    </div>
+    <div class="field--wrapper fields fields-standardCpd">
+
+    </div>
+    <div class="field--wrapper fields fields-standardPayments">
+
+    </div>
+    <div class="field--wrapper fields fields-standardSm">
+
+    </div>
+    <div class="field--wrapper fields fields-results fields-required fields-expired">
         <label for="reportResultType" class="no-float">Result Type</label>
         <select name="fields[reportResultType]" id="reportResultType">
             <option value="all" {% if entry is defined and entry.reportResultType == 'all' %} selected="selected"{% endif %}>
@@ -141,18 +151,6 @@
             </select>
         </div>
     </div>
-    <div class="field--wrapper fields fields-cpd">
-
-    </div>
-
-    <div class="field--wrapper fields fields-payments">
-
-    </div>
-
-    <div class="field--wrapper fields fields-sm">
-
-    </div>
-
     <div class="field--wrapper fields fields-expired">
         <label for="reportResultExpiry" class="no-float">Result expiry:</label>
         <select name="fields[reportResultExpiry]" id="reportResultExpiry">

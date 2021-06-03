@@ -1,0 +1,35 @@
+<table width="100%" class="data">
+    <thead>
+    <tr>
+        <th>Company</th>
+        <th>User Name</th>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Start Date</th>
+        <th>Renewal Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in elements %}
+        {% set userCompany = craft.lantra.userCompany(user.id) %}
+        <tr>
+            <td>{{ userCompany.title|default('~') }}</td>
+            <td>{{ user.getFullName() }}</td>
+            <td>{{ user.id }}</td>
+            <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+            <td>{{ user.userTelephone|default('~') }}</td>
+            <td>
+                {% if user.userRole.count %}
+                    {% for role in user.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}
+                {% else %}
+                    ~
+                {% endif %}
+            </td>
+            <td>{{ user.userStartDate ? user.userStartDate|date(dateFormat) : '~' }}</td>
+            <td></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -418,7 +418,15 @@ class LantraVariable
         if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
             return true;
         }
+    }
 
+    /**
+     * @param $reportEntry
+     * @return bool
+     */
+    public function isStandardReport($reportEntry)
+    {
+        return substr($reportEntry->reportType, 0, 8) === 'standard';
     }
 
     /**
@@ -662,6 +670,24 @@ class LantraVariable
     }
 
     /**
+     * Return a manager report
+     *
+     * @param string $reportType
+     * @param null $userId
+     * @param mixed $days
+     * @param mixed $search
+     * @param int $limit
+     * @param bool $count
+     * @return mixed
+     * @throws Exception
+     */
+    public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
+    {
+        $user = $this->getUser($userId);
+        return Lantra::$app->reports->getStandardReportData($reportType, $user->id, $days, $search, $limit, $count);
+    }
+
+    /**
      * @param $search
      * @param $limit
      * @param $order
@@ -678,9 +704,9 @@ class LantraVariable
      * @param $reportEntry
      * @return \lantra\sp\services\ElementCriteriaModel|null
      */
-    public function reportDataCriteria($reportEntry)
+    public function reportDataCriteria($reportEntry, $limit)
     {
-        return Lantra::$app->reports->reportDataCriteria($reportEntry);
+        return Lantra::$app->reports->reportDataCriteria($reportEntry, $limit);
     }
 
     /**
@@ -1119,24 +1145,6 @@ class LantraVariable
             return null;
         }
         return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
-    }
-
-    /**
-     * Return a manager report
-     *
-     * @param string $reportType
-     * @param null $userId
-     * @param mixed $days
-     * @param mixed $search
-     * @param int $limit
-     * @param bool $count
-     * @return mixed
-     * @throws Exception
-     */
-    public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
-    {
-        $user = $this->getUser($userId);
-        return Lantra::$app->reports->getStandardReportData($reportType, $user->id, $days, $search, $limit, $count);
     }
 
     /**
