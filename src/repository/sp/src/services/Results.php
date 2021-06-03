@@ -2639,7 +2639,7 @@ class Results extends Component
      * @throws mixed
      */
     private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '') {
-        if ( ! is_null($userId)) {
+        if (! is_null($userId)) {
             $manager = Craft::$app->users->getUserById($userId);
         }
         else {
@@ -2657,10 +2657,10 @@ class Results extends Component
             $criteria->order = 'expiryDate asc';
         }
         elseif ($days != 'all') {
-            $criteria->postDate = '>' . (time() - ($days*86400));
+           $criteria->postDate = '>' . (time() - ($days*86400));
         }
         if ($status) {
-            $criteria->resultStatus = $status;
+           $criteria->resultStatus = $status;
         }
         // from specific ids (i.e. blocked results)
         if ($id) {

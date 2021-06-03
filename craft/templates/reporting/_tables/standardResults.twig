@@ -1,0 +1,39 @@
+<table width="100%" class="data">
+    <thead>
+    <tr>
+        <th>Company</th>
+        <th>User Name</th>
+        <th>User ID</th>
+        <th>Unit</th>
+        {% if reportEntry.reportResultStandardType == 'endorsed' %}
+            <th>Endorsed Date</th>
+            <th>Endorsed By</th>
+        {% else %}
+            <th>Expiry Date</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for result in elements %}
+        {% set user = result.author %}
+        {% set userCompany = craft.lantra.userCompany(user.id) %}
+        <tr>
+            <td>{{ userCompany.title|default('~') }}</td>
+            <td>{{ user.getFullName() }}</td>
+            <td>{{ user.id }}</td>
+            <td>{{ result.title }}</td>
+            {% if reportEntry.reportResultStandardType == 'endorsed' %}
+                <td>{{ result.resultEndorsedDate|date(dateFormat) }}</td>
+                <td>
+                    {% if result.resultEndorsedUser.count %}
+                        {% set resultEndorsedUser = result.resultEndorsedUser.one %}
+                        {{ resultEndorsedUser ? resultEndorsedUser.fullName : '~' }}
+                    {% endif %}
+                </td>
+            {% else %}
+                <td>{{ result.expiryDate }}</th>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

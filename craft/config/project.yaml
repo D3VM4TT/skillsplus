@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1622725867
+dateModified: 1622734907
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2116,6 +2116,41 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Matrix
+  6fae9879-b107-4f41-9bc0-0f119a358ef1:
+    contentColumnType: string
+    fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+    handle: reportResultStandardType
+    instructions: ''
+    name: 'Report Results Standard Type'
+    searchable: true
+    settings:
+      optgroups: true
+      options:
+        -
+          __assoc__:
+            -
+              - label
+              - Endorsed
+            -
+              - value
+              - endorsed
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - Expiring
+            -
+              - value
+              - expiring
+            -
+              - default
+              - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Dropdown
   73b12e48-7a9e-496f-b91e-01fad8e389d1:
     contentColumnType: text
     fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
@@ -5391,22 +5426,25 @@ sections:
                 fields:
                   19bb4e6d-2834-456c-93b9-6b942b47b8d4:
                     required: false
-                    sortOrder: 15
+                    sortOrder: 16
                   27e57a2d-2938-41e8-ab58-72f377ca20c1:
                     required: false
                     sortOrder: 8
                   2f940be6-d44c-47bf-95b6-392608ee2547:
                     required: false
                     sortOrder: 7
+                  6fae9879-b107-4f41-9bc0-0f119a358ef1:
+                    required: false
+                    sortOrder: 9
                   7b7af1dc-c01f-4f73-b3f4-a83ff572e941:
                     required: false
                     sortOrder: 6
                   8200bbc7-18f0-49da-a017-2fb3a82ee950:
                     required: false
-                    sortOrder: 13
+                    sortOrder: 14
                   a1b63d62-c6f0-443b-910f-1d6691b0e4a4:
                     required: false
-                    sortOrder: 9
+                    sortOrder: 10
                   ab55340f-38e6-4d9f-82eb-f3785c6c6ff8:
                     required: false
                     sortOrder: 4
@@ -5415,16 +5453,16 @@ sections:
                     sortOrder: 5
                   c2e23d12-1d3f-4cbd-a3cb-be22ea64bdca:
                     required: false
-                    sortOrder: 11
+                    sortOrder: 12
                   c9d661c9-fd44-473b-a7ef-70f4bc6340ea:
                     required: false
-                    sortOrder: 12
+                    sortOrder: 13
                   d4776dfe-b66f-4a88-931c-d2bebb2d68d1:
                     required: false
                     sortOrder: 2
                   d4ac5d73-4f3c-467c-a3c4-492a2205f858:
                     required: false
-                    sortOrder: 16
+                    sortOrder: 17
                   d500f1e4-fb5b-435a-af01-cc2402b4a8c3:
                     required: false
                     sortOrder: 3
@@ -5433,10 +5471,10 @@ sections:
                     sortOrder: 1
                   e05af851-b6aa-4f59-a43b-0ac897b54887:
                     required: false
-                    sortOrder: 10
+                    sortOrder: 11
                   f56275dc-26a8-46e7-bfb5-061917775684:
                     required: false
-                    sortOrder: 14
+                    sortOrder: 15
                 name: Criteria
                 sortOrder: 2
               -
@@ -5466,7 +5504,7 @@ sections:
         hasTitleField: true
         name: Reports
         sortOrder: 1
-        titleFormat: null
+        titleFormat: ''
         titleLabel: Title
     handle: reports
     name: Reports

@@ -29,7 +29,7 @@
     </div>
     <section class="page">
         <div class="page-content">
-        {% if elements|length %}
+        {% if elements is defined and elements|length %}
             {% include 'reporting/_tables/' ~ reportEntry.reportType with{reportType:reportEntry.reportType, elements:elements} %}
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
             <div class="container-btn">

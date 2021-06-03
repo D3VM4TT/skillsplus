@@ -116,6 +116,15 @@ class Reports extends Component
             case 'standardUsers':
                 $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
                 break;
+            case 'standardResults':
+                $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
+                if ($reportEntry->reportResultStandardType == 'endorsed') {
+                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
+                }
+                else {
+                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+                }
+                break;
         }
         if ($criteria) {
             return ($count) ? $criteria->count() : $criteria;
