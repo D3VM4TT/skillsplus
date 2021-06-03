@@ -37,11 +37,9 @@ class ReportsController extends BaseController
         ## custom title
         if ($automated) {
             $fields['reportAutomated'] = true;
-            $redirect = 'reporting/automated';
         }
         else {
             $fields['reportAutomated'] = false;
-            $redirect = 'reporting/custom';
         }
         $reportEntry = Lantra::$app->reports->saveCustomReport($manager, $title, $fields, $entryId);
         if ($reportEntry->hasErrors()) {
@@ -52,6 +50,7 @@ class ReportsController extends BaseController
         if (!$automated) {
             Lantra::$app->queue->add($reportEntry->id);
         }
+        $redirect = $automated ? 'reporting/automated' : 'reporting/data/' . $reportEntry->id;
         return $this->_returnMessage('Custom report has been saved.', true, $redirect);
     }
 
