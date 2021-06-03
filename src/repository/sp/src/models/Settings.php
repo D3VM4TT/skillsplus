@@ -238,16 +238,6 @@ class Settings extends Model
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
-        'expired'   => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'required'   => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
         'cpd'       => [
             'active' => true,
             'group'  => 'schemeManagers',
@@ -259,6 +249,21 @@ class Settings extends Model
             'roles'  => []
         ],
         'sm'       => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'customUsers'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'customResults'     => [
+            'active' => true,
+            'group'  => 'schemeManagers',
+            'roles'  => []
+        ],
+        'customExpired'     => [
             'active' => true,
             'group'  => 'schemeManagers',
             'roles'  => []
