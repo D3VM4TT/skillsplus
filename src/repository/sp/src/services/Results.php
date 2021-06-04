@@ -2177,7 +2177,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function getSubordinateResults($subordinateIds, $resultFilter = []) {
+    private function getSubordinateResults($subordinateIds, $resultFilter = [], $return = 'results')
+    {
         if (!$subordinateIds || !count($subordinateIds)) {
             return [];
         }
@@ -2206,6 +2207,10 @@ class Results extends Component
         $criteria->status = $resultFilter['status'];
         if ($resultFilter['relatedTo']) {
             $criteria->relatedTo = $resultFilter['relatedTo'];
+        }
+
+        if ($return == 'criteria') {
+            return $criteria;
         }
         $results = $criteria->all();
 
@@ -2311,7 +2316,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getManagerCpdResults($userId = null, $userFilter = [], $resultFilter) {
+    public function getManagerCpdModuleResults($userId = null, $userFilter = [], $resultFilter)
+    {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $subordinates->ids();
@@ -2329,10 +2335,6 @@ class Results extends Component
             'Evidence',
             'Comments'
         ];
-
-        $resultFilter['resultType'] = 'unitResult';
-        $resultFilter = $this->formatResultsFilter($resultFilter);
-        $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
         $rows = [$header];
         foreach($subordinates as $user) {

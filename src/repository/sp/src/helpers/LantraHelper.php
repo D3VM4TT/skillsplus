@@ -85,6 +85,22 @@ class LantraHelper
         return $userIds;
     }
 
+    /**
+     * @param $user
+     * @return string
+     */
+    public static function userRoles($user)
+    {
+        if (!count($user->userRole)) {
+            return '';
+        }
+        $roles = [];
+        foreach ($user->userRole as $role) {
+            $roles[] = $role->title;
+        }
+
+        return implode (', ', $roles);
+    }
 
     /**
      * @param $handle

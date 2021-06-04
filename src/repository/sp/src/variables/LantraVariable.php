@@ -16,6 +16,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
 use lantra\sp\helpers\RecordHelper;
+use lantra\sp\helpers\ReportHelper;
 use lantra\sp\models\RecordItem;
 
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -713,6 +714,26 @@ class LantraVariable
     public function reportDataCriteria($reportEntry, $limit)
     {
         return Lantra::$app->reports->reportDataCriteria($reportEntry, $limit);
+    }
+
+    /**
+     * @param $reportEntry
+     * @param bool $html
+     * @return string
+     */
+    public function reportHeader($reportEntry, $html = true)
+    {
+        return ReportHelper::reportHeader($reportEntry, $html);
+    }
+
+    /**
+     * @param $reportEntry
+     * @param bool $html
+     * @return string
+     */
+    public function reportRow($reportEntry, $row, $html = true)
+    {
+        return ReportHelper::reportRow($reportEntry, $row, $html);
     }
 
     /**

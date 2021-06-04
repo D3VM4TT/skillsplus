@@ -1,7 +1,7 @@
 {% do craft.lantra.requirePermission('editReports') %}
 {% extends "_layout" %}
 
-{% set entryId = craft.app.request.getSegment(4) %}
+{% set entryId = craft.app.request.getSegment(3) %}
 {% set reportEntry = craft.entries.id(entryId).one %}
 
 {% set filterDays = craft.app.request.getParam('days')|default(28) %}
@@ -30,7 +30,20 @@
     <section class="page">
         <div class="page-content">
         {% if elements is defined and elements|length %}
-            {% include 'reporting/_tables/' ~ reportEntry.reportType with{reportType:reportEntry.reportType, elements:elements} %}
+            <table width="100%" class="data">
+                <thead>
+                <tr>
+                    {{ craft.lantra.reportHeader(reportEntry)|raw }}
+                </tr>
+                </thead>
+                <tbody>
+                {% for element in elements %}
+                    <tr>
+                        {{ craft.lantra.reportRow(reportEntry, element)|raw }}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
             <div class="container-btn">
                 <a class="button primary-bg" href="/sp/reports/standard-report/{{ reportEntry.reportType }}?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
