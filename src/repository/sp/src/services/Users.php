@@ -18,8 +18,7 @@ use craft\events\UserEvent;
 use craft\elements\db\UserQuery;
 use craft\helpers\DateTimeHelper;
 
-use craft\records\MatrixBlock;
-use craft\records\MatrixBlockType;
+use craft\elements\MatrixBlock;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 

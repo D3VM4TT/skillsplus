@@ -10,6 +10,7 @@ namespace lantra\sp\helpers;
 
 use lantra\sp\Plugin as Lantra;
 use craft\base\Element;
+use craft\elements\MatrixBlock;
 use craft\elements\Entry;
 use craft\elements\User;
 
@@ -189,6 +190,50 @@ class ReportHelper
             $resultEntry->resultHours,
             $resultModule->targetPoints,
             $resultEntry->resultPoints
+        ];
+
+        return $items;
+    }
+
+    /**
+     * @param Entry $reportEntry
+     * @return array
+     */
+    public static function reportHeaderStandardPayments(Entry $reportEntry)
+    {
+        return [
+            'User ID',
+            'Company',
+            'User Name',
+            'Transaction Date',
+            'Transaction Total',
+            'Transaction ID'
+        ];
+    }
+
+    /**
+     * @param Entry $reportEntry
+     * @param MatrixBlock $paymentBlock
+     * @param bool $html
+     * @return array
+     */
+    public static function reportRowStandardPayments(Entry $reportEntry, MatrixBlock $paymentBlock, $html = true)
+    {
+        $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
+        if (get_class($paymentBlock->owner) == 'craft\elements\User') {
+            $user = $paymentBlock->owner;
+        }
+        else {
+            $user = $paymentBlock->owner->author;
+        }
+        $userCompany = Lantra::$app->users->userCompany($user);
+        $items = [
+            $user->id,
+            $userCompany ? $userCompany->title : '~',
+            $user->fullName,
+            $paymentBlock->dateCreated->format($dateFormat),
+            $paymentBlock->mc_gross,
+            $paymentBlock->txn_id
         ];
 
         return $items;
