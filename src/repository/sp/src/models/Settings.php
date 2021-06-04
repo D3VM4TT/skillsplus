@@ -230,41 +230,49 @@ class Settings extends Model
     public $reports                             = [
         'standardUsers'     => [
             'active' => true,
+            'title' => 'Users',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'standardResults'     => [
             'active' => true,
+            'title' => 'Results',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'standardCpd'       => [
             'active' => true,
+            'title' => 'CPD',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'standardPayments'  => [
             'active' => true,
+            'title' => 'Payments',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'standardSm'       => [
             'active' => true,
+            'title' => 'Scheme Manager',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'users'     => [
             'active' => true,
+            'title' => 'Custom User (hierarchy)',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'results'   => [
             'active' => true,
+            'title' => 'Custom Results (qual user)',
             'group'  => 'schemeManagers',
             'roles'  => []
         ],
         'expired'     => [
             'active' => true,
+            'title' => 'Custom Expired (required training)',
             'group'  => 'schemeManagers',
             'roles'  => []
         ]

@@ -29,6 +29,10 @@
                     name:			"reports[standardUsers][active]",
                     on:		        settings.reports.standardUsers.active|default(false)
                 }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardUsers][title]",
+                    value:		     "Users"
+                }) }}
             </td>
             <td>
                 {{ forms.selectField({
@@ -59,6 +63,10 @@
                     id:				"reports-standardResults-active",
                     name:			"reports[standardResults][active]",
                     on:		        settings.reports.standardResults.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardResults][title]",
+                    value:		     "Results"
                 }) }}
             </td>
             <td>
@@ -91,6 +99,10 @@
                     name:			"reports[standardCpd][active]",
                     on:		        settings.reports.standardCpd.active|default(false)
                 }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardCpd][title]",
+                    value:		     "CPD"
+                }) }}
             </td>
             <td>
                 {{ forms.selectField({
@@ -121,6 +133,10 @@
                     id:				"reports-standardPayments-active",
                     name:			"reports[standardPayments][active]",
                     on:		        settings.reports.standardPayments.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardPayments][title]",
+                    value:		     "Payments"
                 }) }}
             </td>
             <td>
@@ -153,6 +169,10 @@
                     name:			"reports[standardSm][active]",
                     on:		        settings.reports.standardSm.active|default(false)
                 }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardSm][title]",
+                    value:		     "Scheme Manager"
+                }) }}
             </td>
             <td>
                 {{ forms.selectField({
@@ -183,6 +203,10 @@
                     id:				"reports-users-active",
                     name:			"reports[users][active]",
                     on:		        settings.reports.users.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[users][title]",
+                    value:		     "Custom User (hierarchy)"
                 }) }}
             </td>
             <td>
@@ -215,6 +239,10 @@
                     name:			"reports[results][active]",
                     on:		        settings.reports.results.active|default(false)
                 }) }}
+                {{ forms.hidden ({
+                    name:			"reports[results][title]",
+                    value:		     "Custom Results (qual user)"
+                }) }}
             </td>
             <td>
                 {{ forms.selectField({
@@ -245,6 +273,10 @@
                     id:				"reports-expired-active",
                     name:			"reports[expired][active]",
                     on:		        settings.reports.expired.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[expired][title]",
+                    value:		     "Custom Expired (required training)"
                 }) }}
             </td>
             <td>

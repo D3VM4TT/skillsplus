@@ -384,10 +384,10 @@ class LantraVariable
     }
 
     /**
-     * @param null $key
-     * @return bool
+     * @param null $return
+     * @return mixed
      */
-    public function settingReports($key = null)
+    public function settingReports($return = null)
     {
         $reports = Lantra::$app->settings->getSetting('reports');
         $active = [];
@@ -396,10 +396,16 @@ class LantraVariable
                 $active[$k] = $report;
             }
         }
-        if (is_null($key)) {
-            return count($active);
+        ## return bool
+        if (is_null($return)) {
+            return count($active) > 0;
         }
-        return isset($active[$key]) ? $active[$key] : null;
+        ## return array
+        if ($return == 'array') {
+            return $active;
+        }
+        ## return specific report
+        return isset($active[$return]) ? $active[$return] : null;
     }
 
     /**

@@ -46,47 +46,12 @@
     <div class="field--wrapper">
         <label for="reportType">Report Type</label>
         <select id="reportType" name="fields[reportType]">
-            {% if craft.lantra.settingReports('standardUsers') %}
-                <option value="standardUsers" {% if entry is defined and entry.reportType == 'standardUsers' %} selected="selected"{% endif %}>
-                    Users
+            {% set reports = craft.lantra.settingReports('array') %}
+            {% for key, report in reports %}
+                <option value="{{ key }}" {% if entry is defined and entry.reportType == key %} selected="selected"{% endif %}>
+                    {{ report.title }}
                 </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('standardResults') %}
-                <option value="standardResults" {% if entry is defined and entry.reportType == 'standardResults' %} selected="selected"{% endif %}>
-                    Results
-                </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('standardCpd') %}
-                <option value="standardCpd" {% if entry is defined and entry.reportType == 'standardCpd' %} selected="selected"{% endif %}>
-                    CPD
-                </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('standardPayments') %}
-                <option value="standardPayments" {% if entry is defined and entry.reportType == 'standardPayments' %} selected="selected"{% endif %}>
-                    Payments
-                </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('standardSm') %}
-                <option value="sm" {% if entry is defined and entry.reportType == 'sm' %} selected="selected"{% endif %}>
-                    Scheme Manager
-                </option>
-            {% endif %}
-
-            {% if craft.lantra.settingReports('users') %}
-                <option value="users" {% if entry is defined and entry.reportType == 'users' %} selected="selected"{% endif %}>
-                    Custom Users (hierarchy)
-                </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('results') %}
-                <option value="results" {% if entry is defined and entry.reportType == 'results' %} selected="selected"{% endif %}>
-                    Custom Results (qual user)
-                </option>
-            {% endif %}
-            {% if craft.lantra.settingReports('expired') %}
-                <option value="expired" {% if entry is defined and entry.reportType == 'expired' %} selected="selected"{% endif %}>
-                    Custom Expired (required training)
-                </option>
-            {% endif %}
+            {% endfor %}
         </select>
     </div>
     <div class="field--wrapper">
