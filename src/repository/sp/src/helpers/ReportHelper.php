@@ -28,7 +28,7 @@ class ReportHelper
         if ($html) {
             return '<th>' . implode('</th><th>', $items) . '</th>';
         }
-        return implode(',', $items);
+        return $items;
     }
 
     /**
@@ -45,7 +45,7 @@ class ReportHelper
         if ($html) {
             return '<td>' . implode('</td><td>', $items) . '</td>';
         }
-        return implode(',', $items);
+        return $items;
 
     }
 
@@ -56,14 +56,15 @@ class ReportHelper
     static function reportHeaderStandardUsers(Entry $reportEntry)
     {
         return [
+            'User ID',
             'Company',
             'User Name',
-            'User ID',
             'Email',
             'Phone',
             'Role',
             'Start Date',
-            'Renewal Date'
+            'Renewal Date',
+            'Last Login Date'
         ];
     }
     /**
@@ -76,14 +77,15 @@ class ReportHelper
         $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
         $userCompany = Lantra::$app->users->userCompany($user);
         return [
+            $user->id,
             $userCompany ? $userCompany->title : '~',
             $user->fullName,
-            $user->id,
             $html ? '<a href="mailto:' . $user->email . '">' . $user->email . '</a>' : $user->email,
             $user->userTelephone ? $user->userTelephone : '~',
             LantraHelper::userRoles($user),
             $user->userStartDate ? $user->userStartDate->format($dateFormat) : '~',
-            $user->userExpiryDate ? $user->userExpiryDate->format($dateFormat) : '~'
+            $user->userExpiryDate ? $user->userExpiryDate->format($dateFormat) : '~',
+            $user->lastLoginDate ? $user->lastLoginDate->format($dateFormat) : '~'
         ];
     }
 
@@ -94,10 +96,11 @@ class ReportHelper
     static function reportHeaderStandardResults(Entry $reportEntry)
     {
         $items = [
+            'User ID',
             'Company',
             'User Name',
-            'User ID',
-            'Result Title',
+            'Unit ID',
+            'Unit Title',
         ];
         if ($reportEntry->reportResultStandardType == 'endorsed') {
             $items = array_merge($items, ['Endorsed Date', 'Endorsed User']);
@@ -119,18 +122,23 @@ class ReportHelper
         $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
         $user = $resultEntry->author;
         $userCompany = Lantra::$app->users->userCompany($user);
+        $resultUnit = $resultEntry->resultUnit->one();
         $items = [
+            $user->id,
             $userCompany ? $userCompany->title : '~',
             $user->fullName,
-            $user->id,
-            $resultEntry->title
+            $resultUnit->id,
+            $resultUnit->title
         ];
 
-        if ($reportEntry->reportResultStandardType == 'endorsed') {
-
+        if ($reportEntry->reportResultStandardType == 'endorsed')
+        {
             $endorsedUser = $resultEntry->resultEndorsedUser->count() ? $resultEntry->resultEndorsedUser->one() : null;
             $items[] = $endorsedUser ? $resultEntry->resultEndorsedDate->format($dateFormat) : '~';
             $items[] = $endorsedUser ? $endorsedUser->fullName : '~';
+        }
+        else {
+            $items[] = $resultEntry->expiryDate->format($dateFormat);
         }
 
         return $items;
@@ -138,19 +146,51 @@ class ReportHelper
 
     /**
      * @param Entry $reportEntry
+     * @return array
      */
     public static function reportHeaderStandardCpd(Entry $reportEntry)
     {
-
+        return [
+            'User ID',
+            'Company',
+            'User Name',
+            'Module ID',
+            'Module Title',
+            'Cycle Start',
+            'Cycle Finish',
+            'Target Hours',
+            'Result Hours',
+            'Target Points',
+            'Result Points'
+        ];
     }
 
     /**
+     * @param Entry $reportEntry
      * @param Entry $resultEntry
      * @param bool $html
      * @return array
      */
-    public static function reportRowStandardCpd(Entry $resultEntry, $html = true)
+    public static function reportRowStandardCpd(Entry $reportEntry, Entry $resultEntry, $html = true)
     {
-        return [];
+        $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
+        $user = $resultEntry->author;
+        $userCompany = Lantra::$app->users->userCompany($user);
+        $resultModule = $resultEntry->resultModule->one();
+        $items = [
+            $user->id,
+            $userCompany ? $userCompany->title : '~',
+            $user->fullName,
+            $resultModule->id,
+            $resultModule->title,
+            $resultModule->cycleStartDate ? $resultModule->cycleStartDate->format($dateFormat) : '~',
+            $resultModule->cycleFinishDate ? $resultModule->cycleFinishDate->format($dateFormat) : '~',
+            $resultModule->targetHours,
+            $resultEntry->resultHours,
+            $resultModule->targetPoints,
+            $resultEntry->resultPoints
+        ];
+
+        return $items;
     }
 }

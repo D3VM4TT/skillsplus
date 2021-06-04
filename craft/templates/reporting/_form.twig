@@ -16,6 +16,8 @@
 {% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').orderBy('firstName').limit(null) %}
 {% set moduleGroups = craft.categories.group('moduleGroups').limit(null).orderBy('title') %}
 
+{% set cpdModuleEntries = craft.entries.section('modules').type('cpd').limit(null).all() %}
+
 {% set dateFormat = 'd-m-y H:i' %}
 
 {% block content %}
@@ -63,8 +65,6 @@
                     value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
             {% endfor %}
         </select>
-    </div>
-    <div class="field--wrapper">
         <label for="reportAllCompanies" class="no-float">
             <input name="fields[reportAllCompanies]" id="reportAllCompanies" type="checkbox" value="1"
                 {% if entry is defined and entry.reportAllCompanies %} checked{% endif %}>
@@ -78,8 +78,17 @@
     </div>
 
     <div class="field--wrapper fields fields-standardUsers">
-
+        <label for="reportDays" class="no-float">Filter by user last login:</label>
+        <select name="fields[reportDays]" id="reportDays">
+            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">Show all users</option>
+            <option value="7" {% if entry is defined and entry.reportResultExpiry == '7' %} selected="selected{% endif %}">Not accessed for 7 days</option>
+            <option value="14" {% if entry is defined and entry.reportResultExpiry == '14' %} selected="selected{% endif %}">Not accessed for 90 days</option>
+            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Not accessed for 180 days</option>
+            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Not accessed for 365 days</option>
+            <option value="9999" {% if entry is defined and entry.reportResultExpiry == '9999' %} selected="selected{% endif %}">Never accessed</option>
+        </select>
     </div>
+
     <div class="field--wrapper fields fields-standardResults">
         <label for="reportResultStandardType" class="no-float">Result type</label>
         <select name="fields[reportResultStandardType]" id="reportResultStandardType">
@@ -108,8 +117,21 @@
         </label>
     </div>
     <div class="field--wrapper fields fields-standardCpd">
-
+        <label for="reportModules" class="no-float">Filter Modules</label>
+        <input type="hidden" name="fields[reportModules]" value="" />
+        <select multiple class="js-select2" name="fields[reportModules][]" id="reportModules">
+            {% for moduleEntry in cpdModuleEntries %}
+                <option {% if entry is defined and moduleEntry.id in entry.reportModules.ids() %} selected="selected"{% endif %}
+                        value="{{ moduleEntry.id }}">{{ moduleEntry.title }}</option>
+            {% endfor %}
+        </select>
+        <label for="reportAllCompanies" class="no-float">
+            <input name="fields[reportAllModules]" id="reportAllCompanies" type="checkbox" value="1"
+                {% if entry is defined and entry.reportAllModules %} checked{% endif %}>
+            Include all modules
+        </label>
     </div>
+
     <div class="field--wrapper fields fields-standardPayments">
 
     </div>

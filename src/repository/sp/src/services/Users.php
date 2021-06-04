@@ -18,6 +18,8 @@ use craft\events\UserEvent;
 use craft\elements\db\UserQuery;
 use craft\helpers\DateTimeHelper;
 
+use craft\records\MatrixBlock;
+use craft\records\MatrixBlockType;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
@@ -1117,16 +1119,14 @@ class Users extends Component
     }
 
     /**
-     * Return subordinate users (as criteria for report) for a manager (similar to above)
-     *
      * @param null $userId
      * @param int $limit
      * @param string $search
-     * @param string $relatedTo
-     * @return ElementCriteriaModel|null
-     * @throws mixed
+     * @param null $relatedTo
+     * @param null $lastLoginDate
+     * @return \craft\elements\db\ElementQueryInterface|UserQuery|null
      */
-    public function getManagerUsers($userId = null, $limit = 10, $search = '', $relatedTo = null)
+    public function getManagerUsers($userId = null, $limit = 10, $search = '', $relatedTo = null, $lastLoginDate = null)
     {
         if (!is_null($userId)) {
             $manager = Craft::$app->users->getUserById($userId);
@@ -1146,6 +1146,9 @@ class Users extends Component
         }
         if ($relatedTo) {
             $criteria->relatedTo = $relatedTo;
+        }
+        if ($lastLoginDate) {
+            $criteria->lastLoginDate = $lastLoginDate;
         }
         ## get the subordinate ids if not admin or scheme manager
         if (!$manager->admin && !$manager->isInGroup('schemeManagers')) {
@@ -1530,5 +1533,16 @@ class Users extends Component
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntry->moduleRoles->ids(), 'field' => 'userRole'];
         return $criteria->all();
+    }
+
+    /**
+     *
+     */
+    function getUserPayments()
+    {
+        $field = Craft::$app->fields->getFieldByHandle('userPayments');
+        $criteria = MatrixBlock::find();
+        $criteria->fieldId = $field->id;
+        return $criteria;
     }
 }

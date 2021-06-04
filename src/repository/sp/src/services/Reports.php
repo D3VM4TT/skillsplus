@@ -114,7 +114,7 @@ class Reports extends Component
         $criteria = null;
         switch ($reportEntry->reportType) {
             case 'standardUsers':
-                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
+                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
             case 'standardResults':
                 $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
@@ -126,62 +126,10 @@ class Reports extends Component
                 }
                 break;
             case 'standardCpd':
-                $criteria = Lantra::$app->results->getManagerCpdModuleResults($userId, $userFilter, $resultFilter, $limit, $search);
+                $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
                 break;
             case 'standardPayments':
-
-                break;
-            case 'standardSm':
-
-                break;
-
-
-        }
-        if ($criteria) {
-            return ($count) ? $criteria->count() : $criteria;
-        }
-        return null;
-    }
-
-    /**
-     * Return a manager report
-     *
-     * @param string $reportType
-     * @param null $userId
-     * @param mixed $days
-     * @param mixed $search
-     * @param int $limit
-     * @param bool $count
-     * @return mixed
-     * @throws Exception
-     */
-    public function getStandardReportData($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
-    {
-        $criteria = null;
-        switch ($reportType) {
-            case 'units-required':
-                $criteria = Lantra::$app->results->getManagerUnitRequiredResults($userId);
-                break;
-            case 'units-blocked':
-                $criteria = Lantra::$app->results->getManagerUnitBlockedResults($userId, $days, $limit, $search);
-                break;
-            case 'units-expiring':
-                $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
-                break;
-            case 'units-endorsed':
-                $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-active':
-                $criteria = Lantra::$app->results->getManagerModuleActiveResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-expiring':
-                $criteria = Lantra::$app->results->getManagerModuleExpiringResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-completed':
-                $criteria = Lantra::$app->results->getManagerModuleCompletedResults($userId, $days, $limit, $search);
-                break;
-            case 'users':
-                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
+                $criteria = Lantra::$app->users->getUserPayments();
                 break;
         }
         if ($criteria) {
@@ -249,14 +197,15 @@ class Reports extends Component
     public function getReportFilter($reportEntry)
     {
         $filter = [
+            'reportDays'                => $reportEntry->reportDays,
             'reportResultType'          => $reportEntry->reportResultType->value,
             'reportDisplayField'        => $reportEntry->reportDisplayField->value,
             'reportResultExpiry'        => $reportEntry->reportResultExpiry->value,
-            ## 'reportNoDates'             => $reportEntry->reportNoDates,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
             'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
-            'reportUnits'               => []
+            'reportUnits'               => [],
+            'reportModules'             => []
         ];
 
         if ($reportEntry->reportCompanies->count()) {
@@ -264,6 +213,9 @@ class Reports extends Component
         }
         if ($reportEntry->reportUnits->count()) {
             $filter['reportUnits'] = $reportEntry->reportUnits->ids();
+        }
+        if ($reportEntry->reportModules->count()) {
+            $filter['reportModules'] = $reportEntry->reportModules->ids();
         }
         return $filter;
     }
@@ -326,13 +278,13 @@ class Reports extends Component
      */
     private function _parseUserFilter($filter)
     {
-        $defaults = [
-            'limit'      => null,
-            'search'     => '',
-            'relatedTo'  => []
+        $userFilter = [
+            'limit'         => null,
+            'search'        => '',
+            'relatedTo'     => [],
+            'lastLoginDate' => null
         ];
 
-        $userFilter = [];
         if (count($filter['reportCompanies'])) {
             if ($filter['reportIncludeHierarchy']) {
                 $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
@@ -343,7 +295,17 @@ class Reports extends Component
             ];
         }
 
-        return array_merge($defaults, $filter);
+        if ($filter['reportDays']) {
+            if ($filter['reportDays'] == 9999) {
+                $userFilter['lastLoginDate'] = ':empty:';
+            }
+            else {
+                $date = new \DateTime();
+                $userFilter['lastLoginDate'] = '> ' . $date->modify('-' . $filter['reportDays'] . ' days')->getTimestamp();
+            }
+        }
+
+        return $userFilter;
     }
 
     /**
@@ -352,7 +314,13 @@ class Reports extends Component
      */
     private function _parseResultFilter($filter)
     {
-        $resultFilter = [];
+        $resultFilter = [
+            'limit'         => null,
+            'search'        => '',
+            'relatedTo'     => null,
+            'resultType'    => null,
+            'unitIds'       => null
+        ];
         if ($filter['reportResultType'] != 'all') {
             $resultFilter['resultType'] = $filter['reportResultType'];
         }
@@ -360,13 +328,18 @@ class Reports extends Component
         if ($filter['reportResultType'] != 'unitResult') {
             $filter['reportUnits'] = [];
         }
-
         if (count($filter['reportUnits'])) {
             $resultFilter['relatedTo'] = [
                 'targetElement' => $filter['reportUnits'],
                 'field' => 'resultUnit'
             ];
             $resultFilter['unitIds'] = $filter['reportUnits'];
+        }
+        if (count($filter['reportModules'])) {
+            $resultFilter['relatedTo'] = [
+                'targetElement' => $filter['reportModules'],
+                'field' => 'resultModule'
+            ];
         }
         return $resultFilter;
     }

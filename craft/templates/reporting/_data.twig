@@ -21,8 +21,7 @@
     <div class="page-header secondary-bg">
         <h2>{{ reportEntry.title }}</h2>
         <div class="header-controls">
-            <div class="header-search">{% include '_includes/filter' with{filterDays:false} %}</div>
-            <div class="container-btn primary-bg">
+            <div class="container-btn primary-bg" style="margin-left:0;">
                 <a class="btn-add-new" href="/reporting/edit/{{ reportEntry.id }}">Edit Report</a>
             </div>
         </div>
@@ -46,7 +45,7 @@
             </table>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
             <div class="container-btn">
-                <a class="button primary-bg" href="/sp/reports/standard-report/{{ reportEntry.reportType }}?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
+                <a class="button primary-bg" href="/sp/reports/download-report/{{ reportEntry.id }}?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
             </div>
         {% else %}
                 <h3>There are no results to display.</h3>

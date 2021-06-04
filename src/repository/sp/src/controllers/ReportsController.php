@@ -10,6 +10,7 @@ namespace lantra\sp\controllers;
 
 use Craft;
 
+use lantra\sp\helpers\ReportHelper;
 use lantra\sp\Plugin as Lantra;
 
 class ReportsController extends BaseController
@@ -107,45 +108,20 @@ class ReportsController extends BaseController
      *
      * @throws mixed
      */
-    public function actionStandardReport()
+    public function actionDownloadReport()
     {
-        $type = Craft::$app->request->getSegment(4);
-        $days = Craft::$app->request->getParam('days', 28);
-        $search = Craft::$app->request->getParam('search', '');
-
-        $manager = Craft::$app->getUser();
-
-        $data = [];
-        if (false != $results = Lantra::$app->reports->getStandardReportData($type, $manager->id, $days, $search, false)) {
-            foreach ($results as $row) {
-                if ($type == 'users') {
-                    $company = $row->userCompany->one();
-                    $data[] = [
-                        $company ? $company->companyLabel : '~',
-                        $row->getFullName(),
-                        $row->email,
-                    ];
-                }
-                else {
-                    $company = $row->author->userCompany->one();
-                    $title = $row->title;
-                    if ($row->type == 'unitResult') {
-                        $title = $row->resultUnit->one()->title;
-                    }
-                    elseif ($row->type == 'moduleResult' && $row->resultModule->count()) {
-                        $title = $row->resultModule->one()->title;
-                    }
-                    $data[] = [
-                        $company ? $company->companyLabel : '~',
-                        $row->author->getFullName(),
-                        $title,
-                        $row->postDate->format('d-m-Y'),
-                        $row->expiryDate ? $row->expiryDate->format('d-m-Y') : '',
-                    ];
-                }
-            }
+        $entryId = Craft::$app->request->getSegment(4);
+        if (false == $reportEntry = Craft::$app->entries->getEntryById($entryId)) {
+            $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-        return $this->downloadReport($data, 'report-' . $type . '.csv');
+
+        $criteria = Lantra::$app->reports->reportDataCriteria($reportEntry, null);
+        $results = $criteria->all();
+        $data[] = ReportHelper::reportHeader($reportEntry, false);
+        foreach ($results as $row) {
+            $data[] = ReportHelper::reportRow($reportEntry, $row,false);
+        }
+        return $this->reportCsv($data, 'report-' . $reportEntry->id . '.csv');
     }
 
     /**
@@ -154,7 +130,7 @@ class ReportsController extends BaseController
      * @throws \yii\web\HttpException
      * @throws \yii\web\RangeNotSatisfiableHttpException
      */
-    private function downloadReport($data, $name)
+    private function reportCsv($data, $name)
     {
         ob_start();
         $export = fopen('php://output', 'w');
