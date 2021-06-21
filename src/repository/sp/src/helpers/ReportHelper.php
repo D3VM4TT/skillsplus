@@ -137,7 +137,7 @@ class ReportHelper
             $endorsedUser = $resultEntry->resultEndorsedUser->count() ? $resultEntry->resultEndorsedUser->one() : null;
             $items[] = $endorsedUser ? $resultEntry->resultEndorsedDate->format($dateFormat) : '~';
             $items[] = $endorsedUser ? $endorsedUser->fullName : '~';
-            $items[] = $resultEntry->expiryDate->format($dateFormat);
+            $items[] = $resultEntry->expiryDate ? $resultEntry->expiryDate->format($dateFormat) : '~';
         }
         else {
             $items[] = $resultEntry->expiryDate->format($dateFormat);
