@@ -206,6 +206,7 @@ class ReportHelper
             'User ID',
             'Company',
             'User Name',
+            'Email',
             'Transaction Date',
             'Transaction Total',
             'Transaction ID'
@@ -232,6 +233,7 @@ class ReportHelper
             $user->id,
             $userCompany ? $userCompany->title : '~',
             $user->fullName,
+            $user->email,
             $paymentBlock->dateCreated->format($dateFormat),
             $paymentBlock->mc_gross,
             $paymentBlock->txn_id
