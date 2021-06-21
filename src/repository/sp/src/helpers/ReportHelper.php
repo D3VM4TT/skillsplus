@@ -163,7 +163,8 @@ class ReportHelper
             'Target Hours',
             'Result Hours',
             'Target Points',
-            'Result Points'
+            'Result Points',
+            'Module Components'
         ];
     }
 
@@ -179,6 +180,21 @@ class ReportHelper
         $user = $resultEntry->author;
         $userCompany = Lantra::$app->users->userCompany($user);
         $resultModule = $resultEntry->resultModule->one();
+
+        $componentText = '';
+        foreach ($resultEntry->resultComponentResults as $componentRow) {
+            $componentText .= $componentRow['title'] . ' ';
+            if ($componentRow['targetHours']) {
+                $componentText .= $componentRow['endorsedHours'] . '/' . $componentRow['targetHours'] . ' hours ';
+            }
+            if ($componentRow['targetHours'] && $componentRow['targetPoints']) {
+                $componentText .= " ";
+            }
+            if ($componentRow['targetPoints']) {
+                $componentText .= $componentRow['endorsedPoints'] . '/' . $componentRow['targetPoints'] . ' points ';
+            }
+        }
+
         $items = [
             $user->id,
             $userCompany ? $userCompany->title : '~',
@@ -187,10 +203,11 @@ class ReportHelper
             $resultModule->title,
             $resultModule->cycleStartDate ? $resultModule->cycleStartDate->format($dateFormat) : '~',
             $resultModule->cycleFinishDate ? $resultModule->cycleFinishDate->format($dateFormat) : '~',
-            $resultModule->targetHours,
-            $resultEntry->resultHours,
-            $resultModule->targetPoints,
-            $resultEntry->resultPoints
+            $resultModule->targetHours ? $resultModule->targetHours : 0,
+            $resultEntry->resultHours ? $resultEntry->resultHours : 0,
+            $resultModule->targetPoints ? $resultModule->targetPoints : 0,
+            $resultEntry->resultPoints ? $resultEntry->resultPoints : 0,
+            $componentText
         ];
 
         return $items;
