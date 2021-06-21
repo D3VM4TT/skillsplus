@@ -514,14 +514,21 @@ $(document).ready(function(){
 
     $('#reportAutomated').hide();
 
-    // show automated report inputs
+    // toggle automated report inputs
     $('#buttonAutomated').click(function (e) {
         e.preventDefault();
-        $('#buttonAutomated').hide();
-        $('#reportAutomated').show();
-        $('input[name="automated"]').val(1);
-        $('#buttonSubmit').text('Save Report');
-    })
+        if ($('input[name="automated"]').val() == 1) {
+            $('#reportAutomated').hide();
+            $('input[name="automated"]').val(0);
+            $('#buttonAutomated').text('Create Automated');
+        }
+        else {
+            $('#reportAutomated').show();
+            $('input[name="automated"]').val(1);
+            $('#buttonSubmit').text('Save Report');
+            $('#buttonAutomated').text('Cancel Automated');
+        }
+    });
 
     // show report type options
     $('#reportType').change(function(){
