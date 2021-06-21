@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ filename }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        th, td {
+            padding:5px;
+        }
+        th {
+            text-align: left;
+            border-bottom: 2px solid #000000;
+        }
+    </style>
+</head>
+<body>
+<table style="width: 100%;" cellspacing="0">
+    <thead>
+        <tr>
+        {% for value in header %}
+            <th>{{ value }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in rows %}
+        <tr>
+        {% for value in row %}
+            <td>{{ value }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

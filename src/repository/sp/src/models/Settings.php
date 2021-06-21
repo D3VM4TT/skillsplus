@@ -264,21 +264,21 @@ class Settings extends Model
             'description'  => ''
         ],
         'users'     => [
-            'active' => true,
+            'active' => false,
             'title' => 'Custom User (hierarchy)',
             'group'  => 'schemeManagers',
             'roles'  => [],
             'description'  => ''
         ],
         'results'   => [
-            'active' => true,
+            'active' => false,
             'title' => 'Custom Results (qual user)',
             'group'  => 'schemeManagers',
             'roles'  => [],
             'description'  => ''
         ],
         'expired'     => [
-            'active' => true,
+            'active' => false,
             'title' => 'Custom Expired (required training)',
             'group'  => 'schemeManagers',
             'roles'  => [],

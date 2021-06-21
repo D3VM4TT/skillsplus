@@ -19,7 +19,7 @@ use League\Csv\Writer;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
+use Dompdf\Dompdf;
 
 class Reports extends Component
 {
@@ -34,7 +34,8 @@ class Reports extends Component
     {
         $filename = 'report-' . $reportId . '.' . $ext;
 
-        if ($ext == 'xlsx' || $ext == 'pdf') {
+        if ($ext == 'xlsx')
+        {
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
@@ -48,28 +49,42 @@ class Reports extends Component
                 $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $writer = new Xlsx($spreadsheet);
             }
-            else {
-                $mime = 'application/pdf';
-                $writer = new Dompdf($spreadsheet);
-            }
             ob_start();
             $writer->save('php://output');
             $content = ob_get_clean();
 
             Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
+            return;
         }
 
-        if ($ext == 'csv') {
-            ob_start();
-            $export = fopen('php://output', 'w');
-            foreach ($data as $row) {
-                fputcsv($export, $row);
-            }
-            fclose($export);
-            $content = ob_get_clean();
-            $content = str_replace("\n", "\r\n", $content);
-            Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => 'text/csv']);
+        if ($ext == 'pdf')
+        {
+            $header = array_shift($data);
+            $variables = [
+                'filename'  => $filename,
+                'header'    => $header,
+                'rows'      => $data
+            ];
+            $view = Craft::$app->getView();
+            $view->setTemplatesPath(Lantra::getInstance()->getBasePath());
+            $html = $view->renderTemplate('/templates/reports/default', $variables);
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            $dompdf->stream($filename);
+            return;
         }
+
+        ob_start();
+        $export = fopen('php://output', 'w');
+        foreach ($data as $row) {
+            fputcsv($export, $row);
+        }
+        fclose($export);
+        $content = ob_get_clean();
+        $content = str_replace("\n", "\r\n", $content);
+        Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => 'text/csv']);
     }
 
     /**
