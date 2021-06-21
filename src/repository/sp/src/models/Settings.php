@@ -382,6 +382,18 @@ class Settings extends Model
                 $this->$key = $categories;
             }
         }
+
+        foreach ($this->reports as $key => $report) {
+            if (is_array($report['roles'])) {
+                $categories = [];
+                foreach($report['roles'] as $categoryId) {
+                    if (false != $category = Craft::$app->categories->getCategoryById($categoryId)) {
+                        $categories[] = $category;
+                    }
+                }
+                $this->reports[$key]['roles'] = $categories;
+            }
+        }
     }
 
     /**
