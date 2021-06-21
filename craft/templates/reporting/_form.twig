@@ -101,6 +101,7 @@
         </select>
     </div>
     <div class="field--wrapper fields fields-standardResults">
+        <div id="resultExpiringOptions">
         <label for="reportResultExpiry" class="no-float">Result expiry:</label>
         <select name="fields[reportResultExpiry]" id="reportResultExpiry">
             <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
@@ -115,6 +116,7 @@
                     {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
             Include expired results with expiring results
         </label>
+        </div>
     </div>
     <div class="field--wrapper fields fields-standardCpd">
         <label for="reportModules" class="no-float">Filter Modules</label>

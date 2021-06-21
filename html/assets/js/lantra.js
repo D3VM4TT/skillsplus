@@ -523,6 +523,7 @@ $(document).ready(function(){
         $('#buttonSubmit').text('Save Report');
     })
 
+    // show report type options
     $('#reportType').change(function(){
         var type = $(this).val();
         $('form#reports').find('div.fields').hide();
@@ -531,6 +532,7 @@ $(document).ready(function(){
 
     $('#reportType').change();
 
+    // show report result type options
     $('#reportResultType').change(function(){
         var type = $(this).val();
         if (type != 'unitResult') {
@@ -543,6 +545,7 @@ $(document).ready(function(){
 
     $('#reportResultType').change();
 
+    // show result unit title
     $('#resultUnit').change(function(){
         var unitId = $(this).val();
         if (unitId) {
@@ -554,6 +557,19 @@ $(document).ready(function(){
     });
 
     $('#resultUnit').change();
+
+    // show expiring options if relevant
+    $('#reportResultStandardType').change(function(){
+        var type = $(this).val();
+        if (type == 'expiring') {
+            $('div#resultExpiringOptions').show();
+        }
+        else {
+            $('div#resultExpiringOptions').hide();
+        }
+    });
+
+    $('#reportResultStandardType').change();
 
     // delete user photo
     $("#deleteUserPhotoAction").on('click', function(e) {
