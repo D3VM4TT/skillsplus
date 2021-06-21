@@ -50,11 +50,12 @@
         <select id="reportType" name="fields[reportType]">
             {% set reports = craft.lantra.settingReports('array') %}
             {% for key, report in reports %}
-                <option value="{{ key }}" {% if entry is defined and entry.reportType == key %} selected="selected"{% endif %}>
+                <option data-description="{{ report.description }}" value="{{ key }}" {% if entry is defined and entry.reportType == key %} selected="selected"{% endif %}>
                     {{ report.title }}
                 </option>
             {% endfor %}
         </select>
+        <p style="font-size: 10px;margin:10px 0 10px 0;" id="reportTypeDescription"></p>
     </div>
     <div class="field--wrapper">
         <label for="reportCompanies" class="no-float">Filter Companies</label>

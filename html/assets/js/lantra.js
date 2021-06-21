@@ -526,8 +526,10 @@ $(document).ready(function(){
     // show report type options
     $('#reportType').change(function(){
         var type = $(this).val();
+        var description = $(this).find(':selected').data('description');
         $('form#reports').find('div.fields').hide();
         $('form#reports').find('div.fields-' + type).show();
+        $('p#reportTypeDescription').text(description);
     });
 
     $('#reportType').change();

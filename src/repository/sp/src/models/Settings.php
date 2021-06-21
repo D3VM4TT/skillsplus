@@ -232,51 +232,61 @@ class Settings extends Model
             'active' => true,
             'title' => 'Users',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'standardResults'     => [
             'active' => true,
             'title' => 'Results',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'standardCpd'       => [
             'active' => true,
             'title' => 'CPD',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'standardPayments'  => [
             'active' => true,
             'title' => 'Payments',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'standardSm'       => [
             'active' => true,
             'title' => 'Scheme Manager',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'users'     => [
             'active' => true,
             'title' => 'Custom User (hierarchy)',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'results'   => [
             'active' => true,
             'title' => 'Custom Results (qual user)',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ],
         'expired'     => [
             'active' => true,
             'title' => 'Custom Expired (required training)',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => ''
         ]
     ];
+
+    public $reportNotes                         = '';
 
     public $payPalBusiness                      = '';
     public $payPalLantraCert                    = '';

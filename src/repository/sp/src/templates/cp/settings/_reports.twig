@@ -16,8 +16,9 @@
         <tr>
             <th width="15%">Report</th>
             <th width="15%">Active</th>
-            <th width="30%">Group</th>
-            <th width="30%">Roles</th>
+            <th width="20%">Group</th>
+            <th width="20%">Roles</th>
+            <th width="20%">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -55,6 +56,15 @@
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardUsers-description",
+                    name:			"reports[standardUsers][description]",
+                    value:		    settings.reports.standardUsers.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Results</td>
@@ -88,6 +98,15 @@
                     elements:           settings.reports.standardResults.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardResults-description",
+                    name:			"reports[standardResults][description]",
+                    value:		    settings.reports.standardResults.description|default(),
+                    rows:           2,
+                    cols:           50
                 }) }}
             </td>
         </tr>
@@ -125,6 +144,15 @@
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardCpd-description",
+                    name:			"reports[standardCpd][description]",
+                    value:		    settings.reports.standardCpd.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Payments</td>
@@ -158,6 +186,15 @@
                     elements:           settings.reports.standardPayments.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardPayments-description",
+                    name:			"reports[standardPayments][description]",
+                    value:		    settings.reports.standardPayments.description|default(),
+                    rows:           2,
+                    cols:           50
                 }) }}
             </td>
         </tr>
@@ -195,6 +232,15 @@
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardSm-description",
+                    name:			"reports[standardSm][description]",
+                    value:		    settings.reports.standardSm.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Custom User (hierarchy)</td>
@@ -219,8 +265,8 @@
             </td>
             <td>
                 {{ forms.elementSelectField ({
-                    id:				    "reports-results-roles",
-                    name:			    "reports[results][roles]",
+                    id:				    "reports-users-roles",
+                    name:			    "reports[users][roles]",
                     elementType:        config.categoryElementType,
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
@@ -228,6 +274,15 @@
                     elements:           settings.reports.users.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-users-description",
+                    name:			"reports[users][description]",
+                    value:		    settings.reports.results.description|default(),
+                    rows:           2,
+                    cols:           50
                 }) }}
             </td>
         </tr>
@@ -265,6 +320,15 @@
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-results-description",
+                    name:			"reports[results][description]",
+                    value:		    settings.reports.results.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Custom Expired (required training)</td>
@@ -300,6 +364,25 @@
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-expired-description",
+                    name:			"reports[expired][description]",
+                    value:		    settings.reports.expired.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
         </tr>
     </tbody>
 </table>
+
+
+{{ forms.textareaField ({
+    label:			"Report Notes",
+    id:				"reportNotes",
+    name:			"reportNotes",
+    value:		    settings.reportNotes,
+    rows:           10,
+    cols:           50
+}) }}
