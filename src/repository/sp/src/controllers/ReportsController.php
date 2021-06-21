@@ -104,24 +104,22 @@ class ReportsController extends BaseController
     }
 
     /**
-     * Run  standard report
-     *
-     * @throws mixed
+     * @param string $ext
+     * @param int $entryId
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function actionDownloadReport()
+    public function actionDownloadReport($ext, int $entryId)
     {
-        $entryId = Craft::$app->request->getSegment(4);
         if (false == $reportEntry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
-
         $criteria = Lantra::$app->reports->reportDataCriteria($reportEntry, null);
         $results = $criteria->all();
         $data[] = ReportHelper::reportHeader($reportEntry, false);
         foreach ($results as $row) {
             $data[] = ReportHelper::reportRow($reportEntry, $row,false);
         }
-        return $this->reportCsv($data, 'report-' . $reportEntry->id . '.csv');
+        Lantra::$app->reports->reportDownload($ext, $data, $reportEntry->id);
     }
 
     /**

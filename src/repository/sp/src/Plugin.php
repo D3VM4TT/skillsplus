@@ -445,7 +445,7 @@ class Plugin extends BasePlugin
             'sp/reports/save-report'                    => 'sp/reports/save-report',
             'sp/reports/delete-report'                  => 'sp/reports/delete-report',
             'sp/reports/run-report'                     => 'sp/reports/run-report',
-            'sp/reports/download-report/<reportId>'     => 'sp/reports/download-report',
+            'sp/reports/download-report/<ext>/<entryId>'     => 'sp/reports/download-report',
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',

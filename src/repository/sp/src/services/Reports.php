@@ -17,8 +17,61 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use League\Csv\Writer;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Dompdf;
+
 class Reports extends Component
 {
+    /**
+     * @param $ext
+     * @param $data
+     * @param $reportId
+     * @throws \yii\web\HttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function reportDownload($ext, $data, $reportId)
+    {
+        $filename = 'report-' . $reportId . '.' . $ext;
+
+        if ($ext == 'xlsx' || $ext == 'pdf') {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
+                $j = 0;
+                foreach ($data[$i] as $k => $v) {
+                    $sheet->setCellValueByColumnAndRow($j + 1, ($i + 1), $v);
+                    $j++;
+                }
+            }
+            if ($ext == 'xlsx') {
+                $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                $writer = new Xlsx($spreadsheet);
+            }
+            else {
+                $mime = 'application/pdf';
+                $writer = new Dompdf($spreadsheet);
+            }
+            ob_start();
+            $writer->save('php://output');
+            $content = ob_get_clean();
+
+            Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
+        }
+
+        if ($ext == 'csv') {
+            ob_start();
+            $export = fopen('php://output', 'w');
+            foreach ($data as $row) {
+                fputcsv($export, $row);
+            }
+            fclose($export);
+            $content = ob_get_clean();
+            $content = str_replace("\n", "\r\n", $content);
+            Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => 'text/csv']);
+        }
+    }
+
     /**
      * @param string $search
      * @param int $limit

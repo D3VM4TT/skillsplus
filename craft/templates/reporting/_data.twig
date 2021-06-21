@@ -29,6 +29,15 @@
     <section class="page">
         <div class="page-content">
         {% if elements is defined and elements|length %}
+            <div id="downloadButtons" style="width:100%;text-align: right;margin-bottom:20px;">
+                <p>
+                    Download:
+                    <a href="/sp/reports/download-report/csv/{{ reportEntry.id }}?{{ craft.app.request.getQueryStringWithoutPath }}">CSV</a> |
+                    <a href="/sp/reports/download-report/xlsx/{{ reportEntry.id }}?{{ craft.app.request.getQueryStringWithoutPath }}">Excel</a> |
+                    <a href="/sp/reports/download-report/pdf/{{ reportEntry.id }}?{{ craft.app.request.getQueryStringWithoutPath }}">PDF</a>
+
+                </p>
+            </div>
             <table width="100%" class="data">
                 <thead>
                 <tr>
@@ -44,9 +53,6 @@
                 </tbody>
             </table>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-            <div class="container-btn">
-                <a class="button primary-bg" href="/sp/reports/download-report/{{ reportEntry.id }}?{{ craft.app.request.getQueryStringWithoutPath }}">Download as CSV</a>
-            </div>
         {% else %}
                 <h3>There are no results to display.</h3>
         {% endif %}
