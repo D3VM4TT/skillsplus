@@ -49,7 +49,7 @@
                                     {{ report.title }}
                                 {% endif %}
                             </td>
-                            <td>{{ report.reportType|replace('standard', '') }}</td>
+                            <td>{{ craft.lantra.reportTypeLabel(report) }}</td>
                             <td>{{ report.postDate|date(dateFormat) }}</td>
                             <td>
                                 {% if complete %}

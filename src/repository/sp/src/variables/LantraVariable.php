@@ -737,6 +737,21 @@ class LantraVariable
     }
 
     /**
+     * @param $reportEntry
+     * @return string
+     */
+    public function reportTypeLabel($reportEntry)
+    {
+        if ($reportEntry->reportType == 'standardResults') {
+            return 'Results (' . ($reportEntry->reportResultStandardType == 'endorsed' ? 'Endorsed' : 'Expiring') . ')';
+        }
+        elseif ($reportEntry->reportType == 'standardCpd') {
+            return 'CPD';
+        }
+        return ucwords(str_replace('standard', '', $reportEntry->reportType));
+    }
+
+    /**
      * @param $task
      * @param null $userId
      * @throws ForbiddenHttpException
