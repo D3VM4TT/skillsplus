@@ -104,7 +104,7 @@ class ReportHelper
             'Unit Title',
         ];
         if ($reportEntry->reportResultStandardType == 'endorsed') {
-            $items = array_merge($items, ['Endorsed Date', 'Endorsed User']);
+            $items = array_merge($items, ['Endorsed Date', 'Endorsed User', 'Expiry Date']);
         }
         else {
             $items = array_merge($items, ['Expiry Date']);
@@ -137,6 +137,7 @@ class ReportHelper
             $endorsedUser = $resultEntry->resultEndorsedUser->count() ? $resultEntry->resultEndorsedUser->one() : null;
             $items[] = $endorsedUser ? $resultEntry->resultEndorsedDate->format($dateFormat) : '~';
             $items[] = $endorsedUser ? $endorsedUser->fullName : '~';
+            $items[] = $resultEntry->expiryDate->format($dateFormat);
         }
         else {
             $items[] = $resultEntry->expiryDate->format($dateFormat);
