@@ -419,12 +419,21 @@ class LantraVariable
         if ($user->admin) {
             return true;
         }
-        if ($user->isInGroup('schemeManagers') && in_array($report['group'], ['schemeManagers', 'companyManagers'])) {
+        if (is_countable($report['roles']) && count($report['roles'])) {
+            $reportRoleIds = [];
+            foreach ($report['roles'] as $category) {
+                $reportRoleIds[] = $category->id;
+            }
+            $userRoleIds = $user->userRole->ids();
+            return count(array_intersect($reportRoleIds, $userRoleIds));
+        }
+        if ($user->isInGroup('schemeManagers') && $report['group'] == 'schemeManagers') {
             return true;
         }
         if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
             return true;
         }
+        return false;
     }
 
     /**
