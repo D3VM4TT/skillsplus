@@ -51,8 +51,13 @@ class ReportsController extends BaseController
         if (!$automated) {
             Lantra::$app->queue->add($reportEntry->id);
         }
-        $redirect = $automated ? 'reporting/automated' : 'reporting/data/' . $reportEntry->id;
-        return $this->_returnMessage('Custom report has been saved.', true, $redirect);
+        if ($automated) {
+            $redirect = 'reporting/automated';
+        }
+        else {
+            $redirect = ReportHelper::isStandardReport($reportEntry) ? 'reporting/data/' . $reportEntry->id : 'reporting';
+        }
+        return $this->_returnMessage('Report has been saved.', true, $redirect);
     }
 
     /**

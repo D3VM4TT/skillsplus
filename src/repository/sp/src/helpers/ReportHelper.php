@@ -258,4 +258,13 @@ class ReportHelper
 
         return $items;
     }
+
+    /**
+     * @param $reportEntry
+     * @return bool
+     */
+    public static function isStandardReport($reportEntry)
+    {
+        return substr($reportEntry->reportType, 0, 8) === 'standard';
+    }
 }
