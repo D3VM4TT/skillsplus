@@ -449,7 +449,7 @@ class LantraVariable
      */
     public function reportTypeSetting($reportType, $key = null)
     {
-        return ReportHelper::reportTypeSetting($reportType);
+        return ReportHelper::reportTypeSetting($reportType, $key);
     }
 
     /**
