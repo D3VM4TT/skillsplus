@@ -416,22 +416,19 @@ class LantraVariable
     private function canAccessReport($report = null)
     {
         $user = $this->getUser();
-        if ($user->admin) {
+        if ($user->admin || $user->isInGroup('schemeManagers')) {
             return true;
         }
-        if (is_countable($report['roles']) && count($report['roles'])) {
+        if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
+            return true;
+        }
+        if ($report['group'] == 'userRole' && is_countable($report['roles']) && count($report['roles'])) {
             $reportRoleIds = [];
             foreach ($report['roles'] as $category) {
                 $reportRoleIds[] = $category->id;
             }
             $userRoleIds = $user->userRole->ids();
             return count(array_intersect($reportRoleIds, $userRoleIds));
-        }
-        if ($user->isInGroup('schemeManagers') && $report['group'] == 'schemeManagers') {
-            return true;
-        }
-        if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
-            return true;
         }
         return false;
     }

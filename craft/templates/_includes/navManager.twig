@@ -39,19 +39,7 @@
         </ul>
     </li>
     {% if craft.lantra.settingReports() %}
-        <li class="{% if craft.app.request.getSegment(1) == 'reporting' %}nav-open{% else %}nav-closed{% endif %}">
-            <a class="secondary-bg-hover" href="#">Reporting</a>
-            <ul>
-                <li>
-                    <a class="{% if craft.app.request.getSegment(2) == '' %}active{% endif %}" href="/reporting/">My Reports</a>
-                </li>
-                {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-                    <li>
-                        <a class="{% if craft.app.request.getSegment(2) == 'automated' %}active{% endif %}" href="/reporting/automated">Automated Reports</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </li>
+        {% include '_includes/navReports' %}
     {% endif %}
     {% if alias('@site') != 'poultrypassport' %}
         {% set pendingEndorsementCount = craft.lantra.managerCountEndorsementUsers() %}
