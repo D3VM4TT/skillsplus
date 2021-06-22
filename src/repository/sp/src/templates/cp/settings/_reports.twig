@@ -19,10 +19,11 @@
     <thead>
         <tr>
             <th width="15%">Report</th>
-            <th width="15%">Active</th>
-            <th width="20%">Group</th>
-            <th width="20%">Roles</th>
-            <th width="20%">Description</th>
+            <th>Active</th>
+            <th>Group</th>
+            <th>Roles</th>
+            <th>Description</th>
+            <th width="10%">Page Limit</th>
         </tr>
     </thead>
     <tbody>
@@ -69,6 +70,13 @@
                     cols:           50
                 }) }}
             </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardUsers-pageLimit",
+                    name:			"reports[standardUsers][pageLimit]",
+                    value:		    settings.reports.standardUsers.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Results</td>
@@ -111,6 +119,13 @@
                     value:		    settings.reports.standardResults.description|default(),
                     rows:           2,
                     cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardResults-pageLimit",
+                    name:			"reports[standardResults][pageLimit]",
+                    value:		    settings.reports.standardResults.pageLimit|default(),
                 }) }}
             </td>
         </tr>
@@ -157,6 +172,13 @@
                     cols:           50
                 }) }}
             </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardCpd-pageLimit",
+                    name:			"reports[standardCpd][pageLimit]",
+                    value:		    settings.reports.standardCpd.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Payments</td>
@@ -199,6 +221,13 @@
                     value:		    settings.reports.standardPayments.description|default(),
                     rows:           2,
                     cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardPayments-pageLimit",
+                    name:			"reports[standardPayments][pageLimit]",
+                    value:		    settings.reports.standardPayments.pageLimit|default(),
                 }) }}
             </td>
         </tr>
@@ -245,6 +274,13 @@
                     cols:           50
                 }) }}
             </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardSm-pageLimit",
+                    name:			"reports[standardSm][pageLimit]",
+                    value:		    settings.reports.standardSm.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Custom User (hierarchy)</td>
@@ -284,9 +320,16 @@
                 {{ forms.textareaField ({
                     id:				"reports-users-description",
                     name:			"reports[users][description]",
-                    value:		    settings.reports.results.description|default(),
+                    value:		    settings.reports.users.description|default(),
                     rows:           2,
                     cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-users-pageLimit",
+                    name:			"reports[users][pageLimit]",
+                    value:		    settings.reports.users.pageLimit|default(),
                 }) }}
             </td>
         </tr>
@@ -333,6 +376,13 @@
                     cols:           50
                 }) }}
             </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-results-pageLimit",
+                    name:			"reports[results][pageLimit]",
+                    value:		    settings.reports.results.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
             <td>Custom Expired (required training)</td>
@@ -375,6 +425,13 @@
                     value:		    settings.reports.expired.description|default(),
                     rows:           2,
                     cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-expired-pageLimit",
+                    name:			"reports[expired][pageLimit]",
+                    value:		    settings.reports.expired.pageLimit|default(),
                 }) }}
             </td>
         </tr>

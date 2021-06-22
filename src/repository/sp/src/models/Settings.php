@@ -233,56 +233,64 @@ class Settings extends Model
             'title' => 'Users',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'standardResults'     => [
             'active' => true,
             'title' => 'Results',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'standardCpd'       => [
             'active' => true,
             'title' => 'CPD',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'standardPayments'  => [
             'active' => true,
             'title' => 'Payments',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'standardSm'       => [
             'active' => true,
             'title' => 'Scheme Manager',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'users'     => [
             'active' => false,
             'title' => 'Custom User (hierarchy)',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'results'   => [
             'active' => false,
             'title' => 'Custom Results (qual user)',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'expired'     => [
             'active' => false,
             'title' => 'Custom Expired (required training)',
             'group'  => 'schemeManagers',
             'roles'  => [],
-            'description'  => ''
+            'description'  => '',
+            'pageLimit' => ''
         ]
     ];
 

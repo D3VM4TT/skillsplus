@@ -9,7 +9,8 @@
 
 {% set metaTitle = "Reporting > Data" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set reportTypePageLimit = craft.lantra.reportTypeSetting(reportEntry.reportType, 'pageLimit') %}
+{% set pageLimit = reportTypePageLimit ? reportTypePageLimit : craft.lantra.setting('themeDefaultLimit', 10) %}
 
 {% set criteria = craft.lantra.reportDataCriteria(reportEntry, pageLimit) %}
 {% if criteria %}{% paginate criteria as pageInfo, elements %}{% endif %}

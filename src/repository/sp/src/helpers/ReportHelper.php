@@ -17,6 +17,22 @@ use craft\elements\User;
 class ReportHelper
 {
     /**
+     * @param $reportType
+     * @param null $key
+     * @return null
+     */
+    public static function reportTypeSetting($reportType, $key = null)
+    {
+        $reports = Lantra::$app->settings->getSetting('reports');
+        foreach($reports as $k => $settings) {
+            if ($reportType == $k) {
+                return $key ? $settings[$key] : $settings;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param $reportEntry
      * @param bool $html
      * @return string

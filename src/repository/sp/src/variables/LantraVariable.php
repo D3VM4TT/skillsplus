@@ -443,6 +443,16 @@ class LantraVariable
     }
 
     /**
+     * @param $reportType
+     * @param null $key
+     * @return null
+     */
+    public function reportTypeSetting($reportType, $key = null)
+    {
+        return ReportHelper::reportTypeSetting($reportType);
+    }
+
+    /**
      * @param $attemptEntry
      * @return array
      */
