@@ -13,6 +13,7 @@ use craft\base\Component;
 use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 
+use lantra\sp\helpers\ReportHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use League\Csv\Writer;
@@ -155,7 +156,12 @@ class Reports extends Component
         $weekDay = $weekValue ? $weekValue : (int) date('N');
         $monthDay = $monthValue ? $monthValue : (int) date('j');
         $reportEntries = $this->getAutomatedReports();
-        foreach ($reportEntries as $reportEntry) {
+        foreach ($reportEntries as $reportEntry)
+        {
+            ## skip if report no longer active
+            if (!ReportHelper::reportTypeSetting($reportEntry->reportType,'active')) {
+                continue;
+            }
             $reportSendValue = (int) $reportEntry->reportSendValue;
             $reportSendFrequency = $reportEntry->reportSendFrequency->value;
             if (($reportSendFrequency == 'weekly' && $reportSendValue == $weekDay) || ($reportSendFrequency == 'monthly' && $reportSendValue == $monthDay)) {
