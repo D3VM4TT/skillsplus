@@ -196,13 +196,13 @@ class Record extends Model
         $packages = Lantra::$app->packages->getUserPackages($this->user);
         foreach ($packages as $package) {
             $this->_resetData();
-            $moduleGroups = [];
-            foreach ($package->moduleGroupCategories() as $moduleGroup) {
-                $relatedModules = Lantra::$app->records->getRelatedModules($moduleGroup);
-                $items = $this->_getModuleGroupModuleItems($moduleGroup, $relatedModules);
-                $moduleGroups[$moduleGroup->id] = $this->_addItem('moduleGroup', $moduleGroup, $items);
+            $taskbookGroups = [];
+            foreach ($package->taskbookGroupCategories() as $taskbookGroup) {
+                $relatedModules = Lantra::$app->records->getRelatedModules($taskbookGroup);
+                $items = $this->_getTaskbookGroupModuleItems($taskbookGroup, $relatedModules);
+                $taskbookGroups[$taskbookGroup->id] = $this->_addItem('taskbookGroup', $taskbookGroup, $items);
             }
-            $this->_record['packages'][$package->id] = $this->_addItem('package', $package, $moduleGroups, $this->_data);
+            $this->_record['packages'][$package->id] = $this->_addItem('package', $package, $taskbookGroups, $this->_data);
         }
         ## $this->_setCache();
     }
@@ -224,7 +224,7 @@ class Record extends Model
             'data' => $data
         ]);
         $this->_items[$element->id] = $item;
-        if ($item->itemType == 'moduleGroup' || $itemType == 'jobRole') {
+        if ($item->itemType == 'taskbookGroup' || $item->itemType == 'moduleGroup' || $itemType == 'jobRole') {
             $this->_addElementId('Category', $element->id);
         }
         elseif ($item->itemType == 'package' || $item->itemType == 'module' || $item->itemType == 'unit') {
@@ -255,6 +255,24 @@ class Record extends Model
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
+                $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
+                $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);
+                $this->_data['moduleIds'][] = $moduleEntry->id;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $taskbookGroup
+     * @param $relatedEntries
+     * @return array
+     */
+    private function _getTaskbookGroupModuleItems(Category $taskbookGroup, ElementQueryInterface $relatedEntries)
+    {
+        $return = [];
+        foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
+            if (in_array($taskbookGroup->id, $moduleEntry->taskbookGroup->ids())) {
                 $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);
                 $this->_data['moduleIds'][] = $moduleEntry->id;

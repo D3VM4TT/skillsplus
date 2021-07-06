@@ -21,42 +21,42 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function getModuleGroup()
+    public function getTaskbookGroup()
     {
-        return $this->owner->packageModuleGroup ? $this->owner->packageModuleGroup->last() : null;
+        return $this->owner->packageTaskbookGroup ? $this->owner->packageTaskbookGroup->last() : null;
     }
 
     /**
      * @return null
      */
-    public function moduleGroups()
+    public function taskbookGroups()
     {
-        if (!$this->owner->packageModuleGroup) {
+        if (!$this->owner->packageTaskbookGroup) {
             return [];
         }
-        $modulesGroups = [
+        $taskbookGroups = [
             [
-                'category' => $this->owner->packageModuleGroup->last(),
+                'category' => $this->owner->packageTaskbookGroup->last(),
                 'level'    => $this->owner->packageLevel
             ]
         ];
-        foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
-            $modulesGroups[] = [
-                'category' => $optionalModuleGroupBlock->optionalModuleGroup->leaves()->one(),
-                'level'    => $optionalModuleGroupBlock->optionalLevel
+        foreach($this->owner->packageOptionalTaskbookGroups->all() as $optionalTaskbookGroupBlock) {
+            $taskbookGroups[] = [
+                'category' => $optionalTaskbookGroupBlock->optionalTaskbookGroup->leaves()->one(),
+                'level'    => $optionalTaskbookGroupBlock->optionalLevel
             ];
         }
-        return $modulesGroups;
+        return $taskbookGroups;
     }
 
     /**
      * @return null
      */
-    public function moduleGroupCategories()
+    public function taskbookGroupCategories()
     {
         $categories = [];
-        foreach($this->moduleGroups() as $moduleGroup) {
-            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
+        foreach($this->taskbookGroups() as $taskbookGroup) {
+            $categories[$taskbookGroup['category']->id] = $taskbookGroup['category'];
         }
         return $categories;
     }
@@ -64,11 +64,11 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function availableModuleGroupCategories()
+    public function availableTaskbookGroupCategories()
     {
-        $moduleGroup = $this->getModuleGroup();
-        $optionalModules = $moduleGroup->children->all();
-        $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
+        $taskbookGroup = $this->getTaskbookGroup();
+        $optionalModules = $taskbookGroup->children->all();
+        $existingIds = array_keys(Lantra::$app->packages->getAllTaskbookGroups($this->owner->author));
         $available = [];
         foreach($optionalModules as $category) {
             if (!in_array($category->id, $existingIds)) {
@@ -81,12 +81,12 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function resitModuleGroupCategories()
+    public function resitTaskbookGroupCategories()
     {
         $resits = [];
         foreach ($this->owner->packageAssessment as $assessment) {
             if ($assessment->assessmentDate && ! $assessment->assessmentPassed) {
-                $category = $assessment->assessmentModuleGroup->last();
+                $category = $assessment->assessmentTaskbookGroup->last();
                 $resits[$category->id] = $category;
             }
         }
@@ -94,13 +94,13 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @param int $moduleGroupId
+     * @param int $taskbookGroupId
      * @return null
      */
-    public function moduleGroupAssessment($moduleGroupId = null)
+    public function taskbookGroupAssessment($taskbookGroupId = null)
     {
         foreach ($this->owner->packageAssessment as $assessment) {
-            if ($assessment->assessmentModuleGroup->last()->id == $moduleGroupId) {
+            if ($assessment->assessmentTaskbookGroup->last()->id == $taskbookGroupId) {
                 return $assessment;
             }
         }

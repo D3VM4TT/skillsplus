@@ -41,7 +41,7 @@ class Notify extends Component
         $variables = [
             'package'           => $package,
             'assessmentText'    => $this->assessmentText($package),
-            'moduleGroup'       => $package->moduleGroup,
+            'moduleGroup'       => $package->taskbookGroup,
             'user'              => $user,
         ];
         $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n{{ assessmentText }}");
@@ -58,8 +58,8 @@ class Notify extends Component
     {
         $text = "";
         foreach ($package->packageAssessment as $row) {
-            $moduleGroup = $row->assessmentModuleGroup->last();
-            $text .= $moduleGroup->title . " - " . ($row->assessmentPassed ? 'Passed' : 'Failed') . "\n";
+            $taskbookGroup = $row->assessmentTaskbookGroup->last();
+            $text .= $taskbookGroup->title . " - " . ($row->assessmentPassed ? 'Passed' : 'Failed') . "\n";
         }
         return $text;
     }
@@ -105,7 +105,7 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectNewPackage', 'New ' . $taskbookLabel);
         $variables = [
             'package'       => $packageEntry,
-            'moduleGroup'   => $packageEntry->moduleGroup,
+            'moduleGroup'   => $packageEntry->taskbookGroup,
             'user'          => $packageEntry->author,
         ];
         $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ moduleGroup.title }}.");

@@ -1,8 +1,8 @@
-<div class="taskbook-optional taskbook-optional-{{ moduleGroup.id }}">
-    {% if optionalModuleGroups|length  %}
+<div class="taskbook-optional taskbook-optional-{{ taskbookGroup.id }}">
+    {% if optionalTaskbookGroups|length  %}
         <label>Below are the optional modules you can choose to complete along with core.
-        {% if moduleGroup.moduleMinimumOptional %}
-           <br />You must select at least {{ moduleGroup.moduleMinimumOptional }} optional {{ 'module'|pluralize(qty=moduleGroup.moduleMinimumOptional) }}.
+        {% if taskbookGroup.moduleMinimumOptional %}
+           <br />You must select at least {{ taskbookGroup.moduleMinimumOptional }} optional {{ 'module'|pluralize(qty=taskbookGroup.moduleMinimumOptional) }}.
         {% endif %}
         </label>
         <table class="data">
@@ -13,37 +13,37 @@
             </tr>
             </thead>
             <tbody>
-            {% for optionalModuleGroup in optionalModuleGroups %}
-                {% set packageOptionalModuleGroupRow = craft.lantra.getOptionalModuleGroupRow(entry, optionalModuleGroup.id)  %}
+            {% for optionalTaskbookGroup in optionalTaskbookGroups %}
+                {% set packageOptionalTaskbookGroupRow = craft.lantra.getOptionalTaskbookGroupRow(entry, optionalTaskbookGroup.id)  %}
                 <tr class="optional-module">
-                    <td>{{ optionalModuleGroup.title }}</td>
+                    <td>{{ optionalTaskbookGroup.title }}</td>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
                         <select class="optional-level" name="optionalLevel">
                             {% for option in craft.lantra.taskbookLevels() %}
-                                <option {% if packageOptionalModuleGroupRow and packageOptionalModuleGroupRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                                <option {% if packageOptionalTaskbookGroupRow and packageOptionalTaskbookGroupRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
                             {% endfor %}
                         </select>
                     </td>
                     {% endif %}
                     <td>
-                        <input class="optional" type="checkbox" name="optionalModuleGroup" value="{{ optionalModuleGroup.id }}" {% if packageOptionalModuleGroupRow %}checked{% endif %}>
+                        <input class="optional" type="checkbox" name="optionalTaskbookGroup" value="{{ optionalTaskbookGroup.id }}" {% if packageOptionalTaskbookGroupRow %}checked{% endif %}>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
-        {% for row in moduleGroup.moduleCosts %}
+        {% for row in taskbookGroup.moduleCosts %}
            Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />
         {% endfor %}
-            Max Cost: £{{ moduleGroup.moduleMaxCost }}</p>
-        {% if moduleGroup.moduleMinimumOptional %}
-            Minimum optional modules: {{ moduleGroup.moduleMinimumOptional }}
+            Max Cost: £{{ taskbookGroup.moduleMaxCost }}</p>
+        {% if taskbookGroup.moduleMinimumOptional %}
+            Minimum optional modules: {{ taskbookGroup.moduleMinimumOptional }}
         {% endif %}
         </div>
     {% else %}
-        <p>There are currently no optional modules for {{ moduleGroup.title }}.</p>
+        <p>There are currently no optional modules for {{ taskbookGroup.title }}.</p>
         <p>&nbsp;</p>
     {% endif %}
 </div>

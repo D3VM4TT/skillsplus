@@ -7,11 +7,11 @@
     </tr>
     </thead>
     <tbody>
-    {% for categoryGroup in availableModuleGroups %}
+    {% for categoryGroup in availableTaskbookGroups %}
         <tr>
             <td>{{ categoryGroup.title }}</td>
             <td>£{{ categoryGroup.moduleSingleCost }}</td>
-            <td style="text-align: right;"><a href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&moduleGroupId={{ categoryGroup.id }}">Buy Now</a></td>
+            <td style="text-align: right;"><a href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&taskbookGroupId={{ categoryGroup.id }}">Buy Now</a></td>
         </tr>
     {% endfor %}
     </tbody>

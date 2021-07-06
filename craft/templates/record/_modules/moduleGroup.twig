@@ -1,5 +1,5 @@
 <div class="groups-tab-group endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
-    {% if moduleGroup.isCompany and cpdUser.userCompany %}
+    {% if isTaskbooks is not defined and moduleGroup.isCompany and cpdUser.userCompany %}
         {% set userCompany = cpdUser.userCompany.one %}
         <div class="assessment" style="border-color: {{ craft.lantra.setting('themeColorPrimary') }}">
             <p>Company Name:
@@ -12,7 +12,7 @@
         </div>
     {% endif %}
     {% if package is defined %}
-        {% set assessment = package.moduleGroupAssessment(moduleGroup.id) %}
+        {% set assessment = package.taskbookGroupAssessment(moduleGroup.id) %}
         {% if assessment and assessment.assessmentDate %}
             <div class="assessment {{ assessment.assessmentPassed ? 'passed' : 'failed' }}">
                 <p>

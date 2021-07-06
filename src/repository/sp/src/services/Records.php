@@ -55,4 +55,17 @@ class Records extends Component
         $criteria->moduleGroupTaskbooks = $taskbooks;
         return $criteria;
     }
+
+
+    /**
+     * @param ElementQueryInterface $modules
+     * @return \craft\elements\db\CategoryQuery|ElementQueryInterface
+     */
+    public function getTasbookGroups(ElementQueryInterface $modules)
+    {
+        $criteria = Category::find();
+        $criteria->group = 'taskbookGroups';
+        $criteria->relatedTo($modules->ids());
+        return $criteria;
+    }
 }
