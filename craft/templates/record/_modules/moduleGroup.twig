@@ -28,7 +28,7 @@
                 {% if not moduleGroupItem.modules|length %}
                     No modules have been added to this module group.
                 {% endif %}
-                {% set options = '' %}
+                {% set options = '<option value="">Please select module:</option>' %}
                 {% for moduleItem in moduleGroupItem.modules %}
                     {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
                     {% set moduleElementId = moduleGroupElementId ~ module.id %}

@@ -643,6 +643,7 @@ $(document).ready(function(){
     $('.module-group-tabs ul.tabs li:first-child a').click();
 
     $('select.module-menu').change(function(){
+        if (!$(this).val()) return;
         $('a[href="' + $(this).val() + '"]').click();
     });
 
