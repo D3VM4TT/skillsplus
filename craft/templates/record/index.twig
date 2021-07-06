@@ -53,7 +53,12 @@
         {% else %}
             <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
         {% endif %}
-        <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+            {% if not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
+                <h2>Hello {{ account.firstName }}</h2>
+                <p class="welcome-back">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
+            {% else %}
+                <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+            {% endif %}
         {% if craft.lantra.setting('taskbooks') and isManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
@@ -62,13 +67,6 @@
                     {% else %}
                         <a class="btn-add-new" href="/cpd/{{ account.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
                     {% endif %}
-                </div>
-            </div>
-        {% endif %}
-        {% if not isManager and isTaskbooks %}
-            <div class="header-controls">
-                <div class="container-btn primary-bg" style="margin-left:0;">
-                    <a class="btn-add-new" href="/cpd/{{ account.id }}/taskbooks/manage">Manage {{ taskbookLabel|pluralize }}</a>
                 </div>
             </div>
         {% endif %}
