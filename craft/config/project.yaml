@@ -136,7 +136,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1625844087
+dateModified: 1625845672
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -6182,7 +6182,7 @@ sections:
                     required: false
                     sortOrder: 4
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
-                    required: true
+                    required: false
                     sortOrder: 2
                 name: Module
                 sortOrder: 1
