@@ -5,6 +5,7 @@
 
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% extends "_layout" %}
 {% import "_macros" as ui %}
@@ -21,6 +22,7 @@
 {% set hierarchyTeam = craft.app.request.getParam('team') %}
 
 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel').all() %}
+{% set taskbookGroups = craft.categories.group('taskbookGroups').level(1).limit(null).all() %}
 {% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getParam('companyManagers') %}
 
 {% block content %}
@@ -240,6 +242,31 @@
                     </div>
                 </div>
                 {% endif %}
+
+                <div class="field--wrapper">
+                    <label for="userCompany">{{ taskbookLabel }} review companies:</label>
+                    <input type="hidden" name="fields[userReviewCompanies]" value="" />
+                    <select multiple class="js-select2" name="fields[userReviewCompanies][]" id="userReviewCompanies">
+                        {% for companyEntry in companyEntries %}
+                            <option value="{{ companyEntry.id }}"
+                                {% if account is defined and companyEntry.id in account.userReviewCompanies.ids() %} selected="selected"{% endif %}>{{ companyEntry.companyLabel }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field--wrapper">
+                    <label for="userCompany">{{ taskbookLabel }} review groups:</label>
+                    <input type="hidden" name="fields[userReviewTaskbookGroups]" value="" />
+                    <select multiple class="js-select2" name="fields[userReviewTaskbookGroups][]" id="userReviewTaskbookGroups">
+                        {% for taskbookGroup in taskbookGroups %}
+                            <option value="{{ taskbookGroup.id }}"
+                                    {% if account is defined and taskbookGroup.id in account.userReviewTaskbookGroups.ids() %} selected="selected"{% endif %}>{{ taskbookGroup.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
             </div>
         </div>
         
@@ -285,7 +312,7 @@
                 </thead>
                 <tbody>
                 {% for package in packages %}
-                    {% set packageTitle = package.moduleGroup.title %}
+                    {% set packageTitle = package.taskbookGroup.title %}
                     <tr class="item">
                         <td>{{ package.dateCreated|date(dateFormat) }}</td>
                         <td>
@@ -299,14 +326,14 @@
                             <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
                         {% endif %}
                         <td>
-                            {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
-                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
-                                {% if not moduleGroup %}
+                            {% for optionalTaskbookGroupBlock in package.packageOptionalTaskbookGroups.all %}
+                                {% set taskbookGroup = optionalTaskbookGroupBlock.optionalTaskbookGroup.inReverse().one %}
+                                {% if not taskbookGroup %}
                                     Invalid Optional Module Group<br />
                                 {% else %}
-                                    {{ moduleGroup.title }}
+                                    {{ taskbookGroup.title }}
                                     {% if craft.lantra.setting('taskbookLevels') %}
-                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
+                                        ({{ craft.lantra.taskbookLevel(optionalTaskbookGroupBlock.optionalLevel) }})<br />
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}

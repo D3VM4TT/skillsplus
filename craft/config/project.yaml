@@ -136,7 +136,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1625843522
+dateModified: 1625844087
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -7261,7 +7261,7 @@ users:
   allowPublicRegistration: true
   defaultGroup: 9bbb42a9-a0e6-4d9b-8029-3d0c95243dae
   fieldLayouts:
-    e313cedf-8c04-4fa5-989a-e087a1432495:
+    97bd8588-5803-4f29-a5ce-69b96c94589b:
       tabs:
         -
           fields:
@@ -7333,6 +7333,16 @@ users:
               sortOrder: 1
           name: 'Custom Scheme User Fields'
           sortOrder: 4
+        -
+          fields:
+            4079dd4e-0518-44d1-aa49-f8bcb5621e1d:
+              required: false
+              sortOrder: 2
+            74f58342-e9c7-44e6-b13a-d0a90d3961d4:
+              required: false
+              sortOrder: 1
+          name: 'Taskbook Reviews'
+          sortOrder: 5
         -
           fields:
             080bb830-4bd6-458e-a3f3-dbb58358aeb1:
