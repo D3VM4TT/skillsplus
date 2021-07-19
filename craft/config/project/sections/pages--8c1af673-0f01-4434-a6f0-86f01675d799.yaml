@@ -1,0 +1,39 @@
+enableVersioning: true
+entryTypes:
+  006ef470-d860-40ff-a431-e2515805f2e8:
+    fieldLayouts:
+      6d710b1b-95a9-4417-b0dd-78a03a5baa40:
+        tabs:
+          -
+            fields:
+              5d8461b5-aba0-482c-a677-b59c1ec759ab:
+                required: false
+                sortOrder: 3
+              6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                required: false
+                sortOrder: 1
+              b8c430cf-c3d3-4d15-a8a8-21eb2fb94ace:
+                required: false
+                sortOrder: 2
+            name: Pages
+            sortOrder: 1
+    handle: pages
+    hasTitleField: true
+    name: Pages
+    sortOrder: 1
+    titleFormat: null
+    titleLabel: Title
+handle: pages
+name: Pages
+previewTargets:
+  -
+    label: 'Primary entry page'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+    enabledByDefault: true
+    hasUrls: true
+    template: pages/_entry
+    uriFormat: 'public/{slug}'
+type: channel

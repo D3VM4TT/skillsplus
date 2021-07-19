@@ -1,0 +1,55 @@
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+handle: unitEndorsementManagerLevel
+instructions: ''
+name: 'Unit Endorsement Manager Level'
+searchable: true
+settings:
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - 'Level One'
+        -
+          - value
+          - '1'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Level Two'
+        -
+          - value
+          - '2'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Level Three'
+        -
+          - value
+          - '3'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Level Four'
+        -
+          - value
+          - '4'
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

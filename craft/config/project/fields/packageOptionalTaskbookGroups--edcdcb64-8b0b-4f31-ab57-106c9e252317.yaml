@@ -1,0 +1,33 @@
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+handle: packageOptionalTaskbookGroups
+instructions: ''
+name: 'Package Optional Taskbook Groups'
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - 00afc899-b37a-415c-8829-b06a42a8638f
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 9a61af4b-dccb-4d5e-9bc1-53b775f9de18
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_packageoptionaltaskbookgroups}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: ''
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

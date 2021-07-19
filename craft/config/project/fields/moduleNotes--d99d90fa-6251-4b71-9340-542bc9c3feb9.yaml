@@ -1,0 +1,17 @@
+contentColumnType: text
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+handle: moduleNotes
+instructions: ''
+name: 'Module Notes'
+searchable: true
+settings:
+  byteLimit: null
+  charLimit: null
+  code: ''
+  columnType: null
+  initialRows: '4'
+  multiline: '1'
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

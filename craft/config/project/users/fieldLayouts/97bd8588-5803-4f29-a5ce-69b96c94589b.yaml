@@ -1,0 +1,121 @@
+tabs:
+  -
+    fields:
+      4ac0fb06-5ba4-4129-ad0a-664727323d89:
+        required: false
+        sortOrder: 1
+      6e432459-1ae7-4301-a7cd-e23c574bd569:
+        required: false
+        sortOrder: 7
+      8df69537-0612-4b94-af60-c27617fddb4d:
+        required: false
+        sortOrder: 6
+      27f36190-a4c4-4f11-b546-5e4ffb5efc06:
+        required: false
+        sortOrder: 8
+      af392c27-30aa-4dde-a30c-fd69e3dd665e:
+        required: false
+        sortOrder: 4
+      ca3cc99a-ddf3-4e81-b35c-37d0ecd39ebb:
+        required: false
+        sortOrder: 2
+      dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
+        required: false
+        sortOrder: 3
+      e39c693b-aafd-4f9c-8e82-53aa5da6694e:
+        required: false
+        sortOrder: 5
+    name: Structure
+    sortOrder: 1
+  -
+    fields:
+      027f626e-2eaa-4fca-9665-c8812bce20a9:
+        required: false
+        sortOrder: 3
+      041dc464-9e48-4a7d-9999-6cf36dd10aaa:
+        required: false
+        sortOrder: 5
+      0995325e-5dbc-4d5b-9582-a2457bd2a3c3:
+        required: false
+        sortOrder: 8
+      a15416ef-8183-4171-946e-fb80248cdc21:
+        required: false
+        sortOrder: 7
+      aa4a666c-db2c-4515-b356-344c43b82ca1:
+        required: false
+        sortOrder: 1
+      d1847ab4-a98b-4069-b9db-3ef5cc3124f0:
+        required: false
+        sortOrder: 6
+      e85a0c45-d4c3-4d25-81e6-80819d599872:
+        required: false
+        sortOrder: 4
+      f0039d1f-5cfd-4bf6-970e-5592f86712de:
+        required: false
+        sortOrder: 2
+    name: Profile
+    sortOrder: 2
+  -
+    fields:
+      7f1c4f49-327b-48eb-b631-5950532840c2:
+        required: false
+        sortOrder: 1
+    name: Payments
+    sortOrder: 3
+  -
+    fields:
+      53b87ea0-021a-4671-bfbd-8000933bcf0e:
+        required: false
+        sortOrder: 1
+    name: 'Custom Scheme User Fields'
+    sortOrder: 4
+  -
+    fields:
+      74f58342-e9c7-44e6-b13a-d0a90d3961d4:
+        required: false
+        sortOrder: 1
+      4079dd4e-0518-44d1-aa49-f8bcb5621e1d:
+        required: false
+        sortOrder: 2
+    name: 'Taskbook Reviews'
+    sortOrder: 5
+  -
+    fields:
+      0ab87047-3af7-4556-92f5-2a8f396e025a:
+        required: false
+        sortOrder: 9
+      3f2f2e5a-9c13-4199-aaa4-0d0d1eb8abfc:
+        required: false
+        sortOrder: 2
+      31ce8d27-b2e8-42fd-90eb-c3365915c0be:
+        required: false
+        sortOrder: 6
+      080bb830-4bd6-458e-a3f3-dbb58358aeb1:
+        required: false
+        sortOrder: 7
+      440ee4d2-9c90-47a0-a2e7-9ec4d1a97683:
+        required: false
+        sortOrder: 12
+      85884bff-7c6a-4759-a769-d3f056254b7b:
+        required: false
+        sortOrder: 3
+      b7d6d158-4e92-4be7-ab53-c7e655c7e062:
+        required: false
+        sortOrder: 4
+      bb511299-1a44-4db4-b8f0-32035ca24b2d:
+        required: false
+        sortOrder: 5
+      dc88c84b-17f2-4b8b-8cc6-124b5115c9cc:
+        required: false
+        sortOrder: 1
+      e0eca823-9419-4b9d-bbdb-e6161cc76f1c:
+        required: false
+        sortOrder: 10
+      f6a57088-da9c-4ebb-ab25-070c60d329ea:
+        required: false
+        sortOrder: 8
+      fbb9f4ca-eb83-49d9-a5f0-b1a7996bf39c:
+        required: false
+        sortOrder: 11
+    name: Legacy
+    sortOrder: 6

@@ -1,0 +1,77 @@
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+handle: reportResultExpiry
+instructions: ''
+name: 'Report Result Expiry'
+searchable: true
+settings:
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Expired
+        -
+          - value
+          - '0'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - '30'
+        -
+          - value
+          - '30'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - '90'
+        -
+          - value
+          - '90'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - '180'
+        -
+          - value
+          - '180'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - '365'
+        -
+          - value
+          - '365'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 365+
+        -
+          - value
+          - 365+
+        -
+          - default
+          - '1'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

@@ -1,0 +1,45 @@
+fieldLayouts:
+  79dbc264-ef07-4141-bced-c875960a0e3b:
+    tabs:
+      -
+        fields:
+          5bdda926-785f-4d89-aebe-9a805b3dab29:
+            required: false
+            sortOrder: 6
+          294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
+            required: false
+            sortOrder: 4
+          680431de-8445-48e9-8acf-e32d867f73dd:
+            required: false
+            sortOrder: 3
+          bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
+            required: false
+            sortOrder: 1
+          da81a368-f84c-47f8-9e3a-b83346be0865:
+            required: false
+            sortOrder: 2
+          dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
+            required: false
+            sortOrder: 7
+          e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+            required: false
+            sortOrder: 5
+        name: Settings
+        sortOrder: 1
+      -
+        fields:
+          fe956922-ff3a-4931-a5fd-5b85605d9c20:
+            required: false
+            sortOrder: 1
+        name: 'Taskbook Group Modules'
+        sortOrder: 2
+handle: taskbookGroups
+name: 'Taskbook Groups'
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+    hasUrls: false
+    template: null
+    uriFormat: null
+structure:
+  maxLevels: 2
+  uid: 47a9be3c-9d1c-4e7f-a268-eaa4b5a473a7

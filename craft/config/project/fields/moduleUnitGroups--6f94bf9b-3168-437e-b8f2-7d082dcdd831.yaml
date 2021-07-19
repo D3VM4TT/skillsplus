@@ -1,0 +1,14 @@
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+handle: moduleUnitGroups
+instructions: ''
+name: 'Unit Groups'
+searchable: true
+settings:
+  contentTable: '{{%matrixcontent_moduleunitgroups}}'
+  maxBlocks: ''
+  minBlocks: ''
+  propagationMethod: all
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Matrix

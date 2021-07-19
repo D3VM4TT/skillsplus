@@ -1,0 +1,15 @@
+contentColumnType: text
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
+handle: teamDescription
+instructions: ''
+name: 'Team Description'
+searchable: true
+settings:
+  charLimit: ''
+  columnType: text
+  initialRows: '4'
+  multiline: '1'
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

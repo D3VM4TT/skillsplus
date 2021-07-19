@@ -1,0 +1,17 @@
+contentColumnType: integer(10)
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+handle: targetHours
+instructions: ''
+name: 'Target Hours'
+searchable: true
+settings:
+  decimals: 0
+  defaultValue: null
+  max: null
+  min: '0'
+  prefix: ''
+  size: null
+  suffix: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Number

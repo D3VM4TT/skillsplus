@@ -1,0 +1,84 @@
+field: 61e98c20-6536-4fb2-8420-7b21d34b4dd5
+fieldLayouts:
+  21ce6d78-5c1b-4d6b-84b6-73b6b453d065:
+    tabs:
+      -
+        fields:
+          0c515fa0-cbdd-4bd9-8267-917a447e5702:
+            required: '0'
+            sortOrder: '1'
+          3c50a00d-c61b-4018-bed4-f1685a215e01:
+            required: '0'
+            sortOrder: '2'
+          974df618-fa82-42bd-9ad4-612f8f4a985c:
+            required: '0'
+            sortOrder: '4'
+          cea55199-bbc5-4529-8451-c12a00ff1080:
+            required: '0'
+            sortOrder: '3'
+        name: Content
+        sortOrder: '1'
+fields:
+  0c515fa0-cbdd-4bd9-8267-917a447e5702:
+    contentColumnType: string
+    fieldGroup: null
+    handle: user
+    instructions: ''
+    name: User
+    searchable: '1'
+    settings:
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Users
+  3c50a00d-c61b-4018-bed4-f1685a215e01:
+    contentColumnType: text
+    fieldGroup: null
+    handle: comment
+    instructions: ''
+    name: Comment
+    searchable: '1'
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: false
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  974df618-fa82-42bd-9ad4-612f8f4a985c:
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: read
+    instructions: ''
+    name: Read
+    searchable: '1'
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  cea55199-bbc5-4529-8451-c12a00ff1080:
+    contentColumnType: datetime
+    fieldGroup: null
+    handle: date
+    instructions: ''
+    name: Date
+    searchable: '1'
+    settings:
+      minuteIncrement: '30'
+      showDate: 1
+      showTime: 1
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Date

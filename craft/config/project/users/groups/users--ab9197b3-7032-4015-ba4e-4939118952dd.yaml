@@ -1,0 +1,37 @@
+handle: users
+name: Users
+permissions:
+  - 'createentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'publishentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'deleteentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'publishpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'deletepeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'editpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'publishpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'deletepeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'editpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'editentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+  - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+  - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'replacepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'deletepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'

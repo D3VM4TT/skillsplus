@@ -102,6 +102,13 @@ categoryGroups:
                 sortOrder: 5
             name: Settings
             sortOrder: 1
+          -
+            fields:
+              fe956922-ff3a-4931-a5fd-5b85605d9c20:
+                required: false
+                sortOrder: 1
+            name: 'Taskbook Group Modules'
+            sortOrder: 2
     handle: taskbookGroups
     name: 'Taskbook Groups'
     siteSettings:
@@ -136,7 +143,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1625845672
+dateModified: 1626706072
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -870,8 +877,8 @@ fields:
     contentColumnType: integer(10)
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleSingleCost
-    instructions: 'Cost if purchased as individual optional module group.'
-    name: 'Module Group Single Cost'
+    instructions: 'Cost if purchased as individual optional taskbook group.'
+    name: 'Taskbook Module Single Cost'
     searchable: true
     settings:
       decimals: 0
@@ -1717,7 +1724,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleResitCost
     instructions: ''
-    name: 'Module Group Resit Cost'
+    name: 'Taskbook Module Resit Cost'
     searchable: true
     settings:
       decimals: 0
@@ -2036,7 +2043,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleCosts
     instructions: ''
-    name: 'Module Group Costs'
+    name: 'Taskbook Module Costs'
     searchable: true
     settings:
       addRowLabel: 'Add a row'
@@ -2049,7 +2056,7 @@ fields:
               __assoc__:
                 -
                   - heading
-                  - 'No. Optional Module Groups'
+                  - 'No. Optional Taskbook Groups'
                 -
                   - handle
                   - optionalModules
@@ -3682,7 +3689,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleMinimumOptional
     instructions: ''
-    name: 'Module Group Minimum Optional'
+    name: 'Taskbook Module Minimum Optional'
     searchable: true
     settings:
       decimals: 0
@@ -3918,7 +3925,7 @@ fields:
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
     handle: moduleMaxCost
     instructions: ''
-    name: 'Module Group Max Cost'
+    name: 'Taskbook Module Max Cost'
     searchable: true
     settings:
       decimals: 0
@@ -4376,6 +4383,28 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  fe956922-ff3a-4931-a5fd-5b85605d9c20:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookGroupModules
+    instructions: ''
+    name: 'Taskbook Group Modules'
+    searchable: true
+    settings:
+      limit: null
+      localizeRelations: false
+      readOnly: ''
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+      targetFieldId: null
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: robuust\reverserelations\fields\ReverseEntries
 globalSets:
   78c5a5fd-a2f0-4482-a20c-fde7866eb5c0:
     handle: globalsPackage
@@ -7251,7 +7280,7 @@ system:
   edition: pro
   live: true
   name: 'Skills Plus'
-  schemaVersion: 3.4.10
+  schemaVersion: 3.4.11
   timeZone: UTC
 tagGroups:
   d507d3b5-cbbc-4860-b80c-49906ef43a9e:

@@ -1,0 +1,13 @@
+contentColumnType: datetime
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+handle: cycleFinishDate
+instructions: ''
+name: 'Cycle Finish Date'
+searchable: true
+settings:
+  minuteIncrement: '30'
+  showDate: true
+  showTime: false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Date

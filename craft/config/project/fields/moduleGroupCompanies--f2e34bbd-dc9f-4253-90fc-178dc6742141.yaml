@@ -1,0 +1,19 @@
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+handle: moduleGroupCompanies
+instructions: ''
+name: Companies
+searchable: true
+settings:
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  source: null
+  sources:
+    - 'section:86faf121-d218-4348-8ab8-de457b46aa63'
+  targetSiteId: null
+  validateRelatedElements: ''
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Entries

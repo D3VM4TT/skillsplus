@@ -1,0 +1,15 @@
+contentColumnType: string
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
+handle: companySecondaryManagers
+instructions: ''
+name: 'Company Secondary Managers'
+searchable: true
+settings:
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  sources:
+    - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Users

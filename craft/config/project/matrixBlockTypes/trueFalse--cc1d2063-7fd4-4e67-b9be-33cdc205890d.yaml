@@ -1,0 +1,79 @@
+field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9
+fieldLayouts:
+  18bf33fe-444c-4031-b481-cd8db9cd2ecb:
+    tabs:
+      -
+        fields:
+          6f6554bf-571c-46f8-a4eb-37e34c65b1a8:
+            required: false
+            sortOrder: 3
+          9bb07531-d5ed-4c48-9a33-67ca0c17882b:
+            required: false
+            sortOrder: 2
+          265e7462-688b-4c0b-a1b2-6f25d1b08525:
+            required: false
+            sortOrder: 1
+        name: Content
+        sortOrder: 1
+fields:
+  6f6554bf-571c-46f8-a4eb-37e34c65b1a8:
+    contentColumnType: string
+    fieldGroup: null
+    handle: asset
+    instructions: ''
+    name: Asset
+    searchable: true
+    settings:
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+      defaultUploadLocationSubpath: ''
+      limit: '1'
+      localizeRelations: false
+      restrictFiles: ''
+      selectionLabel: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: true
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources: 'folder:2'
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: false
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
+  9bb07531-d5ed-4c48-9a33-67ca0c17882b:
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: answer
+    instructions: 'Lightswitch off (grey) is false, on (green) is true.'
+    name: Answer
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  265e7462-688b-4c0b-a1b2-6f25d1b08525:
+    contentColumnType: text
+    fieldGroup: null
+    handle: question
+    instructions: ''
+    name: Question
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: false
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+handle: trueFalse
+name: 'True False'
+sortOrder: 1

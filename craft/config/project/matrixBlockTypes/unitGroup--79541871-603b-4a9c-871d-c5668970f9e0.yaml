@@ -1,0 +1,155 @@
+field: 6f94bf9b-3168-437e-b8f2-7d082dcdd831
+fieldLayouts:
+  11bf57e1-f8b5-4045-9861-210b0d80c82b:
+    tabs:
+      -
+        fields:
+          1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9:
+            required: false
+            sortOrder: 4
+          7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+            required: false
+            sortOrder: 6
+          45d289dd-249a-42e9-95ae-62ab979e8b02:
+            required: false
+            sortOrder: 1
+          46656fa8-cf4d-4c7e-93d0-800132d01aa2:
+            required: false
+            sortOrder: 5
+          64769feb-a327-4c92-8224-bfd94a529f1a:
+            required: false
+            sortOrder: 7
+          a773e69f-0bf1-46fd-ae75-5182be37772c:
+            required: false
+            sortOrder: 3
+          de561917-2808-45e4-b7db-324c21a2aebf:
+            required: false
+            sortOrder: 2
+        name: Content
+        sortOrder: 1
+fields:
+  1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9:
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: enableSubmissions
+    instructions: ''
+    name: 'Enable Multiple Results?'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0:
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: cpdTargetPoints
+    instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+    name: 'CPD Target Points'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: Points
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  45d289dd-249a-42e9-95ae-62ab979e8b02:
+    contentColumnType: text
+    fieldGroup: null
+    handle: groupName
+    instructions: ''
+    name: Name
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  46656fa8-cf4d-4c7e-93d0-800132d01aa2:
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: unitPointsOverride
+    instructions: 'Set all units in this group to the same point value.'
+    name: 'Unit Points Override'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  64769feb-a327-4c92-8224-bfd94a529f1a:
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: cpdTargetHours
+    instructions: 'Only for CPD type modules - must be met to complete this unit group.'
+    name: 'CPD Target Hours'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: Hours
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  a773e69f-0bf1-46fd-ae75-5182be37772c:
+    contentColumnType: string
+    fieldGroup: null
+    handle: unitEntries
+    instructions: ''
+    name: 'Unit Entries'
+    searchable: true
+    settings:
+      limit: ''
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
+  de561917-2808-45e4-b7db-324c21a2aebf:
+    contentColumnType: text
+    fieldGroup: null
+    handle: groupNotes
+    instructions: ''
+    name: Notes
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: '1'
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+handle: unitGroup
+name: 'Unit Group'
+sortOrder: 1

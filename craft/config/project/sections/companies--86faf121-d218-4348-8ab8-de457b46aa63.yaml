@@ -1,0 +1,62 @@
+enableVersioning: false
+entryTypes:
+  2fbdc981-206f-44f9-9f39-fdb605cff8f2:
+    fieldLayouts:
+      d12a8c7b-ca2c-4e5a-a2ea-56c7d843b0d7:
+        tabs:
+          -
+            fields:
+              8a8d1ecb-3c6c-4ade-a2e7-8e6996e7fe86:
+                required: false
+                sortOrder: 3
+              75ec7211-a9c5-4390-963a-9d63dfd0dbd4:
+                required: false
+                sortOrder: 1
+              a8d84419-f7b9-4d64-b7cb-ce827c7ca810:
+                required: false
+                sortOrder: 4
+              fa734878-4241-4654-86c9-50964d8a8692:
+                required: false
+                sortOrder: 2
+            name: Company
+            sortOrder: 1
+          -
+            fields:
+              3d52518d-7b85-4ef8-af1c-fb8a813e0cce:
+                required: false
+                sortOrder: 2
+              440ee4d2-9c90-47a0-a2e7-9ec4d1a97683:
+                required: false
+                sortOrder: 3
+              dc88c84b-17f2-4b8b-8cc6-124b5115c9cc:
+                required: false
+                sortOrder: 1
+            name: Legacy
+            sortOrder: 2
+          -
+            fields:
+              069f2a42-da65-478a-852e-18a44408ab93:
+                required: false
+                sortOrder: 2
+              3629d8e1-89dd-47fd-939f-c81889682a13:
+                required: false
+                sortOrder: 1
+            name: Hierarchy
+            sortOrder: 3
+    handle: company
+    hasTitleField: true
+    name: Company
+    sortOrder: 1
+    titleFormat: null
+    titleLabel: Title
+handle: companies
+name: Companies
+previewTargets: null
+propagationMethod: all
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+type: channel
