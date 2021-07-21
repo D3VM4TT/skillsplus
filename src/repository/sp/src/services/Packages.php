@@ -86,30 +86,34 @@ class Packages extends Component
      */
     public function onBeforeSavePackage(ModelEvent $event, Entry $entry)
     {
-        $taskbookGroup = $entry->packageTaskbookGroup ? $entry->packageTaskbookGroup->last() : null;
-        if (!$taskbookGroup) {
-            $entry->addError('packageTaskbookGroup', 'You must select a taskbook group.');
+        $moduleGroup = $entry->packageModuleGroup ? $entry->packageModuleGroup->last() : null;
+        if (!$moduleGroup) {
+            $entry->addError('packageModuleGroup', 'You must select a module group.');
             $event->isValid = false;
             return;
         }
+        if (!$moduleGroup->moduleGroupTaskbooks) {
+            $entry->addError('packageModuleGroup', 'You must select a Taskbook type module group.');
+            $event->isValid = false;
+        }
 
-        $entry->title = '[' . $taskbookGroup->title . '] ' . $entry->author->fullname;
-        $totalOptional = $entry->packageOptionalTaskbookGroups ? $entry->packageOptionalTaskbookGroups->count() : 0;
+        $entry->title = '[' . $moduleGroup->title . '] ' . $entry->author->fullname;
+        $totalOptional = $entry->packageOptionalModuleGroups ? $entry->packageOptionalModuleGroups->count() : 0;
 
         ## check minimum optional modules
-        if ($taskbookGroup->moduleMinimumOptional && $totalOptional < $taskbookGroup->moduleMinimumOptional) {
-            $entry->addError('packageOptionalModules', 'You must select a minimum of ' . $taskbookGroup->moduleMinimumOptional . ' optional modules.');
+        if ($moduleGroup->moduleMinimumOptional && $totalOptional < $moduleGroup->moduleMinimumOptional) {
+            $entry->addError('packageOptionalModules', 'You must select a minimum of ' . $moduleGroup->moduleMinimumOptional . ' optional modules.');
             $event->isValid = false;
         }
 
         $singleType = Craft::$app->request->getParam('singleType');
         ## calculate cost
         if ($singleType) {
-            $cost = $singleType == 'resit' ?  $taskbookGroup->moduleResitCost : $taskbookGroup->moduleSingleCost;
+            $cost = $singleType == 'resit' ?  $moduleGroup->moduleResitCost : $moduleGroup->moduleSingleCost;
         } else {
-            $cost = $taskbookGroup->moduleMaxCost;
-            if ($taskbookGroup->moduleCosts) {
-                foreach ($taskbookGroup->moduleCosts as $row) {
+            $cost = $moduleGroup->moduleMaxCost;
+            if ($moduleGroup->moduleCosts) {
+                foreach ($moduleGroup->moduleCosts as $row) {
                     if ($totalOptional == $row['optionalModules']) {
                         $cost = (int)$row['cost'];
                     }
@@ -224,18 +228,18 @@ class Packages extends Component
         $sp = new SuperTableService();
         $field = Craft::$app->fields->getFieldByHandle('packageAssessment');
         $assessmentBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-        $taskbookGroupIds = [$entry->packageTaskbookGroup->last()->id];
-        foreach ($entry->packageOptionalTaskbookGroups as $block) {
-            $taskbookGroupIds[] = $block->optionalTaskbookGroup->last()->id;
+        $moduleGroupIds = [$entry->packageModuleGroup->last()->id];
+        foreach ($entry->packageOptionalModuleGroups as $block) {
+            $moduleGroupIds[] = $block->optionalModuleGroup->last()->id;
         }
         $n = 1;
-        foreach ($taskbookGroupIds as $taskbookGroupId) {
+        foreach ($moduleGroupIds as $moduleGroupId) {
             $packageAssessment['new' . $n] = [
                 'type' => $assessmentBlockType->id,
                 'enabled' => true,
                 'fields' => [
                     'assessmentDate' => '',
-                    'assessmentTaskbookGroup' => [$taskbookGroupId]
+                    'assessmentModuleGroup' => [$moduleGroupId]
                 ]
             ];
             $n++;
@@ -248,12 +252,12 @@ class Packages extends Component
      * @param User $user
      * @return array
      */
-    public function getAllTaskbookGroups(User $user)
+    public function getAllModuleGroups(User $user)
     {
         $packages = $this->getUserPackages($user);
         $categories = [];
         foreach ($packages as $package) {
-            foreach ($package->taskbookGroupCategories() as $category) {
+            foreach ($package->moduleGroupCategories() as $category) {
                 $categories[$category->id] = $category;
             }
         }
@@ -267,14 +271,14 @@ class Packages extends Component
      * @param $user
      * @return array
      */
-    public function getOptionalTaskbookGroups(User $user)
+    public function getOptionalModuleGroups(User $user)
     {
         $packages = $this->getUserPackages($user);
         $available = [];
-        $categoryIds = array_keys($this->getAllTaskbookGroups($user));
+        $categoryIds = array_keys($this->getAllModuleGroups($user));
         ## get available ids
         foreach ($packages as $package) {
-            $packageAvailable = $package->availableTaskbookGroupCategories();
+            $packageAvailable = $package->availableModuleGroupCategories();
             foreach ($packageAvailable as $id => $c) {
                 if (!in_array($id, $categoryIds)) {
                     $available[$id] = $c;
@@ -290,13 +294,13 @@ class Packages extends Component
      * @param $user
      * @return array
      */
-    public function getResitTaskbookGroups(User $user)
+    public function getResitModuleGroups(User $user)
     {
         $packages = $this->getUserPackages($user);
         $resit = [];
         ## get resit ids
         foreach ($packages as $package) {
-            $packageResit = $package->resitTaskbookGroupCategories();
+            $packageResit = $package->resitModuleGroupCategories();
             foreach ($packageResit as $id => $c) {
                 $resit[$id] = $c;
             }
@@ -534,16 +538,16 @@ class Packages extends Component
 
     /**
      * @param Entry|null $package
-     * @param $taskbookGroupId
+     * @param $moduleGroupId
      * @return mixed|null
      */
-    public function getOptionalTaskbookGroupRow($package = null, $taskbookGroupId)
+    public function getOptionalModuleGroupRow($package = null, $moduleGroupId)
     {
-        if (!$package || !$package->packageOptionalTaskbookGroups) {
+        if (!$package || !$package->packageOptionalModuleGroups) {
             return null;
         }
-        foreach ($package->packageOptionalTaskbookGroups as $row) {
-            if ($row->optionalTaskbookGroup->one()->id == $taskbookGroupId) {
+        foreach ($package->packageOptionalModuleGroups as $row) {
+            if ($row->optionalModuleGroup->one()->id == $moduleGroupId) {
                 return $row;
             }
         }
@@ -613,7 +617,7 @@ class Packages extends Component
     {
         $criteria = Entry::find();
         $criteria->section = 'modules';
-        $criteria->relatedTo(['targetElement' => $package->taskbookGroup->id, 'field' => 'moduleGroup']);
+        $criteria->relatedTo(['targetElement' => $package->moduleGroup->id, 'field' => 'moduleGroup']);
         return $criteria->all();
     }
 
@@ -632,16 +636,16 @@ class Packages extends Component
 
     /**
      * @param User $user
-     * @param null $taskbookGroupId
+     * @param null $moduleGroupId
      * @return int|string
      */
-    public function userPackageExists(User $user, $taskbookGroupId = null)
+    public function userPackageExists(User $user, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->authorId = $user->id;
         $criteria->relatedTo = [
-            'targetElement' => $taskbookGroupId,
-            'field' => 'packageTaskbookGroup'
+            'targetElement' => $moduleGroupId,
+            'field' => 'packageModuleGroup'
         ];
         return $criteria->count();
     }
@@ -687,7 +691,7 @@ class Packages extends Component
      * @param null $type
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null)
+    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';

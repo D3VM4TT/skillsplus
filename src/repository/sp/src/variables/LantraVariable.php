@@ -119,24 +119,24 @@ class LantraVariable
      * @param null $userId
      * @return array
      */
-    public function getOptionalTaskbookGroups($userId = null)
+    public function getOptionalModuleGroups($userId = null)
     {
         if (false == $user = $this->getUser($userId)) {
             return;
         }
-        return Lantra::$app->packages->getOptionalTaskbookGroups($user);
+        return Lantra::$app->packages->getOptionalModuleGroups($user);
     }
 
     /**
      * @param null $userId
      * @return array
      */
-    public function getResitTaskbookGroups($userId = null)
+    public function getResitModuleGroups($userId = null)
     {
         if (false == $user = $this->getUser($userId)) {
             return;
         }
-        return Lantra::$app->packages->getResitTaskbookGroups($user);
+        return Lantra::$app->packages->getResitModuleGroups($user);
     }
 
     /**
@@ -230,9 +230,9 @@ class LantraVariable
      * @param $moduleId
      * @return null
      */
-    public function getOptionalTaskbookGroupRow($package = null, $taskbookGroupId)
+    public function getOptionalModuleGroupRow($package = null, $moduleGroupId)
     {
-        return Lantra::$app->packages->getOptionalTaskbookGroupRow($package, $taskbookGroupId);
+        return Lantra::$app->packages->getOptionalModuleGroupRow($package, $moduleGroupId);
     }
 
     /**
@@ -671,12 +671,12 @@ class LantraVariable
 
     /**
      * @param $userId
-     * @param $taskbookGroupId
+     * @param $moduleGroupId
      * @return bool
      */
-    public function packageExists($userId, $taskbookGroupId)
+    public function packageExists($userId, $moduleGroupId)
     {
-        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $taskbookGroupId);
+        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $moduleGroupId);
     }
 
     /**

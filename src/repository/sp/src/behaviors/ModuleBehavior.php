@@ -19,8 +19,7 @@ class ModuleBehavior extends Behavior
      */
     public function isCompany()
     {
-        $moduleGroup = $this->owner->moduleGroup->one();
-        return $moduleGroup ? $this->owner->moduleGroup->one()->isCompany() : false;
+        return $this->owner->moduleGroup->one()->isCompany();
     }
 
     /**
@@ -28,7 +27,6 @@ class ModuleBehavior extends Behavior
      */
     public function isUserCompany($userId = null)
     {
-        $moduleGroup = $this->owner->moduleGroup->one();
-        return $moduleGroup ? $this->owner->moduleGroup->one()->isUserCompany($userId) : false;
+        return $this->owner->moduleGroup->one()->isUserCompany($userId);
     }
 }

@@ -1,22 +1,22 @@
-{% set taskbookGroups = craft.categories.group('taskbookGroups').level(1).all() %}
+{% set modulesGroups = craft.categories.group('moduleGroups').moduleGroupTaskbooks('1').level(1).all() %}
 {% if packageUserId is not defined %}
     {% set packageUserId = currentUser.id %}
 {% endif %}
-{% if not taskbookGroups|length %}
+{% if not modulesGroups|length %}
     <div class="field--wrapper">
-        <p style="color:red;">There are currently no {{ taskbookLabel }} groups available.</p>
+        <p style="color:red;">There are currently no module groups available.</p>
     </div>
 {% else %}
     <div class="field--wrapper">
-        <label for="packageTaskbookGroup" class="no-float">Please select which {{ taskbookLabel|lower }}
+        <label for="packageModuleGroup" class="no-float">Please select which {{ taskbookLabel|lower }}
             you wish to create:</label>
-        <select class="package-taskbook-group" name="fields[packageTaskbookGroup][]">
-            {% for taskbookGroup in taskbookGroups %}
-                {% set packageExists = craft.lantra.packageExists(packageUserId, taskbookGroup.id) %}
-                <option {% if entry is defined and packageTaskbookGroup and packageTaskbookGroup.id == taskbookGroup.id %}selected {% endif %}
-                        data-minimum="{{ taskbookGroup.moduleMinimumOptional }}"
+        <select class="package-module-group" name="fields[packageModuleGroup][]">
+            {% for moduleGroup in modulesGroups %}
+                {% set packageExists = craft.lantra.packageExists(packageUserId, moduleGroup.id) %}
+                <option {% if entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id %}selected {% endif %}
+                        data-minimum="{{ moduleGroup.moduleMinimumOptional }}"
                         data-revision="{{ packageExists ? 1 : 0 }}"
-                        value="{{ taskbookGroup.id }}">{{ taskbookGroup.title }}{{ packageExists ? ' (revision)' : '' }}</option>
+                        value="{{ moduleGroup.id }}">{{ moduleGroup.title }}{{ packageExists ? ' (revision)' : '' }}</option>
             {% endfor %}
         </select>
         <input id="package-revision" type="hidden" name="fields[packageRevision]" value="0" />
@@ -33,24 +33,24 @@
             </select>
         </div>
     {% endif %}
-    {% for taskbookGroup in taskbookGroups %}
-        {% set optionalTaskbookGroups = craft.categories.group('taskbookGroups').descendantOf(taskbookGroup).level(2).all() %}
-        {% if optionalTaskbookGroups|length %}
-            {% include '_forms/taskbookOptional' with {optionalTaskbookGroups: optionalTaskbookGroups, taskbookGroup: taskbookGroup, entry: entry is defined ? entry} %}
+    {% for moduleGroup in modulesGroups %}
+        {% set optionalModuleGroups = craft.categories.group('moduleGroups').descendantOf(moduleGroup).level(2).all() %}
+        {% if optionalModuleGroups|length %}
+            {% include '_forms/taskbookOptional' with {optionalModuleGroups: optionalModuleGroups, moduleGroup: moduleGroup, entry: entry is defined ? entry} %}
         {% endif %}
     {% endfor %}
 {% endif %}
 <script id="input-template" type="text/template">
-    {% set blocktype = craft.lantra.spBlockType('packageOptionalTaskbookGroups') %}
-    <input type="hidden" class="optional-hidden" name="fields[packageOptionalTaskbookGroups][new{n}][type]"
+    {% set blocktype = craft.lantra.spBlockType('packageOptionalModuleGroups') %}
+    <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][type]"
            value="{{ blocktype.id }}"/>
-    <input type="hidden" class="optional-hidden" name="fields[packageOptionalTaskbookGroups][new{n}][enabled]" value="1"/>
+    <input type="hidden" class="optional-hidden" name="fields[packageOptionalModuleGroups][new{n}][enabled]" value="1"/>
     <input type="hidden" class="optional-hidden"
-           name="fields[packageOptionalTaskbookGroups][new{n}][fields][optionalTaskbookGroup][]"
-           value="{optionalTaskbookGroupId}"/>
+           name="fields[packageOptionalModuleGroups][new{n}][fields][optionalModuleGroup][]"
+           value="{optionalModuleGroupId}"/>
     {% if craft.lantra.setting('taskbookLevels') %}
         <input type="hidden" class="optional-hidden"
-               name="fields[packageOptionalTaskbookGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}"/>
+               name="fields[packageOptionalModuleGroups][new{n}][fields][optionalLevel]" value="{optionalLevel}"/>
     {% endif %}
 </script>
 

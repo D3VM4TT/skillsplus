@@ -12,7 +12,7 @@
 {% set cpdResultEntry = false %}
 
 {% if resultEntry.section.handle == 'packages' %}
-    {% set certTitle = resultEntry.packageGroup.title %}
+    {% set certTitle = resultEntry.moduleGroup.title %}
     {% set certDate = resultEntry.getCompleteDate()|date(dateFormat) %}
 {% elseif resultEntry.type == 'moduleResult' %}
     {% set moduleEntry = resultEntry.resultModule.one %}

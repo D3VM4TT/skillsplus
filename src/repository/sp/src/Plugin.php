@@ -312,9 +312,6 @@ class Plugin extends BasePlugin
                 }
             }
         );
-
-
-
     }
 
     /**

@@ -38,7 +38,7 @@
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
                 <tr>
                     <td>
-                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.packageGroup.title }}</a>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.moduleGroup.title }}</a>
                     </td>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <td>

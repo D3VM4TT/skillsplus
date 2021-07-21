@@ -1,7 +1,6 @@
 {% set package = cpdUser.record.getElement(packageId) %}
-{% set availableTaskbookGroups = package.availableTaskbookGroupCategories %}
-{% set resitTaskbookGroups = package.resitTaskbookGroupCategories %}
-{% set isTaskbooks = true %}
+{% set availableModuleGroups = package.availableModuleGroupCategories %}
+{% set resitModuleGroups = package.resitModuleGroupCategories %}
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -9,7 +8,7 @@
         </div>
         <div class="align-horizontal">
             <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
-            <div><h2>{{ package.taskbookGroup.title }}</h2></div>
+            <div><h2>{{ package.moduleGroup.title }}</h2></div>
             <p>
                 {% if package.isManager(currentUser, true) and package.hasNextStep %}
                     Next Step: {{ package.nextStep.reviewStepName }}
@@ -44,12 +43,12 @@
     <div id="j{{ package.id }}" class="open">
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
-                {% for row in package.taskbookGroups %}
-                    {% set taskbookGroup = row.category %}
-                    {% set taskbookGroupElementId = package.id ~ taskbookGroup.id %}
+                {% for row in package.moduleGroups %}
+                    {% set moduleGroup = row.category %}
+                    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
                     <li>
-                        <a href="#tab{{ taskbookGroupElementId }}" class="primary-bg">
-                            <h4>{{ taskbookGroup.title }}</h4>
+                        <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
+                            <h4>{{ moduleGroup.title }}</h4>
                         </a>
                     </li>
                 {% endfor %}
@@ -66,17 +65,17 @@
                     </li>
                 {% endif %}
                 {% if not isManager %}
-                    {% if resitTaskbookGroups|length %}
+                    {% if resitModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
-                                <h4>Resit {{ taskbookLabel }} Groups ({{ resitTaskbookGroups|length }})</h4>
+                                <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
-                    {% if availableTaskbookGroups|length %}
+                    {% if availableModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}optional" class="primary-bg">
-                                <h4>Optional {{ taskbookLabel }} Groups ({{ availableTaskbookGroups|length }})</h4>
+                                <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
@@ -84,8 +83,7 @@
             </ul>
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
-            {% for row in package.taskbookGroups %}
-                {# USING moduleGroup for moduleGroup template #}
+            {% for row in package.moduleGroups %}
                 {% set moduleGroup = row.category %}
                 {% set level = row.level %}
                 {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
@@ -105,14 +103,14 @@
                 </div>
             {% endif %}
             {% if not isManager %}
-                {% if resitTaskbookGroups|length %}
+                {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
-                        {% include '_includes/packageResits' with {admin:false, resitTaskbookGroups:resitTaskbookGroups} %}
+                        {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
                     </div>
                 {% endif %}
-                {% if availableTaskbookGroups|length %}
+                {% if availableModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                        {% include '_includes/packageOptional' with {admin:false, availablTaskbookGroups:availablTaskbookGroups} %}
+                        {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
                     </div>
                 {% endif %}
             {% endif %}

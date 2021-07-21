@@ -44,19 +44,19 @@
             <h2>New {{ unpaidPackages.count == 1 ? taskbookLabel : taskbookLabel|pluralize }}</h2>
             {{ globalsHtml.pageNew }}
             {% for package in unpaidPackages.all %}
-                {% set packageTitle = package.taskbookGroup.title %}
+                {% set packageTitle = package.moduleGroup.title %}
                 {% if craft.lantra.setting('taskbookLevels') %}
                     {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
                 {% endif %}
                 <h3>{{ packageTitle }} </h3>
                 <p>Date Created: {{ package.dateCreated|date(dateFormat) }}</p>
-                {% if package.packageOptionalTaskbookGroups.count %}
+                {% if package.packageOptionalModuleGroups.count %}
                     <p>
-                    {% for optionalTaskbookGroupBlock in package.packageOptionalTaskbookGroups.all %}
-                        {% set taskbookGroup = optionalTaskbookGroupBlock.optionalTaskbookGroup.inReverse().one %}
-                        {{ taskbookGroup.title }}
+                    {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+                        {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
+                        {{ moduleGroup.title }}
                         {% if craft.lantra.setting('taskbookLevels') %}
-                            ({{ craft.lantra.taskbookLevel(optionalTaskbookGroupBlock.optionalLevel) }})
+                            ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})
                         {% endif %}
                         <br />
                     {% endfor %}
@@ -76,11 +76,11 @@
             <thead>
                 <tr>
                     <th>Date Created</th>
-                    <th>{{ taskbookLabel }} Group</th>
+                    <th>Module Group</th>
                     {% if craft.lantra.setting('taskbookLevels') %}
                         <th>Level</th>
                     {% endif %}
-                    <th>Optional {{ taskbookLabel }} Groups</th>
+                    <th>Optional Module Groups</th>
                     <th>Cost</th>
                     <th>PayPal Email</th>
                     <th>Reference</th>
@@ -88,15 +88,15 @@
             </thead>
             <tbody>
                 {% for package in paidPackages.all %}
-                    {% set packageTitle = package.taskbookGroup.title %}
+                    {% set packageTitle = package.moduleGroup.title %}
                     {% set payment = package.userPayments.one %}
                     {% if craft.lantra.setting('taskbookLevels') %}
                         {% set packageTitle = packageTitle ~ ' ' ~ craft.lantra.taskbookLevel(package.packageLevel) %}
                     {% endif %}
                     <tr>
                         <td>{{ package.dateCreated|date(dateFormat) }}</td>
-                        {% if not package.taskbookGroup %}
-                            <td style="color:red">Invalid Taskbook Group</td>
+                        {% if not package.moduleGroup %}
+                            <td style="color:red">Invalid Module Group</td>
                         {% else %}
                             <td>
                                 <a href="/cpd/{{ account.id }}/taskbooks/{{ package.id }}">{{ packageTitle }}</a>
@@ -106,14 +106,14 @@
                             <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
                         {% endif %}
                         <td>
-                            {% for optionalTaskbookGroupBlock in package.packageOptionalTaskbookGroups.all %}
-                                {% set taskbookGroup = optionalTaskbookGroupBlock.optionalTaskbookGroup.inReverse().one %}
-                                {% if not taskbookGroup %}
-                                    Invalid Optional Taskbook Group<br />
+                            {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
+                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
+                                {% if not moduleGroup %}
+                                    Invalid Optional Module Group<br />
                                 {% else %}
-                                    {{ taskbookGroup.title }}
+                                    {{ moduleGroup.title }}
                                     {% if craft.lantra.setting('taskbookLevels') %}
-                                        ({{ craft.lantra.taskbookLevel(optionalTaskbookGroupBlock.optionalLevel) }})<br />
+                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}

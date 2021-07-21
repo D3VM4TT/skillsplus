@@ -73,45 +73,6 @@ categoryGroups:
     structure:
       maxLevels: 2
       uid: bc778126-df63-4aaa-98b1-a3cbd027192f
-  a8731481-f6d5-4f6e-9d29-0bd442774b61:
-    fieldLayouts:
-      79dbc264-ef07-4141-bced-c875960a0e3b:
-        tabs:
-          -
-            fields:
-              294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
-                required: false
-                sortOrder: 4
-              5bdda926-785f-4d89-aebe-9a805b3dab29:
-                required: false
-                sortOrder: 6
-              680431de-8445-48e9-8acf-e32d867f73dd:
-                required: false
-                sortOrder: 3
-              bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
-                required: false
-                sortOrder: 1
-              da81a368-f84c-47f8-9e3a-b83346be0865:
-                required: false
-                sortOrder: 2
-              dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
-                required: false
-                sortOrder: 7
-              e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
-                required: false
-                sortOrder: 5
-            name: Settings
-            sortOrder: 1
-    handle: taskbookGroups
-    name: 'Taskbook Groups'
-    siteSettings:
-      47b102e1-4aed-4206-8420-dfd6e6684f7c:
-        hasUrls: false
-        template: null
-        uriFormat: null
-    structure:
-      maxLevels: 1
-      uid: 47a9be3c-9d1c-4e7f-a268-eaa4b5a473a7
   d83da856-af9d-458e-8b34-08ff74c012b5:
     fieldLayouts:
       33adba6b-22c9-44dc-9937-48757ba24cf2:
@@ -136,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1625583540
+dateModified: 1622813800
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -417,9 +378,9 @@ fields:
   164fe93f-d610-4819-8ca4-77cc4a88112e:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageTaskbookGroup
+    handle: packageModuleGroup
     instructions: ''
-    name: 'Package Taskbook Group'
+    name: 'Package Module Group'
     searchable: true
     settings:
       allowLimit: false
@@ -427,8 +388,8 @@ fields:
       branchLimit: '1'
       limit: null
       localizeRelations: false
-      selectionLabel: 'Select taskbook group'
-      source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+      selectionLabel: 'Select module group'
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
       sources: '*'
       targetSiteId: null
       validateRelatedElements: ''
@@ -772,28 +733,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
-  24b21fee-14c2-48d5-ad2c-25b89954b1cd:
-    contentColumnType: string
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
-    handle: taskbookGroup
-    instructions: ''
-    name: 'Taskbook Group'
-    searchable: true
-    settings:
-      allowLimit: false
-      allowMultipleSources: false
-      branchLimit: ''
-      limit: null
-      localizeRelations: false
-      selectionLabel: ''
-      source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
-      sources: '*'
-      targetSiteId: null
-      validateRelatedElements: ''
-      viewMode: null
-    translationKeyFormat: null
-    translationMethod: site
-    type: craft\fields\Categories
   2722a41a-2635-4f3b-8ecb-d39db9efa049:
     contentColumnType: text
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -3959,9 +3898,9 @@ fields:
   edcdcb64-8b0b-4f31-ab57-106c9e252317:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageOptionalTaskbookGroups
+    handle: packageOptionalModuleGroups
     instructions: ''
-    name: 'Package Optional Taskbook Groups'
+    name: 'Package Optional Module Groups'
     searchable: true
     settings:
       columns:
@@ -3980,7 +3919,7 @@ fields:
                 -
                   - width
                   - ''
-      contentTable: '{{%stc_packageoptionaltaskbookgroups}}'
+      contentTable: '{{%stc_packageoptionalmodulegroups}}'
       fieldLayout: table
       maxRows: ''
       minRows: ''
@@ -6159,18 +6098,15 @@ sections:
             tabs:
               -
                 fields:
-                  24b21fee-14c2-48d5-ad2c-25b89954b1cd:
-                    required: true
-                    sortOrder: 1
                   6b431a5f-e1ee-4520-ab30-89ca72993c00:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 2
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 3
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
-                    sortOrder: 2
+                    sortOrder: 1
                 name: Module
                 sortOrder: 1
               -
@@ -6381,9 +6317,9 @@ superTableBlockTypes:
       00afc899-b37a-415c-8829-b06a42a8638f:
         contentColumnType: string
         fieldGroup: null
-        handle: optionalTaskbookGroup
+        handle: optionalModuleGroup
         instructions: ''
-        name: 'Taskbook Group'
+        name: 'Module Group'
         searchable: true
         settings:
           allowLimit: false
@@ -6391,8 +6327,8 @@ superTableBlockTypes:
           branchLimit: '1'
           limit: null
           localizeRelations: false
-          selectionLabel: 'Select optional taskbook group'
-          source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+          selectionLabel: 'Select optional module group'
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
           sources: '*'
           targetSiteId: null
           validateRelatedElements: ''
@@ -6507,9 +6443,9 @@ superTableBlockTypes:
       32c6ef2b-26dd-41c1-818c-411a8164e1f0:
         contentColumnType: string
         fieldGroup: null
-        handle: assessmentTaskbookGroup
+        handle: assessmentModuleGroup
         instructions: ''
-        name: 'Taskbook Group'
+        name: 'Module Group'
         searchable: true
         settings:
           allowLimit: false
@@ -6518,7 +6454,7 @@ superTableBlockTypes:
           limit: null
           localizeRelations: false
           selectionLabel: ''
-          source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
           sources: '*'
           targetSiteId: null
           validateRelatedElements: ''

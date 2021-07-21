@@ -14,7 +14,7 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageTaskbookGroup = entry is defined and entry.packageTaskbookGroup ? entry.packageTaskbookGroup.one : null %}
+{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
 {% set section = craft.sections.getSectionByHandle('packages') %}
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
@@ -30,7 +30,7 @@
             </a>
             {{ currentUserCompany|default('') }}
             <h2>Create {{ taskbookLabel }}</h2>
-            <p>Purchase a package of {{ taskbookLabel }} groups.</p>
+            <p>Purchase a package of module groups.</p>
         </div>
         <div class="page-content">
             {{ globalsHtml.pageCreate }}
