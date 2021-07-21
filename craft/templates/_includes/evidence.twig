@@ -1,0 +1,45 @@
+<div id="files" class="files files-table">
+{% if evidence|length %}
+    <table width="100%">
+        <thead>
+            <tr>
+                <th style="text-align:left">Filename</th>
+                <th style="text-align:left">Size</th>
+                <th style="text-align:left">Date Uploaded</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for file in evidence.all() %}
+            <tr>
+                <td><a target="_blank" href="/internal/{{ file.id }}">{{ file.filename }}</a></td>
+                <td>{{ file.size }}</td>
+                <td>{{ file.dateCreated|date('d/m/Y') }}</td>
+                <td>
+                    <a class="delete-file" data-id="{{ file.id }}">[x]</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
+{% if evidenceFolderId %}
+    <p></p>
+    <p>
+    <span class="btn btn-success fileinput-button primary-bg">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Upload Evidence</span>
+            <input id="fileupload" type="file" name="assets-upload" multiple data-folderid="{{ evidenceFolderId }}" data-display="table" >
+    </span>
+    <br>
+    <br>
+    </p>
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+{% else %}
+    <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
+{% endif %}
+</div>

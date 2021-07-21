@@ -1,0 +1,18 @@
+<table class="data">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Cost</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for taskbookGroup in availableTaskbookGroups %}
+        <tr>
+            <td>{{ taskbookGroup.title }}</td>
+            <td>£{{ taskbookGroup.moduleSingleCost }}</td>
+            <td style="text-align: right;"><a href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&taskbookGroupId={{ taskbookGroup.id }}">Buy Now</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

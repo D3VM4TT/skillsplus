@@ -212,12 +212,15 @@
                     e.preventDefault();
                     var a = $(this),
                         url = '{{ url('sp/assets/delete-evidence') }}',
-                        p = a.closest('p');
+                        p = a.closest('p'),
+                        tr = a.closest('tr');
                     $.post(url, {fileId: a.data('id')}, function(data) {
                         if(data.success) {
-                            p.fadeOut(function () {
-                                p.remove();
-                            })
+                            if (tr) {
+                                tr.fadeOut(function () {p.remove();});
+                                return;
+                            }
+                            p.fadeOut(function () {p.remove();});
                         }
                         else {
                             alert('Could not delete this file. ' + data.message);
@@ -243,16 +246,30 @@
                         if(data.result.success) {
                             var fileId = data.result.asset.id,
                                 fileName = data.result.asset.filename,
+                                fileSize = data.result.asset.size,
+                                dateCreated = new Date(data.result.asset.dateCreated),
                                 coordinates = data.result.asset.location.coordinates,
-                                node = $('<p/>')
+
+                                p = $('<p/>')
                                     .append('<input type="hidden" name="fields[resultEvidence][]" value="' + fileId + '" />')
                                     .append('[<a href="#" class="delete-file" data-id="' + fileId + '" style="color:#FF0000">delete</a>] ')
-                                    .append('<a target="_blank" href="/internal/' + fileId + '">' + fileName + '</a>');
+                                    .append('<a target="_blank" href="/internal/' + fileId + '">' + fileName + '</a>'),
+
+                                tr = $('<tr/>')
+                                    .append('<td><a target="_blank" href="/internal/' + fileId + '">' + fileName + '</a></td>')
+                                    .append('<td>' + formatBytes(fileSize) + '</td>')
+                                    .append('<td>' + dateCreated.getDate() + '/' + dateCreated.getMonth() + '/' + dateCreated.getFullYear() + '</td>')
+                                    .append('<td><a href="#" class="delete-file" data-id="' + fileId + '" style="color:#FF0000">[x]</a></td>');
 
                                 if (coordinates) {
-                                    node.append('<a class="icon" href="https://maps.google.co.uk?q=' + coordinates + '" target="_blank"><img src="/assets/img/marker.svg"></a>');
+                                    p.append('<a class="icon" href="https://maps.google.co.uk?q=' + coordinates + '" target="_blank"><img src="/assets/img/marker.svg"></a>');
                                 }
-                            node.appendTo($('#files'));
+                            if ($('#fileupload').data('display') == 'table') {
+                                tr.appendTo($('#files').find('table:eq(0)'));
+                                return;
+                            }
+
+                            p.appendTo($('#files'));
                         }
                         else {
                             $('body').removeClass('loading');
@@ -271,6 +288,19 @@
 
                 });
             });
+
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Bytes';
+
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
         </script>
 
         {% if currentUser %}

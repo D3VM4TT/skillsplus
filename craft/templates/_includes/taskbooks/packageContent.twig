@@ -1,0 +1,9 @@
+{% for row in package.taskbookGroups %}
+    {# USING moduleGroup for moduleGroup template #}
+    {% set moduleGroup = row.category %}
+    {% set level = row.level %}
+    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
+    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+    {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
+    {% include 'record/_modules/moduleGroup' %}
+{% endfor %}
