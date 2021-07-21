@@ -2,14 +2,13 @@
 {% set availableTaskbookGroups = package.availableTaskbookGroupCategories %}
 {% set resitTaskbookGroups = package.resitTaskbookGroupCategories %}
 {% set isTaskbooks = true %}
-{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
             <img src="/assets/img/tool-job-role-management.svg" width="120" height="120" class="" alt="">
         </div>
         <div class="align-horizontal">
-            <div><h4>{{ taskbookLabel }}</h4></div>
+            <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
             <div><h2>{{ package.taskbookGroup.title }}</h2></div>
             <p>
                 {% if package.isManager(currentUser, true) and package.hasNextStep %}
@@ -45,21 +44,15 @@
     <div id="j{{ package.id }}" class="open">
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
-                <li>
-                    <a href="#tab{{ package.id }}taskbook" class="primary-bg">
-                        <h4>{{ package.taskbookGroup.title }}</h4>
-                    </a>
-                </li>
-                <li>
-                    <a href="#tab{{ package.id }}content" class="primary-bg">
-                        <h4>{{ taskbookLabel }} Content</h4>
-                    </a>
-                </li>
-                <li>
-                    <a href="#tab{{ package.id }}evidence" class="primary-bg">
-                        <h4>Evidence</h4>
-                    </a>
-                </li>
+                {% for row in package.taskbookGroups %}
+                    {% set taskbookGroup = row.category %}
+                    {% set taskbookGroupElementId = package.id ~ taskbookGroup.id %}
+                    <li>
+                        <a href="#tab{{ taskbookGroupElementId }}" class="primary-bg">
+                            <h4>{{ taskbookGroup.title }}</h4>
+                        </a>
+                    </li>
+                {% endfor %}
                 <li>
                     <a href="#tab{{ package.id }}reviews" class="primary-bg">
                         <h4>Reviews</h4>
@@ -91,61 +84,35 @@
             </ul>
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
-            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}taskbook">
-
-                <div style="margin-top:20px;margin-bottom:20px">
-
-                {{ package.taskbookGroup.taskbookIntro }}
-
-                </div>
-
-                {% if package.taskbookGroup.taskbookFiles.count  %}
-                    <h4>Supporting Files &amp; Images</h4>
-                    <table class="data unit-files" width="100%">
-                        <thead>
-                        <tr>
-                            <th>Filename</th>
-                            <th style="text-align: right;padding-right:0;">Date Uploaded</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for file in package.taskbookGroup.taskbookFiles.all()  %}
-                            <tr>
-                                <td><a target="_blank" href="{{ file.url }}">{{ file.filename }}</a></td>
-                                <td style="text-align: right">{{ file.dateCreated|date('d/m/Y') }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-
-            </div>
-            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}content">
-                {% include '_includes/taskbooks/packageContent' with {admin:false} %}
-            </div>
-            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
-                {% include '_includes/taskbooks/packageEvidence' with {admin:false} %}
-            </div>
+            {% for row in package.taskbookGroups %}
+                {# USING moduleGroup for moduleGroup template #}
+                {% set moduleGroup = row.category %}
+                {% set level = row.level %}
+                {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
+                {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
+                {% include 'record/_modules/moduleGroup' %}
+            {% endfor %}
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
-                {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
+                {% include '_includes/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
                     <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
                 {% endif %}
             </div>
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
-                    {% include '_includes/taskbooks/packageLog' with {admin:false} %}
+                    {% include '_includes/packageLog' with {admin:false} %}
                 </div>
             {% endif %}
             {% if not isManager %}
                 {% if resitTaskbookGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
-                        {% include '_includes/taskbooks/packageResits' with {admin:false, resitTaskbookGroups:resitTaskbookGroups} %}
+                        {% include '_includes/packageResits' with {admin:false, resitTaskbookGroups:resitTaskbookGroups} %}
                     </div>
                 {% endif %}
                 {% if availableTaskbookGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                        {% include '_includes/taskbooks/packageOptional' with {admin:false, availablTaskbookGroups:availablTaskbookGroups} %}
+                        {% include '_includes/packageOptional' with {admin:false, availablTaskbookGroups:availablTaskbookGroups} %}
                     </div>
                 {% endif %}
             {% endif %}

@@ -102,13 +102,6 @@ categoryGroups:
                 sortOrder: 5
             name: Settings
             sortOrder: 1
-          -
-            fields:
-              ff2e64db-dd91-4b53-9259-0b7698464a0b:
-                required: false
-                sortOrder: 1
-            name: Files
-            sortOrder: 2
     handle: taskbookGroups
     name: 'Taskbook Groups'
     siteSettings:
@@ -143,7 +136,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1626790051
+dateModified: 1626713968
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4383,36 +4376,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  ff2e64db-dd91-4b53-9259-0b7698464a0b:
-    contentColumnType: string
-    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: taskbookFiles
-    instructions: ''
-    name: 'Taskbook Files'
-    searchable: true
-    settings:
-      allowSelfRelations: ''
-      allowedKinds: null
-      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
-      defaultUploadLocationSubpath: ''
-      limit: ''
-      localizeRelations: false
-      restrictFiles: ''
-      selectionLabel: ''
-      showUnpermittedFiles: false
-      showUnpermittedVolumes: false
-      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
-      singleUploadLocationSubpath: ''
-      source: null
-      sources:
-        - 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
-      targetSiteId: null
-      useSingleFolder: false
-      validateRelatedElements: ''
-      viewMode: list
-    translationKeyFormat: null
-    translationMethod: site
-    type: craft\fields\Assets
 globalSets:
   78c5a5fd-a2f0-4482-a20c-fde7866eb5c0:
     handle: globalsPackage

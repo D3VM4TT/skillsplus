@@ -1056,7 +1056,7 @@ article.cpd h2 {
 }
 
 article.cpd p {
-
+    font-weight: 600;
     padding-top: 10px;
 }
 

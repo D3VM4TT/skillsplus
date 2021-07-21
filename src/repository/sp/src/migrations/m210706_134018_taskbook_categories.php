@@ -37,11 +37,7 @@ class m210706_134018_taskbook_categories extends Migration
             ## update structure table
             $query = $this->db->createCommand();
             $query->update('{{%structureelements}}', ['structureId' => $group->structureId], ['elementId' => $category->id])->execute();
-
-            ## update elements table
-            $query = $this->db->createCommand();
-            $query->update('{{%elements}}', ['fieldLayoutId' => $group->fieldLayoutId], ['id' => $category->id])->execute();
-            echo "updated {$category->title}!\n\n";
+            echo "updated {$category->title}!";
         }
 
         ## copy over module groups to taskbook groups
