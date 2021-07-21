@@ -16,7 +16,7 @@ use yii\base\Behavior;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
-class TaskbookBehaviour extends Behavior
+class TaskbookBehavior extends Behavior
 {
     /**
      * @return array
