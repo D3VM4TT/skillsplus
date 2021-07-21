@@ -272,7 +272,7 @@ class Record extends Model
     {
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
-            if ($moduleEntry->taskbookGroup && in_array($taskbookGroup->id, $moduleEntry->taskbookGroup->ids())) {
+            if (in_array($taskbookGroup->id, $moduleEntry->taskbookGroup->ids())) {
                 $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);
                 $this->_data['moduleIds'][] = $moduleEntry->id;
