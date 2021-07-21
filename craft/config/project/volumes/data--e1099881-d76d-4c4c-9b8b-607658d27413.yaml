@@ -1,9 +1,0 @@
-handle: data
-hasUrls: false
-name: Data
-settings:
-  path: '@assetsPath/data'
-  url: ''
-sortOrder: 3
-type: craft\volumes\Local
-url: null

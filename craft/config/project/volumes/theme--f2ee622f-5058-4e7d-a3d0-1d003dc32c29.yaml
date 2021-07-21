@@ -1,8 +1,0 @@
-handle: theme
-hasUrls: true
-name: Theme
-settings:
-  path: '@basePath/html/assets/theme'
-sortOrder: 4
-type: craft\volumes\Local
-url: /assets/theme/

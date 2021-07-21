@@ -1,9 +1,0 @@
-handle: uploads
-hasUrls: true
-name: Uploads
-settings:
-  path: '@basePath/html/assets/uploads'
-  url: /assets/uploads/
-sortOrder: 2
-type: craft\volumes\Local
-url: null

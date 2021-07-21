@@ -1,8 +1,0 @@
-handle: photos
-hasUrls: true
-name: Photos
-settings:
-  path: '@basePath/html/assets/photos'
-sortOrder: 5
-type: craft\volumes\Local
-url: /assets/photos
