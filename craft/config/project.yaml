@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1622813800
+dateModified: 1626875954
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -807,7 +807,7 @@ fields:
     type: craft\fields\PlainText
   294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleSingleCost
     instructions: 'Cost if purchased as individual optional module group.'
     name: 'Module Group Single Cost'
@@ -1359,6 +1359,54 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  497fe30b-60db-4d82-a39f-a64da4fc64f4:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookModuleGroups
+    instructions: ''
+    name: 'Taskbook Module Groups'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - 96b71085-7e6b-450c-81bc-6f4d51a3e89b
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 687fa013-507d-4700-9241-0f4ce857efb8
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 78370cd4-5519-4248-8875-40be1a85de10
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 838a9f15-1751-4d54-b8e6-8ae6ad773a25
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_taskbookmodulegroups}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   4a4bc5cd-115e-4309-a51a-3e5095ceea90:
     contentColumnType: string
     fieldGroup: 3f934bd7-b755-4330-88af-dd41d6ea990b
@@ -1522,6 +1570,27 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  53fe1ed0-e4fe-4a51-8235-3f3a1b123528:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageTaskbook
+    instructions: ''
+    name: 'Package Taskbook'
+    searchable: true
+    settings:
+      allowSelfRelations: ''
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:0db8b604-3d85-4638-bc64-f1d73e2e9aba'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   54ffd21d-f058-4546-b582-9f8c03da2f65:
     contentColumnType: text
     fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
@@ -1631,7 +1700,7 @@ fields:
     type: craft\fields\Lightswitch
   5bdda926-785f-4d89-aebe-9a805b3dab29:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleResitCost
     instructions: ''
     name: 'Module Group Resit Cost'
@@ -1950,7 +2019,7 @@ fields:
     type: craft\fields\Assets
   680431de-8445-48e9-8acf-e32d867f73dd:
     contentColumnType: text
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleCosts
     instructions: ''
     name: 'Module Group Costs'
@@ -2697,6 +2766,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  918cc95b-e5c3-468d-809a-8bbd4eb5a8e5:
+    contentColumnType: text
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookIntro
+    instructions: ''
+    name: 'Taskbook Intro'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   93485201-c508-48f9-a114-db4fb3558c38:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -3576,7 +3668,7 @@ fields:
     type: craft\fields\PlainText
   da81a368-f84c-47f8-9e3a-b83346be0865:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleMinimumOptional
     instructions: ''
     name: 'Module Group Minimum Optional'
@@ -3592,6 +3684,36 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  db4d8830-6fbb-45c9-bdb4-cc058820b1ae:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookFiles
+    instructions: ''
+    name: 'Taskbook Files'
+    searchable: true
+    settings:
+      allowSelfRelations: ''
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+      defaultUploadLocationSubpath: ''
+      limit: ''
+      localizeRelations: false
+      restrictFiles: ''
+      selectionLabel: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources:
+        - 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: ''
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
   dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
     contentColumnType: string
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -3812,7 +3934,7 @@ fields:
     type: craft\fields\Lightswitch
   e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleMaxCost
     instructions: ''
     name: 'Module Group Max Cost'
@@ -5299,20 +5421,23 @@ sections:
                     required: false
                     sortOrder: 1
                   164fe93f-d610-4819-8ca4-77cc4a88112e:
-                    required: true
+                    required: false
                     sortOrder: 2
                   33d71c63-d5f5-42bb-a731-3a8df1f1759f:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
                   534ba9ca-50bd-4b63-a843-b3358f1bc352:
                     required: false
-                    sortOrder: 6
+                    sortOrder: 7
+                  53fe1ed0-e4fe-4a51-8235-3f3a1b123528:
+                    required: false
+                    sortOrder: 3
                   5e4e967d-f646-4378-aedf-9f6ef84c1e28:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   edcdcb64-8b0b-4f31-ab57-106c9e252317:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 6
                 name: Modules
                 sortOrder: 1
               -
@@ -5389,23 +5514,46 @@ sections:
             tabs:
               -
                 fields:
-                  5df92654-19a4-446e-a578-2b359d4bc88f:
+                  918cc95b-e5c3-468d-809a-8bbd4eb5a8e5:
                     required: false
                     sortOrder: 1
-                  840f8f48-be42-4008-ae9e-1fa132183769:
+                  db4d8830-6fbb-45c9-bdb4-cc058820b1ae:
                     required: false
                     sortOrder: 2
-                  f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+                name: Intro
+                sortOrder: 1
+              -
+                fields:
+                  497fe30b-60db-4d82-a39f-a64da4fc64f4:
+                    required: false
+                    sortOrder: 1
+                  da81a368-f84c-47f8-9e3a-b83346be0865:
+                    required: false
+                    sortOrder: 2
+                name: Settings
+                sortOrder: 2
+              -
+                fields:
+                  294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
+                    required: false
+                    sortOrder: 4
+                  5bdda926-785f-4d89-aebe-9a805b3dab29:
                     required: false
                     sortOrder: 3
-                name: Pages
-                sortOrder: 1
-        handle: taskbooks
-        hasTitleField: false
-        name: Taskbooks
+                  680431de-8445-48e9-8acf-e32d867f73dd:
+                    required: false
+                    sortOrder: 1
+                  e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+                    required: false
+                    sortOrder: 2
+                name: Costs
+                sortOrder: 3
+        handle: taskbook
+        hasTitleField: true
+        name: Taskbook
         sortOrder: 1
         titleFormat: '{section.name|raw}'
-        titleLabel: ''
+        titleLabel: 'Taskbook Name'
     handle: taskbooks
     name: Taskbooks
     previewTargets:
@@ -5427,7 +5575,7 @@ sections:
         hasUrls: true
         template: ''
         uriFormat: taskbooks
-    type: single
+    type: channel
   1d590683-b16e-4955-be62-315accb3e628:
     enableVersioning: false
     entryTypes:
@@ -6294,6 +6442,99 @@ sites:
     siteGroup: c5e418fc-d028-4dae-86d0-52f2cb163583
     sortOrder: 1
 superTableBlockTypes:
+  2b935deb-1a72-475d-8af3-34b4f511602f:
+    field: 497fe30b-60db-4d82-a39f-a64da4fc64f4
+    fieldLayouts:
+      112bf991-eefa-49b8-b116-6a665f0ef787:
+        tabs:
+          -
+            fields:
+              1648b942-a6f7-47b2-a284-5a971121b556:
+                required: false
+                sortOrder: 1
+              24f4925c-74c9-4425-bbe9-0a53575db631:
+                required: false
+                sortOrder: 3
+              651fac2b-5f39-4c8f-96b0-4c75c3267102:
+                required: false
+                sortOrder: 2
+              af49d354-08d5-422e-9f65-56c76ff7d485:
+                required: false
+                sortOrder: 4
+            name: Content
+            sortOrder: 1
+    fields:
+      1648b942-a6f7-47b2-a284-5a971121b556:
+        contentColumnType: string
+        fieldGroup: null
+        handle: moduleGroup
+        instructions: ''
+        name: 'Module Group'
+        searchable: true
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          allowSelfRelations: ''
+          branchLimit: '1'
+          limit: null
+          localizeRelations: false
+          selectionLabel: ''
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+      24f4925c-74c9-4425-bbe9-0a53575db631:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: moduleGroupLevel
+        instructions: ''
+        name: Level
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      651fac2b-5f39-4c8f-96b0-4c75c3267102:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: moduleGroupMandatory
+        instructions: ''
+        name: Mandatory
+        searchable: true
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      af49d354-08d5-422e-9f65-56c76ff7d485:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: moduleGroupCredit
+        instructions: ''
+        name: Credit
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
   3f042657-c4b8-44de-a216-84449fa08a51:
     field: edcdcb64-8b0b-4f31-ab57-106c9e252317
     fieldLayouts:
