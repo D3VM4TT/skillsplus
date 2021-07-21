@@ -322,15 +322,7 @@ class PackageBehavior extends Behavior
 
         $criteria = User::find();
         if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            ## find users assigned to this company and taskbook group
-            $taskbookGroup = $this->getTaskbookGroup();
-            $company = $this->owner->author->userCompany->one();
-            $criteria->relatedTo = [
-                'and',
-                ['targetElement' => [$company], 'field' => 'userReviewCompanies'],
-                ['targetElement' => [$taskbookGroup], 'field' => 'userReviewTaskbookGroups'],
-                ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole']
-            ];
+            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole'];
         } else {
             $criteria->group = $packageWorkflowStep->stepUserGroup;
         }
