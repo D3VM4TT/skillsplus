@@ -8,6 +8,8 @@ use craft\elements\Category;
 use craft\elements\Entry;
 
 use lantra\sp\helpers\LantraHelper;
+use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\services\SuperTableService;
 
 /**
  * m210721_134639_convertTaskbooks migration.
@@ -24,6 +26,9 @@ class m210721_134639_convert_taskbooks extends Migration
     {
         $sectionId = LantraHelper::sectionId('taskbooks');
         $typeId = LantraHelper::entryTypeId('taskbooks', 'taskbook');
+
+        $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
+        $sp = new SuperTableService();
 
         $criteria = Category::find();
         $criteria->group = 'moduleGroups';
@@ -57,6 +62,19 @@ class m210721_134639_convert_taskbooks extends Migration
                 foreach ($packages as $package) {
                     $package->setFieldValue('packageTaskbook', [$entry->id]);
                     if (Craft::$app->elements->saveElement($package)) {
+
+                        ## add previous module group to new module groups field
+                        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+                        $block = new SuperTableBlockElement();
+                        $block->fieldId = $field->id;
+                        $block->ownerId = $package->id;
+                        $block->typeId = $stepBlockType->id;
+                        $block->setFieldValues([
+                            'moduleGroup' => [$category->id],
+                            'moduleGroupLevel' => $package->packageLevel
+                        ]);
+                        Craft::$app->elements->saveElement($block);
+
                         echo "Updated package " . $package->id . "\n\n";
                     }
                 }

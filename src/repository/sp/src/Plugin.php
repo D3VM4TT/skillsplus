@@ -40,6 +40,7 @@ use lantra\sp\behaviors\PackageBehavior;
 use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserRecordBehavior;
+use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
@@ -261,6 +262,9 @@ class Plugin extends BasePlugin
                 }
                 if ($event->sender->sectionId == $this->sectionId('modules')) {
                     $event->behaviors[] = ModuleBehavior::class;
+                }
+                if ($event->sender->sectionId == $this->sectionId('taskbooks')) {
+                    $event->behaviors[] = TaskbookBehavior::class;
                 }
             }
         );

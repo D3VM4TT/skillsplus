@@ -8,7 +8,7 @@
         </div>
         <div class="align-horizontal">
             <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
-            <div><h2>{{ package.moduleGroup.title }}</h2></div>
+            <div><h2>{{ package.taskbook.title }}</h2></div>
             <p>
                 {% if package.isManager(currentUser, true) and package.hasNextStep %}
                     Next Step: {{ package.nextStep.reviewStepName }}

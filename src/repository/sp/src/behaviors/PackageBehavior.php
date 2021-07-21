@@ -21,9 +21,9 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function getModuleGroup()
+    public function getTaskbook()
     {
-        return $this->owner->packageModuleGroup ? $this->owner->packageModuleGroup->last() : null;
+        return $this->owner->packageTaskbook ? $this->owner->packageTaskbook->last() : null;
     }
 
     /**
@@ -31,19 +31,13 @@ class PackageBehavior extends Behavior
      */
     public function moduleGroups()
     {
-        if (!$this->owner->packageModuleGroup) {
+        if (!$this->owner->packageModuleGroups) {
             return [];
         }
-        $modulesGroups = [
-            [
-                'category' => $this->owner->packageModuleGroup->last(),
-                'level'    => $this->owner->packageLevel
-            ]
-        ];
-        foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
+        foreach($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
             $modulesGroups[] = [
-                'category' => $optionalModuleGroupBlock->optionalModuleGroup->leaves()->one(),
-                'level'    => $optionalModuleGroupBlock->optionalLevel
+                'category' => $moduleGroupBlock->moduleGroup->leaves()->one(),
+                'level'    => $moduleGroupBlock->moduleGroupLevel
             ];
         }
         return $modulesGroups;
@@ -66,11 +60,11 @@ class PackageBehavior extends Behavior
      */
     public function availableModuleGroupCategories()
     {
-        $moduleGroup = $this->getModuleGroup();
-        $optionalModules = $moduleGroup->children->all();
+        $taskbook = $this->getTaskbook();
+        $optionalModuleGroups = $taskbook->optionalModuleGroupCategories();
         $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
         $available = [];
-        foreach($optionalModules as $category) {
+        foreach($optionalModuleGroups as $category) {
             if (!in_array($category->id, $existingIds)) {
                 $available[$category->id] = $category;
             }
