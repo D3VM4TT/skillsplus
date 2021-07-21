@@ -24,7 +24,7 @@
     <table class="data">
         <thead>
         <tr>
-            <th>{{ taskbookLabel }} Group</th>
+            <th>Module Group</th>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <th>Level</th>
             {% endif %}
@@ -38,7 +38,7 @@
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
                 <tr>
                     <td>
-                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbookGroup.title }}</a>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.packageGroup.title }}</a>
                     </td>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
