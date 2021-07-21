@@ -37,28 +37,33 @@ class m210721_134639_convert_taskbooks extends Migration
             $entry->enabled = true;
             $entry->title = $category->title;
 
-            if (false == Craft::$app->elements->saveElement($entry)) {
+            if (!Craft::$app->elements->saveElement($entry)) {
                 echo "Could not create " . $category->title;
+                return false;
             }
 
-            ## update content table
-            $query = $this->db->createCommand();
-            $query->update('{{%content}}', ['elementId' => $entry->id], ['elementId' => $category->id])->execute();
+            if ($entry->id) {
+                ## update content table
+                $query = $this->db->createCommand();
+                $query->delete('{{%content}}', ['elementId' => $entry->id])->execute();
+                $query->update('{{%content}}', ['elementId' => $entry->id], ['elementId' => $category->id])->execute();
 
 
-            ## update packages to point to new taskbooks
-            $criteria = Entry::find();
-            $criteria->section = 'packages';
-            $criteria->relatedTo = ['targetElement' => $category->id, 'field' => 'packageModuleGroup'];
-            $packages = $criteria->all();
-            foreach ($packages as $package) {
-                $package->setFieldValue('packageTaskbook', [$entry->id]);
-                if (Craft::$app->elements->saveElement($package)) {
-                    echo "Updated package " . $package->id . "\n\n";
+                ## update packages to point to new taskbooks
+                $criteria = Entry::find();
+                $criteria->section = 'packages';
+                $criteria->relatedTo = ['targetElement' => $category->id, 'field' => 'packageModuleGroup'];
+                $packages = $criteria->all();
+                foreach ($packages as $package) {
+                    $package->setFieldValue('packageTaskbook', [$entry->id]);
+                    if (Craft::$app->elements->saveElement($package)) {
+                        echo "Updated package " . $package->id . "\n\n";
+                    }
                 }
-            }
 
-            echo "Converted " . $category->title . "\n\n";
+                echo "Converted " . $category->title . "\n\n";
+                Craft::$app->elements->deleteElementById($category->id);
+            }
         }
     }
 
