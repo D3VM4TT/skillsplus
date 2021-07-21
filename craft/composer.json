@@ -13,8 +13,7 @@
     "robuust/craft-reverserelations": "1.2.5",
     "topshelfcraft/wordsmith": "^3.2",
     "verbb/super-table": "2.4.9",
-    "vlucas/phpdotenv": "^3.0",
-    "wrav/related" : "1.1.6"
+    "vlucas/phpdotenv": "^3.0"
   },
   "autoload": {
     "psr-4": {

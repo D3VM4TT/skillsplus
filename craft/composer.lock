@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c454f2a9c21b427ad731ff1c6950d9d8",
+    "content-hash": "a2bf648e4d0855ae903e2a5ad3469ed5",
     "packages": [
         {
             "name": "aelvan/preparse-field",
@@ -7157,66 +7157,6 @@
                 "source": "https://github.com/webonyx/graphql-php/tree/0.12.x"
             },
             "time": "2018-09-02T14:59:54+00:00"
-        },
-        {
-            "name": "wrav/related",
-            "version": "1.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wrav/related.git",
-                "reference": "552bbd0d35acd46919e6711f2918e4a6d34c0239"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wrav/related/zipball/552bbd0d35acd46919e6711f2918e4a6d34c0239",
-                "reference": "552bbd0d35acd46919e6711f2918e4a6d34c0239",
-                "shasum": ""
-            },
-            "require": {
-                "craftcms/cms": "^3.0.0-RC1",
-                "php": ">=7.2.5"
-            },
-            "type": "craft-plugin",
-            "extra": {
-                "name": "Related",
-                "handle": "related",
-                "hasCpSettings": true,
-                "hasCpSection": false,
-                "changelogUrl": "https://raw.githubusercontent.com/wrav/related/master/CHANGELOG.md",
-                "components": {
-                    "relatedService": "wrav\\related\\services\\RelatedService"
-                },
-                "class": "wrav\\related\\Related"
-            },
-            "autoload": {
-                "psr-4": {
-                    "wrav\\related\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "reganlawton",
-                    "homepage": "https://github.com/reganlawton"
-                }
-            ],
-            "description": "A simple plugin that adds a widget within the Craft CP page sidebar, allowing you to quickly and easily access related entries.",
-            "keywords": [
-                "Craft",
-                "cms",
-                "craft-plugin",
-                "craftcms",
-                "related"
-            ],
-            "support": {
-                "docs": "https://github.com/wrav/related/blob/master/README.md",
-                "issues": "https://github.com/wrav/related/issues",
-                "source": "https://github.com/wrav/related/tree/1.1.6"
-            },
-            "time": "2021-03-30T05:37:08+00:00"
         },
         {
             "name": "yii2tech/ar-softdelete",
