@@ -5188,10 +5188,6 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 0.0.1
-  super-pdf:
-    edition: standard
-    enabled: true
-    schemaVersion: 1.0.4
   super-table:
     enabled: '1'
     licenseKey: null
@@ -7412,7 +7408,7 @@ system:
   edition: pro
   live: true
   name: 'Skills Plus'
-  schemaVersion: 3.4.10
+  schemaVersion: 3.4.11
   timeZone: UTC
 tagGroups:
   d507d3b5-cbbc-4860-b80c-49906ef43a9e:
