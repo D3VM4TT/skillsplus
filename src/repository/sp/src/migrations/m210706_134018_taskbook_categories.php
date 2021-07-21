@@ -7,9 +7,6 @@ use craft\db\Migration;
 use craft\elements\Category;
 use craft\elements\Entry;
 
-use craft\records\CategoryGroup as CategoryGroupRecord;
-use craft\records\Field as FieldRecord;
-
 
 /**
  * m210706_134018_taskbook_categories migration.
@@ -24,7 +21,7 @@ class m210706_134018_taskbook_categories extends Migration
      */
     public function safeUp()
     {
-        $group = CategoryGroupRecord::find()->where(['handle' => 'taskbookGroups'])->one();
+        $group = Craft::$app->categories->getGroupByHandle('taskbookGroups');
         $criteria = Category::find();
         $criteria->group = 'moduleGroups';
         $criteria->moduleGroupTaskbooks = true;
@@ -41,8 +38,8 @@ class m210706_134018_taskbook_categories extends Migration
         }
 
         ## copy over module groups to taskbook groups
-        $moduleGroupField = FieldRecord::find()->where(['handle' => 'moduleGroup'])->one();
-        $taskbookGroupField = FieldRecord::find()->where(['handle' => 'taskbookGroup'])->one();
+        $moduleGroupField = Craft::$app->fields->getFieldByHandle('moduleGroup');
+        $taskbookGroupField = Craft::$app->fields->getFieldByHandle('taskbookGroup');
         ## copy over module groups to taskbook groups
         $criteria = Entry::find();
         $criteria->section = 'modules';
