@@ -7757,7 +7757,7 @@ system:
   edition: pro
   live: true
   name: 'Skills Plus'
-  schemaVersion: 3.4.10
+  schemaVersion: 3.4.11
   timeZone: UTC
 tagGroups:
   d507d3b5-cbbc-4860-b80c-49906ef43a9e:
