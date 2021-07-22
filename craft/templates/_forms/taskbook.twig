@@ -38,16 +38,9 @@
     {% endfor %}
 {% endif %}
 <script id="input-template" type="text/template">
-    {% set blocktype = craft.lantra.spBlockType('packageModuleGroups') %}
-    <input type="hidden" class="optional-hidden" name="fields[packageModuleGroups][new{n}][type]"
-           value="{{ blocktype.id }}"/>
-    <input type="hidden" class="optional-hidden" name="fields[packageModuleGroups][new{n}][enabled]" value="1"/>
-    <input type="hidden" class="optional-hidden"
-           name="fields[packageModuleGroups][new{n}][fields][moduleGroup][]"
-           value="{moduleGroupId}"/>
+    <input type="hidden" class="optional-hidden" name="optional[{n}][id]" value="{moduleGroupId}"/>
     {% if craft.lantra.setting('taskbookLevels') %}
-        <input type="hidden" class="optional-hidden"
-               name="fields[packageModuleGroups][new{n}][fields][moduleGrouplLevel]" value="{moduleGrouplLevel}"/>
+        <input type="hidden" class="optional-hidden" name="optional[{n}][level]" value="{moduleGrouplLevel}"/>
     {% endif %}
 </script>
 

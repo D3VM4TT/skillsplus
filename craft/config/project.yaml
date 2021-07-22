@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1626952069
+dateModified: 1626963609
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -6646,23 +6646,17 @@ superTableBlockTypes:
         translationMethod: site
         type: craft\fields\Categories
       8b738285-1f1f-4f66-bb77-bdf61a7f234e:
-        contentColumnType: text
+        contentColumnType: boolean
         fieldGroup: null
         handle: moduleGroupMandatory
         instructions: ''
         name: Mandatory
         searchable: true
         settings:
-          byteLimit: null
-          charLimit: null
-          code: ''
-          columnType: null
-          initialRows: '4'
-          multiline: ''
-          placeholder: ''
+          default: ''
         translationKeyFormat: null
         translationMethod: none
-        type: craft\fields\PlainText
+        type: craft\fields\Lightswitch
       9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
         contentColumnType: smallint(2)
         fieldGroup: null

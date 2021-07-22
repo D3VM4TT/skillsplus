@@ -89,19 +89,21 @@ class Packages extends Component
         $taskbookLabel = LantraHelper::setting('taskbookLabel');
         $taskbook = $entry->packageTaskbook ? $entry->packageTaskbook->one() : null;
         if (!$taskbook) {
-            $entry->addError('packageModuleGroup', 'You must select a ' . $taskbookLabel . '.');
+            $entry->addError('packageTaskbook', 'You must select a ' . $taskbookLabel . '.');
             $event->isValid = false;
             return;
         }
 
         $entry->title = '[' . $taskbook->title . '] ' . $entry->author->fullname;
-        $fields = Craft::$app->request->getParam('fields');
-        $totalOptional = isset($fields['packageModuleGroups']) ? count($fields['packageModuleGroups']) : 0;
 
-        ## check minimum optional module groups
-        if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
-            $entry->addError('packageOptionalModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
-            $event->isValid = false;
+        if (Craft::$app->request->isSiteRequest) {
+            $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
+            $totalOptional = count($optionalModuleGroups);
+            ## check minimum optional module groups
+            if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
+                $entry->addError('packageModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
+                $event->isValid = false;
+            }
         }
 
         $singleType = Craft::$app->request->getParam('singleType');
@@ -150,8 +152,9 @@ class Packages extends Component
      */
     public function onSavePackage(ModelEvent $event, Entry $entry)
     {
-        $this->applyPackageMandatoryModuleGroups($entry);
-
+        if ($event->isNew) {
+            $this->applyPackageModuleGroups($entry);
+        }
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
         }
@@ -159,7 +162,6 @@ class Packages extends Component
             $this->applyPackageAssessment($entry);
         }
         if (Craft::$app->request->isSiteRequest && $event->isNew && $entry->packageRevision) {
-            // set existing unit results to revision
             $this->revisionPackageUnits($entry);
         }
     }
@@ -185,52 +187,54 @@ class Packages extends Component
     }
 
     /**
-     * @param $entry
+     * @param Entry $entry
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function applyPackageMandatoryModuleGroups(Entry $entry)
+    public function applyPackageModuleGroups(Entry $entry)
     {
-        $entry = Craft::$app->entries->getEntryById($entry->id);
-        ## for some reason we need to make sure this only happens once...
-        $categoryIds = $this->getPackageModuleGroupIds($entry);
-        $taskbook = $entry->packageTaskbook ? $entry->packageTaskbook->one() : null;
-        foreach($taskbook->moduleGroupCategories('mandatory') as $mandatoryModuleGroupCategory) {
-            $categoryId = $mandatoryModuleGroupCategory->id;
-            if (in_array($categoryId, $categoryIds)) {
-                continue;
-            }
-            $this->addModuleGroupBlock($entry, $categoryId, 1);
+        ## stop if already set
+        if (count($entry->packageModuleGroups)) {
+            return;
         }
-    }
 
-    /**
-     * @param $field
-     * @param $owner
-     * @param $categoryId
-     * @param int $mandatory
-     * @param int $level
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
-     */
-    function addModuleGroupBlock($owner, $categoryId, $mandatory = 0, $level = 1)
-    {
+        $taskbook = $entry->packageTaskbook->one();
+        $n = 1;
+        $packageModuleGroups = [];
         $sp = new SuperTableService();
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
         $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-
-        $block = new SuperTableBlockElement();
-        $block->fieldId = $field->id;
-        $block->ownerId = $owner->id;
-        $block->typeId = $stepBlockType->id;
-        $block->setFieldValues([
-            'moduleGroup' => [$categoryId],
-            'moduleGroupLevel' => $level,
-            'moduleGroupMandatory' => $mandatory
-        ]);
-        Craft::$app->elements->saveElement($block);
+        foreach ($taskbook->moduleGroupCategories('mandatory') as $mandatoryModuleGroupCategory) {
+            $packageModuleGroups['new' . $n] = [
+                'type' => $stepBlockType->id,
+                'enabled' => true,
+                'fields' => [
+                    'moduleGroup' => [$mandatoryModuleGroupCategory->id],
+                    'moduleGroupLevel' => 1,
+                    'moduleGroupMandatory' => 1
+                ]
+            ];
+            $n++;
+        }
+        if (Craft::$app->request->isSiteRequest) {
+            $optional = Craft::$app->request->getParam('optional', []);
+            ## append the optional module groups
+            foreach ($optional as $row) {
+                $packageModuleGroups['new' . $n] = [
+                    'type' => $stepBlockType->id,
+                    'enabled' => true,
+                    'fields' => [
+                        'moduleGroup' => [$row['id']],
+                        'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
+                        'moduleGroupMandatory' => 0
+                    ]
+                ];
+                $n++;
+            }
+        }
+        $entry->setFieldValues(['packageModuleGroups' => $packageModuleGroups]);
+        Craft::$app->elements->saveElement($entry);
     }
 
     /**
