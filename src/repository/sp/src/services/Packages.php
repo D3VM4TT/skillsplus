@@ -96,9 +96,10 @@ class Packages extends Component
 
         $entry->title = '[' . $taskbook->title . '] ' . $entry->author->fullname;
 
+        $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
+        $totalOptional = count($optionalModuleGroups);
+
         if (Craft::$app->request->isSiteRequest) {
-            $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
-            $totalOptional = count($optionalModuleGroups);
             ## check minimum optional module groups
             if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
                 $entry->addError('packageModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
