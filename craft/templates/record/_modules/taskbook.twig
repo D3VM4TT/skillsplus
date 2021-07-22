@@ -1,5 +1,6 @@
 {% set package = cpdUser.record.getElement(packageId) %}
 {% set availableModuleGroups = package.availableModuleGroupCategories %}
+{% set resitTaskbookGroups = package.resitModuleGroupCategories %}
 {% set resitModuleGroups = package.resitModuleGroupCategories %}
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
@@ -43,15 +44,21 @@
     <div id="j{{ package.id }}" class="open">
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
-                {% for row in package.moduleGroups %}
-                    {% set moduleGroup = row.category %}
-                    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
-                    <li>
-                        <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
-                            <h4>{{ moduleGroup.title }}</h4>
-                        </a>
-                    </li>
-                {% endfor %}
+                <li>
+                    <a href="#tab{{ package.id }}taskbook" class="primary-bg">
+                        <h4>{{ taskbookLabel }}</h4>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab{{ package.id }}content" class="primary-bg">
+                        <h4>Content</h4>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab{{ package.id }}evidence" class="primary-bg">
+                        <h4>Evidence</h4>
+                    </a>
+                </li>
                 <li>
                     <a href="#tab{{ package.id }}reviews" class="primary-bg">
                         <h4>Reviews</h4>
@@ -68,14 +75,14 @@
                     {% if resitModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
-                                <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
+                                <h4>Resit {{ taskbookLabel }} Groups ({{ resitModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
                     {% if availableModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}optional" class="primary-bg">
-                                <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
+                                <h4>Optional {{ taskbookLabel }} Groups ({{ availableModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
@@ -83,34 +90,59 @@
             </ul>
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
-            {% for row in package.moduleGroups %}
-                {% set moduleGroup = row.category %}
-                {% set level = row.level %}
-                {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
-                {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
-                {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
-                {% include 'record/_modules/moduleGroup' %}
-            {% endfor %}
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}taskbook">
+
+                <div style="margin-top:20px;margin-bottom:20px">
+                    {{ package.taskbook.taskbookIntro }}
+                </div>
+
+                {% if package.taskbook.taskbookFiles.count  %}
+                    <h4>Supporting Files &amp; Images</h4>
+                    <table class="data unit-files" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th style="text-align: right;padding-right:0;">Date Uploaded</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for file in package.taskbook.taskbookFiles.all()  %}
+                            <tr>
+                                <td><a target="_blank" href="{{ file.url }}">{{ file.filename }}</a></td>
+                                <td style="text-align: right">{{ file.dateCreated|date('d/m/Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+            </div>
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}content">
+                {% include '_includes/taskbooks/packageContent' with {admin:false} %}
+            </div>
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
+                {% include '_includes/taskbooks/packageEvidence' with {admin:false} %}
+            </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
-                {% include '_includes/packageReviews' with {admin:false} %}
+                {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
                     <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
                 {% endif %}
             </div>
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
-                    {% include '_includes/packageLog' with {admin:false} %}
+                    {% include '_includes/taskbooks/packageLog' with {admin:false} %}
                 </div>
             {% endif %}
             {% if not isManager %}
                 {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
-                        {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
+                        {% include '_includes/taskbooks/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
                     </div>
                 {% endif %}
                 {% if availableModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                        {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
+                        {% include '_includes/taskbooks/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
                     </div>
                 {% endif %}
             {% endif %}

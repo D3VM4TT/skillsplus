@@ -1,0 +1,9 @@
+{% for block in package.packageModuleGroups %}
+    {# USING moduleGroup for moduleGroup template #}
+    {% set moduleGroup = block.moduleGroup.one %}
+    {% set level = block.moduleGroupLevel %}
+    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
+    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+    {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
+    {% include 'record/_modules/moduleGroup' %}
+{% endfor %}
