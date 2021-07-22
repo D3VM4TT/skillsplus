@@ -14,11 +14,11 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.last : null %}
+{% set packageTaskbook = entry is defined and entry.packageTaskbook ? entry.packageTaskbook.one : null %}
 
 {% set section = craft.sections.getSectionByHandle('packages') %}
 
-{% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
+{% set taskbookId = craft.request.getParam('taskbookId') %}
 {% set singleType = craft.request.getParam('type') %}
 
 {% set isTaskbooks = true %}

@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1626878874
+dateModified: 1626952069
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1370,28 +1370,28 @@ fields:
       columns:
         __assoc__:
           -
-            - 96b71085-7e6b-450c-81bc-6f4d51a3e89b
+            - 1648b942-a6f7-47b2-a284-5a971121b556
             -
               __assoc__:
                 -
                   - width
                   - ''
           -
-            - 687fa013-507d-4700-9241-0f4ce857efb8
+            - 651fac2b-5f39-4c8f-96b0-4c75c3267102
             -
               __assoc__:
                 -
                   - width
                   - ''
           -
-            - 78370cd4-5519-4248-8875-40be1a85de10
+            - 24f4925c-74c9-4425-bbe9-0a53575db631
             -
               __assoc__:
                 -
                   - width
                   - ''
           -
-            - 838a9f15-1751-4d54-b8e6-8ae6ad773a25
+            - af49d354-08d5-422e-9f65-56c76ff7d485
             -
               __assoc__:
                 -
@@ -2766,6 +2766,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  911228bd-5f4b-4526-a90f-7caf97abd2f5:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleMinimumMandatory
+    instructions: ''
+    name: 'Module Group Minimum Mandatory'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '1'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: 'mandatory module groups'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   918cc95b-e5c3-468d-809a-8bbd4eb5a8e5:
     contentColumnType: text
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -2926,6 +2944,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  a4dc3b14-4f82-4680-9db5-c95aa46fe459:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleMinimumMandatoryCredits
+    instructions: ''
+    name: 'Module Group Minimum Mandatory Credits'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   a75d2fa6-54eb-4155-9483-d7729fb83004:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -3680,7 +3716,7 @@ fields:
       min: '0'
       prefix: ''
       size: null
-      suffix: 'optional modules'
+      suffix: 'optional module groups'
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
@@ -3920,6 +3956,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  e1c8bc22-c8ae-487a-8cfa-074338772cbc:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleMinimumOptionalCredits
+    instructions: ''
+    name: 'Module Group Minimum Optional Credits'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   e39c693b-aafd-4f9c-8e82-53aa5da6694e:
     contentColumnType: boolean
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -4035,7 +4089,21 @@ fields:
                   - width
                   - ''
           -
+            - 8b738285-1f1f-4f66-bb77-bdf61a7f234e
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
             - 9a61af4b-dccb-4d5e-9bc1-53b775f9de18
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - fbc35002-a8fc-4772-9339-a14216fd28d2
             -
               __assoc__:
                 -
@@ -5527,9 +5595,18 @@ sections:
                   497fe30b-60db-4d82-a39f-a64da4fc64f4:
                     required: false
                     sortOrder: 1
-                  da81a368-f84c-47f8-9e3a-b83346be0865:
+                  911228bd-5f4b-4526-a90f-7caf97abd2f5:
                     required: false
                     sortOrder: 2
+                  a4dc3b14-4f82-4680-9db5-c95aa46fe459:
+                    required: false
+                    sortOrder: 4
+                  da81a368-f84c-47f8-9e3a-b83346be0865:
+                    required: false
+                    sortOrder: 3
+                  e1c8bc22-c8ae-487a-8cfa-074338772cbc:
+                    required: false
+                    sortOrder: 5
                 name: Settings
                 sortOrder: 2
               -
@@ -6533,9 +6610,15 @@ superTableBlockTypes:
               00afc899-b37a-415c-8829-b06a42a8638f:
                 required: true
                 sortOrder: 1
+              8b738285-1f1f-4f66-bb77-bdf61a7f234e:
+                required: false
+                sortOrder: 2
               9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
                 required: true
-                sortOrder: 2
+                sortOrder: 3
+              fbc35002-a8fc-4772-9339-a14216fd28d2:
+                required: false
+                sortOrder: 4
             name: Content
             sortOrder: 1
     fields:
@@ -6553,7 +6636,7 @@ superTableBlockTypes:
           branchLimit: '1'
           limit: null
           localizeRelations: false
-          selectionLabel: 'Select optional module group'
+          selectionLabel: 'Select module group'
           source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
           sources: '*'
           targetSiteId: null
@@ -6562,6 +6645,24 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Categories
+      8b738285-1f1f-4f66-bb77-bdf61a7f234e:
+        contentColumnType: text
+        fieldGroup: null
+        handle: moduleGroupMandatory
+        instructions: ''
+        name: Mandatory
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
       9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
         contentColumnType: smallint(2)
         fieldGroup: null
@@ -6580,6 +6681,24 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Number
+      fbc35002-a8fc-4772-9339-a14216fd28d2:
+        contentColumnType: text
+        fieldGroup: null
+        handle: moduleGroupCredit
+        instructions: ''
+        name: Credit
+        searchable: true
+        settings:
+          byteLimit: null
+          charLimit: null
+          code: ''
+          columnType: null
+          initialRows: '4'
+          multiline: ''
+          placeholder: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\PlainText
   44e21cea-14c2-44e9-9bbf-8c104a4c7128:
     field: a75d2fa6-54eb-4155-9483-d7729fb83004
     fieldLayouts:

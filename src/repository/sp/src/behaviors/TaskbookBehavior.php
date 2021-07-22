@@ -21,13 +21,26 @@ class TaskbookBehavior extends Behavior
     /**
      * @return array
      */
-    public function optionalModuleGroupCategories()
+    public function moduleGroups($type = 'all')
+    {
+        $blocks = [];
+        foreach ($this->owner->taskbookModuleGroups as $block) {
+            if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
+                $blocks[] = $block;
+            }
+        }
+        return $blocks;
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    public function moduleGroupCategories($type = 'all')
     {
         $categories = [];
-        foreach ($this->owner->taskbookModuleGroups as $block) {
-            if (!$block->moduleGroupMandatory) {
-                $categories[] = $block->moduleGroup->one();
-            }
+        foreach ($this->moduleGroups($type) as $block) {
+            $categories[] = $block->moduleGroup->one();
         }
         return $categories;
     }

@@ -19,6 +19,18 @@ use lantra\sp\helpers\LantraHelper;
 class PackageBehavior extends Behavior
 {
     /**
+     * @return array
+     */
+    public function getOptionalModuleGroups()
+    {
+        $categories = [];
+        foreach ($this->moduleGroups('optional') as $moduleGroup) {
+            $categories[] = $moduleGroup['category'];
+        }
+        return $categories;
+    }
+
+    /**
      * @return null
      */
     public function getTaskbook()
@@ -27,20 +39,29 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @return null
+     * @param string $type
+     * @return array
      */
-    public function moduleGroups()
+    public function moduleGroups($type = 'all')
     {
         if (!$this->owner->packageModuleGroups) {
             return [];
         }
+        $modulesGroups = [];
         foreach($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
-            $modulesGroups[] = [
-                'category' => $moduleGroupBlock->moduleGroup->leaves()->one(),
-                'level'    => $moduleGroupBlock->moduleGroupLevel
-            ];
+            if ($type == 'all' || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
+                $modulesGroups[] = [
+                    'category' => $moduleGroupBlock->moduleGroup->one(),
+                    'level' => $moduleGroupBlock->moduleGroupLevel
+                ];
+            }
         }
         return $modulesGroups;
+    }
+
+    public function moduleGroupIds()
+    {
+        return array_keys($this->moduleGroupCategories());
     }
 
     /**
@@ -61,7 +82,7 @@ class PackageBehavior extends Behavior
     public function availableModuleGroupCategories()
     {
         $taskbook = $this->getTaskbook();
-        $optionalModuleGroups = $taskbook->optionalModuleGroupCategories();
+        $optionalModuleGroups = $taskbook->moduleGroupCategories('optional');
         $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
         $available = [];
         foreach($optionalModuleGroups as $category) {
@@ -80,7 +101,7 @@ class PackageBehavior extends Behavior
         $resits = [];
         foreach ($this->owner->packageAssessment as $assessment) {
             if ($assessment->assessmentDate && ! $assessment->assessmentPassed) {
-                $category = $assessment->assessmentModuleGroup->last();
+                $category = $assessment->assessmentModuleGroup->one();
                 $resits[$category->id] = $category;
             }
         }
@@ -94,7 +115,8 @@ class PackageBehavior extends Behavior
     public function moduleGroupAssessment($moduleGroupId = null)
     {
         foreach ($this->owner->packageAssessment as $assessment) {
-            if ($assessment->assessmentModuleGroup->last()->id == $moduleGroupId) {
+            $moduleGroup = $assessment->assessmentModuleGroup->one();
+            if ($moduleGroup && $moduleGroup->id == $moduleGroupId) {
                 return $assessment;
             }
         }

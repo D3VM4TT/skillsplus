@@ -227,12 +227,12 @@ class LantraVariable
 
     /**
      * @param Entry|null $package
-     * @param $moduleId
+     * @param $moduleGroupId
      * @return null
      */
-    public function getOptionalModuleGroupRow($package = null, $moduleGroupId)
+    public function getModuleGroupRow($package = null, $moduleGroupId)
     {
-        return Lantra::$app->packages->getOptionalModuleGroupRow($package, $moduleGroupId);
+        return Lantra::$app->packages->getModuleGroupRow($package, $moduleGroupId);
     }
 
     /**
@@ -671,12 +671,12 @@ class LantraVariable
 
     /**
      * @param $userId
-     * @param $moduleGroupId
+     * @param $taskbookId
      * @return bool
      */
-    public function packageExists($userId, $moduleGroupId)
+    public function packageExists($userId, $taskbookId)
     {
-        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $moduleGroupId);
+        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $taskbookId);
     }
 
     /**

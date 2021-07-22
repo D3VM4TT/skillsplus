@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 
-    $('select.package-module-group').change(function(){
+    $('select.package-taskbook').change(function(){
         var moduleGroupId = $(this).val(),
             revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
         $('div.taskbook-optional').hide();
@@ -32,7 +32,7 @@ $(document).ready(function(){
                 l = $(this).find('select').val(),
                 t = $('#input-template').clone().html();
             if (c.is(':checked')) {
-                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
+                t = t.replace(/{n}/g, n).replace(/{moduleGroupId}/g, c.val()).replace(/{moduleGroupLevel}/g, l);
                 $('form#taskbooks').prepend($(t));
                 n ++;
             }
