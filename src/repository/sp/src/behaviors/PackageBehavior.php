@@ -39,20 +39,38 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param $categoryId
+     * @return null
+     */
+    public function getTaskbookModuleGroupBlock($categoryId)
+    {
+        if (null == $taskbook = $this->getTaskbook()) {
+            return null;
+        }
+        return $taskbook->moduleGroupBlock($categoryId);
+    }
+
+    /**
      * @param string $type
      * @return array
      */
     public function moduleGroups($type = 'all')
     {
+        if ($type == 'available') {
+            return $this->availableModuleGroups();
+        }
         if (!$this->owner->packageModuleGroups) {
             return [];
         }
         $modulesGroups = [];
         foreach($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
             if ($type == 'all' || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
+                $category = $moduleGroupBlock->moduleGroup->one();
+                $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
                 $modulesGroups[] = [
-                    'category' => $moduleGroupBlock->moduleGroup->one(),
-                    'level' => $moduleGroupBlock->moduleGroupLevel
+                    'category' => $category,
+                    'level' => $moduleGroupBlock->moduleGroupLevel,
+                    'credit' => $taskbookModuleGroupBlock->moduleGroupCredit
                 ];
             }
         }
@@ -74,6 +92,35 @@ class PackageBehavior extends Behavior
             $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
         }
         return $categories;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailable()
+    {
+        return (bool) count($this->availableModuleGroups());
+    }
+
+    /**
+     * @return array
+     */
+    public function availableModuleGroups()
+    {
+        $taskbook = $this->getTaskbook();
+        $taskBookModuleGroups = $taskbook->moduleGroups('optional');
+        $modulesGroups = [];
+        foreach($taskBookModuleGroups as $moduleGroupBlock) {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if (!in_array($category->id, $this->moduleGroupIds())) {
+                $modulesGroups[] = [
+                    'category' => $category,
+                    'level' => '',
+                    'credit' => $moduleGroupBlock->moduleGroupCredit
+                ];
+            }
+        }
+        return $modulesGroups;
     }
 
     /**

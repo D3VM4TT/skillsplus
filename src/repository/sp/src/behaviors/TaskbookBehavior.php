@@ -19,6 +19,22 @@ use lantra\sp\helpers\LantraHelper;
 class TaskbookBehavior extends Behavior
 {
     /**
+     * @param $categoryId
+     * @return null
+     */
+    public function moduleGroupBlock($categoryId)
+    {
+        foreach($this->moduleGroups() as $moduleGroupBlock)
+        {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if ($category->id == $categoryId) {
+                return $category;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return array
      */
     public function moduleGroups($type = 'all')
@@ -45,4 +61,50 @@ class TaskbookBehavior extends Behavior
         return $categories;
     }
 
+    /**
+     * @param string $type
+     * @return int
+     */
+    public function moduleGroupCredits($type = 'all')
+    {
+        $credits = 0;
+        foreach ($this->owner->taskbookModuleGroups as $block) {
+            if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
+                $credits = $credits + $block->moduleGroupCredit;
+            }
+        }
+        return $credits;
+    }
+
+    /**
+     * @return int
+     */
+    public function countMandatory()
+    {
+        return count($this->moduleGroups('mandatory'));
+    }
+
+    /**
+     * @return int
+     */
+    public function countOptional()
+    {
+        return count($this->moduleGroups('optional'));
+    }
+
+    /**
+     * @return int
+     */
+    public function creditsMandatory()
+    {
+        return $this->moduleGroupCredits('mandatory');
+    }
+
+    /**
+     * @return int
+     */
+    public function creditsOptional()
+    {
+        return $this->moduleGroupCredits('optional');
+    }
 }
