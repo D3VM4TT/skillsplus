@@ -805,4 +805,61 @@ class Packages extends Component
         $query = $supertableService->getRelatedElementsQuery($params);
         return $query ? $query->ids() : [];
     }
+
+    /**
+     * @param $package
+     * @param $categoryId
+     * @return bool|null
+     * @throws \Throwable
+     */
+    public function removeModuleGroup($package, $categoryId)
+    {
+        if (null !== $block = $package->moduleGroupBlock($categoryId)) {
+            return Craft::$app->elements->deleteElementById($block->id);
+        }
+        return null;
+    }
+
+    /**
+     * @param $package
+     * @param $categoryId
+     * @return bool|null
+     * @throws \Throwable
+     */
+    public function addModuleGroup($package, $categoryId)
+    {
+        if (null == $taskbookBlock = $package->taskbook->moduleGroupBlock($categoryId)) {
+            return false;
+        }
+
+        $level = 1;
+        $sp = new SuperTableService();
+        $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
+        $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
+
+        $sortOrder = (clone $package->packageModuleGroups)->anyStatus()->ids();
+        $sortOrder[] = 'new:1';
+
+        $newBlock = [
+            'type' => $blockType->id,
+            'enabled' => true,
+            'fields' => [
+                'moduleGroup' => [$categoryId],
+                'moduleGroupMandatory' => $taskbookBlock->moduleGroupMandatory,
+                'moduleGroupLevel' => $level
+            ],
+        ];
+
+        $package->setFieldValue('packageModuleGroups', [
+            'sortOrder' => $sortOrder,
+            'blocks' => [
+                'new:1' => $newBlock,
+            ],
+        ]);
+
+        if (!Craft::$app->elements->saveElement($package)) {
+            var_dump($package->getErrors());
+            die();
+        }
+    }
 }

@@ -1,6 +1,4 @@
 {% set package = cpdUser.record.getElement(packageId) %}
-{% set availableModuleGroups = package.availableModuleGroupCategories %}
-{% set resitTaskbookGroups = package.resitModuleGroupCategories %}
 {% set resitModuleGroups = package.resitModuleGroupCategories %}
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
@@ -76,13 +74,6 @@
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
                                 <h4>Resit {{ taskbookLabel }} Groups ({{ resitModuleGroups|length }})</h4>
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if availableModuleGroups|length %}
-                        <li>
-                            <a href="#tab{{ package.id }}optional" class="primary-bg">
-                                <h4>Optional {{ taskbookLabel }} Groups ({{ availableModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
@@ -173,6 +164,7 @@
                         {% if package.taskbook.moduleMinimumCredits %}
                             <th style="text-align: right;">Credit</th>
                         {% endif %}
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -183,6 +175,7 @@
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td style="text-align: right;">{{ moduleGroup.credit }}</td>
                             {% endif %}
+                            <td style="text-align: right;"><a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a></a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -214,7 +207,9 @@
                                 {% if package.taskbook.moduleMinimumCredits %}
                                     <td style="text-align: right;">{{ moduleGroup.credit }}</td>
                                 {% endif %}
-                                <th></th>
+                                <td style="text-align: right;">
+                                    <a href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&moduleGroupId={{ moduleGroup.category.id }}">Add</a>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -243,11 +238,6 @@
                 {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
                         {% include '_includes/taskbooks/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
-                    </div>
-                {% endif %}
-                {% if availableModuleGroups|length %}
-                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                        {% include '_includes/taskbooks/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
                     </div>
                 {% endif %}
             {% endif %}

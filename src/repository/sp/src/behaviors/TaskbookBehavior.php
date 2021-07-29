@@ -28,7 +28,7 @@ class TaskbookBehavior extends Behavior
         {
             $category = $moduleGroupBlock->moduleGroup->one();
             if ($category->id == $categoryId) {
-                return $category;
+                return $moduleGroupBlock;
             }
         }
         return null;

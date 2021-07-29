@@ -63,7 +63,7 @@ class PackageBehavior extends Behavior
             return [];
         }
         $modulesGroups = [];
-        foreach($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
+        foreach ($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
             if ($type == 'all' || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
                 $category = $moduleGroupBlock->moduleGroup->one();
                 $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
@@ -88,18 +88,34 @@ class PackageBehavior extends Behavior
     public function moduleGroupCategories()
     {
         $categories = [];
-        foreach($this->moduleGroups() as $moduleGroup) {
+        foreach ($this->moduleGroups() as $moduleGroup) {
             $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
         }
         return $categories;
     }
 
     /**
+     * @param $categoryId
+     * @return mixed|null
+     */
+    public function moduleGroupBlock($categoryId)
+    {
+        foreach ($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if ($category->id == $categoryId) {
+                return $moduleGroupBlock;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * @return bool
      */
     public function hasAvailable()
     {
-        return (bool) count($this->availableModuleGroups());
+        return (bool)count($this->availableModuleGroups());
     }
 
     /**
@@ -110,7 +126,7 @@ class PackageBehavior extends Behavior
         $taskbook = $this->getTaskbook();
         $taskBookModuleGroups = $taskbook->moduleGroups('optional');
         $modulesGroups = [];
-        foreach($taskBookModuleGroups as $moduleGroupBlock) {
+        foreach ($taskBookModuleGroups as $moduleGroupBlock) {
             $category = $moduleGroupBlock->moduleGroup->one();
             if (!in_array($category->id, $this->moduleGroupIds())) {
                 $modulesGroups[] = [
@@ -132,7 +148,7 @@ class PackageBehavior extends Behavior
         $optionalModuleGroups = $taskbook->moduleGroupCategories('optional');
         $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
         $available = [];
-        foreach($optionalModuleGroups as $category) {
+        foreach ($optionalModuleGroups as $category) {
             if (!in_array($category->id, $existingIds)) {
                 $available[$category->id] = $category;
             }
@@ -147,7 +163,7 @@ class PackageBehavior extends Behavior
     {
         $resits = [];
         foreach ($this->owner->packageAssessment as $assessment) {
-            if ($assessment->assessmentDate && ! $assessment->assessmentPassed) {
+            if ($assessment->assessmentDate && !$assessment->assessmentPassed) {
                 $category = $assessment->assessmentModuleGroup->one();
                 $resits[$category->id] = $category;
             }
@@ -218,7 +234,7 @@ class PackageBehavior extends Behavior
     {
         $manager = LantraHelper::getUser($user);
         $steps = [];
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id) {
                 $steps[] = $step;
             }
@@ -233,7 +249,7 @@ class PackageBehavior extends Behavior
     public function canAssign(User $user = null)
     {
         $manager = LantraHelper::getUser($user);
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($this->canAssignStep($step, $manager)) {
                 return true;
             }
@@ -276,7 +292,7 @@ class PackageBehavior extends Behavior
     public function getPackageWorkflowStep($stepId)
     {
         $packagesWorkflow = $this->getWorkflow();
-        foreach($packagesWorkflow as $step) {
+        foreach ($packagesWorkflow as $step) {
             if ($step->stepId == $stepId) {
                 return $step;
             }
@@ -327,11 +343,11 @@ class PackageBehavior extends Behavior
             return;
         }
         $new = [
-            'col1'       => time(),
-            'col2'       => $userMessage,
-            'col3'       => $adminMessage,
-            'col4'       => $user->id,
-            'col5'       => $user->fullName
+            'col1' => time(),
+            'col2' => $userMessage,
+            'col3' => $adminMessage,
+            'col4' => $user->id,
+            'col5' => $user->fullName
         ];
         $packageLog = $this->owner->packageLog;
         $packageLog['new1'] = $new;
@@ -415,7 +431,7 @@ class PackageBehavior extends Behavior
      */
     public function getNextStep()
     {
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if (!$step->reviewDate) {
                 return $step;
             }
@@ -431,7 +447,7 @@ class PackageBehavior extends Behavior
     public function getPreviousStep()
     {
         $previousStep = null;
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if (!$step->reviewDate) {
                 break;
             }
@@ -492,7 +508,7 @@ class PackageBehavior extends Behavior
         if ($includeAdmin && ($manager->admin || $manager->isInGroup('schemeManagers'))) {
             return true;
         }
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($step->reviewStepType == $type && $this->isReviewUser($manager, $step, $includeAdmin)) {
                 return true;
             }

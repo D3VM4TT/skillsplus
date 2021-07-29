@@ -18,7 +18,7 @@
 
 {% set section = craft.sections.getSectionByHandle('packages') %}
 
-{% set taskbookId = craft.request.getParam('taskbookId') %}
+{% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
 {% set singleType = craft.request.getParam('type') %}
 
 {% set isTaskbooks = true %}
@@ -60,6 +60,7 @@
                 {{ csrfInput() }}
                 {{ actionInput('entries/save-entry') }}
                 {{ hiddenInput('sectionId', section.id) }}
+                {{ hiddenInput('entryId', entry.id) }}
                 {{ hiddenInput('author[]', account.id) }}
                 {{ hiddenInput('enabled', 1) }}
                 {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks') }}
@@ -69,7 +70,7 @@
                     <select class="core-module" name="fields[packageModuleGroup][]">
                         {% for moduleGroup in singleModuleGroups %}
                             {% set cost = singleType == 'optional' ? moduleGroup.moduleSingleCost : moduleGroup.moduleResitCost %}
-                            <option {% if (entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id) or (moduleGroupId == moduleGroup.id) %}selected {% endif %}
+                            <option {% if (moduleGroupId == moduleGroup.id) %}selected {% endif %}
                                     value="{{ moduleGroup.id }}">{{ moduleGroup.title }} £{{ cost }}</option>
                         {% endfor %}
                     </select>

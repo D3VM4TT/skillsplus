@@ -20,6 +20,26 @@ use lantra\sp\Plugin as Lantra;
 class PackagesController extends BaseController
 {
     /**
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionRemoveModuleGroup()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $moduleGroupId =  Craft::$app->request->getParam('moduleGroupId');
+        $packageId =  Craft::$app->request->getParam('packageId');
+        if (null == $package = Entry::findOne($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        Lantra::$app->packages->removeModuleGroup($package, $moduleGroupId);
+        $this->_returnMessage('Package updated.');
+    }
+
+    /**
      * User requests assessment for taskbook package
      *
      * @throws mixed
