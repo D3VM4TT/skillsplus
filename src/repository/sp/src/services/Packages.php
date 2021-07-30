@@ -246,8 +246,8 @@ class Packages extends Component
                 'moduleGroup' => [$categoryId],
                 'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
                 'moduleGroupMandatory' => 0,
-                'modulePaid' => $cost == 0,
-                'moduleCost' => $cost
+                'moduleGroupPaid' => $cost == 0,
+                'moduleGroupCost' => $cost
             ]);
             Craft::$app->elements->saveElement($block);
         }
