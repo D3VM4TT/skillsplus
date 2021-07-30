@@ -69,4 +69,14 @@ class RecordHelper
     {
         return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['not', 'draft']);
     }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
+     * @return bool
+     */
+    public static function isComplete(RecordItem $recordItem, User $user)
+    {
+        return self::totalComplete($recordItem, $user) == self::totalUnits($recordItem);
+    }
 }

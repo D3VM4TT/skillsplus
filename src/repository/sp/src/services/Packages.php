@@ -16,6 +16,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use \DateTime;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\helpers\RecordHelper;
 use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;

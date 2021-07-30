@@ -15,21 +15,10 @@ use yii\base\Behavior;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\helpers\RecordHelper;
 
 class PackageBehavior extends Behavior
 {
-    /**
-     * @return array
-     */
-    public function getOptionalModuleGroups()
-    {
-        $categories = [];
-        foreach ($this->moduleGroups('optional') as $moduleGroup) {
-            $categories[] = $moduleGroup['category'];
-        }
-        return $categories;
-    }
-
     /**
      * @return null
      */
@@ -72,6 +61,7 @@ class PackageBehavior extends Behavior
                 $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
                 $modulesGroups[] = [
                     'category' => $category,
+                    'mandatory' => $taskbookModuleGroupBlock->moduleGroupMandatory,
                     'level' => $moduleGroupBlock->moduleGroupLevel,
                     'credit' => $taskbookModuleGroupBlock->moduleGroupCredit,
                     'paid' => (bool) $moduleGroupBlock->moduleGroupPaid,
@@ -82,9 +72,24 @@ class PackageBehavior extends Behavior
         return $modulesGroups;
     }
 
-    public function moduleGroupIds()
+    /**
+     * @return array
+     */
+    public function moduleGroupIds($type = 'all')
     {
-        return array_keys($this->moduleGroupCategories());
+        return array_keys($this->moduleGroupCategories($type));
+    }
+
+    /**
+     * @return null
+     */
+    public function moduleGroupCategories($type = 'all')
+    {
+        $categories = [];
+        foreach ($this->moduleGroups($type) as $moduleGroup) {
+            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
+        }
+        return $categories;
     }
 
     /**
@@ -95,14 +100,15 @@ class PackageBehavior extends Behavior
     {
         return array_key_exists($categoryId, $this->moduleGroupIds());
     }
+
     /**
-     * @return null
+     * @return array
      */
-    public function moduleGroupCategories()
+    public function getOptionalModuleGroups()
     {
         $categories = [];
-        foreach ($this->moduleGroups() as $moduleGroup) {
-            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
+        foreach ($this->moduleGroups('optional') as $moduleGroup) {
+            $categories[] = $moduleGroup['category'];
         }
         return $categories;
     }
@@ -237,6 +243,54 @@ class PackageBehavior extends Behavior
             }
         }
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isComplete()
+    {
+        $required = $this->required();
+        return $required['complete'];
+    }
+
+    /**
+     * @return array
+     */
+    public function required()
+    {
+        $user = $this->owner->author;
+        $taskbook = $this->getTaskbook();
+        $mandatory = 0;
+        $optional = 0;
+        $credits = 0;
+        $levelCredits = 0;
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            ## get the results from the user record
+            $categoryId = $moduleGroup['category']->id;
+            $moduleGroupItem = $user->record->getItem($categoryId);
+            if (RecordHelper::isComplete($moduleGroupItem, $this->owner->author)) {
+                if ($moduleGroup['mandatory']) {
+                    $mandatory++;
+                }
+                else{
+                    $optional++;
+                }
+                $credits += $moduleGroup['credit'];
+                if ($moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+                    $levelCredits += $moduleGroup['credit'];
+                }
+            }
+        }
+        $totalMandatory = count($this->moduleGroupIds('mandatory'));
+        $required = [
+            'mandatory'     => max($totalMandatory - $mandatory, 0),
+            'optional'      => max($taskbook->moduleMinimumOptional - $optional, 0),
+            'credits'       => max($taskbook->moduleMinimumCredits - $credits,0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $levelCredits, 0)
+        ];
+        $required['complete'] = $required['mandatory'] == 0 && $required['optional'] == 0 && $required['credits'] == 0 && $required['levelCredits'] == 0;
+        return $required;
     }
 
     /**
@@ -419,7 +473,7 @@ class PackageBehavior extends Behavior
     /**
      * @return bool
      */
-    public function isComplete()
+    public function isStatusComplete()
     {
         return $this->owner->packageStatus == 'complete';
     }

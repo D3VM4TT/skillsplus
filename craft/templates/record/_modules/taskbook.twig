@@ -21,9 +21,7 @@
             {% endif %}
         </div>
         <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
-            {% set totalUnits = craft.lantra.totalUnits(packageItem) %}
-            {% set unitsComplete = craft.lantra.totalComplete(packageItem, cpdUser.id) %}
-            {% if unitsComplete >= totalUnits %}
+            {% if package.isComplete %}
                 {% if package.packageStatus == 'active' %}
                     <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
                        data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
@@ -34,8 +32,6 @@
                         Step reviewer not assigned
                     {% endif %}
                 {% endif %}
-            {% else %}
-                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
             {% endif %}
         </div>
     </div>
@@ -105,7 +101,7 @@
                     </table>
                 {% endif %}
                 <h4>Requirements</h4>
-                <p>To complete this {{ taskbookLabel|lower }} you must complete the following:</p>
+                <p>To complete this {{ taskbookLabel|lower }} you must complete a total of:</p>
                 <p>
                     <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ pluralize('module', qty=package.taskbook.countMandatory) }}
                     {% if package.taskbook.moduleMinimumOptional %}
@@ -115,11 +111,22 @@
                 {% if package.taskbook.moduleMinimumCredits %}
                     <p>
                         You must attain a minimum of <strong>{{ package.taskbook.moduleMinimumCredits }}</strong> total credits
-                        {% if package.taskbook.moduleGroupMinimumLevelCredits and package.taskbook.moduleGroupMinimumLevel %}
+                        {% if package.taskbook.moduleGroupMinimumLevel %}
                             and <strong>{{ package.taskbook.moduleGroupMinimumLevelCredits }}</strong> credits must be at or above level
                             <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>
                         {% endif %}
                     </p>
+                {% endif %}
+
+                <p>You need to complete <strong>{{ package.required.mandatory }}</strong> mandatory {{ pluralize('module', qty= package.required.mandatory) }}</p>
+                {% if package.taskbook.moduleMinimumOptional %}
+                    <p>You need to complete <strong>{{ package.required.optional }}</strong> optional {{ pluralize('module', qty= package.required.optional) }}</p>
+                {% endif %}
+                {% if package.taskbook.moduleMinimumCredits %}
+                    <p>You need <strong>{{ package.required.credits }}</strong> more credits</p>
+                {% endif %}
+                {% if package.taskbook.moduleGroupMinimumLevel %}
+                    <p>You need <strong>{{ package.required.levelCredits }}</strong> more credits at level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong></p>
                 {% endif %}
                 <p>&nbsp;</p>
                 <hr />
