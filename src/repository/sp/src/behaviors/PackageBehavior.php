@@ -64,13 +64,18 @@ class PackageBehavior extends Behavior
         }
         $modulesGroups = [];
         foreach ($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
-            if ($type == 'all' || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
+            if ($type == 'all' || ($type == 'unpaid' && !$moduleGroupBlock->moduleGroupPaid) || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
+                if (!$type == 'paid' && !$moduleGroupBlock->moduleGroupPaid) {
+                    continue;
+                }
                 $category = $moduleGroupBlock->moduleGroup->one();
                 $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
                 $modulesGroups[] = [
                     'category' => $category,
                     'level' => $moduleGroupBlock->moduleGroupLevel,
-                    'credit' => $taskbookModuleGroupBlock->moduleGroupCredit
+                    'credit' => $taskbookModuleGroupBlock->moduleGroupCredit,
+                    'paid' => (bool) $moduleGroupBlock->moduleGroupPaid,
+                    'cost' => (int) $moduleGroupBlock->moduleGroupCost
                 ];
             }
         }
@@ -82,6 +87,14 @@ class PackageBehavior extends Behavior
         return array_keys($this->moduleGroupCategories());
     }
 
+    /**
+     * @param $categoryId
+     * @return bool
+     */
+    public function hasModuleGroup($categoryId)
+    {
+        return array_key_exists($categoryId, $this->moduleGroupIds());
+    }
     /**
      * @return null
      */
@@ -109,6 +122,46 @@ class PackageBehavior extends Behavior
         return null;
     }
 
+    /**
+     * @return int
+     */
+    public function unpaidCost()
+    {
+        $cost = 0;
+        foreach ($this->moduleGroups('unpaid') as $unpaid) {
+            $cost = $cost + $unpaid['cost'];
+        }
+        return $cost;
+    }
+
+    /**
+     * @return array
+     */
+    public function unpaidPayPalParams()
+    {
+        $params = [
+            'packageId' => $this->owner->id,
+            'moduleGroupIds' => []
+        ];
+        foreach ($this->moduleGroups('unpaid') as $unpaid) {
+            $params['moduleGroupIds'][] = $unpaid['category']->id;
+        }
+        return $params;
+    }
+
+    /**
+     * @param $moduleGroupIds
+     */
+    public function payModuleGroups($moduleGroupIds)
+    {
+        foreach ($this->owner->packageModuleGroups as $moduleGroupBlock) {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if (in_array($category->id, $moduleGroupIds)) {
+                $moduleGroupBlock->setFieldValue('moduleGroupPaid', true);
+                $moduleGroupBlock->save();
+            }
+        }
+    }
 
     /**
      * @return bool

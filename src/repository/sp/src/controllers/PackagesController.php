@@ -25,6 +25,30 @@ class PackagesController extends BaseController
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\web\BadRequestHttpException
      */
+    public function actionAddModuleGroups()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $packageId =  Craft::$app->request->getParam('packageId');
+        $singleType =  Craft::$app->request->getParam('singleType');
+        if (null == $package = Entry::findOne($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        Lantra::$app->packages->applyOptionalModuleGroups($package, $singleType);
+        if ($package->hasErrors()) {
+            return $this->_returnError($package->getFirstErrors()[0]);
+        }
+        ## redirect to paypal if payment
+        $this->_returnMessage('Package updated.');
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionRemoveModuleGroup()
     {
         $this->requirePostRequest();

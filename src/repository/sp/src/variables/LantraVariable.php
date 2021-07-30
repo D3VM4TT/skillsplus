@@ -236,6 +236,16 @@ class LantraVariable
     }
 
     /**
+     * @param Entry $taskbook
+     * @param string $type
+     * @return mixed
+     */
+    public function getModuleGroupCost(Entry $taskbook, $type = 'optional')
+    {
+        return Lantra::$app->packages->getModuleGroupCost($taskbook, $type);
+    }
+
+    /**
      * @param Entry $package
      * @param $complete
      * @return array

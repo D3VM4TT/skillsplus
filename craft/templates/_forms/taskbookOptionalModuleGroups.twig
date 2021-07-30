@@ -1,0 +1,32 @@
+<table class="data">
+    <thead>
+    <tr>
+        <th width="50%">Module Title</th>
+        {% if craft.lantra.setting('taskbookLevels') %}
+            <th>Level</th>
+        {% endif %}
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for optionalModuleGroup in optionalModuleGroups %}
+        {% set category = optionalModuleGroup.category  %}
+        {% set packageModuleGroupRow = package is defined ? craft.lantra.getModuleGroupRow(package, category.id) : null  %}
+        <tr class="optional-module">
+            <td>{{ category.title }}</td>
+            {% if craft.lantra.setting('taskbookLevels') %}
+                <td>
+                    <select class="optional-level" name="optional[{{ category.id  }}][level]">
+                        {% for option in craft.lantra.taskbookLevels() %}
+                            <option {% if packageModuleGroupRow and packageModuleGroupRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            {% endif %}
+            <td style="text-align: right">
+                <input class="optional" type="checkbox" name="optional[{{ category.id  }}][selected]" value="{{ category.id }}" {% if packageModuleGroupRow %}checked{% endif %}>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

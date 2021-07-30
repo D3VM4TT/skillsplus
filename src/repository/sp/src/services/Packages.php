@@ -86,32 +86,24 @@ class Packages extends Component
      */
     public function onBeforeSavePackage(ModelEvent $event, Entry $entry)
     {
-        $taskbookLabel = LantraHelper::setting('taskbookLabel');
-        $taskbook = $entry->packageTaskbook ? $entry->packageTaskbook->one() : null;
-        if (!$taskbook) {
-            $entry->addError('packageTaskbook', 'You must select a ' . $taskbookLabel . '.');
-            $event->isValid = false;
-            return;
-        }
-
-        $entry->title = '[' . $taskbook->title . '] ' . $entry->author->fullname;
-
-        $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
-        $totalOptional = count($optionalModuleGroups);
-
-        if (Craft::$app->request->isSiteRequest) {
-            ## check minimum optional module groups
-            if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
-                $entry->addError('packageModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
+        if ($event->isNew) {
+            $taskbookLabel = LantraHelper::setting('taskbookLabel');
+            $taskbook = $entry->packageTaskbook ? $entry->packageTaskbook->one() : null;
+            if (!$taskbook) {
+                $entry->addError('packageTaskbook', 'You must select a ' . $taskbookLabel . '.');
                 $event->isValid = false;
+                return;
             }
-        }
-
-        $singleType = Craft::$app->request->getParam('singleType');
-        ## calculate cost
-        if ($singleType) {
-            $cost = $singleType == 'resit' ?  $taskbook->moduleResitCost : $taskbook->moduleSingleCost;
-        } else {
+            $entry->title = '[' . $taskbook->title . '] ' . $entry->author->fullname;
+            $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
+            $totalOptional = count($optionalModuleGroups);
+            if (Craft::$app->request->isSiteRequest) {
+                ## check minimum optional module groups
+                if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
+                    $entry->addError('packageModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
+                    $event->isValid = false;
+                }
+            }
             $cost = $taskbook->moduleMaxCost;
             if ($taskbook->moduleCosts) {
                 foreach ($taskbook->moduleCosts as $row) {
@@ -120,15 +112,13 @@ class Packages extends Component
                     }
                 }
             }
-        }
-        $entry->setFieldValue('packageCost', $cost);
-
-        ## make sure log is clear
-        $entry->setFieldValue('packageLog', []);
-
-        ## package is free
-        if (!$cost) {
-            $entry->setFieldValue('packagePaid', true);
+            $entry->setFieldValue('packageCost', $cost);
+            ## package is free
+            if (!$cost) {
+                $entry->setFieldValue('packagePaid', true);
+            }
+            ## make sure log is clear
+            $entry->setFieldValue('packageLog', []);
         }
 
         ## set default workflow
@@ -199,16 +189,15 @@ class Packages extends Component
         if (count($entry->packageModuleGroups)) {
             return;
         }
-
         $taskbook = $entry->packageTaskbook->one();
         $n = 1;
         $packageModuleGroups = [];
         $sp = new SuperTableService();
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
-        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
         foreach ($taskbook->moduleGroupCategories('mandatory') as $mandatoryModuleGroupCategory) {
             $packageModuleGroups['new' . $n] = [
-                'type' => $stepBlockType->id,
+                'type' => $blockType->id,
                 'enabled' => true,
                 'fields' => [
                     'moduleGroup' => [$mandatoryModuleGroupCategory->id],
@@ -218,24 +207,50 @@ class Packages extends Component
             ];
             $n++;
         }
-        if (Craft::$app->request->isSiteRequest) {
-            $optional = Craft::$app->request->getParam('optional', []);
-            ## append the optional module groups
-            foreach ($optional as $row) {
-                $packageModuleGroups['new' . $n] = [
-                    'type' => $stepBlockType->id,
-                    'enabled' => true,
-                    'fields' => [
-                        'moduleGroup' => [$row['id']],
-                        'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
-                        'moduleGroupMandatory' => 0
-                    ]
-                ];
-                $n++;
-            }
-        }
         $entry->setFieldValues(['packageModuleGroups' => $packageModuleGroups]);
         Craft::$app->elements->saveElement($entry);
+        ## apply optional module groups
+        if (Craft::$app->request->isSiteRequest) {
+            $this->applyOptionalModuleGroups($entry);
+        }
+    }
+
+    /**
+     * @param $package
+     * @param null $singleType
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function applyOptionalModuleGroups($package, $singleType = null)
+    {
+        $sp = new SuperTableService();
+        $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
+        $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $optional = Craft::$app->request->getParam('optional', []);
+        ## calculate cost if new
+        $cost = $this->getModuleGroupCost($package->taskbook, $singleType);
+        ## append the optional module groups
+        foreach ($optional as $categoryId => $row) {
+            ## if selected and not already in package
+            if (!isset($row['selected']) || $package->hasModuleGroup($categoryId)) {
+                continue;
+            }
+            $block = new SuperTableBlockElement();
+            $block->fieldId = $field->id;
+            $block->typeId = $blockType->id;
+            $block->ownerId = $package->id;
+            $block->setFieldValues([
+                'moduleGroup' => [$categoryId],
+                'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
+                'moduleGroupMandatory' => 0,
+                'moduleGPaid' => $cost == 0,
+                'moduleCost' => $cost
+            ]);
+            Craft::$app->elements->saveElement($block);
+        }
+        return true;
     }
 
     /**
@@ -821,45 +836,12 @@ class Packages extends Component
     }
 
     /**
-     * @param $package
-     * @param $categoryId
-     * @return bool|null
-     * @throws \Throwable
+     * @param Entry $taskbook
+     * @param string $singleType
+     * @return int
      */
-    public function addModuleGroup($package, $categoryId)
+    public function getModuleGroupCost(Entry $taskbook, $singleType = null)
     {
-        if (null == $taskbookBlock = $package->taskbook->moduleGroupBlock($categoryId)) {
-            return false;
-        }
-
-        $level = 1;
-        $sp = new SuperTableService();
-        $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
-        $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
-
-        $sortOrder = (clone $package->packageModuleGroups)->anyStatus()->ids();
-        $sortOrder[] = 'new:1';
-
-        $newBlock = [
-            'type' => $blockType->id,
-            'enabled' => true,
-            'fields' => [
-                'moduleGroup' => [$categoryId],
-                'moduleGroupMandatory' => $taskbookBlock->moduleGroupMandatory,
-                'moduleGroupLevel' => $level
-            ],
-        ];
-
-        $package->setFieldValue('packageModuleGroups', [
-            'sortOrder' => $sortOrder,
-            'blocks' => [
-                'new:1' => $newBlock,
-            ],
-        ]);
-
-        if (!Craft::$app->elements->saveElement($package)) {
-            var_dump($package->getErrors());
-            die();
-        }
+        return $singleType == null ? 0 : ($singleType == 'resit' ?  $taskbook->moduleResitCost : $taskbook->moduleSingleCost);
     }
 }

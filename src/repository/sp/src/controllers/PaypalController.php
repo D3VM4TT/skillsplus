@@ -61,7 +61,13 @@ class PaypalController extends BaseController
                 return $this->asJson(['success' => 'false']);
             }
             LantraHelper::addUserPayment($package, $payerEmail, $paymentAmount, $transactionId);
-            $package->setFieldValue('packagePaid', true);
+            ## pay for optional module groups
+            if (isset($custom->moduleGroupIds)) {
+                $package->payModuleGroups($custom->moduleGroupIds);
+            }
+            else {
+                $package->setFieldValue('packagePaid', true);
+            }
             $package->save();
             Craft::info("PayPal payment received for package #" . $package->id, __METHOD__);
 

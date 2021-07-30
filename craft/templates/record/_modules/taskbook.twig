@@ -82,11 +82,9 @@
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}taskbook">
-
                 <div style="margin-top:20px;margin-bottom:20px">
                     {{ package.taskbook.taskbookIntro }}
                 </div>
-
                 {% if package.taskbook.taskbookFiles.count  %}
                     <h4>Supporting Files &amp; Images</h4>
                     <table class="data unit-files" width="100%">
@@ -106,35 +104,33 @@
                         </tbody>
                     </table>
                 {% endif %}
-
                 <h4>Requirements</h4>
                 <p>To complete this {{ taskbookLabel|lower }} you must complete the following:</p>
                 <p>
-                    {{ package.taskbook.countMandatory }} mandatory module {{ pluralize('group', qty=package.taskbook.countMandatory) }}
+                    <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ pluralize('module', qty=package.taskbook.countMandatory) }}
                     {% if package.taskbook.moduleMinimumOptional %}
-                        and {{ package.taskbook.moduleMinimumOptional }} optional module
-                        {{ pluralize('group', qty=package.taskbook.moduleMinimumOptional) }}{% endif %}
+                        and <strong>{{ package.taskbook.moduleMinimumOptional }}</strong> optional {{ pluralize('module', qty=package.taskbook.moduleMinimumOptional) }}
+                    {% endif %}
                 </p>
                 {% if package.taskbook.moduleMinimumCredits %}
-                    <p>Minimum of {{ package.taskbook.moduleMinimumCredits }} total credits</p>
-                    {% if package.taskbook.moduleGroupMinimumLevelCredits and package.taskbook.moduleGroupMinimumLevel %}
-                        <p>{{ package.taskbook.moduleGroupMinimumLevelCredits }} credits must be at or above level {{ package.taskbook.moduleGroupMinimumLevel }}</p>
-                    {% endif %}
+                    <p>
+                        You must attain a minimum of <strong>{{ package.taskbook.moduleMinimumCredits }}</strong> total credits
+                        {% if package.taskbook.moduleGroupMinimumLevelCredits and package.taskbook.moduleGroupMinimumLevel %}
+                            and <strong>{{ package.taskbook.moduleGroupMinimumLevelCredits }}</strong> credits must be at or above level
+                            <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>
+                        {% endif %}
+                    </p>
                 {% endif %}
-
                 <p>&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>
-
                 <h4>Your Current Selection</h4>
-
                 {% set mandatoryModuleGroups = package.moduleGroups('mandatory')  %}
                 {% set optionalModuleGroups = package.moduleGroups('optional')  %}
-
                 <table class="data" width="100%">
                     <thead>
                     <tr>
-                        <th>Mandatory Module Group</th>
+                        <th>Module Title</th>
                         <th style="text-align: right;">Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
                             <th style="text-align: right;">Credit</th>
@@ -153,13 +149,11 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
                 {% if optionalModuleGroups %}
-
                 <table class="data" width="100%">
                     <thead>
                     <tr>
-                        <th>Optional Module Group</th>
+                        <th>Module Title</th>
                         <th style="text-align: right;">Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
                             <th style="text-align: right;">Credit</th>
@@ -180,24 +174,18 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
                 {% endif %}
-
                 {% if package.hasAvailable %}
-
                     <hr />
                     <p>&nbsp;</p>
-
-                    <h4>Available Module Groups</h4>
-
+                    <h4>Available Modules</h4>
                     <table class="data" width="100%">
                         <thead>
                         <tr>
-                            <th>Optional Module Group</th>
+                            <th>Module Title</th>
                             {% if package.taskbook.moduleMinimumCredits %}
-                                <th style="text-align: right;">Credit</th>
+                                <th style="text-align: right;padding-right: 0;">Credit</th>
                             {% endif %}
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -207,15 +195,38 @@
                                 {% if package.taskbook.moduleMinimumCredits %}
                                     <td style="text-align: right;">{{ moduleGroup.credit }}</td>
                                 {% endif %}
-                                <td style="text-align: right;">
-                                    <a href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&moduleGroupId={{ moduleGroup.category.id }}">Add</a>
-                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                    <p style="text-align: right">
+                        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&packageId={{ package.id }}">Add Optional Modules</a>
+                    </p>
                 {% endif %}
-
+                {% if package.moduleGroups('unpaid') %}
+                    <hr />
+                    <p>&nbsp;</p>
+                    <h4>Unpaid Module Groups</h4>
+                    <table class="data" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Module Group</th>
+                            <th style="text-align: right;padding-right:0">Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for moduleGroup in package.moduleGroups('unpaid')  %}
+                            <tr>
+                                <td>{{ moduleGroup.category.title }}</td>
+                                <td style="text-align: right">£{{ moduleGroup.cost }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p style="text-align: right">
+                        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?payment=true&packageId={{ package.id }}">Pay Now</a>
+                    </p>
+                {% endif %}
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}content">
                 {% include '_includes/taskbooks/packageContent' with {admin:false} %}

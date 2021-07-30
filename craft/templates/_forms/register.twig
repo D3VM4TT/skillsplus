@@ -57,7 +57,6 @@
             </div>
         {% endswitch %}
     {% endfor %}
-
     {% for row in craft.lantra.userCustomFields('register') %}
         <div class="field--wrapper">
             <label for="custom-{{ row.name }}" class="no-float">{{ row.label }}:</label>
@@ -72,12 +71,10 @@
             value="{{ userCustomBlock|length ? userCustomBlock.customValue|default('') }}">
         </div>
     {% endfor %}
-
     <div class="field--wrapper">
         <label for="registerPassword" class="no-float">Password</label>
         <input id="registerPassword" type="password" name="password" placeholder="Password">
     </div>
-
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Register</button>
     </div>
