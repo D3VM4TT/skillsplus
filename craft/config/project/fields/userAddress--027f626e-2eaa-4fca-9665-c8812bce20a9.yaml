@@ -1,0 +1,15 @@
+contentColumnType: text
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+handle: userAddress
+instructions: ''
+name: 'User Address'
+searchable: true
+settings:
+  charLimit: ''
+  columnType: text
+  initialRows: '2'
+  multiline: '1'
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

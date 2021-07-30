@@ -1,0 +1,44 @@
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+handle: reportSendFrequency
+instructions: ''
+name: 'Report Send Frequency'
+searchable: true
+settings:
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Never
+        -
+          - value
+          - never
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Weekly
+        -
+          - value
+          - weekly
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Monthly
+        -
+          - value
+          - monthly
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

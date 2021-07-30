@@ -1,0 +1,15 @@
+contentColumnType: string
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+handle: resultModule
+instructions: ''
+name: 'Result Module'
+searchable: true
+settings:
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  sources:
+    - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Entries

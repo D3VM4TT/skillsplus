@@ -1,0 +1,38 @@
+contentColumnType: string
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+handle: resultComments
+instructions: ''
+name: 'Result Comments'
+searchable: true
+settings:
+  columns:
+    178:
+      __assoc__:
+        -
+          - width
+          - ''
+    179:
+      __assoc__:
+        -
+          - width
+          - ''
+    180:
+      __assoc__:
+        -
+          - width
+          - ''
+    191:
+      __assoc__:
+        -
+          - width
+          - ''
+  contentTable: '`craft_stc_resultcomments`'
+  fieldLayout: table
+  maxRows: null
+  minRows: null
+  propagationMethod: all
+  selectionLabel: 'Add a row'
+  staticField: null
+translationKeyFormat: null
+translationMethod: none
+type: verbb\supertable\fields\SuperTableField

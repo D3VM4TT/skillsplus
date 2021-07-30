@@ -1,0 +1,11 @@
+contentColumnType: boolean
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+handle: reportIncludeHierarchy
+instructions: ''
+name: 'Report Include Hierarchy'
+searchable: true
+settings:
+  default: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

@@ -1,0 +1,11 @@
+contentColumnType: boolean
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+handle: userReadOnly
+instructions: ''
+name: 'User Read Only'
+searchable: true
+settings:
+  default: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

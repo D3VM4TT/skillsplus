@@ -1,0 +1,87 @@
+field: df065216-2242-4a91-8b81-fa97ca27d449
+fieldLayouts:
+  4981846d-1413-471c-89c7-fa2229aabff6:
+    tabs:
+      -
+        fields:
+          3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+            required: '0'
+            sortOrder: '3'
+          22c29753-9e14-4e97-9291-ca025bc83380:
+            required: '0'
+            sortOrder: '2'
+          32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+            required: '0'
+            sortOrder: '1'
+          feebdaae-888d-4c75-b0ed-d99114744179:
+            required: '0'
+            sortOrder: '4'
+        name: Content
+        sortOrder: '1'
+fields:
+  3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+    contentColumnType: text
+    fieldGroup: null
+    handle: assessmentComment
+    instructions: ''
+    name: Comment
+    searchable: '1'
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  22c29753-9e14-4e97-9291-ca025bc83380:
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: assessmentPassed
+    instructions: ''
+    name: Passed
+    searchable: '1'
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+    contentColumnType: string
+    fieldGroup: null
+    handle: assessmentTaskbookGroup
+    instructions: ''
+    name: 'Taskbook Group'
+    searchable: '1'
+    settings:
+      allowLimit: false
+      allowMultipleSources: false
+      branchLimit: ''
+      limit: null
+      localizeRelations: false
+      selectionLabel: ''
+      source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Categories
+  feebdaae-888d-4c75-b0ed-d99114744179:
+    contentColumnType: datetime
+    fieldGroup: null
+    handle: assessmentDate
+    instructions: ''
+    name: Date
+    searchable: '1'
+    settings:
+      minuteIncrement: '30'
+      showDate: true
+      showTime: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Date

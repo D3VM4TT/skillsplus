@@ -1,0 +1,15 @@
+contentColumnType: string
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
+handle: locationCompany
+instructions: ''
+name: 'Location Company '
+searchable: true
+settings:
+  limit: '1'
+  localizeRelations: false
+  selectionLabel: ''
+  sources:
+    - 'section:86faf121-d218-4348-8ab8-de457b46aa63'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Entries

@@ -1,0 +1,68 @@
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+handle: packageReviews
+instructions: ''
+name: 'Package Reviews'
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - eed6767c-11d8-46d2-b3d5-47ef288cd76b
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 92d2e862-77f6-43f3-aa6e-cd75c38d424d
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - e97c33b5-d88c-43c2-a829-e12ba86c75ac
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 13071690-5bed-43f9-8afb-8c2c799eac7e
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - e927b48c-3108-4edd-a018-67e44c2989d5
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 7497821d-a351-4210-97ac-024153a093af
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - e98e5085-4cf9-46ca-818c-b71e74ed4eaa
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_packagereviews}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: ''
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

@@ -1,0 +1,21 @@
+contentColumnType: text
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+handle: resultNarrative
+instructions: ''
+name: 'Result Narrative'
+searchable: true
+settings:
+  availableTransforms: '*'
+  availableVolumes:
+    - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+  cleanupHtml: true
+  columnType: text
+  purifierConfig: ''
+  purifyHtml: '1'
+  redactorConfig: ''
+  removeEmptyTags: '1'
+  removeInlineStyles: '1'
+  removeNbsp: '1'
+translationKeyFormat: null
+translationMethod: none
+type: craft\redactor\Field

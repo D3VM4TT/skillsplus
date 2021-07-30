@@ -1,0 +1,45 @@
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+handle: packageStatus
+instructions: ''
+name: 'Package Status'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Active
+        -
+          - value
+          - active
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Locked
+        -
+          - value
+          - locked
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Complete
+        -
+          - value
+          - complete
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

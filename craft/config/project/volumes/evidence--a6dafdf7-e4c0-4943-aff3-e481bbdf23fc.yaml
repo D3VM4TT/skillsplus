@@ -1,0 +1,18 @@
+fieldLayouts:
+  d815e921-d4db-4003-be19-7818b9ae30ac:
+    tabs:
+      -
+        fields:
+          27ae4aac-8776-4581-9548-667541eefd7c:
+            required: false
+            sortOrder: 1
+        name: Location
+        sortOrder: 1
+handle: evidence
+hasUrls: false
+name: Evidence
+settings:
+  path: '@assetsPath/evidence'
+sortOrder: 1
+type: craft\volumes\Local
+url: null

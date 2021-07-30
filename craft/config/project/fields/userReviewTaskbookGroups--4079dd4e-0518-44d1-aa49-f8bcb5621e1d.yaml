@@ -1,0 +1,21 @@
+contentColumnType: string
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+handle: userReviewTaskbookGroups
+instructions: 'User will be allowed to review for the selected taskbook groups.'
+name: 'User Review Taskbook Groups'
+searchable: true
+settings:
+  allowLimit: false
+  allowMultipleSources: false
+  branchLimit: ''
+  limit: null
+  localizeRelations: false
+  selectionLabel: ''
+  source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: ''
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Categories

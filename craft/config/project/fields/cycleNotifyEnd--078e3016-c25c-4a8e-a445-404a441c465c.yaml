@@ -1,0 +1,11 @@
+contentColumnType: boolean
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+handle: cycleNotifyEnd
+instructions: ''
+name: 'Cycle Notify End'
+searchable: true
+settings:
+  default: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

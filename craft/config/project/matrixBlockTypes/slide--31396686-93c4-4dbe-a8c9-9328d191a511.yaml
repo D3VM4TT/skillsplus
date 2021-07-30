@@ -1,0 +1,112 @@
+field: 4a4bc5cd-115e-4309-a51a-3e5095ceea90
+fieldLayouts:
+  d3af77e8-adbb-403d-8ca0-78f119435628:
+    tabs:
+      -
+        fields:
+          89bc5035-7e58-43a7-a7e5-bcaa9de73d4a:
+            required: false
+            sortOrder: 4
+          111e6e76-917a-43f6-aa70-c659bd131921:
+            required: false
+            sortOrder: 1
+          4978c00f-2afb-4601-83f2-12952bc08242:
+            required: false
+            sortOrder: 2
+          2558296b-ca8b-4d67-b227-6310a19405da:
+            required: false
+            sortOrder: 3
+        name: Content
+        sortOrder: 1
+fields:
+  89bc5035-7e58-43a7-a7e5-bcaa9de73d4a:
+    contentColumnType: string
+    fieldGroup: null
+    handle: slideImage
+    instructions: ''
+    name: Image
+    searchable: true
+    settings:
+      allowedKinds:
+        - image
+      defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      defaultUploadLocationSubpath: ''
+      limit: '1'
+      localizeRelations: false
+      restrictFiles: '1'
+      selectionLabel: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: true
+      singleUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources: '*'
+      targetSiteId: null
+      useSingleFolder: true
+      validateRelatedElements: ''
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
+  111e6e76-917a-43f6-aa70-c659bd131921:
+    contentColumnType: text
+    fieldGroup: null
+    handle: slideTitle
+    instructions: ''
+    name: Title
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  4978c00f-2afb-4601-83f2-12952bc08242:
+    contentColumnType: text
+    fieldGroup: null
+    handle: slideHeading
+    instructions: ''
+    name: Heading
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  2558296b-ca8b-4d67-b227-6310a19405da:
+    contentColumnType: text
+    fieldGroup: null
+    handle: slideContent
+    instructions: ''
+    name: Content
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
+handle: slide
+name: Slide
+sortOrder: 1

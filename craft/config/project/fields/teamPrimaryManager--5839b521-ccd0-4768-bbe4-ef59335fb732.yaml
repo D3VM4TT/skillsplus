@@ -1,0 +1,15 @@
+contentColumnType: string
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
+handle: teamPrimaryManager
+instructions: ''
+name: 'Team Primary Manager'
+searchable: true
+settings:
+  limit: '1'
+  localizeRelations: false
+  selectionLabel: ''
+  sources:
+    - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Users

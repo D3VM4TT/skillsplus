@@ -1,0 +1,43 @@
+enableVersioning: false
+entryTypes:
+  ed2a03c5-bea9-4bed-8fe2-2a9e97abb03e:
+    fieldLayouts:
+      bcaf5920-c460-4465-a5db-e7f4bad29958:
+        tabs:
+          -
+            fields:
+              0578b9f0-6e63-4ecd-b386-295f3b276282:
+                required: true
+                sortOrder: 2
+              fcef71c8-c93e-4e97-a8f3-4fc223b2d223:
+                required: true
+                sortOrder: 1
+            name: Team
+            sortOrder: 1
+          -
+            fields:
+              838b996f-8f5d-4df2-9a75-0d1692348632:
+                required: false
+                sortOrder: 2
+              5839b521-ccd0-4768-bbe4-ef59335fb732:
+                required: false
+                sortOrder: 1
+            name: Managers
+            sortOrder: 2
+    handle: team
+    hasTitleField: false
+    name: Team
+    sortOrder: 1
+    titleFormat: '{teamCompany.one.title} - {teamName}'
+    titleLabel: null
+handle: teams
+name: Teams
+previewTargets: null
+propagationMethod: all
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+type: channel

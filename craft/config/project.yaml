@@ -97,7 +97,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1627553389
+dateModified: 1627651273
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -4125,6 +4125,20 @@ fields:
                 -
                   - width
                   - ''
+          -
+            - 7209f99b-e88b-403f-b8ba-fbb0301b5c0f
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - cad6f0cc-99c2-432e-b299-3990a84d96fc
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
       contentTable: '{{%stc_packagemodulegroups}}'
       fieldLayout: table
       maxRows: ''
@@ -6605,12 +6619,18 @@ superTableBlockTypes:
               00afc899-b37a-415c-8829-b06a42a8638f:
                 required: true
                 sortOrder: 1
+              7209f99b-e88b-403f-b8ba-fbb0301b5c0f:
+                required: false
+                sortOrder: 4
               8b738285-1f1f-4f66-bb77-bdf61a7f234e:
                 required: false
                 sortOrder: 2
               9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
                 required: true
                 sortOrder: 3
+              cad6f0cc-99c2-432e-b299-3990a84d96fc:
+                required: false
+                sortOrder: 5
             name: Content
             sortOrder: 1
     fields:
@@ -6637,6 +6657,18 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Categories
+      7209f99b-e88b-403f-b8ba-fbb0301b5c0f:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: moduleGroupPaid
+        instructions: ''
+        name: Paid
+        searchable: true
+        settings:
+          default: '1'
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
       8b738285-1f1f-4f66-bb77-bdf61a7f234e:
         contentColumnType: boolean
         fieldGroup: null
@@ -6661,6 +6693,24 @@ superTableBlockTypes:
           defaultValue: '1'
           max: '10'
           min: '1'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      cad6f0cc-99c2-432e-b299-3990a84d96fc:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: moduleGroupCost
+        instructions: ''
+        name: Cost
+        searchable: true
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
           prefix: ''
           size: null
           suffix: ''

@@ -1,0 +1,33 @@
+contentColumnType: string
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+handle: resultCustom
+instructions: ''
+name: 'Result Custom'
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - new1
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - new2
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '`craft_stc_resultcustom`'
+  fieldLayout: table
+  maxRows: null
+  minRows: null
+  propagationMethod: all
+  selectionLabel: 'Add a row'
+  staticField: null
+translationKeyFormat: null
+translationMethod: none
+type: verbb\supertable\fields\SuperTableField

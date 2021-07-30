@@ -1,0 +1,6 @@
+handle: usersTaskbookPending
+name: 'Users [Taskbook Pending]'
+permissions:
+  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages

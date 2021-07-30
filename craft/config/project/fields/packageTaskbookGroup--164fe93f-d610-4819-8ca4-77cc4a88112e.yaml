@@ -1,0 +1,21 @@
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+handle: packageTaskbookGroup
+instructions: ''
+name: 'Package Taskbook Group'
+searchable: true
+settings:
+  allowLimit: false
+  allowMultipleSources: false
+  branchLimit: '1'
+  limit: null
+  localizeRelations: false
+  selectionLabel: 'Select taskbook group'
+  source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: ''
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Categories

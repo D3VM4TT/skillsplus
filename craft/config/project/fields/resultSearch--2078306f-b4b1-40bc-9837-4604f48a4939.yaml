@@ -1,0 +1,17 @@
+contentColumnType: text
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+handle: resultSearch
+instructions: ''
+name: 'Result Search'
+searchable: true
+settings:
+  allowSelect: ''
+  columnType: text
+  decimals: '0'
+  fieldTwig: "{% if entry.type == 'unitResult' %}{{ entry.resultUnit.first.title|raw }}{% else %}{{ entry.resultModule.first.title|raw }}{% endif %} \r\n{{ entry.author.userTeam.first.title|raw }} {{ entry.au"
+  parseBeforeSave: ''
+  parseOnMove: ''
+  showField: '1'
+translationKeyFormat: null
+translationMethod: none
+type: aelvan\preparsefield\fields\PreparseFieldType

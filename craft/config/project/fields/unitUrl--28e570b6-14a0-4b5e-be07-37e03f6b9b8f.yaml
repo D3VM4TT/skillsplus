@@ -1,0 +1,15 @@
+contentColumnType: text
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+handle: unitUrl
+instructions: ''
+name: 'URL (e-learning)'
+searchable: true
+settings:
+  charLimit: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText
