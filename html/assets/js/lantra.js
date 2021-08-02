@@ -710,7 +710,7 @@ $(document).ready(function(){
                         $('body').removeClass('loading');
                         return;
                     }
-                    if (response.message == '1') {
+                    if (response.message != '0') {
                         window.location.replace(paymentRedirect);
                         return;
                     }
