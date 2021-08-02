@@ -1,7 +1,7 @@
 {% set mandatoryModuleGroups = taskbook.moduleGroups('mandatory') %}
 {% set optionalModuleGroups = taskbook.moduleGroups('optional') %}
 <div class="taskbook-optional taskbook-optional-{{ taskbook.id }}">
-    {% if mandatoryModuleGroupCategories|length  %}
+    {% if mandatoryModuleGroups|length  %}
         <label>Below are the mandatory modules for this {{ taskbookLabel }}</label>
         <table class="data">
             <thead>
