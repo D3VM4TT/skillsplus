@@ -189,12 +189,19 @@ class LantraHelper
      * @param $payerEmail
      * @param $paymentAmount
      * @param $transactionId
+     * @return null
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
     public static function addUserPayment($owner, $payerEmail, $paymentAmount, $transactionId)
     {
+        ## stop duplicates
+        foreach($owner->userPayments as $block) {
+            if ($block->txn_id == $transactionId) {
+                return null;
+            }
+        }
         $field = Craft::$app->fields->getFieldByHandle('userPayments');
         $blockType = Craft::$app->matrix->getBlockTypesByFieldId($field->id)[0];
         ## create payment block
