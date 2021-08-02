@@ -40,6 +40,20 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param $categoryId
+     * @return mixed|null
+     */
+    public function moduleGroup($categoryId)
+    {
+        foreach($this->moduleGroups() as $moduleGroup) {
+            if ($moduleGroup['category']->id == $categoryId) {
+                return $moduleGroup;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param string $type
      * @return array
      */

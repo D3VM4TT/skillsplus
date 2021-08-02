@@ -1,4 +1,5 @@
 {% set packageId = craft.app.request.getSegment(4) %}
+{% set moduleGroupId = craft.app.request.getSegment(5) %}
 
 {# only one package - redirect to package #}
 {% if not packageId and cpdUser.record.totalPackages == 1 %}
@@ -19,7 +20,7 @@
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
-        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem} %}
+        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem, moduleGroupId:moduleGroupId} %}
     </article>
 {% else %}
     <table class="data">

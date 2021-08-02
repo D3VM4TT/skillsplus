@@ -397,12 +397,13 @@ class Plugin extends BasePlugin
             ## cpd routes
 
             ## taskbook routes
-            'cpd/<userId>/taskbooks'                    => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/manage'             => ['template' => 'record/_taskbooks/manage'],
-            'cpd/<userId>/taskbooks/new'                => ['template' => 'record/_taskbooks/new'],
-            'cpd/<userId>/taskbooks/single'             => ['template' => 'record/_taskbooks/single'],
-            'cpd/<userId>/taskbooks/<entryId>'          => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/<entryId>/pay'      => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks'                            => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/manage'                     => ['template' => 'record/_taskbooks/manage'],
+            'cpd/<userId>/taskbooks/new'                        => ['template' => 'record/_taskbooks/new'],
+            'cpd/<userId>/taskbooks/single'                     => ['template' => 'record/_taskbooks/single'],
+            'cpd/<userId>/taskbooks/<entryId>'                  => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/<moduleGroupId>'  => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/pay'              => ['template' => 'record/index'],
 
             'profile'                                   => ['template' => 'profile/index'],
             'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],

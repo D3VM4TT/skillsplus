@@ -1,5 +1,15 @@
 {% set package = cpdUser.record.getElement(packageId) %}
 {% set resitModuleGroups = package.resitModuleGroupCategories %}
+{% set isModuleGroup = false %}
+{% if moduleGroupId %}
+    {% set isModuleGroup = true %}
+    {% set moduleGroup = cpdUser.record.getElement(moduleGroupId) %}
+    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
+    {% set moduleGroupElementId = package.id ~ moduleGroupId %}
+    {% set packageModuleGroup = package.moduleGroup(moduleGroupId) %}
+    {% set level = packageModuleGroup.level %}
+{% endif %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -9,7 +19,9 @@
             <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
             <div><h2>{{ package.taskbook.title }}</h2></div>
             <p>
-                {% if package.isManager(currentUser, true) and package.hasNextStep %}
+                {% if isModuleGroup %}
+                    <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}">&laquo; back to {{ taskbookLabel }}</a>
+                {% elseif package.isManager(currentUser, true) and package.hasNextStep %}
                     Next Step: {{ package.nextStep.reviewStepName }}
                 {% else %}
                     Status: {{ package.packageStatus  }}
@@ -38,6 +50,13 @@
     <div id="j{{ package.id }}" class="open">
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
+                {% if moduleGroupId %}
+                    <li>
+                        <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
+                            <h4>{{ moduleGroup.magicTitle }}</h4>
+                        </a>
+                    </li>
+                {% else %}
                 <li>
                     <a href="#tab{{ package.id }}taskbook" class="primary-bg">
                         <h4>{{ taskbookLabel }}</h4>
@@ -74,9 +93,13 @@
                         </li>
                     {% endif %}
                 {% endif %}
+                {% endif %}
             </ul>
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
+            {% if moduleGroupId %}
+                {% include 'record/_modules/moduleGroup' %}
+            {% else %}
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}taskbook">
                 <div style="margin-top:20px;margin-bottom:20px">
                     {{ package.taskbook.taskbookIntro }}
@@ -258,6 +281,7 @@
                         {% include '_includes/taskbooks/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
                     </div>
                 {% endif %}
+            {% endif %}
             {% endif %}
         </section>
     </div>
