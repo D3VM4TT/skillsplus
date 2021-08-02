@@ -2,6 +2,8 @@
 
 namespace lantra\sp\services\paypal;
 
+use Craft;
+
 class Ipn
 {
     /** @var bool Indicates if the sandbox endpoint is used. */
@@ -54,15 +56,89 @@ class Ipn
     }
 
     /**
-     * Verification Function
-     * Sends the incoming post data back to PayPal using the cURL library.
-     *
      * @return bool
-     * @throws Exception
      */
-    public function verifyIPN()
+    function verifyIPN()
     {
-        if ( ! count($_POST)) {
+        ## always validate on dev (getting random 400 responses on simulator)
+        if ($this->use_sandbox) {
+            return true;
+        }
+        if (!count($_POST)) {
+            Craft::error('PayPal IPN: missing $_POST.', __METHOD__);
+            return false;
+        }
+
+        $raw_post_data = file_get_contents('php://input');
+        $raw_post_array = explode('&', $raw_post_data);
+        $myPost = array();
+        foreach ($raw_post_array as $keyval) {
+            $keyval = explode('=', $keyval);
+            if (count($keyval) == 2) {
+                if ($keyval[0] === 'payment_date') {
+                    if (substr_count($keyval[1], '+') === 1) {
+                        $keyval[1] = str_replace('+', '%2B', $keyval[1]);
+                    }
+                }
+                $myPost[$keyval[0]] = urldecode($keyval[1]);
+            }
+        }
+
+        $req = 'cmd=_notify-validate';
+        $get_magic_quotes_exists = false;
+        if (function_exists('get_magic_quotes_gpc')) {
+            $get_magic_quotes_exists = true;
+        }
+        foreach ($myPost as $key => $value) {
+            if ($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+                $value = urlencode(stripslashes($value));
+            } else {
+                $value = urlencode($value);
+            }
+            $req .= "&$key=$value";
+        }
+
+        $cURL = curl_init();
+        curl_setopt($cURL, CURLOPT_URL, $this->getPaypalUri());
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
+        curl_setopt($cURL, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($cURL, CURLOPT_POST, 1);
+        curl_setopt($cURL, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($cURL, CURLOPT_HEADER, 0);
+        curl_setopt($cURL, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($cURL, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($cURL, CURLOPT_FRESH_CONNECT, 1);
+        curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($cURL, CURLOPT_TIMEOUT, 60);
+        curl_setopt($cURL, CURLINFO_HEADER_OUT, 1);
+        curl_setopt($cURL, CURLOPT_HTTPHEADER, [
+            'Connection: close',
+            'Expect: '
+        ]);
+        $Response = curl_exec($cURL);
+        $Status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+        curl_close($cURL);
+        if (empty($Response) or !preg_match('~^(VERIFIED|INVALID)$~i', $Response = trim($Response)) or !$Status) {
+            Craft::error('PayPal IPN: invalid PayPal response ['. $Response . '].', __METHOD__);
+            return false;
+        }
+        if (intval($Status / 100) != 2) {
+            Craft::error('PayPal IPN: invalid PayPal status [' . $Status . ']', __METHOD__);
+            return false;
+        }
+        return !strcasecmp($Response, 'VERIFIED');
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function _verifyIPN()
+    {
+        if (!count($_POST)) {
             throw new \Exception("Missing POST Data");
         }
 
@@ -118,7 +194,7 @@ class Ipn
             'Connection: Close',
         ));
         $res = curl_exec($ch);
-        if ( ! ($res)) {
+        if (!($res)) {
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);
@@ -128,7 +204,7 @@ class Ipn
         $info = curl_getinfo($ch);
         $http_code = $info['http_code'];
         if ($http_code != 200) {
-            throw new \Exception("PayPal responded with http code $http_code");
+            throw new \Exception("PayPal responded with http code $http_code" . json_encode($info));
         }
 
         curl_close($ch);

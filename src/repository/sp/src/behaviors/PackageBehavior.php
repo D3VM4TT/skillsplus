@@ -157,6 +157,9 @@ class PackageBehavior extends Behavior
 
     /**
      * @param $moduleGroupIds
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function payModuleGroups($moduleGroupIds)
     {
@@ -164,7 +167,7 @@ class PackageBehavior extends Behavior
             $category = $moduleGroupBlock->moduleGroup->one();
             if (in_array($category->id, $moduleGroupIds)) {
                 $moduleGroupBlock->setFieldValue('moduleGroupPaid', true);
-                $moduleGroupBlock->save();
+                Craft::$app->getElements()->saveElement($moduleGroupBlock, false);
             }
         }
     }
