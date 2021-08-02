@@ -109,7 +109,7 @@
                             {% for moduleGroup in package.moduleGroups('optional') %}
                                 {{ moduleGroup.category.title }}
                                 {% if craft.lantra.setting('taskbookLevels') %}
-                                    ({{ craft.lantra.taskbookLevel(moduleGroup.moduleGroupLevel) }})<br />
+                                    ({{ craft.lantra.taskbookLevel(moduleGroup.level) }})<br />
                                 {% endif %}
                             {% endfor %}
                         </td>

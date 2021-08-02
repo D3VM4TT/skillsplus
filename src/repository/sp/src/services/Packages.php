@@ -191,6 +191,7 @@ class Packages extends Component
             return;
         }
         $taskbook = $entry->packageTaskbook->one();
+        $packageLevel = $entry->packageLevel;
         $n = 1;
         $packageModuleGroups = [];
         $sp = new SuperTableService();
@@ -202,7 +203,7 @@ class Packages extends Component
                 'enabled' => true,
                 'fields' => [
                     'moduleGroup' => [$mandatoryModuleGroupCategory->id],
-                    'moduleGroupLevel' => 1,
+                    'moduleGroupLevel' => $packageLevel,
                     'moduleGroupMandatory' => 1
                 ]
             ];
@@ -210,9 +211,10 @@ class Packages extends Component
         }
         $entry->setFieldValues(['packageModuleGroups' => $packageModuleGroups]);
         Craft::$app->elements->saveElement($entry);
-        ## apply optional module groups
+        ## get the package (with behaviour)
         if (Craft::$app->request->isSiteRequest) {
-            $this->applyOptionalModuleGroups($entry);
+            $package = Entry::findOne($entry->id);
+            $this->applyOptionalModuleGroups($package);
         }
     }
 

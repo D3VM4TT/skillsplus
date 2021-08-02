@@ -188,14 +188,14 @@ class PackageBehavior extends Behavior
         $taskbook = $this->getTaskbook();
         $taskBookModuleGroups = $taskbook->moduleGroups('optional');
         $modulesGroups = [];
-        foreach ($taskBookModuleGroups as $moduleGroupBlock) {
-            $category = $moduleGroupBlock->moduleGroup->one();
+        foreach ($taskBookModuleGroups as $moduleGroup) {
+            $category = $moduleGroup['category'];
             if (!in_array($category->id, $this->moduleGroupIds())) {
                 $modulesGroups[] = [
                     'category' => $category,
                     'level' => '',
-                    'credit' => $moduleGroupBlock->moduleGroupCredit
-                ];
+                    'credit' => $moduleGroup['credit']
+               ];
             }
         }
         return $modulesGroups;

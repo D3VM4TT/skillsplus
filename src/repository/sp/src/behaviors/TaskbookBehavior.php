@@ -24,11 +24,10 @@ class TaskbookBehavior extends Behavior
      */
     public function moduleGroupBlock($categoryId)
     {
-        foreach($this->moduleGroups() as $moduleGroupBlock)
+        foreach($this->moduleGroups() as $moduleGroup)
         {
-            $category = $moduleGroupBlock->moduleGroup->one();
-            if ($category->id == $categoryId) {
-                return $moduleGroupBlock;
+            if ($moduleGroup['category']->id == $categoryId) {
+                return $moduleGroup['block'];
             }
         }
         return null;
@@ -39,13 +38,19 @@ class TaskbookBehavior extends Behavior
      */
     public function moduleGroups($type = 'all')
     {
-        $blocks = [];
+        $modulesGroups = [];
         foreach ($this->owner->taskbookModuleGroups as $block) {
             if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
-                $blocks[] = $block;
+                $category = $block->moduleGroup->one();
+                $modulesGroups[] = [
+                    'category' => $category,
+                    'mandatory' => $block->moduleGroupMandatory,
+                    'credit' => $block->moduleGroupCredit,
+                    'block' => $block
+                ];
             }
         }
-        return $blocks;
+        return $modulesGroups;
     }
 
     /**
@@ -55,8 +60,8 @@ class TaskbookBehavior extends Behavior
     public function moduleGroupCategories($type = 'all')
     {
         $categories = [];
-        foreach ($this->moduleGroups($type) as $block) {
-            $categories[] = $block->moduleGroup->one();
+        foreach ($this->moduleGroups($type) as $moduleGroup) {
+            $categories[] = $moduleGroup['category'];
         }
         return $categories;
     }
@@ -68,9 +73,9 @@ class TaskbookBehavior extends Behavior
     public function moduleGroupCredits($type = 'all')
     {
         $credits = 0;
-        foreach ($this->owner->taskbookModuleGroups as $block) {
-            if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
-                $credits = $credits + $block->moduleGroupCredit;
+        foreach ($this->moduleGroups($type) as $moduleGroup) {
+            if ($type == 'all' || ($type == 'mandatory' && $moduleGroup['mandatory']) || ($type == 'optional' && !$moduleGroup['mandatory']))  {
+                $credits = $credits + $moduleGroup['credit'];
             }
         }
         return $credits;
