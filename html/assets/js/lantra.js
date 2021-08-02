@@ -698,8 +698,8 @@ $(document).ready(function(){
             data = {'entryId': pp.data('id')},
             paymentRedirect = pp.data('redirect'),
             checkPayment = function(){
-                if (loop == 5) {
-                    alert('Payment not confirmed.  Contact support.');
+                if (loop == 10) {
+                    alert('Payment confirmation not yet received.  Refresh and try again.');
                     $('body').removeClass('loading');
                     return;
                 }
