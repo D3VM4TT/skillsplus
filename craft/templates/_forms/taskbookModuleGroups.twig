@@ -6,7 +6,7 @@
         <table class="data">
             <thead>
             <tr>
-                <th width="50%">Module Group</th>
+                <th width="50%">Mandatory</th>
                 <th width="50%"></th>
             </tr>
             </thead>
@@ -15,7 +15,7 @@
                 {% set category = mandatoryModuleGroup.category  %}
                 {% set packageModuleGroupRow = craft.lantra.getModuleGroupRow(entry, category.id)  %}
                 <tr class="optional-module">
-                    <td>{{ category.title }}</td>
+                    <td>{{ category.magicTitle }}</td>
                     <td></td>
                 </tr>
             {% endfor %}

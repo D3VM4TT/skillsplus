@@ -1,7 +1,7 @@
 <table class="data">
     <thead>
     <tr>
-        <th width="50%">Module Title</th>
+        <th width="50%">Optional</th>
         {% if craft.lantra.setting('taskbookLevels') %}
             <th>Level</th>
         {% endif %}
@@ -13,7 +13,7 @@
         {% set category = optionalModuleGroup.category  %}
         {% set packageModuleGroupRow = package is defined ? craft.lantra.getModuleGroupRow(package, category.id) : null  %}
         <tr class="optional-module">
-            <td>{{ category.title }}</td>
+            <td>{{ category.magicTitle }}</td>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <td>
                     <select class="optional-level" name="optional[{{ category.id  }}][level]">
