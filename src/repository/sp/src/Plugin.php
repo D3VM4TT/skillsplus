@@ -263,7 +263,7 @@ class Plugin extends BasePlugin
                 }
                 if ($event->sender->sectionId == $this->sectionId('modules')) {
                     $event->behaviors[] = ModuleBehavior::class;
-                    $event->behaviors[] = ShortTitleBehavior::class;
+                    $event->behaviors[] = MagicTitleBehavior::class;
                 }
                 if ($event->sender->sectionId == $this->sectionId('taskbooks')) {
                     $event->behaviors[] = TaskbookBehavior::class;
