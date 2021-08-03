@@ -319,6 +319,15 @@ class LantraVariable
     }
 
     /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
+    public function hasAssessmentUnit($recordItem)
+    {
+        return RecordHelper::hasAssessmentUnit($recordItem);
+    }
+
+    /**
      * @return mixed
      */
     public function release()
@@ -1078,6 +1087,28 @@ class LantraVariable
             $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
         }
         return Lantra::$app->attempts->remainingAttempts($unitEntry, $resultEntry, $user->id);
+    }
+
+    /**
+     * Display remaining attempts
+     *
+     * @param Entry $unitEntry
+     * @param Entry $resultEntry
+     * @param null $userId
+     * @return int|string
+     */
+    public function assessmentScore($unitEntry, $resultEntry = null, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return 0;
+        }
+        if (is_null($resultEntry)) {
+            $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
+        }
+        if (is_null($resultEntry)) {
+            return '~';
+        }
+        return $resultEntry->resultScore .'% (' . ($resultEntry->resultScore >= $unitEntry->testPassPercent ? 'Pass' : 'Fail') . ')';
     }
 
     /**

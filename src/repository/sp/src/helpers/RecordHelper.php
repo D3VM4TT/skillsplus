@@ -84,4 +84,21 @@ class RecordHelper
     {
         return self::totalComplete($recordItem, $user, $taskbook) == self::totalUnits($recordItem);
     }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return int|string
+     */
+    public static function hasAssessmentUnit(RecordItem $recordItem)
+    {
+        $unitIds = $recordItem->unitIds();
+        if (!count($unitIds)) {
+            return false;
+        }
+        $criteria = Entry::find();
+        $criteria->section = 'units';
+        $criteria->where(['in', 'entries.id', $unitIds]);
+        $criteria->andWhere(['field_unitType' => 'elearning']);
+        return $criteria->count();
+    }
 }
