@@ -10,6 +10,7 @@ namespace lantra\sp\helpers;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\RecordItem;
+use craft\elements\Entry;
 use craft\elements\User;
 
 class RecordHelper
@@ -63,20 +64,24 @@ class RecordHelper
     /**
      * @param RecordItem $recordItem
      * @param User $user
-     * @return null
+     * @param Entry|null $taskbook
+     * @return int
      */
-    public static function totalComplete(RecordItem $recordItem, User $user)
+    public static function totalComplete(RecordItem $recordItem, User $user, Entry $taskbook = null)
     {
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['not', 'draft']);
+        ## taskbook unitEndorse requires individual units to be endorsed
+        $status = $taskbook && $taskbook->unitEndorse ? ['endorsed'] : ['not', 'draft'];
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), $status);
     }
 
     /**
      * @param RecordItem $recordItem
      * @param User $user
+     * @param Entry|null $taskbook
      * @return bool
      */
-    public static function isComplete(RecordItem $recordItem, User $user)
+    public static function isComplete(RecordItem $recordItem, User $user, Entry $taskbook = null)
     {
-        return self::totalComplete($recordItem, $user) == self::totalUnits($recordItem);
+        return self::totalComplete($recordItem, $user, $taskbook) == self::totalUnits($recordItem);
     }
 }

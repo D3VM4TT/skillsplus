@@ -100,7 +100,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1627913281
+dateModified: 1627995748
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -2730,6 +2730,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
+  84396576-ea02-4748-adcd-ae3fe8d26824:
+    contentColumnType: boolean
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: unitEndorse
+    instructions: ''
+    name: 'Unit Endorse'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   84ec75d0-1dcf-408a-bce8-4ea7b5370c3b:
     contentColumnType: text
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -5658,6 +5670,9 @@ sections:
                   809b8647-dd59-44cf-b5d5-63dac0021cb1:
                     required: false
                     sortOrder: 5
+                  84396576-ea02-4748-adcd-ae3fe8d26824:
+                    required: false
+                    sortOrder: 6
                   da81a368-f84c-47f8-9e3a-b83346be0865:
                     required: false
                     sortOrder: 2

@@ -155,24 +155,31 @@
                 <table class="data" width="100%">
                     <thead>
                     <tr>
-                        <th>Mandatory</th>
-                        <th style="text-align: right;">Level</th>
+                        <th style="width: 60%;">Mandatory</th>
+                        <th>Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <th style="text-align: right;">Credit</th>
+                            <th>Credit</th>
                         {% endif %}
+                        <th>Units {{ package.taskbook.unitEndorse ? 'Endorsed' : 'Complete' }}</th>
+                        <th style="width:100px;"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for moduleGroup in mandatoryModuleGroups %}
-                    <tr>
-                        <td>
-                            <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
-                        </td>
-                        <td style="text-align: right;">{{ moduleGroup.level }}</td>
-                        {% if package.taskbook.moduleMinimumCredits %}
-                            <td style="text-align: right;">{{ moduleGroup.credit }}</td>
-                        {% endif %}
-                    </tr>
+                        {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set totalUnits = moduleGroupItem.allUnits|length %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        <tr>
+                            <td>
+                                <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                            </td>
+                            <td>{{ moduleGroup.level }}</td>
+                            {% if package.taskbook.moduleMinimumCredits %}
+                                <td>{{ moduleGroup.credit }}</td>
+                            {% endif %}
+                            <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
+                            <td></td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -180,24 +187,29 @@
                 <table class="data" width="100%">
                     <thead>
                     <tr>
-                        <th>Optional</th>
-                        <th style="text-align: right;">Level</th>
+                        <th style="width: 60%;">Optional</th>
+                        <th>Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <th style="text-align: right;">Credit</th>
+                            <th>Credit</th>
                         {% endif %}
-                        <th></th>
+                        <th>Units {{ package.taskbook.unitEndorse ? 'Endorsed' : 'Complete' }}</th>
+                        <th style="width:100px;"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for moduleGroup in package.moduleGroups('optional')  %}
+                        {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set totalUnits = moduleGroupItem.allUnits|length %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem) %}
                         <tr>
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                             </td>
-                            <td style="text-align: right;">{{ moduleGroup.level }}</td>
+                            <td>{{ moduleGroup.level }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
-                                <td style="text-align: right;">{{ moduleGroup.credit }}</td>
+                                <td>{{ moduleGroup.credit }}</td>
                             {% endif %}
+                            <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
                             <td style="text-align: right;"><a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a></a></td>
                         </tr>
                     {% endfor %}

@@ -286,7 +286,7 @@ class PackageBehavior extends Behavior
             ## get the results from the user record
             $categoryId = $moduleGroup['category']->id;
             $moduleGroupItem = $user->record->getItem($categoryId);
-            if (RecordHelper::isComplete($moduleGroupItem, $this->owner->author)) {
+            if (RecordHelper::isComplete($moduleGroupItem, $this->owner->author, $taskbook)) {
                 if ($moduleGroup['mandatory']) {
                     $mandatory++;
                 }
