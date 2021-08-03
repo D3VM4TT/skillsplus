@@ -63,11 +63,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#tab{{ package.id }}content" class="primary-bg">
-                        <h4>Content</h4>
-                    </a>
-                </li>
-                <li>
                     <a href="#tab{{ package.id }}evidence" class="primary-bg">
                         <h4>Evidence</h4>
                     </a>
@@ -170,7 +165,9 @@
                     <tbody>
                     {% for moduleGroup in mandatoryModuleGroups %}
                     <tr>
-                        <td>{{ moduleGroup.category.title }}</td>
+                        <td>
+                            <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                        </td>
                         <td style="text-align: right;">{{ moduleGroup.level }}</td>
                         {% if package.taskbook.moduleMinimumCredits %}
                             <td style="text-align: right;">{{ moduleGroup.credit }}</td>
@@ -194,7 +191,9 @@
                     <tbody>
                     {% for moduleGroup in package.moduleGroups('optional')  %}
                         <tr>
-                            <td>{{ moduleGroup.category.title }}</td>
+                            <td>
+                                <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                            </td>
                             <td style="text-align: right;">{{ moduleGroup.level }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td style="text-align: right;">{{ moduleGroup.credit }}</td>
@@ -257,9 +256,6 @@
                         <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?payment=true&packageId={{ package.id }}">Pay Now</a>
                     </p>
                 {% endif %}
-            </div>
-            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}content">
-                {% include '_includes/taskbooks/packageContent' with {admin:false} %}
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
                 {% include '_includes/taskbooks/packageEvidence' with {admin:false} %}
