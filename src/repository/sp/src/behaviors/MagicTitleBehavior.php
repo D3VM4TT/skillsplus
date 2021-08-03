@@ -10,7 +10,7 @@ namespace lantra\sp\behaviors;
 
 use yii\base\Behavior;
 
-class ShortTitleBehavior extends Behavior
+class MagicTitleBehavior extends Behavior
 {
     public $owner;
 
@@ -19,6 +19,10 @@ class ShortTitleBehavior extends Behavior
      */
     public function magicTitle()
     {
-        return !empty($this->owner->shortTitle) ? $this->owner->shortTitle : $this->owner->title;
+        $title = !empty($this->owner->shortTitle) ? $this->owner->shortTitle : $this->owner->title;
+        if (!empty($this->owner->code)) {
+            $title .= '(' . $this->owner->code . ')';
+        }
+        return $title;
     }
 }
