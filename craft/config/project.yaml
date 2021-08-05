@@ -1501,7 +1501,6 @@ fields:
     name: 'Package Evidence'
     searchable: true
     settings:
-      allowSelfRelations: ''
       allowedKinds: null
       defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
       defaultUploadLocationSubpath: '{author.id}'
@@ -1607,7 +1606,6 @@ fields:
     name: 'Package Taskbook'
     searchable: true
     settings:
-      allowSelfRelations: ''
       limit: '1'
       localizeRelations: false
       selectionLabel: ''
@@ -3805,7 +3803,6 @@ fields:
     name: 'Taskbook Files'
     searchable: true
     settings:
-      allowSelfRelations: ''
       allowedKinds: null
       defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
       defaultUploadLocationSubpath: ''
@@ -6650,7 +6647,6 @@ superTableBlockTypes:
         settings:
           allowLimit: false
           allowMultipleSources: false
-          allowSelfRelations: ''
           branchLimit: '1'
           limit: null
           localizeRelations: false
@@ -6728,7 +6724,6 @@ superTableBlockTypes:
         settings:
           allowLimit: false
           allowMultipleSources: false
-          allowSelfRelations: ''
           branchLimit: '1'
           limit: null
           localizeRelations: false
@@ -7859,7 +7854,7 @@ system:
   edition: pro
   live: true
   name: 'Skills Plus'
-  schemaVersion: 3.4.11
+  schemaVersion: 3.4.10
   timeZone: UTC
 tagGroups:
   d507d3b5-cbbc-4860-b80c-49906ef43a9e:
