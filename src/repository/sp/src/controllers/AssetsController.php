@@ -10,6 +10,7 @@ namespace lantra\sp\controllers;
 
 use Craft;
 use craft\errors\AssetException;
+use craft\elements\Asset;
 use yii\web\HttpException;
 
 use lantra\sp\Plugin as Lantra;
@@ -20,7 +21,8 @@ class AssetsController extends BaseController
 
     public $allowAnonymous = array(
         'actionUploadEvidence',
-        'actionDeleteEvidence'
+        'actionDeleteEvidence',
+        'actionBrowseEvidence'
     );
 
     /**
@@ -90,6 +92,36 @@ class AssetsController extends BaseController
             $response['success'] = true;
         }
         $this->asJson($response);
+    }
+
+    /**
+     * Uploads evidence from front end
+     *
+     * @throws mixed
+     */
+    public function actionBrowseEvidence()
+    {
+        $this->requireLogin();
+        $user = LantraHelper::getUser();
+
+        $response = [
+            'success' => false,
+            'message' => '',
+            'assets' => []
+        ];
+
+        if (null == $evidenceFolder = LantraHelper::userEvidenceFolder($user)) {
+            $response['message'] = 'Could not access evidence folder.';
+            return $this->asJson($response);
+        }
+
+        $response['success'] = true;
+        $response['assets'] = Asset::find()
+            ->volume('evidence')
+            ->folderId($evidenceFolder->id)
+            ->all();
+
+        return $this->asJson($response);
     }
 
     /**

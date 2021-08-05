@@ -462,6 +462,7 @@ class Plugin extends BasePlugin
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
+            'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
 
             'sp/paypal/ipn'                             => 'sp/paypal/ipn',
             'sp/paypal/pay/<entryId>'                   => 'sp/paypal/pay',

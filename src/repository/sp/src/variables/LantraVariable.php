@@ -495,14 +495,16 @@ class LantraVariable
     }
 
     /**
-     * @param $accountId
+     * @param $userId
      * @return int|null
      * @throws \craft\errors\AssetConflictException
      * @throws \craft\errors\VolumeObjectExistsException
      */
-    public function evidenceFolderId($accountId)
+    public function evidenceFolderId($userId = null)
     {
-        $user = Craft::$app->users->getUserById($accountId);
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
         $folder = LantraHelper::userEvidenceFolder($user);
         return $folder && isset($folder->id) ? $folder->id : null;
     }
