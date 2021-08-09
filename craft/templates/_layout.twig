@@ -165,12 +165,17 @@
         </div>
 
         {% if currentUser %}
-            {% include '_includes/evidence/browser' %}
+            <div class="modal-wrapper" id="browser-modal">
+                <div class="modal-content">
+                    {% include '_includes/evidence/browser' %}
+                </div>
+            </div>
         {% endif %}
 
 
         <!-- Scripts
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <script src="https://kit.fontawesome.com/85bb522056.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
             window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";

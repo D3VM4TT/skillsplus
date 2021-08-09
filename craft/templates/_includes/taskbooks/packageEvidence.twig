@@ -1,3 +1,10 @@
-{#{% include '_includes/evidence' with {evidence:package.packageEvidence, accountId:package.authorId} %}#}
-
-<a href="#" data-modal="#browser-modal">Open Evidence Browser</a>
+<div style="margin-top:20px;margin-bottom:20px">
+    <h4>Evidence</h4>
+</div>
+<form method="post" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('entries/save-entry') }}
+    {{ hiddenInput('sectionId', package.section.id) }}
+    {{ hiddenInput('entryId', package.id) }}
+    {% include '_includes/evidence' with {evidence:package.packageEvidence, accountId:package.authorId, fieldName:'fields[packageEvidence][]', autoSave:true} %}
+</form>

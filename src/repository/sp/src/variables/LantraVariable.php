@@ -510,6 +510,15 @@ class LantraVariable
     }
 
     /**
+     * @param string $kind
+     * @return mixed
+     */
+    public function assetIcon($kind = '')
+    {
+        return LantraHelper::assetIcon($kind);
+    }
+
+    /**
      * @param $comment
      * @param null $userId
      * @throws \Exception

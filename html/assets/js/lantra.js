@@ -763,4 +763,10 @@ $(document).ready(function(){
         $('input[name="taskbook"]').val(1);
         $(this).closest('form').submit();
     });
+
+    $('[data-modal]').click(function(e){
+        e.preventDefault();
+        let t = $('#' + $(this).data('modal'));
+        if (t) t.addClass('modal-open');
+    })
 });

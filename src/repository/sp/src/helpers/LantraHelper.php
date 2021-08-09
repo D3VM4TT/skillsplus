@@ -376,9 +376,9 @@ class LantraHelper
      * @throws \craft\errors\AssetConflictException
      * @throws \craft\errors\VolumeObjectExistsException
      */
-    public static function userEvidenceFolder($user)
+    public static function userEvidenceFolder($user, $volume = 'evidence')
     {
-        $volume = Craft::$app->volumes->getVolumeByHandle('evidence');
+        $volume = Craft::$app->volumes->getVolumeByHandle($volume);
         $parentFolder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
         $folder = Craft::$app->assets->findFolder(['parentId' => $parentFolder->id, 'name' => $user->id]);
         if (!$folder) {
@@ -390,6 +390,36 @@ class LantraHelper
             Craft::$app->assets->createFolder($folder, true);
         }
         return $folder;
+    }
+
+    /**
+     * @param string $kind
+     * @return mixed
+     */
+    public static function assetIcon($kind = '')
+    {
+        $icons = [
+            'access' => 'fa-file',
+            'audio' => 'fa-file-audio',
+            'compressed' => 'fa-file-archive',
+            'excel' => 'fa-file-excel',
+            'html' => 'fa-file-code',
+            'illustrator'  => 'fa-file-image',
+            'image' => 'fa-file-image',
+            'javascript'  => 'fa-file-code',
+            'json' => 'fa-file-code',
+            'pdf' => 'fa-file-pdf',
+            'photoshop' => 'fa-file-image',
+            'php' => 'fa-file-code',
+            'powerpoint' => 'fa-file-powerpoint',
+            'text' => 'fa-file-alt',
+            'video' => 'fa-file-video',
+            'word' => 'fa-file-word',
+            'xml' => 'fa-file',
+            'unknown' => 'fa-file'
+        ];
+
+        return $kind && isset($icons[$kind]) ? $icons[$kind] : $icons['unknown'];
     }
 
     /**
