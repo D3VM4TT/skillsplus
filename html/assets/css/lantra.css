@@ -2655,7 +2655,6 @@ section.lantra-browser ul.assets span.controls {
 }
 
 section.lantra-browser {
-    min-width: 500px;
     background: #FFF;
     position: relative;
 }
@@ -2730,4 +2729,13 @@ section.lantra-browser.loading div.progress:after {
     border: 5px solid #fff;
     border-color: #fff transparent #fff transparent;
     animation: loading-spinner 1.2s linear infinite;
+}
+
+section.lantra-browser div.loading p {
+    text-align:center;
+    margin-top:60px;
+}
+
+section.lantra-browser div.loading a {
+    color:#FFF;
 }

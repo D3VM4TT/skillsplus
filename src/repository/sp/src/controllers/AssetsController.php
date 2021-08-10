@@ -60,6 +60,17 @@ class AssetsController extends BaseController
     {
         $this->requireAcceptsJson();
 
+        $user = LantraHelper::getUser();
+        $uploadId = Craft::$app->request->getParam('uploadId', $user->id);
+        $tempFolder = rtrim(Craft::$app->path->tempPath, '/') . '/';
+
+        ## handle upload cancels
+        if (null != $fileName = Craft::$app->request->getParam('fileName')) {
+            $tempPath = $tempFolder . $uploadId . '-' . $fileName;
+            $response = ['success' => @unlink($tempPath)];
+            return $this->asJson($response);
+        }
+
         if (empty($_FILES) || !isset($_FILES['assets-upload']) || !isset($_FILES['assets-upload']['name']) || !isset($_FILES['assets-upload']['tmp_name'])) {
             $response = [
                 'success' => false,
@@ -72,7 +83,6 @@ class AssetsController extends BaseController
         $tmpName = $_FILES['assets-upload']['tmp_name'];
         $size = $_FILES['assets-upload']['size'];
 
-        $user = LantraHelper::getUser();
 
         ## get specific folder
         if (null != $folderId = Craft::$app->request->getParam('folderId')) {
@@ -91,12 +101,9 @@ class AssetsController extends BaseController
             return $this->asJson($response);
         }
 
-        ## add some randomness to avoid conflicts
-        $uploadId = Craft::$app->request->getParam('uploadId', $user->id);
         $fieldName = Craft::$app->request->getParam('fieldName', 'evidence[]');
 
         ## upload file
-        $tempFolder = rtrim(Craft::$app->path->tempPath, '/') . '/';
         $tempPath = $tempFolder . $uploadId . '-' . $fileName;
 
         $append = is_file($tempPath);

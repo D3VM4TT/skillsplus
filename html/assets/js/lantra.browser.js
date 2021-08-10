@@ -11,8 +11,9 @@ function formatBytes(bytes,decimals) {
     $.lantraBrowser = function(element, options) {
 
         let plugin = this,
+            uploadId = Date.now(),
             $target = null,
-            $fieldName = null,
+            fieldName = null,
             $element = $(element),
             $ulEvidence = $element.find('ul.assets-evidence'),
             $inputUpload = $element.find('span.upload').find('input'),
@@ -39,6 +40,11 @@ function formatBytes(bytes,decimals) {
                 plugin.selectAsset($(this).clone());
             });
 
+            // add select click
+            $element.on('click', 'a.upload-cancel', function(e){
+                plugin.cancelUpload();
+            });
+
             // upload file
             $inputUpload.fileupload({
                 url: this.settings.urlUpload,
@@ -62,29 +68,39 @@ function formatBytes(bytes,decimals) {
                 },
                 error: function (e, data) {
                     $element.removeClass('loading');
-                    plugin.loadAssets();
-                    alert('Could not upload this file.');
                 }
+            }).on('fileuploadadd', function (e, data) {
+                $element.data('jqXHR', data.submit());
+                $element.data('fileName', data.files[0].name);
             }).on('fileuploadsubmit', function (e, data) {
                 // add a random upload ID to avoid conflicts
                 data.formData = {
-                    uploadId: Date.now(),
-                    fieldName: $fieldName
+                    uploadId: uploadId,
+                    fieldName: fieldName
                 };
             }).on('fileuploadprogressall', function (e, data) {
                 let progress = parseInt(data.loaded / data.total * 100, 10);
                 $progress.text( progress + '%');
             }).on('fileuploadsend', function (e, data) {
                 $progress.text( '0%');
-
             });
+        }
 
-            plugin.refreshAssets();
+        plugin.cancelUpload = function() {
+            let jqXHR = $element.data('jqXHR'),
+                data = {
+                uploadId: uploadId,
+                fileName: $element.data('fileName')
+            };
+            if (jqXHR) jqXHR.abort();
+            $element.removeClass('loading');
+            data[window.csrfTokenName] = window.csrfTokenValue;
+            $.post(this.settings.urlUpload, data, function(response) {}, "json");
         }
 
         plugin.setTarget = function(t) {
             $target = t;
-            $fieldName = $target.data('field-name');
+            fieldName = $target.data('field-name');
             return plugin;
         }
 
@@ -106,7 +122,7 @@ function formatBytes(bytes,decimals) {
         plugin.loadAssets = function($ul) {
             let data = {
                 volume: $ul.data('volume'),
-                fieldName: $fieldName
+                fieldName: fieldName
             };
             data[window.csrfTokenName] = window.csrfTokenValue;
             $('body').addClass('loading');
