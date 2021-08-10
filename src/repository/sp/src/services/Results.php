@@ -141,13 +141,22 @@ class Results extends Component
                     $userStartDate = $date->format(DATE_ATOM);
                     $entry->setFieldValue('resultStartDate', $userStartDate);
                 }
+                else {
+                    $entry->setFieldValue('resultStartDate', null);
+                }
                 if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
                     $userFinishDate = $date->format(DATE_ATOM);
                     $entry->setFieldValue('resultFinishDate', $userFinishDate);
                 }
+                else {
+                    $entry->setFieldValue('resultFinishDate', null);
+                }
                 if ($userExpiryDate && false != $date = $dateTime->createFromFormat($dateFormat, $userExpiryDate)) {
                     $userExpiryDate = $date->getTimestamp();
                     $entry->expiryDate = $date->format(DATE_ATOM);
+                }
+                else {
+                    $entry->expiryDate = null;
                 }
                 ## validate dates
                 if ($userStartDate && $userFinishDate && $userStartDate > $userFinishDate) {
