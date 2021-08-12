@@ -72,7 +72,9 @@ class PackageBehavior extends Behavior
                     continue;
                 }
                 $category = $moduleGroupBlock->moduleGroup->one();
-                $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
+                if (null == $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id)) {
+                    continue;
+                }
                 $modulesGroups[] = [
                     'category' => $category,
                     'mandatory' => $taskbookModuleGroupBlock->moduleGroupMandatory,
