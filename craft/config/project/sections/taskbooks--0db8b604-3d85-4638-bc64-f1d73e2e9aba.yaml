@@ -9,11 +9,11 @@ previewTargets:
         - label
         - 'Primary entry page'
       -
-        - refresh
-        - '1'
-      -
         - urlFormat
         - '{url}'
+      -
+        - refresh
+        - '1'
 propagationMethod: all
 siteSettings:
   47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
@@ -21,4 +21,4 @@ siteSettings:
     hasUrls: true
     template: null
     uriFormat: taskbooks
-type: single
+type: channel
