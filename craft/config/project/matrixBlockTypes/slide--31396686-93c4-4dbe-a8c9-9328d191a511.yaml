@@ -1,25 +1,50 @@
-field: 4a4bc5cd-115e-4309-a51a-3e5095ceea90
+field: 4a4bc5cd-115e-4309-a51a-3e5095ceea90 # Home Slider
 fieldLayouts:
   d3af77e8-adbb-403d-8ca0-78f119435628:
     tabs:
       -
-        fields:
-          89bc5035-7e58-43a7-a7e5-bcaa9de73d4a:
-            required: false
-            sortOrder: 4
-          111e6e76-917a-43f6-aa70-c659bd131921:
-            required: false
-            sortOrder: 1
-          4978c00f-2afb-4601-83f2-12952bc08242:
-            required: false
-            sortOrder: 2
-          2558296b-ca8b-4d67-b227-6310a19405da:
-            required: false
-            sortOrder: 3
+        elements:
+          -
+            fieldUid: 111e6e76-917a-43f6-aa70-c659bd131921 # Title
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 4978c00f-2afb-4601-83f2-12952bc08242 # Heading
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 2558296b-ca8b-4d67-b227-6310a19405da # Content
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 89bc5035-7e58-43a7-a7e5-bcaa9de73d4a # Image
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Content
         sortOrder: 1
 fields:
-  89bc5035-7e58-43a7-a7e5-bcaa9de73d4a:
+  89bc5035-7e58-43a7-a7e5-bcaa9de73d4a: # Image
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: slideImage
@@ -27,28 +52,33 @@ fields:
     name: Image
     searchable: true
     settings:
+      allowSelfRelations: false
+      allowUploads: true
       allowedKinds:
         - image
-      defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
       defaultUploadLocationSubpath: ''
       limit: '1'
       localizeRelations: false
+      previewMode: full
       restrictFiles: '1'
       selectionLabel: ''
+      showSiteMenu: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: true
-      singleUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
+      singleUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
       singleUploadLocationSubpath: ''
       source: null
       sources: '*'
       targetSiteId: null
       useSingleFolder: true
-      validateRelatedElements: ''
+      validateRelatedElements: false
       viewMode: list
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Assets
-  111e6e76-917a-43f6-aa70-c659bd131921:
+  111e6e76-917a-43f6-aa70-c659bd131921: # Title
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: slideTitle
@@ -62,11 +92,13 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  4978c00f-2afb-4601-83f2-12952bc08242:
+  4978c00f-2afb-4601-83f2-12952bc08242: # Heading
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: slideHeading
@@ -80,11 +112,13 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  2558296b-ca8b-4d67-b227-6310a19405da:
+  2558296b-ca8b-4d67-b227-6310a19405da: # Content
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: slideContent
@@ -96,14 +130,19 @@ fields:
       availableVolumes: '*'
       cleanupHtml: true
       columnType: text
+      configSelectionMode: choose
+      defaultTransform: ''
+      manualConfig: ''
       purifierConfig: ''
       purifyHtml: '1'
       redactorConfig: ''
       removeEmptyTags: '1'
       removeInlineStyles: '1'
       removeNbsp: '1'
+      showHtmlButtonForNonAdmins: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: false
+      uiMode: enlarged
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field

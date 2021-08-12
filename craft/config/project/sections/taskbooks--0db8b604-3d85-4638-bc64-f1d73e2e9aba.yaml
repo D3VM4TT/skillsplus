@@ -1,40 +1,24 @@
+defaultPlacement: end
 enableVersioning: true
-entryTypes:
-  aa0a1650-9855-4bd3-a399-b549a74c19be:
-    fieldLayouts:
-      e8d523cd-161e-4cf6-9d36-39e2d444cc43:
-        tabs:
-          -
-            fields:
-              5df92654-19a4-446e-a578-2b359d4bc88f:
-                required: false
-                sortOrder: 1
-              840f8f48-be42-4008-ae9e-1fa132183769:
-                required: false
-                sortOrder: 2
-              f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
-                required: false
-                sortOrder: 3
-            name: Pages
-            sortOrder: 1
-    handle: taskbooks
-    hasTitleField: false
-    name: Taskbooks
-    sortOrder: 1
-    titleFormat: '{section.name|raw}'
-    titleLabel: ''
 handle: taskbooks
 name: Taskbooks
 previewTargets:
   -
-    label: 'Primary entry page'
-    refresh: '1'
-    urlFormat: '{url}'
+    __assoc__:
+      -
+        - label
+        - 'Primary entry page'
+      -
+        - refresh
+        - '1'
+      -
+        - urlFormat
+        - '{url}'
 propagationMethod: all
 siteSettings:
-  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
     enabledByDefault: true
     hasUrls: true
-    template: ''
+    template: null
     uriFormat: taskbooks
 type: single

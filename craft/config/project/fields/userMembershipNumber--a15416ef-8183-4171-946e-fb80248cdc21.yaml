@@ -1,15 +1,19 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userMembershipNumber
 instructions: ''
 name: 'User Membership Number'
 searchable: true
 settings:
-  charLimit: ''
+  byteLimit: null
+  charLimit: null
+  code: false
   columnType: text
   initialRows: '4'
   multiline: ''
-  placeholder: ''
+  placeholder: null
+  uiMode: normal
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\PlainText

@@ -2,31 +2,62 @@ fieldLayouts:
   12aee44f-6a97-442b-913a-6c6d8eda32e6:
     tabs:
       -
-        fields:
-          5df92654-19a4-446e-a578-2b359d4bc88f:
+        elements:
+          -
+            fieldUid: 5df92654-19a4-446e-a578-2b359d4bc88f # Taskbook Page Create
+            instructions: null
+            label: null
             required: false
-            sortOrder: 1
-          840f8f48-be42-4008-ae9e-1fa132183769:
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: f4f743d8-8e66-4bb5-920a-01bd366d6ba2 # Taskbook Page Current
+            instructions: null
+            label: null
             required: false
-            sortOrder: 3
-          f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 840f8f48-be42-4008-ae9e-1fa132183769 # Taskbook Page New
+            instructions: null
+            label: null
             required: false
-            sortOrder: 2
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Taskbooks
         sortOrder: 1
       -
-        fields:
-          54ffd21d-f058-4546-b582-9f8c03da2f65:
+        elements:
+          -
+            fieldUid: 54ffd21d-f058-4546-b582-9f8c03da2f65 # Page Membership
+            instructions: null
+            label: null
             required: false
-            sortOrder: 1
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Membership
         sortOrder: 2
       -
-        fields:
-          b18328e8-46a5-482e-b83f-2ccfba7d2f20:
+        elements:
+          -
+            fieldUid: b18328e8-46a5-482e-b83f-2ccfba7d2f20 # Page Dashboard
+            instructions: null
+            label: null
             required: false
-            sortOrder: 1
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Dashboard
         sortOrder: 3
 handle: globalsHtml
 name: 'HTML Content'
+sortOrder: 1

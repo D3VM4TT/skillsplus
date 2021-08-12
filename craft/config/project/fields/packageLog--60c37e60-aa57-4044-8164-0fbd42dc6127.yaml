@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageLog
 instructions: ''
 name: 'Package Log'

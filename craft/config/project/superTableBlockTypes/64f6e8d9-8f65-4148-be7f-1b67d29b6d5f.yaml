@@ -1,31 +1,56 @@
-field: df065216-2242-4a91-8b81-fa97ca27d449
+field: df065216-2242-4a91-8b81-fa97ca27d449 # Package Assessment
 fieldLayouts:
   4981846d-1413-471c-89c7-fa2229aabff6:
     tabs:
       -
-        fields:
-          3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+        elements:
+          -
+            fieldUid: 32c6ef2b-26dd-41c1-818c-411a8164e1f0 # Module Group
+            instructions: null
+            label: null
             required: '0'
-            sortOrder: '3'
-          22c29753-9e14-4e97-9291-ca025bc83380:
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 22c29753-9e14-4e97-9291-ca025bc83380 # Passed
+            instructions: null
+            label: null
             required: '0'
-            sortOrder: '2'
-          32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 3ffef8f2-5599-4a8c-b8e7-ce6b7113d648 # Comment
+            instructions: null
+            label: null
             required: '0'
-            sortOrder: '1'
-          feebdaae-888d-4c75-b0ed-d99114744179:
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: feebdaae-888d-4c75-b0ed-d99114744179 # Date
+            instructions: null
+            label: null
             required: '0'
-            sortOrder: '4'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Content
-        sortOrder: '1'
+        sortOrder: 1
 fields:
-  3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+  3ffef8f2-5599-4a8c-b8e7-ce6b7113d648: # Comment
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: assessmentComment
     instructions: ''
     name: Comment
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -33,55 +58,66 @@ fields:
       columnType: null
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  22c29753-9e14-4e97-9291-ca025bc83380:
+  22c29753-9e14-4e97-9291-ca025bc83380: # Passed
+    columnSuffix: null
     contentColumnType: boolean
     fieldGroup: null
     handle: assessmentPassed
     instructions: ''
     name: Passed
-    searchable: '1'
+    searchable: true
     settings:
-      default: ''
+      default: false
+      offLabel: null
+      onLabel: null
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+  32c6ef2b-26dd-41c1-818c-411a8164e1f0: # Module Group
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
-    handle: assessmentTaskbookGroup
+    handle: assessmentModuleGroup
     instructions: ''
-    name: 'Taskbook Group'
-    searchable: '1'
+    name: 'Module Group'
+    searchable: true
     settings:
       allowLimit: false
       allowMultipleSources: false
+      allowSelfRelations: false
       branchLimit: ''
       limit: null
       localizeRelations: false
       selectionLabel: ''
-      source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+      showSiteMenu: true
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
       sources: '*'
       targetSiteId: null
-      validateRelatedElements: ''
+      validateRelatedElements: false
       viewMode: null
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Categories
-  feebdaae-888d-4c75-b0ed-d99114744179:
+  feebdaae-888d-4c75-b0ed-d99114744179: # Date
+    columnSuffix: null
     contentColumnType: datetime
     fieldGroup: null
     handle: assessmentDate
     instructions: ''
     name: Date
-    searchable: '1'
+    searchable: true
     settings:
+      max: null
+      min: null
       minuteIncrement: '30'
       showDate: true
       showTime: false
+      showTimeZone: false
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date

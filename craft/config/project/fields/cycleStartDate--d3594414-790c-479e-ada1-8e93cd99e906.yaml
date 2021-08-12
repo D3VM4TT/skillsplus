@@ -1,13 +1,17 @@
+columnSuffix: null
 contentColumnType: datetime
-fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: cycleStartDate
 instructions: ''
 name: 'Cycle Start Date'
 searchable: true
 settings:
+  max: null
+  min: null
   minuteIncrement: '30'
   showDate: true
   showTime: false
+  showTimeZone: false
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Date

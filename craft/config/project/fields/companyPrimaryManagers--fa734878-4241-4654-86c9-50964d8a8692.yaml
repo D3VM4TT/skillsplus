@@ -1,15 +1,22 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
 handle: companyPrimaryManagers
 instructions: ''
 name: 'Company Primary Managers'
 searchable: true
 settings:
+  allowSelfRelations: false
   limit: null
   localizeRelations: false
   selectionLabel: ''
+  showSiteMenu: true
+  source: null
   sources:
-    - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6'
+    - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6' # Company Managers
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Users

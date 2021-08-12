@@ -1,15 +1,22 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userCompany
 instructions: ''
 name: 'User Company'
 searchable: true
 settings:
+  allowSelfRelations: false
   limit: '1'
   localizeRelations: false
   selectionLabel: ''
+  showSiteMenu: true
+  source: null
   sources:
-    - 'section:86faf121-d218-4348-8ab8-de457b46aa63'
+    - 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Entries

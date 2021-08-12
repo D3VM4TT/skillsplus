@@ -1,0 +1,270 @@
+fieldLayouts:
+  89a1da50-2312-48cf-8d06-5c4168438cb9:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: 892d5048-f63d-468f-a926-c89daebf07f9 # Short Title
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 57f129b9-c872-49ad-9f42-c2b3c1f84753 # Code
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4 # Module Group
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 646454e2-66f9-4f03-bac7-b94a89aba17a # Module Expiry Days
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 3bfea235-c57e-4998-b079-8c15a1ebbf0e # Hide Add Achievement?
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 6b856e7c-77f4-4646-9dc9-81cd812d3919 # Achievement Label
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 2347e1b1-c7d8-4870-9904-36bd73538d1a # Achievement Target Hours
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831 # Unit Groups
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Module
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: f08f684f-1af1-417b-94f2-5df2f3ac7da6 # Job Roles
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Job Roles'
+        sortOrder: 2
+      -
+        elements:
+          -
+            fieldUid: d3594414-790c-479e-ada1-8e93cd99e906 # Cycle Start Date
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: ab5599bf-7e9b-4581-ab6d-6862127dd932 # Cycle User Start Date
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 1fb0d5d7-af10-4668-8a88-e918e5134c14 # Cycle Duration Type
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 5a41c0e5-8a79-4db5-89f2-b87a6104ffca # Cycle Duration Length
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 4505e42f-b7ae-43dd-ae25-694fc4e9b816 # Cycle Grace
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 30a277bf-ed0a-48fb-9a03-3e7d5a79b357 # Target Hours
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 4967ee7c-a86e-49fd-89f6-a281f294c8a4 # Target Points
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 2f75994a-9452-4602-857a-c5f8eb169bf2 # Target Type
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'CPD Cycle'
+        sortOrder: 3
+      -
+        elements:
+          -
+            fieldUid: 5afbaea1-bb0e-4189-bd27-3b00a46c9db3 # Cycle Notify Start
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 078e3016-c25c-4a8e-a445-404a441c465c # Cycle Notify End
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: d2a928eb-2546-4416-8531-6a94c7a1f8a6 # Cycle Notify Complete
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 9b4c8ae8-e860-435e-b436-2befb8d35d88 # Cycle Notify Reminder
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 68c27db1-5957-4d1c-896f-d45fe1c2a062 # Cycle Notify Reminder Frequency
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Notifications
+        sortOrder: 4
+      -
+        elements:
+          -
+            fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Column Layout'
+        sortOrder: 5
+handle: cpd
+hasTitleField: true
+name: CPD
+section: e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a # Modules
+sortOrder: 2
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

@@ -1,0 +1,127 @@
+fieldLayouts:
+  d12a8c7b-ca2c-4e5a-a2ea-56c7d843b0d7:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: 75ec7211-a9c5-4390-963a-9d63dfd0dbd4 # Company Parent
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: fa734878-4241-4654-86c9-50964d8a8692 # Company Primary Managers
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 8a8d1ecb-3c6c-4ade-a2e7-8e6996e7fe86 # Company Secondary Managers
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: a8d84419-f7b9-4d64-b7cb-ce827c7ca810 # Company Remaining Licences
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Company
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: dc88c84b-17f2-4b8b-8cc6-124b5115c9cc # Legacy ID
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 3d52518d-7b85-4ef8-af1c-fb8a813e0cce # Legacy Parent ID
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 440ee4d2-9c90-47a0-a2e7-9ec4d1a97683 # Data Imported
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Legacy
+        sortOrder: 2
+      -
+        elements:
+          -
+            fieldUid: 3629d8e1-89dd-47fd-939f-c81889682a13 # Company Label
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 069f2a42-da65-478a-852e-18a44408ab93 # Data Clean Company Parent
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Hierarchy
+        sortOrder: 3
+handle: company
+hasTitleField: true
+name: Company
+section: 86faf121-d218-4348-8ab8-de457b46aa63 # Companies
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

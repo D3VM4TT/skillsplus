@@ -1,17 +1,20 @@
+columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: moduleMinimumOptional
 instructions: ''
-name: 'Taskbook Module Minimum Optional'
+name: 'Module Group Minimum Optional'
 searchable: true
 settings:
   decimals: 0
   defaultValue: '0'
   max: null
   min: '0'
-  prefix: ''
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
   size: null
-  suffix: 'optional modules'
+  suffix: 'optional module groups'
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

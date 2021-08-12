@@ -1,0 +1,47 @@
+fieldLayouts:
+  c4b22db3-609f-427d-b427-8b75e7bc7161:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: 31c31961-f4f1-4f09-9c8e-cbbd46d62e97 # Workflow
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Package Workflow'
+        sortOrder: 1
+handle: workflow
+hasTitleField: true
+name: Workflow
+section: c0a51ffd-8054-40a9-824f-32657b83f14c # Taskbook Workflows
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

@@ -1,11 +1,14 @@
+columnSuffix: null
 contentColumnType: boolean
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportAllTeams
 instructions: ''
 name: 'Report All Teams'
 searchable: true
 settings:
-  default: ''
+  default: false
+  offLabel: null
+  onLabel: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch
