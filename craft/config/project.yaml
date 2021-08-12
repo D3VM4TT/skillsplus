@@ -5467,10 +5467,10 @@ plugins:
     licenseKey: null
     schemaVersion: 2.2.1
     settings: null
-  wordsmith:
+  typogrify:
     edition: standard
     enabled: true
-    schemaVersion: 0.0.0.0
+    schemaVersion: 1.0.0
 sections:
   090b3c24-a9ac-4935-a919-c4fc8a3099b0:
     enableVersioning: false
