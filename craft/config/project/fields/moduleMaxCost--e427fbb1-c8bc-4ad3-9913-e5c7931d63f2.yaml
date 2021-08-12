@@ -1,17 +1,20 @@
+columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: moduleMaxCost
 instructions: ''
-name: 'Taskbook Module Max Cost'
+name: 'Module Group Max Cost'
 searchable: true
 settings:
   decimals: 0
   defaultValue: null
   max: null
   min: '0'
-  prefix: ''
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
   size: null
-  suffix: ''
+  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

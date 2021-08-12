@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
+fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
 handle: pageBody
 instructions: ''
 name: Body
@@ -12,6 +13,11 @@ settings:
   purifierConfig: ''
   purifyHtml: '1'
   redactorConfig: Standard.json
+  removeEmptyTags: true
+  removeInlineStyles: true
+  removeNbsp: true
+  showUnpermittedFiles: false
+  showUnpermittedVolumes: true
 translationKeyFormat: null
 translationMethod: none
 type: craft\redactor\Field

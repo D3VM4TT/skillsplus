@@ -1,0 +1,20 @@
+columnSuffix: null
+contentColumnType: integer(10)
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: moduleMinimumCredits
+instructions: 'This is the total minimum including mandatory credits.  Leave blank to disable minimum credits.'
+name: 'Module Group Minimum Credits'
+searchable: true
+settings:
+  decimals: 0
+  defaultValue: '0'
+  max: null
+  min: '0'
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
+  size: null
+  suffix: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Number

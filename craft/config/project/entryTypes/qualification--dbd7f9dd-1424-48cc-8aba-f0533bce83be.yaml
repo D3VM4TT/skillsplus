@@ -4,53 +4,117 @@ fieldLayouts:
       -
         elements:
           -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
             instructions: null
-            label: Title
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
             type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
           -
-            fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4
-            required: true
+            fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4 # Module Group
+            instructions: null
+            label: null
+            required: '1'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00
-            required: false
+            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: d99d90fa-6251-4b71-9340-542bc9c3feb9
-            required: false
+            fieldUid: d99d90fa-6251-4b71-9340-542bc9c3feb9 # Module Notes
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 646454e2-66f9-4f03-bac7-b94a89aba17a
-            required: false
+            fieldUid: 646454e2-66f9-4f03-bac7-b94a89aba17a # Module Expiry Days
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 3bfea235-c57e-4998-b079-8c15a1ebbf0e
-            required: false
+            fieldUid: 3bfea235-c57e-4998-b079-8c15a1ebbf0e # Hide Add Achievement?
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 6b856e7c-77f4-4646-9dc9-81cd812d3919
-            required: false
+            fieldUid: 6b856e7c-77f4-4646-9dc9-81cd812d3919 # Achievement Label
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831
-            required: false
+            fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831 # Unit Groups
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Module
         sortOrder: 1
       -
         elements:
           -
-            fieldUid: f08f684f-1af1-417b-94f2-5df2f3ac7da6
-            required: false
+            fieldUid: f08f684f-1af1-417b-94f2-5df2f3ac7da6 # Job Roles
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: 'Job Roles'
         sortOrder: 2
       -
         elements:
           -
-            fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
-            required: false
+            fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: 'Column Layout'
         sortOrder: 3
 handle: qualification
@@ -58,4 +122,6 @@ hasTitleField: true
 name: Qualification
 section: e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a # Modules
 sortOrder: 1
-titleFormat: ''
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

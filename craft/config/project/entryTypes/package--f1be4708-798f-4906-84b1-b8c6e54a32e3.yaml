@@ -4,77 +4,161 @@ fieldLayouts:
       -
         elements:
           -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
             instructions: null
-            label: Title
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
             type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
           -
-            fieldUid: 006c28e4-4119-476d-bf1f-82019f947b02
-            required: false
+            fieldUid: 006c28e4-4119-476d-bf1f-82019f947b02 # Package Level
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 164fe93f-d610-4819-8ca4-77cc4a88112e
-            required: true
+            fieldUid: 164fe93f-d610-4819-8ca4-77cc4a88112e # Package Module Group
+            instructions: null
+            label: null
+            required: '1'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 33d71c63-d5f5-42bb-a731-3a8df1f1759f
-            required: false
+            fieldUid: 33d71c63-d5f5-42bb-a731-3a8df1f1759f # Package Revision
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 5e4e967d-f646-4378-aedf-9f6ef84c1e28
-            required: false
+            fieldUid: 5e4e967d-f646-4378-aedf-9f6ef84c1e28 # Package Job Role
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: edcdcb64-8b0b-4f31-ab57-106c9e252317
-            required: false
+            fieldUid: edcdcb64-8b0b-4f31-ab57-106c9e252317 # Package Module Groups
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 534ba9ca-50bd-4b63-a843-b3358f1bc352
-            required: false
+            fieldUid: 534ba9ca-50bd-4b63-a843-b3358f1bc352 # Package Status
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Modules
         sortOrder: 1
       -
         elements:
           -
-            fieldUid: 60c37e60-aa57-4044-8164-0fbd42dc6127
-            required: false
+            fieldUid: 60c37e60-aa57-4044-8164-0fbd42dc6127 # Package Log
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Log
         sortOrder: 2
       -
         elements:
           -
-            fieldUid: df065216-2242-4a91-8b81-fa97ca27d449
-            required: false
+            fieldUid: df065216-2242-4a91-8b81-fa97ca27d449 # Package Assessment
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Assessment
         sortOrder: 3
       -
         elements:
           -
-            fieldUid: 3455bcb3-f959-4b7a-a64d-b0138268b594
-            required: false
+            fieldUid: 3455bcb3-f959-4b7a-a64d-b0138268b594 # Package Workflow
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 7f722e30-ba1b-49e0-a5f4-e7070b600311
-            required: false
+            fieldUid: 7f722e30-ba1b-49e0-a5f4-e7070b600311 # Package Reviews
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Reviews
         sortOrder: 4
       -
         elements:
           -
-            fieldUid: 1e03a0c1-334b-4517-9560-d95c13db8a99
-            required: false
+            fieldUid: 1e03a0c1-334b-4517-9560-d95c13db8a99 # Package Cost
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: a9271765-2484-428e-8c34-62e30184b582
-            required: false
+            fieldUid: a9271765-2484-428e-8c34-62e30184b582 # Package Paid
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
           -
-            fieldUid: 7f1c4f49-327b-48eb-b631-5950532840c2
-            required: false
+            fieldUid: 7f1c4f49-327b-48eb-b631-5950532840c2 # User Payments
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
             type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Payments
         sortOrder: 5
 handle: package
@@ -82,4 +166,6 @@ hasTitleField: true
 name: Package
 section: 0c63d248-a060-4ecd-b881-00607c9f4024 # Taskbook Packages
 sortOrder: 1
-titleFormat: ''
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

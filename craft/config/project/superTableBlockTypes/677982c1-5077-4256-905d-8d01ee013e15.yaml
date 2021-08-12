@@ -1,34 +1,34 @@
-field: 7f722e30-ba1b-49e0-a5f4-e7070b600311
+field: 7f722e30-ba1b-49e0-a5f4-e7070b600311 # Package Reviews
 fieldLayouts:
   781d536b-9543-4153-8654-47ec0202f97c:
     tabs:
       -
         fields:
-          92d2e862-77f6-43f3-aa6e-cd75c38d424d:
+          92d2e862-77f6-43f3-aa6e-cd75c38d424d: # Step Name
             required: '0'
             sortOrder: '2'
-          7497821d-a351-4210-97ac-024153a093af:
+          7497821d-a351-4210-97ac-024153a093af: # Review Passed
             required: '0'
             sortOrder: '6'
-          13071690-5bed-43f9-8afb-8c2c799eac7e:
+          13071690-5bed-43f9-8afb-8c2c799eac7e: # Review User
             required: '0'
             sortOrder: '4'
-          e97c33b5-d88c-43c2-a829-e12ba86c75ac:
+          e97c33b5-d88c-43c2-a829-e12ba86c75ac: # Step Type
             required: '0'
             sortOrder: '3'
-          e98e5085-4cf9-46ca-818c-b71e74ed4eaa:
+          e98e5085-4cf9-46ca-818c-b71e74ed4eaa: # Review Comment
             required: '0'
             sortOrder: '7'
-          e927b48c-3108-4edd-a018-67e44c2989d5:
+          e927b48c-3108-4edd-a018-67e44c2989d5: # Review Date
             required: '0'
             sortOrder: '5'
-          eed6767c-11d8-46d2-b3d5-47ef288cd76b:
+          eed6767c-11d8-46d2-b3d5-47ef288cd76b: # Step ID
             required: '0'
             sortOrder: '1'
         name: Content
         sortOrder: '1'
 fields:
-  92d2e862-77f6-43f3-aa6e-cd75c38d424d:
+  92d2e862-77f6-43f3-aa6e-cd75c38d424d: # Step Name
     contentColumnType: text
     fieldGroup: null
     handle: reviewStepName
@@ -48,7 +48,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: mmikkel\incognitofield\fields\IncognitoFieldType
-  7497821d-a351-4210-97ac-024153a093af:
+  7497821d-a351-4210-97ac-024153a093af: # Review Passed
     contentColumnType: boolean
     fieldGroup: null
     handle: reviewPassed
@@ -60,7 +60,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  13071690-5bed-43f9-8afb-8c2c799eac7e:
+  13071690-5bed-43f9-8afb-8c2c799eac7e: # Review User
     contentColumnType: string
     fieldGroup: null
     handle: reviewUser
@@ -83,7 +83,7 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Users
-  e97c33b5-d88c-43c2-a829-e12ba86c75ac:
+  e97c33b5-d88c-43c2-a829-e12ba86c75ac: # Step Type
     contentColumnType: string
     fieldGroup: null
     handle: reviewStepType
@@ -108,7 +108,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  e98e5085-4cf9-46ca-818c-b71e74ed4eaa:
+  e98e5085-4cf9-46ca-818c-b71e74ed4eaa: # Review Comment
     contentColumnType: text
     fieldGroup: null
     handle: reviewComment
@@ -126,7 +126,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  e927b48c-3108-4edd-a018-67e44c2989d5:
+  e927b48c-3108-4edd-a018-67e44c2989d5: # Review Date
     contentColumnType: datetime
     fieldGroup: null
     handle: reviewDate
@@ -140,7 +140,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date
-  eed6767c-11d8-46d2-b3d5-47ef288cd76b:
+  eed6767c-11d8-46d2-b3d5-47ef288cd76b: # Step ID
     contentColumnType: text
     fieldGroup: null
     handle: reviewStepId

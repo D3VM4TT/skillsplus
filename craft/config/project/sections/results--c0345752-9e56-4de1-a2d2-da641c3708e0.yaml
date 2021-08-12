@@ -1,10 +1,10 @@
+defaultPlacement: end
 enableVersioning: true
 handle: results
 name: Results
-previewTargets: null
 propagationMethod: all
 siteSettings:
-  47b102e1-4aed-4206-8420-dfd6e6684f7c:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
     enabledByDefault: true
     hasUrls: false
     template: null

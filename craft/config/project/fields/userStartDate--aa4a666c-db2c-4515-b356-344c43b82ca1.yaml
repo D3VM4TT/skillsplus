@@ -1,13 +1,17 @@
+columnSuffix: null
 contentColumnType: datetime
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userStartDate
 instructions: ''
 name: 'User Start Date'
 searchable: true
 settings:
+  max: null
+  min: null
   minuteIncrement: '30'
   showDate: 1
   showTime: 0
+  showTimeZone: false
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Date

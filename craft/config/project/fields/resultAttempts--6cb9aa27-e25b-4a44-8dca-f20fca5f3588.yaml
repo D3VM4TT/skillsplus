@@ -1,15 +1,22 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultAttempts
 instructions: ''
 name: 'Result Attempts'
 searchable: true
 settings:
+  allowSelfRelations: false
   limit: ''
   localizeRelations: false
   selectionLabel: ''
+  showSiteMenu: true
+  source: null
   sources:
     - 'section:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Entries

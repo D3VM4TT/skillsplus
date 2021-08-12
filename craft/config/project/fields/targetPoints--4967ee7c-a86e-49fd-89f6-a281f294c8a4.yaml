@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: targetPoints
 instructions: ''
 name: 'Target Points'
@@ -9,9 +10,11 @@ settings:
   defaultValue: null
   max: null
   min: '0'
-  prefix: ''
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
   size: null
-  suffix: ''
+  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

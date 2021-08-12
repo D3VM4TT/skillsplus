@@ -1,18 +1,21 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultCompany
 instructions: ''
 name: 'Result Company'
 searchable: true
 settings:
+  allowSelfRelations: false
   limit: '1'
   localizeRelations: false
   selectionLabel: ''
+  showSiteMenu: true
   source: null
   sources:
     - 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
   targetSiteId: null
-  validateRelatedElements: ''
+  validateRelatedElements: false
   viewMode: null
 translationKeyFormat: null
 translationMethod: site

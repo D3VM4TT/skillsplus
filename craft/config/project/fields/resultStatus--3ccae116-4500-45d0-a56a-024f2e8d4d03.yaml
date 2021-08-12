@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultStatus
 instructions: ''
 name: 'Result Status'

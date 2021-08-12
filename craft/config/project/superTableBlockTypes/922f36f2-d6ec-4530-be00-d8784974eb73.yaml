@@ -1,37 +1,37 @@
-field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
+field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
 fieldLayouts:
   bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
     tabs:
       -
         fields:
-          6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
+          6cb593e0-eb38-45a0-bd9b-22a23586dfbe: # Field Custom Type
             required: '0'
             sortOrder: '5'
-          7ed267ff-a262-4e68-81b8-be3bcaa5c178:
+          7ed267ff-a262-4e68-81b8-be3bcaa5c178: # Field Required
             required: '0'
             sortOrder: '7'
-          8fec0242-3542-431e-8a9a-d2d86b3e3b06:
+          8fec0242-3542-431e-8a9a-d2d86b3e3b06: # Field Type
             required: '0'
             sortOrder: '1'
-          31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
+          31a1729c-6625-4e9e-9ffe-3fcce0da9bbd: # Field Manager Only
             required: '0'
             sortOrder: '3'
-          19794a8d-aa57-4cea-9297-7c4ccfb2d561:
+          19794a8d-aa57-4cea-9297-7c4ccfb2d561: # Field Label
             required: '0'
             sortOrder: '2'
-          74329152-64bf-43a9-95b3-0458edd36e4f:
+          74329152-64bf-43a9-95b3-0458edd36e4f: # Field Custom Key
             required: '0'
             sortOrder: '4'
-          a37728d1-3a88-46ca-b9d5-ec79b66ba635:
+          a37728d1-3a88-46ca-b9d5-ec79b66ba635: # Field Custom Options
             required: '0'
             sortOrder: '6'
-          b46f9aa2-ceed-4dee-ac99-835a93962438:
+          b46f9aa2-ceed-4dee-ac99-835a93962438: # Field Display
             required: '0'
             sortOrder: '8'
         name: Content
         sortOrder: '1'
 fields:
-  6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
+  6cb593e0-eb38-45a0-bd9b-22a23586dfbe: # Field Custom Type
     contentColumnType: string
     fieldGroup: null
     handle: fieldCustomType
@@ -52,7 +52,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  7ed267ff-a262-4e68-81b8-be3bcaa5c178:
+  7ed267ff-a262-4e68-81b8-be3bcaa5c178: # Field Required
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldRequired
@@ -64,7 +64,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  8fec0242-3542-431e-8a9a-d2d86b3e3b06:
+  8fec0242-3542-431e-8a9a-d2d86b3e3b06: # Field Type
     contentColumnType: string
     fieldGroup: null
     handle: fieldType
@@ -133,7 +133,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
+  31a1729c-6625-4e9e-9ffe-3fcce0da9bbd: # Field Manager Only
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldManagerOnly
@@ -145,7 +145,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  19794a8d-aa57-4cea-9297-7c4ccfb2d561:
+  19794a8d-aa57-4cea-9297-7c4ccfb2d561: # Field Label
     contentColumnType: text
     fieldGroup: null
     handle: fieldLabel
@@ -163,7 +163,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  74329152-64bf-43a9-95b3-0458edd36e4f:
+  74329152-64bf-43a9-95b3-0458edd36e4f: # Field Custom Key
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomKey
@@ -181,7 +181,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  a37728d1-3a88-46ca-b9d5-ec79b66ba635:
+  a37728d1-3a88-46ca-b9d5-ec79b66ba635: # Field Custom Options
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomOptions
@@ -199,7 +199,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  b46f9aa2-ceed-4dee-ac99-835a93962438:
+  b46f9aa2-ceed-4dee-ac99-835a93962438: # Field Display
     contentColumnType: string
     fieldGroup: null
     handle: fieldDisplay

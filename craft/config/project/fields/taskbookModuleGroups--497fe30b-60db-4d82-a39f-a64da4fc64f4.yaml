@@ -1,0 +1,41 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: taskbookModuleGroups
+instructions: ''
+name: 'Taskbook Module Groups'
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - 1648b942-a6f7-47b2-a284-5a971121b556 # Module Group
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 651fac2b-5f39-4c8f-96b0-4c75c3267102 # Mandatory
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - af49d354-08d5-422e-9f65-56c76ff7d485 # Credit
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_taskbookmodulegroups}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: ''
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

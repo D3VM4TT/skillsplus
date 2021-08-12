@@ -1,14 +1,24 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportRoles
 instructions: ''
 name: 'Report Roles'
 searchable: true
 settings:
+  allowLimit: false
+  allowMultipleSources: false
+  allowSelfRelations: false
   branchLimit: ''
+  limit: null
   localizeRelations: false
   selectionLabel: ''
-  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
+  showSiteMenu: true
+  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Categories

@@ -1,25 +1,25 @@
-field: df065216-2242-4a91-8b81-fa97ca27d449
+field: df065216-2242-4a91-8b81-fa97ca27d449 # Package Assessment
 fieldLayouts:
   4981846d-1413-471c-89c7-fa2229aabff6:
     tabs:
       -
         fields:
-          3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+          3ffef8f2-5599-4a8c-b8e7-ce6b7113d648: # Comment
             required: '0'
             sortOrder: '3'
-          22c29753-9e14-4e97-9291-ca025bc83380:
+          22c29753-9e14-4e97-9291-ca025bc83380: # Passed
             required: '0'
             sortOrder: '2'
-          32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+          32c6ef2b-26dd-41c1-818c-411a8164e1f0: # Module Group
             required: '0'
             sortOrder: '1'
-          feebdaae-888d-4c75-b0ed-d99114744179:
+          feebdaae-888d-4c75-b0ed-d99114744179: # Date
             required: '0'
             sortOrder: '4'
         name: Content
         sortOrder: '1'
 fields:
-  3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
+  3ffef8f2-5599-4a8c-b8e7-ce6b7113d648: # Comment
     contentColumnType: text
     fieldGroup: null
     handle: assessmentComment
@@ -37,7 +37,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  22c29753-9e14-4e97-9291-ca025bc83380:
+  22c29753-9e14-4e97-9291-ca025bc83380: # Passed
     contentColumnType: boolean
     fieldGroup: null
     handle: assessmentPassed
@@ -49,12 +49,12 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  32c6ef2b-26dd-41c1-818c-411a8164e1f0:
+  32c6ef2b-26dd-41c1-818c-411a8164e1f0: # Module Group
     contentColumnType: string
     fieldGroup: null
-    handle: assessmentTaskbookGroup
+    handle: assessmentModuleGroup
     instructions: ''
-    name: 'Taskbook Group'
+    name: 'Module Group'
     searchable: '1'
     settings:
       allowLimit: false
@@ -63,7 +63,7 @@ fields:
       limit: null
       localizeRelations: false
       selectionLabel: ''
-      source: 'group:a8731481-f6d5-4f6e-9d29-0bd442774b61'
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
       sources: '*'
       targetSiteId: null
       validateRelatedElements: ''
@@ -71,7 +71,7 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Categories
-  feebdaae-888d-4c75-b0ed-d99114744179:
+  feebdaae-888d-4c75-b0ed-d99114744179: # Date
     contentColumnType: datetime
     fieldGroup: null
     handle: assessmentDate

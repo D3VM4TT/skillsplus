@@ -1,11 +1,14 @@
+columnSuffix: null
 contentColumnType: boolean
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: resultDisplayValue
 instructions: ''
 name: 'Result Display Value'
 searchable: true
 settings:
-  default: ''
+  default: false
+  offLabel: null
+  onLabel: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

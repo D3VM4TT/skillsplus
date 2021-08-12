@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportResultStandardType
 instructions: ''
 name: 'Report Results Standard Type'

@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageCost
 instructions: ''
 name: 'Package Cost'
@@ -9,9 +10,11 @@ settings:
   defaultValue: null
   max: null
   min: '0'
-  prefix: ''
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
   size: null
-  suffix: ''
+  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number
