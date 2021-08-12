@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: unitPoints
 instructions: ''
 name: 'Unit Points'
@@ -10,11 +9,9 @@ settings:
   defaultValue: null
   max: null
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
+  prefix: ''
   size: null
-  suffix: null
+  suffix: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

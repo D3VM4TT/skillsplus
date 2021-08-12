@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
+fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2
 handle: testMaxAttempts
 instructions: ''
 name: 'Max Attempts'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
-  max: null
+  decimals: '0'
+  max: ''
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

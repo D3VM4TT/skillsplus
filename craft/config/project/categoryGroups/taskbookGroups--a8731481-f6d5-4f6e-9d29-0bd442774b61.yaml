@@ -26,13 +26,6 @@ fieldLayouts:
             sortOrder: 5
         name: Settings
         sortOrder: 1
-      -
-        fields:
-          fe956922-ff3a-4931-a5fd-5b85605d9c20:
-            required: false
-            sortOrder: 1
-        name: 'Taskbook Group Modules'
-        sortOrder: 2
 handle: taskbookGroups
 name: 'Taskbook Groups'
 siteSettings:

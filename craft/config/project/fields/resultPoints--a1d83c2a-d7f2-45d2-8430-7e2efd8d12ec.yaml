@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
 handle: resultPoints
 instructions: ''
 name: 'Result Points'
@@ -10,11 +9,9 @@ settings:
   defaultValue: null
   max: null
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
+  prefix: ''
   size: null
-  suffix: null
+  suffix: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

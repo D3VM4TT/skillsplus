@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
 handle: companyRemainingLicences
 instructions: ''
 name: 'Company Remaining Licences'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
-  max: null
+  decimals: '0'
+  max: ''
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

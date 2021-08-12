@@ -1,17 +1,13 @@
-columnSuffix: null
 contentColumnType: datetime
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
 handle: resultDateRequired
 instructions: ''
 name: 'Result Date Required'
 searchable: true
 settings:
-  max: null
-  min: null
   minuteIncrement: '30'
   showDate: true
   showTime: false
-  showTimeZone: false
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Date

@@ -1,14 +1,11 @@
-columnSuffix: null
 contentColumnType: boolean
-fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
 handle: cycleNotifyComplete
 instructions: ''
 name: 'Cycle Notify Complete'
 searchable: true
 settings:
-  default: false
-  offLabel: null
-  onLabel: null
+  default: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

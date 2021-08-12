@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8 # Legacy
+fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8
 handle: legacyParentId
 instructions: ''
 name: 'Legacy Parent ID'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
-  max: null
+  decimals: '0'
+  max: ''
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

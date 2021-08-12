@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: moduleCompletedValue
 instructions: 'Enter the total value of the points needed to complete this module.'
 name: 'Module Completed Value'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
-  max: null
+  decimals: '0'
+  max: ''
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

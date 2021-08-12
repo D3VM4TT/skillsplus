@@ -1,14 +1,11 @@
-columnSuffix: null
 contentColumnType: boolean
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
 handle: userReadOnly
 instructions: ''
 name: 'User Read Only'
 searchable: true
 settings:
-  default: false
-  offLabel: null
-  onLabel: null
+  default: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

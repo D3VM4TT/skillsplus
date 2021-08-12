@@ -1,21 +1,18 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
 handle: packageWorkflow
 instructions: ''
 name: 'Package Workflow'
 searchable: true
 settings:
-  allowSelfRelations: false
   limit: '1'
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
   source: null
   sources:
     - 'section:c0a51ffd-8054-40a9-824f-32657b83f14c' # Taskbook Workflows
   targetSiteId: null
-  validateRelatedElements: false
+  validateRelatedElements: ''
   viewMode: null
 translationKeyFormat: null
 translationMethod: site

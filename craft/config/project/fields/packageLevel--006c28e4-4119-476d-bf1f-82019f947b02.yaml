@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: smallint(2)
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
 handle: packageLevel
 instructions: 'Enter level 1-10 '
 name: 'Package Level'
@@ -10,11 +9,9 @@ settings:
   defaultValue: '1'
   max: '10'
   min: '1'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
+  prefix: ''
   size: '1'
-  suffix: null
+  suffix: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

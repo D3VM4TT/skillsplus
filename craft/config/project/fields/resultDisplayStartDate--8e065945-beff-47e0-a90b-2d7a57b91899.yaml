@@ -1,14 +1,11 @@
-columnSuffix: null
 contentColumnType: boolean
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: resultDisplayStartDate
 instructions: ''
 name: 'Result Display Start Date'
 searchable: true
 settings:
-  default: false
-  offLabel: null
-  onLabel: null
+  default: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

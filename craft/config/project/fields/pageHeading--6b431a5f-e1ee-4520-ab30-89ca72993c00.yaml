@@ -1,19 +1,15 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
+fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
 handle: pageHeading
 instructions: ''
 name: Heading
 searchable: true
 settings:
-  byteLimit: null
-  charLimit: null
-  code: false
+  charLimit: ''
   columnType: text
   initialRows: '4'
   multiline: ''
-  placeholder: null
-  uiMode: normal
+  placeholder: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\PlainText

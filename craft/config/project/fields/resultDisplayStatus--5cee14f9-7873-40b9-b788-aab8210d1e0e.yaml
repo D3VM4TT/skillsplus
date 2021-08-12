@@ -1,14 +1,11 @@
-columnSuffix: null
 contentColumnType: boolean
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: resultDisplayStatus
 instructions: ''
 name: 'Result Display Status'
 searchable: true
 settings:
-  default: true
-  offLabel: null
-  onLabel: null
+  default: '1'
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

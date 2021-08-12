@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 3f934bd7-b755-4330-88af-dd41d6ea990b # Theme
+fieldGroup: 3f934bd7-b755-4330-88af-dd41d6ea990b
 handle: homeSlider
 instructions: ''
 name: 'Home Slider'
@@ -9,7 +8,6 @@ settings:
   contentTable: '{{%matrixcontent_homeslider}}'
   maxBlocks: ''
   minBlocks: ''
-  propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null
 translationMethod: site

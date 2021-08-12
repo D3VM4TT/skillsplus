@@ -1,14 +1,11 @@
-columnSuffix: null
 contentColumnType: boolean
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
 handle: packagePaid
 instructions: ''
 name: 'Package Paid'
 searchable: true
 settings:
-  default: false
-  offLabel: null
-  onLabel: null
+  default: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Lightswitch

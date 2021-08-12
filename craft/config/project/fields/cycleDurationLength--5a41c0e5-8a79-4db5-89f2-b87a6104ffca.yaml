@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
 handle: cycleDurationLength
 instructions: ''
 name: 'Cycle Duration Length'
@@ -10,11 +9,9 @@ settings:
   defaultValue: '1'
   max: null
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
+  prefix: ''
   size: null
-  suffix: null
+  suffix: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

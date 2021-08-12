@@ -1,12 +1,10 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
 handle: userType
 instructions: ''
 name: 'User Type'
 searchable: true
 settings:
-  optgroups: true
   options:
     -
       __assoc__:

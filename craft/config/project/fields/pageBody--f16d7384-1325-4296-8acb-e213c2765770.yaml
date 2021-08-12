@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
+fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
 handle: pageBody
 instructions: ''
 name: Body
@@ -10,19 +9,9 @@ settings:
   availableVolumes: '*'
   cleanupHtml: '1'
   columnType: text
-  configSelectionMode: choose
-  defaultTransform: ''
-  manualConfig: ''
   purifierConfig: ''
   purifyHtml: '1'
   redactorConfig: Standard.json
-  removeEmptyTags: true
-  removeInlineStyles: true
-  removeNbsp: true
-  showHtmlButtonForNonAdmins: true
-  showUnpermittedFiles: false
-  showUnpermittedVolumes: true
-  uiMode: enlarged
 translationKeyFormat: null
 translationMethod: none
 type: craft\redactor\Field

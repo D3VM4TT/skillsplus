@@ -1,32 +1,19 @@
-field: b8c430cf-c3d3-4d15-a8a8-21eb2fb94ace # Content
+field: b8c430cf-c3d3-4d15-a8a8-21eb2fb94ace
 fieldLayouts:
   33a2cd8b-939a-4112-af78-f861c965887f:
     tabs:
       -
-        elements:
-          -
-            fieldUid: 56f0758a-86e6-4c78-ae70-e09843a275a2 # Title
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 9a8e1aa6-c705-41e6-ab80-8c987022d24b # HTML
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+        fields:
+          9a8e1aa6-c705-41e6-ab80-8c987022d24b:
+            required: false
+            sortOrder: 2
+          56f0758a-86e6-4c78-ae70-e09843a275a2:
+            required: false
+            sortOrder: 1
         name: Content
         sortOrder: 1
 fields:
-  9a8e1aa6-c705-41e6-ab80-8c987022d24b: # HTML
-    columnSuffix: null
+  9a8e1aa6-c705-41e6-ab80-8c987022d24b:
     contentColumnType: text
     fieldGroup: null
     handle: columnHtml
@@ -36,27 +23,21 @@ fields:
     settings:
       availableTransforms: '*'
       availableVolumes:
-        - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9 # Uploads
+        - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
       cleanupHtml: true
       columnType: text
-      configSelectionMode: choose
-      defaultTransform: ''
-      manualConfig: ''
       purifierConfig: ''
       purifyHtml: ''
       redactorConfig: Standard.json
       removeEmptyTags: '1'
       removeInlineStyles: '1'
       removeNbsp: '1'
-      showHtmlButtonForNonAdmins: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: false
-      uiMode: enlarged
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
-  56f0758a-86e6-4c78-ae70-e09843a275a2: # Title
-    columnSuffix: null
+  56f0758a-86e6-4c78-ae70-e09843a275a2:
     contentColumnType: text
     fieldGroup: null
     handle: columnTitle
@@ -70,8 +51,7 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText

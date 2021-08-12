@@ -1,9 +1,8 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: moduleCosts
 instructions: ''
-name: 'Module Group Costs'
+name: 'Taskbook Module Costs'
 searchable: true
 settings:
   addRowLabel: 'Add a row'
@@ -16,7 +15,7 @@ settings:
           __assoc__:
             -
               - heading
-              - 'No. Optional Module Groups'
+              - 'No. Optional Taskbook Groups'
             -
               - handle
               - optionalModules

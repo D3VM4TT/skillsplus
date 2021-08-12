@@ -1,41 +1,22 @@
-field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9 # Test Questions
+field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9
 fieldLayouts:
   18bf33fe-444c-4031-b481-cd8db9cd2ecb:
     tabs:
       -
-        elements:
-          -
-            fieldUid: 265e7462-688b-4c0b-a1b2-6f25d1b08525 # Question
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 9bb07531-d5ed-4c48-9a33-67ca0c17882b # Answer
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 6f6554bf-571c-46f8-a4eb-37e34c65b1a8 # Asset
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+        fields:
+          6f6554bf-571c-46f8-a4eb-37e34c65b1a8:
+            required: false
+            sortOrder: 3
+          9bb07531-d5ed-4c48-9a33-67ca0c17882b:
+            required: false
+            sortOrder: 2
+          265e7462-688b-4c0b-a1b2-6f25d1b08525:
+            required: false
+            sortOrder: 1
         name: Content
         sortOrder: 1
 fields:
-  6f6554bf-571c-46f8-a4eb-37e34c65b1a8: # Asset
-    columnSuffix: null
+  6f6554bf-571c-46f8-a4eb-37e34c65b1a8:
     contentColumnType: string
     fieldGroup: null
     handle: asset
@@ -43,20 +24,16 @@ fields:
     name: Asset
     searchable: true
     settings:
-      allowSelfRelations: false
-      allowUploads: true
       allowedKinds: null
-      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
       defaultUploadLocationSubpath: ''
       limit: '1'
       localizeRelations: false
-      previewMode: full
       restrictFiles: ''
       selectionLabel: ''
-      showSiteMenu: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: true
-      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
       singleUploadLocationSubpath: ''
       source: null
       sources: 'folder:2'
@@ -67,8 +44,7 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Assets
-  9bb07531-d5ed-4c48-9a33-67ca0c17882b: # Answer
-    columnSuffix: null
+  9bb07531-d5ed-4c48-9a33-67ca0c17882b:
     contentColumnType: boolean
     fieldGroup: null
     handle: answer
@@ -76,14 +52,11 @@ fields:
     name: Answer
     searchable: true
     settings:
-      default: false
-      offLabel: null
-      onLabel: null
+      default: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  265e7462-688b-4c0b-a1b2-6f25d1b08525: # Question
-    columnSuffix: null
+  265e7462-688b-4c0b-a1b2-6f25d1b08525:
     contentColumnType: text
     fieldGroup: null
     handle: question
@@ -97,8 +70,7 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText

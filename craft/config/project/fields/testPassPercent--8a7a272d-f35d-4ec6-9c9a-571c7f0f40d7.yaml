@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: smallint(3)
-fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
+fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2
 handle: testPassPercent
 instructions: ''
 name: 'Test Pass Percent'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
+  decimals: '0'
   max: '100'
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

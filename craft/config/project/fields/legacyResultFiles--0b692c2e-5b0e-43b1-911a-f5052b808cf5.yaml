@@ -1,19 +1,15 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8 # Legacy
+fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8
 handle: legacyResultFiles
 instructions: ''
 name: 'Legacy Result Files'
 searchable: true
 settings:
-  byteLimit: null
-  charLimit: null
-  code: false
+  charLimit: ''
   columnType: text
   initialRows: '4'
   multiline: ''
-  placeholder: null
-  uiMode: normal
+  placeholder: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\PlainText

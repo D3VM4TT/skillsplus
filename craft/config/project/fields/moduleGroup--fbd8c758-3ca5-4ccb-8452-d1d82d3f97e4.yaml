@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: moduleGroup
 instructions: ''
 name: 'Module Group'
@@ -8,16 +7,14 @@ searchable: true
 settings:
   allowLimit: false
   allowMultipleSources: false
-  allowSelfRelations: false
   branchLimit: '0'
   limit: null
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
-  source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
   sources: '*'
   targetSiteId: null
-  validateRelatedElements: false
+  validateRelatedElements: ''
   viewMode: null
 translationKeyFormat: null
 translationMethod: site

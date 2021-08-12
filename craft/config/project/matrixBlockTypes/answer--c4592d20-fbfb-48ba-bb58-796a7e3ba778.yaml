@@ -1,50 +1,25 @@
-field: 4b25bd1b-f51c-4175-8db7-e871de866f2f # Attempt Answers
+field: 4b25bd1b-f51c-4175-8db7-e871de866f2f
 fieldLayouts:
   b6774e86-2d02-4f1e-8fcc-df899659d76c:
     tabs:
       -
-        elements:
-          -
-            fieldUid: 3a779dd7-470c-4c09-9363-7f1be3a04a59 # Question ID
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 09efb818-9488-45a7-b860-1fc9d3c99155 # Question
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: c7ee8208-f166-48c8-b7c2-e8eab9555b64 # Answer
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 57ccb83f-5e54-480a-90b7-e80dfbc8cc94 # Correct
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+        fields:
+          3a779dd7-470c-4c09-9363-7f1be3a04a59:
+            required: false
+            sortOrder: 1
+          09efb818-9488-45a7-b860-1fc9d3c99155:
+            required: false
+            sortOrder: 2
+          57ccb83f-5e54-480a-90b7-e80dfbc8cc94:
+            required: false
+            sortOrder: 4
+          c7ee8208-f166-48c8-b7c2-e8eab9555b64:
+            required: false
+            sortOrder: 3
         name: Content
         sortOrder: 1
 fields:
-  3a779dd7-470c-4c09-9363-7f1be3a04a59: # Question ID
-    columnSuffix: null
+  3a779dd7-470c-4c09-9363-7f1be3a04a59:
     contentColumnType: integer(10)
     fieldGroup: null
     handle: questionId
@@ -57,15 +32,12 @@ fields:
       max: null
       min: '0'
       prefix: null
-      previewCurrency: null
-      previewFormat: decimal
       size: null
       suffix: null
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
-  09efb818-9488-45a7-b860-1fc9d3c99155: # Question
-    columnSuffix: null
+  09efb818-9488-45a7-b860-1fc9d3c99155:
     contentColumnType: text
     fieldGroup: null
     handle: question
@@ -79,13 +51,11 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  57ccb83f-5e54-480a-90b7-e80dfbc8cc94: # Correct
-    columnSuffix: null
+  57ccb83f-5e54-480a-90b7-e80dfbc8cc94:
     contentColumnType: boolean
     fieldGroup: null
     handle: correct
@@ -93,14 +63,11 @@ fields:
     name: Correct
     searchable: true
     settings:
-      default: false
-      offLabel: null
-      onLabel: null
+      default: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  c7ee8208-f166-48c8-b7c2-e8eab9555b64: # Answer
-    columnSuffix: null
+  c7ee8208-f166-48c8-b7c2-e8eab9555b64:
     contentColumnType: text
     fieldGroup: null
     handle: answer
@@ -114,8 +81,7 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText

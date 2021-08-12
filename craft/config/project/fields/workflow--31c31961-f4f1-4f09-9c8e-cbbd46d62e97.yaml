@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
 handle: workflow
 instructions: 'The first step must be an assessment step.  Review and complete steps are optional but if you add any review steps, the last step must be a complete step.  If there is only one review you should add assessment -> complete.  If there are multiple reviews you should add assessment -> review -> review -> complete.'
 name: Workflow
@@ -9,49 +8,49 @@ settings:
   columns:
     __assoc__:
       -
-        - d4afcfe1-1ba1-4435-8a39-88a785af7535 # Step ID
+        - d4afcfe1-1ba1-4435-8a39-88a785af7535
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 8baba5fc-1c81-4b6d-a597-453862005a68 # Step Name
+        - 8baba5fc-1c81-4b6d-a597-453862005a68
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - b893071b-6c51-4812-b88c-dd1f60840ff5 # Step Type
+        - b893071b-6c51-4812-b88c-dd1f60840ff5
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 703cc741-3177-4d42-88f9-c3c0f4ce9249 # Step User Group
+        - 703cc741-3177-4d42-88f9-c3c0f4ce9249
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - f5f4282b-109d-4b80-a44f-78c73c254b37 # Step Job Role
+        - f5f4282b-109d-4b80-a44f-78c73c254b37
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 43c2a918-aa04-4759-bf4e-df7f7a51578a # Step Assign User Group
+        - 43c2a918-aa04-4759-bf4e-df7f7a51578a
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 4c81c4c4-4ce4-4d59-aae5-409187760100 # Step Message
+        - 4c81c4c4-4ce4-4d59-aae5-409187760100
         -
           __assoc__:
             -
@@ -61,7 +60,6 @@ settings:
   fieldLayout: row
   maxRows: ''
   minRows: ''
-  placeholderKey: null
   propagationMethod: all
   selectionLabel: ''
   staticField: ''

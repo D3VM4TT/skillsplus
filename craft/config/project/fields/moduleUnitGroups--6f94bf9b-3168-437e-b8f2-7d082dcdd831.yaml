@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: moduleUnitGroups
 instructions: ''
 name: 'Unit Groups'
@@ -9,7 +8,6 @@ settings:
   contentTable: '{{%matrixcontent_moduleunitgroups}}'
   maxBlocks: ''
   minBlocks: ''
-  propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null
 translationMethod: site

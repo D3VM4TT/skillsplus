@@ -1,34 +1,24 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
+fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
 handle: pageImage
 instructions: ''
 name: Image
 searchable: true
 settings:
-  allowSelfRelations: false
-  allowUploads: true
   allowedKinds:
     - image
-  defaultUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
+  defaultUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
   defaultUploadLocationSubpath: ''
   limit: '1'
   localizeRelations: false
-  previewMode: full
   restrictFiles: '1'
   selectionLabel: ''
-  showSiteMenu: true
-  showUnpermittedFiles: false
-  showUnpermittedVolumes: true
-  singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
   singleUploadLocationSubpath: ''
-  source: null
   sources:
-    - 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
-  targetSiteId: null
-  useSingleFolder: false
-  validateRelatedElements: false
+    - 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
+  useSingleFolder: ''
   viewMode: list
 translationKeyFormat: null
-translationMethod: site
+translationMethod: none
 type: craft\fields\Assets

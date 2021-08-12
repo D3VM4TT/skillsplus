@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
+fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
 handle: columnLayout
 instructions: 'In Globals this is the default layout as used on Result History.'
 name: 'Column Layout'
@@ -9,49 +8,49 @@ settings:
   columns:
     __assoc__:
       -
-        - 19794a8d-aa57-4cea-9297-7c4ccfb2d561 # Field Label
+        - 19794a8d-aa57-4cea-9297-7c4ccfb2d561
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 31a1729c-6625-4e9e-9ffe-3fcce0da9bbd # Field Manager Only
+        - 31a1729c-6625-4e9e-9ffe-3fcce0da9bbd
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 6cb593e0-eb38-45a0-bd9b-22a23586dfbe # Field Custom Type
+        - 6cb593e0-eb38-45a0-bd9b-22a23586dfbe
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 74329152-64bf-43a9-95b3-0458edd36e4f # Field Custom Key
+        - 74329152-64bf-43a9-95b3-0458edd36e4f
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 7ed267ff-a262-4e68-81b8-be3bcaa5c178 # Field Required
+        - 7ed267ff-a262-4e68-81b8-be3bcaa5c178
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 8fec0242-3542-431e-8a9a-d2d86b3e3b06 # Field Type
+        - 8fec0242-3542-431e-8a9a-d2d86b3e3b06
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - a37728d1-3a88-46ca-b9d5-ec79b66ba635 # Field Custom Options
+        - a37728d1-3a88-46ca-b9d5-ec79b66ba635
         -
           __assoc__:
             -
@@ -61,7 +60,6 @@ settings:
   fieldLayout: table
   maxRows: ''
   minRows: ''
-  placeholderKey: null
   propagationMethod: all
   selectionLabel: 'Add a row'
   staticField: ''

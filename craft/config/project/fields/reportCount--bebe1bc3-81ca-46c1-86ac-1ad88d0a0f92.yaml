@@ -1,20 +1,13 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
 handle: reportCount
 instructions: ''
 name: 'Report Count'
 searchable: true
 settings:
-  decimals: 0
-  defaultValue: null
-  max: null
+  decimals: '0'
+  max: ''
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
-  size: null
-  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

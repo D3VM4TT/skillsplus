@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
 handle: reportDays
 instructions: ''
 name: 'Report Days'
@@ -10,11 +9,9 @@ settings:
   defaultValue: null
   max: null
   min: '0'
-  prefix: null
-  previewCurrency: null
-  previewFormat: decimal
+  prefix: ''
   size: null
-  suffix: null
+  suffix: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

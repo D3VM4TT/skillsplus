@@ -1,21 +1,14 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
 handle: reportRecipients
 instructions: ''
 name: 'Report Recipients'
 searchable: true
 settings:
-  allowSelfRelations: false
   limit: ''
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
-  source: null
   sources: 'group:2group:1group:3'
-  targetSiteId: null
-  validateRelatedElements: false
-  viewMode: null
 translationKeyFormat: null
-translationMethod: site
+translationMethod: none
 type: craft\fields\Users

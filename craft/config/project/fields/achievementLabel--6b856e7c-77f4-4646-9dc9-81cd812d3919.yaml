@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: achievementLabel
 instructions: 'Label for add button and title for the table.'
 name: 'Achievement Label'
@@ -12,8 +11,7 @@ settings:
   columnType: null
   initialRows: '4'
   multiline: ''
-  placeholder: null
-  uiMode: normal
+  placeholder: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\PlainText

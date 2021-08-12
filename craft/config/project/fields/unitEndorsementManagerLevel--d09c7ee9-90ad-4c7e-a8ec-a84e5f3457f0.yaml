@@ -1,12 +1,10 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: unitEndorsementManagerLevel
 instructions: ''
 name: 'Unit Endorsement Manager Level'
 searchable: true
 settings:
-  optgroups: true
   options:
     -
       __assoc__:

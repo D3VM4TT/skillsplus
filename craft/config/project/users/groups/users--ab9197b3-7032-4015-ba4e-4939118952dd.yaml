@@ -1,22 +1,6 @@
-description: null
 handle: users
 name: Users
 permissions:
-  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'editpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'replacepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'deletepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'createentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
   - 'publishentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
   - 'deleteentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
@@ -27,6 +11,10 @@ permissions:
   - 'deletepeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
   - 'editpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
   - 'editentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
+  - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
   - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
@@ -36,4 +24,15 @@ permissions:
   - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'replacefilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'replacepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'deletepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+  - 'replacefilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'

@@ -1,41 +1,22 @@
-field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9 # Test Questions
+field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9
 fieldLayouts:
   f0eab96c-214e-4799-b2e8-091e277ad5ce:
     tabs:
       -
-        elements:
-          -
-            fieldUid: 29245631-dbe4-4182-85d0-ae4290604622 # Question
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 6e83784c-1c34-4973-9929-0307ffb6cff0 # Answers
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: f523e5d2-5acc-48c3-ab1d-fba29e427581 # Asset
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+        fields:
+          6e83784c-1c34-4973-9929-0307ffb6cff0:
+            required: false
+            sortOrder: 2
+          29245631-dbe4-4182-85d0-ae4290604622:
+            required: false
+            sortOrder: 1
+          f523e5d2-5acc-48c3-ab1d-fba29e427581:
+            required: false
+            sortOrder: 3
         name: Content
         sortOrder: 1
 fields:
-  6e83784c-1c34-4973-9929-0307ffb6cff0: # Answers
-    columnSuffix: null
+  6e83784c-1c34-4973-9929-0307ffb6cff0:
     contentColumnType: text
     fieldGroup: null
     handle: answers
@@ -93,8 +74,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Table
-  29245631-dbe4-4182-85d0-ae4290604622: # Question
-    columnSuffix: null
+  29245631-dbe4-4182-85d0-ae4290604622:
     contentColumnType: text
     fieldGroup: null
     handle: question
@@ -108,13 +88,11 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  f523e5d2-5acc-48c3-ab1d-fba29e427581: # Asset
-    columnSuffix: null
+  f523e5d2-5acc-48c3-ab1d-fba29e427581:
     contentColumnType: string
     fieldGroup: null
     handle: asset
@@ -122,20 +100,16 @@ fields:
     name: Asset
     searchable: true
     settings:
-      allowSelfRelations: false
-      allowUploads: true
       allowedKinds: null
-      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
       defaultUploadLocationSubpath: ''
       limit: ''
       localizeRelations: false
-      previewMode: full
       restrictFiles: ''
       selectionLabel: ''
-      showSiteMenu: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: true
-      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
       singleUploadLocationSubpath: ''
       source: null
       sources: 'folder:2'

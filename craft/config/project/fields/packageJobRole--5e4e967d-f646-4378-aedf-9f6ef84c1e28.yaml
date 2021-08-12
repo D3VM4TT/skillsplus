@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
 handle: packageJobRole
 instructions: ''
 name: 'Package Job Role'
@@ -8,16 +7,14 @@ searchable: true
 settings:
   allowLimit: false
   allowMultipleSources: false
-  allowSelfRelations: false
   branchLimit: ''
   limit: null
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
-  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
   sources: '*'
   targetSiteId: null
-  validateRelatedElements: false
+  validateRelatedElements: ''
   viewMode: null
 translationKeyFormat: null
 translationMethod: site

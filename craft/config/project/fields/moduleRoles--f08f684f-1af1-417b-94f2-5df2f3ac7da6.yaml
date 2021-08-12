@@ -1,24 +1,14 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
 handle: moduleRoles
 instructions: ''
 name: 'Job Roles'
 searchable: true
 settings:
-  allowLimit: false
-  allowMultipleSources: false
-  allowSelfRelations: false
   branchLimit: ''
-  limit: null
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
-  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
-  sources: '*'
-  targetSiteId: null
-  validateRelatedElements: false
-  viewMode: null
+  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
 translationKeyFormat: null
-translationMethod: site
+translationMethod: none
 type: craft\fields\Categories

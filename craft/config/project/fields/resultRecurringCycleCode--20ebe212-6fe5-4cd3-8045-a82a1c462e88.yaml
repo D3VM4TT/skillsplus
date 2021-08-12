@@ -1,19 +1,16 @@
-columnSuffix: null
 contentColumnType: text
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
 handle: resultRecurringCycleCode
 instructions: ''
 name: 'Result Recurring Cycle Code'
 searchable: true
 settings:
-  byteLimit: null
-  charLimit: null
+  charLimit: ''
   code: ''
   columnType: text
   initialRows: '4'
   multiline: ''
-  placeholder: null
-  uiMode: normal
+  placeholder: ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\PlainText

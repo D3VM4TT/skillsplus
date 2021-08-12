@@ -1,29 +1,29 @@
 fieldLayouts:
-  6d710b1b-95a9-4417-b0dd-78a03a5baa40:
+  e8d523cd-161e-4cf6-9d36-39e2d444cc43:
     tabs:
       -
         elements:
           -
             instructions: null
-            label: Title
+            label: ''
             type: craft\fieldlayoutelements\EntryTitleField
           -
-            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00
+            fieldUid: 5df92654-19a4-446e-a578-2b359d4bc88f
             required: false
             type: craft\fieldlayoutelements\CustomField
           -
-            fieldUid: b8c430cf-c3d3-4d15-a8a8-21eb2fb94ace
+            fieldUid: 840f8f48-be42-4008-ae9e-1fa132183769
             required: false
             type: craft\fieldlayoutelements\CustomField
           -
-            fieldUid: 5d8461b5-aba0-482c-a677-b59c1ec759ab
+            fieldUid: f4f743d8-8e66-4bb5-920a-01bd366d6ba2
             required: false
             type: craft\fieldlayoutelements\CustomField
         name: Pages
         sortOrder: 1
-handle: pages
-hasTitleField: true
-name: Pages
-section: 8c1af673-0f01-4434-a6f0-86f01675d799 # Pages
+handle: taskbooks
+hasTitleField: false
+name: Taskbooks
+section: 0db8b604-3d85-4638-bc64-f1d73e2e9aba # Taskbooks
 sortOrder: 1
-titleFormat: null
+titleFormat: '{section.name|raw}'

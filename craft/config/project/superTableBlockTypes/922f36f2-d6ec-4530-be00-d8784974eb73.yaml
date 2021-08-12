@@ -1,326 +1,157 @@
-field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
+field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b
 fieldLayouts:
   bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
     tabs:
       -
-        elements:
-          -
-            fieldUid: 8fec0242-3542-431e-8a9a-d2d86b3e3b06 # Field Type
-            instructions: null
-            label: null
+        fields:
+          6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 19794a8d-aa57-4cea-9297-7c4ccfb2d561 # Field Label
-            instructions: null
-            label: null
+            sortOrder: '5'
+          7ed267ff-a262-4e68-81b8-be3bcaa5c178:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 31a1729c-6625-4e9e-9ffe-3fcce0da9bbd # Field Manager Only
-            instructions: null
-            label: null
+            sortOrder: '7'
+          8fec0242-3542-431e-8a9a-d2d86b3e3b06:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 74329152-64bf-43a9-95b3-0458edd36e4f # Field Custom Key
-            instructions: null
-            label: null
+            sortOrder: '1'
+          31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 6cb593e0-eb38-45a0-bd9b-22a23586dfbe # Field Custom Type
-            instructions: null
-            label: null
+            sortOrder: '3'
+          19794a8d-aa57-4cea-9297-7c4ccfb2d561:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: a37728d1-3a88-46ca-b9d5-ec79b66ba635 # Field Custom Options
-            instructions: null
-            label: null
+            sortOrder: '2'
+          74329152-64bf-43a9-95b3-0458edd36e4f:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 7ed267ff-a262-4e68-81b8-be3bcaa5c178 # Field Required
-            instructions: null
-            label: null
+            sortOrder: '4'
+          a37728d1-3a88-46ca-b9d5-ec79b66ba635:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: b46f9aa2-ceed-4dee-ac99-835a93962438 # Field Display
-            instructions: null
-            label: null
+            sortOrder: '6'
+          b46f9aa2-ceed-4dee-ac99-835a93962438:
             required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+            sortOrder: '8'
         name: Content
-        sortOrder: 1
+        sortOrder: '1'
 fields:
-  6cb593e0-eb38-45a0-bd9b-22a23586dfbe: # Field Custom Type
-    columnSuffix: null
+  6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
     contentColumnType: string
     fieldGroup: null
     handle: fieldCustomType
     instructions: ''
     name: 'Field Custom Type'
-    searchable: true
+    searchable: '1'
     settings:
       optgroups: true
       options:
         -
-          __assoc__:
-            -
-              - label
-              - Text
-            -
-              - value
-              - text
-            -
-              - default
-              - '1'
+          default: '1'
+          label: Text
+          value: text
         -
-          __assoc__:
-            -
-              - label
-              - Dropdown
-            -
-              - value
-              - dropdown
-            -
-              - default
-              - ''
+          default: ''
+          label: Dropdown
+          value: dropdown
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  7ed267ff-a262-4e68-81b8-be3bcaa5c178: # Field Required
-    columnSuffix: null
+  7ed267ff-a262-4e68-81b8-be3bcaa5c178:
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldRequired
     instructions: ''
     name: 'Field Required'
-    searchable: true
+    searchable: '1'
     settings:
-      default: false
-      offLabel: null
-      onLabel: null
+      default: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  8fec0242-3542-431e-8a9a-d2d86b3e3b06: # Field Type
-    columnSuffix: null
+  8fec0242-3542-431e-8a9a-d2d86b3e3b06:
     contentColumnType: string
     fieldGroup: null
     handle: fieldType
     instructions: ''
     name: 'Field Type'
-    searchable: true
+    searchable: '1'
     settings:
       optgroups: true
       options:
         -
-          __assoc__:
-            -
-              - label
-              - Type
-            -
-              - value
-              - unitType
-            -
-              - default
-              - ''
+          default: ''
+          label: Type
+          value: unitType
         -
-          __assoc__:
-            -
-              - label
-              - 'Unit Points'
-            -
-              - value
-              - unitPoints
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Unit Points'
+          value: unitPoints
         -
-          __assoc__:
-            -
-              - label
-              - Status
-            -
-              - value
-              - resultStatus
-            -
-              - default
-              - ''
+          default: ''
+          label: Status
+          value: resultStatus
         -
-          __assoc__:
-            -
-              - label
-              - 'Endorsed Date'
-            -
-              - value
-              - resultEndorsedDate
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Endorsed Date'
+          value: resultEndorsedDate
         -
-          __assoc__:
-            -
-              - label
-              - 'Endorsed User'
-            -
-              - value
-              - resultEndorsedUser
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Endorsed User'
+          value: resultEndorsedUser
         -
-          __assoc__:
-            -
-              - label
-              - 'Expiry Date'
-            -
-              - value
-              - resultExpiryDate
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Expiry Date'
+          value: resultExpiryDate
         -
-          __assoc__:
-            -
-              - label
-              - 'Start Date'
-            -
-              - value
-              - resultStartDate
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Start Date'
+          value: resultStartDate
         -
-          __assoc__:
-            -
-              - label
-              - 'Finish Date'
-            -
-              - value
-              - resultFinishDate
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Finish Date'
+          value: resultFinishDate
         -
-          __assoc__:
-            -
-              - label
-              - Location
-            -
-              - value
-              - resultLocation
-            -
-              - default
-              - ''
+          default: ''
+          label: Location
+          value: resultLocation
         -
-          __assoc__:
-            -
-              - label
-              - Evidence
-            -
-              - value
-              - resultEvidence
-            -
-              - default
-              - ''
+          default: ''
+          label: Evidence
+          value: resultEvidence
         -
-          __assoc__:
-            -
-              - label
-              - Custom
-            -
-              - value
-              - resultCustom
-            -
-              - default
-              - ''
+          default: ''
+          label: Custom
+          value: resultCustom
         -
-          __assoc__:
-            -
-              - label
-              - 'Result Points'
-            -
-              - value
-              - resultPoints
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Result Points'
+          value: resultPoints
         -
-          __assoc__:
-            -
-              - label
-              - 'Result Hours'
-            -
-              - value
-              - resultHours
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Result Hours'
+          value: resultHours
         -
-          __assoc__:
-            -
-              - label
-              - 'Result Narrative'
-            -
-              - value
-              - resultNarrative
-            -
-              - default
-              - ''
+          default: ''
+          label: 'Result Narrative'
+          value: resultNarrative
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  31a1729c-6625-4e9e-9ffe-3fcce0da9bbd: # Field Manager Only
-    columnSuffix: null
+  31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldManagerOnly
     instructions: ''
     name: 'Field Manager Only'
-    searchable: true
+    searchable: '1'
     settings:
-      default: false
-      offLabel: null
-      onLabel: null
+      default: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  19794a8d-aa57-4cea-9297-7c4ccfb2d561: # Field Label
-    columnSuffix: null
+  19794a8d-aa57-4cea-9297-7c4ccfb2d561:
     contentColumnType: text
     fieldGroup: null
     handle: fieldLabel
     instructions: ''
     name: 'Field Label'
-    searchable: true
+    searchable: '1'
     settings:
       byteLimit: null
       charLimit: null
@@ -328,19 +159,17 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  74329152-64bf-43a9-95b3-0458edd36e4f: # Field Custom Key
-    columnSuffix: null
+  74329152-64bf-43a9-95b3-0458edd36e4f:
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomKey
     instructions: ''
     name: 'Field Custom Key'
-    searchable: true
+    searchable: '1'
     settings:
       byteLimit: null
       charLimit: null
@@ -348,19 +177,17 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  a37728d1-3a88-46ca-b9d5-ec79b66ba635: # Field Custom Options
-    columnSuffix: null
+  a37728d1-3a88-46ca-b9d5-ec79b66ba635:
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomOptions
     instructions: ''
     name: 'Field Custom Options'
-    searchable: true
+    searchable: '1'
     settings:
       byteLimit: null
       charLimit: null
@@ -368,55 +195,32 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: null
-      uiMode: normal
+      placeholder: ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  b46f9aa2-ceed-4dee-ac99-835a93962438: # Field Display
-    columnSuffix: null
+  b46f9aa2-ceed-4dee-ac99-835a93962438:
     contentColumnType: string
     fieldGroup: null
     handle: fieldDisplay
     instructions: ''
     name: 'Field Display'
-    searchable: true
+    searchable: '1'
     settings:
       optgroups: true
       options:
         -
-          __assoc__:
-            -
-              - label
-              - Both
-            -
-              - value
-              - both
-            -
-              - default
-              - '1'
+          default: '1'
+          label: Both
+          value: both
         -
-          __assoc__:
-            -
-              - label
-              - Table
-            -
-              - value
-              - table
-            -
-              - default
-              - ''
+          default: ''
+          label: Table
+          value: table
         -
-          __assoc__:
-            -
-              - label
-              - Form
-            -
-              - value
-              - form
-            -
-              - default
-              - ''
+          default: ''
+          label: Form
+          value: form
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown

@@ -1,22 +1,15 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
 handle: userTeam
 instructions: ''
 name: 'User Team'
 searchable: true
 settings:
-  allowSelfRelations: false
   limit: '1'
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: true
-  source: null
   sources:
     - 'section:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  targetSiteId: null
-  validateRelatedElements: false
-  viewMode: null
 translationKeyFormat: null
-translationMethod: site
+translationMethod: none
 type: craft\fields\Entries

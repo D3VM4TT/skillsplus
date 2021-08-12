@@ -1,6 +1,5 @@
-columnSuffix: null
 contentColumnType: string
-fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
 handle: cycleDurationType
 instructions: ''
 name: 'Cycle Duration Type'
