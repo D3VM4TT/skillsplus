@@ -1,4 +1,4 @@
-dateModified: 1628782664
+dateModified: 1628783357
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -381,7 +381,6 @@ plugins:
     schemaVersion: 2.2.1
     settings: null
   typogrify:
-    edition: standard
     enabled: true
     schemaVersion: 1.0.0
 system:
