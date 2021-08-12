@@ -37,8 +37,17 @@ fieldLayouts:
             width: 100
           -
             fieldUid: 164fe93f-d610-4819-8ca4-77cc4a88112e # Package Module Group
-            instructions: null
-            label: null
+            instructions: ''
+            label: ''
+            required: ''
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 53fe1ed0-e4fe-4a51-8235-3f3a1b123528 # Package Taskbook
+            instructions: ''
+            label: ''
             required: '1'
             tip: null
             type: craft\fieldlayoutelements\CustomField
