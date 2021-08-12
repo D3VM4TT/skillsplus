@@ -121,9 +121,9 @@
                 <h4>Requirements</h4>
                 <p>To complete this {{ taskbookLabel|lower }} you must complete a total of:</p>
                 <p>
-                    <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ pluralize('module', qty=package.taskbook.countMandatory) }}
+                    <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ 'module'|pluralize(package.taskbook.countMandatory) }}
                     {% if package.taskbook.moduleMinimumOptional %}
-                        and <strong>{{ package.taskbook.moduleMinimumOptional }}</strong> optional {{ pluralize('module', qty=package.taskbook.moduleMinimumOptional) }}
+                        and <strong>{{ package.taskbook.moduleMinimumOptional }}</strong> optional {{ 'module'|pluralize(package.taskbook.moduleMinimumOptional) }}
                     {% endif %}
                 </p>
                 {% if package.taskbook.moduleMinimumCredits %}
@@ -136,9 +136,9 @@
                     </p>
                 {% endif %}
 
-                <p>You need to complete <strong>{{ package.required.mandatory }}</strong> mandatory {{ pluralize('module', qty= package.required.mandatory) }}</p>
+                <p>You need to complete <strong>{{ package.required.mandatory }}</strong> mandatory {{ 'module'|pluralize(package.required.mandatory) }}</p>
                 {% if package.taskbook.moduleMinimumOptional %}
-                    <p>You need to complete <strong>{{ package.required.optional }}</strong> optional {{ pluralize('module', qty= package.required.optional) }}</p>
+                    <p>You need to complete <strong>{{ package.required.optional }}</strong> optional {{ 'module'|pluralize(package.required.optional) }}</p>
                 {% endif %}
                 {% if package.taskbook.moduleMinimumCredits %}
                     <p>You need <strong>{{ package.required.credits }}</strong> more credits</p>
