@@ -103,7 +103,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1628524402
+dateModified: 1628766933
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -1501,7 +1501,6 @@ fields:
     name: 'Package Evidence'
     searchable: true
     settings:
-      allowSelfRelations: ''
       allowedKinds: null
       defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
       defaultUploadLocationSubpath: '{author.id}'
