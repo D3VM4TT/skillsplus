@@ -2,6 +2,7 @@
 {% if currentUser.managerReadOnly %}{% redirect 404 %}{% endif %}
 
 {% set isTaskbooks = craft.lantra.setting('taskbooks') %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% set jsDateFormat = craft.lantra.setting('jsDateFormat', 'dd-mm-yyyy') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
@@ -22,6 +23,8 @@
 
 {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel').all() %}
 {% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getParam('companyManagers') %}
+
+{% set taskbookEntries = craft.entries.section('taskbooks').limit(null).all() %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -128,11 +131,39 @@
             <input type="hidden" name="fields[userRole]" value="" />
             <select multiple class="js-select2" name="fields[userRole][]" id="userRole">
                 {% for roleCategory in roleCategories %}
-                    <option value="{{ roleCategory.id }}"
-                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected"{% endif %}>{{ roleCategory.title }}</option>
+                    <option data-reviewer="{{ roleCategory.isReviewer }}" value="{{ roleCategory.id }}"
+                            {% if account is defined and roleCategory.id in account.userRole.ids() %} selected="selected"{% endif %}>
+                        {{ roleCategory.title }}
+                        {% if roleCategory.isReviewer %} ({{ taskbookLabel }} Reviewer){% endif %}
+                    </option>
                 {% endfor %}
             </select>
         </div>
+
+        <div id="taskbook-review">
+            <h2>{{ taskbookLabel }} Reviewer Options</h2>
+            <div class="field--wrapper">
+                <label for="userTaskbooks">{{ taskbookLabel|pluralize }}:</label>
+                <select multiple class="js-select2" name="fields[userTaskbooks][]" id="userTaskbooks">
+                    {% for taskbookEntry in taskbookEntries %}
+                        <option value="{{ taskbookEntry.id }}"
+                                {% if account is defined and taskbookEntry.id in account.userTaskbooks.ids() %} selected="selected{% endif %}">{{ taskbookEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="userTaskbooks">{{ taskbookLabel }} Companies:</label>
+                <select multiple class="js-select2" name="fields[userTaskbookCompanies][]" id="userTaskbookCompanies">
+                    {% for companyEntry in companyEntries %}
+                        <option value="{{ companyEntry.id }}"
+                                {% if account is defined and companyEntry.id in account.userTaskbookCompanies.ids() %} selected="selected{% endif %}">{{ companyEntry.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+
         <div class="field--wrapper">
             <label for="userCompany">Primary Location: For Hierarchy and Reporting</label>
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.one().id|default(hierarchyCompany) }}" id="userCompany" >
@@ -264,6 +295,10 @@
         </div>
 
         {% if craft.lantra.setting('taskbooks') %}
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+
         {% if account is defined and account.id  %}
             {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
             {% set packages = craft.entries.section('packages').authorId(account.id)  %}

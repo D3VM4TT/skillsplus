@@ -847,4 +847,24 @@ class Packages extends Component
     {
         return $singleType == null ? 0 : ($singleType == 'resit' ?  $taskbook->moduleResitCost : $taskbook->moduleSingleCost);
     }
+
+    /**
+     * @param $user
+     * @param $taskbook
+     * @return null
+     */
+    public function getReviewers($user, $taskbook, $jobRoleIds)
+    {
+        if (null == $userCompany = $user->userCompany->one()) {
+            return null;
+        }
+        $criteria = User::find();
+        $criteria->relatedTo = [
+            'and',
+            ['targetElement' => [$userCompany->id], 'field' => 'userTaskbookCompanies'],
+            ['targetElement' => [$taskbook->id], 'field' => 'userTaskbooks'],
+            ['targetElement' => $jobRoleIds, 'field' => 'userRole']
+        ];
+        return $criteria->ids();
+    }
 }

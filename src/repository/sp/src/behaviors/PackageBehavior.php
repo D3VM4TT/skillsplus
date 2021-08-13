@@ -552,10 +552,11 @@ class PackageBehavior extends Behavior
         if (!$packageWorkflowStep) {
             return null;
         }
-
         $criteria = User::find();
         if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole'];
+            $jobRoleIds = $packageWorkflowStep->stepJobRole->ids();
+            $managerIds = Lantra::$app->packages->getReviewers($step->owner->author, $this->owner->taskbook, $jobRoleIds);
+            $criteria->id = $managerIds;
         } else {
             $criteria->group = $packageWorkflowStep->stepUserGroup;
         }
