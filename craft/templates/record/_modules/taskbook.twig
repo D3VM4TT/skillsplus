@@ -117,7 +117,9 @@
                 {% endif %}
                 <h4>Requirements</h4>
                 {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
-
+                {% if package.taskbook.moduleMinimumCredits %}
+                    <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
+                {% endif %}
                 {% if package.isComplete %}
                     {% if package.packageStatus == 'active' %}
                         <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
