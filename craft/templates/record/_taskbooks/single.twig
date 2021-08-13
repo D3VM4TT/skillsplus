@@ -60,6 +60,9 @@
                 <p style="color:red;">There are currently no modules available.</p>
             </div>
         {% else %}
+
+            {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}

@@ -119,33 +119,7 @@
                     </table>
                 {% endif %}
                 <h4>Requirements</h4>
-                <p>To complete this {{ taskbookLabel|lower }} you must complete a total of:</p>
-                <p>
-                    <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ 'module'|pluralize(package.taskbook.countMandatory) }}
-                    {% if package.taskbook.moduleMinimumOptional %}
-                        and <strong>{{ package.taskbook.moduleMinimumOptional }}</strong> optional {{ 'module'|pluralize(package.taskbook.moduleMinimumOptional) }}
-                    {% endif %}
-                </p>
-                {% if package.taskbook.moduleMinimumCredits %}
-                    <p>
-                        You must attain a minimum of <strong>{{ package.taskbook.moduleMinimumCredits }}</strong> total credits
-                        {% if package.taskbook.moduleGroupMinimumLevel %}
-                            and <strong>{{ package.taskbook.moduleGroupMinimumLevelCredits }}</strong> credits must be at or above level
-                            <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>
-                        {% endif %}
-                    </p>
-                {% endif %}
-
-                <p>You need to complete <strong>{{ package.required.mandatory }}</strong> mandatory {{ 'module'|pluralize(package.required.mandatory) }}</p>
-                {% if package.taskbook.moduleMinimumOptional %}
-                    <p>You need to complete <strong>{{ package.required.optional }}</strong> optional {{ 'module'|pluralize(package.required.optional) }}</p>
-                {% endif %}
-                {% if package.taskbook.moduleMinimumCredits %}
-                    <p>You need <strong>{{ package.required.credits }}</strong> more credits</p>
-                {% endif %}
-                {% if package.taskbook.moduleGroupMinimumLevel %}
-                    <p>You need <strong>{{ package.required.levelCredits }}</strong> more credits at level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong></p>
-                {% endif %}
+                {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
                 <p>&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>
