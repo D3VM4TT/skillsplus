@@ -5,20 +5,22 @@
         {% if craft.lantra.setting('taskbookLevels') %}
             <th>Level</th>
         {% endif %}
-        <th></th>
+        <th style="text-align: right;padding-right:0;">Selected</th>
     </tr>
     </thead>
     <tbody>
     {% for optionalModuleGroup in optionalModuleGroups %}
         {% set category = optionalModuleGroup.category  %}
         {% set packageModuleGroupBlock = package is defined ? package.moduleGroupBlock(category.id) : null  %}
-        <tr class="optional-module">
-            <td>{{ category.magicTitle }}</td>
+        <tr class="optional-module" data-category-id="{{ category.id }}">
+            <td>
+                {{ category.magicTitle }}
+            </td>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <td>
                     {% if optionalModuleGroup.level %}
                         <strong>{{ craft.lantra.taskbookLevel(optionalModuleGroup.level) }}</strong>
-                        <input type="hidden" name="optional[{{ category.id  }}][level]" value="{{ optionalModuleGroup.level }}" />
+                        <input class="optional-level-hidden" type="hidden" name="optional[{{ category.id  }}][level]" value="{{ optionalModuleGroup.level }}" />
                     {% else %}
                         <select class="optional-level" name="optional[{{ category.id  }}][level]">
                             {% for option in craft.lantra.taskbookLevels() %}
@@ -29,7 +31,11 @@
                 </td>
             {% endif %}
             <td style="text-align: right">
-                <input class="optional" type="checkbox" name="optional[{{ category.id  }}][selected]" value="{{ category.id }}" {% if packageModuleGroupBlock %}checked{% endif %}>
+                <span class="module-select {% if packageModuleGroupBlock %}module-selected{% endif %}">
+                    <i class="fas fa-check"></i>
+                    <i class="fas fa-times"></i>
+                    <input type="hidden" name="optional[{{ category.id }}][selected]" value="{{ packageModuleGroupBlock ? 1 : 0 }}">
+                </span>
             </td>
         </tr>
     {% endfor %}

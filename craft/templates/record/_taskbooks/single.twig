@@ -75,7 +75,7 @@
                 {{ csrfInput() }}
                 {{ actionInput('sp/packages/add-module-groups') }}
                 {{ hiddenInput('packageId', package.id) }}
-                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks') }}
+                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/' ~ package.id ) }}
                 {{ hiddenInput('singleType', singleType) }}
                 <div class="field--wrapper">
                     {% if cost %}

@@ -1,6 +1,5 @@
 $(document).ready(function(){
 
-
     $('select.package-taskbook').change(function(){
         var moduleGroupId = $(this).val(),
             revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
@@ -24,25 +23,37 @@ $(document).ready(function(){
         updateOptional();
     });
 
+    $('span.module-select').click(function () {
+        var tr = $(this).parents('tr.optional-module').eq(0),
+            s = tr.hasClass('module-selected'),
+            i = $(this).find('input');
+        i.val(s ? 0 : 1);
+        if (s) {
+            tr.removeClass('module-selected');
+        }
+        else {
+            tr.addClass('module-selected');
+        }
+        updateOptional();
+    });
+
     updateOptional = function() {
         var n = 1;
         $('form#taskbooks').find('.optional-hidden').remove();
         $('tr.optional-module').each(function(){
-            var c = $(this).find('input[type=checkbox]'),
-                l = $(this).find('select').val(),
+            var id = $(this).data('category-id'),
+                s = $(this).find('select').val(),
+                h = $(this).find('input').val(),
                 t = $('#input-template').clone().html();
-            if (c.is(':checked')) {
-                t = t.replace(/{n}/g, n).replace(/{moduleGroupId}/g, c.val()).replace(/{moduleGroupLevel}/g, l);
+            if ($(this).hasClass('module-selected')) {
+                l = h ? h : s;
+                t = t.replace(/{n}/g, n).replace(/{moduleGroupId}/g, id).replace(/{moduleGroupLevel}/g, l);
                 $('form#taskbooks').prepend($(t));
-                n ++;
+                n++;
             }
         });
     };
 
-
-    $('input.optional').change(function(){
-        updateOptional();
-    }).change();
 
     $('.btn-toggle-small').on('click', function() {
         $('.sidebar').toggleClass('is-collapsed');

@@ -237,7 +237,7 @@ class Packages extends Component
         ## append the optional module groups
         foreach ($optional as $categoryId => $row) {
             ## if selected and not already in package
-            if (!isset($row['selected']) || $package->hasModuleGroup($categoryId)) {
+            if (!isset($row['selected']) || $row['selected'] == 0 || $package->hasModuleGroup($categoryId)) {
                 continue;
             }
             $block = new SuperTableBlockElement();
