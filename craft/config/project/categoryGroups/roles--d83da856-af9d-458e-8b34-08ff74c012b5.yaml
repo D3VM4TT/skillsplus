@@ -26,7 +26,20 @@ fieldLayouts:
             title: null
             type: craft\fieldlayoutelements\TitleField
             warning: null
-            width: 100
+            width: 50
+          -
+            fieldUid: 09dd9f6b-4143-4e66-adc3-f156a34cdfe0 # Reviewer
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+        name: 'Job Role'
+        sortOrder: 1
+      -
+        elements:
           -
             fieldUid: dc88c84b-17f2-4b8b-8cc6-124b5115c9cc # Legacy ID
             instructions: null
@@ -35,7 +48,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
           -
             fieldUid: 440ee4d2-9c90-47a0-a2e7-9ec4d1a97683 # Data Imported
             instructions: null
@@ -44,9 +57,9 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
-        name: Fields
-        sortOrder: 1
+            width: 50
+        name: Legacy
+        sortOrder: 2
 handle: roles
 name: 'Job Roles'
 siteSettings:
