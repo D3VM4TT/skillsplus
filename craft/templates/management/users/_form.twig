@@ -285,7 +285,7 @@
                 </thead>
                 <tbody>
                 {% for package in packages %}
-                    {% set packageTitle = package.moduleGroup.title %}
+                    {% set packageTitle = package.taskbook.title %}
                     <tr class="item">
                         <td>{{ package.dateCreated|date(dateFormat) }}</td>
                         <td>
@@ -299,15 +299,10 @@
                             <td>{{ craft.lantra.taskbookLevel(package.packageLevel) }}</td>
                         {% endif %}
                         <td>
-                            {% for optionalModuleGroupBlock in package.packageOptionalModuleGroups.all %}
-                                {% set moduleGroup = optionalModuleGroupBlock.optionalModuleGroup.inReverse().one %}
-                                {% if not moduleGroup %}
-                                    Invalid Optional Module Group<br />
-                                {% else %}
-                                    {{ moduleGroup.title }}
-                                    {% if craft.lantra.setting('taskbookLevels') %}
-                                        ({{ craft.lantra.taskbookLevel(optionalModuleGroupBlock.optionalLevel) }})<br />
-                                    {% endif %}
+                            {% for moduleGroup in package.moduleGroups %}
+                                {{ moduleGroup.category.title }}
+                                {% if craft.lantra.setting('taskbookLevels') %}
+                                    ({{ craft.lantra.taskbookLevel(moduleGroup.level) }})<br />
                                 {% endif %}
                             {% endfor %}
                         </td>
