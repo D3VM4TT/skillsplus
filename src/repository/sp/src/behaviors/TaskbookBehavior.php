@@ -46,6 +46,7 @@ class TaskbookBehavior extends Behavior
                     'category' => $category,
                     'mandatory' => $block->moduleGroupMandatory,
                     'credit' => $block->moduleGroupCredit,
+                    'level' => $block->moduleGroupLevel,
                     'block' => $block
                 ];
             }
