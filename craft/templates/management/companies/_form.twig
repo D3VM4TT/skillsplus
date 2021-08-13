@@ -108,6 +108,24 @@
 </form>
     {% if entry %}
         <div class="page-content">
+        <h2>Company {{ taskbookLabel|pluralize }}</h2>
+        {% set companyTaskbooks = entry.companyTaskbooks.all() %}
+        {% if companyTaskbooks|length %}
+            <table class="data">
+                <thead>
+                <tr>
+                    <th>{{ taskbookLabel }}</th>
+                </tr>
+                </thead>
+                {% for taskbook in companyTaskbooks %}
+                    <tr>
+                        <td>{{ taskbook.title }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No {{ taskbookLabel|pluralize }} have been assigned to this company.</p>
+        {% endif %}
         {% set companyReviewers = craft.users.relatedTo({targetElement: entry, field: 'userTaskbookCompanies'}).all() %}
         <h2>Company Reviewers</h2>
         {% if companyReviewers|length %}

@@ -1,10 +1,9 @@
-{% set taskbooks = craft.entries.section('taskbooks').all() %}
 {% if packageUserId is not defined %}
     {% set packageUserId = currentUser.id %}
 {% endif %}
 {% if not taskbooks|length %}
     <div class="field--wrapper">
-        <p style="color:red;">There are currently no {{ taskbookLabel|pluralize }} available.</p>
+        <p style="color:red;">There are currently no {{ taskbookLabel|pluralize|lower }} available.</p>
     </div>
 {% else %}
     <div class="field--wrapper">
