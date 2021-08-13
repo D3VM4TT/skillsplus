@@ -35,6 +35,19 @@
     on:		        settings.taskbookLevels == 1
 }) }}
 
+{{ forms.editableTableField ({
+    label:			"Taskbook Level Labels",
+    id:				"taskbookLevelLabels",
+    name:			"taskbookLevelLabels",
+    addRowLabel:    "Add a level label",
+    cols:
+    {
+        value:       {heading: "Level", type: "number"},
+        label:       {heading: "Label", type: "text"}
+    },
+    rows:           settings.taskbookLevelLabels
+}) }}
+
 {{ forms.elementSelectField ({
     label:			    "Default Taskbook Job Role",
     id:				    "taskbookJobRole",

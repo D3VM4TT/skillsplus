@@ -280,10 +280,8 @@ class LantraVariable
      */
     public function taskbookLevels()
     {
-        return [
-            ['value' => 5, 'label' => 'Inspector'],
-            ['value' => 10, 'label' => 'Senior Inspector'],
-        ];
+        $levels = self::setting('taskbookLevelLabels');
+        return $levels && is_array($levels) ? $levels : [];
     }
 
     /**
@@ -297,7 +295,7 @@ class LantraVariable
                 return $l['label'];
             }
         }
-        return 'unknown';
+        return $level;
     }
 
     /**
