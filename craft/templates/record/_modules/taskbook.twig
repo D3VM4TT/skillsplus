@@ -34,10 +34,7 @@
         </div>
         <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
             {% if package.isComplete %}
-                {% if package.packageStatus == 'active' %}
-                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
-                {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
+                {% if package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
                     {% if package.isNextStepAssigned %}
                         <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
                     {% else %}
@@ -120,6 +117,14 @@
                 {% endif %}
                 <h4>Requirements</h4>
                 {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+
+                {% if package.isComplete %}
+                    {% if package.packageStatus == 'active' %}
+                        <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                           data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                    {% endif %}
+                {% endif %}
+
                 <p>&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>
