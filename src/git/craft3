@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space) included in 'all' command
-PROD_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs"
+PROD_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs fisa ptb tmp fencing lantraeportfolio d1 d2 d3 d4 d5 d6 d7 d8 d9 d10"
 
 # demo sites not deployed to prod if using 'all' command
 DEMO_DOMAINS="demo demo1 demo2 demo3 demo4 demo5 demo6 demo7 demo8 demo9 demo10"
@@ -62,11 +62,19 @@ else
    REMOTE_IP="$DEV_IP"
 fi
 
-if [[ "$3" == "" || "$2" == "composer" ]] ; then
-  COMPOSER="true"
-else
-  COMPOSER="false"
-fi
+INSTALL="false"
+COMPOSER="true"
+SENDEMAIL="true"
+# handle options
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -i|--install) INSTALL="true"; shift ;;
+	-nc|--nocomposer) COMPOSER="false" ;;
+	-ne|--noemail) SENDEMAIL="false" ;;
+
+    esac
+    shift
+done
 
 # make temp directory for checkout
 TMP_DIR="/git/tmp/$BRANCH"
@@ -107,14 +115,22 @@ else
     # loop through domains and copy to server
     for SITE in $SITES;
     do
-	    REMOTE_FOLDER="/datadisk/sites/$SITE"
 
-        echo "starting deployment of $SITE to $SERVER [$REMOTE_IP]"
+if [[ "$INSTALL" == "true" ]] ; then
+    DB="$SERVER-$SITE"
+	echo "creating database $DB"
+	mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "create database \`$DB\`"
+fi
 
         if [[ "$SERVER" == "prod" ]] ; then
             echo "backing up database"
-            mysqldump -u $DB_USER -p$DB_PASS prod-$SITE | gzip -9 -c > /git/sql/$SITE.sql.gz
+ 	    NOW=`date +"%Y-%m-%d"`
+            mysqldump -u $DB_USER -p$DB_PASS -h $DB_HOST prod-$SITES | gzip -9 -c > /git/sql/$SITE-$NOW.sql.gz
         fi
+
+	REMOTE_FOLDER="/datadisk/sites/$SITE"
+
+        echo "starting deployment of $SITE to $SERVER [$REMOTE_IP]"
 
         # set .env properties
         cp /git/config/.env $CRAFT_DIR
@@ -132,7 +148,7 @@ else
           rsync -acvz --no-perms --no-owner --no-group --no-times --delete --exclude 'craft/vendor' --exclude 'craft/storage' $CRAFT_DIR git@$REMOTE_IP:$REMOTE_FOLDER
 	fi
 
-	echo "syncing files from $HTML_DIR to $REMOTE_FOLDER"
+	"syncing files from $HTML_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/photos' --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
 
 	echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
@@ -141,25 +157,31 @@ else
         # switch directory ownership back to apache
         ssh git@$REMOTE_IP sudo chown apache:apache -R $REMOTE_FOLDER
 
-	    echo "setting file and folder permissions on $REMOTE_FOLDER"
+	echo "setting file and folder permissions on $REMOTE_FOLDER"
         ssh git@$REMOTE_IP sudo mkdir -p $REMOTE_FOLDER/craft/storage/runtime
-	    ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/storage
+	ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/storage
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/.env
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.json
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/composer.lock
         ssh git@$REMOTE_IP sudo chmod 744 $REMOTE_FOLDER/craft/config/license.key
         ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/craft/vendor
 
-        if [[ "$INSTALL" == "false" ]] ; then
-            ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
-        fi
+	if [[ "$INSTALL" == "false" ]] ; then
+	    ssh git@$REMOTE_IP sudo chmod -R 744 $REMOTE_FOLDER/html/cpresources
+	fi
 
         # update craft via cli
         ssh git@$REMOTE_IP sudo chmod a+x $REMOTE_FOLDER/craft/craft
-		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
-		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
-		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/up --plugin=sp
-		ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
+
+		if [[ "$INSTALL" == "true" ]] ; then
+			echo "installing new site..."
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/craft
+		else
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/up --plugin=sp
+ 		fi
 
         # write deployment to database
         SQL_QUERY="INSERT INTO \`admin\`.\`deployments\` (\`server\`, \`site\`, \`release\`) VALUES ('$SERVER', '$SITE', '$RELEASE_TAG');"
@@ -167,8 +189,13 @@ else
 
         echo "finished deployment of $SITE to $SERVER [$REMOTE_IP]"
     done
+
     # send notification
-    if [[ "$EMAIL" != "" ]] ; then
+    if [[ "$SENDEMAIL" == "false" ]] ; then
+	echo "No email sent"
+    fi
+
+    if [[ "$SENDEMAIL" == "true" ]] && [[ "$EMAIL" != "" ]] ; then
         echo "$SITES" | mail -s "Lantra Deploy [$SERVER] $RELEASE_TAG" -r "Skills Plus REPO<noreply@skills-plus.repo>" $EMAIL
         echo "sending email confirmation to $EMAIL"
     fi
