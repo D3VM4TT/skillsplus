@@ -2,23 +2,11 @@ defaultPlacement: end
 enableVersioning: true
 handle: taskbooks
 name: Taskbooks
-previewTargets:
-  -
-    __assoc__:
-      -
-        - label
-        - 'Primary entry page'
-      -
-        - urlFormat
-        - '{url}'
-      -
-        - refresh
-        - '1'
 propagationMethod: all
 siteSettings:
   47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
     enabledByDefault: true
-    hasUrls: true
+    hasUrls: false
     template: null
-    uriFormat: taskbooks
+    uriFormat: null
 type: channel
