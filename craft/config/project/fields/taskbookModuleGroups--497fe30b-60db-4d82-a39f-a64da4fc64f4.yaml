@@ -29,10 +29,18 @@ settings:
             -
               - width
               - ''
+      -
+        - 72642c3b-23ee-4e9c-92a9-2daf8d5b62e8 # Level
+        -
+          __assoc__:
+            -
+              - width
+              - ''
   contentTable: '{{%stc_taskbookmodulegroups}}'
   fieldLayout: table
   maxRows: ''
   minRows: ''
+  placeholderKey: null
   propagationMethod: all
   selectionLabel: ''
   staticField: ''

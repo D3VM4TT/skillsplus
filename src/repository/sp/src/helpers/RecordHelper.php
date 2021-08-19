@@ -77,6 +77,16 @@ class RecordHelper
     /**
      * @param RecordItem $recordItem
      * @param User $user
+     * @return null
+     */
+    public static function totalEndorsed(RecordItem $recordItem, User $user)
+    {
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['endorsed']);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
      * @param Entry|null $taskbook
      * @return bool
      */

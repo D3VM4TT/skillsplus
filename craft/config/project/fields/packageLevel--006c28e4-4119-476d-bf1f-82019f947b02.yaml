@@ -11,7 +11,7 @@ settings:
   max: '10'
   min: '1'
   prefix: null
-  previewCurrency: null
+  previewCurrency: ''
   previewFormat: decimal
   size: '1'
   suffix: null
