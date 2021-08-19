@@ -116,17 +116,20 @@
                     </table>
                 {% endif %}
                 <h4>Requirements</h4>
-                {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
-                {% if package.taskbook.moduleMinimumCredits %}
-                    <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
-                {% endif %}
-                {% if package.isComplete %}
-                    {% if package.packageStatus == 'active' %}
-                        <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                           data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                <div style="width: 50%;display: inline;float:left;">
+                    {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+                    {% if package.taskbook.moduleMinimumCredits %}
+                        <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
                     {% endif %}
-                {% endif %}
-
+                </div>
+                <div style="width: 50%;display: inline;float:right;text-align: right">
+                    {% if package.isComplete %}
+                        {% if package.packageStatus == 'active' %}
+                            <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                               data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
                 <p>&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>

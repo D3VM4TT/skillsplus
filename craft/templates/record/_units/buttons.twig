@@ -23,7 +23,7 @@
         <div class="container-btn">
             <button class="button primary-bg status" data-status="endorsed" type="button">Save Result</button>
         </div>
-    {% elseif not isPackage and not craft.lantra.setting('jobRoleEndorse', false) %}
+    {% elseif (not isPackage or isPackage and package.taskbook.unitEndorse) and not craft.lantra.setting('jobRoleEndorse', false) %}
         <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
         <div class="container-btn">
             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
