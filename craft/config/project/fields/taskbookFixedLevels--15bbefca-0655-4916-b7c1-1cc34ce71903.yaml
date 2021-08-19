@@ -1,0 +1,14 @@
+columnSuffix: bvanfzto
+contentColumnType: boolean
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: taskbookFixedLevels
+instructions: 'If selected user will not be able to select the level.'
+name: 'Taskbook Fixed Levels'
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

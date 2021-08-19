@@ -44,7 +44,7 @@
            <br />You must select at least {{ taskbook.moduleMinimumOptional }} optional {{ 'module'|pluralize(taskbook.moduleMinimumOptional) }}.
         {% endif %}
         </label>
-        {% include '_forms/taskbookOptionalModuleGroups' with {optionalModuleGroups:optionalModuleGroups} %}
+        {% include '_forms/taskbookOptionalModuleGroups' with {optionalModuleGroups:optionalModuleGroups, taskbook:taskbook} %}
         <div style="font-size: 12px; font-style: italic; margin-bottom:20px; text-align: right;">
         {% for row in taskbook.moduleCosts %}
            Core + {{ row.optionalModules }} module: £{{ row.cost }}<br />

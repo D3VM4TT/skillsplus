@@ -198,12 +198,13 @@ class Packages extends Component
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
         $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
         foreach ($taskbook->moduleGroupCategories('mandatory') as $mandatoryModuleGroupCategory) {
+            $level = $taskbook->taskbookFixedLevels ?  $mandatoryModuleGroupCategory->level : $packageLevel;
             $packageModuleGroups['new' . $n] = [
                 'type' => $blockType->id,
                 'enabled' => true,
                 'fields' => [
                     'moduleGroup' => [$mandatoryModuleGroupCategory->id],
-                    'moduleGroupLevel' => $packageLevel,
+                    'moduleGroupLevel' => $level,
                     'moduleGroupMandatory' => 1
                 ]
             ];
@@ -232,6 +233,8 @@ class Packages extends Component
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
         $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
         $optional = Craft::$app->request->getParam('optional', []);
+        $taskbook = $package->packageTaskbook->one();
+
         ## calculate cost if new
         $cost = $this->getModuleGroupCost($package->taskbook, $singleType);
         ## append the optional module groups
@@ -240,13 +243,16 @@ class Packages extends Component
             if (!isset($row['selected']) || $row['selected'] == 0 || $package->hasModuleGroup($categoryId)) {
                 continue;
             }
+            $taskbookModuleGroupBlock = $taskbook->moduleGroupBlock($categoryId);
+            $postedLevel = isset($row['level']) ? $row['level'] : 1;
+            $level = $taskbook->taskbookFixedLevels ? $taskbookModuleGroupBlock->moduleGroupLevel :$postedLevel;
             $block = new SuperTableBlockElement();
             $block->fieldId = $field->id;
             $block->typeId = $blockType->id;
             $block->ownerId = $package->id;
             $block->setFieldValues([
                 'moduleGroup' => [$categoryId],
-                'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
+                'moduleGroupLevel' => $level,
                 'moduleGroupMandatory' => 0,
                 'moduleGroupPaid' => $cost == 0,
                 'moduleGroupCost' => $cost

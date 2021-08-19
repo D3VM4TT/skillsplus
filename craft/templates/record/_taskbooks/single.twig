@@ -82,7 +82,7 @@
                         <p>Additional modules cost £{{ cost }} each.</p>
                         <p>&nbsp;</p>
                     {% endif %}
-                    {% include '_forms/taskbookOptionalModuleGroups' with {package:package, optionalModuleGroups:availableModuleGroups} %}
+                    {% include '_forms/taskbookOptionalModuleGroups' with {package:package, optionalModuleGroups:availableModuleGroups, taskbook:package.taskbook} %}
                 </div>
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Module</button>

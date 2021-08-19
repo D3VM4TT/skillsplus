@@ -67,6 +67,15 @@ fieldLayouts:
             warning: null
             width: 100
           -
+            fieldUid: 15bbefca-0655-4916-b7c1-1cc34ce71903 # Taskbook Fixed Levels
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
             fieldUid: da81a368-f84c-47f8-9e3a-b83346be0865 # Module Group Minimum Optional
             instructions: null
             label: null

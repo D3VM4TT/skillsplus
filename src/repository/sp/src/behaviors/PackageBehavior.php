@@ -209,7 +209,7 @@ class PackageBehavior extends Behavior
             if (!in_array($category->id, $this->moduleGroupIds())) {
                 $modulesGroups[] = [
                     'category' => $category,
-                    'level' => '',
+                    'level' => $moduleGroup['level'],
                     'credit' => $moduleGroup['credit']
                ];
             }
