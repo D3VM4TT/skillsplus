@@ -14,6 +14,7 @@
                 {% set packageExists = craft.lantra.packageExists(packageUserId, taskbook.id) %}
                 <option {% if entry is defined and packageTaskbook and packageTaskbook.id == taskbook.id %}selected {% endif %}
                         data-minimum="{{ taskbook.moduleMinimumOptional }}"
+                        data-levels="{{ taskbook.taskbookFixedLevels ? 0 : 1 }}"
                         data-revision="{{ packageExists ? 1 : 0 }}"
                         value="{{ taskbook.id }}">{{ taskbook.title }}{{ packageExists ? ' (revision)' : '' }}</option>
             {% endfor %}
@@ -21,7 +22,7 @@
         <input id="package-revision" type="hidden" name="fields[packageRevision]" value="0" />
     </div>
     {% if craft.lantra.setting('taskbookLevels') %}
-        <div class="field--wrapper">
+        <div id="package-levels" class="field--wrapper">
             <label for="packageLevel" class="no-float">Please select the level you would like to
                 achieve:</label>
             <select class="package-level" name="fields[packageLevel]">

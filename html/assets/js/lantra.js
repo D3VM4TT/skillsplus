@@ -19,10 +19,18 @@ $(document).ready(function () {
 
     $('select.package-taskbook').change(function () {
         var moduleGroupId = $(this).val(),
-            revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
+            option = $(this).find('option[value="' + moduleGroupId + '"]'),
+            revision = option.data('revision'),
+            levels = option.data('levels');
         $('div.taskbook-optional').hide();
         $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
         $('input#package-revision').val(revision);
+        if (levels) {
+            $('div#package-levels').show();
+        }
+        else {
+            $('div#package-levels').hide();
+        }
     }).change();
 
     $('select.package-level').change(function () {
