@@ -2,8 +2,11 @@
     <thead>
     <tr>
         <th width="50%">Optional</th>
-        {% if craft.lantra.setting('taskbookLevels') %}
+        {% if craft.lantra.setting('taskbookLevels')  %}
             <th>Level</th>
+        {% endif %}
+        {% if taskbook.moduleMinimumCredits %}
+            <th>Credit</th>
         {% endif %}
         <th style="text-align: right;padding-right:0;">Selected</th>
     </tr>
@@ -18,7 +21,7 @@
             </td>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <td>
-                    {% if optionalModuleGroup.level %}
+                    {% if taskbook.taskbookFixedLevels %}
                         <strong>{{ craft.lantra.taskbookLevel(optionalModuleGroup.level) }}</strong>
                         <input class="optional-level-hidden" type="hidden" name="optional[{{ category.id  }}][level]" value="{{ optionalModuleGroup.level }}" />
                     {% else %}
@@ -29,6 +32,9 @@
                         </select>
                     {% endif %}
                 </td>
+            {% endif %}
+            {% if taskbook.moduleMinimumCredits %}
+                <td>{{ optionalModuleGroup.credit }}</td>
             {% endif %}
             <td style="text-align: right">
                 <span class="module-select {% if packageModuleGroupBlock %}module-selected{% endif %}">

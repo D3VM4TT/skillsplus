@@ -1,13 +1,23 @@
 {% set mandatoryModuleGroups = taskbook.moduleGroups('mandatory') %}
 {% set optionalModuleGroups = taskbook.moduleGroups('optional') %}
 <div class="taskbook-optional taskbook-optional-{{ taskbook.id }}">
+
+    {% include '_includes/taskbooks/taskbookRequired' with {taskbook: taskbook} %}
+    <p>&nbsp;</p>
+
     {% if mandatoryModuleGroups|length  %}
         <label>Below are the mandatory modules for this {{ taskbookLabel }}</label>
         <table class="data">
             <thead>
             <tr>
                 <th width="50%">Mandatory</th>
-                <th width="50%"></th>
+                {% if craft.lantra.setting('taskbookLevels') and taskbook.taskbookFixedLevels %}
+                    <th>Level</th>
+                {% endif %}
+                {% if taskbook.moduleMinimumCredits %}
+                    <th>Credit</th>
+                {% endif %}
+                <th width="20%"></th>
             </tr>
             </thead>
             <tbody>
@@ -16,6 +26,12 @@
                 {% set packageModuleGroupRow = craft.lantra.getModuleGroupRow(entry, category.id)  %}
                 <tr class="optional-module">
                     <td>{{ category.magicTitle }}</td>
+                    {% if craft.lantra.setting('taskbookLevels') and taskbook.taskbookFixedLevels %}
+                        <td>{{ craft.lantra.taskbookLevel(mandatoryModuleGroup.level) }}</td>
+                    {% endif %}
+                    {% if taskbook.moduleMinimumCredits %}
+                        <td>{{ mandatoryModuleGroup.credit }}</td>
+                    {% endif %}
                     <td></td>
                 </tr>
             {% endfor %}
