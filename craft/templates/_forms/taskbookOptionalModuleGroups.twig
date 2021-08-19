@@ -15,7 +15,7 @@
     {% for optionalModuleGroup in optionalModuleGroups %}
         {% set category = optionalModuleGroup.category  %}
         {% set packageModuleGroupBlock = package is defined ? package.moduleGroupBlock(category.id) : null  %}
-        <tr class="optional-module" data-category-id="{{ category.id }}">
+        <tr class="optional-module {% if packageModuleGroupBlock %}module-selected{% endif %}" data-category-id="{{ category.id }}">
             <td>
                 {{ category.magicTitle }}
             </td>
@@ -37,7 +37,7 @@
                 <td>{{ optionalModuleGroup.credit }}</td>
             {% endif %}
             <td style="text-align: right">
-                <span class="module-select {% if packageModuleGroupBlock %}module-selected{% endif %}">
+                <span class="module-select">
                     <i class="fas fa-check"></i>
                     <i class="fas fa-times"></i>
                     <input type="hidden" name="optional[{{ category.id }}][selected]" value="{{ packageModuleGroupBlock ? 1 : 0 }}">

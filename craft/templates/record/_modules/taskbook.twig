@@ -154,7 +154,7 @@
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                             </td>
-                            <td>{{ moduleGroup.level }}</td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td>{{ moduleGroup.credit }}</td>
                             {% endif %}
@@ -186,7 +186,7 @@
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                             </td>
-                            <td>{{ moduleGroup.level }}</td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td>{{ moduleGroup.credit }}</td>
                             {% endif %}
@@ -204,9 +204,10 @@
                     <table class="data" width="100%">
                         <thead>
                         <tr>
-                            <th>Module Title</th>
+                            <th style="width: 60%;">Available</th>
+                            <th>Level</th>
                             {% if package.taskbook.moduleMinimumCredits %}
-                                <th style="text-align: right;padding-right: 0;">Credit</th>
+                                <th style="text-align: right;padding-right:0">Credit</th>
                             {% endif %}
                         </tr>
                         </thead>
@@ -214,6 +215,7 @@
                         {% for moduleGroup in package.moduleGroups('available')  %}
                             <tr>
                                 <td>{{ moduleGroup.category.title }}</td>
+                                <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                                 {% if package.taskbook.moduleMinimumCredits %}
                                     <td style="text-align: right;">{{ moduleGroup.credit }}</td>
                                 {% endif %}

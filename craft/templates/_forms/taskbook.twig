@@ -36,12 +36,6 @@
         {% include '_forms/taskbookModuleGroups' with {taskbook: taskbook, entry: entry is defined ? entry} %}
     {% endfor %}
 {% endif %}
-<script id="input-template" type="text/template">
-    <input type="hidden" class="optional-hidden" name="optional[{n}][id]" value="{moduleGroupId}"/>
-    {% if craft.lantra.setting('taskbookLevels') %}
-        <input type="hidden" class="optional-hidden" name="optional[{n}][level]" value="{moduleGroupLevel}"/>
-    {% endif %}
-</script>
 
 {% if options is defined and options %}
     {{ hiddenInput('fields[packagePaid]', 0) }}

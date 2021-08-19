@@ -24,8 +24,7 @@ class TaskbookBehavior extends Behavior
      */
     public function moduleGroupBlock($categoryId)
     {
-        foreach($this->moduleGroups() as $moduleGroup)
-        {
+        foreach($this->moduleGroups('all') as $moduleGroup) {
             if ($moduleGroup['category']->id == $categoryId) {
                 return $moduleGroup['block'];
             }

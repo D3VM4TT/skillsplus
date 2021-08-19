@@ -84,8 +84,8 @@ fields:
     translationMethod: site
     type: craft\fields\Categories
   72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: # Level
-    columnSuffix: wrlzdlkm
-    contentColumnType: integer(10)
+    columnSuffix: null
+    contentColumnType: smallint(2)
     fieldGroup: null
     handle: moduleGroupLevel
     instructions: 'If selected, users will not be able to choose their own level.'
@@ -94,8 +94,8 @@ fields:
     settings:
       decimals: 0
       defaultValue: null
-      max: null
-      min: '0'
+      max: '10'
+      min: '1'
       prefix: null
       previewCurrency: ''
       previewFormat: decimal

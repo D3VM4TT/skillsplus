@@ -72,7 +72,7 @@ class PackageBehavior extends Behavior
                     continue;
                 }
                 $category = $moduleGroupBlock->moduleGroup->one();
-                if (null == $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id)) {
+                if (null == $category || null == $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id)) {
                     continue;
                 }
                 $modulesGroups[] = [

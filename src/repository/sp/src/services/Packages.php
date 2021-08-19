@@ -240,12 +240,12 @@ class Packages extends Component
         ## append the optional module groups
         foreach ($optional as $categoryId => $row) {
             ## if selected and not already in package
-            if (!isset($row['selected']) || $row['selected'] == 0 || $package->hasModuleGroup($categoryId)) {
+            if (!isset($row['selected']) || $row['selected'] == '0' || $package->hasModuleGroup($categoryId)) {
                 continue;
             }
             $taskbookModuleGroupBlock = $taskbook->moduleGroupBlock($categoryId);
-            $postedLevel = isset($row['level']) ? $row['level'] : 1;
-            $level = $taskbook->taskbookFixedLevels ? $taskbookModuleGroupBlock->moduleGroupLevel :$postedLevel;
+            $postedLevel = isset($row['level']) ? $row['level'] : 0;
+            $level = $taskbook->taskbookFixedLevels ? $taskbookModuleGroupBlock->moduleGroupLevel : $postedLevel;
             $block = new SuperTableBlockElement();
             $block->fieldId = $field->id;
             $block->typeId = $blockType->id;
@@ -257,7 +257,9 @@ class Packages extends Component
                 'moduleGroupPaid' => $cost == 0,
                 'moduleGroupCost' => $cost
             ]);
-            Craft::$app->elements->saveElement($block);
+            if (!Craft::$app->elements->saveElement($block)) {
+                continue;
+            }
         }
         return true;
     }
