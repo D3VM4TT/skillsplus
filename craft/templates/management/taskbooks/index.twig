@@ -56,7 +56,7 @@
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
                             <td><p class="td-title-responsive">Member: </p><a href={{ craft.lantra.packageUrl(user.id, package.id) }}>{{ user.fullname }}</a></td>
-                            <td><p class="td-title-responsive">Module Group: </p>{{ package.moduleGroup.title }}</td>
+                            <td><p class="td-title-responsive">Taskbook: </p>{{ package.taskbook.title }}</td>
                             <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
                             <td><p class="td-title-responsive">Status: </p>{{ package.packageStatus }}</td>
