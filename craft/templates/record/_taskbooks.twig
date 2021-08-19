@@ -1,11 +1,6 @@
 {% set packageId = craft.app.request.getSegment(4) %}
 {% set moduleGroupId = craft.app.request.getSegment(5) %}
 
-{# only one package - redirect to package #}
-{% if not packageId and cpdUser.record.totalPackages == 1 %}
-    {% redirect craft.lantra.packageUrl(cpdUser.id, cpdUser.record.firstPackage.elementId) %}
-{% endif %}
-
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set isManager = false %}
 {% set isAssessor = false %}
@@ -32,12 +27,16 @@
             {% endif %}
             <th>Next Step</th>
             <th>Status</th>
+            <th>Cost</th>
+            <th>PayPal Email</th>
+            <th>Reference</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
             {% for packageItem in cpdUser.record.packages %}
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
+                {% set payment = package.userPayments.one %}
                 <tr>
                     <td>
                         <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
@@ -53,6 +52,13 @@
                     <td>
                         {{ package.packageStatus|title }}
                     </td>
+                    <td>£{{ package.packageCost }}</td>
+                    <td>
+                        {{ payment ? payment.payer_email : 'unknown' }}
+                    </td>
+                    <td>
+                        {{ payment ? payment.txn_id : 'unknown' }}
+                    </td>
                     <td>
                         {% set certificateUrl = craft.lantra.certificateUrl(package) %}
                         {% if certificateUrl %}
@@ -65,6 +71,11 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if craft.lantra.setting('taskbookNew') %}
+        <div class="container-btn">
+            <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
+        </div>
+    {% endif %}
 {% endif %}
 
 
