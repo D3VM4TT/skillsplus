@@ -115,21 +115,25 @@
                         </tbody>
                     </table>
                 {% endif %}
-                <h4>Requirements</h4>
-                <div style="width: 50%;display: inline;float:left;">
-                    {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
-                    {% if package.taskbook.moduleMinimumCredits %}
-                        <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
-                    {% endif %}
-                </div>
-                <div style="width: 50%;display: inline;float:right;text-align: right">
-                    {% if package.isComplete %}
-                        {% if package.packageStatus == 'active' %}
-                            <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                               data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                {% if package.packageStatus == 'locked' %}
+                    <h4>{{ taskbookLabel }} Locked</h4>
+                    <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
+                {% else %}
+                    <h4>Requirements</h4>
+                    <div style="width: 50%;display: inline;float:left;">
+                        {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+                        {% if package.taskbook.moduleMinimumCredits %}
+                            <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
                         {% endif %}
+                    </div>
+                    {% if package.isComplete %}
+                        <div style="width: 50%;display: inline;float:right;text-align: right">
+                            <p style="color:#006600;margin-bottom:10px;">You have completed your {{ taskbookLabel|lower }}.<br />Click below to request assessment.</p>
+                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                                   data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                        </div>
                     {% endif %}
-                </div>
+                {% endif %}
                 <p style="clear: both">&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>
