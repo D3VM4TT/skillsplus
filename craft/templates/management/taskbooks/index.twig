@@ -10,7 +10,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
-{% set filterPackageStatus = craft.app.request.getParam('status')|default('locked') %}
+{% set filterPackageStatus = craft.app.request.getParam('status')|default('all') %}
 {% set sortParam = craft.app.request.getParam('sort') %}
 {% set validSorts = ['title', 'id', 'dateCreated'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
