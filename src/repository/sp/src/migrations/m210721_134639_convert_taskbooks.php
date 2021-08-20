@@ -76,8 +76,6 @@ class m210721_134639_convert_taskbooks extends Migration
                 $categories[$optional->id] = 0;
             }
 
-            $this->resetCategoryChildren($category);
-
             if ($entry->id) {
 
                 ## add previous module groups to new module groups field
@@ -105,14 +103,23 @@ class m210721_134639_convert_taskbooks extends Migration
                 }
                 echo "Converted " . $category->title . "\n\n";
             }
+
+            $criteria = Category::find();
+            $criteria->group = 'moduleGroups';
+            $criteria->moduleGroupTaskbooks = true;
+            $criteria->level = 1;
+            $categories = $criteria->all();
+            foreach ($categories as $category) {
+                $this->resetCategoryChildren($category);
+            }
         }
     }
 
     function resetCategoryChildren($category)
     {
         foreach($category->getChildren() as $optional) {
-            $query = $this->db->createCommand();
-            $query->update('{{%structureelements}}', ['level' => 1], ['elementId' => $optional->id])->execute();
+            $optional->parent = null;
+            Craft::$app->elements->saveElement($optional);
         }
     }
 
