@@ -1,0 +1,127 @@
+field: 497fe30b-60db-4d82-a39f-a64da4fc64f4 # Taskbook Module Groups
+fieldLayouts:
+  112bf991-eefa-49b8-b116-6a665f0ef787:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 1648b942-a6f7-47b2-a284-5a971121b556 # Module Group
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 651fac2b-5f39-4c8f-96b0-4c75c3267102 # Mandatory
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: af49d354-08d5-422e-9f65-56c76ff7d485 # Credit
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 72642c3b-23ee-4e9c-92a9-2daf8d5b62e8 # Level
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  651fac2b-5f39-4c8f-96b0-4c75c3267102: # Mandatory
+    columnSuffix: null
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: moduleGroupMandatory
+    instructions: ''
+    name: Mandatory
+    searchable: true
+    settings:
+      default: false
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  1648b942-a6f7-47b2-a284-5a971121b556: # Module Group
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: moduleGroup
+    instructions: ''
+    name: 'Module Group'
+    searchable: true
+    settings:
+      allowLimit: false
+      allowMultipleSources: false
+      allowSelfRelations: false
+      branchLimit: '1'
+      limit: null
+      localizeRelations: false
+      selectionLabel: ''
+      showSiteMenu: true
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Categories
+  72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: # Level
+    columnSuffix: null
+    contentColumnType: smallint(2)
+    fieldGroup: null
+    handle: moduleGroupLevel
+    instructions: 'If selected, users will not be able to choose their own level.'
+    name: Level
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: '10'
+      min: '1'
+      prefix: null
+      previewCurrency: ''
+      previewFormat: decimal
+      size: null
+      suffix: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  af49d354-08d5-422e-9f65-56c76ff7d485: # Credit
+    columnSuffix: null
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: moduleGroupCredit
+    instructions: ''
+    name: Credit
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: null
+      previewCurrency: ''
+      previewFormat: decimal
+      size: null
+      suffix: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number

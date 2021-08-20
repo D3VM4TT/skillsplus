@@ -198,12 +198,13 @@ class Packages extends Component
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
         $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
         foreach ($taskbook->moduleGroupCategories('mandatory') as $mandatoryModuleGroupCategory) {
+            $level = $taskbook->taskbookFixedLevels ?  $mandatoryModuleGroupCategory->level : $packageLevel;
             $packageModuleGroups['new' . $n] = [
                 'type' => $blockType->id,
                 'enabled' => true,
                 'fields' => [
                     'moduleGroup' => [$mandatoryModuleGroupCategory->id],
-                    'moduleGroupLevel' => $packageLevel,
+                    'moduleGroupLevel' => $level,
                     'moduleGroupMandatory' => 1
                 ]
             ];
@@ -232,26 +233,33 @@ class Packages extends Component
         $field = Craft::$app->fields->getFieldByHandle('packageModuleGroups');
         $blockType = $sp->getBlockTypesByFieldId($field->id)[0];
         $optional = Craft::$app->request->getParam('optional', []);
+        $taskbook = $package->packageTaskbook->one();
+
         ## calculate cost if new
         $cost = $this->getModuleGroupCost($package->taskbook, $singleType);
         ## append the optional module groups
         foreach ($optional as $categoryId => $row) {
             ## if selected and not already in package
-            if (!isset($row['selected']) || $package->hasModuleGroup($categoryId)) {
+            if (!isset($row['selected']) || $row['selected'] == '0' || $package->hasModuleGroup($categoryId)) {
                 continue;
             }
+            $taskbookModuleGroupBlock = $taskbook->moduleGroupBlock($categoryId);
+            $postedLevel = isset($row['level']) ? $row['level'] : 0;
+            $level = $taskbook->taskbookFixedLevels ? $taskbookModuleGroupBlock->moduleGroupLevel : $postedLevel;
             $block = new SuperTableBlockElement();
             $block->fieldId = $field->id;
             $block->typeId = $blockType->id;
             $block->ownerId = $package->id;
             $block->setFieldValues([
                 'moduleGroup' => [$categoryId],
-                'moduleGroupLevel' => isset($row['level']) ? $row['level'] : 1,
+                'moduleGroupLevel' => $level,
                 'moduleGroupMandatory' => 0,
                 'moduleGroupPaid' => $cost == 0,
                 'moduleGroupCost' => $cost
             ]);
-            Craft::$app->elements->saveElement($block);
+            if (!Craft::$app->elements->saveElement($block)) {
+                continue;
+            }
         }
         return true;
     }
@@ -846,5 +854,25 @@ class Packages extends Component
     public function getModuleGroupCost(Entry $taskbook, $singleType = null)
     {
         return $singleType == null ? 0 : ($singleType == 'resit' ?  $taskbook->moduleResitCost : $taskbook->moduleSingleCost);
+    }
+
+    /**
+     * @param $user
+     * @param $taskbook
+     * @return null
+     */
+    public function getReviewers($user, $taskbook, $jobRoleIds)
+    {
+        if (null == $userCompany = $user->userCompany->one()) {
+            return null;
+        }
+        $criteria = User::find();
+        $criteria->relatedTo = [
+            'and',
+            ['targetElement' => [$userCompany->id], 'field' => 'userTaskbookCompanies'],
+            ['targetElement' => [$taskbook->id], 'field' => 'userTaskbooks'],
+            ['targetElement' => $jobRoleIds, 'field' => 'userRole']
+        ];
+        return $criteria->ids();
     }
 }

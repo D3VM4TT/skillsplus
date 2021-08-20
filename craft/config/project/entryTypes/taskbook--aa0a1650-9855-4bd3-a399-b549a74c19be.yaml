@@ -1,0 +1,181 @@
+fieldLayouts:
+  e8d523cd-161e-4cf6-9d36-39e2d444cc43:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: 892d5048-f63d-468f-a926-c89daebf07f9 # Short Title
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 918cc95b-e5c3-468d-809a-8bbd4eb5a8e5 # Taskbook Intro
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: db4d8830-6fbb-45c9-bdb4-cc058820b1ae # Taskbook Files
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Intro
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: 497fe30b-60db-4d82-a39f-a64da4fc64f4 # Taskbook Module Groups
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 15bbefca-0655-4916-b7c1-1cc34ce71903 # Taskbook Fixed Levels
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: da81a368-f84c-47f8-9e3a-b83346be0865 # Module Group Minimum Optional
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: e1c8bc22-c8ae-487a-8cfa-074338772cbc # Module Group Minimum Credits
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 753f71f4-d39b-43bd-9219-b76f91626502 # Module Group Minimum Level
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 809b8647-dd59-44cf-b5d5-63dac0021cb1 # Module Group Minimum Level Credits
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 84396576-ea02-4748-adcd-ae3fe8d26824 # Unit Endorse
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Settings
+        sortOrder: 2
+      -
+        elements:
+          -
+            fieldUid: ab5af452-7d2f-4498-9a76-6ffbe1c7a251 # Taskbook Free
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: e427fbb1-c8bc-4ad3-9913-e5c7931d63f2 # Module Group Max Cost
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 5bdda926-785f-4d89-aebe-9a805b3dab29 # Module Group Resit Cost
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3 # Module Group Single Cost
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 680431de-8445-48e9-8acf-e32d867f73dd # Module Group Costs
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Costs
+        sortOrder: 3
+handle: taskbook
+hasTitleField: true
+name: Taskbook
+section: 0db8b604-3d85-4638-bc64-f1d73e2e9aba # Taskbooks
+sortOrder: 1
+titleFormat: '{section.name|raw}'
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

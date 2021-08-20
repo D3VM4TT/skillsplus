@@ -1,0 +1,78 @@
+fieldLayouts:
+  bcaf5920-c460-4465-a5db-e7f4bad29958:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: fcef71c8-c93e-4e97-a8f3-4fc223b2d223 # Team Name
+            instructions: null
+            label: null
+            required: '1'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 0578b9f0-6e63-4ecd-b386-295f3b276282 # Team Company
+            instructions: null
+            label: null
+            required: '1'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Team
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: 5839b521-ccd0-4768-bbe4-ef59335fb732 # Team Primary Manager
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 838b996f-8f5d-4df2-9a75-0d1692348632 # Team Secondary Managers
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Managers
+        sortOrder: 2
+handle: team
+hasTitleField: false
+name: Team
+section: bcf0ea1d-9495-423e-ac83-ef089790460c # Teams
+sortOrder: 1
+titleFormat: '{teamCompany.one.title} - {teamName}'
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

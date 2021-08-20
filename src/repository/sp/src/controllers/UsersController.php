@@ -133,8 +133,13 @@ class UsersController extends BaseController {
         $redirect = Craft::$app->getRequest()->getValidatedBodyParam('redirect');
         $fields = $request->getParam('fields');
 
-        ## existing user
-        if ($userId) {
+        $isNew = !$userId;
+
+        if ($isNew) {
+            $this->requirePermission('registerUsers');
+            $user = new User();
+        }
+        else {
             $user = User::find()
                 ->id($userId)
                 ->anyStatus()
@@ -143,11 +148,6 @@ class UsersController extends BaseController {
             if (!$user) {
                 $this->_returnError('Invalid user ID ' . $userId . '.');
             }
-        }
-        ## create new user
-        else {
-            $this->requirePermission('registerUsers');
-            $user = new User();
         }
 
         ## set basic account fields
@@ -183,12 +183,13 @@ class UsersController extends BaseController {
         ## assign user to groups (always in 'user' group from front end)
         $groupIds = [$usersId];
         $userCompany = isset($fields['userCompany']) ? $fields['userCompany'] : null;
+
         if ($fields['userType'] == 'manager') {
             $groupIds[] = $companyManagersId;
             $companyManager = true;
         }
         ## remove as manager from all companies
-        elseif (false != $companies = Lantra::$app->users->getManagerCompanies($user)) {
+        elseif (!$isNew && false != $companies = Lantra::$app->users->getManagerCompanies($user)) {
             foreach ($companies as $company) {
                 Lantra::$app->users->removeCompanyManager($company, $user);
             }

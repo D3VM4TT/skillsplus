@@ -1,10 +1,9 @@
-{% set taskbooks = craft.entries.section('taskbooks').all() %}
 {% if packageUserId is not defined %}
     {% set packageUserId = currentUser.id %}
 {% endif %}
 {% if not taskbooks|length %}
     <div class="field--wrapper">
-        <p style="color:red;">There are currently no {{ taskbookLabel|pluralize }} available.</p>
+        <p style="color:red;">There are currently no {{ taskbookLabel|pluralize|lower }} available.</p>
     </div>
 {% else %}
     <div class="field--wrapper">
@@ -15,6 +14,7 @@
                 {% set packageExists = craft.lantra.packageExists(packageUserId, taskbook.id) %}
                 <option {% if entry is defined and packageTaskbook and packageTaskbook.id == taskbook.id %}selected {% endif %}
                         data-minimum="{{ taskbook.moduleMinimumOptional }}"
+                        data-levels="{{ taskbook.taskbookFixedLevels ? 0 : 1 }}"
                         data-revision="{{ packageExists ? 1 : 0 }}"
                         value="{{ taskbook.id }}">{{ taskbook.title }}{{ packageExists ? ' (revision)' : '' }}</option>
             {% endfor %}
@@ -22,7 +22,7 @@
         <input id="package-revision" type="hidden" name="fields[packageRevision]" value="0" />
     </div>
     {% if craft.lantra.setting('taskbookLevels') %}
-        <div class="field--wrapper">
+        <div id="package-levels" class="field--wrapper">
             <label for="packageLevel" class="no-float">Please select the level you would like to
                 achieve:</label>
             <select class="package-level" name="fields[packageLevel]">
@@ -37,12 +37,6 @@
         {% include '_forms/taskbookModuleGroups' with {taskbook: taskbook, entry: entry is defined ? entry} %}
     {% endfor %}
 {% endif %}
-<script id="input-template" type="text/template">
-    <input type="hidden" class="optional-hidden" name="optional[{n}][id]" value="{moduleGroupId}"/>
-    {% if craft.lantra.setting('taskbookLevels') %}
-        <input type="hidden" class="optional-hidden" name="optional[{n}][level]" value="{moduleGroupLevel}"/>
-    {% endif %}
-</script>
 
 {% if options is defined and options %}
     {{ hiddenInput('fields[packagePaid]', 0) }}

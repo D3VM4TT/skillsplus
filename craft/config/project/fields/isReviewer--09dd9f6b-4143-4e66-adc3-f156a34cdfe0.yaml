@@ -1,0 +1,14 @@
+columnSuffix: exnsdsny
+contentColumnType: boolean
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: isReviewer
+instructions: 'Include users with this job role in the list of potential taskbook reviewers?'
+name: Reviewer
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

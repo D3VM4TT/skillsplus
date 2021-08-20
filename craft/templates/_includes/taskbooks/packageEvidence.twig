@@ -1,10 +1,15 @@
 <div style="margin-top:20px;margin-bottom:20px">
     <h4>Evidence</h4>
 </div>
-<form method="post" accept-charset="UTF-8">
-    {{ csrfInput() }}
-    {{ actionInput('entries/save-entry') }}
-    {{ hiddenInput('sectionId', package.section.id) }}
-    {{ hiddenInput('entryId', package.id) }}
-    {% include '_includes/evidence' with {evidence:package.packageEvidence, accountId:package.authorId, fieldName:'fields[packageEvidence][]', autoSave:true} %}
-</form>
+
+<ul class="assets" id="evidence">
+{% set allUnits = cpdUser.record.getItem(package.id).allUnits() %}
+{% for unit in allUnits %}
+    {% set result = cpdUser.record.getUnitResult(unit.elementId) %}
+    {% if result and result.resultEvidence|length %}
+        {% for asset in result.resultEvidence.all() %}
+            {% include '_includes/evidence/asset' with {'asset': asset, readOnly:true} %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+</ul>

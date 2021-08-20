@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: unitIntro
 instructions: ''
 name: 'Unit Intro'
@@ -7,7 +8,7 @@ searchable: true
 settings:
   availableTransforms: '*'
   availableVolumes:
-    - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9
+    - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9 # Uploads
   cleanupHtml: true
   columnType: text
   purifierConfig: ''

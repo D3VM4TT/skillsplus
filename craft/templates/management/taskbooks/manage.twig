@@ -19,7 +19,7 @@
     </div>
     <div class="page-header secondary-bg">
         <h2>Manage taskbook</h2>
-        <p>{{ package.author.fullName  }} - {{ package.moduleGroup.title }}</p>
+        <p>{{ package.author.fullName  }} - {{ package.taskbook.title }}</p>
     </div>
 
     {{ ui.errorList(package.getFirstErrors()) }}
@@ -33,6 +33,6 @@
         {% else %}
             {% include 'management/taskbooks/_assign' %}
         {% endif %}
-        {% include '_includes/packageLog' with {package:package, admin:true} %}
+        {% include '_includes/taskbooks/packageLog' with {package:package, admin:true} %}
     </form>
 {% endblock %}

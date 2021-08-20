@@ -459,4 +459,9 @@ class LantraHelper
         }
         return null;
     }
+
+    public static function taskbookLevels()
+    {
+
+    }
 }

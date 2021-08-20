@@ -2,29 +2,46 @@
     <thead>
     <tr>
         <th width="50%">Optional</th>
-        {% if craft.lantra.setting('taskbookLevels') %}
+        {% if craft.lantra.setting('taskbookLevels')  %}
             <th>Level</th>
         {% endif %}
-        <th></th>
+        {% if taskbook.moduleMinimumCredits %}
+            <th>Credit</th>
+        {% endif %}
+        <th style="text-align: right;padding-right:0;">Selected</th>
     </tr>
     </thead>
     <tbody>
     {% for optionalModuleGroup in optionalModuleGroups %}
         {% set category = optionalModuleGroup.category  %}
-        {% set packageModuleGroupRow = package is defined ? craft.lantra.getModuleGroupRow(package, category.id) : null  %}
-        <tr class="optional-module">
-            <td>{{ category.magicTitle }}</td>
+        {% set packageModuleGroupBlock = package is defined ? package.moduleGroupBlock(category.id) : null  %}
+        <tr class="optional-module {% if packageModuleGroupBlock %}module-selected{% endif %}" data-category-id="{{ category.id }}">
+            <td>
+                {{ category.magicTitle }}
+            </td>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <td>
-                    <select class="optional-level" name="optional[{{ category.id  }}][level]">
-                        {% for option in craft.lantra.taskbookLevels() %}
-                            <option {% if packageModuleGroupRow and packageModuleGroupRow.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
-                        {% endfor %}
-                    </select>
+                    {% if taskbook.taskbookFixedLevels %}
+                        <strong>{{ craft.lantra.taskbookLevel(optionalModuleGroup.level) }}</strong>
+                        <input class="optional-level-hidden" type="hidden" name="optional[{{ category.id  }}][level]" value="{{ optionalModuleGroup.level }}" />
+                    {% else %}
+                        <select class="optional-level" name="optional[{{ category.id  }}][level]">
+                            {% for option in craft.lantra.taskbookLevels() %}
+                                <option {% if packageModuleGroupBlock and packageModuleGroupBlock.moduleLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
                 </td>
             {% endif %}
+            {% if taskbook.moduleMinimumCredits %}
+                <td>{{ optionalModuleGroup.credit }}</td>
+            {% endif %}
             <td style="text-align: right">
-                <input class="optional" type="checkbox" name="optional[{{ category.id  }}][selected]" value="{{ category.id }}" {% if packageModuleGroupRow %}checked{% endif %}>
+                <span class="module-select">
+                    <i class="fas fa-check"></i>
+                    <i class="fas fa-times"></i>
+                    <input type="hidden" name="optional[{{ category.id }}][selected]" value="{{ packageModuleGroupBlock ? 1 : 0 }}">
+                </span>
             </td>
         </tr>
     {% endfor %}

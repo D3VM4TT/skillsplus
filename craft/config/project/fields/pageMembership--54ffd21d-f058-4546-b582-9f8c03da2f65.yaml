@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
+fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
 handle: pageMembership
 instructions: ''
 name: 'Page Membership'

@@ -169,7 +169,8 @@ function formatBytes(bytes,decimals) {
 
 $(document).ready(function(){
     $('.lantra-browser').lantraBrowser();
-    $('.open-lantra-browser').click(function(){
+    $('.open-lantra-browser').click(function(e){
+        e.preventDefault();
         let t = $(this).data('target'),
             $element = $('#browser-modal').find('.lantra-browser').eq(0);
         $element.data('lantraBrowser').setTarget($('#' + t)).refreshAssets().openModal();

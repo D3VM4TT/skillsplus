@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: unitRecurringPeriod
 instructions: ''
 name: 'Unit Recurring Period'

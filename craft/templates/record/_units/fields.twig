@@ -77,39 +77,11 @@
             {% if not resultLocked and not fieldDisabled %}
                 {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
                 {% if evidenceFolderId %}
-                    <span class="btn btn-success fileinput-button primary-bg">
-                            <i class="glyphicon glyphicon-plus"></i>
-                            <span>Add files...</span>
-                            <input id="fileupload" type="file" name="assets-upload" multiple data-folderid="{{ evidenceFolderId }}">
-                    </span>
-                    <br>
-                    <br>
-                    <div id="progress" class="progress">
-                        <div class="progress-bar progress-bar-success"></div>
-                    </div>
+                    {% include '_includes/evidence' with {evidence:resultEvidence, accountId:cpdUser.id, fieldName:'fields[resultEvidence][]', autoSave:false} %}
                 {% else %}
                     <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
                 {% endif %}
             {% endif %}
-            <div id="files" class="files">
-                {% if resultExists and resultEntry.legacyResultFiles %}
-                    <p style="color:#FF0000;font-weight:700">ERROR: Could not copy legacy result files, contact technical support.</p>
-                    <p>{{ resultEntry.legacyResultFiles  }}</p>
-                {% endif %}
-                {% if resultEvidence %}
-                    {% for resultAsset in resultEntry.resultEvidence.all %}
-                    <p>
-                        <input type="hidden" name="fields[resultEvidence][]" value="{{ resultAsset.id }}" />
-                        [<a href="#" class="delete-file" data-id="{{ resultAsset.id }}" style="color:#FF0000">x</a>]
-                        <a target="_blank" href="/internal/{{ resultAsset.id }}">{{ resultAsset.filename }}</a>
-                        {% if resultAsset.location and resultAsset.location|coordinates %}
-                            <a class="icon" href="https://maps.google.co.uk?q={{ resultAsset.location|coordinates }}" target="_blank"><img src="/assets/img/marker.svg"></a>
-                        {% endif %}
-                        <br /><span style="font-size: small">Uploaded {{ resultAsset.dateCreated|date('d/m/Y') }}</span>
-                    </p>
-                    {% endfor %}
-                {% endif %}
-            </div>
         </div>
     {% endif %}
     {% if row.fieldType == 'resultCustom' %}

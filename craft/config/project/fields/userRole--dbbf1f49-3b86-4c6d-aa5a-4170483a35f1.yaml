@@ -1,14 +1,24 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userRole
 instructions: ''
 name: 'User Role'
 searchable: true
 settings:
+  allowLimit: false
+  allowMultipleSources: false
+  allowSelfRelations: false
   branchLimit: ''
+  limit: null
   localizeRelations: false
   selectionLabel: ''
-  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
+  showSiteMenu: true
+  source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Categories

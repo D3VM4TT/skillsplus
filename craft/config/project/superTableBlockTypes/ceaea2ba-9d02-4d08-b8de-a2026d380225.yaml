@@ -1,34 +1,34 @@
-field: 31c31961-f4f1-4f09-9c8e-cbbd46d62e97
+field: 31c31961-f4f1-4f09-9c8e-cbbd46d62e97 # Workflow
 fieldLayouts:
   900a6d8c-e8e6-4886-9159-a1af6d862396:
     tabs:
       -
         fields:
-          4c81c4c4-4ce4-4d59-aae5-409187760100:
+          4c81c4c4-4ce4-4d59-aae5-409187760100: # Step Message
             required: '0'
             sortOrder: '7'
-          8baba5fc-1c81-4b6d-a597-453862005a68:
+          8baba5fc-1c81-4b6d-a597-453862005a68: # Step Name
             required: '1'
             sortOrder: '2'
-          43c2a918-aa04-4759-bf4e-df7f7a51578a:
+          43c2a918-aa04-4759-bf4e-df7f7a51578a: # Step Assign User Group
             required: '0'
             sortOrder: '6'
-          703cc741-3177-4d42-88f9-c3c0f4ce9249:
+          703cc741-3177-4d42-88f9-c3c0f4ce9249: # Step User Group
             required: '0'
             sortOrder: '4'
-          b893071b-6c51-4812-b88c-dd1f60840ff5:
+          b893071b-6c51-4812-b88c-dd1f60840ff5: # Step Type
             required: '0'
             sortOrder: '3'
-          d4afcfe1-1ba1-4435-8a39-88a785af7535:
+          d4afcfe1-1ba1-4435-8a39-88a785af7535: # Step ID
             required: '0'
             sortOrder: '1'
-          f5f4282b-109d-4b80-a44f-78c73c254b37:
+          f5f4282b-109d-4b80-a44f-78c73c254b37: # Step Job Role
             required: '0'
             sortOrder: '5'
         name: Content
         sortOrder: '1'
 fields:
-  4c81c4c4-4ce4-4d59-aae5-409187760100:
+  4c81c4c4-4ce4-4d59-aae5-409187760100: # Step Message
     contentColumnType: text
     fieldGroup: null
     handle: stepMessage
@@ -51,7 +51,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
-  8baba5fc-1c81-4b6d-a597-453862005a68:
+  8baba5fc-1c81-4b6d-a597-453862005a68: # Step Name
     contentColumnType: text
     fieldGroup: null
     handle: stepName
@@ -69,7 +69,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-  43c2a918-aa04-4759-bf4e-df7f7a51578a:
+  43c2a918-aa04-4759-bf4e-df7f7a51578a: # Step Assign User Group
     contentColumnType: string
     fieldGroup: null
     handle: stepAssignUserGroup
@@ -98,7 +98,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  703cc741-3177-4d42-88f9-c3c0f4ce9249:
+  703cc741-3177-4d42-88f9-c3c0f4ce9249: # Step User Group
     contentColumnType: string
     fieldGroup: null
     handle: stepUserGroup
@@ -131,7 +131,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  b893071b-6c51-4812-b88c-dd1f60840ff5:
+  b893071b-6c51-4812-b88c-dd1f60840ff5: # Step Type
     contentColumnType: string
     fieldGroup: null
     handle: stepType
@@ -156,7 +156,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
-  d4afcfe1-1ba1-4435-8a39-88a785af7535:
+  d4afcfe1-1ba1-4435-8a39-88a785af7535: # Step ID
     contentColumnType: text
     fieldGroup: null
     handle: stepId
@@ -176,7 +176,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: mmikkel\incognitofield\fields\IncognitoFieldType
-  f5f4282b-109d-4b80-a44f-78c73c254b37:
+  f5f4282b-109d-4b80-a44f-78c73c254b37: # Step Job Role
     contentColumnType: string
     fieldGroup: null
     handle: stepJobRole
@@ -190,7 +190,7 @@ fields:
       limit: null
       localizeRelations: false
       selectionLabel: 'Add job role'
-      source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5'
+      source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
       sources: '*'
       targetSiteId: null
       validateRelatedElements: ''

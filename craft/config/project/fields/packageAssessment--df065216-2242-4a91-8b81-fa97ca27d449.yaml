@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageAssessment
 instructions: ''
 name: 'Package Assessment'
@@ -8,28 +9,28 @@ settings:
   columns:
     __assoc__:
       -
-        - 32c6ef2b-26dd-41c1-818c-411a8164e1f0
+        - 32c6ef2b-26dd-41c1-818c-411a8164e1f0 # Module Group
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 22c29753-9e14-4e97-9291-ca025bc83380
+        - 22c29753-9e14-4e97-9291-ca025bc83380 # Passed
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 3ffef8f2-5599-4a8c-b8e7-ce6b7113d648
+        - 3ffef8f2-5599-4a8c-b8e7-ce6b7113d648 # Comment
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - feebdaae-888d-4c75-b0ed-d99114744179
+        - feebdaae-888d-4c75-b0ed-d99114744179 # Date
         -
           __assoc__:
             -

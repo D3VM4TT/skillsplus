@@ -72,7 +72,9 @@ class PackageBehavior extends Behavior
                     continue;
                 }
                 $category = $moduleGroupBlock->moduleGroup->one();
-                $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id);
+                if (null == $category || null == $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id)) {
+                    continue;
+                }
                 $modulesGroups[] = [
                     'category' => $category,
                     'mandatory' => $taskbookModuleGroupBlock->moduleGroupMandatory,
@@ -207,7 +209,7 @@ class PackageBehavior extends Behavior
             if (!in_array($category->id, $this->moduleGroupIds())) {
                 $modulesGroups[] = [
                     'category' => $category,
-                    'level' => '',
+                    'level' => $moduleGroup['level'],
                     'credit' => $moduleGroup['credit']
                ];
             }
@@ -272,39 +274,67 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @param bool $level
+     * @return int
+     */
+    public function totalCredits($level = false)
+    {
+        $credits = 0;
+        $taskbook = $this->getTaskbook();
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            if (!$level || $moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+                $credits += $moduleGroup['credit'];
+            }
+        }
+        return $credits;
+    }
+
+    /**
      * @return array
      */
-    public function required()
+    public function complete()
     {
         $user = $this->owner->author;
         $taskbook = $this->getTaskbook();
-        $mandatory = 0;
-        $optional = 0;
-        $credits = 0;
-        $levelCredits = 0;
+        $complete = [
+            'mandatory'     => 0,
+            'optional'      => 0,
+            'credits'       => 0,
+            'levelCredits'  => 0
+        ];
         foreach ($this->moduleGroups() as $moduleGroup) {
             ## get the results from the user record
             $categoryId = $moduleGroup['category']->id;
             $moduleGroupItem = $user->record->getItem($categoryId);
             if (RecordHelper::isComplete($moduleGroupItem, $this->owner->author, $taskbook)) {
                 if ($moduleGroup['mandatory']) {
-                    $mandatory++;
+                    $complete['mandatory']++;
                 }
                 else{
-                    $optional++;
+                    $complete['optional']++;
                 }
-                $credits += $moduleGroup['credit'];
+                $complete['credits'] += $moduleGroup['credit'];
                 if ($moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
-                    $levelCredits += $moduleGroup['credit'];
+                    $complete['levelCredits'] += $moduleGroup['credit'];
                 }
             }
         }
+        return $complete;
+    }
+
+    /**
+     * @return array
+     */
+    public function required()
+    {
+        $taskbook = $this->getTaskbook();
+        $complete = $this->complete();
         $totalMandatory = count($this->moduleGroupIds('mandatory'));
         $required = [
-            'mandatory'     => max($totalMandatory - $mandatory, 0),
-            'optional'      => max($taskbook->moduleMinimumOptional - $optional, 0),
-            'credits'       => max($taskbook->moduleMinimumCredits - $credits,0),
-            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $levelCredits, 0)
+            'mandatory'     => max($totalMandatory - $complete['mandatory'], 0),
+            'optional'      => max($taskbook->moduleMinimumOptional - $complete['optional'], 0),
+            'credits'       => max($taskbook->moduleMinimumCredits - $complete['credits'],0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $complete['levelCredits'], 0)
         ];
         $required['complete'] = $required['mandatory'] == 0 && $required['optional'] == 0 && $required['credits'] == 0 && $required['levelCredits'] == 0;
         return $required;
@@ -522,10 +552,11 @@ class PackageBehavior extends Behavior
         if (!$packageWorkflowStep) {
             return null;
         }
-
         $criteria = User::find();
         if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole'];
+            $jobRoleIds = $packageWorkflowStep->stepJobRole->ids();
+            $managerIds = Lantra::$app->packages->getReviewers($step->owner->author, $this->owner->taskbook, $jobRoleIds);
+            $criteria->id = $managerIds;
         } else {
             $criteria->group = $packageWorkflowStep->stepUserGroup;
         }

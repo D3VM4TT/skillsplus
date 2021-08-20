@@ -34,10 +34,7 @@
         </div>
         <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
             {% if package.isComplete %}
-                {% if package.packageStatus == 'active' %}
-                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
-                {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
+                {% if package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
                     {% if package.isNextStepAssigned %}
                         <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
                     {% else %}
@@ -118,35 +115,26 @@
                         </tbody>
                     </table>
                 {% endif %}
-                <h4>Requirements</h4>
-                <p>To complete this {{ taskbookLabel|lower }} you must complete a total of:</p>
-                <p>
-                    <strong>{{ package.taskbook.countMandatory }}</strong> mandatory {{ pluralize('module', qty=package.taskbook.countMandatory) }}
-                    {% if package.taskbook.moduleMinimumOptional %}
-                        and <strong>{{ package.taskbook.moduleMinimumOptional }}</strong> optional {{ pluralize('module', qty=package.taskbook.moduleMinimumOptional) }}
-                    {% endif %}
-                </p>
-                {% if package.taskbook.moduleMinimumCredits %}
-                    <p>
-                        You must attain a minimum of <strong>{{ package.taskbook.moduleMinimumCredits }}</strong> total credits
-                        {% if package.taskbook.moduleGroupMinimumLevel %}
-                            and <strong>{{ package.taskbook.moduleGroupMinimumLevelCredits }}</strong> credits must be at or above level
-                            <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>
+                {% if package.packageStatus == 'locked' %}
+                    <h4>{{ taskbookLabel }} Locked</h4>
+                    <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
+                {% else %}
+                    <h4>Requirements</h4>
+                    <div style="width: 50%;display: inline;float:left;">
+                        {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+                        {% if package.taskbook.moduleMinimumCredits %}
+                            <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
                         {% endif %}
-                    </p>
+                    </div>
+                    {% if package.isComplete %}
+                        <div style="width: 50%;display: inline;float:right;text-align: right">
+                            <p style="color:#006600;margin-bottom:10px;">You have completed your {{ taskbookLabel|lower }}.<br />Click below to request assessment.</p>
+                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
+                                   data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                        </div>
+                    {% endif %}
                 {% endif %}
-
-                <p>You need to complete <strong>{{ package.required.mandatory }}</strong> mandatory {{ pluralize('module', qty= package.required.mandatory) }}</p>
-                {% if package.taskbook.moduleMinimumOptional %}
-                    <p>You need to complete <strong>{{ package.required.optional }}</strong> optional {{ pluralize('module', qty= package.required.optional) }}</p>
-                {% endif %}
-                {% if package.taskbook.moduleMinimumCredits %}
-                    <p>You need <strong>{{ package.required.credits }}</strong> more credits</p>
-                {% endif %}
-                {% if package.taskbook.moduleGroupMinimumLevel %}
-                    <p>You need <strong>{{ package.required.levelCredits }}</strong> more credits at level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong></p>
-                {% endif %}
-                <p>&nbsp;</p>
+                <p style="clear: both">&nbsp;</p>
                 <hr />
                 <p>&nbsp;</p>
                 <h4>Your Current Selection</h4>
@@ -160,7 +148,10 @@
                         {% if package.taskbook.moduleMinimumCredits %}
                             <th>Credit</th>
                         {% endif %}
-                        <th>Units {{ package.taskbook.unitEndorse ? 'Endorsed' : 'Complete' }}</th>
+                        <th>Units Complete</th>
+                        {% if package.taskbook.unitEndorse %}
+                            <th>Units Endorsed</th>
+                        {% endif %}
                         <th style="width:100px;"></th>
                     </tr>
                     </thead>
@@ -169,15 +160,21 @@
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
                         {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        {% set isComplete = totalComplete >= totalUnits %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
                         <tr>
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
                             </td>
-                            <td>{{ moduleGroup.level }}</td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td>{{ moduleGroup.credit }}</td>
                             {% endif %}
                             <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
+                            {% if package.taskbook.unitEndorse %}
+                                <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
+                            {% endif %}
                             <td></td>
                         </tr>
                     {% endfor %}
@@ -192,7 +189,10 @@
                         {% if package.taskbook.moduleMinimumCredits %}
                             <th>Credit</th>
                         {% endif %}
-                        <th>Units {{ package.taskbook.unitEndorse ? 'Endorsed' : 'Complete' }}</th>
+                        <th>Units Complete</th>
+                        {% if package.taskbook.unitEndorse %}
+                            <th>Units Endorsed</th>
+                        {% endif %}
                         <th style="width:100px;"></th>
                     </tr>
                     </thead>
@@ -201,15 +201,21 @@
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
                         {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem) %}
+                        {% set isComplete = totalComplete >= totalUnits %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
                         <tr>
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
                             </td>
-                            <td>{{ moduleGroup.level }}</td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
                                 <td>{{ moduleGroup.credit }}</td>
                             {% endif %}
                             <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
+                            {% if package.taskbook.unitEndorse %}
+                                <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
+                            {% endif %}
                             <td style="text-align: right;"><a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a></a></td>
                         </tr>
                     {% endfor %}
@@ -223,9 +229,10 @@
                     <table class="data" width="100%">
                         <thead>
                         <tr>
-                            <th>Module Title</th>
+                            <th style="width: 60%;">Available</th>
+                            <th>Level</th>
                             {% if package.taskbook.moduleMinimumCredits %}
-                                <th style="text-align: right;padding-right: 0;">Credit</th>
+                                <th style="text-align: right;padding-right:0">Credit</th>
                             {% endif %}
                         </tr>
                         </thead>
@@ -233,6 +240,7 @@
                         {% for moduleGroup in package.moduleGroups('available')  %}
                             <tr>
                                 <td>{{ moduleGroup.category.title }}</td>
+                                <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                                 {% if package.taskbook.moduleMinimumCredits %}
                                     <td style="text-align: right;">{{ moduleGroup.credit }}</td>
                                 {% endif %}

@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: workflow
 instructions: 'The first step must be an assessment step.  Review and complete steps are optional but if you add any review steps, the last step must be a complete step.  If there is only one review you should add assessment -> complete.  If there are multiple reviews you should add assessment -> review -> review -> complete.'
 name: Workflow
@@ -8,49 +9,49 @@ settings:
   columns:
     __assoc__:
       -
-        - d4afcfe1-1ba1-4435-8a39-88a785af7535
+        - d4afcfe1-1ba1-4435-8a39-88a785af7535 # Step ID
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 8baba5fc-1c81-4b6d-a597-453862005a68
+        - 8baba5fc-1c81-4b6d-a597-453862005a68 # Step Name
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - b893071b-6c51-4812-b88c-dd1f60840ff5
+        - b893071b-6c51-4812-b88c-dd1f60840ff5 # Step Type
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 703cc741-3177-4d42-88f9-c3c0f4ce9249
+        - 703cc741-3177-4d42-88f9-c3c0f4ce9249 # Step User Group
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - f5f4282b-109d-4b80-a44f-78c73c254b37
+        - f5f4282b-109d-4b80-a44f-78c73c254b37 # Step Job Role
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 43c2a918-aa04-4759-bf4e-df7f7a51578a
+        - 43c2a918-aa04-4759-bf4e-df7f7a51578a # Step Assign User Group
         -
           __assoc__:
             -
               - width
               - ''
       -
-        - 4c81c4c4-4ce4-4d59-aae5-409187760100
+        - 4c81c4c4-4ce4-4d59-aae5-409187760100 # Step Message
         -
           __assoc__:
             -

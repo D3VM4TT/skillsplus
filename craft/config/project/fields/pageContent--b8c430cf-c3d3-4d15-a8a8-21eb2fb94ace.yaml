@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677
+fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
 handle: pageContent
 instructions: ''
 name: Content
@@ -8,6 +9,7 @@ settings:
   contentTable: '{{%matrixcontent_pagecontent}}'
   maxBlocks: ''
   minBlocks: ''
+  propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null
 translationMethod: site

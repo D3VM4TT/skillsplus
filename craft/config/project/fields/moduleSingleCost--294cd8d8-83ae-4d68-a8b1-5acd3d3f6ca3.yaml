@@ -1,17 +1,20 @@
+columnSuffix: null
 contentColumnType: integer(10)
-fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: moduleSingleCost
-instructions: 'Cost if purchased as individual optional taskbook group.'
-name: 'Taskbook Module Single Cost'
+instructions: 'Cost if purchased as individual optional module group.'
+name: 'Module Group Single Cost'
 searchable: true
 settings:
   decimals: 0
   defaultValue: '0'
   max: null
   min: '0'
-  prefix: ''
+  prefix: null
+  previewCurrency: null
+  previewFormat: decimal
   size: null
-  suffix: ''
+  suffix: null
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Number

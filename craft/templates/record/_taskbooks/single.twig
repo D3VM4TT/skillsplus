@@ -60,6 +60,9 @@
                 <p style="color:red;">There are currently no modules available.</p>
             </div>
         {% else %}
+
+            {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
                 {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
@@ -72,14 +75,14 @@
                 {{ csrfInput() }}
                 {{ actionInput('sp/packages/add-module-groups') }}
                 {{ hiddenInput('packageId', package.id) }}
-                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks') }}
+                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/' ~ package.id ) }}
                 {{ hiddenInput('singleType', singleType) }}
                 <div class="field--wrapper">
                     {% if cost %}
                         <p>Additional modules cost £{{ cost }} each.</p>
                         <p>&nbsp;</p>
                     {% endif %}
-                    {% include '_forms/taskbookOptionalModuleGroups' with {package:package, optionalModuleGroups:availableModuleGroups} %}
+                    {% include '_forms/taskbookOptionalModuleGroups' with {package:package, optionalModuleGroups:availableModuleGroups, taskbook:package.taskbook} %}
                 </div>
                 <div class="container-btn">
                     <button type="submit" class="button primary-bg">Add Module</button>

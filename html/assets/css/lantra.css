@@ -2739,3 +2739,30 @@ section.lantra-browser div.loading p {
 section.lantra-browser div.loading a {
     color:#FFF;
 }
+
+span.module-select {
+    cursor: pointer;
+}
+
+span.module-select i.fas {
+    font-size: 30px;
+    font-weight:700;
+}
+
+span.module-select i.fa-check {
+    color:#006600;
+}
+
+span.module-select i.fa-times {
+    color:#990000;
+}
+
+span.module-select i.fa-check,
+tr.module-selected span.module-select i.fa-times {
+    display:none;
+}
+
+span.module-select i.fa-times,
+tr.module-selected span.module-select i.fa-check {
+    display:inline-block;
+}

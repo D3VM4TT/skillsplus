@@ -1,0 +1,23 @@
+columnSuffix: null
+contentColumnType: text
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: taskbookIntro
+instructions: ''
+name: 'Taskbook Intro'
+searchable: true
+settings:
+  availableTransforms: '*'
+  availableVolumes: '*'
+  cleanupHtml: true
+  columnType: text
+  purifierConfig: ''
+  purifyHtml: '1'
+  redactorConfig: ''
+  removeEmptyTags: '1'
+  removeInlineStyles: '1'
+  removeNbsp: '1'
+  showUnpermittedFiles: false
+  showUnpermittedVolumes: false
+translationKeyFormat: null
+translationMethod: none
+type: craft\redactor\Field

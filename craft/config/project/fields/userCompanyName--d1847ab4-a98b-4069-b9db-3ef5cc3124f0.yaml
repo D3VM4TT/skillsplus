@@ -1,5 +1,6 @@
+columnSuffix: null
 contentColumnType: text
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userCompanyName
 instructions: ''
 name: 'User Company Name'
@@ -8,10 +9,12 @@ settings:
   allowSelect: ''
   columnType: text
   decimals: '0'
+  displayType: hidden
   fieldTwig: '{{ user.userCompany | length ? user.userCompany.first().title }}'
   parseBeforeSave: ''
   parseOnMove: ''
   showField: '1'
+  textareaRows: 5
 translationKeyFormat: null
 translationMethod: none
 type: aelvan\preparsefield\fields\PreparseFieldType

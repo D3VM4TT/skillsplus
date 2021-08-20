@@ -1,14 +1,21 @@
+columnSuffix: null
 contentColumnType: string
-fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportModules
 instructions: ''
 name: 'Report Modules'
 searchable: true
 settings:
+  allowSelfRelations: false
   limit: ''
   localizeRelations: false
   selectionLabel: ''
+  showSiteMenu: true
+  source: null
   sources: 'section:6'
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
 translationKeyFormat: null
-translationMethod: none
+translationMethod: site
 type: craft\fields\Entries
