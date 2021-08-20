@@ -79,7 +79,7 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company primary managers:</label>
         <input type="hidden" name="fields[companyPrimaryManagers]" value="" />
-        <select multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
+        <select style="width:100%" multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
                         {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
@@ -89,7 +89,7 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company secondary managers:</label>
         <input type="hidden" name="fields[companySecondaryManagers]" value="" />
-        <select multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+        <select style="width:100%" multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
                         {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
@@ -100,7 +100,7 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company {{ taskbookLabel|pluralize|lower }}:</label>
         <input type="hidden" name="fields[companyTaskbooks]" value="" />
-        <select multiple class="js-select2" name="fields[companyTaskbooks][]" id="companyTaskbooks">
+        <select style="width:100%" multiple class="js-select2" name="fields[companyTaskbooks][]" id="companyTaskbooks">
             {% for taskbookEntry in taskbookEntries %}
                 <option value="{{ taskbookEntry.id }}"
                         {% if entry is defined and taskbookEntry.id in entry.companyTaskbooks.ids() %} selected="selected{% endif %}">{{ taskbookEntry.title }}</option>
