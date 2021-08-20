@@ -96,27 +96,38 @@ class Packages extends Component
                 return;
             }
             $entry->title = '[' . $taskbook->title . '] ' . $entry->author->fullname;
-            $optionalModuleGroups = Craft::$app->request->getParam('optional', []);
-            $totalOptional = count($optionalModuleGroups);
             if (Craft::$app->request->isSiteRequest) {
+                ## loop optional and pull out selected
+                $optional = Craft::$app->request->getParam('optional', []);
+                $optionalModuleGroups = [];
+                foreach ($optional as $id => $item) {
+                    if ($item['selected'] == '1') {
+                        $optionalModuleGroups[$id] = $item;
+                    }
+                }
+                $totalOptional = count($optionalModuleGroups);
                 ## check minimum optional module groups
                 if ($taskbook->moduleMinimumOptional && $totalOptional < $taskbook->moduleMinimumOptional) {
                     $entry->addError('packageModules', 'You must select a minimum of ' . $taskbook->moduleMinimumOptional . ' optional modules.');
                     $event->isValid = false;
                 }
-            }
-            $cost = $taskbook->moduleMaxCost;
-            if ($taskbook->moduleCosts) {
-                foreach ($taskbook->moduleCosts as $row) {
-                    if ($totalOptional == $row['optionalModules']) {
-                        $cost = (int)$row['cost'];
+                if (!$taskbook->taskbookIsFree && !$this->isCompleteCredits($taskbook, $optionalModuleGroups)) {
+                    $entry->addError('packageModules', 'You have not met the requirements for this package');
+                    $event->isValid = false;
+                }
+                $cost = $taskbook->moduleMaxCost;
+                if ($taskbook->moduleCosts) {
+                    foreach ($taskbook->moduleCosts as $row) {
+                        if ($totalOptional == $row['optionalModules']) {
+                            $cost = (int)$row['cost'];
+                        }
                     }
                 }
-            }
-            $entry->setFieldValue('packageCost', $cost);
-            ## package is free
-            if (!$cost) {
-                $entry->setFieldValue('packagePaid', true);
+                $entry->setFieldValue('packageCost', $cost);
+                ## package is free
+                if (!$cost) {
+                    $entry->setFieldValue('packagePaid', true);
+                }
             }
             ## make sure log is clear
             $entry->setFieldValue('packageLog', []);
@@ -874,5 +885,37 @@ class Packages extends Component
             ['targetElement' => $jobRoleIds, 'field' => 'userRole']
         ];
         return $criteria->ids();
+    }
+
+    /**
+     * @param $taskbook
+     * @param $optionalModuleGroups
+     * @return bool
+     */
+    private function isCompleteCredits($taskbook, $optionalModuleGroups)
+    {
+        if (!$taskbook->moduleMinimumCredits) {
+            return true;
+        }
+        $credits = 0;
+        $levelCredits = 0;
+        ## add the mandatory credits
+        foreach ($taskbook->moduleGroups('mandatory') as $mandatory) {
+            $credits += $mandatory['credit'];
+            if ($mandatory['level'] <= $taskbook->moduleGroupMinimumLevel) {
+                $levelCredits += $mandatory['credit'];
+            }
+        }
+        foreach ($optionalModuleGroups as $id => $optional) {
+            $block = $taskbook->moduleGroupBlock($id);
+            $credits += $block->moduleGroupCredit;
+            if ($optional['level'] >= $taskbook->moduleGroupMinimumLevel) {
+                $levelCredits += $block->moduleGroupCredit;
+            }
+        }
+        if ($taskbook->moduleGroupMinimumLevelCredits) {
+            return $credits >= $taskbook->moduleMinimumCredits && $levelCredits >= $taskbook->moduleGroupMinimumLevelCredits;
+        }
+        return $credits >= $taskbook->moduleMinimumCredits;
     }
 }
