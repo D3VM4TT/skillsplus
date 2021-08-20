@@ -1,4 +1,4 @@
-dateModified: 1629382680
+dateModified: 1629463107
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -233,6 +233,7 @@ meta:
     a9271765-2484-428e-8c34-62e30184b582: 'Package Paid' # Package Paid
     aa0a1650-9855-4bd3-a399-b549a74c19be: Taskbook # Taskbook
     aa4a666c-db2c-4515-b356-344c43b82ca1: 'User Start Date' # User Start Date
+    ab5af452-7d2f-4498-9a76-6ffbe1c7a251: 'Taskbook Free' # Taskbook Free
     ab5599bf-7e9b-4581-ab6d-6862127dd932: 'Cycle User Start Date' # Cycle User Start Date
     ab9197b3-7032-4015-ba4e-4939118952dd: Users # Users
     ab55340f-38e6-4d9f-82eb-f3785c6c6ff8: 'Report Include Hierarchy' # Report Include Hierarchy
