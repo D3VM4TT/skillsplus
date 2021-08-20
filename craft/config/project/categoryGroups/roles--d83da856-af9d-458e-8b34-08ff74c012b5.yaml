@@ -26,9 +26,18 @@ fieldLayouts:
             title: null
             type: craft\fieldlayoutelements\TitleField
             warning: null
-            width: 50
+            width: 100
           -
             fieldUid: 09dd9f6b-4143-4e66-adc3-f156a34cdfe0 # Reviewer
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+          -
+            fieldUid: 585cec7d-218d-4241-a113-0a7ab6f7503e # Dashboard
             instructions: null
             label: null
             required: false
