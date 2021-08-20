@@ -123,7 +123,10 @@
                     <div style="width: 50%;display: inline;float:left;">
                         {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
+                            <p>
+                                Your current selection includes <strong>{{ package.totalCredits }}</strong> {{ 'credit' |pluralize(package.totalCredits) }}
+                                {% if package.taskbook.moduleGroupMinimumLevel %}including <strong>{{ package.totalCredits(true) }}</strong> {{ 'credit' |pluralize(package.totalCredits) }} at or above level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>{% endif %}.
+                            </p>
                         {% endif %}
                     </div>
                     {% if package.isComplete %}
