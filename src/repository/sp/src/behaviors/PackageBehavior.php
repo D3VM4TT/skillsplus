@@ -650,6 +650,32 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns all evidence for package grouped by unit
+     *
+     * @return array
+     */
+    public function getEvidence()
+    {
+        $assets = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $unit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultEvidence->all() as $evidence) {
+                if (isset($assets[$evidence->id])) {
+                    $assets[$evidence->id]['units'][] = $unit;
+                }
+                else {
+                    $assets[$evidence->id] = [
+                        'asset' => $evidence,
+                        'units' => [$unit]
+                    ];
+                }
+            }
+        }
+        return $assets;
+    }
+
+    /**
      * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete
