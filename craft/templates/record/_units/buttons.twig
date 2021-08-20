@@ -1,3 +1,10 @@
+{% if craft.lantra.setting('managerConfirmSubmit') %}
+    <label for="confirmSubmit">
+        <input id="confirmSubmit" type="checkbox" value="0" name="confirmSubmit" />
+        {{ craft.lantra.setting('managerConfirmText') }}
+    </label>
+{% endif %}
+<div id="managerSubmit">
 {% if isManager and account.id != currentUser.id %}
     {% if resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
         {% set resultEndorsedUser = resultEntry.resultEndorsedUser ? resultEntry.resultEndorsedUser.one() %}
@@ -42,3 +49,4 @@
         <button class="button primary-bg status" data-status="complete" type="button">Save as complete</button>
     </div>
 {% endif %}
+</div>

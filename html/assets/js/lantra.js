@@ -1,5 +1,18 @@
 $(document).ready(function () {
 
+    if ($('#confirmSubmit').length) {
+
+        $('#confirmSubmit').change(function(){
+           if ($(this).is(':checked')) {
+               $('#managerSubmit').show();
+           }
+           else {
+               $('#managerSubmit').hide();
+           }
+        });
+        $('#confirmSubmit').change();
+    }
+
     $('select#userRole').change(function () {
         var isReviewer = false;
         $(this).find('option:selected').each(function () {
