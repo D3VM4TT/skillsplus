@@ -873,6 +873,18 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @return bool
+     */
+    public function hasDashboard($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        return Lantra::$app->users->hasDashboard($user);
+    }
+
+    /**
      * @param null $subordinateId
      * @param null $managerId
      * @param bool $includeHierarchy

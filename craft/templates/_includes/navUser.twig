@@ -9,7 +9,7 @@
             <a class="secondary-bg-hover" href="/public/register/membership">Register</a>
         </li>
     {% else %}
-        {% if craft.lantra.setting('themeMyDashboard') %}
+        {% if craft.lantra.setting('themeMyDashboard') and craft.lantra.hasDashboard(currentUser) %}
             <li class="{% if craft.app.request.getSegment(1) == '' %}nav-open{% else %}nav-closed{% endif %}">
                 <a class="secondary-bg-hover " href="/">My Dashboard</a>
             </li>

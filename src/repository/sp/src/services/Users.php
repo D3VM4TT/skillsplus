@@ -436,6 +436,28 @@ class Users extends Component
         return false;
     }
 
+
+    /**
+     * Check whether this user has dashboard
+     *
+     * @param null $user
+     * @return bool
+     */
+    function hasDashboard($user = null)
+    {
+        $dashboard = false;
+        if (is_null($user)) {
+            $user = Craft::$app->getUser();
+        }
+        foreach($user->userRole as $role) {
+            if ($role->isDashboard) {
+                $dashboard = true;
+                break;
+            }
+        }
+        return $dashboard;
+    }
+
     /**
      * Check whether this user manages the subordinate
      *
