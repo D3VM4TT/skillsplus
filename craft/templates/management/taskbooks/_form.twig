@@ -21,7 +21,7 @@
 
 {% set authorId = craft.app.request.getParam('userId') %}
 {% set user = craft.app.users.getUserById(authorId) %}
-{% set userCompany = account.userCompany.one() %}
+{% set userCompany = user.userCompany.one() %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
