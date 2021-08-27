@@ -3,61 +3,110 @@ fieldLayouts:
   900a6d8c-e8e6-4886-9159-a1af6d862396:
     tabs:
       -
-        fields:
-          4c81c4c4-4ce4-4d59-aae5-409187760100: # Step Message
-            required: '0'
-            sortOrder: '7'
-          8baba5fc-1c81-4b6d-a597-453862005a68: # Step Name
-            required: '1'
-            sortOrder: '2'
-          43c2a918-aa04-4759-bf4e-df7f7a51578a: # Step Assign User Group
-            required: '0'
-            sortOrder: '6'
-          703cc741-3177-4d42-88f9-c3c0f4ce9249: # Step User Group
-            required: '0'
-            sortOrder: '4'
-          b893071b-6c51-4812-b88c-dd1f60840ff5: # Step Type
-            required: '0'
-            sortOrder: '3'
-          d4afcfe1-1ba1-4435-8a39-88a785af7535: # Step ID
-            required: '0'
-            sortOrder: '1'
-          f5f4282b-109d-4b80-a44f-78c73c254b37: # Step Job Role
-            required: '0'
-            sortOrder: '5'
+        elements:
+          -
+            fieldUid: d4afcfe1-1ba1-4435-8a39-88a785af7535 # Step ID
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 8baba5fc-1c81-4b6d-a597-453862005a68 # Step Name
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: b893071b-6c51-4812-b88c-dd1f60840ff5 # Step Type
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 703cc741-3177-4d42-88f9-c3c0f4ce9249 # Step User Group
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: f5f4282b-109d-4b80-a44f-78c73c254b37 # Step Job Role
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 43c2a918-aa04-4759-bf4e-df7f7a51578a # Step Assign User Group
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 4c81c4c4-4ce4-4d59-aae5-409187760100 # Step Message
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Content
-        sortOrder: '1'
+        sortOrder: 1
 fields:
   4c81c4c4-4ce4-4d59-aae5-409187760100: # Step Message
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: stepMessage
     instructions: ''
     name: 'Step Message'
-    searchable: '1'
+    searchable: true
     settings:
       availableTransforms: '*'
       availableVolumes: '*'
       cleanupHtml: true
       columnType: text
+      configSelectionMode: choose
+      defaultTransform: ''
+      manualConfig: ''
       purifierConfig: ''
       purifyHtml: '1'
       redactorConfig: Simple.json
       removeEmptyTags: '1'
       removeInlineStyles: '1'
       removeNbsp: '1'
+      showHtmlButtonForNonAdmins: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: false
+      uiMode: enlarged
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
   8baba5fc-1c81-4b6d-a597-453862005a68: # Step Name
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: stepName
     instructions: ''
     name: 'Step Name'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -65,104 +114,193 @@ fields:
       columnType: null
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
   43c2a918-aa04-4759-bf4e-df7f7a51578a: # Step Assign User Group
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: stepAssignUserGroup
     instructions: 'Select the user group for who can assign the manager for this step. '
     name: 'Step Assign User Group'
-    searchable: '1'
+    searchable: true
     settings:
       optgroups: true
       options:
         -
-          default: ''
-          label: Admin
-          value: admin
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - Admin
+            -
+              - value
+              - admin
         -
-          default: '1'
-          label: 'Scheme Manager'
-          value: schemeManagers
+          __assoc__:
+            -
+              - default
+              - '1'
+            -
+              - label
+              - 'Scheme Manager'
+            -
+              - value
+              - schemeManagers
         -
-          default: ''
-          label: 'Company Manager'
-          value: companyManagers
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - 'Company Manager'
+            -
+              - value
+              - companyManagers
         -
-          default: ''
-          label: 'Team Manager'
-          value: teamManagers
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - 'Team Manager'
+            -
+              - value
+              - teamManagers
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
   703cc741-3177-4d42-88f9-c3c0f4ce9249: # Step User Group
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: stepUserGroup
     instructions: ''
     name: 'Step User Group'
-    searchable: '1'
+    searchable: true
     settings:
       optgroups: true
       options:
         -
-          default: ''
-          label: Admin
-          value: admin
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - Admin
+            -
+              - value
+              - admin
         -
-          default: '1'
-          label: 'Scheme Manager'
-          value: schemeManagers
+          __assoc__:
+            -
+              - default
+              - '1'
+            -
+              - label
+              - 'Scheme Manager'
+            -
+              - value
+              - schemeManagers
         -
-          default: ''
-          label: 'Company Manager'
-          value: companyManagers
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - 'Company Manager'
+            -
+              - value
+              - companyManagers
         -
-          default: ''
-          label: 'Team Manager'
-          value: teamManagers
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - 'Team Manager'
+            -
+              - value
+              - teamManagers
         -
-          default: ''
-          label: 'Job Role'
-          value: jobRole
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - 'Job Role'
+            -
+              - value
+              - jobRole
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
   b893071b-6c51-4812-b88c-dd1f60840ff5: # Step Type
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: stepType
     instructions: ''
     name: 'Step Type'
-    searchable: '1'
+    searchable: true
     settings:
       optgroups: true
       options:
         -
-          default: '1'
-          label: Assessment
-          value: assessment
+          __assoc__:
+            -
+              - default
+              - '1'
+            -
+              - label
+              - Assessment
+            -
+              - value
+              - assessment
         -
-          default: ''
-          label: Review
-          value: review
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - Review
+            -
+              - value
+              - review
         -
-          default: ''
-          label: Complete
-          value: complete
+          __assoc__:
+            -
+              - default
+              - ''
+            -
+              - label
+              - Complete
+            -
+              - value
+              - complete
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
   d4afcfe1-1ba1-4435-8a39-88a785af7535: # Step ID
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: stepId
     instructions: ''
     name: 'Step ID'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -172,28 +310,32 @@ fields:
       mode: disabled
       modeOverride: '{{ not element.id ? ''hidden'' : ''disabled'' }}'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: mmikkel\incognitofield\fields\IncognitoFieldType
   f5f4282b-109d-4b80-a44f-78c73c254b37: # Step Job Role
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: stepJobRole
     instructions: ''
     name: 'Step Job Role'
-    searchable: '1'
+    searchable: true
     settings:
       allowLimit: false
       allowMultipleSources: false
+      allowSelfRelations: false
       branchLimit: ''
       limit: null
       localizeRelations: false
       selectionLabel: 'Add job role'
+      showSiteMenu: true
       source: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
       sources: '*'
       targetSiteId: null
-      validateRelatedElements: ''
+      validateRelatedElements: false
       viewMode: null
     translationKeyFormat: null
     translationMethod: site

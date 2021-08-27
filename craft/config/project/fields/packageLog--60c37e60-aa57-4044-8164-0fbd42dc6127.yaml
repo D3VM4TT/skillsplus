@@ -93,16 +93,16 @@ settings:
   defaults:
     -
       __assoc__:
-        1:
+        -
           - col2
           - ''
-        2:
+        -
           - col3
           - ''
-        3:
+        -
           - col4
           - ''
-        4:
+        -
           - col5
           - ''
   maxRows: ''
