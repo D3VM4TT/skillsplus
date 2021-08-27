@@ -9,7 +9,7 @@
         {% set enabled = not assessment.assessmentDate %}
         {% set moduleGroup = assessment.assessmentModuleGroup.last %}
         <tr>
-            <td style="width:25%;">{{ taskbook.title }}</td>
+            <td style="width:25%;">{{ package.taskbook.title }}</td>
             <td style="width:10%;">
                 <select {% if not enabled %} disabled{% endif %} id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
                     <option value="1"{% if assessment.assessmentPassed %} selected{% endif %}>Passed</option>
