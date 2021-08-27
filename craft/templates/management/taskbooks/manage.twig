@@ -8,6 +8,9 @@
 {% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManagers') %}
 {% set nextStep = package.nextStep %}
 
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Taskbooks" %}
