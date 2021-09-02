@@ -321,11 +321,27 @@ $(document).ready(function () {
         $(this).attr('name', $(this).data('relation') + ($(this).val() ? '[]' : ''))
     });
     $('select[data-relation]').change();
+
+
+    // handle endorse row complete
+    endorseRow = function(link) {
+        let tr = link.closest('tr');
+        if (tr.hasClass('summary')) {
+            tr.remove();
+            return;
+        }
+        else {
+            tr.removeClass('endorse');
+            link.remove();
+        }
+    }
+
     // entry action links
-    $('a.action').on('click', function (e) {
+    $('body').on('click', 'a.action', function(e){
         e.preventDefault();
-        var action = $(this).data('action'),
-            row = $(this).closest('.item'),
+        var link = $(this),
+            action = link.data('action'),
+            row = link.closest('.item'),
             deleteRow = false,
             reload = false;
         if (action == 'entries/reset-result') {
@@ -428,6 +444,10 @@ $(document).ready(function () {
                     window.location = window.location;
                 }
                 alert(response.message);
+
+                if (action == 'entries/endorse-evidence') {
+                    endorseRow(link);
+                }
             }
             else {
                 $('body').removeClass('loading');
@@ -686,7 +706,6 @@ $(document).ready(function () {
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
-        console.log('test');
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#' + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             tabContainer = moduleGroupLink.closest('div.tab-container');
@@ -773,6 +792,7 @@ $(document).ready(function () {
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
         var row = $('<tr />');
+        row.addClass('summary');
         row.append('<td>' + moduleGroup + '</td>');
         row.append('<td>' + unitTitle + '</td>');
         var icons = '';

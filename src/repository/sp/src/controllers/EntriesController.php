@@ -119,7 +119,7 @@ class EntriesController extends BaseController {
                 }
             }
         }
-        $this->_returnMessage($count . ' results endorsed.', true, $return);
+        $this->_returnMessage($count . ' results endorsed.', true);
     }
 
     /**
