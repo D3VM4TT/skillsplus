@@ -314,7 +314,7 @@ class PackageBehavior extends Behavior
                     $complete['optional']++;
                 }
                 $complete['credits'] += $moduleGroup['credit'];
-                if ($moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+                if ($moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
                     $complete['levelCredits'] += $moduleGroup['credit'];
                 }
             }
