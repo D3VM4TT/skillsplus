@@ -132,10 +132,11 @@ class Results extends Component
                 }
             }
             $request = Craft::$app->getRequest();
-            if (!$request->isCpRequest) {
-                $userStartDate = Craft::$app->request->getParam('userStartDate');
-                $userFinishDate = Craft::$app->request->getParam('userFinishDate');
-                $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+            $userStartDate = Craft::$app->request->getParam('userStartDate');
+            $userFinishDate = Craft::$app->request->getParam('userFinishDate');
+            $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+            $hasDates = $userStartDate !== null || $userFinishDate !== null || $userExpiryDate !== null;
+            if (!$request->isCpRequest && $hasDates) {
                 $dateFormat = 'Y-m-d H:i:s';
                 if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
                     $userStartDate = $date->format(DATE_ATOM);
