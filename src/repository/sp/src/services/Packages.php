@@ -909,7 +909,7 @@ class Packages extends Component
         foreach ($optionalModuleGroups as $id => $optional) {
             $block = $taskbook->moduleGroupBlock($id);
             $credits += $block->moduleGroupCredit;
-            if ($optional['level'] >= $taskbook->moduleGroupMinimumLevel) {
+            if (isset($optional['level']) && $optional['level'] >= $taskbook->moduleGroupMinimumLevel) {
                 $levelCredits += $block->moduleGroupCredit;
             }
         }
