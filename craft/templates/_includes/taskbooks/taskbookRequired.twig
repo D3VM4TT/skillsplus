@@ -1,7 +1,7 @@
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 <p>To submit this {{ taskbookLabel|lower }} for assessment you must complete a total of:</p>
 <p>
-    <strong>{{ taskbook.countMandatory }}</strong> mandatory {{ 'module'|pluralize(taskbook.countMandatory) }}{% if taskbook.moduleMinimumOptional %}and <strong>{{ taskbook.moduleMinimumOptional }}</strong> optional {{ 'module'|pluralize(taskbook.moduleMinimumOptional) }}{% endif %}.
+    <strong>{{ taskbook.countMandatory }}</strong> mandatory {{ 'module'|pluralize(taskbook.countMandatory) }}{% if taskbook.moduleMinimumOptional %} and <strong>{{ taskbook.moduleMinimumOptional }}</strong> optional {{ 'module'|pluralize(taskbook.moduleMinimumOptional) }}{% endif %}.
 </p>
 {% if taskbook.moduleMinimumCredits %}
     <p>

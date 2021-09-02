@@ -282,7 +282,7 @@ class PackageBehavior extends Behavior
         $credits = 0;
         $taskbook = $this->getTaskbook();
         foreach ($this->moduleGroups() as $moduleGroup) {
-            if (!$level || $moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+            if (!$level || $moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
                 $credits += $moduleGroup['credit'];
             }
         }
