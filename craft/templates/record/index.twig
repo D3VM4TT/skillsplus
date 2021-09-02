@@ -55,10 +55,13 @@
         {% endif %}
             {% if not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
                 <h2>Hello {{ account.firstName }}</h2>
-                <p class="welcome-back">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
+                <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
             {% else %}
                 <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
             {% endif %}
+        {% if account.userRole|length %}
+            <p style="padding:0;">{% for role in account.userRole %}{{ role.title }}{% if not loop.last %} ,{% endif %}{% endfor %}</p>
+        {% endif %}
         {% if craft.lantra.setting('taskbooks') and isManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
