@@ -644,9 +644,9 @@ class PackageBehavior extends Behavior
     public function getNextStepReviewer()
     {
         if (null == $step = $this->getNextStep()) {
-            return null;
+            return false;
         }
-        return $step->reviewUser->one();
+        return $step->reviewUser->count() ? $step->reviewUser->one() : false;
     }
 
     /**

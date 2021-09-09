@@ -94,8 +94,9 @@ class Results extends Component
             $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
+            $managerId = Craft::$app->request->getParam('managerId');
             if ($comment) {
-                $this->addComment($entry, $comment);
+                $this->addComment($entry, $comment, $managerId);
             }
             $fields = Craft::$app->request->getParam('fields');
             $resultUnitId = isset($fields['resultUnit']) && is_array($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
@@ -358,7 +359,7 @@ class Results extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function addComment($entry, $comment, $userId = null)
+    function addComment($entry, $comment, $userId = null, $managerId = null)
     {
         if (is_null($userId)) {
             $userId = Craft::$app->getUser()->id;
@@ -391,7 +392,7 @@ class Results extends Component
             ]
         ];
         $entry->setFieldValues(['resultComments' => $tableData]);
-        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId);
+        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId, $managerId);
     }
 
     /**
