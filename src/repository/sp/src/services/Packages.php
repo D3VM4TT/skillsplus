@@ -309,20 +309,22 @@ class Packages extends Component
     }
 
     /**
-     * @param $entry
+     * @param $package
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
     public function applyPackageAssessment(Entry $entry)
     {
+        ## have to reload package behavior
+        $package = Craft::$app->entries->getEntryById($entry->id);
+        $moduleGroupIds = $package->moduleGroupIds();
+        if (!count($moduleGroupIds)) {
+            return;
+        }
         $sp = new SuperTableService();
         $field = Craft::$app->fields->getFieldByHandle('packageAssessment');
         $assessmentBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
-        $moduleGroupIds = [$entry->packageTaskbook->one()->id];
-        foreach ($entry->packageModuleGroups as $block) {
-            $moduleGroupIds[] = $block->moduleGroup->one()->id;
-        }
         $n = 1;
         foreach ($moduleGroupIds as $moduleGroupId) {
             $packageAssessment['new' . $n] = [
@@ -335,8 +337,8 @@ class Packages extends Component
             ];
             $n++;
         }
-        $entry->setFieldValues(['packageAssessment' => $packageAssessment]);
-        Craft::$app->elements->saveElement($entry);
+        $package->setFieldValues(['packageAssessment' => $packageAssessment]);
+        Craft::$app->elements->saveElement($package);
     }
 
     /**
