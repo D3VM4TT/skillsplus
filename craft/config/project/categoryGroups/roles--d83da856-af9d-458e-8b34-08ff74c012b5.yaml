@@ -35,7 +35,16 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 50
+            width: 25
+          -
+            fieldUid: 0b7c55cd-d5b0-44f1-ba0a-882e155ae4bf # External
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
           -
             fieldUid: 585cec7d-218d-4241-a113-0a7ab6f7503e # Dashboard
             instructions: null
@@ -44,7 +53,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 50
+            width: 25
         name: 'Job Role'
         sortOrder: 1
       -

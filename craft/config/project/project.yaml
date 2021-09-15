@@ -1,8 +1,9 @@
-dateModified: 1630068773
+dateModified: 1631718925
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
     00afc899-b37a-415c-8829-b06a42a8638f: 'Module Group' # Module Group
+    0b7c55cd-d5b0-44f1-ba0a-882e155ae4bf: External # External
     0b692c2e-5b0e-43b1-911a-f5052b808cf5: 'Legacy Result Files' # Legacy Result Files
     0b770895-5b1b-4424-976b-53d7cfd96fbe: Taskbook # Taskbook
     0c63d248-a060-4ecd-b881-00607c9f4024: 'Taskbook Packages' # Taskbook Packages
@@ -13,6 +14,7 @@ meta:
     1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9: 'Enable Multiple Results?' # Enable Multiple Results?
     1a8a5dc7-66a0-4520-957d-7dec3aa3cf2f: 'Report Last Sent Date' # Report Last Sent Date
     1a27fa24-b0d3-491d-8b77-f1656c3afc77: 'Report Type' # Report Type
+    1bbfea30-57d1-4024-acac-dd05e705e8d5: 'Review Sampled' # Review Sampled
     1d7e1155-f678-423c-bfdb-a74218e031a9: Thumb # Thumb
     1d522b30-9aa0-4fc8-afd1-84e738233479: Certificate # Certificate
     1d590683-b16e-4955-be62-315accb3e628: Reports # Reports
