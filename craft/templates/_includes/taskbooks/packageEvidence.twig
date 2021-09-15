@@ -5,7 +5,7 @@
 {% set evidence = package.evidence %}
 
 {% if not evidence|length %}
-    <p>No evidence has been uploaded for this {{ taskbookLabel }}.</p>
+    <p>No evidence has been uploaded for this {{ taskbookLabel|lower }}.</p>
 {% else %}
     <table class="data">
         <thead>
