@@ -10,6 +10,8 @@
     {% set level = packageModuleGroup.level %}
 {% endif %}
 
+{% set packageComments =  package.comments %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -73,6 +75,13 @@
                     <li>
                         <a href="#tab{{ package.id }}log" class="primary-bg">
                             <h4>Log</h4>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if isManager and packageComments|length %}
+                    <li>
+                        <a href="#tab{{ package.id }}comments" class="primary-bg">
+                            <h4>Unread Comments ({{ packageComments|length }})</h4>
                         </a>
                     </li>
                 {% endif %}
@@ -294,6 +303,11 @@
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                     {% include '_includes/taskbooks/packageLog' with {admin:false} %}
+                </div>
+            {% endif %}
+            {% if isManager and packageComments|length %}
+                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
+                    {% include '_includes/taskbooks/packageComments' with {packageComments:packageComments} %}
                 </div>
             {% endif %}
             {% if not isManager %}

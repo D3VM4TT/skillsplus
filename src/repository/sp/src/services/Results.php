@@ -408,7 +408,7 @@ class Results extends Component
         $resultAuthorId = $comment->getOwner()->author->id;
         $commentAuthorId = $comment->user->one()->id;
         if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
-            $comment->read = true;
+            $comment->setFieldValue('read', true);
             Craft::$app->elements->saveElement($comment);
         }
     }

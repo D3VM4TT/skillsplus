@@ -676,6 +676,65 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns all unread comments for package grouped by unit
+     *
+     * @return array
+     */
+    public function getComments()
+    {
+        $comments = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $resultUnit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultComments as $comment) {
+                $commentUser = $comment->user->one();
+                if ($comment->read || $commentUser->id != $resultEntry->authorId) {
+                    continue;
+                }
+                $comments[] = [
+                    'unit' => $resultUnit,
+                    'date' => $comment->date,
+                    'comment' => $comment->comment
+                ];
+
+            }
+        }
+        return $comments;
+    }
+
+    /**
+     * @todo this should be more general and elsewhere...
+     *
+     * @param $unitId
+     * @return string
+     */
+    public function getUnitLink($unitId)
+    {
+        $user = $this->owner->author;
+        $uri = '/cpd/' . $user->id . '/';
+        $moduleEntry = null;
+        $unitEntry = null;
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            $categoryId = $moduleGroup['category']->id;
+            $moduleGroupItem = $user->record->getItem($categoryId);
+            foreach ($moduleGroupItem->items as $module) {
+                foreach ($module->allUnits() as $unit) {
+                    if ($unit->elementId == $unitId) {
+                        $moduleEntry = $user->record->getElement($module->elementId);
+                        $unitEntry = $user->record->getElement($unit->elementId);
+                        $uri .= $module->elementId . '/' . $unitId;
+                    }
+                }
+            }
+        }
+        if ($moduleEntry && $unitEntry) {
+            $moduleResultEntry = Lantra::$app->results->getModuleResult($user->id, $moduleEntry->id, true);
+            return $uri . '?ref=moduleResultId=' . $moduleResultEntry->id . '&packageId=' . $this->owner->id;
+        }
+        return '';
+    }
+
+    /**
      * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete
