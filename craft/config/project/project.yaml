@@ -1,4 +1,4 @@
-dateModified: 1631718925
+dateModified: 1631804254
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -191,6 +191,7 @@ meta:
     4505e42f-b7ae-43dd-ae25-694fc4e9b816: 'Cycle Grace' # Cycle Grace
     4967ee7c-a86e-49fd-89f6-a281f294c8a4: 'Target Points' # Target Points
     4978c00f-2afb-4601-83f2-12952bc08242: Heading # Heading
+    5828e048-752b-48b2-922d-f3743be7d970: 'Result Outcome' # Result Outcome
     5839b521-ccd0-4768-bbe4-ef59335fb732: 'Team Primary Manager' # Team Primary Manager
     6616a98b-5530-40e0-93db-6e73e439e274: 'Unit Image' # Unit Image
     7209f99b-e88b-403f-b8ba-fbb0301b5c0f: Paid # Paid

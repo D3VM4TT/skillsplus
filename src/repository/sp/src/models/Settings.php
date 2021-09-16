@@ -57,6 +57,9 @@ class Settings extends Model
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
 
+    public $labelResultOutcome0                 = 'Failed';
+    public $labelResultOutcome1                 = 'Passed';
+
     public $managerConfirmSubmit                = false;
     public $managerConfirmText                  = 'I confirm all information submitted was completed by the user.';
 

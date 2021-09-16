@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     if ($('#confirmSubmit').length) {
-
         $('#confirmSubmit').change(function(){
            if ($(this).is(':checked')) {
                $('#managerSubmit').show();
@@ -11,6 +10,15 @@ $(document).ready(function () {
            }
         });
         $('#confirmSubmit').change();
+    }
+
+    if ($('select#resultOutcome').length) {
+        $('select#resultOutcome').change(function () {
+            let outcome = $(this).val(),
+                status = outcome === '1' ? 'endorsed' : 'draft';
+            $('button#endorseStatus').data('status', status);
+        });
+        $('select#resultOutcome').change();
     }
 
     $('select#userRole').change(function () {
@@ -129,6 +137,15 @@ $(document).ready(function () {
     $('button.status').click(function () {
         var f = $(this).closest('form');
         f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
+        // make sure comment has been added for managers
+        if ($(this).hasClass('endorse')) {
+            let comment = $('#endorsementComment').val();
+            if ($(this).data('status') === 'draft' && comment.trim() === '') {
+                alert('You must add a comment.');
+                e.preventDefault();
+                return false
+            }
+        }
         f.submit();
     });
 

@@ -34,7 +34,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
           -
             fieldUid: b44b14bb-77d3-4e81-9d72-9a478aa97053 # Result Company
             instructions: null
@@ -43,16 +43,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
-          -
-            fieldUid: 3ccae116-4500-45d0-a56a-024f2e8d4d03 # Result Status
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
+            width: 50
           -
             fieldUid: 3103beed-feb4-4eed-b71a-68cb81d67f7e # Result Unit
             instructions: null
@@ -61,7 +52,25 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 25
+          -
+            fieldUid: 3ccae116-4500-45d0-a56a-024f2e8d4d03 # Result Status
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 5828e048-752b-48b2-922d-f3743be7d970 # Result Outcome
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
           -
             fieldUid: 5dd21124-5f28-49d6-8f3e-d70184415478 # Result Endorsed Date
             instructions: null
@@ -70,7 +79,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 25
           -
             fieldUid: 3cff7796-6519-48a5-97e7-e4dbb14befcc # Result Endorsed User
             instructions: null
