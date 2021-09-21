@@ -47,6 +47,7 @@
                     <img src="/assets/img/delete.svg" alt="Delete">
                 </a>
             {% endif %}
+            {# ## remove unit endorse ticks
             {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
                 <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
                    data-label="{{ rowName|default(rowTitle)|trim }}"
@@ -57,6 +58,7 @@
                     <img src="/assets/img/endorse.svg" alt="Endorse">
                 </a>
             {% endif %}
+            #}
         {% endif %}
     </td>
     <td class="icons">
