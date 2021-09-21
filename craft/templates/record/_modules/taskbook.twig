@@ -174,7 +174,8 @@
                         {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
                         {% set isComplete = totalComplete >= totalUnits %}
                         {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
-                        <tr>
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        <tr class="{% if package.taskbook.unitEndorse and not isEndorsed %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                                 {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
@@ -212,10 +213,11 @@
                     {% for moduleGroup in package.moduleGroups('optional')  %}
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
-                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem) %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
                         {% set isComplete = totalComplete >= totalUnits %}
                         {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
-                        <tr>
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        <tr class="{% if package.taskbook.unitEndorse and not isEndorsed %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                                 {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
