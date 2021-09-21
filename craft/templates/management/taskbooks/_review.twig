@@ -7,9 +7,10 @@
     <tbody>
     {% for assessment in package.packageAssessment %}
         {% set enabled = not assessment.assessmentDate %}
-        {% set moduleGroup = assessment.assessmentModuleGroup.last %}
+        {% set moduleGroup = assessment.assessmentModuleGroup.one %}
+        {% if moduleGroup %}
         <tr>
-            <td style="width:25%;">{{ package.taskbook.title }}</td>
+            <td style="width:25%;">{{ moduleGroup.title }}</td>
             <td style="width:10%;">
                 <select {% if not enabled %} disabled{% endif %} id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
                     <option value="1"{% if assessment.assessmentPassed %} selected{% endif %}>Passed</option>
@@ -20,6 +21,7 @@
                 <textarea {% if not enabled %} disabled{% endif %} rows="4" style="width:100%;" id="comment-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentComment]">{{ assessment.assessmentComment }}</textarea>
             </td>
         </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>
