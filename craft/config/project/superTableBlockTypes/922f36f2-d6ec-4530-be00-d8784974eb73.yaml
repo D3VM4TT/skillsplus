@@ -93,25 +93,25 @@ fields:
         -
           __assoc__:
             -
-              - default
-              - '1'
-            -
               - label
               - Text
             -
               - value
               - text
-        -
-          __assoc__:
             -
               - default
-              - ''
+              - '1'
+        -
+          __assoc__:
             -
               - label
               - Dropdown
             -
               - value
               - dropdown
+            -
+              - default
+              - ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
@@ -144,157 +144,168 @@ fields:
         -
           __assoc__:
             -
-              - default
-              - ''
-            -
               - label
               - Type
             -
               - value
               - unitType
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Unit Points'
             -
               - value
               - unitPoints
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - Status
             -
               - value
               - resultStatus
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Endorsed Date'
             -
               - value
               - resultEndorsedDate
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Endorsed User'
             -
               - value
               - resultEndorsedUser
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Expiry Date'
             -
               - value
               - resultExpiryDate
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Start Date'
             -
               - value
               - resultStartDate
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Finish Date'
             -
               - value
               - resultFinishDate
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - Location
             -
               - value
               - resultLocation
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - Evidence
             -
               - value
               - resultEvidence
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - Custom
             -
               - value
               - resultCustom
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Result Points'
             -
               - value
               - resultPoints
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Result Hours'
             -
               - value
               - resultHours
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - 'Result Narrative'
             -
               - value
               - resultNarrative
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Result Outcome'
+            -
+              - value
+              - resultOutcome
+            -
+              - default
+              - ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
@@ -387,36 +398,36 @@ fields:
         -
           __assoc__:
             -
-              - default
-              - '1'
-            -
               - label
               - Both
             -
               - value
               - both
-        -
-          __assoc__:
             -
               - default
-              - ''
+              - '1'
+        -
+          __assoc__:
             -
               - label
               - Table
             -
               - value
               - table
-        -
-          __assoc__:
             -
               - default
               - ''
+        -
+          __assoc__:
             -
               - label
               - Form
             -
               - value
               - form
+            -
+              - default
+              - ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
