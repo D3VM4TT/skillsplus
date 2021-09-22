@@ -11,16 +11,28 @@
         <thead>
         <tr>
             <th>Filename</th>
-            <th>Units</th>
+            <th>Uploaded By</th>
+            <th>Uploaded Date</th>
+            <th>Size</th>
+            <th>Location</th>
+            <th>Unit IDs</th>
         </tr>
         </thead>
         <tbody>
         {% for row in evidence %}
             <tr>
                 <td>{{ row.asset.filename }}</td>
+                <td>{{ row.asset.uploader ? row.asset.uploader.fullName : '~' }}</td>
+                <td>{{ row.asset.dateCreated|date(dateFormat) }}</td>
+                <td>{{ row.asset.size|filesize }}</td>
+                <td>
+                    {% if row.asset.location|coordinates %}
+                        <a href="http://www.google.com/maps/place/{{ row.asset.location|coordinates  }}"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+                    {% endif %}
+                </td>
                 <td>
                     {% for unit in row.units %}
-                        {{ unit.title }}<br />
+                        {{ unit.id }}<br />
                     {% endfor %}
                 </td>
             </tr>
