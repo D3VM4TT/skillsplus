@@ -96,7 +96,7 @@ class Results extends Component
             $comment = Craft::$app->request->getParam('comment');
             $managerId = Craft::$app->request->getParam('managerId');
             if ($comment) {
-                $this->addComment($entry, $comment, $managerId);
+                $this->addComment($entry, $comment, $userId, $managerId);
             }
             $fields = Craft::$app->request->getParam('fields');
             $resultUnitId = isset($fields['resultUnit']) && is_array($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
