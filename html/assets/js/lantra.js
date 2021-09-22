@@ -359,6 +359,7 @@ $(document).ready(function () {
         var link = $(this),
             action = link.data('action'),
             row = link.closest('.item'),
+            confirmMessage = link.data('confirm'),
             deleteRow = false,
             reload = false;
         if (action == 'entries/reset-result') {
@@ -430,7 +431,7 @@ $(document).ready(function () {
             reload = true;
         }
         else if (action == 'packages/request-assessment') {
-            if (!confirm('Are you sure you want to request assessment?')) {
+            if (!confirm(confirmMessage ? confirmMessage : 'Are you sure you want to submit?  You will no longer be able to make any changes.')) {
                 return false;
             }
             var data = {id: $(this).data('id'), userId: $(this).data('userid')};

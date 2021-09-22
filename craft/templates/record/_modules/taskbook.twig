@@ -148,8 +148,12 @@
                     {% if package.isComplete(true) %}
                         <div style="width: 50%;display: inline;float:right;text-align: right">
                             <p style="color:#006600;margin-bottom:10px;">You have completed your {{ taskbookLabel|lower }}.<br />Click below to request assessment.</p>
-                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                                   data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}"
+                                   data-ref="package"
+                                   data-confirm="Are you sure you want to submit this {{ taskbookLabel|lower }}? You will no longer be able to make any changes."
+                                   data-userid="{{ cpdUser.id }}"
+                                   data-action="packages/request-assessment"
+                                >Request Assessment</a>
                         </div>
                     {% endif %}
                 {% endif %}
