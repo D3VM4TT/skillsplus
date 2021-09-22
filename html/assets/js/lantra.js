@@ -798,13 +798,12 @@ $(document).ready(function () {
         checkPayment();
     }
 
-    $('a.endorse').each(function () {
-        var tr = $(this).closest('tr'),
+    $('tr.endorse').each(function () {
+        var tr = $(this),
             moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
             unitTitle = $(this).data('label'),
             e = $('#endorsements');
 
-        tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 

@@ -2,7 +2,9 @@
 {% set unreadComments = resultEntry ? craft.lantra.unreadComments(resultEntry) : 0 %}
 {% set packageUnitEndorse = package is defined ? package.taskbook.unitEndorse : true %}
 
-<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }}">
+{% set statusPending = managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' ? 'endorse' : '' %}
+
+<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }} {{ statusPending }}">
     <td>
         {{ rowTitle|raw }}
         <div class="cpd-icons">
