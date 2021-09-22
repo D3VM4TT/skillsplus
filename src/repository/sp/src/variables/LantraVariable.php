@@ -329,6 +329,15 @@ class LantraVariable
      * @param RecordItem $recordItem
      * @return bool
      */
+    public function totalPending($recordItem, $userId = null)
+    {
+        return RecordHelper::totalPending($recordItem, $this->getUser($userId));
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
     public function hasAssessmentUnit($recordItem)
     {
         return RecordHelper::hasAssessmentUnit($recordItem);
