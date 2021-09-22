@@ -349,6 +349,22 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return array
+     */
+    public function creditsSelected()
+    {
+        $taskbook = $this->getTaskbook();
+        if (!$taskbook->moduleMinimumCredits) {
+            return true;
+        }
+        $required = [
+            'credits'       => max($taskbook->moduleMinimumCredits - $this->totalCredits(),0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $this->totalCredits(true), 0)
+        ];
+        return $taskbook->moduleGroupMinimumLevelCredits ? $required['credits'] && $required['levelCredits'] : $required['credits'];
+    }
+
+    /**
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool
