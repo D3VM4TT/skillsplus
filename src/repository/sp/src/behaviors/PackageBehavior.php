@@ -265,11 +265,12 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @return bool
+     * @param bool $includeOptional
+     * @return mixed
      */
-    public function isComplete()
+    public function isComplete($includeOptional = false)
     {
-        $required = $this->required();
+        $required = $this->required($includeOptional);
         return $required['complete'];
     }
 
@@ -323,9 +324,10 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @return array
+     * @param bool $includeOptional
+     * @return array|bool
      */
-    public function required()
+    public function required($includeOptional = false)
     {
         $taskbook = $this->getTaskbook();
         $complete = $this->complete();
@@ -336,6 +338,12 @@ class PackageBehavior extends Behavior
             'credits'       => max($taskbook->moduleMinimumCredits - $complete['credits'],0),
             'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $complete['levelCredits'], 0)
         ];
+
+        ## make optional all incomplete
+        if ($includeOptional) {
+            $required['optional'] = max(count($this->moduleGroupIds('optional')) - $complete['optional'], 0);
+        }
+
         $required['complete'] = $required['mandatory'] == 0 && $required['optional'] == 0 && $required['credits'] == 0 && $required['levelCredits'] == 0;
         return $required;
     }
