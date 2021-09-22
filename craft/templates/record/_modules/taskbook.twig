@@ -50,9 +50,16 @@
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
                 {% if moduleGroupId %}
+                    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
+                    {% set totalUnits = moduleGroupItem.allUnits|length %}
+                    {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                    {% set isComplete = totalComplete >= totalUnits %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
-                            <h4>{{ moduleGroup.magicTitle }}</h4>
+                            <h4>
+                                {{ moduleGroup.magicTitle }}
+                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
+                            </h4>
                         </a>
                     </li>
                 {% else %}
