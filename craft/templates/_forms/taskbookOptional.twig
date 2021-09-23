@@ -2,7 +2,7 @@
     {% if optionalModuleGroups|length  %}
         <label>Below are the optional modules you can choose to complete along with core.
         {% if moduleGroup.moduleMinimumOptional %}
-           <br />You must select at least {{ moduleGroup.moduleMinimumOptional }} optional {{ 'module'|pluralize(qty=moduleGroup.moduleMinimumOptional) }}.
+           <br />You must select at least {{ moduleGroup.moduleMinimumOptional }} optional {{ 'module'|pluralize(moduleGroup.moduleMinimumOptional) }}.
         {% endif %}
         </label>
         <table class="data">
