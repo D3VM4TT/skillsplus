@@ -14,3 +14,16 @@
     on:		        settings.disableResultCache == 1,
 }) }}
 
+{{ forms.lightswitchField ({
+    label:			"Manager Confirm Submit?",
+    id:				"managerConfirmSubmit",
+    name:			"managerConfirmSubmit",
+    on:		        settings.managerConfirmSubmit == 1,
+}) }}
+
+{{ forms.textField ({
+    label:			"Manager Confirm Text",
+    id:				"managerConfirmText",
+    name:			"managerConfirmText",
+    value:		    settings.managerConfirmText,
+}) }}

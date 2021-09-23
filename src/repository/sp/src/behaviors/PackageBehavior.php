@@ -265,11 +265,12 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @return bool
+     * @param bool $includeOptional
+     * @return mixed
      */
-    public function isComplete()
+    public function isComplete($includeOptional = false)
     {
-        $required = $this->required();
+        $required = $this->required($includeOptional);
         return $required['complete'];
     }
 
@@ -282,7 +283,7 @@ class PackageBehavior extends Behavior
         $credits = 0;
         $taskbook = $this->getTaskbook();
         foreach ($this->moduleGroups() as $moduleGroup) {
-            if (!$level || $moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+            if (!$level || $moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
                 $credits += $moduleGroup['credit'];
             }
         }
@@ -314,7 +315,7 @@ class PackageBehavior extends Behavior
                     $complete['optional']++;
                 }
                 $complete['credits'] += $moduleGroup['credit'];
-                if ($moduleGroup['level'] <= $taskbook->moduleGroupMinimumLevel) {
+                if ($moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
                     $complete['levelCredits'] += $moduleGroup['credit'];
                 }
             }
@@ -323,9 +324,10 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * @return array
+     * @param bool $includeOptional
+     * @return array|bool
      */
-    public function required()
+    public function required($includeOptional = false)
     {
         $taskbook = $this->getTaskbook();
         $complete = $this->complete();
@@ -336,8 +338,30 @@ class PackageBehavior extends Behavior
             'credits'       => max($taskbook->moduleMinimumCredits - $complete['credits'],0),
             'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $complete['levelCredits'], 0)
         ];
+
+        ## make optional all incomplete
+        if ($includeOptional) {
+            $required['optional'] = max(count($this->moduleGroupIds('optional')) - $complete['optional'], 0);
+        }
+
         $required['complete'] = $required['mandatory'] == 0 && $required['optional'] == 0 && $required['credits'] == 0 && $required['levelCredits'] == 0;
         return $required;
+    }
+
+    /**
+     * @return array
+     */
+    public function creditsSelected()
+    {
+        $taskbook = $this->getTaskbook();
+        if (!$taskbook->moduleMinimumCredits) {
+            return true;
+        }
+        $required = [
+            'credits'       => max($taskbook->moduleMinimumCredits - $this->totalCredits(),0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $this->totalCredits(true), 0)
+        ];
+        return $taskbook->moduleGroupMinimumLevelCredits ? $required['credits'] && $required['levelCredits'] : $required['credits'];
     }
 
     /**
@@ -644,9 +668,94 @@ class PackageBehavior extends Behavior
     public function getNextStepReviewer()
     {
         if (null == $step = $this->getNextStep()) {
-            return null;
+            return false;
         }
-        return $step->reviewUser->one();
+        return $step->reviewUser->count() ? $step->reviewUser->one() : false;
+    }
+
+    /**
+     * Returns all evidence for package grouped by unit
+     *
+     * @return array
+     */
+    public function getEvidence()
+    {
+        $assets = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $unit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultEvidence->all() as $evidence) {
+                if (isset($assets[$evidence->id])) {
+                    $assets[$evidence->id]['units'][] = $unit;
+                }
+                else {
+                    $assets[$evidence->id] = [
+                        'asset' => $evidence,
+                        'units' => [$unit]
+                    ];
+                }
+            }
+        }
+        return $assets;
+    }
+
+    /**
+     * Returns all unread comments for package grouped by unit
+     *
+     * @return array
+     */
+    public function getComments()
+    {
+        $comments = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $resultUnit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultComments as $comment) {
+                $commentUser = $comment->user->one();
+                if ($comment->read || $commentUser->id != $resultEntry->authorId) {
+                    continue;
+                }
+                $comments[] = [
+                    'unit' => $resultUnit,
+                    'date' => $comment->date,
+                    'comment' => $comment->comment
+                ];
+
+            }
+        }
+        return $comments;
+    }
+
+    /**
+     * @todo this should be more general and elsewhere...
+     *
+     * @param $unitId
+     * @return string
+     */
+    public function getUnitLink($unitId)
+    {
+        $user = $this->owner->author;
+        $uri = '/cpd/' . $user->id . '/';
+        $moduleEntry = null;
+        $unitEntry = null;
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            $categoryId = $moduleGroup['category']->id;
+            $moduleGroupItem = $user->record->getItem($categoryId);
+            foreach ($moduleGroupItem->items as $module) {
+                foreach ($module->allUnits() as $unit) {
+                    if ($unit->elementId == $unitId) {
+                        $moduleEntry = $user->record->getElement($module->elementId);
+                        $unitEntry = $user->record->getElement($unit->elementId);
+                        $uri .= $module->elementId . '/' . $unitId;
+                    }
+                }
+            }
+        }
+        if ($moduleEntry && $unitEntry) {
+            $moduleResultEntry = Lantra::$app->results->getModuleResult($user->id, $moduleEntry->id, true);
+            return $uri . '?ref=moduleResultId=' . $moduleResultEntry->id . '&packageId=' . $this->owner->id;
+        }
+        return '';
     }
 
     /**

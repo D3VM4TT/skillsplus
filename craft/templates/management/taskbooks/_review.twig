@@ -1,15 +1,14 @@
-{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-
 <table class="data">
     <thead>
-        <th>Module Group</th>
+        <th>{{ taskbookLabel }}</th>
         <th>Result</th>
         <th>Comment</th>
     </thead>
     <tbody>
     {% for assessment in package.packageAssessment %}
         {% set enabled = not assessment.assessmentDate %}
-        {% set moduleGroup = assessment.assessmentModuleGroup.last %}
+        {% set moduleGroup = assessment.assessmentModuleGroup.one %}
+        {% if moduleGroup %}
         <tr>
             <td style="width:25%;">{{ moduleGroup.title }}</td>
             <td style="width:10%;">
@@ -22,6 +21,7 @@
                 <textarea {% if not enabled %} disabled{% endif %} rows="4" style="width:100%;" id="comment-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentComment]">{{ assessment.assessmentComment }}</textarea>
             </td>
         </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>

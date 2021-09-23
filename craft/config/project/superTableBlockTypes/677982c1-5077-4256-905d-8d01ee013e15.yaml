@@ -3,38 +3,110 @@ fieldLayouts:
   781d536b-9543-4153-8654-47ec0202f97c:
     tabs:
       -
-        fields:
-          92d2e862-77f6-43f3-aa6e-cd75c38d424d: # Step Name
-            required: '0'
-            sortOrder: '2'
-          7497821d-a351-4210-97ac-024153a093af: # Review Passed
-            required: '0'
-            sortOrder: '6'
-          13071690-5bed-43f9-8afb-8c2c799eac7e: # Review User
-            required: '0'
-            sortOrder: '4'
-          e97c33b5-d88c-43c2-a829-e12ba86c75ac: # Step Type
-            required: '0'
-            sortOrder: '3'
-          e98e5085-4cf9-46ca-818c-b71e74ed4eaa: # Review Comment
-            required: '0'
-            sortOrder: '7'
-          e927b48c-3108-4edd-a018-67e44c2989d5: # Review Date
-            required: '0'
-            sortOrder: '5'
-          eed6767c-11d8-46d2-b3d5-47ef288cd76b: # Step ID
-            required: '0'
-            sortOrder: '1'
+        elements:
+          -
+            fieldUid: eed6767c-11d8-46d2-b3d5-47ef288cd76b # Step ID
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 92d2e862-77f6-43f3-aa6e-cd75c38d424d # Step Name
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: e97c33b5-d88c-43c2-a829-e12ba86c75ac # Step Type
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 13071690-5bed-43f9-8afb-8c2c799eac7e # Review User
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: e927b48c-3108-4edd-a018-67e44c2989d5 # Review Date
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 7497821d-a351-4210-97ac-024153a093af # Review Passed
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: e98e5085-4cf9-46ca-818c-b71e74ed4eaa # Review Comment
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 1bbfea30-57d1-4024-acac-dd05e705e8d5 # Review Sampled
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Content
-        sortOrder: '1'
+        sortOrder: 1
 fields:
+  1bbfea30-57d1-4024-acac-dd05e705e8d5: # Review Sampled
+    columnSuffix: hvxqcyhq
+    contentColumnType: text
+    fieldGroup: null
+    handle: reviewSampled
+    instructions: ''
+    name: 'Review Sampled'
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   92d2e862-77f6-43f3-aa6e-cd75c38d424d: # Step Name
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: reviewStepName
     instructions: ''
     name: 'Step Name'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -44,77 +116,119 @@ fields:
       mode: disabled
       modeOverride: ''
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: mmikkel\incognitofield\fields\IncognitoFieldType
   7497821d-a351-4210-97ac-024153a093af: # Review Passed
+    columnSuffix: null
     contentColumnType: boolean
     fieldGroup: null
     handle: reviewPassed
     instructions: ''
     name: 'Review Passed'
-    searchable: '1'
+    searchable: true
     settings:
-      default: ''
+      default: false
+      offLabel: null
+      onLabel: null
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
   13071690-5bed-43f9-8afb-8c2c799eac7e: # Review User
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: reviewUser
     instructions: ''
     name: 'Review User'
-    searchable: '1'
+    searchable: true
     settings:
+      allowSelfRelations: false
       limit: '1'
       localizeRelations: false
       selectionLabel: ''
+      showSiteMenu: true
       source: null
       sources:
         - admins
         - 'group:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6' # Company Managers
         - 'group:2a75e796-1574-407e-8869-545d14d6d126' # Scheme Managers
         - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a' # Team Managers
+        - 'group:ab9197b3-7032-4015-ba4e-4939118952dd' # Users
       targetSiteId: null
-      validateRelatedElements: ''
+      validateRelatedElements: false
       viewMode: null
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Users
   e97c33b5-d88c-43c2-a829-e12ba86c75ac: # Step Type
+    columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: reviewStepType
     instructions: ''
     name: 'Step Type'
-    searchable: '1'
+    searchable: true
     settings:
       optgroups: true
       options:
         -
-          default: '1'
-          label: Assessment
-          value: assessment
+          __assoc__:
+            -
+              - label
+              - Assessment
+            -
+              - value
+              - assessment
+            -
+              - default
+              - '1'
         -
-          default: ''
-          label: Review
-          value: review
+          __assoc__:
+            -
+              - label
+              - Review
+            -
+              - value
+              - review
+            -
+              - default
+              - ''
         -
-          default: ''
-          label: Complete
-          value: complete
+          __assoc__:
+            -
+              - label
+              - Complete
+            -
+              - value
+              - complete
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - External
+            -
+              - value
+              - external
+            -
+              - default
+              - ''
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Dropdown
   e98e5085-4cf9-46ca-818c-b71e74ed4eaa: # Review Comment
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: reviewComment
     instructions: ''
     name: 'Review Comment'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -122,31 +236,37 @@ fields:
       columnType: null
       initialRows: '4'
       multiline: '1'
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
   e927b48c-3108-4edd-a018-67e44c2989d5: # Review Date
+    columnSuffix: null
     contentColumnType: datetime
     fieldGroup: null
     handle: reviewDate
     instructions: ''
     name: 'Review Date'
-    searchable: '1'
+    searchable: true
     settings:
+      max: null
+      min: null
       minuteIncrement: '30'
       showDate: true
       showTime: false
+      showTimeZone: false
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Date
   eed6767c-11d8-46d2-b3d5-47ef288cd76b: # Step ID
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: reviewStepId
     instructions: ''
     name: 'Step ID'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -156,7 +276,8 @@ fields:
       mode: disabled
       modeOverride: ''
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: mmikkel\incognitofield\fields\IncognitoFieldType

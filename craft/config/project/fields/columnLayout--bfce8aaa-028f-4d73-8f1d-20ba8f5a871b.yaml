@@ -9,6 +9,13 @@ settings:
   columns:
     __assoc__:
       -
+        - 8fec0242-3542-431e-8a9a-d2d86b3e3b06 # Field Type
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
         - 19794a8d-aa57-4cea-9297-7c4ccfb2d561 # Field Label
         -
           __assoc__:
@@ -23,6 +30,13 @@ settings:
               - width
               - ''
       -
+        - 74329152-64bf-43a9-95b3-0458edd36e4f # Field Custom Key
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
         - 6cb593e0-eb38-45a0-bd9b-22a23586dfbe # Field Custom Type
         -
           __assoc__:
@@ -30,7 +44,7 @@ settings:
               - width
               - ''
       -
-        - 74329152-64bf-43a9-95b3-0458edd36e4f # Field Custom Key
+        - a37728d1-3a88-46ca-b9d5-ec79b66ba635 # Field Custom Options
         -
           __assoc__:
             -
@@ -44,14 +58,7 @@ settings:
               - width
               - ''
       -
-        - 8fec0242-3542-431e-8a9a-d2d86b3e3b06 # Field Type
-        -
-          __assoc__:
-            -
-              - width
-              - ''
-      -
-        - a37728d1-3a88-46ca-b9d5-ec79b66ba635 # Field Custom Options
+        - b46f9aa2-ceed-4dee-ac99-835a93962438 # Field Display
         -
           __assoc__:
             -
@@ -61,6 +68,7 @@ settings:
   fieldLayout: table
   maxRows: ''
   minRows: ''
+  placeholderKey: null
   propagationMethod: all
   selectionLabel: 'Add a row'
   staticField: ''

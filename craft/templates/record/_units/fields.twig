@@ -5,8 +5,10 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set readOnly = readOnly is defined and readOnly %}
 
-{%- do view.registerJsFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.js')) -%}
-{%- do view.registerCssFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/lib/redactor/redactor.css')) -%}
+
+{%- do view.registerJsFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/src/assets/redactor/dist/redactor.min.js')) -%}
+{%- do view.registerCssFile(view.getAssetManager().getPublishedUrl('@vendor/craftcms/redactor/src/assets/redactor/dist/redactor.css')) -%}
+
 {% includeJs "$('.redactor').redactor();" %}
 <style>
     .redactor-styles ul,
@@ -135,6 +137,11 @@
     {% endif %}
     {% if not resultLocked %}
         <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
+        {% if not isManager and isPackage is defined and isPackage %}
+            {% set nextReviewer = package.nextStepReviewer %}
+            <p>Comment will be sent to {{ nextReviewer ? nextReviewer.fullName : ' your manager' }}.</p>
+            <input type="hidden" name="managerId" value="{{ nextReviewer ? nextReviewer.id : '' }}" />
+        {% endif %}
     {% endif %}
 </div>
 {% if readOnly and not resultLocked %}

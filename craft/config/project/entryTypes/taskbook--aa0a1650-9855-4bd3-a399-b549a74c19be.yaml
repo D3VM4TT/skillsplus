@@ -74,7 +74,16 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
+          -
+            fieldUid: 84396576-ea02-4748-adcd-ae3fe8d26824 # Unit Endorse
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
           -
             fieldUid: da81a368-f84c-47f8-9e3a-b83346be0865 # Module Group Minimum Optional
             instructions: null
@@ -104,15 +113,6 @@ fieldLayouts:
             width: 100
           -
             fieldUid: 809b8647-dd59-44cf-b5d5-63dac0021cb1 # Module Group Minimum Level Credits
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 84396576-ea02-4748-adcd-ae3fe8d26824 # Unit Endorse
             instructions: null
             label: null
             required: '0'

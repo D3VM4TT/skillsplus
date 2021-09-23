@@ -478,7 +478,7 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function sendCommentUpdate(Entry $entry, $comment, $userId)
+    function sendCommentUpdate(Entry $entry, $comment, $userId, $managerId = null)
     {
         ## notification is disabled
         if (!$this->isEnabled('comment')) {
@@ -494,6 +494,11 @@ class Notify extends Component
         ## manager commenting - notify user
         if ($userId != $entry->authorId) {
             $this->notify($user->email, $subject, $message, null, $user, $cc);
+        }
+        ## manager id sent from form (i.e. taskbook assessor)
+        elseif ($managerId) {
+            $manager = Craft::$app->users->getUserById($managerId);
+            $this->notify($manager->email, $subject, $message, null, $manager, $cc);
         }
         ## user commenting - notify managers
         else {

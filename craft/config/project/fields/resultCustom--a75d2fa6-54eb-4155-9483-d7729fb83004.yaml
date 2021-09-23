@@ -26,6 +26,7 @@ settings:
   fieldLayout: table
   maxRows: null
   minRows: null
+  placeholderKey: null
   propagationMethod: all
   selectionLabel: 'Add a row'
   staticField: null

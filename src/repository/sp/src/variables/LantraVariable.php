@@ -329,6 +329,15 @@ class LantraVariable
      * @param RecordItem $recordItem
      * @return bool
      */
+    public function totalPending($recordItem, $userId = null)
+    {
+        return RecordHelper::totalPending($recordItem, $this->getUser($userId));
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
     public function hasAssessmentUnit($recordItem)
     {
         return RecordHelper::hasAssessmentUnit($recordItem);
@@ -870,6 +879,18 @@ class LantraVariable
             return false;
         }
         return Lantra::$app->users->canManage($user, $scheme);
+    }
+
+    /**
+     * @param null $userId
+     * @return bool
+     */
+    public function hasDashboard($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        return Lantra::$app->users->hasDashboard($user);
     }
 
     /**

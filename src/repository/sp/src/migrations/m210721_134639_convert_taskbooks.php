@@ -76,13 +76,11 @@ class m210721_134639_convert_taskbooks extends Migration
                 $categories[$optional->id] = 0;
             }
 
-            $this->resetCategoryChildren($category);
-
             if ($entry->id) {
 
                 ## add previous module groups to new module groups field
-                foreach($categories as $categoryId => $mandatory) {
-                    $this->addModuleGroupBlock($this->taskbookModuleGroups, $entry, $categoryId, $mandatory);
+                foreach($categories as $cId => $mandatory) {
+                    $this->addModuleGroupBlock($this->taskbookModuleGroups, $entry, $cId, $mandatory);
                 }
 
                 ## update packages to point to new taskbooks
@@ -100,10 +98,26 @@ class m210721_134639_convert_taskbooks extends Migration
                     ## add previous module group to new package module groups field
                     $this->addModuleGroupBlock($this->packageModuleGroups, $package, $category->id, 1, $package->packageLevel);
 
+                    ## bics portfolio add optional module groups.
+                    if ($category->id == 307057) {
+                        ## add optional module groups
+                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307103, 0, $package->packageLevel);
+                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307104, 0, $package->packageLevel);
+                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307105, 0, $package->packageLevel);
+                    }
                     echo "Updated package " . $package->id . "\n\n";
 
                 }
                 echo "Converted " . $category->title . "\n\n";
+            }
+
+            $criteria = Category::find();
+            $criteria->group = 'moduleGroups';
+            $criteria->moduleGroupTaskbooks = true;
+            $criteria->level = 1;
+            $categories = $criteria->all();
+            foreach ($categories as $category) {
+                $this->resetCategoryChildren($category);
             }
         }
     }
@@ -111,8 +125,8 @@ class m210721_134639_convert_taskbooks extends Migration
     function resetCategoryChildren($category)
     {
         foreach($category->getChildren() as $optional) {
-            $query = $this->db->createCommand();
-            $query->update('{{%structureelements}}', ['level' => 1], ['elementId' => $optional->id])->execute();
+            $optional->parent = null;
+            Craft::$app->elements->saveElement($optional);
         }
     }
 

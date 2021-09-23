@@ -3,23 +3,36 @@ fieldLayouts:
   92c764d5-c74d-44b3-aa9e-73abc60aecc1:
     tabs:
       -
-        fields:
-          5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b: # Custom Key
-            required: '0'
-            sortOrder: '1'
-          70a4b8f2-f454-40e6-82d7-ff577995e2a4: # Custom Value
-            required: '0'
-            sortOrder: '2'
+        elements:
+          -
+            fieldUid: 5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b # Custom Key
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 70a4b8f2-f454-40e6-82d7-ff577995e2a4 # Custom Value
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Content
-        sortOrder: '1'
+        sortOrder: 1
 fields:
   5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b: # Custom Key
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: customKey
     instructions: ''
     name: 'Custom Key'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -27,17 +40,19 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
   70a4b8f2-f454-40e6-82d7-ff577995e2a4: # Custom Value
+    columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: customValue
     instructions: ''
     name: 'Custom Value'
-    searchable: '1'
+    searchable: true
     settings:
       byteLimit: null
       charLimit: null
@@ -45,7 +60,8 @@ fields:
       columnType: text
       initialRows: '4'
       multiline: ''
-      placeholder: ''
+      placeholder: null
+      uiMode: normal
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText

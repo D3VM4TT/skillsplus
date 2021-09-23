@@ -47,6 +47,7 @@ settings:
   fieldLayout: table
   maxRows: ''
   minRows: ''
+  placeholderKey: null
   propagationMethod: all
   selectionLabel: ''
   staticField: ''

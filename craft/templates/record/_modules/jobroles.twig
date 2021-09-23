@@ -20,7 +20,9 @@
     {% else %}
         {% for roleItem in cpdUser.record.jobRoles %}
             {% set role = cpdUser.record.getElement(roleItem.elementId) %}
-            {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
+            {% if role.isDashboard %}
+                {% include 'record/_modules/role' with{cpdUser:cpdUser, role:role} %}
+            {% endif %}
         {% endfor %}
     {% endif %}
 </div>

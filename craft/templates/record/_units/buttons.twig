@@ -1,44 +1,74 @@
 {% if isManager and account.id != currentUser.id %}
-    {% if resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
-        {% set resultEndorsedUser = resultEntry.resultEndorsedUser ? resultEntry.resultEndorsedUser.one() %}
-        {% if resultEndorsedUser and resultEntry.resultEndorsedDate %}
-        <p>
-            <strong>
-                Endorsed by {{ resultEndorsedUser.fullname }}
-                on {{  resultEntry.resultEndorsedDate|date('d-m-y') }}
-            </strong>
-        </p>
+    <div id="managerEndorse" style="background: #f3f3f3;padding:10px;margin:20px 0 20px 0;">
+        {% if resultEntry is defined and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+            {% set resultEndorsedUser = resultEntry.resultEndorsedUser ? resultEntry.resultEndorsedUser.one() %}
+            {% if resultEndorsedUser and resultEntry.resultEndorsedDate %}
+                <p>
+                    <strong>
+                        Endorsed by {{ resultEndorsedUser.fullname }}
+                        on {{  resultEntry.resultEndorsedDate|date('d-m-y') }}
+                    </strong>
+                </p>
+            {% endif %}
+            <p>
+                <label for="newEndorse">
+                    <input id="newEndorse" type="checkbox" value="1" name="newEndorse" /> Update endorsement?
+                </label>
+            </p>
         {% endif %}
-        <p>
-            <label for="newEndorse">
-                <input id="newEndorse" type="checkbox" value="1" name="newEndorse" /> Update endorsement?
-            </label>
-        </p>
-    {% endif %}
-    <div class="container-btn">
-        <button class="button primary-bg status" data-status="endorsed" type="button">Save as endorsed</button>
+        <table class="data" style="margin-bottom:0;">
+            <thead>
+            <tr>
+                <th>Endorsement</th>
+                <th>Comment</th>
+                <th></th>
+            </tr>
+            <tbody>
+            <tr>
+                <td>
+                    <select id="resultOutcome" name="fields[resultOutcome]">
+                        <option value="1">{{ craft.lantra.setting('labelResultOutcome1') }}</option>
+                        <option value="0">{{ craft.lantra.setting('labelResultOutcome0') }}</option>
+                    </select>
+                </td>
+                <td>
+                    <textarea style="width: 100%;" placeholder="Endorsement comment" id="endorsementComment" name="comment"></textarea>
+                </td>
+                <td style="text-align: right;">
+                    <button id="endorseStatus" class="button primary-bg endorse status" type="button">Submit</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-{% else %}
+{% endif %}
+{% if isManager and account.id != currentUser.id and craft.lantra.setting('managerConfirmSubmit') %}
+    <label for="confirmSubmit">
+        <input id="confirmSubmit" type="checkbox" value="0" name="confirmSubmit" />
+        {{ craft.lantra.setting('managerConfirmText') }}
+    </label>
+{% endif %}
+<div id="managerSubmit">
     {% if autoEndorse %}
         <div class="container-btn">
             <button class="button primary-bg status" data-status="endorsed" type="button">Save Result</button>
         </div>
-    {% elseif (not isPackage or isPackage and package.taskbook.unitEndorse) and not craft.lantra.setting('jobRoleEndorse', false) %}
+    {% elseif not isManager and (not isPackage or isPackage and package.taskbook.unitEndorse) and not craft.lantra.setting('jobRoleEndorse', false) %}
         <div class="col-pd-btm"><p>Click 'Request endorsement' if you would like to submit this unit for endorsement.</p></div>
         <div class="container-btn">
             <button class="button primary-bg status" data-status="pending" type="button">Request endorsement</button>
         </div>
     {% endif %}
-{% endif %}
-{% if not autoEndorse %}
-    <div class="col-pd-btm"><p>&nbsp;</p></p><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
-    <div class="container-btn">
-        <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
-    </div>
-{% endif %}
-{% if isPackage and not package.taskbook.unitEndorse %}
-    <div class="col-pd-btm"><p>Click 'Save as complete' if you are ready to submit for endorsement.</p></div>
-    <div class="container-btn">
-        <button class="button primary-bg status" data-status="complete" type="button">Save as complete</button>
-    </div>
-{% endif %}
+    {% if not autoEndorse %}
+        <div class="col-pd-btm"><p>&nbsp;</p></p><p>Click 'Save as draft' if you would like to add more evidence at a later date.</p></div>
+        <div class="container-btn">
+            <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
+        </div>
+    {% endif %}
+    {% if isPackage and not package.taskbook.unitEndorse %}
+        <div class="col-pd-btm"><p>Click 'Save as complete' if you are ready to submit for endorsement.</p></div>
+        <div class="container-btn">
+            <button class="button primary-bg status" data-status="complete" type="button">Save as complete</button>
+        </div>
+    {% endif %}
+</div>

@@ -94,8 +94,9 @@ class Results extends Component
             $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
+            $managerId = Craft::$app->request->getParam('managerId');
             if ($comment) {
-                $this->addComment($entry, $comment);
+                $this->addComment($entry, $comment, $userId, $managerId);
             }
             $fields = Craft::$app->request->getParam('fields');
             $resultUnitId = isset($fields['resultUnit']) && is_array($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
@@ -132,10 +133,11 @@ class Results extends Component
                 }
             }
             $request = Craft::$app->getRequest();
-            if (!$request->isCpRequest) {
-                $userStartDate = Craft::$app->request->getParam('userStartDate');
-                $userFinishDate = Craft::$app->request->getParam('userFinishDate');
-                $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+            $userStartDate = Craft::$app->request->getParam('userStartDate');
+            $userFinishDate = Craft::$app->request->getParam('userFinishDate');
+            $userExpiryDate = Craft::$app->request->getParam('userExpiryDate');
+            $hasDates = $userStartDate !== null || $userFinishDate !== null || $userExpiryDate !== null;
+            if (!$request->isCpRequest && $hasDates) {
                 $dateFormat = 'Y-m-d H:i:s';
                 if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
                     $userStartDate = $date->format(DATE_ATOM);
@@ -357,7 +359,7 @@ class Results extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function addComment($entry, $comment, $userId = null)
+    function addComment($entry, $comment, $userId = null, $managerId = null)
     {
         if (is_null($userId)) {
             $userId = Craft::$app->getUser()->id;
@@ -390,7 +392,7 @@ class Results extends Component
             ]
         ];
         $entry->setFieldValues(['resultComments' => $tableData]);
-        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId);
+        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId, $managerId);
     }
 
     /**
@@ -406,7 +408,7 @@ class Results extends Component
         $resultAuthorId = $comment->getOwner()->author->id;
         $commentAuthorId = $comment->user->one()->id;
         if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
-            $comment->read = true;
+            $comment->setFieldValue('read', true);
             Craft::$app->elements->saveElement($comment);
         }
     }
@@ -532,7 +534,8 @@ class Results extends Component
                 if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
                     $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
                 }
-                if (!$resultEntry->resultModuleResult || $resultEntry->resultModuleResult->one()->id != $moduleResultId) {
+                $resultModuleResult = $resultEntry->resultModuleResult->one();
+                if (!$resultModuleResult || !$resultEntry->resultModuleResult || $resultModuleResult->id != $moduleResultId) {
                     ## fix to update resultModuleResult if cycle has changed
                     $this->setResultModuleResult($resultEntry, $moduleResultId);
                 }

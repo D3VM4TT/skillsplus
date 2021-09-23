@@ -17,4 +17,4 @@ settings:
   textareaRows: 5
 translationKeyFormat: null
 translationMethod: none
-type: aelvan\preparsefield\fields\PreparseFieldType
+type: besteadfast\preparsefield\fields\PreparseFieldType

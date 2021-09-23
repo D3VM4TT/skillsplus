@@ -1,7 +1,13 @@
 {% if header is defined %}
     {% for row in columnLayout.all() %}
         {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
-            <th>{{ row.fieldLabel|default(row.fieldType.label) }}</th>
+            <th>
+            {% if row.fieldType == 'resultOutcome' %}
+                Result {{ craft.lantra.setting('labelResultOutcome1') }}
+            {% else %}
+                {{ row.fieldLabel|default(row.fieldType.label) }}
+            {% endif %}
+            </th>
         {% endif %}
     {% endfor %}
 {% else %}
@@ -40,8 +46,13 @@
                     {% set resultEndorsedUser = resultEntry.resultEndorsedUser.one %}
                     {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
                 {% elseif resultEntry %}
-                    unknown
+                    -
                 {% endif %}
+            </td>
+        {% elseif row.fieldType == 'resultOutcome'  %}
+            <td class="resultOutcome">
+                <p class="td-title-responsive">Result {{ craft.lantra.setting('labelResultOutcome1') }}: </p>
+                {{ resultEntry and resultEntry.resultOutcome ? 'Yes' : 'No' }}
             </td>
         {% elseif row.fieldType == 'resultExpiryDate'  %}
             <td class="expiryDate">

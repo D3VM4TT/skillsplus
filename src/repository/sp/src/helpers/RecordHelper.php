@@ -87,6 +87,16 @@ class RecordHelper
     /**
      * @param RecordItem $recordItem
      * @param User $user
+     * @return null
+     */
+    public static function totalPending(RecordItem $recordItem, User $user)
+    {
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['pending']);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
      * @param Entry|null $taskbook
      * @return bool
      */

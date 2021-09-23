@@ -6,7 +6,7 @@
 {% extends "_layout" %}
 
 {% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
-
+{% set jobRoleLabel = craft.lantra.setting('labelJobRole', 'Job Role') %}
 
 {% block content %}
     <section class="page dashboard">
@@ -19,7 +19,10 @@
             {{ currentUserCompany|default('') }}
             #}
             <h2>Hello {{ currentUser.firstName }},</h2>
-            <p class="welcome-back">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
+            <p class="welcome-back" style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
+            {% if currentUser.userRole|length %}
+                <p  style="padding:0;">Allocated {{ jobRoleLabel|pluralize(currentUser.userRole|length) }}: {% for role in currentUser.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}
         </div>
         <div class="page-content">
             {{ globalsHtml.pageDashboard }}

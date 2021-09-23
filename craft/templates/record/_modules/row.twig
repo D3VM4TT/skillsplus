@@ -2,7 +2,9 @@
 {% set unreadComments = resultEntry ? craft.lantra.unreadComments(resultEntry) : 0 %}
 {% set packageUnitEndorse = package is defined ? package.taskbook.unitEndorse : true %}
 
-<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }}">
+{% set statusPending = not readOnly and craft.lantra.isManager(cpdUser.id) and resultEntry and resultEntry.resultStatus == 'pending' ? 'endorse' : '' %}
+
+<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }} {{ statusPending }}">
     <td>
         {{ rowTitle|raw }}
         <div class="cpd-icons">
@@ -47,6 +49,7 @@
                     <img src="/assets/img/delete.svg" alt="Delete">
                 </a>
             {% endif %}
+            {# ## remove unit endorse ticks
             {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
                 <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
                    data-label="{{ rowName|default(rowTitle)|trim }}"
@@ -57,6 +60,7 @@
                     <img src="/assets/img/endorse.svg" alt="Endorse">
                 </a>
             {% endif %}
+            #}
         {% endif %}
     </td>
     <td class="icons">

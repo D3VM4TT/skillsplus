@@ -2,14 +2,41 @@
     <h4>Evidence</h4>
 </div>
 
-<ul class="assets" id="evidence">
-{% set allUnits = cpdUser.record.getItem(package.id).allUnits() %}
-{% for unit in allUnits %}
-    {% set result = cpdUser.record.getUnitResult(unit.elementId) %}
-    {% if result and result.resultEvidence|length %}
-        {% for asset in result.resultEvidence.all() %}
-            {% include '_includes/evidence/asset' with {'asset': asset, readOnly:true} %}
+{% set evidence = package.evidence %}
+
+{% if not evidence|length %}
+    <p>No evidence has been uploaded for this {{ taskbookLabel|lower }}.</p>
+{% else %}
+    <table class="data">
+        <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Uploaded By</th>
+            <th>Uploaded Date</th>
+            <th>Size</th>
+            <th>Location</th>
+            <th>Unit IDs</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in evidence %}
+            <tr>
+                <td>{{ row.asset.filename }}</td>
+                <td>{{ row.asset.uploader ? row.asset.uploader.fullName : '~' }}</td>
+                <td>{{ row.asset.dateCreated|date(dateFormat) }}</td>
+                <td>{{ row.asset.size|filesize }}</td>
+                <td>
+                    {% if row.asset.location|coordinates %}
+                        <a href="http://www.google.com/maps/place/{{ row.asset.location|coordinates  }}"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% for unit in row.units %}
+                        {{ unit.id }}<br />
+                    {% endfor %}
+                </td>
+            </tr>
         {% endfor %}
-    {% endif %}
-{% endfor %}
-</ul>
+        </tbody>
+    </table>
+{% endif %}

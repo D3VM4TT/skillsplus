@@ -1,5 +1,26 @@
 $(document).ready(function () {
 
+    if ($('#confirmSubmit').length) {
+        $('#confirmSubmit').change(function(){
+           if ($(this).is(':checked')) {
+               $('#managerSubmit').show();
+           }
+           else {
+               $('#managerSubmit').hide();
+           }
+        });
+        $('#confirmSubmit').change();
+    }
+
+    if ($('select#resultOutcome').length) {
+        $('select#resultOutcome').change(function () {
+            let outcome = $(this).val(),
+                status = outcome === '1' ? 'endorsed' : 'draft';
+            $('button#endorseStatus').data('status', status);
+        });
+        $('select#resultOutcome').change();
+    }
+
     $('select#userRole').change(function () {
         var isReviewer = false;
         $(this).find('option:selected').each(function () {
@@ -116,6 +137,15 @@ $(document).ready(function () {
     $('button.status').click(function () {
         var f = $(this).closest('form');
         f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
+        // make sure comment has been added for managers
+        if ($(this).hasClass('endorse')) {
+            let comment = $('#endorsementComment').val();
+            if ($(this).data('status') === 'draft' && comment.trim() === '') {
+                alert('You must add a comment.');
+                e.preventDefault();
+                return false
+            }
+        }
         f.submit();
     });
 
@@ -308,11 +338,28 @@ $(document).ready(function () {
         $(this).attr('name', $(this).data('relation') + ($(this).val() ? '[]' : ''))
     });
     $('select[data-relation]').change();
+
+
+    // handle endorse row complete
+    endorseRow = function(link) {
+        let tr = link.closest('tr');
+        if (tr.hasClass('summary')) {
+            tr.remove();
+            return;
+        }
+        else {
+            tr.removeClass('endorse');
+            link.remove();
+        }
+    }
+
     // entry action links
-    $('a.action').on('click', function (e) {
+    $('body').on('click', 'a.action', function(e){
         e.preventDefault();
-        var action = $(this).data('action'),
-            row = $(this).closest('.item'),
+        var link = $(this),
+            action = link.data('action'),
+            row = link.closest('.item'),
+            confirmMessage = link.data('confirm'),
             deleteRow = false,
             reload = false;
         if (action == 'entries/reset-result') {
@@ -384,7 +431,7 @@ $(document).ready(function () {
             reload = true;
         }
         else if (action == 'packages/request-assessment') {
-            if (!confirm('Are you sure you want to request assessment?')) {
+            if (!confirm(confirmMessage ? confirmMessage : 'Are you sure you want to submit?  You will no longer be able to make any changes.')) {
                 return false;
             }
             var data = {id: $(this).data('id'), userId: $(this).data('userid')};
@@ -415,6 +462,10 @@ $(document).ready(function () {
                     window.location = window.location;
                 }
                 alert(response.message);
+
+                if (action == 'entries/endorse-evidence') {
+                    endorseRow(link);
+                }
             }
             else {
                 $('body').removeClass('loading');
@@ -673,7 +724,6 @@ $(document).ready(function () {
     // add on load module click
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
-        console.log('test');
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
             moduleGroupLink = $('a[href="#' + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             tabContainer = moduleGroupLink.closest('div.tab-container');
@@ -749,17 +799,17 @@ $(document).ready(function () {
         checkPayment();
     }
 
-    $('a.endorse').each(function () {
-        var tr = $(this).closest('tr'),
+    $('tr.endorse').each(function () {
+        var tr = $(this),
             moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
             unitTitle = $(this).data('label'),
             e = $('#endorsements');
 
-        tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
         var row = $('<tr />');
+        row.addClass('summary');
         row.append('<td>' + moduleGroup + '</td>');
         row.append('<td>' + unitTitle + '</td>');
         var icons = '';

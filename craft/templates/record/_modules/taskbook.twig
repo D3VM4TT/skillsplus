@@ -10,6 +10,8 @@
     {% set level = packageModuleGroup.level %}
 {% endif %}
 
+{% set packageComments =  package.comments %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -48,9 +50,16 @@
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
                 {% if moduleGroupId %}
+                    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
+                    {% set totalUnits = moduleGroupItem.allUnits|length %}
+                    {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                    {% set isComplete = totalComplete >= totalUnits %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
-                            <h4>{{ moduleGroup.magicTitle }}</h4>
+                            <h4>
+                                {{ moduleGroup.magicTitle }}
+                                {% if isComplete %} [complete]{% endif %}
+                            </h4>
                         </a>
                     </li>
                 {% else %}
@@ -73,6 +82,13 @@
                     <li>
                         <a href="#tab{{ package.id }}log" class="primary-bg">
                             <h4>Log</h4>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if isManager and packageComments|length %}
+                    <li>
+                        <a href="#tab{{ package.id }}comments" class="primary-bg">
+                            <h4>Unread Comments ({{ packageComments|length }})</h4>
                         </a>
                     </li>
                 {% endif %}
@@ -123,14 +139,21 @@
                     <div style="width: 50%;display: inline;float:left;">
                         {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <p>Your current selection includes modules worth <strong>{{ package.totalCredits }}</strong> credits.</p>
+                            <p{% if not package.creditsSelected %} style="background-color:#FFFF00;"{% endif %}>
+                                Your current selection includes <strong>{{ package.totalCredits }}</strong> {{ 'credit' |pluralize(package.totalCredits) }}
+                                {% if package.taskbook.moduleGroupMinimumLevel %}including <strong>{{ package.totalCredits(true) }}</strong> {{ 'credit' |pluralize(package.totalCredits) }} at or above level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>{% endif %}.
+                            </p>
                         {% endif %}
                     </div>
-                    {% if package.isComplete %}
+                    {% if package.isComplete(true) %}
                         <div style="width: 50%;display: inline;float:right;text-align: right">
                             <p style="color:#006600;margin-bottom:10px;">You have completed your {{ taskbookLabel|lower }}.<br />Click below to request assessment.</p>
-                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                                   data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
+                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}"
+                                   data-ref="package"
+                                   data-confirm="Are you sure you want to submit this {{ taskbookLabel|lower }}? You will no longer be able to make any changes."
+                                   data-userid="{{ cpdUser.id }}"
+                                   data-action="packages/request-assessment"
+                                >Request Assessment</a>
                         </div>
                     {% endif %}
                 {% endif %}
@@ -144,9 +167,9 @@
                     <thead>
                     <tr>
                         <th style="width: 60%;">Mandatory</th>
-                        <th>Level</th>
+                        <th style="width: 10%;">Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <th>Credit</th>
+                            <th style="width: 10%;">Credit</th>
                         {% endif %}
                         <th>Units Complete</th>
                         {% if package.taskbook.unitEndorse %}
@@ -162,7 +185,9 @@
                         {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
                         {% set isComplete = totalComplete >= totalUnits %}
                         {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
-                        <tr>
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        <tr class="{% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                                 {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
@@ -185,9 +210,9 @@
                     <thead>
                     <tr>
                         <th style="width: 60%;">Optional</th>
-                        <th>Level</th>
+                        <th style="width: 10%;">Level</th>
                         {% if package.taskbook.moduleMinimumCredits %}
-                            <th>Credit</th>
+                            <th style="width: 10%;">Credit</th>
                         {% endif %}
                         <th>Units Complete</th>
                         {% if package.taskbook.unitEndorse %}
@@ -200,10 +225,12 @@
                     {% for moduleGroup in package.moduleGroups('optional')  %}
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
-                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem) %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
                         {% set isComplete = totalComplete >= totalUnits %}
                         {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
-                        <tr>
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        <tr class="{% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
                                 {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
@@ -230,10 +257,11 @@
                         <thead>
                         <tr>
                             <th style="width: 60%;">Available</th>
-                            <th>Level</th>
+                            <th style="width: 10%;">Level</th>
                             {% if package.taskbook.moduleMinimumCredits %}
-                                <th style="text-align: right;padding-right:0">Credit</th>
+                                <th style="width: 10%;">Credit</th>
                             {% endif %}
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -242,8 +270,9 @@
                                 <td>{{ moduleGroup.category.title }}</td>
                                 <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                                 {% if package.taskbook.moduleMinimumCredits %}
-                                    <td style="text-align: right;">{{ moduleGroup.credit }}</td>
+                                    <td>{{ moduleGroup.credit }}</td>
                                 {% endif %}
+                                <td></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -289,6 +318,11 @@
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
                     {% include '_includes/taskbooks/packageLog' with {admin:false} %}
+                </div>
+            {% endif %}
+            {% if isManager and packageComments|length %}
+                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
+                    {% include '_includes/taskbooks/packageComments' with {packageComments:packageComments} %}
                 </div>
             {% endif %}
             {% if not isManager %}
