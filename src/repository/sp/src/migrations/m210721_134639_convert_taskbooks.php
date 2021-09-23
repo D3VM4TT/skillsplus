@@ -98,13 +98,6 @@ class m210721_134639_convert_taskbooks extends Migration
                     ## add previous module group to new package module groups field
                     $this->addModuleGroupBlock($this->packageModuleGroups, $package, $category->id, 1, $package->packageLevel);
 
-                    ## bics portfolio add optional module groups.
-                    if ($category->id == 307057) {
-                        ## add optional module groups
-                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307103, 0, $package->packageLevel);
-                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307104, 0, $package->packageLevel);
-                        $this->addModuleGroupBlock($this->packageModuleGroups, $package, 307105, 0, $package->packageLevel);
-                    }
                     echo "Updated package " . $package->id . "\n\n";
 
                 }
