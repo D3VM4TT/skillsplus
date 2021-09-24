@@ -361,7 +361,7 @@ class PackageBehavior extends Behavior
             'credits'       => max($taskbook->moduleMinimumCredits - $this->totalCredits(),0),
             'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $this->totalCredits(true), 0)
         ];
-        return $taskbook->moduleGroupMinimumLevelCredits ? $required['credits'] && $required['levelCredits'] : $required['credits'];
+        return $taskbook->moduleGroupMinimumLevelCredits ? $required['credits'] == 0 && $required['levelCredits'] == 0 : $required['credits'] == 0;
     }
 
     /**
