@@ -1,0 +1,22 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userExternalCompanies
+instructions: ''
+name: 'External Companies'
+searchable: false
+settings:
+  allowSelfRelations: false
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  showSiteMenu: false
+  source: null
+  sources:
+    - 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Entries
