@@ -59,7 +59,7 @@
                             <td><p class="td-title-responsive">Taskbook: </p>{{ package.taskbook.title }}</td>
                             <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
-                            <td><p class="td-title-responsive">Status: </p>{{ package.packageStatus }}</td>
+                            <td><p class="td-title-responsive">Status: </p>{{ package.statusLabel }}</td>
                             <td class="icons" style="width:140px;text-align:right">
                                 <a class="icon" href="/management/taskbooks/manage/{{ package.id }}">
                                     <img src="/assets/img/reviewer.svg" title="Manage Reviewers" />

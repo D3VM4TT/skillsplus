@@ -550,6 +550,24 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return string
+     */
+    public function statusLabel()
+    {
+        if ($this->owner->packageStatus == 'active') {
+            return 'In Progress';
+        }
+        $nextStep = $this->getNextStep();
+        if ($this->owner->packageStatus == 'locked') {
+            return $nextStep ? $nextStep->reviewStepName : 'Unknown';
+        }
+        if ($this->owner->packageStatus == 'complete') {
+            return 'Complete';
+        }
+        return 'Unknown';
+    }
+
+    /**
      * @param User $user
      * @param SuperTableBlockElement $step
      * @param bool $includeAdmin
