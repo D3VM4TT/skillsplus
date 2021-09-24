@@ -14,6 +14,7 @@
 {% set isManager = false %}
 {% if account.id != currentUser.id %}
     {% set isManager = true %}
+    {% set isPackageManager = craft.lantra.isPackageManager(account.id, currentUser.id) %}
 {% endif %}
 
 {% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
@@ -32,7 +33,7 @@
 
 {% block content %}
 <div class="page-subHeader primary-bg">
-    {% if isManager %}
+    {% if isManager and not isPackageManager %}
         {% if craft.app.request.getSegment(3) == 'archive' %}
             <a class="back-link" href="/cpd/{{ account.id }}">&laquo; back</a>
         {% else %}
@@ -45,7 +46,7 @@
 <section class="page">
     <div class="page-header secondary-bg">
     
-        {% if isManager %}
+        {% if isManager and not isPackageManager %}
             {% if hierarchyNode %}
                 <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
             {% else %}
@@ -63,7 +64,7 @@
         {% if account.userRole|length %}
             <p style="padding:0;">Allocated {{ jobRoleLabel|pluralize(account.userRole|length) }}: {% for role in account.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
         {% endif %}
-        {% if craft.lantra.setting('taskbooks') and isManager %}
+        {% if craft.lantra.setting('taskbooks') and isManager and not isPackageManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
                     {% if isTaskbooks %}
