@@ -5,7 +5,7 @@ fieldLayouts:
       -
         elements:
           -
-            fieldUid: 1648b942-a6f7-47b2-a284-5a971121b556 # Module Group
+            fieldUid: 1648b942-a6f7-47b2-a284-5a971121b556
             instructions: null
             label: null
             required: false
@@ -14,7 +14,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 651fac2b-5f39-4c8f-96b0-4c75c3267102 # Mandatory
+            fieldUid: 651fac2b-5f39-4c8f-96b0-4c75c3267102
             instructions: null
             label: null
             required: false
@@ -23,7 +23,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: af49d354-08d5-422e-9f65-56c76ff7d485 # Credit
+            fieldUid: af49d354-08d5-422e-9f65-56c76ff7d485
             instructions: null
             label: null
             required: false
@@ -32,7 +32,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 72642c3b-23ee-4e9c-92a9-2daf8d5b62e8 # Level
+            fieldUid: 72642c3b-23ee-4e9c-92a9-2daf8d5b62e8
             instructions: null
             label: null
             required: false
@@ -43,7 +43,7 @@ fieldLayouts:
         name: Content
         sortOrder: 1
 fields:
-  651fac2b-5f39-4c8f-96b0-4c75c3267102: # Mandatory
+  651fac2b-5f39-4c8f-96b0-4c75c3267102:
     columnSuffix: null
     contentColumnType: boolean
     fieldGroup: null
@@ -58,7 +58,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
-  1648b942-a6f7-47b2-a284-5a971121b556: # Module Group
+  1648b942-a6f7-47b2-a284-5a971121b556:
     columnSuffix: null
     contentColumnType: string
     fieldGroup: null
@@ -83,7 +83,7 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Categories
-  72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: # Level
+  72642c3b-23ee-4e9c-92a9-2daf8d5b62e8:
     columnSuffix: null
     contentColumnType: smallint(2)
     fieldGroup: null
@@ -104,7 +104,7 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
-  af49d354-08d5-422e-9f65-56c76ff7d485: # Credit
+  af49d354-08d5-422e-9f65-56c76ff7d485:
     columnSuffix: null
     contentColumnType: integer(10)
     fieldGroup: null
