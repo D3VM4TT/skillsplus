@@ -12,7 +12,7 @@
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
 {% set filterPackage = craft.app.request.getParam('filter')|default('all') %}
 {% set sortParam = craft.app.request.getParam('sort') %}
-{% set validSorts = ['title', 'id', 'dateCreated'] %}
+{% set validSorts = ['title', 'id', 'dateCreated', 'packageStatus'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
 {% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
@@ -57,7 +57,9 @@
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
                             <td><p class="td-title-responsive">Member: </p><a href={{ craft.lantra.packageUrl(user.id, package.id) }}>{{ user.fullname }}</a></td>
-                            <td><p class="td-title-responsive">Taskbook: </p>{{ package.taskbook.title }}</td>
+                            <td><p class="td-title-responsive">Taskbook: </p>
+                                <a href="/cpd/{{ package.author.id }}/taskbooks/{{ package.id }}">{{ package.taskbook.title }}</a>
+                            </td>
                             <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
                             <td><p class="td-title-responsive">Status: </p>{{ package.statusLabel }}</td>
