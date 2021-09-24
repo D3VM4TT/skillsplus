@@ -793,16 +793,14 @@ class Packages extends Component
 
     /**
      * @param string $search
-     * @param string $packageStatus
-     * @param string $packageStepName
      * @param int $limit
      * @param string $order
      * @param User $assessor
-     * @param null $type
-     * @param null $moduleGroupId
-     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @param null $filterBy
+     * @param string $filterValue
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function packagesCriteria($search = '',  $packageStatus = 'locked', $packageStepName = 'all', $limit = 25, $order = 'title', User $assessor, $type = null, $moduleGroupId = null)
+    public function packagesCriteria($search = '', $limit = 25, $order = 'title', $filterBy = null, $filterValue = 'all', User $assessor)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';
@@ -811,20 +809,20 @@ class Packages extends Component
         if ($search) {
             $criteria->search = 'title:' . $search;
         }
-        if ($packageStatus != 'all') {
-            $criteria->packageStatus = $packageStatus;
+        if ($filterBy == 'status' && $filterValue != 'all') {
+            $criteria->packageStatus = $filterValue;
         }
-        if ($packageStepName != 'all') {
-            ## Assessment gets all assessment steps
-            if ($packageStepName == 'Assessment') {
-                $type = 'assessment';
-                $packageStepName = null;
+        elseif ($filterBy == 'name' && $filterValue != 'all') {
+            ## assessment gets all assessment steps
+            if ($filterValue == 'Assessment') {
+                $criteria->id = $this->getRelatedPackageIds($assessor, 'assessment');
             }
-            $ids = $this->getRelatedPackageIds($assessor, $type, $packageStepName);
-            if (!count($ids)) {
-                return null;
+            else {
+                $criteria->id = $this->getRelatedPackageIds($assessor, null, $filterValue);
             }
-            $criteria->id = $ids;
+        }
+        elseif ($filterBy == 'external') {
+            $criteria->id = $this->getExternalPackageIds($assessor);
         }
         return $criteria;
     }
@@ -876,6 +874,27 @@ class Packages extends Component
     }
 
     /**
+     * @param User $eqa
+     * @return array|int[]
+     */
+    public function getExternalPackageIds(User $eqa)
+    {
+        ## get all users related to eqa companies
+        $criteria = User::find();
+        $criteria->relatedTo = ['targetElement' => $eqa->userExternalCompanies, 'field' => 'userCompany'];
+        $criteria->limit = null;
+        $userIds = $criteria->ids();
+
+        ## get relevant packages
+        $criteria = Entry::find();
+        $criteria->section = 'packages';
+        $criteria->relatedTo = ['targetElement' => $eqa->userExternalTaskbooks, 'field' => 'packageTaskbook'];
+        $criteria->limit = null;
+        $criteria->authorId = $userIds;
+        return $criteria->ids();
+    }
+
+    /**
      * @param $user
      * @return array
      */
@@ -909,9 +928,10 @@ class Packages extends Component
         }
         ## if external
         if (Lantra::$app->users->isExternal($user)) {
+            $ids = $this->getExternalPackageIds($user, null);
             $types[] = [
                 'name' => 'External',
-                'count' => 0
+                'count' => count($ids)
             ];
         }
         return $types;

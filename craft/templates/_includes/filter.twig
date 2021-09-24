@@ -21,13 +21,13 @@
             <option value="all"{% if filterUserStatus == 'all' %} selected="selected"{% endif %}>All Users</option>
         </select>
     {% endif %}
-    {% if filterPackageStepName is defined and filterPackageStepName %}
-        <select name="name" class="sp-select">
+    {% if filterPackage is defined and filterPackage %}
+        <select name="filter" class="sp-select">
             {% set packageTypes = craft.lantra.packageTypes() %}
             {% for type in packageTypes %}
-                <option value="{{ type.name }}"{% if filterPackageStepName == type.name %} selected="selected"{% endif %}>{{ type.name }}</option>
+                <option value="{{ type.name }}"{% if filterPackage == type.name %} selected="selected"{% endif %}>{{ type.name }}</option>
             {% endfor %}
-            <option value="all"{% if filterPackageStepName == 'all' %} selected="selected"{% endif %}>All Packages</option>
+            <option value="all"{% if filterPackage == 'all' %} selected="selected"{% endif %}>All Packages</option>
         </select>
     {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>

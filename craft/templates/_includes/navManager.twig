@@ -61,7 +61,7 @@
                     {% set packageTypes = craft.lantra.packageTypes() %}
                     {% for type in packageTypes %}
                         <li>
-                            <a href="/management/taskbooks?name={{ type.name }}">{{ type.name }} ({{ type.count }})</a>
+                            <a href="/management/taskbooks?filter={{ type.name }}">{{ type.name }} ({{ type.count }})</a>
                         </li>
                     {% endfor %}
                 </ul>

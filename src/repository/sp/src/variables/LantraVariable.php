@@ -694,25 +694,27 @@ class LantraVariable
 
     /**
      * @param $search
-     * @param string $packageStatus
-     * @param string $packageStepName
      * @param null $limit
      * @param string $order
      * @param null $managerId
-     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @param null $filterBy
+     * @param string $filterValue
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function packagesCriteria($search, $packageStatus= 'all', $packageStepName = 'all', $limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($search, $limit = null, $order = 'lastName',  $filterBy = null, $filterValue = 'all', $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $packageStepName, $limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $limit, $order, $filterBy, $filterValue, $this->getUser($managerId));
     }
 
     /**
      * @param null $managerId
-     * @return mixed
+     * @param null $filterBy
+     * @param string $filterValue
+     * @return int|string
      */
-    public function packagesCount($managerId = null)
+    public function packagesCount($filterBy = null, $filterValue = 'all', $managerId = null)
     {
-        $criteria = $this->packagesCriteria('', 'all',null, 'lastName', $this->getUser($managerId));
+        $criteria = $this->packagesCriteria('', null, 'lastName', $filterBy, $filterValue, $this->getUser($managerId));
         return $criteria ? $criteria->count() : 0;
     }
 
