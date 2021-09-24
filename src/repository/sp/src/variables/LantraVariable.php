@@ -694,15 +694,16 @@ class LantraVariable
 
     /**
      * @param $search
-     * @param string $taskbookStatus
+     * @param string $packageStatus
+     * @param string $packageStepName
      * @param null $limit
      * @param string $order
      * @param null $managerId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($search, $packageStatus = 'locked', $limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($search, $packageStatus= 'all', $packageStepName = 'all', $limit = null, $order = 'lastName', $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $packageStepName, $limit, $order, $this->getUser($managerId));
     }
 
     /**
@@ -904,6 +905,18 @@ class LantraVariable
     {
         $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
         return Lantra::$app->users->isManager($subordinateId, $manager, $includeHierarchy);
+    }
+
+    /**
+     * @param null $userId
+     * @return array
+     */
+    public function packageTypes($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return [];
+        }
+        return Lantra::$app->packages->packageTypes($user);
     }
 
     /**
