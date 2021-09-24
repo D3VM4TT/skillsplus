@@ -459,6 +459,27 @@ class Users extends Component
     }
 
     /**
+     * Check whether this user is external
+     *
+     * @param null $user
+     * @return bool
+     */
+    function isExternal($user = null)
+    {
+        $external = false;
+        if (is_null($user)) {
+            $user = Craft::$app->getUser();
+        }
+        foreach($user->userRole as $role) {
+            if ($role->isExternal) {
+                $external = true;
+                break;
+            }
+        }
+        return $external;
+    }
+
+    /**
      * Check whether this user manages the subordinate
      *
      * @param null $subordinateId

@@ -794,13 +794,15 @@ class Packages extends Component
     /**
      * @param string $search
      * @param string $packageStatus
+     * @param string $packageStepName
      * @param int $limit
      * @param string $order
      * @param User $assessor
      * @param null $type
+     * @param null $moduleGroupId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      */
-    public function packagesCriteria($search = '',  $packageStatus = 'locked', $limit = 25, $order = 'title', User $assessor, $type = null, $moduleGroupId = null)
+    public function packagesCriteria($search = '',  $packageStatus = 'locked', $packageStepName = 'all', $limit = 25, $order = 'title', User $assessor, $type = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';
@@ -812,10 +814,13 @@ class Packages extends Component
         if ($packageStatus != 'all') {
             $criteria->packageStatus = $packageStatus;
         }
-        if ($assessor->admin || $assessor->isInGroup('schemeManagers')) {
-            $criteria->authorId = 'not ' . $assessor->id;
-        } else {
-            $ids = $this->getRelatedPackageIds($assessor, $type);
+        if ($packageStepName != 'all') {
+            ## Assessment gets all assessment steps
+            if ($packageStepName == 'Assessment') {
+                $type = 'assessment';
+                $packageStepName = null;
+            }
+            $ids = $this->getRelatedPackageIds($assessor, $type, $packageStepName);
             if (!count($ids)) {
                 return null;
             }
@@ -827,9 +832,10 @@ class Packages extends Component
     /**
      * @param User $assessor
      * @param null $type
+     * @param null $name
      * @return array
      */
-    public function getRelatedPackageIds(User $assessor, $type = null)
+    public function getRelatedPackageIds(User $assessor, $type = null, $name = null)
     {
         $supertableService = new SuperTableService();
         $params = [
@@ -838,11 +844,77 @@ class Packages extends Component
                 'targetElement' => $assessor->id,
                 'field' => 'packageReviews.reviewUser'
             ]];
-        if ($type) {
-            $params['criteria']['reviewStepType'] = $type;
-        }
+        ## get all the related steps
         $query = $supertableService->getRelatedElementsQuery($params);
-        return $query ? $query->ids() : [];
+
+        if (!$type && !$name) {
+            return $query ? $query->ids() : [];
+        }
+        ## filter ids by type or name
+        $ids = [];
+        foreach($query->all() as $packageEntry) {
+            ## only add it once
+            if (in_array($packageEntry->id, $ids)) {
+                continue;
+            }
+            foreach($packageEntry->packageReviews as $packageReview) {
+                $reviewUser = $packageReview->reviewUser->one();
+                if ($reviewUser && $reviewUser->id == $assessor->id) {
+                    if ($type && $name && $packageReview->reviewStepType == $type && $packageReview->reviewStepName == $name) {
+                        $ids[] = $packageEntry->id;
+                    }
+                    elseif ($type && $packageReview->reviewStepType == $type) {
+                        $ids[] = $packageEntry->id;
+                    }
+                    elseif ($name && $packageReview->reviewStepName == $name) {
+                        $ids[] = $packageEntry->id;
+                    }
+                }
+            }
+        }
+        return $ids;
+    }
+
+    /**
+     * @param $user
+     * @return array
+     */
+    public function packageTypes($user)
+    {
+        $types = [];
+        $criteria = Entry::find();
+        $criteria->section = 'workflows';
+        $criteria->limit = null;
+
+        $assessment = false;
+        foreach($criteria->all() as $entry) {
+            foreach($entry->workflow as $workflow) {
+                if ($workflow->stepType == 'assessment' && !$assessment) {
+                    $assessment = true;
+                    $ids = $this->getRelatedPackageIds($user, 'assessment');
+                    $types[] = [
+                        'name' => 'Assessment',
+                        'count' => count($ids)
+                    ];
+                }
+                ## add review steps as step name
+                else {
+                    $ids = $this->getRelatedPackageIds($user, null, $workflow->stepName);
+                    $types[] = [
+                        'name' => $workflow->stepName,
+                        'count' => count($ids)
+                    ];
+                }
+            }
+        }
+        ## if external
+        if (Lantra::$app->users->isExternal($user)) {
+            $types[] = [
+                'name' => 'External',
+                'count' => 0
+            ];
+        }
+        return $types;
     }
 
     /**

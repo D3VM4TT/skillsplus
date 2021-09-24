@@ -26,11 +26,6 @@
                     <a class="{% if craft.app.request.getSegment(2) == 'users' %}active{% endif %}" href="/management/users">Users</a>
                 </li>
             {% endif %}
-            {% if craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount() %}
-                <li>
-                    <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks">{{ taskbookLabel|pluralize }}</a>
-                </li>
-            {%  endif %}
             {% if craft.lantra.can('editModules') %}
                 <li>
                     <a class="{% if craft.app.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
@@ -56,5 +51,21 @@
                 </ul>
             </li>
         {% endif %}
+        {% if craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount() %}
+            <li class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover" href="#">{{ taskbookLabel|pluralize }}</a>
+                <ul>
+                    <li>
+                        <a href="/management/taskbooks">All {{ taskbookLabel|pluralize }}</a>
+                    </li>
+                    {% set packageTypes = craft.lantra.packageTypes() %}
+                    {% for type in packageTypes %}
+                        <li>
+                            <a href="/management/taskbooks?name={{ type.name }}">{{ type.name }} ({{ type.count }})</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {%  endif %}
     {% endif %}
 </ul>

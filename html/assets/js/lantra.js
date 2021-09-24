@@ -799,7 +799,7 @@ $(document).ready(function () {
         checkPayment();
     }
 
-    $('tr.endorse').each(function () {
+    $('tr.endorse:not(.taskbook-module-group)').each(function () {
         var tr = $(this),
             moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
             unitTitle = $(this).data('label'),

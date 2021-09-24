@@ -4,7 +4,7 @@
 
 {% set statusPending = not readOnly and craft.lantra.isManager(cpdUser.id) and resultEntry and resultEntry.resultStatus == 'pending' ? 'endorse' : '' %}
 
-<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }} {{ statusPending }}">
+<tr class="{{ rowClass is defined and rowClass ? rowClass : '' }} {{ statusPending }}" data-label="{{ rowName|default(rowTitle)|trim }}">
     <td>
         {{ rowTitle|raw }}
         <div class="cpd-icons">
