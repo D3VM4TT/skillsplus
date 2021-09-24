@@ -57,6 +57,13 @@ settings:
             -
               - width
               - ''
+      -
+        - 1bbfea30-57d1-4024-acac-dd05e705e8d5 # Review Sampled
+        -
+          __assoc__:
+            -
+              - width
+              - ''
   contentTable: '{{%stc_packagereviews}}'
   fieldLayout: table
   maxRows: ''

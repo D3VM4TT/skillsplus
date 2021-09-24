@@ -80,25 +80,20 @@ fieldLayouts:
         sortOrder: 1
 fields:
   1bbfea30-57d1-4024-acac-dd05e705e8d5: # Review Sampled
-    columnSuffix: hvxqcyhq
-    contentColumnType: text
+    columnSuffix: null
+    contentColumnType: boolean
     fieldGroup: null
     handle: reviewSampled
     instructions: ''
     name: 'Review Sampled'
     searchable: false
     settings:
-      byteLimit: null
-      charLimit: null
-      code: ''
-      columnType: null
-      initialRows: '4'
-      multiline: ''
-      placeholder: null
-      uiMode: normal
+      default: false
+      offLabel: null
+      onLabel: null
     translationKeyFormat: null
     translationMethod: none
-    type: craft\fields\PlainText
+    type: craft\fields\Lightswitch
   92d2e862-77f6-43f3-aa6e-cd75c38d424d: # Step Name
     columnSuffix: null
     contentColumnType: text
