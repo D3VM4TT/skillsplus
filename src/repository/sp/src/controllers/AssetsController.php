@@ -60,7 +60,7 @@ class AssetsController extends BaseController
     {
         $this->requireAcceptsJson();
 
-        $user = LantraHelper::getUser();
+        $user = LantraHelper::getUser(Craft::$app->request->getParam('userId'));
         $uploadId = Craft::$app->request->getParam('uploadId', $user->id);
         $tempFolder = rtrim(Craft::$app->path->tempPath, '/') . '/';
 
@@ -183,16 +183,38 @@ class AssetsController extends BaseController
     public function actionBrowseEvidence()
     {
         $this->requireLogin();
-        $user = LantraHelper::getUser();
+        $user = LantraHelper::getUser(Craft::$app->request->getParam('userId'));
 
         $volume = Craft::$app->request->getParam('volume', 'evidence');
         $fieldName = Craft::$app->request->getParam('fieldName', 'evidence[]');
+        $packageId = Craft::$app->request->getParam('packageId',false);
 
         $response = [
             'success' => false,
             'message' => '',
             'assets' => []
         ];
+
+        $template = '_includes/evidence/asset';
+
+        ## just return assets related to package
+        if ($packageId) {
+            if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
+                $response['message'] = 'Could not access package.';
+                return $this->asJson($response);
+            }
+            $response['success'] = true;
+            $response['assets'] = [];
+
+            foreach($package->evidence() as $evidence) {
+                $asset = $evidence['asset'];
+                $response['assets'][$asset->id] = [
+                    'asset' => $asset,
+                    'html' => Craft::$app->view->renderTemplate($template, ['asset' => $asset, 'fieldName' => $fieldName])
+                ];
+            }
+            return $this->asJson($response);
+        }
 
         if (null == $evidenceFolder = LantraHelper::userEvidenceFolder($user, $volume)) {
             $response['message'] = 'Could not access evidence folder.';
@@ -207,8 +229,6 @@ class AssetsController extends BaseController
             ->folderId($evidenceFolder->id)
             ->orderBy('dateCreated DESC')
             ->all();
-
-        $template = '_includes/evidence/asset';
 
         foreach($assets as $asset) {
             $response['assets'][$asset->id] = [

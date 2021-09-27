@@ -1,4 +1,4 @@
-<ul class="assets" id="evidence" data-field-name="{{ fieldName }}" data-auto-save="{{ autoSave }}">
+<ul class="assets" id="evidence" {% if isPackage is defined and isPackage %}data-package-id="{{ package.id }}{% endif %} data-field-name="{{ fieldName }}" data-user-id="{{ accountId }}" data-auto-save="{{ autoSave }}">
     {% if evidence|length %}
         {% for asset in evidence.all() %}
             {% include '_includes/evidence/asset' with{'asset': asset, 'fieldName': fieldName} %}

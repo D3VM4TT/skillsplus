@@ -12,8 +12,10 @@ function formatBytes(bytes,decimals) {
 
         let plugin = this,
             uploadId = Date.now(),
-            $target = null,
             fieldName = null,
+            userId = null,
+            packageId = null,
+            $target = null,
             $element = $(element),
             $ulEvidence = $element.find('ul.assets-evidence'),
             $inputUpload = $element.find('span.upload').find('input'),
@@ -75,6 +77,7 @@ function formatBytes(bytes,decimals) {
             }).on('fileuploadsubmit', function (e, data) {
                 // add a random upload ID to avoid conflicts
                 data.formData = {
+                    userId: userId,
                     uploadId: uploadId,
                     fieldName: fieldName
                 };
@@ -101,6 +104,8 @@ function formatBytes(bytes,decimals) {
         plugin.setTarget = function(t) {
             $target = t;
             fieldName = $target.data('field-name');
+            userId = $target.data('user-id');
+            packageId = $target.data('package-id');
             return plugin;
         }
 
@@ -122,6 +127,8 @@ function formatBytes(bytes,decimals) {
         plugin.loadAssets = function($ul) {
             let data = {
                 volume: $ul.data('volume'),
+                userId: userId,
+                packageId: packageId,
                 fieldName: fieldName
             };
             data[window.csrfTokenName] = window.csrfTokenValue;
