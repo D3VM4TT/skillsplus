@@ -24,9 +24,7 @@
                 {% if isModuleGroup %}
                     <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}">&laquo; back to {{ taskbookLabel }}</a>
                 {% elseif package.isManager(currentUser, true) and package.hasNextStep %}
-                    Next Step: {{ package.nextStep.reviewStepName }}
-                {% else %}
-                    Status: {{ package.packageStatus  }}
+                    Current Step: {{ package.nextStep.reviewStepName }}
                 {% endif %}
             </p>
             {% set certificateUrl = craft.lantra.certificateUrl(package) %}
