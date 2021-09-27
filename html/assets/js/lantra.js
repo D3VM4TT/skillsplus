@@ -846,4 +846,17 @@ $(document).ready(function () {
         let t = $('#' + $(this).data('modal'));
         if (t) t.addClass('modal-open');
     })
+
+    if ($('#reviewSampled').length) {
+        $('#reviewSampled').change(function(e){
+            if ($(this).is(':checked')) {
+                $('#reviewResult').prop('disabled', false);
+            }
+            else {
+                $('#reviewResult').val('1');
+                $('#reviewResult').prop('disabled', true);
+            }
+        });
+        $('#reviewSampled').change();
+    }
 });

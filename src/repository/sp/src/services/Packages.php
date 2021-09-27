@@ -495,16 +495,20 @@ class Packages extends Component
 
     /**
      * @param SuperTableBlockElement $step
+     * @param $sampled
      * @param $passed
      * @param string $comment
      * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function stepUpdate(SuperTableBlockElement $step, $passed, $comment = '')
+    public function stepUpdate(SuperTableBlockElement $step, $sampled, $passed, $comment = '')
     {
         $package = $step->owner;
         $previousStep = $package->previousStep;
+        $step->setFieldValue('reviewSampled', $sampled);
         $step->setFieldValue('reviewPassed', $passed);
         $step->setFieldValue('reviewComment', $comment);
         $step->setFieldValue('reviewDate', time());

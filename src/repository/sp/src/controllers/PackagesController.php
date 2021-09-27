@@ -151,7 +151,10 @@ class PackagesController extends BaseController
                     Lantra::$app->packages->stepAssign($step, $data['manager']);
                 }
                 if (isset($data['result']) && $data['result'] !== '') {
-                    Lantra::$app->packages->stepUpdate($step, $data['result'] == '1', $data['comment']);
+                    ## result is always passed if not sampled
+                    $sampled =  isset($data['sampled']) && $data['sampled'] == '1';
+                    $passed = $sampled ? $data['result'] == '1' : true;
+                    Lantra::$app->packages->stepUpdate($step, $sampled, $passed, $data['comment']);
                 }
             }
         }

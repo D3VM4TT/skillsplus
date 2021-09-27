@@ -13,8 +13,8 @@
             <td style="width:25%;">{{ moduleGroup.title }}</td>
             <td style="width:10%;">
                 <select {% if not enabled %} disabled{% endif %} id="result-{{ assessment.id }}" name="assessments[{{ assessment.id }}][assessmentPassed]">
-                    <option value="1"{% if assessment.assessmentPassed %} selected{% endif %}>Passed</option>
-                    <option value="0"{% if not assessment.assessmentPassed %} selected{% endif %}>Failed</option>
+                    <option value="1"{% if not enabled and assessment.assessmentPassed %} selected{% endif %}>Passed</option>
+                    <option value="0"{% if not enabled and not assessment.assessmentPassed %} selected{% endif %}>Failed</option>
                 </select>
             </td>
             <td style="width:60%;">
@@ -29,9 +29,15 @@
     {% set workflowStep = package.getPackageWorkflowStep(step.reviewStepId) %}
     {% if nextStep and step.id == nextStep.id and package.isReviewUser(currentUser, nextStep, true) %}
         <h2>{{ step.reviewStepName }}</h2>
+        {% if step.reviewStepType == 'review' or step.reviewStepType == 'complete' %}
+            <div class="field--wrapper">
+                <input type="hidden" name="steps[{{ nextStep.id }}][sampled]" value="0" />
+                <label for="reviewSampled">Sampled: <input id="reviewSampled" type="checkbox" name="steps[{{ nextStep.id }}][sampled]" value="1" /></label>
+            </div>
+        {% endif %}
         <div class="field--wrapper">
-            <label for="result">Review Step Result:</label>
-            <select id="result" name="steps[{{ nextStep.id }}][result]">
+            <label for="reviewResult">Result:</label>
+            <select id="reviewResult" name="steps[{{ nextStep.id }}][result]">
                 <option value="">Please select:</option>
                 <option value="1">Complete</option>
                 <option value="0">Retry</option>
@@ -50,6 +56,9 @@
     {% elseif step.reviewDate|length %}
         <h2>{{ step.reviewStepName }}</h2>
         <p>{{ step.reviewDate|date(dateFormat) }}</p>
+        {% if step.stepType == 'review' or step.stepType == 'complete' %}
+        <p>{{ step.reviewSampled ? 'Sampled' : 'Not Sampled'  }}</p>
+        {% endif %}
         <div class="field--wrapper">
             <label for="result">Review Step Result:</label>
             <select disabled id="result" name="steps[{{ step.id }}][result]">
