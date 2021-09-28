@@ -609,9 +609,10 @@ class Notify extends Component
 
         foreach ($resultEntries as $resultEntry) {
             $user = $resultEntry->getAuthor();
+            $title = $resultEntry->resultUnit->count() ? $resultEntry->resultUnit->one()->title : $resultEntry->title;
             $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
             $cc = $this->getNotifySetting('ccResultExpiry');
-            $variables = ['entry' => $resultEntry, 'user' => $user];
+            $variables = ['entry' => $resultEntry, 'user' => $user, 'resultTitle' => $title];
             $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
             $message = Craft::$app->view->renderString($template, $variables);
             $details[] = $this->notify($user->email, $subject, $message, null, $user, $cc);
