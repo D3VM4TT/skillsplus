@@ -902,7 +902,7 @@ class Packages extends Component
      * @param $user
      * @return array
      */
-    public function packageTypes($user)
+    public function packageTypes($user, $external = true)
     {
         $types = [];
         $criteria = Entry::find();
@@ -931,7 +931,7 @@ class Packages extends Component
             }
         }
         ## if external
-        if (Lantra::$app->users->isExternal($user)) {
+        if ($external && Lantra::$app->users->isExternal($user)) {
             $ids = $this->getExternalPackageIds($user, null);
             $types[] = [
                 'name' => 'External',
