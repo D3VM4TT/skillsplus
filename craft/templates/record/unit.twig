@@ -4,16 +4,19 @@
 {% set cpdUser = craft.users.id(userId).status(null).one %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
 
+{% set isPackageManager = false %}
+{% set isManager = false %}
+
 {% if userId != currentUser.id %}
     {% set account = craft.users.id(userId).one %}
     {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
     {%  set dashboardUri = '/cpd/' ~ userId %}
     {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
+    {% set isPackageManager = craft.lantra.isPackageManager(account.id, currentUser.id) %}
 {% else %}
     {% set account = currentUser %}
     {% set dashboardUri = '/' %}
-    {% set isManager = false %}
 {% endif %}
 
 {% set moduleEntry = craft.entries.id(moduleId).one() %}
@@ -56,7 +59,9 @@
 
 {% block content %}
     <div class="page-subHeader primary-bg">
-        <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
+        {% if not isPackageManager %}
+            <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
+        {% endif %}
         {% include '_includes/topNavigation' %}
     </div>
     {% if unitEntry.unitType == 'elearning' %}
