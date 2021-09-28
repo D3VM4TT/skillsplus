@@ -317,7 +317,6 @@
             {% endif %}
             {% if isManager %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
-                    {% include '_includes/taskbooks/packageComments' with {packageComments:packageComments} %}
                 </div>
             {% endif %}
             {% if not isManager %}
