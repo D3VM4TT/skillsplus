@@ -704,18 +704,16 @@ $(document).ready(function () {
         a.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
-        // load evidence
-        if(a.hasClass('evidence-tab')) {
-            let e = $('.evidence-pane').eq(0);
-            if (!e.hasClass('loaded')) {
-                var data = {packageId: a.data('id')};
+        // load tab contents
+        if(a.hasClass('load-tab')) {
+            if (!target.hasClass('loaded')) {
+                let data = {
+                    template: a.data('template'),
+                    packageId: a.data('id')
+                };
                 data[window.csrfTokenName] = window.csrfTokenValue;
-
-                console.log(data);
-
-
                 $('body').addClass('loading');
-                e.load( "/sp/packages/evidence", data, function() {
+                target.load( "/sp/packages/load-template", data, function() {
                     e.addClass('loaded');
                     $('body').removeClass('loading');
                 });

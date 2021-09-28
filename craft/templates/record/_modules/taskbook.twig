@@ -10,8 +10,6 @@
     {% set level = packageModuleGroup.level %}
 {% endif %}
 
-{% set packageComments =  package.comments %}
-
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -67,7 +65,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#tab{{ package.id }}evidence" class="primary-bg evidence-tab" data-id="{{ package.id }}">
+                    <a href="#tab{{ package.id }}evidence" class="primary-bg load-tab" data-template="evidence" data-id="{{ package.id }}">
                         <h4>Evidence</h4>
                     </a>
                 </li>
@@ -83,10 +81,10 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if isManager and packageComments|length %}
+                {% if isManager %}
                     <li>
-                        <a href="#tab{{ package.id }}comments" class="primary-bg">
-                            <h4>Unread Comments ({{ packageComments|length }})</h4>
+                        <a href="#tab{{ package.id }}comments" class="primary-bg load-tab" data-template="comments" data-id="{{ package.id }}">
+                            <h4>Unread Comments</h4>
                         </a>
                     </li>
                 {% endif %}
@@ -304,7 +302,7 @@
                     </p>
                 {% endif %}
             </div>
-            <div class="groups-tab-group-{{ package.id }} evidence-pane" id="tab{{ package.id }}evidence">
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
@@ -317,7 +315,7 @@
                     {% include '_includes/taskbooks/packageLog' with {admin:false} %}
                 </div>
             {% endif %}
-            {% if isManager and packageComments|length %}
+            {% if isManager %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
                     {% include '_includes/taskbooks/packageComments' with {packageComments:packageComments} %}
                 </div>

@@ -1,18 +1,24 @@
-<table class="data">
-    <thead>
-    <tr>
-        <th width="180px;">Date</th>
-        <th>Unit</th>
-        <th>Comment</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for comment in packageComments %}
+{% set comments = package.comments %}
+
+{% if not comments|length %}
+    <p>No unread comments for this {{ taskbookLabel|lower }}.</p>
+{% else %}
+    <table class="data">
+        <thead>
         <tr>
-            <td>{{ comment.date|date(dateFormat) }}</td>
-            <td><a href="{{ package.getUnitLink(comment.unit.id) }}">{{ comment.unit.title }}</a></td>
-            <td>{{ comment.comment|truncate(200, '&gt;') }}</td>
+            <th width="180px;">Date</th>
+            <th>Unit</th>
+            <th>Comment</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.date|date(dateFormat) }}</td>
+                <td><a href="{{ package.getUnitLink(comment.unit.id) }}">{{ comment.unit.title }}</a></td>
+                <td>{{ comment.comment|truncate(200, '&gt;') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

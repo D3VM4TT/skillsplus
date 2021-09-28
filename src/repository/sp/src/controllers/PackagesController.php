@@ -20,14 +20,14 @@ use lantra\sp\Plugin as Lantra;
 class PackagesController extends BaseController
 {
     /**
-     * @return void|\yii\web\Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \yii\base\Exception
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionEvidence()
+ * @return void|\yii\web\Response
+ * @throws \Twig\Error\LoaderError
+ * @throws \Twig\Error\RuntimeError
+ * @throws \Twig\Error\SyntaxError
+ * @throws \yii\base\Exception
+ * @throws \yii\web\BadRequestHttpException
+ */
+    public function actionLoadTemplate()
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -36,10 +36,14 @@ class PackagesController extends BaseController
         if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
             return $this->_returnError('Package not found.');
         }
-        $template = '_includes/taskbooks/packageEvidence';
-        $taskbookLabel = LantraHelper::setting('taskbookLabel');
-        $response = Craft::$app->view->renderTemplate($template, ['package' => $package, 'taskbookLabel' => $taskbookLabel]);
-        return $response;
+        $template =  Craft::$app->request->getParam('template');
+        $t = $template == 'evidence' ? 'packageEvidence' : 'packageComments';
+        $params = [
+            'package'       => $package,
+            'dateFormat'    => LantraHelper::setting('themeDateFormat', 'd-m-Y'),
+            'taskbookLabel' => LantraHelper::setting('taskbookLabel')
+        ];
+        return Craft::$app->view->renderTemplate('_includes/taskbooks/' . $t, $params);
     }
 
     /**
