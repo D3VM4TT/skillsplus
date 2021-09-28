@@ -20,6 +20,29 @@ use lantra\sp\Plugin as Lantra;
 class PackagesController extends BaseController
 {
     /**
+     * @return void|\yii\web\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionEvidence()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $packageId =  Craft::$app->request->getParam('packageId');
+        if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        $template = '_includes/taskbooks/packageEvidence';
+        $taskbookLabel = LantraHelper::setting('taskbookLabel');
+        $response = Craft::$app->view->renderTemplate($template, ['package' => $package, 'taskbookLabel' => $taskbookLabel]);
+        return $response;
+    }
+
+    /**
      * @throws \Throwable
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException

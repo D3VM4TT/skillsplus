@@ -67,7 +67,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#tab{{ package.id }}evidence" class="primary-bg">
+                    <a href="#tab{{ package.id }}evidence" class="primary-bg evidence-tab" data-id="{{ package.id }}">
                         <h4>Evidence</h4>
                     </a>
                 </li>
@@ -304,8 +304,7 @@
                     </p>
                 {% endif %}
             </div>
-            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
-                {% include '_includes/taskbooks/packageEvidence' with {admin:false} %}
+            <div class="groups-tab-group-{{ package.id }} evidence-pane" id="tab{{ package.id }}evidence">
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
