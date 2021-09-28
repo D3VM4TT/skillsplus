@@ -23,11 +23,18 @@
     {% endif %}
     {% if filterPackage is defined and filterPackage %}
         <select name="filter" class="sp-select">
-            {% set packageTypes = craft.lantra.packageTypes() %}
+            {% set packageTypes = craft.lantra.packageTypes(currentUser, false) %}
             {% for type in packageTypes %}
                 <option value="{{ type.name }}"{% if filterPackage == type.name %} selected="selected"{% endif %}>{{ type.name }}</option>
             {% endfor %}
             <option value="all"{% if filterPackage == 'all' %} selected="selected"{% endif %}>All Packages</option>
+        </select>
+    {% endif %}
+    {% if filterSampled is defined and filterSampled %}
+        <select name="filter" class="sp-select">
+            <option value="complete"{% if filterSampled == 'complete' %} selected="selected"{% endif %}>Complete</option>
+            <option value="sampled"{% if filterSampled == 'sampled' %} selected="selected"{% endif %}>Sampled</option>
+            <option value="all"{% if filterSampled == 'all' %} selected="selected"{% endif %}>All External</option>
         </select>
     {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>

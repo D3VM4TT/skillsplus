@@ -911,6 +911,16 @@ class LantraVariable
 
     /**
      * @param null $userId
+     * @return bool
+     */
+    public function isExternal($userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->users->isExternal($user);
+    }
+
+    /**
+     * @param null $userId
      * @return array
      */
     public function packageTypes($userId = null)

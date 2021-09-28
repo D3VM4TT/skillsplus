@@ -64,6 +64,11 @@
                             <a href="/management/taskbooks?filter={{ type.name }}">{{ type.name }} ({{ type.count }})</a>
                         </li>
                     {% endfor %}
+                    {% if craft.lantra.isExternal(currentUser) %}
+                        <li>
+                            <a href="/management/taskbooks/external">External ({{ craft.lantra.packagesCount('external')  }})</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </li>
         {%  endif %}
