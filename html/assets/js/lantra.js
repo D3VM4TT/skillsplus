@@ -704,6 +704,23 @@ $(document).ready(function () {
         a.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
+        // load evidence
+        if(a.hasClass('evidence-tab')) {
+            let e = $('.evidence-pane').eq(0);
+            if (!e.hasClass('loaded')) {
+                var data = {packageId: a.data('id')};
+                data[window.csrfTokenName] = window.csrfTokenValue;
+
+                console.log(data);
+
+
+                $('body').addClass('loading');
+                e.load( "/sp/packages/evidence", data, function() {
+                    e.addClass('loaded');
+                    $('body').removeClass('loading');
+                });
+            }
+        }
         // make sure first unit group is shown
         if (target.match("^#tab")) {
             $(target).find('ul.tabs').eq(0).find('a').eq(0).click();

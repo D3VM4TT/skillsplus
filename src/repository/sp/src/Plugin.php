@@ -452,6 +452,7 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/delete-results'                => 'sp/packages/delete-results',
+            'sp/packages/evidence'                      => 'sp/packages/evidence',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
