@@ -706,15 +706,15 @@ $(document).ready(function () {
         $(target).show();
         // load tab contents
         if(a.hasClass('load-tab')) {
-            if (!target.hasClass('loaded')) {
+            if (!$(target).hasClass('loaded')) {
                 let data = {
                     template: a.data('template'),
                     packageId: a.data('id')
                 };
                 data[window.csrfTokenName] = window.csrfTokenValue;
                 $('body').addClass('loading');
-                target.load( "/sp/packages/load-template", data, function() {
-                    e.addClass('loaded');
+                $(target).load( "/sp/packages/load-template", data, function() {
+                    $(target).addClass('loaded');
                     $('body').removeClass('loading');
                 });
             }
