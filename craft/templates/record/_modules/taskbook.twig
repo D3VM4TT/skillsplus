@@ -90,7 +90,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if not isManager %}
+                {% if alias('@site') == 'bics' and not isManager %}
                     {% if resitModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
