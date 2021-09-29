@@ -2358,7 +2358,7 @@ class Results extends Component
         }
         if ($includeRequired) {
             foreach ($subordinates as $user) {
-                $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
+                $unitIds = is_array($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
                 $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds, false));
             }
             usort($rows, function ($a, $b) {
@@ -2397,7 +2397,7 @@ class Results extends Component
         $rows = [$header];
         foreach ($subordinates as $user) {
             if (!$resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
-                $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
+                $unitIds = is_array($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
                 $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds));
             }
             if (!$resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
