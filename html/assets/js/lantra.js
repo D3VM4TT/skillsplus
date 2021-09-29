@@ -179,7 +179,7 @@ $(document).ready(function () {
                     e = true;
                 }
             }
-            if (t == 'asset' && !$(this).find('div.files').find('input').length) {
+            if (t == 'asset' && !$(this).find('ul.assets').find('input').length) {
                 e = true;
             }
             // add error message and class
