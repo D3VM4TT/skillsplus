@@ -5,7 +5,11 @@ namespace lantra\sp\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\elements\Entry;
-use craft\elements\SuperTableBlockElement;
+
+
+use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\services\SuperTableService;
+
 
 /**
  * m210721_134639_convertTaskbooks migration.
@@ -53,7 +57,8 @@ class m210929_000000_bics_categories extends Migration
      */
     public function addBlock ($field, $owner, $categoryId, $mandatory = 0, $level = 1) {
 
-        $stepBlockType = $this->sp->getBlockTypesByFieldId($field->id)[0];
+        $sp = new SuperTableService();
+        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
         $block = new SuperTableBlockElement();
         $block->fieldId = $field->id;
         $block->ownerId = $owner->id;
