@@ -19,7 +19,8 @@ class ModuleBehavior extends Behavior
      */
     public function isCompany()
     {
-        return $this->owner->moduleGroup->one()->isCompany();
+        $moduleGroup = $this->owner->moduleGroup->one();
+        return $moduleGroup ? $moduleGroup->isCompany() : false;
     }
 
     /**
