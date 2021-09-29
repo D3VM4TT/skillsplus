@@ -94,6 +94,9 @@ class Queue extends Component
      */
     public function next()
     {
+        if (!count($this->queue)) {
+            return;
+        }
         $job = array_shift($this->queue);
         ## expire jobs twelve hours old
         $expired = $job['dateCreated'] < (time() - 43200);
