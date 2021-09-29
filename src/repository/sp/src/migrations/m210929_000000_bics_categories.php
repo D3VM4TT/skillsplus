@@ -38,10 +38,10 @@ class m210929_000000_bics_categories extends Migration
             foreach ($package->packageModuleGroups as $row) {
                 Craft::$app->elements->deleteElement($row);
             }
-            $this->addBlock($field, $package->id, 307057, 1, $package->packageLevel);
-            $this->addBlock($field, $package->id,307104, 0, $package->packageLevel);
-            $this->addBlock($field, $package->id, 307103, 0, $package->packageLevel);
-            $this->addBlock($field, $package->id, 307105, 0, $package->packageLevel);
+            $this->addBlock($field, $package, 307057, 1, $package->packageLevel);
+            $this->addBlock($field, $package,307104, 0, $package->packageLevel);
+            $this->addBlock($field, $package, 307103, 0, $package->packageLevel);
+            $this->addBlock($field, $package, 307105, 0, $package->packageLevel);
             echo "[done]\n\n";
         }
     }
