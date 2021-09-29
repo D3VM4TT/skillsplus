@@ -65,7 +65,7 @@
             <button class="button primary-bg status" data-status="draft" type="button">Save as draft</button>
         </div>
     {% endif %}
-    {% if isPackage and not package.taskbook.unitEndorse %}
+    {% if not isManager and isPackage and not package.taskbook.unitEndorse %}
         <div class="col-pd-btm"><p>Click 'Save as complete' if you are ready to submit for endorsement.</p></div>
         <div class="container-btn">
             <button class="button primary-bg status" data-status="complete" type="button">Save as complete</button>
