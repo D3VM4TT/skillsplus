@@ -1,0 +1,285 @@
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Reports" %}
+
+{% set entryId = craft.app.request.getSegment(3) %}
+{% if entryId and entry is not defined %}
+    {% set entry = craft.entries.id(entryId).one %}
+{% endif %}
+
+{% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+    {% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel') %}
+{% else %}
+    {% set companyEntries = craft.lantra.managerCompanies(currentUser.id, true) %}
+{% endif %}
+{% set unitEntries = craft.entries.section('units').limit(null).orderBy('title') %}
+{% set allManagers = craft.users.group('teamManagers', 'companyManagers', 'schemeManagers').orderBy('firstName').limit(null) %}
+{% set moduleGroups = craft.categories.group('moduleGroups').limit(null).orderBy('title') %}
+
+{% set cpdModuleEntries = craft.entries.section('modules').type('cpd').limit(null).all() %}
+
+{% set dateFormat = 'd-m-y H:i' %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<div class="page-header secondary-bg">
+    {% if entry is defined and entry.id %}
+        <h2>Edit report</h2>
+    {% else %}
+        <h2>Create a New Report</h2>
+    {% endif %}
+</div>
+
+{% if entry is defined %}
+    {{ ui.errorList(entry.getFirstErrors()) }}
+{% endif %}
+
+<form id="reports" class="page-form no-loading" method="post" role="form" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('sp/reports/save-report') }}
+    {{ redirectInput('reporting') }}
+    <input type="hidden" name="entryId" value="{{ entry.id|default('') }}">
+    <div class="field--wrapper">
+        <label for="reportTitle" class="">Report title:</label>
+        <input id="reportTitle" type="text" name="title" required value="{{ entry is defined ? entry.title }}" />
+    </div>
+    <div class="field--wrapper">
+        <label for="reportType">Report Type</label>
+        <select id="reportType" name="fields[reportType]">
+            {% set reports = craft.lantra.settingReports('array') %}
+            {% for key, report in reports %}
+                <option data-description="{{ report.description }}" value="{{ key }}" {% if entry is defined and entry.reportType == key %} selected="selected"{% endif %}>
+                    {{ report.title }}
+                </option>
+            {% endfor %}
+        </select>
+        <p style="font-size: 10px;margin:10px 0 10px 0;" id="reportTypeDescription"></p>
+    </div>
+    <div class="field--wrapper">
+        <label for="reportCompanies" class="no-float">Filter Companies</label>
+        <input type="hidden" name="fields[reportCompanies]" value="" />
+        <select multiple class="js-select2" name="fields[reportCompanies][]" id="reportCompanies">
+            {% for companyEntry in companyEntries %}
+                <option {% if entry is defined and companyEntry.id in entry.reportCompanies.ids() %} selected="selected"{% endif %}
+                    value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+            {% endfor %}
+        </select>
+        <label for="reportAllCompanies" class="no-float">
+            <input name="fields[reportAllCompanies]" id="reportAllCompanies" type="checkbox" value="1"
+                {% if entry is defined and entry.reportAllCompanies %} checked{% endif %}>
+            Include all companies
+        </label>
+        <label for="reportIncludeHierarchy" class="no-float">
+            <input name="fields[reportIncludeHierarchy]" id="reportIncludeHierarchy" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeHierarchy %} checked{% endif %}>
+            Include hierarchy
+        </label>
+    </div>
+
+    <div class="field--wrapper fields fields-standardUsers">
+        <label for="reportDays" class="no-float">Filter by user last login:</label>
+        <select name="fields[reportDays]" id="reportDays">
+            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">Show all users</option>
+            <option value="7" {% if entry is defined and entry.reportResultExpiry == '7' %} selected="selected{% endif %}">Not accessed for 7 days</option>
+            <option value="14" {% if entry is defined and entry.reportResultExpiry == '14' %} selected="selected{% endif %}">Not accessed for 90 days</option>
+            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Not accessed for 180 days</option>
+            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Not accessed for 365 days</option>
+            <option value="9999" {% if entry is defined and entry.reportResultExpiry == '9999' %} selected="selected{% endif %}">Never accessed</option>
+        </select>
+    </div>
+
+    <div class="field--wrapper fields fields-standardResults">
+        <label for="reportResultStandardType" class="no-float">Result type</label>
+        <select name="fields[reportResultStandardType]" id="reportResultStandardType">
+            <option value="endorsed" {% if entry is defined and entry.reportResultStandardType == 'endorsed' %} selected="selected"{% endif %}>
+                Endorsed
+            </option>
+            <option value="expiring" {% if entry is defined and entry.reportResultStandardType == 'expiring' %} selected="selected"{% endif %}>
+                Expiring
+            </option>
+        </select>
+    </div>
+    <div class="field--wrapper fields fields-standardResults">
+        <div id="resultExpiringOptions">
+        <label for="reportResultExpiry" class="no-float">Result expiry:</label>
+        <select name="fields[reportResultExpiry]" id="reportResultExpiry">
+            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
+            <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
+            <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
+            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
+            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
+            <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
+        </select>
+        <label for="reportIncludeExpired" class="no-float">
+            <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
+            Include expired results with expiring results
+        </label>
+        </div>
+    </div>
+    <div class="field--wrapper fields fields-standardCpd">
+        <label for="reportModules" class="no-float">Filter Modules</label>
+        <input type="hidden" name="fields[reportModules]" value="" />
+        <select multiple class="js-select2" name="fields[reportModules][]" id="reportModules">
+            {% for moduleEntry in cpdModuleEntries %}
+                <option {% if entry is defined and moduleEntry.id in entry.reportModules.ids() %} selected="selected"{% endif %}
+                        value="{{ moduleEntry.id }}">{{ moduleEntry.title }}</option>
+            {% endfor %}
+        </select>
+        <label for="reportAllCompanies" class="no-float">
+            <input name="fields[reportAllModules]" id="reportAllCompanies" type="checkbox" value="1"
+                {% if entry is defined and entry.reportAllModules %} checked{% endif %}>
+            Include all modules
+        </label>
+    </div>
+
+    <div class="field--wrapper fields fields-standardPayments">
+
+    </div>
+    <div class="field--wrapper fields fields-standardSm">
+
+    </div>
+    <div class="field--wrapper fields fields-results fields-required fields-expired">
+        <label for="reportResultType" class="no-float">Result Type</label>
+        <select name="fields[reportResultType]" id="reportResultType">
+            <option value="all" {% if entry is defined and entry.reportResultType == 'all' %} selected="selected"{% endif %}>
+                Both Mandatory & Non Mandatory
+            </option>
+            <option value="unitResult" {% if entry is defined and entry.reportResultType == 'unitResult' %} selected="selected"{% endif %}>
+                Mandatory
+            </option>
+            <option value="userResult" {% if entry is defined and entry.reportResultType == 'userResult' %} selected="selected"{% endif %}>
+                Non Mandatory
+            </option>
+        </select>
+        <div id="reportUnitsDropdown" style="margin-top:30px;">
+            <label for="unitIds" class="no-float">Filter Mandatory Units</label>
+            <input type="hidden" name="fields[reportUnits]" value="" />
+            <select multiple class="js-select2" name="fields[reportUnits][]" id="reportUnits">
+                {% for unitEntry in unitEntries %}
+                    <option {% if entry is defined and unitEntry.id in entry.reportUnits.ids() %} selected="selected"{% endif %}
+                            value="{{ unitEntry.id }}">{{ unitEntry.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="field--wrapper fields fields-expired">
+        <label for="reportResultExpiry" class="no-float">Result expiry:</label>
+        <select name="fields[reportResultExpiry]" id="reportResultExpiry">
+            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
+            <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
+            <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
+            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
+            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
+            <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
+        </select>
+        <label for="reportIncludeExpired" class="no-float">
+            <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
+            Include expired results with expiring results
+        </label>
+        <label for="reportIncludeRequired" class="no-float">
+            <input name="fields[reportIncludeRequired]" id="reportIncludeRequired" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeRequired %} checked{% endif %}>
+            Include incomplete mandatory units
+        </label>
+    </div>
+    <div class="field--wrapper fields fields-results">
+        <label for="reportDisplayField" class="no-float">Display Field</label>
+        <select name="fields[reportDisplayField]" id="reportDisplayField">
+            <option value="expiryDate" {% if entry is defined and entry.reportDisplayField == 'expiryDate' %} selected="selected"{% endif %}>
+                Expiry Date
+            </option>
+            <option value="resultStartDate" {% if entry is defined and entry.reportDisplayField == 'resultStartDate' %} selected="selected"{% endif %}>
+                Start Date
+            </option>
+            <option value="resultFinishDate" {% if entry is defined and entry.reportDisplayField == 'resultFinishDate' %} selected="selected"{% endif %}>
+                Finish Date
+            </option>
+        </select>
+    </div>
+
+    {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+        <div id="reportAutomated">
+            <h2>Automated Report Settings</h2>
+            <div class="field--wrapper">
+                <label id="reportRecipientsLabel" for="reportRecipients" class="">Report recipients (managers of companies selected above):
+                    <span style="display:none;color:#000">loading</span></label>
+                <input type="hidden" name="fields[reportRecipients]" value="" />
+                <select multiple class="js-select2" name="fields[reportRecipients][]" id="reportRecipients">
+                    {% if entry is defined and entry.reportRecipients.count %}
+                        {% for manager in entry.reportRecipients %}
+                            <option selected="selected" value="{{ manager.id }}"> {{ manager.fullName }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+            {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
+                <div class="field--wrapper">
+                    <label for="reportEmails" class="">Report recipients (emails):</label>
+                    <input id="reportEmails" type="text" name="fields[reportEmails]" value="{{ entry is defined ? entry.reportEmails }}" />
+                </div>
+            {% endif %}
+            <div class="field--wrapper">
+                <label for="reportSendFrequency">Report send frequency:</label>
+                <select name="fields[reportSendFrequency]" id="reportSendFrequency">
+                    <option value="never" {% if entry is defined and entry.reportSendFrequency == 'never' %} selected="selected"{% endif %}">
+                    Never
+                    </option>
+                    <option value="weekly" {% if entry is defined and entry.reportSendFrequency == 'weekly' %} selected="selected"{% endif %}">
+                    Weekly
+                    </option>
+                    <option value="monthly" {% if entry is defined and entry.reportSendFrequency == 'monthly' %} selected="selected"{% endif %}">
+                    Monthly
+                    </option>
+                </select>
+            </div>
+            <div class="field--wrapper">
+                <label for="reportSendValue">Report send day (1-7 for weekly):</label>
+                <select name="fields[reportSendValue]" id="reportSendValue">
+                    {% for day in range(1, 31) %}
+                        <option {% if entry is defined and entry.reportSendValue == day %} selected="selected"{% endif %}
+                                value="{{ day }}">{{ day }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="container-btn" style="margin-top:20px;">
+            <button id="buttonAutomated" type="button" class="button primary-bg">{{ entry is defined and entry.reportAutomated ? 'Cancel' : 'Create' }} Automated</button>
+            <input type="hidden" name="automated" value="{{ entry is defined ? entry.reportAutomated : 0 }}">
+        </div>
+    {% endif %}
+
+    <div class="container-btn" style="margin-top:20px;">
+        <button id="buttonSubmit" type="submit" class="button primary-bg">Save Report</button>
+    </div>
+
+    {% if entry is defined and entry.reportData|length %}
+        <h2>Report Archive</h2>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Filename</th>
+                <th>Date Created</th>
+                <th>Size</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in entry.reportData.orderBy('id desc') %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.filename }}</td>
+                    <td>{{ report.dateCreated|date(dateFormat) }}</td>
+                    <td>{{ report.size|filesize }}</td>
+                    <td style="text-align: right;"><a href="/internal/{{ report.id }}" rel="external">download</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</form>
+{% endblock %}

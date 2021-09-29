@@ -1,4 +1,4 @@
-<div class="groups-tab-group endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
+<div class="{% if package is not defined %}groups-tab-group{% endif %} endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
     {% if moduleGroup.isCompany and cpdUser.userCompany %}
         {% set userCompany = cpdUser.userCompany.one %}
         <div class="assessment" style="border-color: {{ craft.lantra.setting('themeColorPrimary') }}">
@@ -48,6 +48,7 @@
         </ul>
         {% if moduleGroup.moduleGroupMenu == 'dropdown' and options %}
             <div class="field--wrapper" style="margin-top:30px;">
+                <p>Please select module below:</p>
                 <select class="module-menu" id="module-select-{{ moduleGroup.id }}">
                     {{ options|raw }}
                 </select>

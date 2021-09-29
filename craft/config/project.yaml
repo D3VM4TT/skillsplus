@@ -7,25 +7,31 @@ categoryGroups:
             fields:
               1d522b30-9aa0-4fc8-afd1-84e738233479:
                 required: false
-                sortOrder: 7
+                sortOrder: 9
               48909e73-b939-470f-b472-53ee709db6e4:
                 required: false
-                sortOrder: 4
-              6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                sortOrder: 6
+              57f129b9-c872-49ad-9f42-c2b3c1f84753:
                 required: false
                 sortOrder: 2
-              b3bb5932-8ec6-48a5-af26-7d974a69e57a:
+              6b431a5f-e1ee-4520-ab30-89ca72993c00:
                 required: false
-                sortOrder: 6
-              bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
+                sortOrder: 4
+              892d5048-f63d-468f-a926-c89daebf07f9:
                 required: false
                 sortOrder: 1
-              c3c65d33-35c6-416d-9e88-c5a678f09161:
+              b3bb5932-8ec6-48a5-af26-7d974a69e57a:
+                required: false
+                sortOrder: 8
+              bfce8aaa-028f-4d73-8f1d-20ba8f5a871b:
                 required: false
                 sortOrder: 3
-              fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+              c3c65d33-35c6-416d-9e88-c5a678f09161:
                 required: false
                 sortOrder: 5
+              fb5bee58-9ee4-4a57-b03f-59c886c40cad:
+                required: false
+                sortOrder: 7
             name: Settings
             sortOrder: 1
           -
@@ -97,7 +103,7 @@ categoryGroups:
     structure:
       maxLevels: 1
       uid: cddeab59-d20c-4b6e-80e2-3912183a9657
-dateModified: 1621869301
+dateModified: 1628766933
 fieldGroups:
   0d277023-1a22-42a9-9b23-8d89a23cc677:
     name: Pages
@@ -314,6 +320,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  115ae560-0d9c-480a-93e9-a355f7718b6f:
+    contentColumnType: text
+    fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+    handle: reportFilter
+    instructions: ''
+    name: 'Report Filter'
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '2'
+      multiline: '1'
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   14b8c677-a8a8-4df3-a74e-a30106bd5398:
     contentColumnType: string
     fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548
@@ -408,7 +432,7 @@ fields:
               - Users
             -
               - value
-              - users
+              - standardUsers
             -
               - default
               - ''
@@ -416,32 +440,10 @@ fields:
           __assoc__:
             -
               - label
-              - Results
+              - 'Results '
             -
               - value
-              - results
-            -
-              - default
-              - ''
-        -
-          __assoc__:
-            -
-              - label
-              - Required
-            -
-              - value
-              - required
-            -
-              - default
-              - ''
-        -
-          __assoc__:
-            -
-              - label
-              - Expired
-            -
-              - value
-              - expired
+              - standardResults
             -
               - default
               - ''
@@ -452,7 +454,7 @@ fields:
               - CPD
             -
               - value
-              - cpd
+              - standardCpd
             -
               - default
               - ''
@@ -463,7 +465,7 @@ fields:
               - Payments
             -
               - value
-              - payments
+              - standardPayments
             -
               - default
               - ''
@@ -474,7 +476,40 @@ fields:
               - 'Scheme Manager'
             -
               - value
-              - sm
+              - standardSm
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Users (Hierarchy)'
+            -
+              - value
+              - users
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Results (Qual User)'
+            -
+              - value
+              - results
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Custom Expired (Required Training)'
+            -
+              - value
+              - expired
             -
               - default
               - ''
@@ -778,7 +813,7 @@ fields:
     type: craft\fields\PlainText
   294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleSingleCost
     instructions: 'Cost if purchased as individual optional module group.'
     name: 'Module Group Single Cost'
@@ -1330,6 +1365,47 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  497fe30b-60db-4d82-a39f-a64da4fc64f4:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookModuleGroups
+    instructions: ''
+    name: 'Taskbook Module Groups'
+    searchable: true
+    settings:
+      columns:
+        __assoc__:
+          -
+            - 1648b942-a6f7-47b2-a284-5a971121b556
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 651fac2b-5f39-4c8f-96b0-4c75c3267102
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - af49d354-08d5-422e-9f65-56c76ff7d485
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_taskbookmodulegroups}}'
+      fieldLayout: table
+      maxRows: ''
+      minRows: ''
+      propagationMethod: all
+      selectionLabel: ''
+      staticField: ''
+    translationKeyFormat: null
+    translationMethod: site
+    type: verbb\supertable\fields\SuperTableField
   4a4bc5cd-115e-4309-a51a-3e5095ceea90:
     contentColumnType: string
     fieldGroup: 3f934bd7-b755-4330-88af-dd41d6ea990b
@@ -1399,6 +1475,53 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
+  4e26dbf7-5c26-4bdd-abaf-efcd389366bc:
+    contentColumnType: integer(10)
+    fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+    handle: reportDays
+    instructions: ''
+    name: 'Report Days'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageEvidence
+    instructions: ''
+    name: 'Package Evidence'
+    searchable: true
+    settings:
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      defaultUploadLocationSubpath: '{author.id}'
+      limit: ''
+      localizeRelations: false
+      restrictFiles: ''
+      selectionLabel: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources:
+        - 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: ''
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
   534ba9ca-50bd-4b63-a843-b3358f1bc352:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
@@ -1475,6 +1598,27 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  53fe1ed0-e4fe-4a51-8235-3f3a1b123528:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: packageTaskbook
+    instructions: ''
+    name: 'Package Taskbook'
+    searchable: true
+    settings:
+      allowSelfRelations: ''
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      source: null
+      sources:
+        - 'section:0db8b604-3d85-4638-bc64-f1d73e2e9aba'
+      targetSiteId: null
+      validateRelatedElements: ''
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
   54ffd21d-f058-4546-b582-9f8c03da2f65:
     contentColumnType: text
     fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df
@@ -1522,6 +1666,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  57f129b9-c872-49ad-9f42-c2b3c1f84753:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: code
+    instructions: ''
+    name: Code
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   5839b521-ccd0-4768-bbe4-ef59335fb732:
     contentColumnType: string
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -1584,7 +1746,7 @@ fields:
     type: craft\fields\Lightswitch
   5bdda926-785f-4d89-aebe-9a805b3dab29:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleResitCost
     instructions: ''
     name: 'Module Group Resit Cost'
@@ -1903,7 +2065,7 @@ fields:
     type: craft\fields\Assets
   680431de-8445-48e9-8acf-e32d867f73dd:
     contentColumnType: text
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleCosts
     instructions: ''
     name: 'Module Group Costs'
@@ -2105,6 +2267,41 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Matrix
+  6fae9879-b107-4f41-9bc0-0f119a358ef1:
+    contentColumnType: string
+    fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
+    handle: reportResultStandardType
+    instructions: ''
+    name: 'Report Results Standard Type'
+    searchable: true
+    settings:
+      optgroups: true
+      options:
+        -
+          __assoc__:
+            -
+              - label
+              - Endorsed
+            -
+              - value
+              - endorsed
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - Expiring
+            -
+              - value
+              - expiring
+            -
+              - default
+              - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Dropdown
   73b12e48-7a9e-496f-b91e-01fad8e389d1:
     contentColumnType: text
     fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c
@@ -2122,6 +2319,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
+  753f71f4-d39b-43bd-9219-b76f91626502:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleGroupMinimumLevel
+    instructions: 'If applicable, the minimum level for credit requirement.'
+    name: 'Module Group Minimum Level'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   75ec7211-a9c5-4390-963a-9d63dfd0dbd4:
     contentColumnType: string
     fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69
@@ -2378,6 +2593,24 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: verbb\supertable\fields\SuperTableField
+  809b8647-dd59-44cf-b5d5-63dac0021cb1:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleGroupMinimumLevelCredits
+    instructions: 'If applicable, minimum credits at Module Group Minimum Level '
+    name: 'Module Group Minimum Level Credits'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   8200bbc7-18f0-49da-a017-2fb3a82ee950:
     contentColumnType: string
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -2517,6 +2750,18 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\redactor\Field
+  84396576-ea02-4748-adcd-ae3fe8d26824:
+    contentColumnType: boolean
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: unitEndorse
+    instructions: ''
+    name: 'Unit Endorse'
+    searchable: true
+    settings:
+      default: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   84ec75d0-1dcf-408a-bce8-4ea7b5370c3b:
     contentColumnType: text
     fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc
@@ -2561,6 +2806,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  892d5048-f63d-468f-a926-c89daebf07f9:
+    contentColumnType: text
+    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    handle: shortTitle
+    instructions: ''
+    name: 'Short Title'
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
   8a7a272d-f35d-4ec6-9c9a-571c7f0f40d7:
     contentColumnType: smallint(3)
     fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2
@@ -2615,6 +2878,29 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  918cc95b-e5c3-468d-809a-8bbd4eb5a8e5:
+    contentColumnType: text
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookIntro
+    instructions: ''
+    name: 'Taskbook Intro'
+    searchable: true
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
   93485201-c508-48f9-a114-db4fb3558c38:
     contentColumnType: boolean
     fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
@@ -3494,7 +3780,7 @@ fields:
     type: craft\fields\PlainText
   da81a368-f84c-47f8-9e3a-b83346be0865:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleMinimumOptional
     instructions: ''
     name: 'Module Group Minimum Optional'
@@ -3506,10 +3792,40 @@ fields:
       min: '0'
       prefix: ''
       size: null
-      suffix: 'optional modules'
+      suffix: 'optional module groups'
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Number
+  db4d8830-6fbb-45c9-bdb4-cc058820b1ae:
+    contentColumnType: string
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: taskbookFiles
+    instructions: ''
+    name: 'Taskbook Files'
+    searchable: true
+    settings:
+      allowSelfRelations: ''
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+      defaultUploadLocationSubpath: ''
+      limit: ''
+      localizeRelations: false
+      restrictFiles: ''
+      selectionLabel: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources:
+        - 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9'
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: ''
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
   dbbf1f49-3b86-4c6d-aa5a-4170483a35f1:
     contentColumnType: string
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -3716,6 +4032,24 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\Lightswitch
+  e1c8bc22-c8ae-487a-8cfa-074338772cbc:
+    contentColumnType: integer(10)
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
+    handle: moduleMinimumCredits
+    instructions: 'This is the total minimum including mandatory credits.  Leave blank to disable minimum credits.'
+    name: 'Module Group Minimum Credits'
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '0'
+      max: null
+      min: '0'
+      prefix: ''
+      size: null
+      suffix: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
   e39c693b-aafd-4f9c-8e82-53aa5da6694e:
     contentColumnType: boolean
     fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b
@@ -3730,7 +4064,7 @@ fields:
     type: craft\fields\Lightswitch
   e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
     contentColumnType: integer(10)
-    fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0
+    fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
     handle: moduleMaxCost
     instructions: ''
     name: 'Module Group Max Cost'
@@ -3816,9 +4150,9 @@ fields:
   edcdcb64-8b0b-4f31-ab57-106c9e252317:
     contentColumnType: string
     fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a
-    handle: packageOptionalModuleGroups
+    handle: packageModuleGroups
     instructions: ''
-    name: 'Package Optional Module Groups'
+    name: 'Package Module Groups'
     searchable: true
     settings:
       columns:
@@ -3831,13 +4165,34 @@ fields:
                   - width
                   - ''
           -
+            - 8b738285-1f1f-4f66-bb77-bdf61a7f234e
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
             - 9a61af4b-dccb-4d5e-9bc1-53b775f9de18
             -
               __assoc__:
                 -
                   - width
                   - ''
-      contentTable: '{{%stc_packageoptionalmodulegroups}}'
+          -
+            - 7209f99b-e88b-403f-b8ba-fbb0301b5c0f
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - cad6f0cc-99c2-432e-b299-3990a84d96fc
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_packagemodulegroups}}'
       fieldLayout: table
       maxRows: ''
       minRows: ''
@@ -5127,34 +5482,40 @@ sections:
                 fields:
                   1d522b30-9aa0-4fc8-afd1-84e738233479:
                     required: false
-                    sortOrder: 10
+                    sortOrder: 12
                   1e5a2205-0d2d-4f4c-b087-a5f706ac0449:
                     required: false
-                    sortOrder: 8
+                    sortOrder: 10
                   28e570b6-14a0-4b5e-be07-37e03f6b9b8f:
                     required: false
-                    sortOrder: 9
+                    sortOrder: 11
                   4bb00585-cc77-465a-add8-7acdffe931ce:
                     required: false
-                    sortOrder: 7
-                  6616a98b-5530-40e0-93db-6e73e439e274:
-                    required: false
-                    sortOrder: 6
-                  98e01bd1-bcac-4523-8399-0c55010d13b6:
+                    sortOrder: 9
+                  57f129b9-c872-49ad-9f42-c2b3c1f84753:
                     required: false
                     sortOrder: 2
-                  995ba33c-928b-43a5-8d39-53c4c36782ed:
+                  6616a98b-5530-40e0-93db-6e73e439e274:
                     required: false
-                    sortOrder: 3
-                  c708fb49-2ead-4372-bb3f-c925d3ab9f41:
-                    required: false
-                    sortOrder: 4
-                  d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
-                    required: false
-                    sortOrder: 5
-                  f2ab3047-5922-481b-a6bc-d1ced215dc10:
+                    sortOrder: 8
+                  892d5048-f63d-468f-a926-c89daebf07f9:
                     required: false
                     sortOrder: 1
+                  98e01bd1-bcac-4523-8399-0c55010d13b6:
+                    required: false
+                    sortOrder: 4
+                  995ba33c-928b-43a5-8d39-53c4c36782ed:
+                    required: false
+                    sortOrder: 5
+                  c708fb49-2ead-4372-bb3f-c925d3ab9f41:
+                    required: false
+                    sortOrder: 6
+                  d09c7ee9-90ad-4c7e-a8ec-a84e5f3457f0:
+                    required: false
+                    sortOrder: 7
+                  f2ab3047-5922-481b-a6bc-d1ced215dc10:
+                    required: false
+                    sortOrder: 3
                 name: Unit
                 sortOrder: 1
               -
@@ -5217,20 +5578,26 @@ sections:
                     required: false
                     sortOrder: 1
                   164fe93f-d610-4819-8ca4-77cc4a88112e:
-                    required: true
+                    required: false
                     sortOrder: 2
                   33d71c63-d5f5-42bb-a731-3a8df1f1759f:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 4
+                  51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3:
+                    required: false
+                    sortOrder: 8
                   534ba9ca-50bd-4b63-a843-b3358f1bc352:
                     required: false
-                    sortOrder: 6
+                    sortOrder: 7
+                  53fe1ed0-e4fe-4a51-8235-3f3a1b123528:
+                    required: false
+                    sortOrder: 3
                   5e4e967d-f646-4378-aedf-9f6ef84c1e28:
                     required: false
-                    sortOrder: 4
+                    sortOrder: 5
                   edcdcb64-8b0b-4f31-ab57-106c9e252317:
                     required: false
-                    sortOrder: 5
+                    sortOrder: 6
                 name: Modules
                 sortOrder: 1
               -
@@ -5280,23 +5647,16 @@ sections:
     name: 'Taskbook Packages'
     previewTargets:
       -
-        __assoc__:
-          -
-            - label
-            - 'Primary entry page'
-          -
-            - urlFormat
-            - '{url}'
-          -
-            - refresh
-            - ''
+        label: 'Primary entry page'
+        refresh: ''
+        urlFormat: '{url}'
     propagationMethod: all
     siteSettings:
       47b102e1-4aed-4206-8420-dfd6e6684f7c:
         enabledByDefault: true
         hasUrls: false
         template: null
-        uriFormat: ''
+        uriFormat: null
     type: channel
   0db8b604-3d85-4638-bc64-f1d73e2e9aba:
     enableVersioning: true
@@ -5307,45 +5667,72 @@ sections:
             tabs:
               -
                 fields:
-                  5df92654-19a4-446e-a578-2b359d4bc88f:
+                  892d5048-f63d-468f-a926-c89daebf07f9:
                     required: false
                     sortOrder: 1
-                  840f8f48-be42-4008-ae9e-1fa132183769:
+                  918cc95b-e5c3-468d-809a-8bbd4eb5a8e5:
                     required: false
                     sortOrder: 2
-                  f4f743d8-8e66-4bb5-920a-01bd366d6ba2:
+                  db4d8830-6fbb-45c9-bdb4-cc058820b1ae:
                     required: false
                     sortOrder: 3
-                name: Pages
+                name: Intro
                 sortOrder: 1
-        handle: taskbooks
-        hasTitleField: false
-        name: Taskbooks
+              -
+                fields:
+                  497fe30b-60db-4d82-a39f-a64da4fc64f4:
+                    required: false
+                    sortOrder: 1
+                  753f71f4-d39b-43bd-9219-b76f91626502:
+                    required: false
+                    sortOrder: 4
+                  809b8647-dd59-44cf-b5d5-63dac0021cb1:
+                    required: false
+                    sortOrder: 5
+                  84396576-ea02-4748-adcd-ae3fe8d26824:
+                    required: false
+                    sortOrder: 6
+                  da81a368-f84c-47f8-9e3a-b83346be0865:
+                    required: false
+                    sortOrder: 2
+                  e1c8bc22-c8ae-487a-8cfa-074338772cbc:
+                    required: false
+                    sortOrder: 3
+                name: Settings
+                sortOrder: 2
+              -
+                fields:
+                  294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3:
+                    required: false
+                    sortOrder: 4
+                  5bdda926-785f-4d89-aebe-9a805b3dab29:
+                    required: false
+                    sortOrder: 3
+                  680431de-8445-48e9-8acf-e32d867f73dd:
+                    required: false
+                    sortOrder: 1
+                  e427fbb1-c8bc-4ad3-9913-e5c7931d63f2:
+                    required: false
+                    sortOrder: 2
+                name: Costs
+                sortOrder: 3
+        handle: taskbook
+        hasTitleField: true
+        name: Taskbook
         sortOrder: 1
         titleFormat: '{section.name|raw}'
-        titleLabel: ''
+        titleLabel: 'Taskbook Name'
     handle: taskbooks
     name: Taskbooks
-    previewTargets:
-      -
-        __assoc__:
-          -
-            - label
-            - 'Primary entry page'
-          -
-            - urlFormat
-            - '{url}'
-          -
-            - refresh
-            - '1'
+    previewTargets: null
     propagationMethod: all
     siteSettings:
       47b102e1-4aed-4206-8420-dfd6e6684f7c:
         enabledByDefault: true
-        hasUrls: true
-        template: ''
-        uriFormat: taskbooks
-    type: single
+        hasUrls: false
+        template: null
+        uriFormat: null
+    type: channel
   1d590683-b16e-4955-be62-315accb3e628:
     enableVersioning: false
     entryTypes:
@@ -5376,22 +5763,28 @@ sections:
                 fields:
                   19bb4e6d-2834-456c-93b9-6b942b47b8d4:
                     required: false
-                    sortOrder: 15
+                    sortOrder: 17
                   27e57a2d-2938-41e8-ab58-72f377ca20c1:
                     required: false
                     sortOrder: 8
                   2f940be6-d44c-47bf-95b6-392608ee2547:
                     required: false
                     sortOrder: 7
+                  4e26dbf7-5c26-4bdd-abaf-efcd389366bc:
+                    required: false
+                    sortOrder: 10
+                  6fae9879-b107-4f41-9bc0-0f119a358ef1:
+                    required: false
+                    sortOrder: 9
                   7b7af1dc-c01f-4f73-b3f4-a83ff572e941:
                     required: false
                     sortOrder: 6
                   8200bbc7-18f0-49da-a017-2fb3a82ee950:
                     required: false
-                    sortOrder: 13
+                    sortOrder: 15
                   a1b63d62-c6f0-443b-910f-1d6691b0e4a4:
                     required: false
-                    sortOrder: 9
+                    sortOrder: 11
                   ab55340f-38e6-4d9f-82eb-f3785c6c6ff8:
                     required: false
                     sortOrder: 4
@@ -5400,16 +5793,16 @@ sections:
                     sortOrder: 5
                   c2e23d12-1d3f-4cbd-a3cb-be22ea64bdca:
                     required: false
-                    sortOrder: 11
+                    sortOrder: 13
                   c9d661c9-fd44-473b-a7ef-70f4bc6340ea:
                     required: false
-                    sortOrder: 12
+                    sortOrder: 14
                   d4776dfe-b66f-4a88-931c-d2bebb2d68d1:
                     required: false
                     sortOrder: 2
                   d4ac5d73-4f3c-467c-a3c4-492a2205f858:
                     required: false
-                    sortOrder: 16
+                    sortOrder: 18
                   d500f1e4-fb5b-435a-af01-cc2402b4a8c3:
                     required: false
                     sortOrder: 3
@@ -5418,10 +5811,10 @@ sections:
                     sortOrder: 1
                   e05af851-b6aa-4f59-a43b-0ac897b54887:
                     required: false
-                    sortOrder: 10
+                    sortOrder: 12
                   f56275dc-26a8-46e7-bfb5-061917775684:
                     required: false
-                    sortOrder: 14
+                    sortOrder: 16
                 name: Criteria
                 sortOrder: 2
               -
@@ -5451,7 +5844,7 @@ sections:
         hasTitleField: true
         name: Reports
         sortOrder: 1
-        titleFormat: null
+        titleFormat: ''
         titleLabel: Title
     handle: reports
     name: Reports
@@ -5937,23 +6330,16 @@ sections:
     name: 'Taskbook Workflows'
     previewTargets:
       -
-        __assoc__:
-          -
-            - label
-            - 'Primary entry page'
-          -
-            - urlFormat
-            - '{url}'
-          -
-            - refresh
-            - '1'
+        label: 'Primary entry page'
+        refresh: '1'
+        urlFormat: '{url}'
     propagationMethod: all
     siteSettings:
       47b102e1-4aed-4206-8420-dfd6e6684f7c:
         enabledByDefault: true
         hasUrls: false
         template: null
-        uriFormat: ''
+        uriFormat: null
     type: channel
   d87a0468-94af-4371-a7d8-59f8f3664b84:
     enableVersioning: true
@@ -5979,16 +6365,9 @@ sections:
     name: Dashboard
     previewTargets:
       -
-        __assoc__:
-          -
-            - label
-            - 'Primary entry page'
-          -
-            - urlFormat
-            - '{url}'
-          -
-            - refresh
-            - '1'
+        label: 'Primary entry page'
+        refresh: '1'
+        urlFormat: '{url}'
     propagationMethod: all
     siteSettings:
       47b102e1-4aed-4206-8420-dfd6e6684f7c:
@@ -6006,15 +6385,21 @@ sections:
             tabs:
               -
                 fields:
-                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                  57f129b9-c872-49ad-9f42-c2b3c1f84753:
                     required: false
                     sortOrder: 2
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 4
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 5
+                  892d5048-f63d-468f-a926-c89daebf07f9:
+                    required: false
+                    sortOrder: 1
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
-                    sortOrder: 1
+                    sortOrder: 3
                 name: Module
                 sortOrder: 1
               -
@@ -6038,25 +6423,31 @@ sections:
                 fields:
                   2347e1b1-c7d8-4870-9904-36bd73538d1a:
                     required: false
-                    sortOrder: 6
+                    sortOrder: 8
                   3bfea235-c57e-4998-b079-8c15a1ebbf0e:
                     required: false
-                    sortOrder: 4
-                  646454e2-66f9-4f03-bac7-b94a89aba17a:
-                    required: false
-                    sortOrder: 3
-                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    sortOrder: 6
+                  57f129b9-c872-49ad-9f42-c2b3c1f84753:
                     required: false
                     sortOrder: 2
-                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
+                  646454e2-66f9-4f03-bac7-b94a89aba17a:
                     required: false
                     sortOrder: 5
-                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 4
+                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
                     required: false
                     sortOrder: 7
-                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
+                  6f94bf9b-3168-437e-b8f2-7d082dcdd831:
+                    required: false
+                    sortOrder: 9
+                  892d5048-f63d-468f-a926-c89daebf07f9:
                     required: false
                     sortOrder: 1
+                  fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
+                    required: false
+                    sortOrder: 3
                 name: Module
                 sortOrder: 1
               -
@@ -6134,25 +6525,31 @@ sections:
                 fields:
                   3bfea235-c57e-4998-b079-8c15a1ebbf0e:
                     required: false
-                    sortOrder: 5
-                  646454e2-66f9-4f03-bac7-b94a89aba17a:
-                    required: false
-                    sortOrder: 4
-                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    sortOrder: 7
+                  57f129b9-c872-49ad-9f42-c2b3c1f84753:
                     required: false
                     sortOrder: 2
-                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
+                  646454e2-66f9-4f03-bac7-b94a89aba17a:
                     required: false
                     sortOrder: 6
+                  6b431a5f-e1ee-4520-ab30-89ca72993c00:
+                    required: false
+                    sortOrder: 4
+                  6b856e7c-77f4-4646-9dc9-81cd812d3919:
+                    required: false
+                    sortOrder: 8
                   6f94bf9b-3168-437e-b8f2-7d082dcdd831:
                     required: false
-                    sortOrder: 7
+                    sortOrder: 9
+                  892d5048-f63d-468f-a926-c89daebf07f9:
+                    required: false
+                    sortOrder: 1
                   d99d90fa-6251-4b71-9340-542bc9c3feb9:
                     required: false
-                    sortOrder: 3
+                    sortOrder: 5
                   fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4:
                     required: true
-                    sortOrder: 1
+                    sortOrder: 3
                 name: Module
                 sortOrder: 1
               -
@@ -6206,36 +6603,40 @@ sites:
     siteGroup: c5e418fc-d028-4dae-86d0-52f2cb163583
     sortOrder: 1
 superTableBlockTypes:
-  3f042657-c4b8-44de-a216-84449fa08a51:
-    field: edcdcb64-8b0b-4f31-ab57-106c9e252317
+  2b935deb-1a72-475d-8af3-34b4f511602f:
+    field: 497fe30b-60db-4d82-a39f-a64da4fc64f4
     fieldLayouts:
-      1fec76e6-301b-49d2-a65d-7e7589e07374:
+      112bf991-eefa-49b8-b116-6a665f0ef787:
         tabs:
           -
             fields:
-              00afc899-b37a-415c-8829-b06a42a8638f:
-                required: true
-                sortOrder: 1
-              9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
-                required: true
-                sortOrder: 2
+              1648b942-a6f7-47b2-a284-5a971121b556:
+                required: '0'
+                sortOrder: '1'
+              651fac2b-5f39-4c8f-96b0-4c75c3267102:
+                required: '0'
+                sortOrder: '2'
+              af49d354-08d5-422e-9f65-56c76ff7d485:
+                required: '0'
+                sortOrder: '3'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
-      00afc899-b37a-415c-8829-b06a42a8638f:
+      1648b942-a6f7-47b2-a284-5a971121b556:
         contentColumnType: string
         fieldGroup: null
-        handle: optionalModuleGroup
+        handle: moduleGroup
         instructions: ''
         name: 'Module Group'
-        searchable: true
+        searchable: '1'
         settings:
           allowLimit: false
           allowMultipleSources: false
+          allowSelfRelations: ''
           branchLimit: '1'
           limit: null
           localizeRelations: false
-          selectionLabel: 'Select optional module group'
+          selectionLabel: ''
           source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
           sources: '*'
           targetSiteId: null
@@ -6244,18 +6645,138 @@ superTableBlockTypes:
         translationKeyFormat: null
         translationMethod: site
         type: craft\fields\Categories
+      651fac2b-5f39-4c8f-96b0-4c75c3267102:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: moduleGroupMandatory
+        instructions: ''
+        name: Mandatory
+        searchable: '1'
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      af49d354-08d5-422e-9f65-56c76ff7d485:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: moduleGroupCredit
+        instructions: ''
+        name: Credit
+        searchable: '1'
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+  3f042657-c4b8-44de-a216-84449fa08a51:
+    field: edcdcb64-8b0b-4f31-ab57-106c9e252317
+    fieldLayouts:
+      1fec76e6-301b-49d2-a65d-7e7589e07374:
+        tabs:
+          -
+            fields:
+              00afc899-b37a-415c-8829-b06a42a8638f:
+                required: '1'
+                sortOrder: '1'
+              7209f99b-e88b-403f-b8ba-fbb0301b5c0f:
+                required: '0'
+                sortOrder: '4'
+              8b738285-1f1f-4f66-bb77-bdf61a7f234e:
+                required: '0'
+                sortOrder: '2'
+              9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
+                required: '1'
+                sortOrder: '3'
+              cad6f0cc-99c2-432e-b299-3990a84d96fc:
+                required: '0'
+                sortOrder: '5'
+            name: Content
+            sortOrder: '1'
+    fields:
+      00afc899-b37a-415c-8829-b06a42a8638f:
+        contentColumnType: string
+        fieldGroup: null
+        handle: moduleGroup
+        instructions: ''
+        name: 'Module Group'
+        searchable: '1'
+        settings:
+          allowLimit: false
+          allowMultipleSources: false
+          allowSelfRelations: ''
+          branchLimit: '1'
+          limit: null
+          localizeRelations: false
+          selectionLabel: 'Select module group'
+          source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68'
+          sources: '*'
+          targetSiteId: null
+          validateRelatedElements: ''
+          viewMode: null
+        translationKeyFormat: null
+        translationMethod: site
+        type: craft\fields\Categories
+      7209f99b-e88b-403f-b8ba-fbb0301b5c0f:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: moduleGroupPaid
+        instructions: ''
+        name: Paid
+        searchable: '1'
+        settings:
+          default: '1'
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
+      8b738285-1f1f-4f66-bb77-bdf61a7f234e:
+        contentColumnType: boolean
+        fieldGroup: null
+        handle: moduleGroupMandatory
+        instructions: ''
+        name: Mandatory
+        searchable: '1'
+        settings:
+          default: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Lightswitch
       9a61af4b-dccb-4d5e-9bc1-53b775f9de18:
         contentColumnType: smallint(2)
         fieldGroup: null
-        handle: optionalLevel
+        handle: moduleGroupLevel
         instructions: ''
         name: Level
-        searchable: true
+        searchable: '1'
         settings:
           decimals: 0
           defaultValue: '1'
           max: '10'
           min: '1'
+          prefix: ''
+          size: null
+          suffix: ''
+        translationKeyFormat: null
+        translationMethod: none
+        type: craft\fields\Number
+      cad6f0cc-99c2-432e-b299-3990a84d96fc:
+        contentColumnType: integer(10)
+        fieldGroup: null
+        handle: moduleGroupCost
+        instructions: ''
+        name: Cost
+        searchable: '1'
+        settings:
+          decimals: 0
+          defaultValue: null
+          max: null
+          min: '0'
           prefix: ''
           size: null
           suffix: ''
@@ -6270,13 +6791,13 @@ superTableBlockTypes:
           -
             fields:
               5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
               70a4b8f2-f454-40e6-82d7-ff577995e2a4:
-                required: false
-                sortOrder: 2
+                required: '0'
+                sortOrder: '2'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       5f11fa33-3356-44d4-ad91-0b9ca0ad5f6b:
         contentColumnType: text
@@ -6284,7 +6805,7 @@ superTableBlockTypes:
         handle: customKey
         instructions: ''
         name: 'Custom Key'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6302,7 +6823,7 @@ superTableBlockTypes:
         handle: customValue
         instructions: ''
         name: 'Custom Value'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6322,19 +6843,19 @@ superTableBlockTypes:
           -
             fields:
               22c29753-9e14-4e97-9291-ca025bc83380:
-                required: false
-                sortOrder: 2
+                required: '0'
+                sortOrder: '2'
               32c6ef2b-26dd-41c1-818c-411a8164e1f0:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
               3ffef8f2-5599-4a8c-b8e7-ce6b7113d648:
-                required: false
-                sortOrder: 3
+                required: '0'
+                sortOrder: '3'
               feebdaae-888d-4c75-b0ed-d99114744179:
-                required: false
-                sortOrder: 4
+                required: '0'
+                sortOrder: '4'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       22c29753-9e14-4e97-9291-ca025bc83380:
         contentColumnType: boolean
@@ -6342,7 +6863,7 @@ superTableBlockTypes:
         handle: assessmentPassed
         instructions: ''
         name: Passed
-        searchable: true
+        searchable: '1'
         settings:
           default: ''
         translationKeyFormat: null
@@ -6354,7 +6875,7 @@ superTableBlockTypes:
         handle: assessmentModuleGroup
         instructions: ''
         name: 'Module Group'
-        searchable: true
+        searchable: '1'
         settings:
           allowLimit: false
           allowMultipleSources: false
@@ -6376,7 +6897,7 @@ superTableBlockTypes:
         handle: assessmentComment
         instructions: ''
         name: Comment
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6394,7 +6915,7 @@ superTableBlockTypes:
         handle: assessmentDate
         instructions: ''
         name: Date
-        searchable: true
+        searchable: '1'
         settings:
           minuteIncrement: '30'
           showDate: true
@@ -6410,28 +6931,28 @@ superTableBlockTypes:
           -
             fields:
               13071690-5bed-43f9-8afb-8c2c799eac7e:
-                required: false
-                sortOrder: 4
+                required: '0'
+                sortOrder: '4'
               7497821d-a351-4210-97ac-024153a093af:
-                required: false
-                sortOrder: 6
+                required: '0'
+                sortOrder: '6'
               92d2e862-77f6-43f3-aa6e-cd75c38d424d:
-                required: false
-                sortOrder: 2
+                required: '0'
+                sortOrder: '2'
               e927b48c-3108-4edd-a018-67e44c2989d5:
-                required: false
-                sortOrder: 5
+                required: '0'
+                sortOrder: '5'
               e97c33b5-d88c-43c2-a829-e12ba86c75ac:
-                required: false
-                sortOrder: 3
+                required: '0'
+                sortOrder: '3'
               e98e5085-4cf9-46ca-818c-b71e74ed4eaa:
-                required: false
-                sortOrder: 7
+                required: '0'
+                sortOrder: '7'
               eed6767c-11d8-46d2-b3d5-47ef288cd76b:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       13071690-5bed-43f9-8afb-8c2c799eac7e:
         contentColumnType: string
@@ -6439,7 +6960,7 @@ superTableBlockTypes:
         handle: reviewUser
         instructions: ''
         name: 'Review User'
-        searchable: true
+        searchable: '1'
         settings:
           limit: '1'
           localizeRelations: false
@@ -6462,7 +6983,7 @@ superTableBlockTypes:
         handle: reviewPassed
         instructions: ''
         name: 'Review Passed'
-        searchable: true
+        searchable: '1'
         settings:
           default: ''
         translationKeyFormat: null
@@ -6474,7 +6995,7 @@ superTableBlockTypes:
         handle: reviewStepName
         instructions: ''
         name: 'Step Name'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6494,7 +7015,7 @@ superTableBlockTypes:
         handle: reviewDate
         instructions: ''
         name: 'Review Date'
-        searchable: true
+        searchable: '1'
         settings:
           minuteIncrement: '30'
           showDate: true
@@ -6508,43 +7029,22 @@ superTableBlockTypes:
         handle: reviewStepType
         instructions: ''
         name: 'Step Type'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Assessment
-                -
-                  - value
-                  - assessment
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: Assessment
+              value: assessment
             -
-              __assoc__:
-                -
-                  - label
-                  - Review
-                -
-                  - value
-                  - review
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Review
+              value: review
             -
-              __assoc__:
-                -
-                  - label
-                  - Complete
-                -
-                  - value
-                  - complete
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Complete
+              value: complete
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -6554,7 +7054,7 @@ superTableBlockTypes:
         handle: reviewComment
         instructions: ''
         name: 'Review Comment'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6572,7 +7072,7 @@ superTableBlockTypes:
         handle: reviewStepId
         instructions: ''
         name: 'Step ID'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6594,31 +7094,31 @@ superTableBlockTypes:
           -
             fields:
               19794a8d-aa57-4cea-9297-7c4ccfb2d561:
-                required: false
-                sortOrder: 2
+                required: '0'
+                sortOrder: '2'
               31a1729c-6625-4e9e-9ffe-3fcce0da9bbd:
-                required: false
-                sortOrder: 3
+                required: '0'
+                sortOrder: '3'
               6cb593e0-eb38-45a0-bd9b-22a23586dfbe:
-                required: false
-                sortOrder: 5
+                required: '0'
+                sortOrder: '5'
               74329152-64bf-43a9-95b3-0458edd36e4f:
-                required: false
-                sortOrder: 4
+                required: '0'
+                sortOrder: '4'
               7ed267ff-a262-4e68-81b8-be3bcaa5c178:
-                required: false
-                sortOrder: 7
+                required: '0'
+                sortOrder: '7'
               8fec0242-3542-431e-8a9a-d2d86b3e3b06:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
               a37728d1-3a88-46ca-b9d5-ec79b66ba635:
-                required: false
-                sortOrder: 6
+                required: '0'
+                sortOrder: '6'
               b46f9aa2-ceed-4dee-ac99-835a93962438:
-                required: false
-                sortOrder: 8
+                required: '0'
+                sortOrder: '8'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       19794a8d-aa57-4cea-9297-7c4ccfb2d561:
         contentColumnType: text
@@ -6626,7 +7126,7 @@ superTableBlockTypes:
         handle: fieldLabel
         instructions: ''
         name: 'Field Label'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6644,7 +7144,7 @@ superTableBlockTypes:
         handle: fieldManagerOnly
         instructions: ''
         name: 'Field Manager Only'
-        searchable: true
+        searchable: '1'
         settings:
           default: ''
         translationKeyFormat: null
@@ -6656,32 +7156,18 @@ superTableBlockTypes:
         handle: fieldCustomType
         instructions: ''
         name: 'Field Custom Type'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Text
-                -
-                  - value
-                  - text
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: Text
+              value: text
             -
-              __assoc__:
-                -
-                  - label
-                  - Dropdown
-                -
-                  - value
-                  - dropdown
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Dropdown
+              value: dropdown
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -6691,7 +7177,7 @@ superTableBlockTypes:
         handle: fieldCustomKey
         instructions: ''
         name: 'Field Custom Key'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6709,7 +7195,7 @@ superTableBlockTypes:
         handle: fieldRequired
         instructions: ''
         name: 'Field Required'
-        searchable: true
+        searchable: '1'
         settings:
           default: ''
         translationKeyFormat: null
@@ -6721,164 +7207,66 @@ superTableBlockTypes:
         handle: fieldType
         instructions: ''
         name: 'Field Type'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Type
-                -
-                  - value
-                  - unitType
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Type
+              value: unitType
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Unit Points'
-                -
-                  - value
-                  - unitPoints
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Unit Points'
+              value: unitPoints
             -
-              __assoc__:
-                -
-                  - label
-                  - Status
-                -
-                  - value
-                  - resultStatus
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Status
+              value: resultStatus
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Endorsed Date'
-                -
-                  - value
-                  - resultEndorsedDate
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Endorsed Date'
+              value: resultEndorsedDate
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Endorsed User'
-                -
-                  - value
-                  - resultEndorsedUser
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Endorsed User'
+              value: resultEndorsedUser
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Expiry Date'
-                -
-                  - value
-                  - resultExpiryDate
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Expiry Date'
+              value: resultExpiryDate
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Start Date'
-                -
-                  - value
-                  - resultStartDate
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Start Date'
+              value: resultStartDate
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Finish Date'
-                -
-                  - value
-                  - resultFinishDate
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Finish Date'
+              value: resultFinishDate
             -
-              __assoc__:
-                -
-                  - label
-                  - Location
-                -
-                  - value
-                  - resultLocation
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Location
+              value: resultLocation
             -
-              __assoc__:
-                -
-                  - label
-                  - Evidence
-                -
-                  - value
-                  - resultEvidence
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Evidence
+              value: resultEvidence
             -
-              __assoc__:
-                -
-                  - label
-                  - Custom
-                -
-                  - value
-                  - resultCustom
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Custom
+              value: resultCustom
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Result Points'
-                -
-                  - value
-                  - resultPoints
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Result Points'
+              value: resultPoints
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Result Hours'
-                -
-                  - value
-                  - resultHours
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Result Hours'
+              value: resultHours
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Result Narrative'
-                -
-                  - value
-                  - resultNarrative
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Result Narrative'
+              value: resultNarrative
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -6888,7 +7276,7 @@ superTableBlockTypes:
         handle: fieldCustomOptions
         instructions: ''
         name: 'Field Custom Options'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -6906,43 +7294,22 @@ superTableBlockTypes:
         handle: fieldDisplay
         instructions: ''
         name: 'Field Display'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Both
-                -
-                  - value
-                  - both
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: Both
+              value: both
             -
-              __assoc__:
-                -
-                  - label
-                  - Table
-                -
-                  - value
-                  - table
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Table
+              value: table
             -
-              __assoc__:
-                -
-                  - label
-                  - Form
-                -
-                  - value
-                  - form
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Form
+              value: form
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -6954,28 +7321,28 @@ superTableBlockTypes:
           -
             fields:
               43c2a918-aa04-4759-bf4e-df7f7a51578a:
-                required: false
-                sortOrder: 6
+                required: '0'
+                sortOrder: '6'
               4c81c4c4-4ce4-4d59-aae5-409187760100:
-                required: false
-                sortOrder: 7
+                required: '0'
+                sortOrder: '7'
               703cc741-3177-4d42-88f9-c3c0f4ce9249:
-                required: false
-                sortOrder: 4
+                required: '0'
+                sortOrder: '4'
               8baba5fc-1c81-4b6d-a597-453862005a68:
-                required: true
-                sortOrder: 2
+                required: '1'
+                sortOrder: '2'
               b893071b-6c51-4812-b88c-dd1f60840ff5:
-                required: false
-                sortOrder: 3
+                required: '0'
+                sortOrder: '3'
               d4afcfe1-1ba1-4435-8a39-88a785af7535:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
               f5f4282b-109d-4b80-a44f-78c73c254b37:
-                required: false
-                sortOrder: 5
+                required: '0'
+                sortOrder: '5'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       43c2a918-aa04-4759-bf4e-df7f7a51578a:
         contentColumnType: string
@@ -6983,54 +7350,26 @@ superTableBlockTypes:
         handle: stepAssignUserGroup
         instructions: 'Select the user group for who can assign the manager for this step. '
         name: 'Step Assign User Group'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Admin
-                -
-                  - value
-                  - admin
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Admin
+              value: admin
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Scheme Manager'
-                -
-                  - value
-                  - schemeManagers
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: 'Scheme Manager'
+              value: schemeManagers
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Company Manager'
-                -
-                  - value
-                  - companyManagers
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Company Manager'
+              value: companyManagers
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Team Manager'
-                -
-                  - value
-                  - teamManagers
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Team Manager'
+              value: teamManagers
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -7040,7 +7379,7 @@ superTableBlockTypes:
         handle: stepMessage
         instructions: ''
         name: 'Step Message'
-        searchable: true
+        searchable: '1'
         settings:
           availableTransforms: '*'
           availableVolumes: '*'
@@ -7063,65 +7402,30 @@ superTableBlockTypes:
         handle: stepUserGroup
         instructions: ''
         name: 'Step User Group'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Admin
-                -
-                  - value
-                  - admin
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Admin
+              value: admin
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Scheme Manager'
-                -
-                  - value
-                  - schemeManagers
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: 'Scheme Manager'
+              value: schemeManagers
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Company Manager'
-                -
-                  - value
-                  - companyManagers
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Company Manager'
+              value: companyManagers
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Team Manager'
-                -
-                  - value
-                  - teamManagers
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Team Manager'
+              value: teamManagers
             -
-              __assoc__:
-                -
-                  - label
-                  - 'Job Role'
-                -
-                  - value
-                  - jobRole
-                -
-                  - default
-                  - ''
+              default: ''
+              label: 'Job Role'
+              value: jobRole
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -7131,7 +7435,7 @@ superTableBlockTypes:
         handle: stepName
         instructions: ''
         name: 'Step Name'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -7149,43 +7453,22 @@ superTableBlockTypes:
         handle: stepType
         instructions: ''
         name: 'Step Type'
-        searchable: true
+        searchable: '1'
         settings:
           optgroups: true
           options:
             -
-              __assoc__:
-                -
-                  - label
-                  - Assessment
-                -
-                  - value
-                  - assessment
-                -
-                  - default
-                  - '1'
+              default: '1'
+              label: Assessment
+              value: assessment
             -
-              __assoc__:
-                -
-                  - label
-                  - Review
-                -
-                  - value
-                  - review
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Review
+              value: review
             -
-              __assoc__:
-                -
-                  - label
-                  - Complete
-                -
-                  - value
-                  - complete
-                -
-                  - default
-                  - ''
+              default: ''
+              label: Complete
+              value: complete
         translationKeyFormat: null
         translationMethod: none
         type: craft\fields\Dropdown
@@ -7195,7 +7478,7 @@ superTableBlockTypes:
         handle: stepId
         instructions: ''
         name: 'Step ID'
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -7215,7 +7498,7 @@ superTableBlockTypes:
         handle: stepJobRole
         instructions: ''
         name: 'Step Job Role'
-        searchable: true
+        searchable: '1'
         settings:
           allowLimit: false
           allowMultipleSources: false
@@ -7239,19 +7522,19 @@ superTableBlockTypes:
           -
             fields:
               0c515fa0-cbdd-4bd9-8267-917a447e5702:
-                required: false
-                sortOrder: 1
+                required: '0'
+                sortOrder: '1'
               3c50a00d-c61b-4018-bed4-f1685a215e01:
-                required: false
-                sortOrder: 2
+                required: '0'
+                sortOrder: '2'
               974df618-fa82-42bd-9ad4-612f8f4a985c:
-                required: false
-                sortOrder: 4
+                required: '0'
+                sortOrder: '4'
               cea55199-bbc5-4529-8451-c12a00ff1080:
-                required: false
-                sortOrder: 3
+                required: '0'
+                sortOrder: '3'
             name: Content
-            sortOrder: 1
+            sortOrder: '1'
     fields:
       0c515fa0-cbdd-4bd9-8267-917a447e5702:
         contentColumnType: string
@@ -7259,7 +7542,7 @@ superTableBlockTypes:
         handle: user
         instructions: ''
         name: User
-        searchable: true
+        searchable: '1'
         settings:
           limit: '1'
           localizeRelations: false
@@ -7278,7 +7561,7 @@ superTableBlockTypes:
         handle: comment
         instructions: ''
         name: Comment
-        searchable: true
+        searchable: '1'
         settings:
           byteLimit: null
           charLimit: null
@@ -7296,7 +7579,7 @@ superTableBlockTypes:
         handle: read
         instructions: ''
         name: Read
-        searchable: true
+        searchable: '1'
         settings:
           default: ''
         translationKeyFormat: null
@@ -7308,7 +7591,7 @@ superTableBlockTypes:
         handle: date
         instructions: ''
         name: Date
-        searchable: true
+        searchable: '1'
         settings:
           minuteIncrement: '30'
           showDate: 1
@@ -7403,9 +7686,6 @@ users:
           name: 'Custom Scheme User Fields'
           sortOrder: 4
         -
-          name: Packages
-          sortOrder: 5
-        -
           fields:
             080bb830-4bd6-458e-a3f3-dbb58358aeb1:
               required: false
@@ -7481,23 +7761,6 @@ users:
         - 'deletepeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628'
         - 'editpeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628'
         - 'editentries:1d590683-b16e-4955-be62-315accb3e628'
-        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
         - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5'
         - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
@@ -7519,6 +7782,23 @@ users:
         - 'editpeerimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
+        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
     2a75e796-1574-407e-8869-545d14d6d126:
       handle: schemeManagers
       name: 'Scheme Managers'
@@ -7534,26 +7814,6 @@ users:
         - administrateusers
         - editusers
         - deleteusers
-        - 'createentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'publishentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'deleteentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'publishpeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'deletepeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'editpeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'publishpeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'deletepeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'editpeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'editentries:86faf121-d218-4348-8ab8-de457b46aa63'
-        - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'publishpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'deletepeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'editpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'publishpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'editpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
-        - 'editentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
         - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024'
         - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024'
         - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024'
@@ -7574,36 +7834,6 @@ users:
         - 'deletepeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628'
         - 'editpeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628'
         - 'editentries:1d590683-b16e-4955-be62-315accb3e628'
-        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
-        - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'editpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5'
         - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
@@ -7625,6 +7855,56 @@ users:
         - 'editpeerimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
         - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413'
+        - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'publishpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'deletepeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'editpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'publishpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'editpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'editentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
+        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'editpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
+        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'createentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'publishentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'deleteentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'publishpeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'deletepeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'editpeerentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'publishpeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'deletepeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'editpeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'editentries:86faf121-d218-4348-8ab8-de457b46aa63'
+        - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c'
+        - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c'
     32ed3edf-a621-4c98-8c9f-785e45ed329f:
       handle: individuals
       name: Individuals
@@ -7632,6 +7912,7 @@ users:
       handle: editors
       name: Editors
       permissions:
+        - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5'
         - accesscp
         - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
         - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a'
@@ -7664,7 +7945,6 @@ users:
         - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
         - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0'
-        - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5'
         - 'editcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68'
         - managejobroles
         - managemodules
@@ -7738,30 +8018,10 @@ users:
       handle: users
       name: Users
       permissions:
-        - 'createentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'publishentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'deleteentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'publishpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'deletepeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'editpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'publishpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'deletepeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'editpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
-        - 'editentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
         - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024'
         - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024'
         - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024'
         - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024'
-        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
-        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
         - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
@@ -7772,6 +8032,26 @@ users:
         - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
         - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc'
+        - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'createentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'publishentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'deleteentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'publishpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'deletepeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'editpeerentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'publishpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'deletepeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'editpeerentrydrafts:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'editentries:51a18e4b-1a36-4210-8769-a5b8f28f3a5f'
+        - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
+        - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0'
   photoSubpath: '{id}'
   photoVolumeUid: c56fc71b-f1b7-47ac-935c-9ad07177edae
   requireEmailVerification: false
@@ -7794,7 +8074,7 @@ volumes:
       path: '@assetsPath/evidence'
     sortOrder: 1
     type: craft\volumes\Local
-    url: ''
+    url: null
   c56fc71b-f1b7-47ac-935c-9ad07177edae:
     handle: photos
     hasUrls: true

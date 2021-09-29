@@ -53,8 +53,15 @@ class Settings extends Model
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
     public $taskbookLevels                      = false;
+    public $taskbookLevelLabels                 = [];
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
+
+    public $labelResultOutcome0                 = 'Failed';
+    public $labelResultOutcome1                 = 'Passed';
+
+    public $managerConfirmSubmit                = false;
+    public $managerConfirmText                  = 'I confirm all information submitted was completed by the user.';
 
     public $membershipEnable                    = false;
     public $membershipOptions                   = [];
@@ -228,42 +235,73 @@ class Settings extends Model
     public $standardReports                     = false;
 
     public $reports                             = [
-        'users'     => [
+        'standardUsers'     => [
             'active' => true,
+            'title' => 'Users',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'standardResults'     => [
+            'active' => true,
+            'title' => 'Results',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'standardCpd'       => [
+            'active' => true,
+            'title' => 'CPD',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'standardPayments'  => [
+            'active' => true,
+            'title' => 'Payments',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'standardSm'       => [
+            'active' => true,
+            'title' => 'Scheme Manager',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'users'     => [
+            'active' => false,
+            'title' => 'Custom User (hierarchy)',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
         ],
         'results'   => [
-            'active' => true,
+            'active' => false,
+            'title' => 'Custom Results (qual user)',
             'group'  => 'schemeManagers',
-            'roles'  => []
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
         ],
-        'expired'   => [
-            'active' => true,
+        'expired'     => [
+            'active' => false,
+            'title' => 'Custom Expired (required training)',
             'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'required'   => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'cpd'       => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'payments'  => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
-        'sm'       => [
-            'active' => true,
-            'group'  => 'schemeManagers',
-            'roles'  => []
-        ],
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ]
     ];
+
+    public $reportNotes                         = '';
 
     public $payPalBusiness                      = '';
     public $payPalLantraCert                    = '';
@@ -357,6 +395,18 @@ class Settings extends Model
                     }
                 }
                 $this->$key = $categories;
+            }
+        }
+
+        foreach ($this->reports as $key => $report) {
+            if (isset($report['roles']) && is_array($report['roles'])) {
+                $categories = [];
+                foreach($report['roles'] as $categoryId) {
+                    if (false != $category = Craft::$app->categories->getCategoryById($categoryId)) {
+                        $categories[] = $category;
+                    }
+                }
+                $this->reports[$key]['roles'] = $categories;
             }
         }
     }

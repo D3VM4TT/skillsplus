@@ -6,6 +6,7 @@
     {% for unitGroupItem in moduleItem.unitGroups %}
         {% set unitGroup = cpdUser.record.getElement(unitGroupItem.elementId) %}
         {% set addResult = unitGroup.enableSubmissions %}
+        {% set hasAssessmentUnit = craft.lantra.hasAssessmentUnit(unitGroupItem) %}
         <div class="unit-group">
             <div class="header primary-bg" data-target="#u{{ moduleElementId ~ unitGroup.id }}">
                 {% if unitGroup.groupNotes %}
@@ -13,7 +14,7 @@
                         <img style="float:left;margin-right:20px;" src="/assets/img/help.svg" width="26" height="26" class="" alt="">
                     </a>
                 {% endif %}
-                <h5>{{ unitGroup.groupName|default('') }}&nbsp;</h5>
+                <h5>{{ unitGroup.groupName|default('') }}</h5>
                 <div class="status">
                     View status and Endorsements
                     <img src="/assets/img/img-arrow-down-white-trans.png">
@@ -30,6 +31,10 @@
                     <tr>
                         <th>Unit title</th>
                         {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager:isManager} %}
+                        {% if hasAssessmentUnit %}
+                            <th>Assessment Score</th>
+                            <th>Remaining Attempts</th>
+                        {% endif %}
                         <th colspan="2"></th>
                     </tr>
                     </thead>

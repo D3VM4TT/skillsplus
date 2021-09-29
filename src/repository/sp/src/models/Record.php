@@ -41,7 +41,7 @@ class Record extends Model
     {
         parent::__construct(['user' => $user]);
         $this->_setRecordFromDb();
-        ## $this->_setUnitResults();
+        $this->_setUnitResults();
     }
 
     /**

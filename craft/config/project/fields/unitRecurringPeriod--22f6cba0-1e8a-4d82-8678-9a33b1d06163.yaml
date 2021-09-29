@@ -1,0 +1,46 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: unitRecurringPeriod
+instructions: ''
+name: 'Unit Recurring Period'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Monthly
+        -
+          - value
+          - monthly
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Quarterly
+        -
+          - value
+          - quarterly
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Yearly
+        -
+          - value
+          - yearly
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

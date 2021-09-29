@@ -1,0 +1,14 @@
+columnSuffix: null
+contentColumnType: boolean
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+handle: resultLocked
+instructions: ''
+name: 'Result Locked'
+searchable: true
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

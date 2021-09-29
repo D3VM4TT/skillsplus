@@ -1,0 +1,29 @@
+columnSuffix: null
+contentColumnType: text
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: unitIntro
+instructions: ''
+name: 'Unit Intro'
+searchable: true
+settings:
+  availableTransforms: '*'
+  availableVolumes:
+    - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9 # Uploads
+  cleanupHtml: true
+  columnType: text
+  configSelectionMode: choose
+  defaultTransform: ''
+  manualConfig: ''
+  purifierConfig: ''
+  purifyHtml: '1'
+  redactorConfig: ''
+  removeEmptyTags: '1'
+  removeInlineStyles: '1'
+  removeNbsp: '1'
+  showHtmlButtonForNonAdmins: true
+  showUnpermittedFiles: false
+  showUnpermittedVolumes: false
+  uiMode: enlarged
+translationKeyFormat: null
+translationMethod: none
+type: craft\redactor\Field

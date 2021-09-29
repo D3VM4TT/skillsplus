@@ -15,6 +15,7 @@
 {% set hierarchyParent = craft.app.request.getParam('parent') %}
 
 {% set section = craft.sections.getSectionByHandle('companies') %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
@@ -78,7 +79,7 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company primary managers:</label>
         <input type="hidden" name="fields[companyPrimaryManagers]" value="" />
-        <select multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
+        <select style="width:100%" multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
                         {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
@@ -88,13 +89,25 @@
     <div class="field--wrapper">
         <label for="companySecondaryManagers">Company secondary managers:</label>
         <input type="hidden" name="fields[companySecondaryManagers]" value="" />
-        <select multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
+        <select style="width:100%" multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
-                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+                        {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>
+    {% set taskbookEntries = craft.entries.section('taskbooks').limit(null) %}
+    <div class="field--wrapper">
+        <label for="companySecondaryManagers">Company {{ taskbookLabel|pluralize|lower }}:</label>
+        <input type="hidden" name="fields[companyTaskbooks]" value="" />
+        <select style="width:100%" multiple class="js-select2" name="fields[companyTaskbooks][]" id="companyTaskbooks">
+            {% for taskbookEntry in taskbookEntries %}
+                <option value="{{ taskbookEntry.id }}"
+                        {% if entry is defined and taskbookEntry.id in entry.companyTaskbooks.ids() %} selected="selected{% endif %}">{{ taskbookEntry.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     {% if lantraLicences %}
     <div class="field--wrapper">
         <label for="companyRemainingLicences" class="no-float">Remaining Company licences:</label>
@@ -106,6 +119,31 @@
     </div>
 </form>
     {% if entry %}
+        <div class="page-content">
+        {% set companyReviewers = craft.users.relatedTo({targetElement: entry, field: 'userTaskbookCompanies'}).all() %}
+        <h2>Company Reviewers</h2>
+        {% if companyReviewers|length %}
+            <table class="data">
+                <thead>
+                <tr>
+                    <th>Reviewer</th>
+                    <th>{{ taskbookLabel|pluralize }}</th>
+                </tr>
+                </thead>
+            {% for user in companyReviewers %}
+                <tr>
+                    <td><a href="/management/users/edit/{{ user.id }}">{{ user.fullName }}</a></td>
+                    <td>{% for taskbook in user.userTaskbooks %}{{ taskbook.title }}<br />{% endfor %}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <p>No reviewers have been assigned to this company.</p>
+        {% endif %}
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        </div>
+
          <form id="suspend-users" class="page-form" method="post" role="form" accept-charset="UTF-8">
             <h2>Manage Company Users</h2>
             {{ csrfInput() }}

@@ -1,0 +1,12 @@
+defaultPlacement: end
+enableVersioning: false
+handle: companies
+name: Companies
+propagationMethod: all
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+type: channel

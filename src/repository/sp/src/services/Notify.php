@@ -41,10 +41,10 @@ class Notify extends Component
         $variables = [
             'package'           => $package,
             'assessmentText'    => $this->assessmentText($package),
-            'moduleGroup'       => $package->moduleGroup,
+            'taskbook'          => $package->taskbook,
             'user'              => $user,
         ];
-        $template = $this->getNotifySetting('assessment', "Assessment for {{ moduleGroup.title }}. \n\n{{ assessmentText }}");
+        $template = $this->getNotifySetting('assessment', "Assessment for {{ taskbook.title }}. \n\n{{ assessmentText }}");
         $message = Craft::$app->view->renderString($template, $variables);
         $cc = $this->getNotifySetting('ccAssessment');
         $this->notify($user->email, $subject, $message, null, $user, $cc);
@@ -105,10 +105,10 @@ class Notify extends Component
         $subject = $this->getNotifySetting('subjectNewPackage', 'New ' . $taskbookLabel);
         $variables = [
             'package'       => $packageEntry,
-            'moduleGroup'   => $packageEntry->moduleGroup,
+            'taskbook'      => $packageEntry->taskbook,
             'user'          => $packageEntry->author,
         ];
-        $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('newPackage', "New $taskbookLabel for {{ user.fullname }} - {{ taskbook.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $schemeManagerEmails = Lantra::$app->users->getSchemeManagersEmails();
         $cc = $this->getNotifySetting('ccNewPackage');
@@ -135,11 +135,11 @@ class Notify extends Component
         $variables = [
             'step'          => $step,
             'package'       => $package,
-            'moduleGroup'   => $package->moduleGroup,
+            'taskbook'      => $package->taskbook,
             'user'          => $package->author,
             'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('stepUnassigned', "Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('stepUnassigned', "Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $emails = Lantra::$app->users->getSchemeManagersEmails();
         $managers = Lantra::$app->users->getUserMangers($package->author);
@@ -169,11 +169,11 @@ class Notify extends Component
         $variables = [
             'step'          => $step,
             'package'       => $package,
-            'moduleGroup'   => $package->moduleGroup,
+            'taskbook'      => $package->taskbook,
             'user'          => $package->author,
             'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('stepRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('stepRequest', "Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $cc = $this->getNotifySetting('ccStepRequest');
         $this->notify($manager->email, $subject, $message, null, $manager, $cc);
@@ -199,11 +199,11 @@ class Notify extends Component
         $variables = [
             'step'          => $step,
             'package'       => $package,
-            'moduleGroup'   => $package->moduleGroup,
+            'taskbook'      => $package->taskbook,
             'user'          => $package->author,
             'type'          => $step->reviewStepType,
         ];
-        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.");
+        $template = $this->getNotifySetting('stepAssign', "You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         $cc = $this->getNotifySetting('ccStepAssign');
         $this->notify($manager->email, $subject, $message, null, $manager, $cc);
@@ -228,12 +228,12 @@ class Notify extends Component
         $variables = [
             'step'          => $step,
             'package'       => $package,
-            'moduleGroup'   => $package->moduleGroup,
+            'taskbook'      => $package->taskbook,
             'user'          => $package->author,
             'manager'       => $manager,
             'result'        => $result
         ];
-        $template = $this->getNotifySetting('stepUpdate', "Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}");
+        $template = $this->getNotifySetting('stepUpdate', "Status update for {{ taskbook.title }}: result is {{ result }}. {{ step.reviewComment }}");
         $message = Craft::$app->view->renderString($template, $variables);
         $cc = $this->getNotifySetting('ccStepUpdate');
         $this->notify($user->email, $subject, $message, null, $user, $cc);
@@ -478,7 +478,7 @@ class Notify extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function sendCommentUpdate(Entry $entry, $comment, $userId)
+    function sendCommentUpdate(Entry $entry, $comment, $userId, $managerId = null)
     {
         ## notification is disabled
         if (!$this->isEnabled('comment')) {
@@ -494,6 +494,11 @@ class Notify extends Component
         ## manager commenting - notify user
         if ($userId != $entry->authorId) {
             $this->notify($user->email, $subject, $message, null, $user, $cc);
+        }
+        ## manager id sent from form (i.e. taskbook assessor)
+        elseif ($managerId) {
+            $manager = Craft::$app->users->getUserById($managerId);
+            $this->notify($manager->email, $subject, $message, null, $manager, $cc);
         }
         ## user commenting - notify managers
         else {
@@ -604,9 +609,10 @@ class Notify extends Component
 
         foreach ($resultEntries as $resultEntry) {
             $user = $resultEntry->getAuthor();
+            $title = $resultEntry->resultUnit->count() ? $resultEntry->resultUnit->one()->title : $resultEntry->title;
             $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
             $cc = $this->getNotifySetting('ccResultExpiry');
-            $variables = ['entry' => $resultEntry, 'user' => $user];
+            $variables = ['entry' => $resultEntry, 'user' => $user, 'resultTitle' => $title];
             $template = $this->getNotifySetting('resultExpiry' . $number, "{{ entry.title}} " . ($when == '-' ? 'expired' : 'expires'). " on {{ entry.expiryDate|date('d-m-Y') }}.");
             $message = Craft::$app->view->renderString($template, $variables);
             $details[] = $this->notify($user->email, $subject, $message, null, $user, $cc);

@@ -1,0 +1,14 @@
+columnSuffix: null
+contentColumnType: boolean
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: moduleGroupTaskbooks
+instructions: 'Include this module group in taskbook options?'
+name: Taskbooks
+searchable: true
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

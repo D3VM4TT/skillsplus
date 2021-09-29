@@ -1,0 +1,35 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userType
+instructions: ''
+name: 'User Type'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Member
+        -
+          - value
+          - member
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Manager
+        -
+          - value
+          - manager
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

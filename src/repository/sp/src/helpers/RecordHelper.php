@@ -10,6 +10,7 @@ namespace lantra\sp\helpers;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\models\RecordItem;
+use craft\elements\Entry;
 use craft\elements\User;
 
 class RecordHelper
@@ -63,10 +64,61 @@ class RecordHelper
     /**
      * @param RecordItem $recordItem
      * @param User $user
+     * @param Entry|null $taskbook
+     * @return int
+     */
+    public static function totalComplete(RecordItem $recordItem, User $user, Entry $taskbook = null)
+    {
+        ## taskbook unitEndorse requires individual units to be endorsed
+        $status = $taskbook && $taskbook->unitEndorse ? ['endorsed'] : ['not', 'draft'];
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), $status);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
      * @return null
      */
-    public static function totalComplete(RecordItem $recordItem, User $user)
+    public static function totalEndorsed(RecordItem $recordItem, User $user)
     {
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['not', 'draft']);
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['endorsed']);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
+     * @return null
+     */
+    public static function totalPending(RecordItem $recordItem, User $user)
+    {
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['pending']);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @param User $user
+     * @param Entry|null $taskbook
+     * @return bool
+     */
+    public static function isComplete(RecordItem $recordItem, User $user, Entry $taskbook = null)
+    {
+        return self::totalComplete($recordItem, $user, $taskbook) == self::totalUnits($recordItem);
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return int|string
+     */
+    public static function hasAssessmentUnit(RecordItem $recordItem)
+    {
+        $unitIds = $recordItem->unitIds();
+        if (!count($unitIds)) {
+            return false;
+        }
+        $criteria = Entry::find();
+        $criteria->section = 'units';
+        $criteria->where(['in', 'entries.id', $unitIds]);
+        $criteria->andWhere(['field_unitType' => 'elearning']);
+        return $criteria->count();
     }
 }

@@ -1,6 +1,15 @@
 {% set package = cpdUser.record.getElement(packageId) %}
-{% set availableModuleGroups = package.availableModuleGroupCategories %}
 {% set resitModuleGroups = package.resitModuleGroupCategories %}
+{% set isModuleGroup = false %}
+{% if moduleGroupId %}
+    {% set isModuleGroup = true %}
+    {% set moduleGroup = cpdUser.record.getElement(moduleGroupId) %}
+    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
+    {% set moduleGroupElementId = package.id ~ moduleGroupId %}
+    {% set packageModuleGroup = package.moduleGroup(moduleGroupId) %}
+    {% set level = packageModuleGroup.level %}
+{% endif %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -8,12 +17,12 @@
         </div>
         <div class="align-horizontal">
             <div><h4>{{ craft.lantra.setting('taskbookLabel', 'Taskbook') }}</h4></div>
-            <div><h2>{{ package.moduleGroup.title }}</h2></div>
+            <div><h2>{{ package.taskbook.title }}</h2></div>
             <p>
-                {% if package.isManager(currentUser, true) and package.hasNextStep %}
-                    Next Step: {{ package.nextStep.reviewStepName }}
-                {% else %}
-                    Status: {{ package.packageStatus  }}
+                {% if isModuleGroup %}
+                    <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}">&laquo; back to {{ taskbookLabel }}</a>
+                {% elseif package.isManager(currentUser, true) and package.hasNextStep %}
+                    Current Step: {{ package.nextStep.reviewStepName }}
                 {% endif %}
             </p>
             {% set certificateUrl = craft.lantra.certificateUrl(package) %}
@@ -22,36 +31,44 @@
             {% endif %}
         </div>
         <div class="align-horizontal" style="margin-left:auto;width:25%;text-align:right">
-            {% set totalUnits = craft.lantra.totalUnits(packageItem) %}
-            {% set unitsComplete = craft.lantra.totalComplete(packageItem, cpdUser.id) %}
-            {% if unitsComplete >= totalUnits %}
-                {% if package.packageStatus == 'active' %}
-                    <a class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}" data-ref="package"
-                       data-userid="{{ cpdUser.id }}" data-action="packages/request-assessment">Request Assessment</a>
-                {% elseif package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
+            {% if package.isComplete %}
+                {% if package.hasNextStep and package.isReviewUser(currentUser, package.nextStep, true) %}
                     {% if package.isNextStepAssigned %}
                         <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}/review">Submit {{ package.nextStep.reviewStepName }}</a>
                     {% else %}
                         Step reviewer not assigned
                     {% endif %}
                 {% endif %}
-            {% else %}
-                Complete {{ totalUnits - unitsComplete }} more unit(s) and then submit for assessment.
             {% endif %}
         </div>
     </div>
     <div id="j{{ package.id }}" class="open">
         <div class="module-group-tabs">
             <ul class="tabs clearfix" data-tabgroup="groups-tab-group-{{ package.id }}">
-                {% for row in package.moduleGroups %}
-                    {% set moduleGroup = row.category %}
-                    {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
+                {% if moduleGroupId %}
+                    {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
+                    {% set totalUnits = moduleGroupItem.allUnits|length %}
+                    {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                    {% set isComplete = totalComplete >= totalUnits %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
-                            <h4>{{ moduleGroup.title }}</h4>
+                            <h4>
+                                {{ moduleGroup.magicTitle }}
+                                {% if isComplete %} [complete]{% endif %}
+                            </h4>
                         </a>
                     </li>
-                {% endfor %}
+                {% else %}
+                <li>
+                    <a href="#tab{{ package.id }}taskbook" class="primary-bg">
+                        <h4>{{ taskbookLabel }}</h4>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab{{ package.id }}evidence" class="primary-bg load-tab" data-template="evidence" data-id="{{ package.id }}">
+                        <h4>Evidence</h4>
+                    </a>
+                </li>
                 <li>
                     <a href="#tab{{ package.id }}reviews" class="primary-bg">
                         <h4>Reviews</h4>
@@ -64,55 +81,257 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if not isManager %}
+                {% if isManager %}
+                    <li>
+                        <a href="#tab{{ package.id }}comments" class="primary-bg load-tab" data-template="comments" data-id="{{ package.id }}">
+                            <h4>Unread Comments</h4>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if alias('@site') == 'bics' and not isManager %}
                     {% if resitModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
-                                <h4>Resit Module Groups ({{ resitModuleGroups|length }})</h4>
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if availableModuleGroups|length %}
-                        <li>
-                            <a href="#tab{{ package.id }}optional" class="primary-bg">
-                                <h4>Optional Module Groups ({{ availableModuleGroups|length }})</h4>
+                                <h4>Resit {{ taskbookLabel }} Groups ({{ resitModuleGroups|length }})</h4>
                             </a>
                         </li>
                     {% endif %}
                 {% endif %}
+                {% endif %}
             </ul>
         </div>
         <section id="groups-tab-group-{{ package.id }}" class="tabgroup">
-            {% for row in package.moduleGroups %}
-                {% set moduleGroup = row.category %}
-                {% set level = row.level %}
-                {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.id) %}
-                {% set moduleGroupElementId = package.id ~ moduleGroup.id %}
-                {% set readOnly = not package.isManager(currentUser, true) and package.isLocked %}
+            {% if moduleGroupId %}
                 {% include 'record/_modules/moduleGroup' %}
-            {% endfor %}
+            {% else %}
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}taskbook">
+                <div style="margin-top:20px;margin-bottom:20px">
+                    {{ package.taskbook.taskbookIntro }}
+                </div>
+                {% if package.taskbook.taskbookFiles.count  %}
+                    <h4>Supporting Files &amp; Images</h4>
+                    <table class="data unit-files" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th style="text-align: right;padding-right:0;">Date Uploaded</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for file in package.taskbook.taskbookFiles.all()  %}
+                            <tr>
+                                <td><a target="_blank" href="{{ file.url }}">{{ file.filename }}</a></td>
+                                <td style="text-align: right">{{ file.dateCreated|date('d/m/Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+                {% if package.packageStatus == 'locked' %}
+                    <h4>{{ taskbookLabel }} Locked</h4>
+                    <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
+                {% elseif package.packageStatus == 'complete' %}
+                    <h4>Congratulations, you have completed this {{ taskbookLabel }}.</h4>
+                {% else %}
+                    <h4>Requirements</h4>
+                    <div style="width: 50%;display: inline;float:left;">
+                        {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
+                        {% if package.taskbook.moduleMinimumCredits %}
+                            <p{% if not package.creditsSelected %} style="background-color:#FFFF00;"{% endif %}>
+                                Your current selection includes <strong>{{ package.totalCredits }}</strong> {{ 'credit' |pluralize(package.totalCredits) }}
+                                {% if package.taskbook.moduleGroupMinimumLevel %}including <strong>{{ package.totalCredits(true) }}</strong> {{ 'credit' |pluralize(package.totalCredits) }} at or above level <strong>{{ package.taskbook.moduleGroupMinimumLevel }}</strong>{% endif %}.
+                            </p>
+                        {% endif %}
+                    </div>
+                    {% if package.isComplete(true) %}
+                        <div style="width: 50%;display: inline;float:right;text-align: right">
+                            <p style="color:#006600;margin-bottom:10px;">You have completed your {{ taskbookLabel|lower }}.<br />Click below to request assessment.</p>
+                                <a style="margin:0;" class="action button no-shadow primary-bg" href="#" data-id="{{ package.id }}"
+                                   data-ref="package"
+                                   data-confirm="Are you sure you want to submit this {{ taskbookLabel|lower }}? You will no longer be able to make any changes."
+                                   data-userid="{{ cpdUser.id }}"
+                                   data-action="packages/request-assessment"
+                                >Request Assessment</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <p style="clear: both">&nbsp;</p>
+                <hr />
+                <p>&nbsp;</p>
+                <h4>Your Current Selection</h4>
+                {% set mandatoryModuleGroups = package.moduleGroups('mandatory')  %}
+                {% set optionalModuleGroups = package.moduleGroups('optional')  %}
+                <table class="data" width="100%">
+                    <thead>
+                    <tr>
+                        <th style="width: 60%;">Mandatory</th>
+                        <th style="width: 10%;">Level</th>
+                        {% if package.taskbook.moduleMinimumCredits %}
+                            <th style="width: 10%;">Credit</th>
+                        {% endif %}
+                        <th>Units Complete</th>
+                        {% if package.taskbook.unitEndorse %}
+                            <th>Units Endorsed</th>
+                        {% endif %}
+                        <th style="width:100px;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for moduleGroup in mandatoryModuleGroups %}
+                        {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set totalUnits = moduleGroupItem.allUnits|length %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        {% set isComplete = totalComplete >= totalUnits %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        <tr class="taskbook-module-group {% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
+                            <td>
+                                <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
+                            </td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
+                            {% if package.taskbook.moduleMinimumCredits %}
+                                <td>{{ moduleGroup.credit }}</td>
+                            {% endif %}
+                            <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
+                            {% if package.taskbook.unitEndorse %}
+                                <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
+                            {% endif %}
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if optionalModuleGroups %}
+                <table class="data" width="100%">
+                    <thead>
+                    <tr>
+                        <th style="width: 60%;">Optional</th>
+                        <th style="width: 10%;">Level</th>
+                        {% if package.taskbook.moduleMinimumCredits %}
+                            <th style="width: 10%;">Credit</th>
+                        {% endif %}
+                        <th>Units Complete</th>
+                        {% if package.taskbook.unitEndorse %}
+                            <th>Units Endorsed</th>
+                        {% endif %}
+                        <th style="width:100px;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for moduleGroup in package.moduleGroups('optional')  %}
+                        {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set totalUnits = moduleGroupItem.allUnits|length %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        {% set isComplete = totalComplete >= totalUnits %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
+                        {% set isEndorsed = totalEndorsed >= totalUnits %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        <tr class="taskbook-module-group {% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
+                            <td>
+                                <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
+                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
+                            </td>
+                            <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
+                            {% if package.taskbook.moduleMinimumCredits %}
+                                <td>{{ moduleGroup.credit }}</td>
+                            {% endif %}
+                            <td>{{ totalComplete ~ '/' ~ totalUnits }}</td>
+                            {% if package.taskbook.unitEndorse %}
+                                <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
+                            {% endif %}
+                            <td style="text-align: right;">
+                                {% if not package.packageStatus == 'complete' or not package.taskbook.isFree %}
+                                    <a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+                {% if package.hasAvailable %}
+                    <hr />
+                    <p>&nbsp;</p>
+                    <h4>Available Modules</h4>
+                    <table class="data" width="100%">
+                        <thead>
+                        <tr>
+                            <th style="width: 60%;">Available</th>
+                            <th style="width: 10%;">Level</th>
+                            {% if package.taskbook.moduleMinimumCredits %}
+                                <th style="width: 10%;">Credit</th>
+                            {% endif %}
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for moduleGroup in package.moduleGroups('available')  %}
+                            <tr>
+                                <td>{{ moduleGroup.category.title }}</td>
+                                <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
+                                {% if package.taskbook.moduleMinimumCredits %}
+                                    <td>{{ moduleGroup.credit }}</td>
+                                {% endif %}
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p style="text-align: right">
+                        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?type=optional&packageId={{ package.id }}">Add Optional Modules</a>
+                    </p>
+                {% endif %}
+                {% if package.moduleGroups('unpaid') %}
+                    <hr />
+                    <p>&nbsp;</p>
+                    <h4>Unpaid Module Groups</h4>
+                    <table class="data" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Module Group</th>
+                            <th style="text-align: right;padding-right:0">Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for moduleGroup in package.moduleGroups('unpaid')  %}
+                            <tr>
+                                <td>{{ moduleGroup.category.title }}</td>
+                                <td style="text-align: right">£{{ moduleGroup.cost }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p style="text-align: right">
+                        <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?payment=true&packageId={{ package.id }}">Pay Now</a>
+                    </p>
+                {% endif %}
+            </div>
+            <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
+            </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
-                {% include '_includes/packageReviews' with {admin:false} %}
+                {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
                     <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
                 {% endif %}
             </div>
             {% if package.packageLog|length %}
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}log">
-                    {% include '_includes/packageLog' with {admin:false} %}
+                    {% include '_includes/taskbooks/packageLog' with {admin:false} %}
+                </div>
+            {% endif %}
+            {% if isManager %}
+                <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
                 </div>
             {% endif %}
             {% if not isManager %}
                 {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
-                        {% include '_includes/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
+                        {% include '_includes/taskbooks/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
                     </div>
                 {% endif %}
-                {% if availableModuleGroups|length %}
-                    <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}optional">
-                        {% include '_includes/packageOptional' with {admin:false, availableModuleGroups:availableModuleGroups} %}
-                    </div>
-                {% endif %}
+            {% endif %}
             {% endif %}
         </section>
     </div>

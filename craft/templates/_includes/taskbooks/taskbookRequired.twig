@@ -1,0 +1,15 @@
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+<p>To submit this {{ taskbookLabel|lower }} for assessment you must complete a total of:</p>
+<p>
+    <strong>{{ taskbook.countMandatory }}</strong> mandatory {{ 'module'|pluralize(taskbook.countMandatory) }}{% if taskbook.moduleMinimumOptional %} and <strong>{{ taskbook.moduleMinimumOptional }}</strong> optional {{ 'module'|pluralize(taskbook.moduleMinimumOptional) }}{% endif %}.
+</p>
+{% if taskbook.moduleMinimumCredits %}
+    <p>
+        You must attain a minimum of <strong>{{ taskbook.moduleMinimumCredits }}</strong> total credits{% if taskbook.moduleGroupMinimumLevel %} and <strong>{{ taskbook.moduleGroupMinimumLevelCredits }}</strong> credits must be at or above level <strong>{{ taskbook.moduleGroupMinimumLevel }}</strong>{% endif %}.
+    </p>
+{% endif %}
+{% if not taskbook.unitEndorse %}
+    <p>
+        All competencies must be complete before you can submit your {{ taskbookLabel|lower }} for assessment.
+    </p>
+{% endif %}

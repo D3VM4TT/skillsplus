@@ -20,6 +20,77 @@ use lantra\sp\Plugin as Lantra;
 class PackagesController extends BaseController
 {
     /**
+ * @return void|\yii\web\Response
+ * @throws \Twig\Error\LoaderError
+ * @throws \Twig\Error\RuntimeError
+ * @throws \Twig\Error\SyntaxError
+ * @throws \yii\base\Exception
+ * @throws \yii\web\BadRequestHttpException
+ */
+    public function actionLoadTemplate()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $packageId =  Craft::$app->request->getParam('packageId');
+        if (null == $package = Craft::$app->entries->getEntryById($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        $template =  Craft::$app->request->getParam('template');
+        $t = $template == 'evidence' ? 'packageEvidence' : 'packageComments';
+        $params = [
+            'package'       => $package,
+            'dateFormat'    => LantraHelper::setting('themeDateFormat', 'd-m-Y'),
+            'taskbookLabel' => LantraHelper::setting('taskbookLabel')
+        ];
+        return Craft::$app->view->renderTemplate('_includes/taskbooks/' . $t, $params);
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionAddModuleGroups()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $packageId =  Craft::$app->request->getParam('packageId');
+        $singleType =  Craft::$app->request->getParam('singleType');
+        if (null == $package = Entry::findOne($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        Lantra::$app->packages->applyOptionalModuleGroups($package, $singleType);
+        if ($package->hasErrors()) {
+            return $this->_returnError($package->getFirstErrors()[0]);
+        }
+        ## redirect to paypal if payment
+        $this->_returnMessage('Package updated.');
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionRemoveModuleGroup()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        ## get the posted id
+        $moduleGroupId =  Craft::$app->request->getParam('moduleGroupId');
+        $packageId =  Craft::$app->request->getParam('packageId');
+        if (null == $package = Entry::findOne($packageId)) {
+            return $this->_returnError('Package not found.');
+        }
+        Lantra::$app->packages->removeModuleGroup($package, $moduleGroupId);
+        $this->_returnMessage('Package updated.');
+    }
+
+    /**
      * User requests assessment for taskbook package
      *
      * @throws mixed
@@ -106,8 +177,17 @@ class PackagesController extends BaseController
                 if (isset($data['manager'])) {
                     Lantra::$app->packages->stepAssign($step, $data['manager']);
                 }
-                if (isset($data['result']) && $data['result'] !== '') {
-                    Lantra::$app->packages->stepUpdate($step, $data['result'] == '1', $data['comment']);
+                else {
+                    $result = isset($data['result']) ? $data['result'] == '1' : true;
+                    if ($step->reviewStepType == 'assessment') {
+                        $sampled = true;
+                        $passed = $result;
+                    }
+                    else {
+                        $sampled = isset($data['sampled']) && $data['sampled'] == '1';
+                        $passed = $sampled ? $result : true;
+                    }
+                    Lantra::$app->packages->stepUpdate($step, $sampled, $passed, $data['comment']);
                 }
             }
         }

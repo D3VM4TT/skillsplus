@@ -1,0 +1,14 @@
+<li class="lantra-asset" data-id="{{ asset.id }}">
+    <i class="primary-color far {{ craft.lantra.assetIcon(asset.kind) }}" aria-hidden="true"></i>
+    <span class="filename">
+        <a target="_blank" href="/internal/{{ asset.id }}">{{ asset.filename }}</a>
+    </span>
+    <span class="date">{{ asset.dateCreated|date('d/m/Y') }}</span>
+    {% if readOnly is not defined or not readOnly %}
+    <span class="controls">
+        <i class="delete far fa-trash-alt" aria-hidden="true"></i>
+    </span>
+    {% endif %}
+    <span class="size">{{ asset.size|filesize }}</span>
+    <input type="hidden" name="{{ fieldName is defined ? fieldName : '' }}" value="{{ asset.id }}" />
+</li>

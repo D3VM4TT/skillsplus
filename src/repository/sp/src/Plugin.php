@@ -40,6 +40,8 @@ use lantra\sp\behaviors\PackageBehavior;
 use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserRecordBehavior;
+use lantra\sp\behaviors\TaskbookBehavior;
+use lantra\sp\behaviors\MagicTitleBehavior;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
@@ -261,6 +263,14 @@ class Plugin extends BasePlugin
                 }
                 if ($event->sender->sectionId == $this->sectionId('modules')) {
                     $event->behaviors[] = ModuleBehavior::class;
+                    $event->behaviors[] = MagicTitleBehavior::class;
+                }
+                if ($event->sender->sectionId == $this->sectionId('taskbooks')) {
+                    $event->behaviors[] = TaskbookBehavior::class;
+                    $event->behaviors[] = MagicTitleBehavior::class;
+                }
+                if ($event->sender->sectionId == $this->sectionId('units')) {
+                    $event->behaviors[] = MagicTitleBehavior::class;
                 }
             }
         );
@@ -271,6 +281,7 @@ class Plugin extends BasePlugin
             function(DefineBehaviorsEvent $event) {
                 if ($event->sender->groupId == $this->groupId('moduleGroups')) {
                     $event->behaviors[] = ModuleGroupBehavior::class;
+                    $event->behaviors[] = MagicTitleBehavior::class;
                 }
             }
         );
@@ -312,6 +323,7 @@ class Plugin extends BasePlugin
                 }
             }
         );
+
     }
 
     /**
@@ -385,12 +397,13 @@ class Plugin extends BasePlugin
             ## cpd routes
 
             ## taskbook routes
-            'cpd/<userId>/taskbooks'                    => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/manage'             => ['template' => 'record/_taskbooks/manage'],
-            'cpd/<userId>/taskbooks/new'                => ['template' => 'record/_taskbooks/new'],
-            'cpd/<userId>/taskbooks/single'             => ['template' => 'record/_taskbooks/single'],
-            'cpd/<userId>/taskbooks/<entryId>'          => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/<entryId>/pay'      => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks'                            => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/manage'                     => ['template' => 'record/_taskbooks/manage'],
+            'cpd/<userId>/taskbooks/new'                        => ['template' => 'record/_taskbooks/new'],
+            'cpd/<userId>/taskbooks/single'                     => ['template' => 'record/_taskbooks/single'],
+            'cpd/<userId>/taskbooks/<entryId>'                  => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/<moduleGroupId>'  => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/pay'              => ['template' => 'record/index'],
 
             'profile'                                   => ['template' => 'profile/index'],
             'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
@@ -415,10 +428,10 @@ class Plugin extends BasePlugin
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
 
             ## reporting routes
-            'reporting/custom/edit/<reportId>'          => ['template' => 'reporting/custom/_form'],
-            'reporting/custom/new'                      => ['template' => 'reporting/custom/_form'],
+            'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],
+            'reporting/data/<reportId>'                 => ['template' => 'reporting/_data'],
+            'reporting/new'                             => ['template' => 'reporting/_form'],
             'reporting/user/<userId>'                   => ['template' => 'reporting/user'],
-            'reporting/standard/<reportSlug>'           => ['template' => 'reporting/standard'],
 
             ## action routes
             'sp/users/hierarchy'                        => 'sp/users/hierarchy',
@@ -439,16 +452,18 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/delete-results'                => 'sp/packages/delete-results',
+            'sp/packages/load-template'                 => 'sp/packages/load-template',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 
             'sp/reports/save-report'                    => 'sp/reports/save-report',
             'sp/reports/delete-report'                  => 'sp/reports/delete-report',
             'sp/reports/run-report'                     => 'sp/reports/run-report',
-            'sp/reports/standard-report/<reportType>'   => 'sp/reports/standard-report',
+            'sp/reports/download-report/<ext>/<entryId>'     => 'sp/reports/download-report',
 
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
+            'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
 
             'sp/paypal/ipn'                             => 'sp/paypal/ipn',
             'sp/paypal/pay/<entryId>'                   => 'sp/paypal/pay',

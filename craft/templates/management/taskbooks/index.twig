@@ -10,13 +10,14 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
-{% set filterPackageStatus = craft.app.request.getParam('status')|default('all') %}
+{% set filterPackage = craft.app.request.getParam('filter')|default('all') %}
 {% set sortParam = craft.app.request.getParam('sort') %}
-{% set validSorts = ['title', 'id', 'dateCreated'] %}
+{% set validSorts = ['title', 'id', 'dateCreated', 'packageStatus'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
 {% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
-{% set criteria = craft.lantra.packagesCriteria(filterSearch, filterPackageStatus, pageLimit, sort ~ ' ' ~ order) %}
+{% set filterBy = filterPackage == 'External' ? 'external' : 'name' %}
+{% set criteria = craft.lantra.packagesCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order, filterBy, filterPackage) %}
 
 {% if criteria %}{% paginate criteria as pageInfo, packageEntries %}{% endif %}
 
@@ -29,7 +30,7 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterPackageStatus:filterPackageStatus} %}</div>
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterPackage:filterPackage} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
@@ -39,12 +40,14 @@
                     <tr>
                         <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                         <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
+                        <th>Company</th>
                         <th>Member</th>
-                        <th>Module Group</th>
-                        <th>Next Step</th>
-                        <th>Reviewer</th>
-                        <th class="title"><a href="?sort=packageStatus&order={{ order == 'desc' ? 'asc' : 'desc' }}">Status</a></th>
+                        <th>{{ taskbookLabel }}</th>
+                        <th>Current Step</th>
+                        <th>Current Reviewer</th>
+                        {% if filterPackage == 'all' %}
                         <th>&nbsp;</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -55,14 +58,20 @@
                         <tr>
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
+                            <td><p class="td-title-responsive">Company: </p>{{ company.title }}</td>
                             <td><p class="td-title-responsive">Member: </p><a href={{ craft.lantra.packageUrl(user.id, package.id) }}>{{ user.fullname }}</a></td>
-                            <td><p class="td-title-responsive">Module Group: </p>{{ package.moduleGroup.title }}</td>
+                            <td><p class="td-title-responsive">Taskbook: </p>
+                                <a href="/cpd/{{ package.author.id }}/taskbooks/{{ package.id }}">{{ package.taskbook.title }}</a>
+                            </td>
                             <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
-                            <td><p class="td-title-responsive">Status: </p>{{ package.packageStatus }}</td>
+                            {% if filterPackage == 'all' %}
                             <td class="icons" style="width:140px;text-align:right">
-                                <a class="icon" href="/management/taskbooks/manage/{{ package.id }}"><img src="/assets/img/edit.svg" title="Email" /></a>
+                                <a class="icon" href="/management/taskbooks/manage/{{ package.id }}">
+                                    <img src="/assets/img/reviewer.svg" title="Manage Reviewers" />
+                                </a>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

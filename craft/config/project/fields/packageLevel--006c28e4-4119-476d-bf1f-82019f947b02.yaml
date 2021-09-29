@@ -1,0 +1,20 @@
+columnSuffix: null
+contentColumnType: smallint(2)
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: packageLevel
+instructions: 'Enter level 1-10 '
+name: 'Package Level'
+searchable: true
+settings:
+  decimals: 0
+  defaultValue: '1'
+  max: '10'
+  min: '1'
+  prefix: null
+  previewCurrency: ''
+  previewFormat: decimal
+  size: '1'
+  suffix: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Number

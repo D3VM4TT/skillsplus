@@ -63,37 +63,37 @@
         .primary-bg.active,
         .primary-bg.show,
         .button.hollow:hover{
-            background-color: {{ craft.lantra.setting('themeColorPrimary') }}
+            background-color: #{{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .primary-color,
         .button.hollow a,
         form label {
-            color: {{ craft.lantra.setting('themeColorPrimary') }}
+            color: #{{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .button.hollow,
         .primary-border,
         .button.hollow.white:hover {
-            border-color:{{ craft.lantra.setting('themeColorPrimary') }}
+            border-color: #{{ craft.lantra.setting('themeColorPrimary') }}
         }
 
         .secondary-color {
-            color: {{ craft.lantra.setting('themeColorSecondary') }}
+            color: #{{ craft.lantra.setting('themeColorSecondary') }}
         }
         .secondary-bg,
         .secondary-bg-hover:hover,
         .nav-open > a {
-            background-color: {{ craft.lantra.setting('themeColorSecondary') }}
+            background-color: #{{ craft.lantra.setting('themeColorSecondary') }}
         }
 
         .secondary-border {
-            border-color: {{ craft.lantra.setting('themeColorSecondary') }}
+            border-color: #{{ craft.lantra.setting('themeColorSecondary') }}
         }
 
         .secondary-bg,
         .button.primary-bg:hover {
-            background-color: {{ craft.lantra.setting('themeColorSecondary') }}
+            background-color: #{{ craft.lantra.setting('themeColorSecondary') }}
         }
     </style>
 
@@ -164,9 +164,18 @@
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         </div>
 
+        {% if currentUser %}
+            <div class="modal-wrapper" id="browser-modal">
+                <div class="modal-content">
+                    {% include '_includes/evidence/browser' %}
+                </div>
+            </div>
+        {% endif %}
+
 
         <!-- Scripts
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <script src="https://kit.fontawesome.com/85bb522056.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript">
             window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";
@@ -176,6 +185,8 @@
         <script src="/assets/js/tooltip.js" async defer></script>
         <script src="/assets/js/vendor/datepicker/js/datepicker.min.js"></script>
         <script src="/assets/js/vendor/datepicker/js/i18n/datepicker.en.js"></script>
+
+        <script src="/assets/js/lantra.browser.js" async defer></script>
         
         {# 
         {% if currentUser %}

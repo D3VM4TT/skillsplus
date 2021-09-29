@@ -1,0 +1,46 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+handle: reportResultType
+instructions: ''
+name: 'Report Result Type'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - All
+        -
+          - value
+          - all
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Unit Result'
+        -
+          - value
+          - unitResult
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'User Result'
+        -
+          - value
+          - userResult
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

@@ -1,0 +1,56 @@
+fieldLayouts:
+  46202269-1d4b-4803-aef3-1a626eaf5054:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: fbd50700-a63f-4a13-b729-1947510b8a14 # Attempt Unit
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 4b25bd1b-f51c-4175-8db7-e871de866f2f # Attempt Answers
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Attempt
+        sortOrder: 1
+handle: attempt
+hasTitleField: false
+name: Attempt
+section: 51a18e4b-1a36-4210-8769-a5b8f28f3a5f # Attempts
+sortOrder: 1
+titleFormat: '[unit {attemptUnit.one.id}] {author.firstName} {author.lastName}'
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

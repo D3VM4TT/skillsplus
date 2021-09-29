@@ -1,0 +1,10 @@
+<ul class="assets" id="evidence" {% if isPackage is defined and isPackage %}data-package-id="{{ package.id }}{% endif %} data-field-name="{{ fieldName }}" data-user-id="{{ accountId }}" data-auto-save="{{ autoSave }}">
+    {% if evidence|length %}
+        {% for asset in evidence.all() %}
+            {% include '_includes/evidence/asset' with{'asset': asset, 'fieldName': fieldName} %}
+        {% endfor %}
+    {% endif %}
+</ul>
+<div style="padding:20px 0 20px 0;">
+    <a href="#" data-target="evidence" class="primary-bg button open-lantra-browser">Add Evidence</a>
+</div>

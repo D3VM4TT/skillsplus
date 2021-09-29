@@ -94,8 +94,9 @@ class Results extends Component
             $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
+            $managerId = Craft::$app->request->getParam('managerId');
             if ($comment) {
-                $this->addComment($entry, $comment);
+                $this->addComment($entry, $comment, $userId, $managerId);
             }
             $fields = Craft::$app->request->getParam('fields');
             $resultUnitId = isset($fields['resultUnit']) && is_array($fields['resultUnit']) && count($fields['resultUnit']) ? $fields['resultUnit'][0] : null;
@@ -196,7 +197,7 @@ class Results extends Component
         $userId = Craft::$app->getUser()->id;
         if ($entry->type == 'unitResult' || $entry->type == 'userResult') {
             ## send notification
-            if ($this->notifyManagerEndorsementResult($entry)){
+            if ($this->notifyManagerEndorsementResult($entry)) {
                 Lantra::$app->notify->sendManagerEndorsementResult($entry);
             }
             if ($entry->type == 'userResult') {
@@ -348,6 +349,7 @@ class Results extends Component
         ]);
         return Craft::$app->elements->saveElement($entry, false);
     }
+
     /**
      * @param $entry
      * @param $comment
@@ -357,7 +359,7 @@ class Results extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\InvalidConfigException
      */
-    function addComment($entry, $comment, $userId = null)
+    function addComment($entry, $comment, $userId = null, $managerId = null)
     {
         if (is_null($userId)) {
             $userId = Craft::$app->getUser()->id;
@@ -367,8 +369,8 @@ class Results extends Component
         $blockType = $blockTypes[0];
         ## not sure why we have to run this loop and resave the previous data
         $tableData = [];
-        foreach($entry->resultComments->all() as $key => $row) {
-            $tableData[$key] =  [
+        foreach ($entry->resultComments->all() as $key => $row) {
+            $tableData[$key] = [
                 'type' => $blockType->id,
                 'enabled' => true,
                 'fields' => [
@@ -390,7 +392,7 @@ class Results extends Component
             ]
         ];
         $entry->setFieldValues(['resultComments' => $tableData]);
-        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId);
+        Lantra::$app->notify->sendCommentUpdate($entry, $comment, $userId, $managerId);
     }
 
     /**
@@ -406,7 +408,7 @@ class Results extends Component
         $resultAuthorId = $comment->getOwner()->author->id;
         $commentAuthorId = $comment->user->one()->id;
         if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
-            $comment->read = true;
+            $comment->setFieldValue('read', true);
             Craft::$app->elements->saveElement($comment);
         }
     }
@@ -419,7 +421,7 @@ class Results extends Component
     {
         $unread = 0;
         $comments = $result->resultComments->all();
-        foreach($comments as $comment) {
+        foreach ($comments as $comment) {
             if ($comment->user->one() && $comment->user->one()->id != $userId && !$comment->read) {
                 $unread++;
             }
@@ -508,7 +510,7 @@ class Results extends Component
         $recurringCycles = $cycle->getRecurring($unitEntry->unitRecurringPeriod);
 
         $validCodes = [];
-        foreach($recurringCycles as $recurringCycle) {
+        foreach ($recurringCycles as $recurringCycle) {
             $validCodes[] = $recurringCycle->code;
         }
 
@@ -581,8 +583,7 @@ class Results extends Component
         if ($moduleResultId) {
             $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
             $criteria->relatedTo[] = ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult'];
-        }
-        else {
+        } else {
             $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         }
         if ($companyId) {
@@ -641,9 +642,8 @@ class Results extends Component
             $userModuleResult->setFieldValue('resultCompany', [$company->id]);
             Craft::$app->elements->saveElement($userModuleResult, false);
             $return = $userModuleResult;
-        }
-        else {
-            $return = $this->getModuleResult($user->id, $moduleId, $create, null, (int) $company->id);
+        } else {
+            $return = $this->getModuleResult($user->id, $moduleId, $create, null, (int)$company->id);
         }
         ## link existing unit results to company @todo remove once all results updated.
         $this->_setUnitResultsUserCompany($moduleId, $user->id);
@@ -661,7 +661,8 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function getModuleResult($userId, $moduleId, $create = false, $postDate = null, $companyId = null) {
+    function getModuleResult($userId, $moduleId, $create = false, $postDate = null, $companyId = null)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
@@ -670,8 +671,7 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
         if ($companyId) {
             $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
-        }
-        else {
+        } else {
             $criteria->authorId = $userId;
         }
         ## postDate might be sent from Cycles
@@ -704,7 +704,7 @@ class Results extends Component
         }
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $unitResults = $this->getUnitResultsQuery($userId, $unitIds, null);
-        foreach($unitResults->all() as $resultEntry) {
+        foreach ($unitResults->all() as $resultEntry) {
             if (!$resultEntry->resultCompany->count()) {
                 $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
             }
@@ -726,7 +726,7 @@ class Results extends Component
         if (!$moduleEntry->isCompany()) {
             return;
         }
-        if  (null == $company = Lantra::$app->users->userCompany($user)) {
+        if (null == $company = Lantra::$app->users->userCompany($user)) {
             return;
         }
         if (!$resultEntry->resultCompany->count()) {
@@ -741,14 +741,15 @@ class Results extends Component
      * @param $resultEntry
      * @return bool
      */
-    function notifyManagerEndorsementResult($resultEntry) {
+    function notifyManagerEndorsementResult($resultEntry)
+    {
         if ($resultEntry->resultStatus != 'pending') {
             return false;
         }
         if ($resultEntry->type == 'userResult') {
             return true;
         }
-        if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult'){
+        if ($resultEntry->resultEvidence && $resultEntry->type == 'unitResult') {
             return true;
         }
         return false;
@@ -761,7 +762,8 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function checkRemainingAttempts($resultEntry) {
+    function checkRemainingAttempts($resultEntry)
+    {
         $resultUnitEntry = $resultEntry->resultUnit->one();
         $totalAttempts = $resultEntry->resultAttempts->count();
         if ($resultUnitEntry->resultStatus != 'endorsed' && $resultUnitEntry->testMaxAttempts && ($totalAttempts >= $resultUnitEntry->testMaxAttempts)) {
@@ -777,7 +779,8 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function setResultStatus($resultEntry, $resultStatus) {
+    function setResultStatus($resultEntry, $resultStatus)
+    {
         ## only continue if status has changed
         if ($resultEntry->resultStatus == $resultStatus) {
             return;
@@ -797,8 +800,9 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function blockResult($resultEntry) {
-        $this->setResultStatus($resultEntry,'blocked');
+    function blockResult($resultEntry)
+    {
+        $this->setResultStatus($resultEntry, 'blocked');
         Lantra::$app->notify->sendManagerBlockedResult($resultEntry);
     }
 
@@ -809,10 +813,11 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function unblockResult($resultEntry) {
+    function unblockResult($resultEntry)
+    {
         $resultEntry->setFieldValue('resultAttempts', []);
         $resultEntry->setFieldValue('resultScore', 0);
-        $this->setResultStatus($resultEntry,'active');
+        $this->setResultStatus($resultEntry, 'active');
         Craft::$app->elements->saveElement($resultEntry);
     }
 
@@ -823,7 +828,8 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function checkUserResult($resultEntry) {
+    function checkUserResult($resultEntry)
+    {
         ## the related module id
         $resultModuleEntry = $resultEntry->resultModule ? $resultEntry->resultModule->one() : null;
         if (!$resultModuleEntry) {
@@ -833,8 +839,7 @@ class Results extends Component
         $user = $resultEntry->author;
         if ($resultEntry->resultModuleResult) {
             $moduleResultEntry = $resultEntry->resultModuleResult->one();
-        }
-        else {
+        } else {
             $moduleResultEntry = $this->getModuleResult($user->id, $resultModuleEntry->id, true);
         }
         $this->checkModuleResult($resultModuleEntry, $user->id, $moduleResultEntry);
@@ -847,7 +852,8 @@ class Results extends Component
      * @return null
      * @throws null
      */
-    function checkUnitResult($resultEntry) {
+    function checkUnitResult($resultEntry)
+    {
         ## the related unit id
         $resultUnitEntry = $resultEntry->resultUnit->one();
         if (!$resultUnitEntry) {
@@ -864,7 +870,7 @@ class Results extends Component
         if ($resultEntry->resultModuleResult) {
             $moduleResultEntry = $resultEntry->resultModuleResult->one();
             $moduleEntry = $this->getModuleResultModule($moduleResultEntry);
-            if($moduleEntry && $moduleEntry->type == 'cpd') {
+            if ($moduleEntry && $moduleEntry->type == 'cpd') {
                 return $this->checkModuleResult($moduleEntry, $user->id, $moduleResultEntry);
             }
         }
@@ -932,19 +938,18 @@ class Results extends Component
         $hours = 0;
         foreach ($resultEntries as $resultEntry) {
             if ($resultEntry->resultStatus == 'endorsed') {
-                if ((float) $resultEntry->resultHours) {
-                    $hours += (float) $resultEntry->resultHours;
+                if ((float)$resultEntry->resultHours) {
+                    $hours += (float)$resultEntry->resultHours;
                 }
                 ## unit results value is unit value
                 if ($resultEntry->type == 'unitResult') {
                     $unitEntry = $resultEntry->resultUnit->one();
                     ## point overridden by unit group
                     $points += $this->getUnitPoints($unitEntry, $moduleEntry);
-                }
-                ## user result value is custom
+                } ## user result value is custom
                 elseif ($resultEntry->type == 'userResult') {
-                    if ((int) $resultEntry->resultPoints) {
-                        $points += (int) $resultEntry->resultPoints;
+                    if ((int)$resultEntry->resultPoints) {
+                        $points += (int)$resultEntry->resultPoints;
                     }
                 }
                 ## check if result expiry is before default module expiry)
@@ -961,8 +966,7 @@ class Results extends Component
         ## update result status to complete or revert to active (if unit result was deleted)
         if ($this->isCompleteModuleResult($moduleResultEntry)) {
             $this->completeModuleResult($moduleResultEntry, $userId, $moduleResultExpiryTime);
-        }
-        else {
+        } else {
             $this->activateModuleResult($moduleResultEntry, $userId);
         }
         return;
@@ -978,11 +982,11 @@ class Results extends Component
         if ($moduleEntry) {
             foreach ($moduleEntry->moduleUnitGroups as $unitGroup) {
                 $unitIds = [];
-                foreach($unitGroup->unitEntries as $groupUnitEntry) {
+                foreach ($unitGroup->unitEntries as $groupUnitEntry) {
                     $unitIds[] = $groupUnitEntry->id;
                 }
                 if ($unitGroup->unitPointsOverride && in_array($unitEntry->id, $unitIds)) {
-                   return $unitGroup->unitPointsOverride;
+                    return $unitGroup->unitPointsOverride;
                 }
             }
         }
@@ -999,9 +1003,9 @@ class Results extends Component
     {
         $rows = [];
         // add unit group targets
-        foreach($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
-            $targetHours = (float) $unitGroup->cpdTargetHours;
-            $targetPoints = (int) $unitGroup->cpdTargetPoints;
+        foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
+            $targetHours = (float)$unitGroup->cpdTargetHours;
+            $targetPoints = (int)$unitGroup->cpdTargetPoints;
             $endorsedHours = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'hours');
             $endorsedPoints = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'points');
             $complete = ($endorsedHours >= $targetHours && $endorsedPoints >= $targetPoints) ? 1 : 0;
@@ -1044,7 +1048,7 @@ class Results extends Component
             if ($userResultEntry->resultStatus != 'endorsed') {
                 continue;
             }
-            $return += (int) $userResultEntry->resultHours;
+            $return += (int)$userResultEntry->resultHours;
         }
         return $return;
     }
@@ -1072,7 +1076,7 @@ class Results extends Component
         foreach ($unitIds as $id) {
             if (isset($_results[$id])) {
                 ## look through multiple results for each unit
-                foreach($_results[$id] as $unitResultEntry) {
+                foreach ($_results[$id] as $unitResultEntry) {
                     if ($unitResultEntry->resultStatus != 'endorsed') {
                         continue;
                     }
@@ -1094,7 +1098,7 @@ class Results extends Component
      */
     function isCompleteComponentResults($moduleResult)
     {
-        foreach($moduleResult->resultComponentResults as $componentResult) {
+        foreach ($moduleResult->resultComponentResults as $componentResult) {
             if (!isset($componentResult['complete']) || !$componentResult['complete']) {
                 return false;
             }
@@ -1117,14 +1121,12 @@ class Results extends Component
             if (!$this->isCompleteComponentResults($moduleResult)) {
                 return false;
             }
-            $targetType = (string) $moduleEntry->targetType->value;
+            $targetType = (string)$moduleEntry->targetType->value;
             if ($targetType == 'hours') {
-                 return $moduleResult->resultHours >= $moduleEntry->targetHours;
-            }
-            elseif ($targetType == 'points') {
+                return $moduleResult->resultHours >= $moduleEntry->targetHours;
+            } elseif ($targetType == 'points') {
                 return $moduleResult->resultPoints >= $moduleEntry->targetPoints;
-            }
-            else {
+            } else {
                 $remainingPoints = max($moduleEntry->targetHours - $moduleResult->resultHours, 0);
                 $remainingHours = max($moduleEntry->targetPoints - $moduleResult->resultPoints, 0);
                 if ($targetType == 'pointsAndHours') {
@@ -1133,8 +1135,7 @@ class Results extends Component
                     return !$remainingPoints || !$remainingHours;
                 }
             }
-        }
-        elseif ($moduleEntry->type == 'qualification') {
+        } elseif ($moduleEntry->type == 'qualification') {
             $totalUnits = count($this->getModuleUnitIds($moduleEntry));
             $totalResults = $this->getModuleUnitResults($moduleEntry, $moduleResult->getAuthor()->id, true);
             return $totalResults >= $totalUnits;
@@ -1149,15 +1150,15 @@ class Results extends Component
     public function pending($moduleResult, $userId)
     {
         $return = [
-            'text'    => '',
-            'total'   => 0
+            'text' => '',
+            'total' => 0
         ];
         $pendingResults = $this->getModuleResultResults($moduleResult->id, null, false, 'both', 'pending');
 
         $pendingHours = 0;
         $pendingPoints = 0;
-        foreach($pendingResults as $result) {
-            $pendingHours = $pendingHours + (float) $result->resultHours;
+        foreach ($pendingResults as $result) {
+            $pendingHours = $pendingHours + (float)$result->resultHours;
             if (null != $resultUnit = $result->resultUnit->one()) {
                 $pendingPoints = $pendingPoints + (int)$result->resultUnit->one()->unitPoints;
             }
@@ -1182,9 +1183,9 @@ class Results extends Component
     public function remaining($moduleResult)
     {
         $return = [
-            'text'          => '',
-            'pointsScore'   => '',
-            'hoursScore'     => ''
+            'text' => '',
+            'pointsScore' => '',
+            'hoursScore' => ''
         ];
         if (!$moduleResult || !$moduleResult->resultModule) {
             return $return;
@@ -1193,11 +1194,11 @@ class Results extends Component
         if (!$moduleEntry) {
             return $return;
         }
-        $targetPoints = (int) $moduleEntry->targetPoints;
-        $targetHours = (float) $moduleEntry->targetHours;
+        $targetPoints = (int)$moduleEntry->targetPoints;
+        $targetHours = (float)$moduleEntry->targetHours;
 
-        $resultPoints = (int) $moduleResult->resultPoints;
-        $resultHours = (float) $moduleResult->resultHours;
+        $resultPoints = (int)$moduleResult->resultPoints;
+        $resultHours = (float)$moduleResult->resultHours;
 
         $remainingPoints = $targetPoints - $resultPoints;
         $remainingHours = $targetHours - $resultHours;
@@ -1215,9 +1216,8 @@ class Results extends Component
             $return['pointsScore'] = $resultPoints . '/' . $targetPoints;
             if ($moduleEntry->targetType == 'pointsAndHours') {
                 if ($remainingPoints && $remainingHours) {
-                    $return['text'] =  $remainingPointsText . ' and ' . $remainingHoursText;
-                }
-                else {
+                    $return['text'] = $remainingPointsText . ' and ' . $remainingHoursText;
+                } else {
                     $return['text'] = $remainingPoints ? $remainingPointsText : $remainingHoursText;
                 }
             } elseif ($moduleEntry->targetType == 'pointsOrHours') {
@@ -1255,7 +1255,7 @@ class Results extends Component
             $resultEntry->setFieldValue('resultModuleResult', [$resultModuleResult]);
         }
         $resultEntry->setFieldValue('resultUnit', [$unitId]);
-        $resultEntry->setFieldValue('resultStatus',  'incomplete');
+        $resultEntry->setFieldValue('resultStatus', 'incomplete');
         if (!Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
@@ -1286,7 +1286,7 @@ class Results extends Component
         $componentResults = $this->getComponentResults($moduleEntry);
         $resultEntry->setFieldValue('resultComponentResults', $componentResults);
         $resultEntry->setFieldValue('resultModule', [$moduleEntryId]);
-        $resultEntry->setFieldValue('resultStatus',  'active');
+        $resultEntry->setFieldValue('resultStatus', 'active');
         if (!Craft::$app->elements->saveElement($resultEntry)) {
             return;
         }
@@ -1348,7 +1348,7 @@ class Results extends Component
      */
     public function getJobRoleUserResults($jobRoleId, $userId = null)
     {
-        if (! $userId) {
+        if (!$userId) {
             return [];
         }
         // get all modules for job role
@@ -1461,7 +1461,8 @@ class Results extends Component
      * @param $moduleEntry
      * @return array
      */
-    function getModuleUnitIds($moduleEntry) {
+    function getModuleUnitIds($moduleEntry)
+    {
         $unitIds = [];
         if ($moduleEntry->moduleUnitGroups) {
             foreach ($moduleEntry->moduleUnitGroups->all() as $unitGroup) {
@@ -1482,7 +1483,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntry, $userId, $resultPoints = true) {
+    function getModuleUserResults($moduleEntry, $userId, $resultPoints = true)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'userResult';
@@ -1503,7 +1505,8 @@ class Results extends Component
      * @param null $moduleResultId
      * @return array|int|string
      */
-    function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null, $status = null) {
+    function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null, $status = null)
+    {
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -1520,8 +1523,7 @@ class Results extends Component
                 ['targetElement' => $unitIds, 'field' => 'resultUnit'],
                 ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult']
             ];
-        }
-        else {
+        } else {
             $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
         }
         if ($count) {
@@ -1545,7 +1547,8 @@ class Results extends Component
      * @return mixed
      * @throws mixed
      */
-    public function getManagerEndorsementResults($manager, $limit = null,  $count = false) {
+    public function getManagerEndorsementResults($manager, $limit = null, $count = false)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = ['userResult', 'unitResult'];
@@ -1559,7 +1562,7 @@ class Results extends Component
                 return null;
             }
             $criteria->authorId = $subordinateIds;
-            $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
+            $level = $manager->managerLevel->value ? (int)$manager->managerLevel->value : 1;
             $criteria->unitEndorsementManagerLevel = '<=' . $level;
         }
         return ($count) ? $criteria->count() : $criteria;
@@ -1575,9 +1578,10 @@ class Results extends Component
      * @return mixed
      * @throws mixed
      */
-    public function getManagerEndorsementUsers($manager, $limit = null, $count = false, $directSubordinates = false) {
+    public function getManagerEndorsementUsers($manager, $limit = null, $count = false, $directSubordinates = false)
+    {
         $criteria = User::find();
-        $criteria->id =  $this->getManagerEndorsementUserIds($manager, $directSubordinates);
+        $criteria->id = $this->getManagerEndorsementUserIds($manager, $directSubordinates);
         $criteria->order = 'lastName desc';
         $criteria->limit = $limit;
         return ($count) ? $criteria->count() : $criteria;
@@ -1589,7 +1593,8 @@ class Results extends Component
      * @return array|int
      * @throws \yii\db\Exception
      */
-    public function countManagerEndorsementUsers(User $manager, $directSubordinates = false) {
+    public function countManagerEndorsementUsers(User $manager, $directSubordinates = false)
+    {
         return $this->getManagerEndorsementUserIds($manager, $directSubordinates, true);
     }
 
@@ -1611,13 +1616,12 @@ class Results extends Component
                 return $count ? 0 : [];
             }
             $onlySubordinates = true;
-            $level = $manager->managerLevel->value ? (int) $manager->managerLevel->value : 1;
+            $level = $manager->managerLevel->value ? (int)$manager->managerLevel->value : 1;
         }
 
         if ($count) {
             $mysql = "SELECT COUNT(DISTINCT authorId) AS total";
-        }
-        else {
+        } else {
             $mysql = "SELECT DISTINCT authorId";
         }
 
@@ -1671,8 +1675,9 @@ class Results extends Component
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerModuleExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        return $this->getManagerModuleResults($userId, $days, $limit, true,'complete', $search);
+    public function getManagerModuleExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
+        return $this->getManagerModuleResults($userId, $days, $limit, true, 'complete', $search);
     }
 
     /**
@@ -1685,8 +1690,9 @@ class Results extends Component
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerModuleCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        return $this->getManagerModuleResults($userId, $days, $limit,false,'complete', $search);
+    public function getManagerModuleCompletedResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
+        return $this->getManagerModuleResults($userId, $days, $limit, false, 'complete', $search);
     }
 
     /**
@@ -1699,8 +1705,41 @@ class Results extends Component
      * @return mixed
      * @throws mixed
      */
-    public function getManagerModuleActiveResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        return $this->getManagerModuleResults($userId, $days, $limit, false,'active', $search);
+    public function getManagerModuleActiveResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
+        return $this->getManagerModuleResults($userId, $days, $limit, false, 'active', $search);
+    }
+
+    /**
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @param string $search
+     * @param null $relatedTo
+     * @return ElementCriteriaModel|null
+     */
+    public function getManagerModuleCpdResults($userId = null, $days = 'all', $limit = 10, $search = '', $relatedTo = null)
+    {
+        if (is_null($relatedTo))
+        {
+            $relatedTo = [
+                'targetElement' => $this->getCpdModules()->ids(),
+                'field' => 'resultModule'
+            ];
+        }
+        return $this->getManagerModuleResults($userId, $days, $limit, false, 'active', $search, null, $relatedTo);
+    }
+
+    /**
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getCpdModules()
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'modules';
+        $criteria->type = 'cpd';
+        $criteria->limit = null;
+        return $criteria;
     }
 
     /**
@@ -1712,29 +1751,30 @@ class Results extends Component
      * @param bool $expiring
      * @param string $status
      * @param string $search
-     * @param array $authorId
+     * @param int $authorId
+     * @param array $relatedTo
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
-        if ( ! is_null($userId)) {
-            $manager = Craft::$app->users->getUserById($userId);
-        }
-        else {
+    private function getManagerModuleResults($userId = null, $days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null, $relatedTo = null)
+    {
+        if (!is_null($userId)) {
+            $manager = User::findOne($userId);
+        } else {
             $manager = Craft::$app->getUser();
         }
-        if ( ! $manager) {
+        if (!$manager) {
             return null;
         }
         // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin()) {
+        if (!$manager->isInGroup('schemeManager') && !$manager->admin) {
             $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
-            if ( ! count($subordinateIds)) {
+            if (!count($subordinateIds)) {
                 return null;
             }
             $authorId = $subordinateIds;
         }
-        return $this->getModuleResults($days, $limit, $expiring, $status, $search, $authorId);
+        return $this->getModuleResults($days, $limit, $expiring, $status, $search, $authorId, $relatedTo);
     }
 
     /**
@@ -1743,31 +1783,34 @@ class Results extends Component
      * @param bool $expiring
      * @param string $status
      * @param string $search
-     * @param array $authorId
+     * @param int $authorId
+     * @param array $relatedTo
      * @return object
      * @throws mixed
      */
-    public function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null) {
+    public function getModuleResults($days = 'all', $limit = 10, $expiring = true, $status = 'active', $search = '', $authorId = null, $relatedTo = null)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'moduleResult';
         $criteria->resultStatus = $status;
         if ($expiring == 'expired') {
-            $criteria->expiryDate = '<'. time();
+            $criteria->expiryDate = '<' . time();
             $criteria->order = 'expiryDate asc';
-        }
-        elseif ($expiring == true) {
-            $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
+        } elseif ($expiring == true) {
+            $criteria->expiryDate = $days != 'all' ? '<' . (time() + ($days * 86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
-        }
-        elseif ($days != 'all') {
-            $criteria->postDate = '>' . (time() - ($days*86400));
+        } elseif ($days != 'all') {
+            $criteria->postDate = '>' . (time() - ($days * 86400));
         }
         if ($search) {
             $criteria->search = $search;
         }
         if ($authorId) {
-        $criteria->authorId = $authorId;
+            $criteria->authorId = $authorId;
+        }
+        if ($relatedTo) {
+            $criteria->relatedTo = $relatedTo;
         }
         $criteria->limit = $limit;
         return $criteria;
@@ -1801,7 +1844,8 @@ class Results extends Component
      * @return mixed
      * @throws mixed
      */
-    public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
+    public function getManagerUnitBlockedResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
         return $this->getManagerUnitResults($userId, $days, $limit, false, 'blocked', false, $search);
     }
 
@@ -1815,8 +1859,9 @@ class Results extends Component
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerUnitExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        return $this->getManagerUnitResults($userId, $days, $limit,true, false, false, $search);
+    public function getManagerUnitExpiringResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
+        return $this->getManagerUnitResults($userId, $days, $limit, true, false, false, $search);
     }
 
     /**
@@ -1829,19 +1874,21 @@ class Results extends Component
      * @return ElementCriteriaModel
      * @throws Exception
      */
-    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10, $search = '') {
-        return $this->getManagerUnitResults($userId, $days, $limit,false, 'endorsed', false, $search);
+    public function getManagerUnitEndorsedResults($userId = null, $days = 'all', $limit = 10, $search = '')
+    {
+        return $this->getManagerUnitResults($userId, $days, $limit, false, 'endorsed', false, $search);
     }
 
     /**
      * @param $filter
      * @return array
      */
-    private function formatUserFilter($filter) {
+    private function formatUserFilter($filter)
+    {
         $defaults = [
-            'limit'      => null,
-            'search'     => '',
-            'relatedTo'  => []
+            'limit' => null,
+            'search' => '',
+            'relatedTo' => []
         ];
         return array_merge($defaults, $filter);
     }
@@ -1850,19 +1897,20 @@ class Results extends Component
      * @param $filter
      * @return array
      */
-    private function formatResultsFilter($filter) {
+    private function formatResultsFilter($filter)
+    {
         $defaults = [
-            'limit'         => null,
-            'search'        => '',
-            'relatedTo'     => [],
-            'order'         => 'authorId',
-            'status'        => ['live', 'expired'],
-            'resultType'    => null,
-            'expiryDate'    => null,
-            'startDate'     => null,
-            'resultStatus'  => null,
+            'limit' => null,
+            'search' => '',
+            'relatedTo' => [],
+            'order' => 'authorId',
+            'status' => ['live', 'expired'],
+            'resultType' => null,
+            'expiryDate' => null,
+            'startDate' => null,
+            'resultStatus' => null,
             ## used for filtering required units
-            'unitIds'       => [],
+            'unitIds' => [],
         ];
         return array_merge($defaults, $filter);
     }
@@ -1874,10 +1922,11 @@ class Results extends Component
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = []) {
+    public function getManagerUserSummary($userId = null, $userFilter = [], $resultFilter = [])
+    {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        if (! $subordinates) {
+        if (!$subordinates) {
             return [];
         }
         $subordinateIds = $subordinates->ids();
@@ -1899,8 +1948,7 @@ class Results extends Component
         // only filter units if less than 10 users
         if (count($subordinateIds) < 10) {
             $allUnits = $this->managerUnits($subordinates);
-        }
-        else {
+        } else {
             $allUnits = $this->allUnits();
         }
 
@@ -1916,7 +1964,7 @@ class Results extends Component
         $format = 'd-m-Y';
 
         $rows = [$header];
-        foreach($users as $user) {
+        foreach ($users as $user) {
 
             $role = $this->getRole($user->roleId);
 
@@ -1980,7 +2028,7 @@ class Results extends Component
 
         $unchanged = true;
 
-        foreach($legacyFiles as $key => $filePath){
+        foreach ($legacyFiles as $key => $filePath) {
             $legacyPath = Craft::getAlias('@assetsPath') . '/archive' . trim($filePath);
             $parts = explode('/', $legacyPath);
             $filename = end($parts);
@@ -1990,7 +2038,7 @@ class Results extends Component
                 $assetIds[] = $existingAsset->id;
                 unset($updatedLegacyResultFiles[$key]);
                 $unchanged = false;
-                Craft::info("Legacy file is existing asset: [". $filename . "] ", __METHOD__);
+                Craft::info("Legacy file is existing asset: [" . $filename . "] ", __METHOD__);
                 continue;
             }
 
@@ -2012,13 +2060,12 @@ class Results extends Component
                     unset($updatedLegacyResultFiles[$key]);
                     $unchanged = false;
                 }
-            }
-            else {
-                Craft::warning("Legacy files not found: [". $localPath . "] ", __METHOD__);
+            } else {
+                Craft::warning("Legacy files not found: [" . $localPath . "] ", __METHOD__);
             }
         }
 
-        if ($unchanged || ! count($assetIds)) {
+        if ($unchanged || !count($assetIds)) {
             return $resultEntry;
         }
 
@@ -2036,12 +2083,13 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function mandatoryUnitTitles($subordinates) {
+    private function mandatoryUnitTitles($subordinates)
+    {
         $return = [];
-        foreach($subordinates as $user) {
+        foreach ($subordinates as $user) {
             $mandatoryUnits = $this->userUnits($user);
-            foreach($mandatoryUnits as $unit) {
-                if (! isset($return[$unit->id])){
+            foreach ($mandatoryUnits as $unit) {
+                if (!isset($return[$unit->id])) {
                     $return[$unit->id] = $unit->title;
                 }
             }
@@ -2056,8 +2104,9 @@ class Results extends Component
      * @param string $title
      * @return null
      */
-    private function getUserResult($userResults, $userId, $unitId, $title = '') {
-        if ( !isset($userResults[$userId])) {
+    private function getUserResult($userResults, $userId, $unitId, $title = '')
+    {
+        if (!isset($userResults[$userId])) {
             return null;
         }
         ## look for unitId
@@ -2083,7 +2132,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = [], $displayField = 'expiryDate') {
+    public function getManagerUserCompletedResults($userId = null, $userFilter = [], $resultFilter = [], $displayField = 'expiryDate')
+    {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $subordinates->ids();
@@ -2106,7 +2156,7 @@ class Results extends Component
             $mandatoryUnits = $this->mandatoryUnitTitles($subordinates);
             foreach ($mandatoryUnits as $id => $title) {
                 // skip mandatory units if filter is on
-                if (count($reportUnits) && ! in_array($id, $reportUnits)) {
+                if (count($reportUnits) && !in_array($id, $reportUnits)) {
                     continue;
                 }
                 $headerUnits[$id] = $title;
@@ -2136,7 +2186,7 @@ class Results extends Component
         }
 
         $rows = [$header];
-        foreach($subordinates as $user) {
+        foreach ($subordinates as $user) {
             // if user results we don't need mandatory units
             if ($resultFilter['resultType'] != 'userResult') {
                 $mandatoryUnits = $this->userUnits($user);
@@ -2154,16 +2204,13 @@ class Results extends Component
                     $fieldValue = $result->$displayField;
                     if ($this->isDateField($displayField)) {
                         $value = $fieldValue ? $fieldValue->format($this->dateFormat) : '-';
-                    }
-                    else {
+                    } else {
                         $value = $fieldValue ? $fieldValue : '-';
                     }
-                }
-                // if mandatory report
+                } // if mandatory report
                 elseif ($resultFilter['resultType'] == 'unitResult' && !isset($mandatoryUnits[$id])) {
                     $value = 'N/R';
-                }
-                else {
+                } else {
                     $value = '';
                 }
                 $row[] = $value;
@@ -2188,7 +2235,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function getSubordinateResults($subordinateIds, $resultFilter = []) {
+    private function getSubordinateResults($subordinateIds, $resultFilter = [], $return = 'results')
+    {
         if (!$subordinateIds || !count($subordinateIds)) {
             return [];
         }
@@ -2197,8 +2245,7 @@ class Results extends Component
         $criteria->limit = null;
         if ($resultFilter['resultType']) {
             $criteria->type = $resultFilter['resultType'];
-        }
-        else {
+        } else {
             $criteria->type = ['unitResult', 'userResult'];
         }
         if ($resultFilter['startDate']) {
@@ -2218,12 +2265,16 @@ class Results extends Component
         if ($resultFilter['relatedTo']) {
             $criteria->relatedTo = $resultFilter['relatedTo'];
         }
+
+        if ($return == 'criteria') {
+            return $criteria;
+        }
         $results = $criteria->all();
 
         // arrange as useful array [userId][id] = [result]
         $data = [];
         foreach ($results as $result) {
-            if ( ! isset ($data[$result->authorId])){
+            if (!isset ($data[$result->authorId])) {
                 $data[$result->authorId] = [];
             }
             $id = $result->type == 'unitResult' && $result->resultUnit->count() ? $result->resultUnit->one()->id : $result->id;
@@ -2236,7 +2287,8 @@ class Results extends Component
      * @param array $array
      * @return array
      */
-    private function getIds($array = []){
+    private function getIds($array = [])
+    {
         $ids = [];
         if ((is_array($array) || is_object($array)) && count($array)) {
             foreach ($array as $item) {
@@ -2254,7 +2306,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter, $includeRequired = false) {
+    public function getManagerUnitExpiredResults($userId = null, $userFilter = [], $resultFilter, $includeRequired = false)
+    {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
         $subordinateIds = $subordinates->ids();
@@ -2274,7 +2327,7 @@ class Results extends Component
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
         $rows = [];
         $resultIds = [];
-        foreach($allResults as $userId => $results) {
+        foreach ($allResults as $userId => $results) {
             foreach ($results as $id => $result) {
                 $resultIds[] = $result->id;
                 $user = $result->author;
@@ -2286,7 +2339,7 @@ class Results extends Component
                     $resultUnit = $result->resultUnit->one();
                     // skip non-mandatory unitResults (i.e. from previous job role)
                     if ($resultFilter['resultType'] == 'unitResult' && !isset($userUnits[$resultUnit->id])) {
-                       continue;
+                        continue;
                     }
                     $title = $resultUnit ? $resultUnit->title : '[unit not found] ' . $title;
                 }
@@ -2304,79 +2357,15 @@ class Results extends Component
             }
         }
         if ($includeRequired) {
-            foreach($subordinates as $user) {
+            foreach ($subordinates as $user) {
                 $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
                 $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds, false));
             }
-            usort($rows, function ($a, $b) {return strcmp($a[0], $b[0]);});
+            usort($rows, function ($a, $b) {
+                return strcmp($a[0], $b[0]);
+            });
         }
         return array_merge([$header], $rows);
-    }
-
-    /**
-     * Return manager CPD results
-     *
-     * @param null $userId
-     * @param array $userFilter
-     * @param array $resultFilter
-     * @return array
-     * @throws Exception
-     */
-    public function getManagerCpdResults($userId = null, $userFilter = [], $resultFilter) {
-        $userFilter = $this->formatUserFilter($userFilter);
-        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-        $subordinateIds = $subordinates->ids();
-
-        $header = [
-            'User ID',
-            'User Name',
-            'Company ID',
-            'Company Label',
-            'Unit',
-            'Start Date',
-            'Finish Date',
-            'Hours',
-            'Points',
-            'Evidence',
-            'Comments'
-        ];
-
-        $resultFilter['resultType'] = 'unitResult';
-        $resultFilter = $this->formatResultsFilter($resultFilter);
-        $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
-
-        $rows = [$header];
-        foreach($subordinates as $user) {
-            if (isset($allResults[$user->id]) && count($allResults[$user->id])) {
-                $company = Lantra::$app->users->userCompany($user);
-                foreach($allResults[$user->id] as $result) {
-                    $unit = $result->resultUnit->one();
-                    $files = [];
-                    $comments = [];
-                    foreach ($result->resultEvidence as $file) {
-                        $files[] = $file->filename;
-                    }
-                    foreach ($result->resultComments as $comment) {
-                        $comments[] = $comment->comment . ' (' . ($comment->user ? $comment->user->one()->fullName : 'unknown') . ')';
-                    }
-                    $row = [
-                        $user->id,
-                        $user->fullName,
-                        $company ? $company->id : '~',
-                        $company ? $company->companyLabel : 'unknown',
-                        $unit->title,
-                        $result->resultStartDate ? $result->resultStartDate->format($this->dateFormat) : '~',
-                        $result->resultFinishDate ? $result->resultFinishDate->format($this->dateFormat) : '~',
-                        $result->resultHours,
-                        $result->resultValue,
-                        implode(', ', $files),
-                        implode(', ', $comments)
-                    ];
-                    $rows[] = $row;
-                }
-            }
-        }
-        return $rows;
     }
 
     /**
@@ -2388,7 +2377,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getManagerUnitRequiredResults($userId = null, $userFilter = [], $resultFilter) {
+    public function getManagerUnitRequiredResults($userId = null, $userFilter = [], $resultFilter)
+    {
         $userFilter = $this->formatUserFilter($userFilter);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
 
@@ -2405,12 +2395,12 @@ class Results extends Component
 
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $rows = [$header];
-        foreach($subordinates as $user) {
-            if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
+        foreach ($subordinates as $user) {
+            if (!$resultFilter['resultType'] || $resultFilter['resultType'] == 'unitResult') {
                 $unitIds = count($resultFilter['unitIds']) ? $resultFilter['unitIds'] : [];
                 $rows = array_merge($rows, $this->userRequiredRows($user, $unitIds));
             }
-            if ( ! $resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
+            if (!$resultFilter['resultType'] || $resultFilter['resultType'] == 'userResult') {
                 $rows = array_merge($rows, $this->userExpiredRows($user, $resultFilter));
             }
         }
@@ -2422,7 +2412,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function userExpiredRows($user, $resultFilter)  {
+    private function userExpiredRows($user, $resultFilter)
+    {
         $rows = [];
         $criteria = Entry::find();
         $criteria->type = 'userResult';
@@ -2455,12 +2446,13 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function userRequiredRows($user, $unitIds = [], $includeExpired = true)  {
+    private function userRequiredRows($user, $unitIds = [], $includeExpired = true)
+    {
         $units = $this->userUnits($user, $unitIds);
         $rows = [];
         foreach ($units as $unit) {
             $result = $this->unitResult($user, $unit->id);
-            if ( ! $result || ($includeExpired && $result->status == 'expired')) {
+            if (!$result || ($includeExpired && $result->status == 'expired')) {
                 $company = Lantra::$app->users->userCompany($user);
                 $role = $user->userRole->one();
                 $row = [
@@ -2482,12 +2474,13 @@ class Results extends Component
     ## cache of roles
     private $roles;
 
-    private function getRole($roleId = null) {
+    private function getRole($roleId = null)
+    {
         if (is_null($this->roles)) {
             $criteria = Category::find();
             $criteria->group = 'roles';
             $criteria->limit = null;
-            foreach($criteria->all() as $role) {
+            foreach ($criteria->all() as $role) {
                 $this->roles[$role->id] = $role;
             }
         }
@@ -2507,11 +2500,12 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function managerUnits($subordinates) {
+    private function managerUnits($subordinates)
+    {
         $units = [];
-        foreach($subordinates as $user) {
-            foreach($this->userUnits($user) as $unit) {
-                if (! isset($units[$unit->id])) {
+        foreach ($subordinates as $user) {
+            foreach ($this->userUnits($user) as $unit) {
+                if (!isset($units[$unit->id])) {
                     $units[$unit->id] = $unit;
                 }
             }
@@ -2526,7 +2520,8 @@ class Results extends Component
      * @return array|mixed
      * @throws Exception
      */
-    public function roleUnits($roleId)  {
+    public function roleUnits($roleId)
+    {
         if (is_null($this->roleUnits)) {
             $criteria = Category::find();
             $criteria->group = 'roles';
@@ -2556,18 +2551,19 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function userUnits($user, $unitIds = [])  {
+    public function userUnits($user, $unitIds = [])
+    {
         $units = [];
-        foreach($user->userRole->all() as $role) {
+        foreach ($user->userRole->all() as $role) {
             $modules = $this->roleModules($role);
             foreach ($modules as $module) {
                 $moduleUnits = $this->moduleUnits($module);
                 foreach ($moduleUnits as $unit) {
-                    if (! isset($units[$unit->id]) && (! count($unitIds) || in_array($unit->id, $unitIds))) {
+                    if (!isset($units[$unit->id]) && (!count($unitIds) || in_array($unit->id, $unitIds))) {
                         $units[$unit->id] = $unit;
                     }
                 }
-           }
+            }
         }
         return $units;
     }
@@ -2578,7 +2574,8 @@ class Results extends Component
      * @return BaseElementModel|null
      * @throws Exception
      */
-    private function unitResult($user, $unitId)  {
+    private function unitResult($user, $unitId)
+    {
         $criteria = Entry::find();
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         $criteria->status = ['live', 'expired'];
@@ -2591,11 +2588,11 @@ class Results extends Component
      * @return ElementCriteriaModel|int
      * @throws Exception
      */
-    private function roleModules($role)  {
+    private function roleModules($role)
+    {
         if (isset($this->roleModules[$role->id])) {
             $criteria = $this->roleModules[$role->id];
-        }
-        else {
+        } else {
             $criteria = Entry::find();
             $criteria->relatedTo = ['targetElement' => $role->id, 'field' => 'moduleRoles'];
             $criteria->limit = null;
@@ -2609,12 +2606,13 @@ class Results extends Component
      * @return ElementCriteriaModel|mixed
      * @throws Exception
      */
-    private function moduleUnits($module)  {
+    private function moduleUnits($module)
+    {
         if (isset($this->moduleUnits[$module->id])) {
             return $this->moduleUnits[$module->id];
         }
         $units = [];
-        foreach($module->moduleUnitGroups as $group) {
+        foreach ($module->moduleUnitGroups as $group) {
             $units = array_merge($units, $group->unitEntries->find());
         }
         $this->moduleUnits[$module->id] = $units;
@@ -2625,12 +2623,13 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function allUnits() {
+    private function allUnits()
+    {
         $criteria = Entry::find();
         $criteria->section = 'units';
         $criteria->limit = null;
         $units = [];
-        foreach($criteria->all() as $unit) {
+        foreach ($criteria->all() as $unit) {
             $units[$unit->id] = $unit;
         }
         return $units;
@@ -2649,14 +2648,14 @@ class Results extends Component
      * @return ElementCriteriaModel|null
      * @throws mixed
      */
-    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '') {
-        if ( ! is_null($userId)) {
+    private function getManagerUnitResults($userId = null, $days = 'all', $limit = 10, $expiring = false, $status = false, $id = false, $search = '')
+    {
+        if (!is_null($userId)) {
             $manager = Craft::$app->users->getUserById($userId);
-        }
-        else {
+        } else {
             $manager = Craft::$app->getUser();
         }
-        if ( ! $manager) {
+        if (!$manager) {
             return null;
         }
         $criteria = Entry::find();
@@ -2664,11 +2663,10 @@ class Results extends Component
         $criteria->type = 'unitResult';
         $criteria->limit = $limit;
         if ($expiring) {
-            $criteria->expiryDate = $days != 'all' ? '<'. (time() + ($days*86400)) : ':notempty:';
+            $criteria->expiryDate = $days != 'all' ? '<' . (time() + ($days * 86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
-        }
-        elseif ($days != 'all') {
-            $criteria->postDate = '>' . (time() - ($days*86400));
+        } elseif ($days != 'all') {
+            $criteria->postDate = '>' . (time() - ($days * 86400));
         }
         if ($status) {
             $criteria->resultStatus = $status;
@@ -2681,9 +2679,9 @@ class Results extends Component
             $criteria->search = $search;
         }
         // limit by subordinates if team or company manager
-        if ( ! $manager->isInGroup('schemeManager') && ! $manager->admin) {
+        if (!$manager->isInGroup('schemeManager') && !$manager->admin) {
             $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, true);
-            if ( ! count($subordinateIds)) {
+            if (!count($subordinateIds)) {
                 return null;
             }
             $criteria->authorId = $subordinateIds;
@@ -2698,7 +2696,8 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    private function getRoleModules($roleId) {
+    private function getRoleModules($roleId)
+    {
         $criteria = Entry::find();
         $criteria->section = 'modules';
         $criteria->limit = null;
@@ -2710,7 +2709,8 @@ class Results extends Component
      * @param $id
      * @throws \yii\base\NotSupportedException
      */
-    public function addUnitColumn($id) {
+    public function addUnitColumn($id)
+    {
         if (LantraHelper::setting('disableResultCache')) {
             return;
         }
@@ -2723,7 +2723,8 @@ class Results extends Component
      * @param $id
      * @throws \yii\base\NotSupportedException
      */
-    public function removeUnitColumn($id) {
+    public function removeUnitColumn($id)
+    {
         if (LantraHelper::setting('disableResultCache')) {
             return;
         }
@@ -2750,7 +2751,8 @@ class Results extends Component
      * @param $userId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getUserUnitResults($userId) {
+    public function getUserUnitResults($userId)
+    {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
@@ -2764,7 +2766,8 @@ class Results extends Component
      * @throws \yii\base\NotSupportedException
      * @throws \yii\db\Exception
      */
-    public function saveUserResultCache($userId, $resultEntries = null) {
+    public function saveUserResultCache($userId, $resultEntries = null)
+    {
         if (LantraHelper::setting('disableResultCache')) {
             return;
         }
@@ -2817,8 +2820,8 @@ class Results extends Component
         }
         $results = $criteria->all();
         $users = [];
-        foreach($results as $result){
-            if (! isset($users[$result->authorId])){
+        foreach ($results as $result) {
+            if (!isset($users[$result->authorId])) {
                 $users[] = $result->author;
             }
         }
@@ -2857,7 +2860,8 @@ class Results extends Component
      * @param $resultEntry
      * @throws \yii\db\Exception
      */
-    public function deleteUserResultCache($resultEntry) {
+    public function deleteUserResultCache($resultEntry)
+    {
         if (Lantra::$app->settings->getSetting('disableResultCache')) {
             return;
         }
@@ -2875,12 +2879,12 @@ class Results extends Component
      * @return array
      *
      */
-    public function getUserResultCache($userIds = []) {
+    public function getUserResultCache($userIds = [])
+    {
         $single = !is_array($userIds);
         if ($single) {
             $where = ['userId' => $userIds];
-        }
-        else {
+        } else {
             $where = ['IN', 'userId', $userIds];
         }
         $result = (new Query())
@@ -2892,10 +2896,10 @@ class Results extends Component
             return null;
         }
         $return = [];
-        foreach($result as $id => $row) {
+        foreach ($result as $id => $row) {
             $return[$row['userId']] = [];
-            foreach($row as $column => $value) {
-                if (substr($column,0 , 4) == 'unit') {
+            foreach ($row as $column => $value) {
+                if (substr($column, 0, 4) == 'unit') {
                     $unitId = trim($column, 'unit');
                     $return[$row['userId']][$unitId] = $this->getResultValue($value);
                 }
@@ -2908,7 +2912,8 @@ class Results extends Component
      * @param $value
      * @return array
      */
-    private function getResultValue($value) {
+    private function getResultValue($value)
+    {
         $value = json_decode($value);
         return [
             'expiryDate' => $value && isset($value->expiryDate) ? DateTime::createFromFormat('U', $value->expiryDate) : null,
@@ -2921,18 +2926,17 @@ class Results extends Component
      * @param $resultEntry
      * @return string
      */
-    private function setResultValue($resultEntry) {
+    private function setResultValue($resultEntry)
+    {
 
         if (is_object($resultEntry->resultStartDate)) {
             $startDate = $resultEntry->resultStartDate->getTimestamp();
-        }
-        else {
+        } else {
             $startDate = $resultEntry->resultStartDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultStartDate)->getTimestamp() : null;
         }
         if (is_object($resultEntry->resultFinishDate)) {
             $finishDate = $resultEntry->resultFinishDate->getTimestamp();
-        }
-        else {
+        } else {
             $finishDate = $resultEntry->resultFinishDate ? DateTime::createFromFormat(DATE_ATOM, $resultEntry->resultFinishDate)->getTimestamp() : null;
         }
         return json_encode([
@@ -2961,10 +2965,10 @@ class Results extends Component
      */
     public function entryTypeId($handle, $typeHandle = null)
     {
-        if (!isset($this->entryTypeIds[$handle.$typeHandle])) {
-            $this->entryTypeIds[$handle.$typeHandle] = LantraHelper::entryTypeId($handle, $typeHandle);
+        if (!isset($this->entryTypeIds[$handle . $typeHandle])) {
+            $this->entryTypeIds[$handle . $typeHandle] = LantraHelper::entryTypeId($handle, $typeHandle);
         }
-        return $this->entryTypeIds[$handle.$typeHandle];
+        return $this->entryTypeIds[$handle . $typeHandle];
     }
 
 

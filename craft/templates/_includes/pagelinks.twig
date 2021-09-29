@@ -7,5 +7,6 @@
         {% for page, url in pageInfo.getNextUrls(5) %}
             <a href="{{ url }}">{{ page }}</a>
         {% endfor %}
+        <p style="font-size: 10px;margin:10px 0 10px 0;">{{ pageInfo.total }} total</p>
     </div>
 {% endif %}

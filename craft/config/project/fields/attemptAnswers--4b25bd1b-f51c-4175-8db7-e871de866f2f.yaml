@@ -1,0 +1,16 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
+handle: attemptAnswers
+instructions: ''
+name: 'Attempt Answers'
+searchable: true
+settings:
+  contentTable: '`craft_matrixcontent_attemptanswers`'
+  maxBlocks: null
+  minBlocks: null
+  propagationKeyFormat: null
+  propagationMethod: all
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Matrix

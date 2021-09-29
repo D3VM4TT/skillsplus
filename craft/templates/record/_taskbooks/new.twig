@@ -14,10 +14,11 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
+{% set packageTaskbook = entry is defined and entry.packageTaskbook ? entry.packageTaskbook.one : null %}
 {% set section = craft.sections.getSectionByHandle('packages') %}
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set userCompany = account.userCompany.one() %}
 
 {% block content %}
     <section class="page dashboard">
@@ -36,29 +37,29 @@
             {{ globalsHtml.pageCreate }}
             <p>&nbsp;</p>
             <p>&nbsp;</p>
-            {% set levelsOptions = '' %}
-            {% for option in craft.lantra.taskbookLevels() %}
-                {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
-            {% endfor %}
-
-            {% if entry is defined %}
-                {{ ui.errorList(entry.getFirstErrors()) }}
+            {% if not userCompany %}
+                <p style="color:red;">Only users assigned to a company can create {{ taskbookLabel|pluralize|lower  }}.</p>
+            {% else %}
+                {% set levelsOptions = '' %}
+                {% for option in craft.lantra.taskbookLevels() %}
+                    {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+                {% endfor %}
+                {% if entry is defined %}
+                    {{ ui.errorList(entry.getFirstErrors()) }}
+                {% endif %}
+                <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
+                    {{ csrfInput() }}
+                    {{ actionInput('entries/save-entry') }}
+                    {{ hiddenInput('sectionId', section.id) }}
+                    {{ hiddenInput('enabled', 1) }}
+                    {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/manage') }}
+                    {{ hiddenInput('author[]', account.id) }}
+                    {% include '_forms/taskbook' with {taskbooks:userCompany.companyTaskbooks} %}
+                    <div class="container-btn">
+                        <button type="submit" class="button primary-bg">Continue</button>
+                    </div>
+                </form>
             {% endif %}
-
-            <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
-                {{ csrfInput() }}
-                {{ actionInput('entries/save-entry') }}
-                {{ hiddenInput('sectionId', section.id) }}
-                {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/manage') }}
-                {{ hiddenInput('author[]', account.id) }}
-
-                {% include '_forms/taskbook' %}
-
-                <div class="container-btn">
-                    <button type="submit" class="button primary-bg">Continue</button>
-                </div>
-            </form>
         </div>
     </section>
 {% endblock %}

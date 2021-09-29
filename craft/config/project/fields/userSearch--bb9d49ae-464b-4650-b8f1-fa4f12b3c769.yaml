@@ -1,0 +1,20 @@
+columnSuffix: null
+contentColumnType: text
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userSearch
+instructions: ''
+name: 'User Search'
+searchable: true
+settings:
+  allowSelect: ''
+  columnType: text
+  decimals: '0'
+  displayType: hidden
+  fieldTwig: '{{ user.userTeam.first.title|raw  }} {{ user.userTeam.first.teamCompany.first.title|raw }}'
+  parseBeforeSave: ''
+  parseOnMove: ''
+  showField: ''
+  textareaRows: 5
+translationKeyFormat: null
+translationMethod: none
+type: besteadfast\preparsefield\fields\PreparseFieldType

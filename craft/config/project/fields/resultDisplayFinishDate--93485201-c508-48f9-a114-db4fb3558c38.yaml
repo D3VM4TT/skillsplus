@@ -1,0 +1,14 @@
+columnSuffix: null
+contentColumnType: boolean
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: resultDisplayFinishDate
+instructions: ''
+name: 'Result Display Finish Date'
+searchable: true
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

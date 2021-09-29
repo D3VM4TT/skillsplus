@@ -1,15 +1,60 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
+    if ($('#confirmSubmit').length) {
+        $('#confirmSubmit').change(function(){
+           if ($(this).is(':checked')) {
+               $('#managerSubmit').show();
+           }
+           else {
+               $('#managerSubmit').hide();
+           }
+        });
+        $('#confirmSubmit').change();
+    }
 
-    $('select.package-module-group').change(function(){
+    if ($('select#resultOutcome').length) {
+        $('select#resultOutcome').change(function () {
+            let outcome = $(this).val(),
+                status = outcome === '1' ? 'endorsed' : 'draft';
+            $('button#endorseStatus').data('status', status);
+        });
+        $('select#resultOutcome').change();
+    }
+
+    $('select#userRole').change(function () {
+        var isReviewer = false;
+        $(this).find('option:selected').each(function () {
+            if ($(this).data('reviewer')) {
+                isReviewer = true;
+            }
+        });
+        if (isReviewer) {
+            $('#taskbook-review').show();
+        }
+        else {
+            $('#taskbook-review').hide();
+        }
+    });
+
+    $('#userRole').change();
+
+    $('select.package-taskbook').change(function () {
         var moduleGroupId = $(this).val(),
-            revision = $(this).find('option[value="' + moduleGroupId + '"]').data('revision');
+            option = $(this).find('option[value="' + moduleGroupId + '"]'),
+            revision = option.data('revision'),
+            levels = option.data('levels');
         $('div.taskbook-optional').hide();
         $('div.taskbook-optional.taskbook-optional-' + moduleGroupId).show();
         $('input#package-revision').val(revision);
+        if (levels) {
+            $('div#package-levels').show();
+        }
+        else {
+            $('div#package-levels').hide();
+        }
     }).change();
 
-    $('select.package-level').change(function(){
+    $('select.package-level').change(function () {
         var level = $(this).val(),
             optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
         if (level == 5) {
@@ -20,43 +65,36 @@ $(document).ready(function(){
         }
     }).change();
 
-    $('select.optional-level').change(function(){
+    $('select.optional-level').change(function () {
         updateOptional();
     });
 
-    updateOptional = function() {
-        var n = 1;
-        $('form#taskbooks').find('.optional-hidden').remove();
-        $('tr.optional-module').each(function(){
-            var c = $(this).find('input[type=checkbox]'),
-                l = $(this).find('select').val(),
-                t = $('#input-template').clone().html();
-            if (c.is(':checked')) {
-                t = t.replace(/{n}/g, n).replace(/{optionalModuleGroupId}/g, c.val()).replace(/{optionalLevel}/g, l);
-                $('form#taskbooks').prepend($(t));
-                n ++;
-            }
-        });
-    };
+    $('span.module-select').click(function (e) {
+        var tr = $(this).parents('tr.optional-module').eq(0),
+            s = tr.hasClass('module-selected'),
+            i = $(this).find('input');
+        i.val(s ? 0 : 1);
+        if (s) {
+            tr.removeClass('module-selected');
+        }
+        else {
+            tr.addClass('module-selected');
+        }
+    });
 
-
-    $('input.optional').change(function(){
-        updateOptional();
-    }).change();
-
-    $('.btn-toggle-small').on('click', function() {
+    $('.btn-toggle-small').on('click', function () {
         $('.sidebar').toggleClass('is-collapsed');
         $('.sidebar-not-sticky').toggleClass('hide');
         $('.content').toggleClass('is-full-width');
     });
 
-    $("#btn-toggle").click(function() {
-    $(".arrow").toggleClass("btn-right");
-    $(".btn-close").toggleClass("is-hidden");
-    $(".btn-open").toggleClass("is-visible");
+    $("#btn-toggle").click(function () {
+        $(".arrow").toggleClass("btn-right");
+        $(".btn-close").toggleClass("is-hidden");
+        $(".btn-open").toggleClass("is-visible");
     });
 
-    $("div.date-selector").bind("update",function(){
+    $("div.date-selector").bind("update", function () {
         var s = $(this),
             d = s.find('select.day').val(),
             m = s.find('select.month').val(),
@@ -72,37 +110,46 @@ $(document).ready(function(){
             c.hide();
         }
     });
-    $("div.date-selector").bind("clear", function(){
+    $("div.date-selector").bind("clear", function () {
         var s = $(this);
         s.find('select.day').val('-');
         s.find('select.month').val('-');
         s.find('select.year').val('-');
         s.trigger('update');
     });
-    $('div.date-selector').each(function(){
+    $('div.date-selector').each(function () {
         var s = $(this);
-        s.find('select').change(function(){
+        s.find('select').change(function () {
             s.trigger('update');
         });
-        s.find('a.clear').click(function(e){
+        s.find('a.clear').click(function (e) {
             e.preventDefault();
             s.trigger('clear');
         });
         s.trigger('update');
     });
 
-    $("#toggle").click(function() {
-    $(this).toggleClass("on");
-    $("#menu").slideToggle();
+    $("#toggle").click(function () {
+        $(this).toggleClass("on");
+        $("#menu").slideToggle();
     });
 
-    $('button.status').click(function(){
-        var f =$(this).closest('form');
+    $('button.status').click(function () {
+        var f = $(this).closest('form');
         f.find('input[name="fields[resultStatus]"]').val($(this).data('status'));
+        // make sure comment has been added for managers
+        if ($(this).hasClass('endorse')) {
+            let comment = $('#endorsementComment').val();
+            if ($(this).data('status') === 'draft' && comment.trim() === '') {
+                alert('You must add a comment.');
+                e.preventDefault();
+                return false
+            }
+        }
         f.submit();
     });
 
-    $('form.result').submit(function(){
+    $('form.result').submit(function () {
         $('body').addClass('loading');
         var f = $(this),
             v = true,
@@ -117,7 +164,7 @@ $(document).ready(function(){
         f.find('div.field--wrapper').removeClass('error');
         f.find('span.error').remove();
 
-        f.find('div.field--wrapper').each(function(){
+        f.find('div.field--wrapper').each(function () {
             var t = $(this).data('type'),
                 r = $(this).data('required'),
                 e = false;
@@ -154,33 +201,33 @@ $(document).ready(function(){
     });
 
     // menu
-    $('.menu-tab').click(function(){
+    $('.menu-tab').click(function () {
         $('.menu-hide').toggleClass('show');
         $('.menu-tab').toggleClass('active');
     });
-    $('a').click(function(){
+    $('a').click(function () {
         $('.menu-hide').removeClass('show');
         $('.menu-tab').removeClass('active');
     });
     // login form
-    $.fn.extend( jQuery.easing, {
-        eioe: function( ø, t, b, c, d ) {
-            if(t==0) return b;
-            if(t==d) return b+c;
-            if( (t /= d/2) < 1 ) return c/2 * Math.pow( 2, 10 * (t - 1) ) + b;
-            return c/2 * ( -Math.pow( 2, -10 * --t ) + 2 ) + b;
+    $.fn.extend(jQuery.easing, {
+        eioe: function (ø, t, b, c, d) {
+            if (t == 0) return b;
+            if (t == d) return b + c;
+            if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+            return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
         }
     });
-    $.fn.toggleAttr = function(a, v1, v2) {
-        return this.each(function() {
+    $.fn.toggleAttr = function (a, v1, v2) {
+        return this.each(function () {
             var $t = $(this),
-                v  = $t.attr(a) === v1 ? v2 : v1;
+                v = $t.attr(a) === v1 ? v2 : v1;
             $t.attr(a, v)
         });
     };
     // toggle login/password reset form
-    $('#login-combined .toggle').click(function(){
-        if($('#form-login').hasClass("hide")) {
+    $('#login-combined .toggle').click(function () {
+        if ($('#form-login').hasClass("hide")) {
             $('#form-login').removeClass("hide");
         }
         else {
@@ -195,51 +242,55 @@ $(document).ready(function(){
     // floating labels
     var onClass = "on";
     var showClass = "show";
-    $("input").bind("checkval",function(){
+    $("input").bind("checkval", function () {
         var label = $(this).prev("label.float");
-        if(this.value !== ""){
+        if (this.value !== "") {
             label.addClass(showClass);
         } else {
             label.removeClass(showClass);
         }
-    }).on("keyup",function(){
+    }).on("keyup", function () {
         $(this).trigger("checkval");
-    }).on("focus",function(){
+    }).on("focus", function () {
         $(this).prev("label").addClass(onClass);
-    }).on("blur",function(){
+    }).on("blur", function () {
         $(this).prev("label").removeClass(onClass);
     }).trigger("checkval");
     // password reset form
-    $(".confirm-password-showhide .trigger-password, .password-showhide .trigger-password").click(function() {
+    $(".confirm-password-showhide .trigger-password, .password-showhide .trigger-password").click(function () {
         var c = $(this).parent().attr("class").replace("-showhide", "");
         var obj = $("#" + (c.indexOf("confirm") > -1 ? "confirmPassword" : "password"));
         obj.attr("type", obj.attr("type") == "text" ? "password" : "text");
         $(this).text($(this).text() == "Hide" ? "Show" : "Hide");
     });
-    $('#showResetPasswordPanel').click(function(event) {
+    $('#showResetPasswordPanel').click(function (event) {
         if ($('.container-reset-password').hasClass('dismiss-reset-password')) {
             $('.container-reset-password').removeClass('dismiss-reset-password').addClass('selected-reset-password').show();
         }
         event.preventDefault();
     });
-    $('#closeResetPasswordPanel').click(function(event) {
+    $('#closeResetPasswordPanel').click(function (event) {
         if ($('.container-reset-password').hasClass('selected-reset-password')) {
             $('.container-reset-password').removeClass('selected-reset-password').addClass('dismiss-reset-password');
         }
         event.preventDefault();
     });
     // cpd navigation
-    $('nav.cpd li.nav-closed a[href="#"]').click(function(e){
+    $('nav.cpd li.nav-closed a[href="#"]').click(function (e) {
         e.preventDefault();
         var li = $(this).closest('li'),
             ul = $(this).siblings('ul:eq(0)');
         if (li.hasClass('nav-closed')) {
-            ul.slideDown(function(){li.attr('class', 'nav-open')});
+            ul.slideDown(function () {
+                li.attr('class', 'nav-open')
+            });
             return;
         }
-        ul.slideUp(function(){li.attr('class', 'nav-closed')});
+        ul.slideUp(function () {
+            li.attr('class', 'nav-closed')
+        });
     });
-    $('a.notes').click(function(e){
+    $('a.notes').click(function (e) {
         e.preventDefault();
         var n = $(this).closest('.header').find('div.notes');
         if (n.hasClass('open')) {
@@ -252,20 +303,24 @@ $(document).ready(function(){
         });
     });
     // toggle accordion
-    $('[data-target] > div.status').click(function(e){
+    $('[data-target] > div.status').click(function (e) {
         e.preventDefault();
         var t = $($(this).closest('[data-target]').data('target'));
         if (t.hasClass('closed')) {
-            t.slideDown(function(){t.removeClass('closed')});
+            t.slideDown(function () {
+                t.removeClass('closed')
+            });
             return;
         }
-        t.slideUp(function(){t.addClass('closed')});
+        t.slideUp(function () {
+            t.addClass('closed')
+        });
     });
     // set datefield values
-    $('div.dateField').each(function(){
+    $('div.dateField').each(function () {
         var dateField = $(this),
             hidden = dateField.find('input[type="hidden"].date');
-        dateField.find('input').change(function(){
+        dateField.find('input').change(function () {
             var day = dateField.find('input.day').val(),
                 month = dateField.find('input.month').val(),
                 year = dateField.find('input.year').val();
@@ -275,11 +330,11 @@ $(document).ready(function(){
         })
     });
     // set select values
-    $('select[data-value]').each(function(){
+    $('select[data-value]').each(function () {
         $(this).val($(this).data('value'));
     });
     // make relation select name single not array if empty
-    $('select[data-relation]').on('change', function(){
+    $('select[data-relation]').on('change', function () {
         $(this).attr('name', $(this).data('relation') + ($(this).val() ? '[]' : ''))
     });
     $('select[data-relation]').change();
@@ -304,85 +359,86 @@ $(document).ready(function(){
         var link = $(this),
             action = link.data('action'),
             row = link.closest('.item'),
+            confirmMessage = link.data('confirm'),
             deleteRow = false,
             reload = false;
         if (action == 'entries/reset-result') {
-            if ( ! confirm('Are you sure you want to unlink all attempts?')) {
+            if (!confirm('Are you sure you want to unlink all attempts?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
         else if (action == 'entries/delete-entry') {
-            if ( ! confirm('Are you sure you want to delete this entry?')) {
+            if (!confirm('Are you sure you want to delete this entry?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
             deleteRow = true;
         }
         else if (action == 'entries/endorse-evidence') {
-            if ( ! confirm('Are you sure you want to endorse this result?')) {
+            if (!confirm('Are you sure you want to endorse this result?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id'), ref: $(this).data('ref')};
         }
         else if (action == 'categories/delete-category') {
-            if ( ! confirm('Are you sure you want to delete this category?')) {
+            if (!confirm('Are you sure you want to delete this category?')) {
                 return false;
             }
             var data = {categoryId: $(this).data('id')};
             deleteRow = true;
         }
         else if (action == 'users/suspend-user') {
-            if ( ! confirm('Are you sure you want to suspend this user?')) {
+            if (!confirm('Are you sure you want to suspend this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
         else if (action == 'users/delete-user') {
-            if ( ! confirm('Are you sure you want to delete this user?')) {
+            if (!confirm('Are you sure you want to delete this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             deleteRow = true;
         }
         else if (action == 'users/restore-user') {
-            if ( ! confirm('Are you sure you want to restore this user?')) {
+            if (!confirm('Are you sure you want to restore this user?')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
             reload = true;
         }
         else if (action == 'reports/delete-report') {
-            if ( ! confirm('Are you sure you want to delete this report?')) {
+            if (!confirm('Are you sure you want to delete this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
             deleteRow = true;
         }
         else if (action == 'reports/run-report') {
-            if ( ! confirm('Are you sure you want to run this report?')) {
+            if (!confirm('Are you sure you want to run this report?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
         }
         else if (action == 'entries/pending-result') {
-            if ( ! confirm('Are you sure you want to request endorsement?')) {
+            if (!confirm('Are you sure you want to request endorsement?')) {
                 return false;
             }
             var data = {id: $(this).data('id'), ref: $(this).data('ref'), userId: $(this).data('userid')};
             reload = true;
         }
         else if (action == 'packages/request-assessment') {
-            if ( ! confirm('Are you sure you want to request assessment?')) {
+            if (!confirm(confirmMessage ? confirmMessage : 'Are you sure you want to submit?  You will no longer be able to make any changes.')) {
                 return false;
             }
             var data = {id: $(this).data('id'), userId: $(this).data('userid')};
             reload = true;
         }
         else if (action == 'packages/delete-results') {
-            if ( ! confirm('Are you sure you want to delete all results?')) {
+            if (!confirm('Are you sure you want to delete all results?')) {
                 return false;
             }
             var data = {entryId: $(this).data('id')};
@@ -393,14 +449,14 @@ $(document).ready(function(){
         }
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('body').addClass('loading');
-        $.post("/sp/" + action, data, function(response) {
+        $.post("/sp/" + action, data, function (response) {
             if (response.redirect) {
                 window.location.replace(response.redirect);
             }
             else if (response.success) {
                 $('body').removeClass('loading');
                 if (deleteRow) {
-                   row.fadeOut().remove();
+                    row.fadeOut().remove();
                 }
                 if (reload) {
                     window.location = window.location;
@@ -421,7 +477,7 @@ $(document).ready(function(){
                     alert('Undefined server error, check the logs.');
                 }
             }
-        }).fail(function(error) {
+        }).fail(function (error) {
             $('body').removeClass('loading');
             console.log(error);
             alert('Server error, check the console.');
@@ -429,14 +485,14 @@ $(document).ready(function(){
     });
 
     // select package assessor
-    $('select.assessor').on('change', function(e){
+    $('select.assessor').on('change', function (e) {
         $('body').addClass('loading');
         var data = {packageId: $(this).data('id'), userId: $(this).val()};
         data[window.csrfTokenName] = window.csrfTokenValue;
-        $.post("/sp/users/package-assessor", data, function(response) {
+        $.post("/sp/users/package-assessor", data, function (response) {
             $('body').removeClass('loading');
             alert(response.message);
-        }).fail(function(error) {
+        }).fail(function (error) {
             $('body').removeClass('loading');
             console.log(error);
             alert('Server error, check the console.');
@@ -448,7 +504,7 @@ $(document).ready(function(){
         var data = {companyIds: $(this).val()};
         data[window.csrfTokenName] = window.csrfTokenValue;
         $('#reportRecipientsLabel span').show();
-        $.post("/sp/users/company-managers", data, function(response) {
+        $.post("/sp/users/company-managers", data, function (response) {
             $('#reportRecipientsLabel span').hide();
             var selectedIds = $("select#reportRecipients").val();
             // first get rid of non selected
@@ -460,33 +516,33 @@ $(document).ready(function(){
                     $('select#reportRecipients').append(newOption).trigger('change');
                 }
             });
-        }).fail(function(error) {
+        }).fail(function (error) {
 
         });
     });
 
     $('select#reportCompanies').change();
 
-    $('form:not(.no-loading)').submit(function(){
+    $('form:not(.no-loading)').submit(function () {
         $('body').addClass('loading');
     });
 
     // submit select filter
-    $('form.filter select').on('change', function(){
+    $('form.filter select').on('change', function () {
         // $(this).closest('form').submit();
     });
     // filter teams by selected companies
     $('input.scopeCompany').on('change', function () {
         var c = $('div#reportScopeCompanies').find('div.checkboxes'),
             t = $('div#reportScopeTeams').find('div.checkboxes');
-        c.find('input.scopeCompany').each(function(){
+        c.find('input.scopeCompany').each(function () {
             var companyId = $(this).data('id'),
                 teamInputs = t.find('label.company-' + companyId);
-            if($(this).prop('checked')) {
+            if ($(this).prop('checked')) {
                 teamInputs.show();
             }
             else {
-                teamInputs.each(function() {
+                teamInputs.each(function () {
                     $(this).find('input').prop('checked', false);
                     $(this).hide();
                 });
@@ -497,14 +553,14 @@ $(document).ready(function(){
     $('input.scopeCompany').eq(0).change();
     // select all
     $('input.scopeAll').on('change', function () {
-       var c = $(this).closest('p').siblings('div.checkboxes'),
-           checked =  $(this).prop('checked') === true;
-        c.find('input').each(function() {
+        var c = $(this).closest('p').siblings('div.checkboxes'),
+            checked = $(this).prop('checked') === true;
+        c.find('input').each(function () {
             $(this).prop('checked', checked).change();
         });
     });
     // show hide module specific report fields
-    $('select#reportType').change(function(){
+    $('select#reportType').change(function () {
         if ($(this).val() == 'results') {
             $('div#modulesResultsFields').show();
         }
@@ -517,7 +573,7 @@ $(document).ready(function(){
     $('input.scopeRole').on('change', function () {
         var r = $('div#reportScopeRoles').find('div.checkboxes'),
             m = $('div#reportScopeModules').find('div.checkboxes');
-        r.find('input.scopeRole').each(function() {
+        r.find('input.scopeRole').each(function () {
             var roleId = $(this).data('id'),
                 moduleInputs = m.find('label.role-' + roleId);
             if ($(this).prop('checked')) {
@@ -534,24 +590,35 @@ $(document).ready(function(){
 
     $('#reportAutomated').hide();
 
-    // show automated report inputs
+    // toggle automated report inputs
     $('#buttonAutomated').click(function (e) {
         e.preventDefault();
-        $('#buttonAutomated').hide();
-        $('#reportAutomated').show();
-        $('input[name="automated"]').val(1);
-        $('#buttonSubmit').text('Save Report');
-    })
+        if ($('input[name="automated"]').val() == 1) {
+            $('#reportAutomated').hide();
+            $('input[name="automated"]').val(0);
+            $('#buttonAutomated').text('Create Automated');
+        }
+        else {
+            $('#reportAutomated').show();
+            $('input[name="automated"]').val(1);
+            $('#buttonSubmit').text('Save Report');
+            $('#buttonAutomated').text('Cancel Automated');
+        }
+    });
 
-    $('#reportType').change(function(){
+    // show report type options
+    $('#reportType').change(function () {
         var type = $(this).val();
+        var description = $(this).find(':selected').data('description');
         $('form#reports').find('div.fields').hide();
         $('form#reports').find('div.fields-' + type).show();
+        $('p#reportTypeDescription').text(description);
     });
 
     $('#reportType').change();
 
-    $('#reportResultType').change(function(){
+    // show report result type options
+    $('#reportResultType').change(function () {
         var type = $(this).val();
         if (type != 'unitResult') {
             $('#reportUnitsDropdown').hide();
@@ -563,7 +630,8 @@ $(document).ready(function(){
 
     $('#reportResultType').change();
 
-    $('#resultUnit').change(function(){
+    // show result unit title
+    $('#resultUnit').change(function () {
         var unitId = $(this).val();
         if (unitId) {
             $('#resultTitle').hide();
@@ -575,44 +643,55 @@ $(document).ready(function(){
 
     $('#resultUnit').change();
 
+    // show expiring options if relevant
+    $('#reportResultStandardType').change(function () {
+        var type = $(this).val();
+        if (type == 'expiring') {
+            $('div#resultExpiringOptions').show();
+        }
+        else {
+            $('div#resultExpiringOptions').hide();
+        }
+    });
+
+    $('#reportResultStandardType').change();
+
     // delete user photo
-    $("#deleteUserPhotoAction").on('click', function(e) {
+    $("#deleteUserPhotoAction").on('click', function (e) {
         e.preventDefault();
         $("input[name='deleteUserPhoto']").val('zap');
         $("#form-photo").submit();
     });
 
     // expand / collapse account details
-    $(".link-toggle-expand").click(function()
-    {
-    $('.link-toggle-expand').removeClass("show");
-    $('.link-toggle-expand').addClass("hide");
-    $('.link-toggle-collapse').removeClass("hide");
-    $('.link-toggle-collapse').addClass("show");
-    $('.link-expand').removeClass("show");
-    $('.link-expand').addClass("hide");
-    $('.link-collapse').removeClass("hide");
-    $('.link-collapse').addClass("show");
-    $("#account-details-expand").slideToggle(400);
+    $(".link-toggle-expand").click(function () {
+        $('.link-toggle-expand').removeClass("show");
+        $('.link-toggle-expand').addClass("hide");
+        $('.link-toggle-collapse').removeClass("hide");
+        $('.link-toggle-collapse').addClass("show");
+        $('.link-expand').removeClass("show");
+        $('.link-expand').addClass("hide");
+        $('.link-collapse').removeClass("hide");
+        $('.link-collapse').addClass("show");
+        $("#account-details-expand").slideToggle(400);
     });
-    $(".link-toggle-collapse").click(function()
-    {
-    $('.link-toggle-collapse').removeClass("show");
-    $('.link-toggle-collapse').addClass("hide");
-    $('.link-toggle-expand').removeClass("hide");
-    $('.link-toggle-expand').addClass("show");
-    $('.link-expand').removeClass("hide");
-    $('.link-expand').addClass("show");
-    $('.link-collapse').removeClass("show");
-    $('.link-collapse').addClass("hide");
-    $("#account-details-expand").slideToggle(400);
+    $(".link-toggle-collapse").click(function () {
+        $('.link-toggle-collapse').removeClass("show");
+        $('.link-toggle-collapse').addClass("hide");
+        $('.link-toggle-expand').removeClass("hide");
+        $('.link-toggle-expand').addClass("show");
+        $('.link-expand').removeClass("hide");
+        $('.link-expand').addClass("show");
+        $('.link-collapse').removeClass("show");
+        $('.link-collapse').addClass("hide");
+        $("#account-details-expand").slideToggle(400);
     });
 
     /* cpd module groups and tabs */
     $('.tabgroup > div').hide();
     $('.module-group-tabs').hide();
 
-    $('.tabs a').click(function(e){
+    $('.tabs a').click(function (e) {
         e.preventDefault();
         var a = $(this),
             ul = a.closest('ul'),
@@ -625,19 +704,35 @@ $(document).ready(function(){
         a.addClass('active');
         $(tabgroup).children('div').hide();
         $(target).show();
+        // load tab contents
+        if(a.hasClass('load-tab')) {
+            if (!$(target).hasClass('loaded')) {
+                let data = {
+                    template: a.data('template'),
+                    packageId: a.data('id')
+                };
+                data[window.csrfTokenName] = window.csrfTokenValue;
+                $('body').addClass('loading');
+                $(target).load( "/sp/packages/load-template", data, function() {
+                    $(target).addClass('loaded');
+                    $('body').removeClass('loading');
+                });
+            }
+        }
         // make sure first unit group is shown
         if (target.match("^#tab")) {
             $(target).find('ul.tabs').eq(0).find('a').eq(0).click();
         }
         // update select if present
-        if(select) {
+        if (select) {
             select.val(target);
         }
     });
 
     $('.module-group-tabs ul.tabs li:first-child a').click();
 
-    $('select.module-menu').change(function(){
+    $('select.module-menu').change(function () {
+        if (!$(this).val()) return;
         $('a[href="' + $(this).val() + '"]').click();
     });
 
@@ -645,7 +740,7 @@ $(document).ready(function(){
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
-            moduleGroupLink = $('a[href="#'  + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
+            moduleGroupLink = $('a[href="#' + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
             tabContainer = moduleGroupLink.closest('div.tab-container');
         if (tabContainer.length) {
             tabContainer.find('a.jobroleEndorseExpand').click();
@@ -660,27 +755,29 @@ $(document).ready(function(){
 
     $('.module-group-tabs').show();
 
-    $('input[name="fields[userType]"]').change(function(){
-        if ($(this).attr('id') == 'userManager' && $(this).is(':checked')){
+    $('input[name="fields[userType]"]').change(function () {
+        if ($(this).attr('id') == 'userManager' && $(this).is(':checked')) {
             return $('div#manager-fields').removeClass('hide');
         }
         $('div#manager-fields').addClass('hide');
     }).change();
 
-    $('input#teamManagers').click(function(){
-        if ($(this).is(':checked')){
+    $('input#teamManagers').click(function () {
+        if ($(this).is(':checked')) {
             return $('div#team-fields').removeClass('hide');
         }
         $('div#team-fields').addClass('hide');
     });
 
     // add choices select
-    $("form.test").find("ul.choices").each(function(){
-      var ul = $(this),
-          choices = ul.find('input[type=checkbox]'),
-          input = ul.find('input[type=hidden]').eq(0);
-        choices.change(function(){
-            input.val(ul.find('input[type=checkbox]:checked').map(function(){return $(this).val()}).get().join());
+    $("form.test").find("ul.choices").each(function () {
+        var ul = $(this),
+            choices = ul.find('input[type=checkbox]'),
+            input = ul.find('input[type=hidden]').eq(0);
+        choices.change(function () {
+            input.val(ul.find('input[type=checkbox]:checked').map(function () {
+                return $(this).val()
+            }).get().join());
         });
     });
 
@@ -690,39 +787,39 @@ $(document).ready(function(){
         var loop = 0,
             data = {'entryId': pp.data('id')},
             paymentRedirect = pp.data('redirect'),
-            checkPayment = function(){
-                if (loop == 5) {
-                    alert('Payment not confirmed.  Contact support.');
+            checkPayment = function () {
+                if (loop == 10) {
+                    alert('Payment confirmation not yet received.  Refresh and try again.');
                     $('body').removeClass('loading');
                     return;
                 }
                 data[window.csrfTokenName] = window.csrfTokenValue;
-                $.post("/sp/paypal/verify-payment", data, function(response) {
+                $.post("/sp/paypal/verify-payment", data, function (response) {
                     if (!response.success) {
                         alert(response.message);
                         $('body').removeClass('loading');
                         return;
                     }
-                    if (response.message == '1') {
+                    if (response.message != '0') {
                         window.location.replace(paymentRedirect);
                         return;
                     }
                     console.log(response);
                     loop++;
-                    setTimeout(function(){checkPayment();}, 2000);
+                    setTimeout(function () {
+                        checkPayment();
+                    }, 2000);
                 });
             }
         checkPayment();
     }
 
-
-    $('a.endorse').each(function(){
-        var tr = $(this).closest('tr'),
+    $('tr.endorse:not(.taskbook-module-group)').each(function () {
+        var tr = $(this),
             moduleGroup = $(this).closest('.endorse-wrapper').data('label'),
-            unitTitle =  $(this).data('label'),
+            unitTitle = $(this).data('label'),
             e = $('#endorsements');
 
-        tr.addClass('endorse');
         var groupId = $(this).closest('.groups-tab-group').attr('id');
         $('a[href="#' + groupId + '"]').closest('li').addClass('endorse');
 
@@ -731,7 +828,7 @@ $(document).ready(function(){
         row.append('<td>' + moduleGroup + '</td>');
         row.append('<td>' + unitTitle + '</td>');
         var icons = '';
-        tr.find('td.icons').each(function(){
+        tr.find('td.icons').each(function () {
             icons += $(this).html()
         });
         row.append('<td style="text-align: right">' + icons + '</td>');
@@ -739,7 +836,7 @@ $(document).ready(function(){
         e.show();
     });
 
-    $('#includeHierarchy').change(function(){
+    $('#includeHierarchy').change(function () {
         var s = $(this).is(':checked');
         $('#includeHierarchyWarning').css('display', s ? 'block' : 'none');
     });
@@ -747,15 +844,34 @@ $(document).ready(function(){
     $("form.read-only :input").not('[type="hidden"]').not('#resultComment').not('#resultCommentButton').prop("disabled", true);
     $("form.read-only .fileinput-button").hide();
     $("form.read-only .date-selector span.clear").hide();
-    $("form.read-only .delete-file").click(function(e){
+    $("form.read-only .delete-file").click(function (e) {
         e.preventDefault();
         alert('Read Only Manager');
         return false;
     });
 
-    $('button.taskbook-create').click(function(e){
+    $('button.taskbook-create').click(function (e) {
         e.preventDefault();
         $('input[name="taskbook"]').val(1);
         $(this).closest('form').submit();
     });
+
+    $('[data-modal]').click(function (e) {
+        e.preventDefault();
+        let t = $('#' + $(this).data('modal'));
+        if (t) t.addClass('modal-open');
+    })
+
+    if ($('#reviewSampled').length) {
+        $('#reviewSampled').change(function(e){
+            if ($(this).is(':checked')) {
+                $('#reviewResult').prop('disabled', false);
+            }
+            else {
+                $('#reviewResult').val('1');
+                $('#reviewResult').prop('disabled', true);
+            }
+        });
+        $('#reviewSampled').change();
+    }
 });

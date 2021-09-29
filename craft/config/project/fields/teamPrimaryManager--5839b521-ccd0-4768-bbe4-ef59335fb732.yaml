@@ -1,0 +1,22 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
+handle: teamPrimaryManager
+instructions: ''
+name: 'Team Primary Manager'
+searchable: true
+settings:
+  allowSelfRelations: false
+  limit: '1'
+  localizeRelations: false
+  selectionLabel: ''
+  showSiteMenu: true
+  source: null
+  sources:
+    - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a' # Team Managers
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Users

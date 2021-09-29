@@ -1,14 +1,11 @@
 {% set packageId = craft.app.request.getSegment(4) %}
-
-{# only one package - redirect to package #}
-{% if not packageId and cpdUser.record.totalPackages == 1 %}
-    {% redirect craft.lantra.packageUrl(cpdUser.id, cpdUser.record.firstPackage.elementId) %}
-{% endif %}
+{% set moduleGroupId = craft.app.request.getSegment(5) %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set isManager = false %}
 {% set isAssessor = false %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 {% if cpdUser.id != currentUser.id %}
     {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
@@ -18,27 +15,31 @@
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
-        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem} %}
+        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem, moduleGroupId:moduleGroupId} %}
     </article>
 {% else %}
     <table class="data">
         <thead>
         <tr>
-            <th>Module Group</th>
+            <th>{{ taskbookLabel }}</th>
             {% if craft.lantra.setting('taskbookLevels') %}
                 <th>Level</th>
             {% endif %}
             <th>Next Step</th>
             <th>Status</th>
+            <th>Cost</th>
+            <th>PayPal Email</th>
+            <th>Reference</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
             {% for packageItem in cpdUser.record.packages %}
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
+                {% set payment = package.userPayments.one %}
                 <tr>
                     <td>
-                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.moduleGroup.title }}</a>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
                     </td>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
@@ -50,6 +51,13 @@
                     </td>
                     <td>
                         {{ package.packageStatus|title }}
+                    </td>
+                    <td>£{{ package.packageCost }}</td>
+                    <td>
+                        {{ payment ? payment.payer_email : 'unknown' }}
+                    </td>
+                    <td>
+                        {{ payment ? payment.txn_id : 'unknown' }}
                     </td>
                     <td>
                         {% set certificateUrl = craft.lantra.certificateUrl(package) %}
@@ -63,6 +71,11 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if craft.lantra.setting('taskbookNew') %}
+        <div class="container-btn">
+            <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
+        </div>
+    {% endif %}
 {% endif %}
 
 

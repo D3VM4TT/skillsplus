@@ -8,14 +8,14 @@
 }) }}
 
 {{ forms.lightswitchField ({
-    label:			"Enable Purchase Taskbook?",
+    label:			"Enable New Taskbook?",
     id:				"taskbookNew",
     name:			"taskbookNew",
     on:		        settings.taskbookNew == 1
 }) }}
 
 {{ forms.lightswitchField ({
-    label:			"Enable Create Taskbook?",
+    label:			"Enable Create Taskbook (new users)?",
     id:				"enableCreateAccount",
     name:			"enableCreateAccount",
     on:		        settings.enableCreateAccount == 1
@@ -33,6 +33,19 @@
     id:				"taskbookLevels",
     name:			"taskbookLevels",
     on:		        settings.taskbookLevels == 1
+}) }}
+
+{{ forms.editableTableField ({
+    label:			"Taskbook Level Labels",
+    id:				"taskbookLevelLabels",
+    name:			"taskbookLevelLabels",
+    addRowLabel:    "Add a level label",
+    cols:
+    {
+        value:       {heading: "Level", type: "number"},
+        label:       {heading: "Label", type: "text"}
+    },
+    rows:           settings.taskbookLevelLabels
 }) }}
 
 {{ forms.elementSelectField ({

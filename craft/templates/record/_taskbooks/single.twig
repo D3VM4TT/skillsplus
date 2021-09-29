@@ -14,12 +14,24 @@
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.last : null %}
-
-{% set section = craft.sections.getSectionByHandle('packages') %}
-
+{% set packageId = craft.request.getParam('packageId') %}
 {% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
 {% set singleType = craft.request.getParam('type') %}
+{% set payment = craft.request.getParam('payment') %}
+{% set package = craft.entries.id(packageId).one() %}
+{% set unpaidCost = package.unpaidCost %}
+
+{% if not package %}
+    {% exit 404 %}
+{% endif %}
+
+{% if payment and not unpaidCost %}
+    {# redirect back to package if nothing to pay #}
+    {% redirect 'cpd/' ~ account.id ~ '/taskbooks/' ~ package.id %}
+{% endif %}
+
+{% set availableModuleGroups = package.moduleGroups('available') %}
+{% set cost = craft.lantra.getModuleGroupCost(package.taskbook, singleType) %}
 
 {% set isTaskbooks = true %}
 
@@ -33,20 +45,23 @@
                 <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
             </a>
             {{ currentUserCompany|default('') }}
-            <h2>Add {{ singleType }} module group</h2>
+            <h2>Add {{ singleType }} modules</h2>
+            <p>{{ package.taskbook.title }}</p>
         </div>
         <div class="page-content">
-        {% if singleType == 'optional' %}
-            {% set singleModuleGroups = craft.lantra.getOptionalModuleGroups() %}
-        {% else %}
-            {% set singleModuleGroups = craft.lantra.getResitModuleGroups() %}
-        {% endif %}
-
-        {% if not singleModuleGroups|length %}
+        {% if payment %}
             <div class="field--wrapper">
-                <p style="color:red;">There are currently no module groups available.</p>
+                <p>There is £{{ unpaidCost }} outstanding to pay.</p>
+                <p>&nbsp;</p>
+                {{ craft.lantra.payPalButton(package.title ~ ' [optional]', unpaidCost, 'Pay £' ~ unpaidCost, siteUrl('sp/paypal/pay/' ~ package.id), package.unpaidPayPalParams)|raw }}
+            </div>
+        {% elseif not availableModuleGroups|length %}
+            <div class="field--wrapper">
+                <p style="color:red;">There are currently no modules available.</p>
             </div>
         {% else %}
+
+            {% include '_includes/taskbooks/taskbookRequired' with {taskbook: package.taskbook} %}
 
             {% set levelsOptions = '' %}
             {% for option in craft.lantra.taskbookLevels() %}
@@ -58,34 +73,19 @@
             {% endif %}
             <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
                 {{ csrfInput() }}
-                {{ actionInput('entries/save-entry') }}
-                {{ hiddenInput('sectionId', section.id) }}
-                {{ hiddenInput('author[]', account.id) }}
-                {{ hiddenInput('enabled', 1) }}
-                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks') }}
+                {{ actionInput('sp/packages/add-module-groups') }}
+                {{ hiddenInput('packageId', package.id) }}
+                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/' ~ package.id ) }}
                 {{ hiddenInput('singleType', singleType) }}
                 <div class="field--wrapper">
-                    <label for="packageModuleGroup" class="no-float">Module Group:</label>
-                    <select class="core-module" name="fields[packageModuleGroup][]">
-                        {% for moduleGroup in singleModuleGroups %}
-                            {% set cost = singleType == 'optional' ? moduleGroup.moduleSingleCost : moduleGroup.moduleResitCost %}
-                            <option {% if (entry is defined and packageModuleGroup and packageModuleGroup.id == moduleGroup.id) or (moduleGroupId == moduleGroup.id) %}selected {% endif %}
-                                    value="{{ moduleGroup.id }}">{{ moduleGroup.title }} £{{ cost }}</option>
-                        {% endfor %}
-                    </select>
+                    {% if cost %}
+                        <p>Additional modules cost £{{ cost }} each.</p>
+                        <p>&nbsp;</p>
+                    {% endif %}
+                    {% include '_forms/taskbookOptionalModuleGroups' with {package:package, optionalModuleGroups:availableModuleGroups, taskbook:package.taskbook} %}
                 </div>
-                {% if craft.lantra.setting('taskbookLevels') %}
-                <div class="field--wrapper">
-                    <label for="packageLevel" class="no-float">Level:</label>
-                    <select class="core-level" name="fields[packageLevel]">
-                        {% for option in craft.lantra.taskbookLevels() %}
-                            <option {% if entry is defined and entry.packageLevel == option.value %}selected {% endif %} value="{{ option.value }}">{{ option.label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% endif %}
                 <div class="container-btn">
-                    <button type="submit" class="button primary-bg">Add Module Group</button>
+                    <button type="submit" class="button primary-bg">Add Module</button>
                 </div>
             </form>
         {% endif %}

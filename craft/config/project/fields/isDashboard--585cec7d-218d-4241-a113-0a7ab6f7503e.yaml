@@ -1,0 +1,14 @@
+columnSuffix: vaxdgyac
+contentColumnType: boolean
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: isDashboard
+instructions: 'Include dashboard for this job role?'
+name: Dashboard
+searchable: false
+settings:
+  default: true
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

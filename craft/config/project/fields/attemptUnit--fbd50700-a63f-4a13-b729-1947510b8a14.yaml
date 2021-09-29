@@ -1,0 +1,22 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
+handle: attemptUnit
+instructions: ''
+name: 'Attempt Unit'
+searchable: true
+settings:
+  allowSelfRelations: false
+  limit: '1'
+  localizeRelations: false
+  selectionLabel: ''
+  showSiteMenu: true
+  source: null
+  sources:
+    - 'section:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Entries

@@ -15,36 +15,204 @@ use yii\base\Behavior;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
+use lantra\sp\helpers\RecordHelper;
 
 class PackageBehavior extends Behavior
 {
     /**
      * @return null
      */
-    public function getModuleGroup()
+    public function getTaskbook()
     {
-        return $this->owner->packageModuleGroup ? $this->owner->packageModuleGroup->last() : null;
+        return $this->owner->packageTaskbook ? $this->owner->packageTaskbook->last() : null;
+    }
+
+    /**
+     * @param $categoryId
+     * @return null
+     */
+    public function getTaskbookModuleGroupBlock($categoryId)
+    {
+        if (null == $taskbook = $this->getTaskbook()) {
+            return null;
+        }
+        return $taskbook->moduleGroupBlock($categoryId);
+    }
+
+    /**
+     * @param $categoryId
+     * @return mixed|null
+     */
+    public function moduleGroup($categoryId)
+    {
+        foreach($this->moduleGroups() as $moduleGroup) {
+            if ($moduleGroup['category']->id == $categoryId) {
+                return $moduleGroup;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    public function moduleGroups($type = 'all')
+    {
+        if ($type == 'available') {
+            return $this->availableModuleGroups();
+        }
+        if (!$this->owner->packageModuleGroups) {
+            return [];
+        }
+        $modulesGroups = [];
+        foreach ($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
+            if ($type == 'all' || ($type == 'unpaid' && !$moduleGroupBlock->moduleGroupPaid) || ($type == 'optional' && !$moduleGroupBlock->moduleGroupMandatory) || ($type == 'mandatory' && $moduleGroupBlock->moduleGroupMandatory)) {
+                if (!$type == 'paid' && !$moduleGroupBlock->moduleGroupPaid) {
+                    continue;
+                }
+                $category = $moduleGroupBlock->moduleGroup->one();
+                if (null == $category || null == $taskbookModuleGroupBlock = $this->getTaskbookModuleGroupBlock($category->id)) {
+                    continue;
+                }
+                $modulesGroups[] = [
+                    'category' => $category,
+                    'mandatory' => $taskbookModuleGroupBlock->moduleGroupMandatory,
+                    'level' => $moduleGroupBlock->moduleGroupLevel,
+                    'credit' => $taskbookModuleGroupBlock->moduleGroupCredit,
+                    'paid' => (bool) $moduleGroupBlock->moduleGroupPaid,
+                    'cost' => (int) $moduleGroupBlock->moduleGroupCost
+                ];
+            }
+        }
+        return $modulesGroups;
+    }
+
+    /**
+     * @return array
+     */
+    public function moduleGroupIds($type = 'all')
+    {
+        return array_keys($this->moduleGroupCategories($type));
     }
 
     /**
      * @return null
      */
-    public function moduleGroups()
+    public function moduleGroupCategories($type = 'all')
     {
-        if (!$this->owner->packageModuleGroup) {
-            return [];
+        $categories = [];
+        foreach ($this->moduleGroups($type) as $moduleGroup) {
+            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
         }
-        $modulesGroups = [
-            [
-                'category' => $this->owner->packageModuleGroup->last(),
-                'level'    => $this->owner->packageLevel
-            ]
+        return $categories;
+    }
+
+    /**
+     * @param $categoryId
+     * @return bool
+     */
+    public function hasModuleGroup($categoryId)
+    {
+        return array_key_exists($categoryId, $this->moduleGroupIds());
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptionalModuleGroups()
+    {
+        $categories = [];
+        foreach ($this->moduleGroups('optional') as $moduleGroup) {
+            $categories[] = $moduleGroup['category'];
+        }
+        return $categories;
+    }
+
+    /**
+     * @param $categoryId
+     * @return mixed|null
+     */
+    public function moduleGroupBlock($categoryId)
+    {
+        foreach ($this->owner->packageModuleGroups->all() as $moduleGroupBlock) {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if ($category->id == $categoryId) {
+                return $moduleGroupBlock;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return int
+     */
+    public function unpaidCost()
+    {
+        $cost = 0;
+        foreach ($this->moduleGroups('unpaid') as $unpaid) {
+            $cost = $cost + $unpaid['cost'];
+        }
+        return $cost;
+    }
+
+    /**
+     * @return array
+     */
+    public function unpaidPayPalParams()
+    {
+        $params = [
+            'packageId' => $this->owner->id,
+            'moduleGroupIds' => []
         ];
-        foreach($this->owner->packageOptionalModuleGroups->all() as $optionalModuleGroupBlock) {
-            $modulesGroups[] = [
-                'category' => $optionalModuleGroupBlock->optionalModuleGroup->leaves()->one(),
-                'level'    => $optionalModuleGroupBlock->optionalLevel
-            ];
+        foreach ($this->moduleGroups('unpaid') as $unpaid) {
+            $params['moduleGroupIds'][] = $unpaid['category']->id;
+        }
+        return $params;
+    }
+
+    /**
+     * @param $moduleGroupIds
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function payModuleGroups($moduleGroupIds)
+    {
+        foreach ($this->owner->packageModuleGroups as $moduleGroupBlock) {
+            $category = $moduleGroupBlock->moduleGroup->one();
+            if (in_array($category->id, $moduleGroupIds)) {
+                $moduleGroupBlock->setFieldValue('moduleGroupPaid', true);
+                Craft::$app->getElements()->saveElement($moduleGroupBlock, false);
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAvailable()
+    {
+        return (bool)count($this->availableModuleGroups());
+    }
+
+    /**
+     * @return array
+     */
+    public function availableModuleGroups()
+    {
+        $taskbook = $this->getTaskbook();
+        $taskBookModuleGroups = $taskbook->moduleGroups('optional');
+        $modulesGroups = [];
+        foreach ($taskBookModuleGroups as $moduleGroup) {
+            $category = $moduleGroup['category'];
+            if (!in_array($category->id, $this->moduleGroupIds())) {
+                $modulesGroups[] = [
+                    'category' => $category,
+                    'level' => $moduleGroup['level'],
+                    'credit' => $moduleGroup['credit']
+               ];
+            }
         }
         return $modulesGroups;
     }
@@ -52,25 +220,13 @@ class PackageBehavior extends Behavior
     /**
      * @return null
      */
-    public function moduleGroupCategories()
-    {
-        $categories = [];
-        foreach($this->moduleGroups() as $moduleGroup) {
-            $categories[$moduleGroup['category']->id] = $moduleGroup['category'];
-        }
-        return $categories;
-    }
-
-    /**
-     * @return null
-     */
     public function availableModuleGroupCategories()
     {
-        $moduleGroup = $this->getModuleGroup();
-        $optionalModules = $moduleGroup->children->all();
+        $taskbook = $this->getTaskbook();
+        $optionalModuleGroups = $taskbook->moduleGroupCategories('optional');
         $existingIds = array_keys(Lantra::$app->packages->getAllModuleGroups($this->owner->author));
         $available = [];
-        foreach($optionalModules as $category) {
+        foreach ($optionalModuleGroups as $category) {
             if (!in_array($category->id, $existingIds)) {
                 $available[$category->id] = $category;
             }
@@ -85,8 +241,8 @@ class PackageBehavior extends Behavior
     {
         $resits = [];
         foreach ($this->owner->packageAssessment as $assessment) {
-            if ($assessment->assessmentDate && ! $assessment->assessmentPassed) {
-                $category = $assessment->assessmentModuleGroup->last();
+            if ($assessment->assessmentDate && !$assessment->assessmentPassed) {
+                $category = $assessment->assessmentModuleGroup->one();
                 $resits[$category->id] = $category;
             }
         }
@@ -100,11 +256,112 @@ class PackageBehavior extends Behavior
     public function moduleGroupAssessment($moduleGroupId = null)
     {
         foreach ($this->owner->packageAssessment as $assessment) {
-            if ($assessment->assessmentModuleGroup->last()->id == $moduleGroupId) {
+            $moduleGroup = $assessment->assessmentModuleGroup->one();
+            if ($moduleGroup && $moduleGroup->id == $moduleGroupId) {
                 return $assessment;
             }
         }
         return null;
+    }
+
+    /**
+     * @param bool $includeOptional
+     * @return mixed
+     */
+    public function isComplete($includeOptional = false)
+    {
+        $required = $this->required($includeOptional);
+        return $required['complete'];
+    }
+
+    /**
+     * @param bool $level
+     * @return int
+     */
+    public function totalCredits($level = false)
+    {
+        $credits = 0;
+        $taskbook = $this->getTaskbook();
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            if (!$level || $moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
+                $credits += $moduleGroup['credit'];
+            }
+        }
+        return $credits;
+    }
+
+    /**
+     * @return array
+     */
+    public function complete()
+    {
+        $user = $this->owner->author;
+        $taskbook = $this->getTaskbook();
+        $complete = [
+            'mandatory'     => 0,
+            'optional'      => 0,
+            'credits'       => 0,
+            'levelCredits'  => 0
+        ];
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            ## get the results from the user record
+            $categoryId = $moduleGroup['category']->id;
+            $moduleGroupItem = $user->record->getItem($categoryId);
+            if (RecordHelper::isComplete($moduleGroupItem, $this->owner->author, $taskbook)) {
+                if ($moduleGroup['mandatory']) {
+                    $complete['mandatory']++;
+                }
+                else{
+                    $complete['optional']++;
+                }
+                $complete['credits'] += $moduleGroup['credit'];
+                if ($moduleGroup['level'] >= $taskbook->moduleGroupMinimumLevel) {
+                    $complete['levelCredits'] += $moduleGroup['credit'];
+                }
+            }
+        }
+        return $complete;
+    }
+
+    /**
+     * @param bool $includeOptional
+     * @return array|bool
+     */
+    public function required($includeOptional = false)
+    {
+        $taskbook = $this->getTaskbook();
+        $complete = $this->complete();
+        $totalMandatory = count($this->moduleGroupIds('mandatory'));
+        $required = [
+            'mandatory'     => max($totalMandatory - $complete['mandatory'], 0),
+            'optional'      => max($taskbook->moduleMinimumOptional - $complete['optional'], 0),
+            'credits'       => max($taskbook->moduleMinimumCredits - $complete['credits'],0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $complete['levelCredits'], 0)
+        ];
+
+        ## make optional all incomplete
+        if ($includeOptional) {
+            $required['optional'] = max(count($this->moduleGroupIds('optional')) - $complete['optional'], 0);
+        }
+
+        $required['complete'] = $required['mandatory'] == 0 && $required['optional'] == 0 && $required['credits'] == 0 && $required['levelCredits'] == 0;
+        return $required;
+    }
+
+    /**
+     * @return array
+     */
+    public function creditsSelected()
+    {
+        $taskbook = $this->getTaskbook();
+        if (!$taskbook->moduleMinimumCredits) {
+            return true;
+        }
+        $required = [
+            'credits'       => max($taskbook->moduleMinimumCredits - $this->totalCredits(),0),
+            'levelCredits'  => max($taskbook->moduleGroupMinimumLevelCredits - $this->totalCredits(true), 0)
+        ];
+        return $taskbook->moduleGroupMinimumLevelCredits ? $required['credits'] == 0 && $required['levelCredits'] == 0 : $required['credits'] == 0;
     }
 
     /**
@@ -155,7 +412,7 @@ class PackageBehavior extends Behavior
     {
         $manager = LantraHelper::getUser($user);
         $steps = [];
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($step->reviewUser->count() && $step->reviewUser->one()->id == $manager->id) {
                 $steps[] = $step;
             }
@@ -170,7 +427,7 @@ class PackageBehavior extends Behavior
     public function canAssign(User $user = null)
     {
         $manager = LantraHelper::getUser($user);
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($this->canAssignStep($step, $manager)) {
                 return true;
             }
@@ -213,7 +470,7 @@ class PackageBehavior extends Behavior
     public function getPackageWorkflowStep($stepId)
     {
         $packagesWorkflow = $this->getWorkflow();
-        foreach($packagesWorkflow as $step) {
+        foreach ($packagesWorkflow as $step) {
             if ($step->stepId == $stepId) {
                 return $step;
             }
@@ -264,11 +521,11 @@ class PackageBehavior extends Behavior
             return;
         }
         $new = [
-            'col1'       => time(),
-            'col2'       => $userMessage,
-            'col3'       => $adminMessage,
-            'col4'       => $user->id,
-            'col5'       => $user->fullName
+            'col1' => time(),
+            'col2' => $userMessage,
+            'col3' => $adminMessage,
+            'col4' => $user->id,
+            'col5' => $user->fullName
         ];
         $packageLog = $this->owner->packageLog;
         $packageLog['new1'] = $new;
@@ -287,9 +544,27 @@ class PackageBehavior extends Behavior
     /**
      * @return bool
      */
-    public function isComplete()
+    public function isStatusComplete()
     {
         return $this->owner->packageStatus == 'complete';
+    }
+
+    /**
+     * @return string
+     */
+    public function statusLabel()
+    {
+        if ($this->owner->packageStatus == 'active') {
+            return 'In Progress';
+        }
+        $nextStep = $this->getNextStep();
+        if ($this->owner->packageStatus == 'locked') {
+            return $nextStep ? $nextStep->reviewStepName : 'Unknown';
+        }
+        if ($this->owner->packageStatus == 'complete') {
+            return 'Complete';
+        }
+        return 'Unknown';
     }
 
     /**
@@ -319,10 +594,11 @@ class PackageBehavior extends Behavior
         if (!$packageWorkflowStep) {
             return null;
         }
-
         $criteria = User::find();
         if ($packageWorkflowStep->stepUserGroup == 'jobRole') {
-            $criteria->relatedTo = ['targetElement' => $packageWorkflowStep->stepJobRole->ids(), 'field' => 'userRole'];
+            $jobRoleIds = $packageWorkflowStep->stepJobRole->ids();
+            $managerIds = Lantra::$app->packages->getReviewers($step->owner->author, $this->owner->taskbook, $jobRoleIds);
+            $criteria->id = $managerIds;
         } else {
             $criteria->group = $packageWorkflowStep->stepUserGroup;
         }
@@ -352,7 +628,7 @@ class PackageBehavior extends Behavior
      */
     public function getNextStep()
     {
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if (!$step->reviewDate) {
                 return $step;
             }
@@ -368,7 +644,7 @@ class PackageBehavior extends Behavior
     public function getPreviousStep()
     {
         $previousStep = null;
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if (!$step->reviewDate) {
                 break;
             }
@@ -410,9 +686,94 @@ class PackageBehavior extends Behavior
     public function getNextStepReviewer()
     {
         if (null == $step = $this->getNextStep()) {
-            return null;
+            return false;
         }
-        return $step->reviewUser->one();
+        return $step->reviewUser->count() ? $step->reviewUser->one() : false;
+    }
+
+    /**
+     * Returns all evidence for package grouped by unit
+     *
+     * @return array
+     */
+    public function getEvidence()
+    {
+        $assets = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $unit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultEvidence->all() as $evidence) {
+                if (isset($assets[$evidence->id])) {
+                    $assets[$evidence->id]['units'][] = $unit;
+                }
+                else {
+                    $assets[$evidence->id] = [
+                        'asset' => $evidence,
+                        'units' => [$unit]
+                    ];
+                }
+            }
+        }
+        return $assets;
+    }
+
+    /**
+     * Returns all unread comments for package grouped by unit
+     *
+     * @return array
+     */
+    public function getComments()
+    {
+        $comments = [];
+        $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit');
+        foreach ($unitResults as $resultEntry) {
+            $resultUnit = $resultEntry->resultUnit->one();
+            foreach ($resultEntry->resultComments as $comment) {
+                $commentUser = $comment->user->one();
+                if ($comment->read || $commentUser->id != $resultEntry->authorId) {
+                    continue;
+                }
+                $comments[] = [
+                    'unit' => $resultUnit,
+                    'date' => $comment->date,
+                    'comment' => $comment->comment
+                ];
+
+            }
+        }
+        return $comments;
+    }
+
+    /**
+     * @todo this should be more general and elsewhere...
+     *
+     * @param $unitId
+     * @return string
+     */
+    public function getUnitLink($unitId)
+    {
+        $user = $this->owner->author;
+        $uri = '/cpd/' . $user->id . '/';
+        $moduleEntry = null;
+        $unitEntry = null;
+        foreach ($this->moduleGroups() as $moduleGroup) {
+            $categoryId = $moduleGroup['category']->id;
+            $moduleGroupItem = $user->record->getItem($categoryId);
+            foreach ($moduleGroupItem->items as $module) {
+                foreach ($module->allUnits() as $unit) {
+                    if ($unit->elementId == $unitId) {
+                        $moduleEntry = $user->record->getElement($module->elementId);
+                        $unitEntry = $user->record->getElement($unit->elementId);
+                        $uri .= $module->elementId . '/' . $unitId;
+                    }
+                }
+            }
+        }
+        if ($moduleEntry && $unitEntry) {
+            $moduleResultEntry = Lantra::$app->results->getModuleResult($user->id, $moduleEntry->id, true);
+            return $uri . '?ref=moduleResultId=' . $moduleResultEntry->id . '&packageId=' . $this->owner->id;
+        }
+        return '';
     }
 
     /**
@@ -429,7 +790,7 @@ class PackageBehavior extends Behavior
         if ($includeAdmin && ($manager->admin || $manager->isInGroup('schemeManagers'))) {
             return true;
         }
-        foreach($this->owner->packageReviews as $step) {
+        foreach ($this->owner->packageReviews as $step) {
             if ($step->reviewStepType == $type && $this->isReviewUser($manager, $step, $includeAdmin)) {
                 return true;
             }

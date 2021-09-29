@@ -1,0 +1,17 @@
+columnSuffix: null
+contentColumnType: datetime
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+handle: resultStartDate
+instructions: ''
+name: 'Result Start date'
+searchable: true
+settings:
+  max: null
+  min: null
+  minuteIncrement: '30'
+  showDate: 1
+  showTime: 0
+  showTimeZone: false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Date

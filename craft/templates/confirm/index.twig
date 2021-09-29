@@ -1,0 +1,42 @@
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Confirm" %}
+{% set controller = craft.app.request.getParam('controller') %}
+{% set method = craft.app.request.getParam('method') %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<div class="page-header secondary-bg">
+    <h2>Confirm</h2>
+</div>
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {% if craft.app.request.referrer %}
+        {{ redirectInput(craft.app.request.referrer) }}
+    {% endif %}
+    <input type="hidden" name="action" value="sp/{{ controller }}/{{ method }}">
+
+    {% if (controller == 'packages') %}
+        {% set packageId = craft.app.request.getParam('packageId') %}
+        {% set moduleGroupId = craft.app.request.getParam('moduleGroupId') %}
+        {% set package = craft.entries.id(packageId).one %}
+        {% set moduleGroup = craft.categories.id(moduleGroupId).one %}
+        {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+        <input type="hidden" name="packageId" value="{{ packageId }}">
+        <input type="hidden" name="moduleGroupId" value="{{ moduleGroupId }}">
+        {% if (method == 'remove-module-group') %}
+            <h4>Remove module from {{ taskbookLabel|lower }}?</h4>
+            <p>In doing so this well delete any saved work under this module and if you later decide to do this module later, you will have to redo any work again. </p>
+        {% endif %}
+    {% endif %}
+
+    <p>&nbsp;</p>
+    <div class="container-btn" style="max-width: 100%; text-align: center">
+        <button class="button primary-bg" type="submit">Confirm</button>
+    </div>
+    <p style="margin-top:50px;text-align: center"><a href="{{ craft.app.request.referrer }}">Cancel</a></p>
+</form>
+{% endblock %}

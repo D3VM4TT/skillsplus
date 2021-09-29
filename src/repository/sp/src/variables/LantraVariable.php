@@ -16,6 +16,7 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
 use lantra\sp\helpers\RecordHelper;
+use lantra\sp\helpers\ReportHelper;
 use lantra\sp\models\RecordItem;
 
 use verbb\supertable\elements\SuperTableBlockElement;
@@ -226,12 +227,22 @@ class LantraVariable
 
     /**
      * @param Entry|null $package
-     * @param $moduleId
+     * @param $moduleGroupId
      * @return null
      */
-    public function getOptionalModuleGroupRow($package = null, $moduleGroupId)
+    public function getModuleGroupRow($package = null, $moduleGroupId)
     {
-        return Lantra::$app->packages->getOptionalModuleGroupRow($package, $moduleGroupId);
+        return Lantra::$app->packages->getModuleGroupRow($package, $moduleGroupId);
+    }
+
+    /**
+     * @param Entry $taskbook
+     * @param string $type
+     * @return mixed
+     */
+    public function getModuleGroupCost(Entry $taskbook, $type = 'optional')
+    {
+        return Lantra::$app->packages->getModuleGroupCost($taskbook, $type);
     }
 
     /**
@@ -269,10 +280,8 @@ class LantraVariable
      */
     public function taskbookLevels()
     {
-        return [
-            ['value' => 5, 'label' => 'Inspector'],
-            ['value' => 10, 'label' => 'Senior Inspector'],
-        ];
+        $levels = self::setting('taskbookLevelLabels');
+        return $levels && is_array($levels) ? $levels : [];
     }
 
     /**
@@ -286,7 +295,7 @@ class LantraVariable
                 return $l['label'];
             }
         }
-        return 'unknown';
+        return $level;
     }
 
     /**
@@ -305,6 +314,33 @@ class LantraVariable
     public function totalComplete($recordItem, $userId = null)
     {
         return RecordHelper::totalComplete($recordItem, $this->getUser($userId));
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
+    public function totalEndorsed($recordItem, $userId = null)
+    {
+        return RecordHelper::totalEndorsed($recordItem, $this->getUser($userId));
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
+    public function totalPending($recordItem, $userId = null)
+    {
+        return RecordHelper::totalPending($recordItem, $this->getUser($userId));
+    }
+
+    /**
+     * @param RecordItem $recordItem
+     * @return bool
+     */
+    public function hasAssessmentUnit($recordItem)
+    {
+        return RecordHelper::hasAssessmentUnit($recordItem);
     }
 
     /**
@@ -384,21 +420,71 @@ class LantraVariable
     }
 
     /**
-     * @param $key
+     * @param null $return
+     * @return mixed
+     */
+    public function settingReports($return = null)
+    {
+        $reports = Lantra::$app->settings->getSetting('reports');
+        $active = [];
+        foreach($reports as $k => $report) {
+            if ($report['active'] && $this->canAccessReport($report)) {
+                $active[$k] = $report;
+            }
+        }
+        ## return bool
+        if (is_null($return)) {
+            return count($active) > 0;
+        }
+        ## return array
+        if ($return == 'array') {
+            return $active;
+        }
+        ## return specific report
+        return isset($active[$return]) ? $active[$return] : null;
+    }
+
+    /**
+     * @param null $report
      * @return bool
      */
-    public function settingCustomReports($key = null)
+    private function canAccessReport($report = null)
     {
-        $customReports = Lantra::$app->settings->getSetting('customReports');
-        if (is_null($key)) {
-            foreach($customReports as $key => $customReport) {
-                if ($customReport) {
-                    return true;
-                }
-            }
-            return false;
+        $user = $this->getUser();
+        if ($user->admin || $user->isInGroup('schemeManagers')) {
+            return true;
         }
-        return isset($customReports[$key]) && $customReports[$key];
+        if ($user->isInGroup('companyManagers') && $report['group'] == 'companyManagers') {
+            return true;
+        }
+        if ($report['group'] == 'userRole' && is_countable($report['roles']) && count($report['roles'])) {
+            $reportRoleIds = [];
+            foreach ($report['roles'] as $category) {
+                $reportRoleIds[] = $category->id;
+            }
+            $userRoleIds = $user->userRole->ids();
+            return count(array_intersect($reportRoleIds, $userRoleIds));
+        }
+        return false;
+    }
+
+    /**
+     * @param $reportEntry
+     * @return bool
+     */
+    public function isStandardReport($reportEntry)
+    {
+        return ReportHelper::isStandardReport($reportEntry);
+    }
+
+    /**
+     * @param $reportType
+     * @param null $key
+     * @return null
+     */
+    public function reportTypeSetting($reportType, $key = null)
+    {
+        return ReportHelper::reportTypeSetting($reportType, $key);
     }
 
     /**
@@ -425,16 +511,27 @@ class LantraVariable
     }
 
     /**
-     * @param $accountId
+     * @param $userId
      * @return int|null
      * @throws \craft\errors\AssetConflictException
      * @throws \craft\errors\VolumeObjectExistsException
      */
-    public function evidenceFolderId($accountId)
+    public function evidenceFolderId($userId = null)
     {
-        $user = Craft::$app->users->getUserById($accountId);
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
         $folder = LantraHelper::userEvidenceFolder($user);
         return $folder && isset($folder->id) ? $folder->id : null;
+    }
+
+    /**
+     * @param string $kind
+     * @return mixed
+     */
+    public function assetIcon($kind = '')
+    {
+        return LantraHelper::assetIcon($kind);
     }
 
     /**
@@ -597,35 +694,38 @@ class LantraVariable
 
     /**
      * @param $search
-     * @param string $taskbookStatus
      * @param null $limit
      * @param string $order
      * @param null $managerId
-     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @param null $filterBy
+     * @param string $filterValue
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function packagesCriteria($search, $packageStatus = 'locked', $limit = null, $order = 'lastName', $managerId = null)
+    public function packagesCriteria($search, $limit = null, $order = 'lastName',  $filterBy = null, $filterValue = 'all', $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($search, $packageStatus, $limit, $order, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $limit, $order, $filterBy, $filterValue, $this->getUser($managerId));
     }
 
     /**
      * @param null $managerId
-     * @return mixed
+     * @param null $filterBy
+     * @param string $filterValue
+     * @return int|string
      */
-    public function packagesCount($managerId = null)
+    public function packagesCount($filterBy = null, $filterValue = 'all', $managerId = null)
     {
-        $criteria = $this->packagesCriteria('', 'all',null, 'lastName', $this->getUser($managerId));
+        $criteria = $this->packagesCriteria('', null, 'lastName', $filterBy, $filterValue, $this->getUser($managerId));
         return $criteria ? $criteria->count() : 0;
     }
 
     /**
      * @param $userId
-     * @param $moduleGroupId
+     * @param $taskbookId
      * @return bool
      */
-    public function packageExists($userId, $moduleGroupId)
+    public function packageExists($userId, $taskbookId)
     {
-        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $moduleGroupId);
+        return Lantra::$app->packages->userPackageExists($this->getUser($userId), $taskbookId);
     }
 
     /**
@@ -642,17 +742,78 @@ class LantraVariable
     }
 
     /**
-     * Return criteria based on report name
+     * Return a manager report
      *
+     * @param string $reportType
+     * @param null $userId
+     * @param mixed $days
+     * @param mixed $search
+     * @param int $limit
+     * @param bool $count
+     * @return mixed
+     * @throws Exception
+     */
+    public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
+    {
+        $user = $this->getUser($userId);
+        return Lantra::$app->reports->getStandardReportData($reportType, $user->id, $days, $search, $limit, $count);
+    }
+
+    /**
      * @param $search
      * @param $limit
      * @param $order
-     * @param $automated
-     * @return mixed
+     * @param bool $automated
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \yii\db\Exception
      */
     public function reportCriteria($search, $limit, $order, $automated = false)
     {
         return Lantra::$app->reports->reportCriteria($search, $limit, $order, $automated);
+    }
+
+    /**
+     * @param $reportEntry
+     * @return \lantra\sp\services\ElementCriteriaModel|null
+     */
+    public function reportDataCriteria($reportEntry, $limit)
+    {
+        return Lantra::$app->reports->reportDataCriteria($reportEntry, $limit);
+    }
+
+    /**
+     * @param $reportEntry
+     * @param bool $html
+     * @return string
+     */
+    public function reportHeader($reportEntry, $html = true)
+    {
+        return ReportHelper::reportHeader($reportEntry, $html);
+    }
+
+    /**
+     * @param $reportEntry
+     * @param bool $html
+     * @return string
+     */
+    public function reportRow($reportEntry, $row, $html = true)
+    {
+        return ReportHelper::reportRow($reportEntry, $row, $html);
+    }
+
+    /**
+     * @param $reportEntry
+     * @return string
+     */
+    public function reportTypeLabel($reportEntry)
+    {
+        if ($reportEntry->reportType == 'standardResults') {
+            return 'Results (' . ($reportEntry->reportResultStandardType == 'endorsed' ? 'Endorsed' : 'Expiring') . ')';
+        }
+        elseif ($reportEntry->reportType == 'standardCpd') {
+            return 'CPD';
+        }
+        return ucwords(str_replace('standard', '', $reportEntry->reportType));
     }
 
     /**
@@ -724,6 +885,18 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @return bool
+     */
+    public function hasDashboard($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        return Lantra::$app->users->hasDashboard($user);
+    }
+
+    /**
      * @param null $subordinateId
      * @param null $managerId
      * @param bool $includeHierarchy
@@ -734,6 +907,28 @@ class LantraVariable
     {
         $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
         return Lantra::$app->users->isManager($subordinateId, $manager, $includeHierarchy);
+    }
+
+    /**
+     * @param null $userId
+     * @return bool
+     */
+    public function isExternal($userId = null)
+    {
+        $user = (is_null($userId)) ? null : $this->getUser($userId);
+        return Lantra::$app->users->isExternal($user);
+    }
+
+    /**
+     * @param null $userId
+     * @return array
+     */
+    public function packageTypes($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return [];
+        }
+        return Lantra::$app->packages->packageTypes($user);
     }
 
     /**
@@ -959,6 +1154,28 @@ class LantraVariable
     }
 
     /**
+     * Display remaining attempts
+     *
+     * @param Entry $unitEntry
+     * @param Entry $resultEntry
+     * @param null $userId
+     * @return int|string
+     */
+    public function assessmentScore($unitEntry, $resultEntry = null, $userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return 0;
+        }
+        if (is_null($resultEntry)) {
+            $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
+        }
+        if (is_null($resultEntry)) {
+            return '~';
+        }
+        return $resultEntry->resultScore .'% (' . ($resultEntry->resultScore >= $unitEntry->testPassPercent ? 'Pass' : 'Fail') . ')';
+    }
+
+    /**
      * Get manager companies
      *
      * @param null $userId
@@ -1091,24 +1308,6 @@ class LantraVariable
             return null;
         }
         return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
-    }
-
-    /**
-     * Return a manager report
-     *
-     * @param string $reportType
-     * @param null $userId
-     * @param mixed $days
-     * @param mixed $search
-     * @param int $limit
-     * @param bool $count
-     * @return mixed
-     * @throws Exception
-     */
-    public function managerReport($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
-    {
-        $user = $this->getUser($userId);
-        return Lantra::$app->reports->getStandardReportData($reportType, $user->id, $days, $search, $limit, $count);
     }
 
     /**

@@ -1,0 +1,35 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: moduleGroupMenu
+instructions: ''
+name: 'Module Group Menu'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Menu
+        -
+          - value
+          - menu
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Dropdown
+        -
+          - value
+          - dropdown
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

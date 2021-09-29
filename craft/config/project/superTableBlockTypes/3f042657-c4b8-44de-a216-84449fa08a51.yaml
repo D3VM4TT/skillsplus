@@ -1,0 +1,151 @@
+field: edcdcb64-8b0b-4f31-ab57-106c9e252317 # Package Module Groups
+fieldLayouts:
+  1fec76e6-301b-49d2-a65d-7e7589e07374:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 00afc899-b37a-415c-8829-b06a42a8638f # Module Group
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 8b738285-1f1f-4f66-bb77-bdf61a7f234e # Mandatory
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 9a61af4b-dccb-4d5e-9bc1-53b775f9de18 # Level
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 7209f99b-e88b-403f-b8ba-fbb0301b5c0f # Paid
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: cad6f0cc-99c2-432e-b299-3990a84d96fc # Cost
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  00afc899-b37a-415c-8829-b06a42a8638f: # Module Group
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: moduleGroup
+    instructions: ''
+    name: 'Module Group'
+    searchable: true
+    settings:
+      allowLimit: false
+      allowMultipleSources: false
+      allowSelfRelations: false
+      branchLimit: '1'
+      limit: null
+      localizeRelations: false
+      selectionLabel: 'Select module group'
+      showSiteMenu: true
+      source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Categories
+  8b738285-1f1f-4f66-bb77-bdf61a7f234e: # Mandatory
+    columnSuffix: null
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: moduleGroupMandatory
+    instructions: ''
+    name: Mandatory
+    searchable: true
+    settings:
+      default: false
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  9a61af4b-dccb-4d5e-9bc1-53b775f9de18: # Level
+    columnSuffix: null
+    contentColumnType: smallint(2)
+    fieldGroup: null
+    handle: moduleGroupLevel
+    instructions: ''
+    name: Level
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: '1'
+      max: '10'
+      min: '1'
+      prefix: null
+      previewCurrency: null
+      previewFormat: decimal
+      size: null
+      suffix: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+  7209f99b-e88b-403f-b8ba-fbb0301b5c0f: # Paid
+    columnSuffix: null
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: moduleGroupPaid
+    instructions: ''
+    name: Paid
+    searchable: true
+    settings:
+      default: true
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  cad6f0cc-99c2-432e-b299-3990a84d96fc: # Cost
+    columnSuffix: null
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: moduleGroupCost
+    instructions: ''
+    name: Cost
+    searchable: true
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: null
+      previewCurrency: null
+      previewFormat: decimal
+      size: null
+      suffix: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number

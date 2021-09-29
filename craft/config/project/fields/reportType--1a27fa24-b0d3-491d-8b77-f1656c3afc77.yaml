@@ -1,0 +1,101 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+handle: reportType
+instructions: ''
+name: 'Report Type'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Users
+        -
+          - value
+          - standardUsers
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Results '
+        -
+          - value
+          - standardResults
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - CPD
+        -
+          - value
+          - standardCpd
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Payments
+        -
+          - value
+          - standardPayments
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Scheme Manager'
+        -
+          - value
+          - standardSm
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Custom Users (Hierarchy)'
+        -
+          - value
+          - users
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Custom Results (Qual User)'
+        -
+          - value
+          - results
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Custom Expired (Required Training)'
+        -
+          - value
+          - expired
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

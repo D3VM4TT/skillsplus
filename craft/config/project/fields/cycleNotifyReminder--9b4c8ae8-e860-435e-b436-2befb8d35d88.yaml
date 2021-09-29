@@ -1,0 +1,14 @@
+columnSuffix: null
+contentColumnType: boolean
+fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
+handle: cycleNotifyReminder
+instructions: ''
+name: 'Cycle Notify Reminder'
+searchable: true
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

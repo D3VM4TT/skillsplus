@@ -1,0 +1,19 @@
+columnSuffix: null
+contentColumnType: text
+fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
+handle: companyLabel
+instructions: 'Automatically set according to company hierarchy.'
+name: 'Company Label'
+searchable: true
+settings:
+  byteLimit: null
+  charLimit: null
+  code: false
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: null
+  uiMode: normal
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

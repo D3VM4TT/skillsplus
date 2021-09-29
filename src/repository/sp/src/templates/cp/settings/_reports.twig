@@ -8,6 +8,10 @@
     {
         label: 'Company Managers',
         value: 'companyManagers'
+    },
+    {
+        label: 'Job Role',
+        value: 'userRole'
     }
 ] %}
 
@@ -15,9 +19,11 @@
     <thead>
         <tr>
             <th width="15%">Report</th>
-            <th width="15%">Active</th>
-            <th width="30%">Group</th>
-            <th width="30%">Roles</th>
+            <th>Active</th>
+            <th>Group</th>
+            <th>Roles</th>
+            <th>Description</th>
+            <th width="10%">Page Limit</th>
         </tr>
     </thead>
     <tbody>
@@ -25,16 +31,275 @@
             <td>Users</td>
             <td>
                 {{ forms.lightswitchField ({
+                    id:				"reports-standardUsers-active",
+                    name:			"reports[standardUsers][active]",
+                    on:		        settings.reports.standardUsers.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardUsers][title]",
+                    value:		     "Users"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardUsers-group',
+                    name: 'reports[standardUsers][group]',
+                    value: settings.reports.standardUsers.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardUsers-roles",
+                    name:			    "reports[standardUsers][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardUsers.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardUsers-description",
+                    name:			"reports[standardUsers][description]",
+                    value:		    settings.reports.standardUsers.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardUsers-pageLimit",
+                    name:			"reports[standardUsers][pageLimit]",
+                    value:		    settings.reports.standardUsers.pageLimit|default(),
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Results</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardResults-active",
+                    name:			"reports[standardResults][active]",
+                    on:		        settings.reports.standardResults.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardResults][title]",
+                    value:		     "Results"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardResults-group',
+                    name: 'reports[standardResults][group]',
+                    value: settings.reports.standardResults.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardResults-roles",
+                    name:			    "reports[standardResults][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardResults.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardResults-description",
+                    name:			"reports[standardResults][description]",
+                    value:		    settings.reports.standardResults.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardResults-pageLimit",
+                    name:			"reports[standardResults][pageLimit]",
+                    value:		    settings.reports.standardResults.pageLimit|default(),
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>CPD</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardCpd-active",
+                    name:			"reports[standardCpd][active]",
+                    on:		        settings.reports.standardCpd.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardCpd][title]",
+                    value:		     "CPD"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardCpd-group',
+                    name: 'reports[standardCpd][group]',
+                    value: settings.reports.standardCpd.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardCpd-roles",
+                    name:			    "reports[standardCpd][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardCpd.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardCpd-description",
+                    name:			"reports[standardCpd][description]",
+                    value:		    settings.reports.standardCpd.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardCpd-pageLimit",
+                    name:			"reports[standardCpd][pageLimit]",
+                    value:		    settings.reports.standardCpd.pageLimit|default(),
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Payments</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardPayments-active",
+                    name:			"reports[standardPayments][active]",
+                    on:		        settings.reports.standardPayments.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardPayments][title]",
+                    value:		     "Payments"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardPayments-group',
+                    name: 'reports[standardPayments][group]',
+                    value: settings.reports.standardPayments.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardPayments-roles",
+                    name:			    "reports[standardPayments][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardPayments.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardPayments-description",
+                    name:			"reports[standardPayments][description]",
+                    value:		    settings.reports.standardPayments.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardPayments-pageLimit",
+                    name:			"reports[standardPayments][pageLimit]",
+                    value:		    settings.reports.standardPayments.pageLimit|default(),
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Scheme Manager</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardSm-active",
+                    name:			"reports[standardSm][active]",
+                    on:		        settings.reports.standardSm.active|default(true)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardSm][title]",
+                    value:		     "Scheme Manager"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardSm-group',
+                    name: 'reports[standardSm][group]',
+                    value: settings.reports.standardSm.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardSm-roles",
+                    name:			    "reports[standardSm][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardSm.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardSm-description",
+                    name:			"reports[standardSm][description]",
+                    value:		    settings.reports.standardSm.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-standardSm-pageLimit",
+                    name:			"reports[standardSm][pageLimit]",
+                    value:		    settings.reports.standardSm.pageLimit|default(),
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Custom User (hierarchy)</td>
+            <td>
+                {{ forms.lightswitchField ({
                     id:				"reports-users-active",
                     name:			"reports[users][active]",
-                    on:		        settings.reports.users.active
+                    on:		        settings.reports.users.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[users][title]",
+                    value:		     "Custom User (hierarchy)"
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
                     id: 'reports-users-group',
                     name: 'reports[users][group]',
-                    value: settings.reports.users.group,
+                    value: settings.reports.users.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
@@ -46,26 +311,46 @@
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.users.roles ? settings.reports.users.roles,
+                    elements:           settings.reports.users.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-users-description",
+                    name:			"reports[users][description]",
+                    value:		    settings.reports.users.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-users-pageLimit",
+                    name:			"reports[users][pageLimit]",
+                    value:		    settings.reports.users.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
-            <td>Results</td>
+            <td>Custom Results (qual user)</td>
             <td>
                 {{ forms.lightswitchField ({
                     id:				"reports-results-active",
                     name:			"reports[results][active]",
-                    on:		        settings.reports.results.active
+                    on:		        settings.reports.results.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[results][title]",
+                    value:		     "Custom Results (qual user)"
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
                     id: 'reports-results-group',
                     name: 'reports[results][group]',
-                    value: settings.reports.results.group,
+                    value: settings.reports.results.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
@@ -77,102 +362,76 @@
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.results.roles ? settings.reports.results.roles,
+                    elements:           settings.reports.results.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
             </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-results-description",
+                    name:			"reports[results][description]",
+                    value:		    settings.reports.results.description|default(),
+                    rows:           2,
+                    cols:           50
+                }) }}
+            </td>
+            <td>
+                {{ forms.textField ({
+                    id:				"reports-results-pageLimit",
+                    name:			"reports[results][pageLimit]",
+                    value:		    settings.reports.results.pageLimit|default(),
+                }) }}
+            </td>
         </tr>
         <tr>
-            <td>CPD</td>
+            <td>Custom Expired (required training)</td>
             <td>
                 {{ forms.lightswitchField ({
-                    id:				"reports-cpd-active",
-                    name:			"reports[cpd][active]",
-                    on:		        settings.reports.cpd.active
+                    id:				"reports-expired-active",
+                    name:			"reports[expired][active]",
+                    on:		        settings.reports.expired.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[expired][title]",
+                    value:		     "Custom Expired (required training)"
                 }) }}
             </td>
             <td>
                 {{ forms.selectField({
-                    id: 'reports-cpd-group',
-                    name: 'reports[cpd][group]',
-                    value: settings.reports.cpd.group,
+                    id: 'reports-expired-group',
+                    name: 'reports[expired][group]',
+                    value: settings.reports.expired.group|default('schemeManagers'),
                     options: groupOptions
                 }) }}
             </td>
             <td>
                 {{ forms.elementSelectField ({
-                    id:				    "reports-cpd-roles",
-                    name:			    "reports[cpd][roles]",
+                    id:				    "reports-expired-roles",
+                    name:			    "reports[expired][roles]",
                     elementType:        config.categoryElementType,
                     sources:            config.jobRoleCategoryGroup,
                     criteria:           '',
                     sourceElementId:    '',
-                    elements:           settings.reports.cpd.roles ? settings.reports.cpd.roles,
+                    elements:           settings.reports.expired.roles|default([]),
                     storageKey:         '',
                     viewMode:           'list'
                 }) }}
             </td>
-        </tr>
-        <tr>
-            <td>Payments</td>
             <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-payments-active",
-                    name:			"reports[payments][active]",
-                    on:		        settings.reports.payments.active
+                {{ forms.textareaField ({
+                    id:				"reports-expired-description",
+                    name:			"reports[expired][description]",
+                    value:		    settings.reports.expired.description|default(),
+                    rows:           2,
+                    cols:           50
                 }) }}
             </td>
             <td>
-                {{ forms.selectField({
-                    id: 'reports-payments-group',
-                    name: 'reports[payments][group]',
-                    value: settings.reports.payments.group,
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-payments-roles",
-                    name:			    "reports[payments][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.payments.roles ? settings.reports.payments.roles,
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Scheme Manager</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-sm-active",
-                    name:			"reports[sm][active]",
-                    on:		        settings.reports.sm.active
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-sm-group',
-                    name: 'reports[sm][group]',
-                    value: settings.reports.sm.group,
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-sm-roles",
-                    name:			    "reports[sm][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.sm.roles ? settings.reports.sm.roles,
-                    storageKey:         '',
-                    viewMode:           'list'
+                {{ forms.textField ({
+                    id:				"reports-expired-pageLimit",
+                    name:			"reports[expired][pageLimit]",
+                    value:		    settings.reports.expired.pageLimit|default(),
                 }) }}
             </td>
         </tr>
@@ -180,48 +439,11 @@
 </table>
 
 
-{{ forms.lightswitchField ({
-    label:			"Show Standard Reports?",
-    id:				"standardReports",
-    name:			"standardReports",
-    on:		        settings.standardReports == 1
+{{ forms.textareaField ({
+    label:			"Report Notes",
+    id:				"reportNotes",
+    name:			"reportNotes",
+    value:		    settings.reportNotes,
+    rows:           10,
+    cols:           50
 }) }}
-
-<h3>Custom Report Types</h3>
-
-{{ forms.lightswitchField ({
-    label:			"Users",
-    id:				"customReports-users",
-    name:			"customReports[users]",
-    on:		        settings.customReports.users
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Results",
-    id:				"customReports-results",
-    name:			"customReports[results]",
-    on:		        settings.customReports.results
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Expired",
-    id:				"customReports-expired",
-    name:			"customReports[expired]",
-    on:		        settings.customReports.expired
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"Required",
-    id:				"customReports-required",
-    name:			"customReports[required]",
-    on:		        settings.customReports.required
-}) }}
-
-{{ forms.lightswitchField ({
-    label:			"CPD",
-    id:				"customReports-cpd",
-    name:			"customReports[cpd]",
-    on:		        settings.customReports.cpd
-}) }}
-
-

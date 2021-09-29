@@ -1,0 +1,46 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+handle: reportDisplayField
+instructions: ''
+name: 'Report Display Field'
+searchable: true
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - 'Expiry Date'
+        -
+          - value
+          - expiryDate
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Start Date'
+        -
+          - value
+          - resultStartDate
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Finish Date'
+        -
+          - value
+          - resultFinishDate
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

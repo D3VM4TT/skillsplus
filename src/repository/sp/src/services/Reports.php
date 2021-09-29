@@ -13,12 +13,81 @@ use craft\base\Component;
 use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 
+use lantra\sp\helpers\ReportHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use League\Csv\Writer;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Dompdf\Dompdf;
+
 class Reports extends Component
 {
+    /**
+     * @param $ext
+     * @param $data
+     * @param $reportId
+     * @throws \yii\web\HttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function reportDownload($ext, $data, $reportId)
+    {
+        $filename = 'report-' . $reportId . '.' . $ext;
+
+        if ($ext == 'xlsx')
+        {
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
+                $j = 0;
+                foreach ($data[$i] as $k => $v) {
+                    $sheet->setCellValueByColumnAndRow($j + 1, ($i + 1), $v);
+                    $j++;
+                }
+            }
+            if ($ext == 'xlsx') {
+                $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                $writer = new Xlsx($spreadsheet);
+            }
+            ob_start();
+            $writer->save('php://output');
+            $content = ob_get_clean();
+
+            Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
+            return;
+        }
+
+        if ($ext == 'pdf')
+        {
+            $header = array_shift($data);
+            $variables = [
+                'filename'  => $filename,
+                'header'    => $header,
+                'rows'      => $data
+            ];
+            $view = Craft::$app->getView();
+            $view->setTemplatesPath(Lantra::getInstance()->getBasePath());
+            $html = $view->renderTemplate('/templates/reports/default', $variables);
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            $dompdf->stream($filename);
+            return;
+        }
+
+        ob_start();
+        $export = fopen('php://output', 'w');
+        foreach ($data as $row) {
+            fputcsv($export, $row);
+        }
+        fclose($export);
+        $content = ob_get_clean();
+        $content = str_replace("\n", "\r\n", $content);
+        Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => 'text/csv']);
+    }
+
     /**
      * @param string $search
      * @param int $limit
@@ -87,7 +156,12 @@ class Reports extends Component
         $weekDay = $weekValue ? $weekValue : (int) date('N');
         $monthDay = $monthValue ? $monthValue : (int) date('j');
         $reportEntries = $this->getAutomatedReports();
-        foreach ($reportEntries as $reportEntry) {
+        foreach ($reportEntries as $reportEntry)
+        {
+            ## skip if report no longer active
+            if (!ReportHelper::reportTypeSetting($reportEntry->reportType,'active')) {
+                continue;
+            }
             $reportSendValue = (int) $reportEntry->reportSendValue;
             $reportSendFrequency = $reportEntry->reportSendFrequency->value;
             if (($reportSendFrequency == 'weekly' && $reportSendValue == $weekDay) || ($reportSendFrequency == 'monthly' && $reportSendValue == $monthDay)) {
@@ -97,44 +171,39 @@ class Reports extends Component
     }
 
     /**
-     * Return a manager report
-     *
-     * @param string $reportType
-     * @param null $userId
-     * @param mixed $days
-     * @param mixed $search
-     * @param int $limit
+     * @param Entry $reportEntry
+     * @param null $limit
+     * @param string $search
      * @param bool $count
-     * @return mixed
-     * @throws Exception
+     * @return ElementCriteriaModel|null
      */
-    public function getStandardReportData($reportType = 'users', $userId = null,  $days = 'all', $search = '', $limit = 10, $count = false)
+    public function reportDataCriteria(Entry $reportEntry, $limit = null, $search = '', $count = false)
     {
+        $filter = $this->getReportFilter($reportEntry);
+        $userFilter = $this->_parseUserFilter($filter);
+        $resultFilter = $this->_parseResultFilter($filter);
+
+        $userId = $reportEntry->authorId;
+
         $criteria = null;
-        switch ($reportType) {
-            case 'units-required':
-                $criteria = Lantra::$app->results->getManagerUnitRequiredResults($userId);
+        switch ($reportEntry->reportType) {
+            case 'standardUsers':
+                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
-            case 'units-blocked':
-                $criteria = Lantra::$app->results->getManagerUnitBlockedResults($userId, $days, $limit, $search);
+            case 'standardResults':
+                $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
+                if ($reportEntry->reportResultStandardType == 'endorsed') {
+                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
+                }
+                else {
+                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+                }
                 break;
-            case 'units-expiring':
-                $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+            case 'standardCpd':
+                $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
                 break;
-            case 'units-endorsed':
-                $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-active':
-                $criteria = Lantra::$app->results->getManagerModuleActiveResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-expiring':
-                $criteria = Lantra::$app->results->getManagerModuleExpiringResults($userId, $days, $limit, $search);
-                break;
-            case 'modules-completed':
-                $criteria = Lantra::$app->results->getManagerModuleCompletedResults($userId, $days, $limit, $search);
-                break;
-            case 'users':
-                $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $search);
+            case 'standardPayments':
+                $criteria = Lantra::$app->users->getUserPayments();
                 break;
         }
         if ($criteria) {
@@ -199,17 +268,18 @@ class Reports extends Component
      * @param $reportEntry
      * @return array
      */
-    public function getCustomReportFilter($reportEntry)
+    public function getReportFilter($reportEntry)
     {
         $filter = [
+            'reportDays'                => $reportEntry->reportDays,
             'reportResultType'          => $reportEntry->reportResultType->value,
             'reportDisplayField'        => $reportEntry->reportDisplayField->value,
             'reportResultExpiry'        => $reportEntry->reportResultExpiry->value,
-            ## 'reportNoDates'             => $reportEntry->reportNoDates,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
             'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
-            'reportUnits'               => []
+            'reportUnits'               => [],
+            'reportModules'             => []
         ];
 
         if ($reportEntry->reportCompanies->count()) {
@@ -217,6 +287,9 @@ class Reports extends Component
         }
         if ($reportEntry->reportUnits->count()) {
             $filter['reportUnits'] = $reportEntry->reportUnits->ids();
+        }
+        if ($reportEntry->reportModules->count()) {
+            $filter['reportModules'] = $reportEntry->reportModules->ids();
         }
         return $filter;
     }
@@ -230,31 +303,9 @@ class Reports extends Component
      */
     public function getCustomReportData($manager, $type, $filter = [])
     {
-        $userFilter = [];
-        $resultFilter = [];
-        if ($filter['reportResultType'] != 'all') {
-            $resultFilter['resultType'] = $filter['reportResultType'];
-        }
-        ## clear report units if non mandatory
-        if ($filter['reportResultType'] != 'unitResult') {
-            $filter['reportUnits'] = [];
-        }
-        if (count($filter['reportCompanies'])) {
-            if ($filter['reportIncludeHierarchy']) {
-                $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
-            }
-            $userFilter['relatedTo'] = [
-                'targetElement' => $filter['reportCompanies'],
-                'field' => 'userCompany'
-            ];
-        }
-        if (count($filter['reportUnits'])) {
-            $resultFilter['relatedTo'] = [
-                'targetElement' => $filter['reportUnits'],
-                'field' => 'resultUnit'
-            ];
-            $resultFilter['unitIds'] = $filter['reportUnits'];
-        }
+        $userFilter = $this->_parseUserFilter($filter);
+        $resultFilter = $this->_parseResultFilter($filter);
+
         if ($type == 'users') {
             $values = Lantra::$app->results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
         }
@@ -292,10 +343,79 @@ class Reports extends Component
         elseif ($type == 'required') {
             $values = Lantra::$app->results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
-        elseif ($type == 'cpd') {
-            $values = Lantra::$app->results->getManagerCpdResults($manager->id, $userFilter, $resultFilter);
-        }
         return $values;
+    }
+
+    /**
+     * @param $filter
+     * @return array
+     */
+    private function _parseUserFilter($filter)
+    {
+        $userFilter = [
+            'limit'         => null,
+            'search'        => '',
+            'relatedTo'     => [],
+            'lastLoginDate' => null
+        ];
+
+        if (count($filter['reportCompanies'])) {
+            if ($filter['reportIncludeHierarchy']) {
+                $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
+            }
+            $userFilter['relatedTo'] = [
+                'targetElement' => $filter['reportCompanies'],
+                'field' => 'userCompany'
+            ];
+        }
+
+        if ($filter['reportDays']) {
+            if ($filter['reportDays'] == 9999) {
+                $userFilter['lastLoginDate'] = ':empty:';
+            }
+            else {
+                $date = new \DateTime();
+                $userFilter['lastLoginDate'] = '> ' . $date->modify('-' . $filter['reportDays'] . ' days')->getTimestamp();
+            }
+        }
+
+        return $userFilter;
+    }
+
+    /**
+     * @param $filter
+     * @return array
+     */
+    private function _parseResultFilter($filter)
+    {
+        $resultFilter = [
+            'limit'         => null,
+            'search'        => '',
+            'relatedTo'     => null,
+            'resultType'    => null,
+            'unitIds'       => null
+        ];
+        if ($filter['reportResultType'] != 'all') {
+            $resultFilter['resultType'] = $filter['reportResultType'];
+        }
+        ## clear report units if non mandatory
+        if ($filter['reportResultType'] != 'unitResult') {
+            $filter['reportUnits'] = [];
+        }
+        if (count($filter['reportUnits'])) {
+            $resultFilter['relatedTo'] = [
+                'targetElement' => $filter['reportUnits'],
+                'field' => 'resultUnit'
+            ];
+            $resultFilter['unitIds'] = $filter['reportUnits'];
+        }
+        if (count($filter['reportModules'])) {
+            $resultFilter['relatedTo'] = [
+                'targetElement' => $filter['reportModules'],
+                'field' => 'resultModule'
+            ];
+        }
+        return $resultFilter;
     }
 
     /**
@@ -312,7 +432,7 @@ class Reports extends Component
             'total'     => 0,
             'message'   => ''
         ];
-        $filter = $this->getCustomReportFilter($reportEntry);
+        $filter = $this->getReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
         $response['total'] = count($values) - 1;
         if (!$response['total']) {

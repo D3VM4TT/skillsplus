@@ -1,0 +1,145 @@
+fieldLayouts:
+  e0343ee1-0f38-4a11-b963-83087a5fb1e1:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 100
+          -
+            fieldUid: b44b14bb-77d3-4e81-9d72-9a478aa97053 # Result Company
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 295e5043-483c-4ad9-bfaa-bac22b99dc19 # Result Module
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 3ccae116-4500-45d0-a56a-024f2e8d4d03 # Result Status
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: fad66cc6-a49e-4a7d-955e-448c48ed449e # Result Linked Results
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Result
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: 61e98c20-6536-4fb2-8420-7b21d34b4dd5 # Result Comments
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Comments
+        sortOrder: 2
+      -
+        elements:
+          -
+            fieldUid: 73b12e48-7a9e-496f-b91e-01fad8e389d1 # Cycle Name
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: d3594414-790c-479e-ada1-8e93cd99e906 # Cycle Start Date
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: af241f00-e550-43b0-9800-e6ce4d85919e # Cycle Finish Date
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 06f9a436-94f4-4170-80ec-6e08d13115ee # Result Hours
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec # Result Points
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 77c7c383-632e-462f-984c-7ab34eb2cd1e # Result Component Results
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'CPD Cycle'
+        sortOrder: 3
+handle: moduleResult
+hasTitleField: false
+name: 'Module Result'
+section: c0345752-9e56-4de1-a2d2-da641c3708e0 # Results
+sortOrder: 2
+titleFormat: '[module {resultModule.one.id}] {author.firstName} {author.lastName} '
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

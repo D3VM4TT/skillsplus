@@ -1,0 +1,28 @@
+fieldLayouts:
+  106ab0fa-af71-4120-9080-283772fe2850:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 4a4bc5cd-115e-4309-a51a-3e5095ceea90 # Home Slider
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+handle: globalsTheme
+name: Theme
+sortOrder: 3

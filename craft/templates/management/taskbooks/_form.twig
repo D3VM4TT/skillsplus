@@ -21,6 +21,7 @@
 
 {% set authorId = craft.app.request.getParam('userId') %}
 {% set user = craft.app.users.getUserById(authorId) %}
+{% set userCompany = user.userCompany.one() %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -31,27 +32,31 @@
         <h2>{{ entryId ? 'Edit' : 'Create' }} {{ taskbookLabel }} for {{ user.fullname }}</h2>
     </div>
 
-    {% set levelsOptions = '' %}
-    {% for option in craft.lantra.taskbookLevels() %}
-        {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
-    {% endfor %}
+    {% if not userCompany %}
+        <p style="color:red;">Only users assigned to a company can create {{ taskbookLabel|pluralize|lower  }}.</p>
+    {% else %}
+        {% set levelsOptions = '' %}
+        {% for option in craft.lantra.taskbookLevels() %}
+            {% set levelsOptions = levelsOptions ~ '<option value="' ~ option.value ~ '">' ~ option.label ~ '</option>' %}
+        {% endfor %}
 
-    {% if entry is defined %}
-        {{ ui.errorList(entry.getFirstErrors()) }}
+        {% if entry is defined %}
+            {{ ui.errorList(entry.getFirstErrors()) }}
+        {% endif %}
+
+        <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
+            {{ csrfInput() }}
+            {{ actionInput('entries/save-entry') }}
+            {{ hiddenInput('sectionId', section.id) }}
+            {{ hiddenInput('enabled', 1) }}
+            {{ redirectInput('management/users/edit/' ~ authorId) }}
+            {{ hiddenInput('author[]', authorId) }}
+
+            {% include '_forms/taskbook' with {packageUserId:authorId, options:true, taskbooks:userCompany.companyTaskbooks} %}
+
+            <div class="container-btn">
+                <button type="submit" class="button primary-bg">Continue</button>
+            </div>
+        </form>
     {% endif %}
-
-    <form class="page-form" id="taskbooks" method="post" accept-charset="UTF-8">
-        {{ csrfInput() }}
-        {{ actionInput('entries/save-entry') }}
-        {{ hiddenInput('sectionId', section.id) }}
-        {{ hiddenInput('enabled', 1) }}
-        {{ redirectInput('management/users/edit/' ~ authorId) }}
-        {{ hiddenInput('author[]', authorId) }}
-
-        {% include '_forms/taskbook' with {packageUserId:authorId, options:true} %}
-
-        <div class="container-btn">
-            <button type="submit" class="button primary-bg">Continue</button>
-        </div>
-    </form>
 {% endblock %}

@@ -19,8 +19,10 @@
 {% if currentUser %}
   {% if isTaskbooks is defined and isTaskbooks %}
     {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
-    {% set account = account is defined ? account:currentUser %}
-    <a class="link-bold" href="/cpd/{{ account.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+    {% set account = account is defined ? account : currentUser %}
+      {% if account.id == currentUser.id %}
+        <a class="link-bold" href="/cpd/{{ account.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
+      {% endif %}
     {% else %}
   <a class="link-bold" href="/">My Dashboard</a>
 {% endif %}
