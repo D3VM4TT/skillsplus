@@ -65,12 +65,14 @@ fi
 INSTALL="false"
 COMPOSER="true"
 SENDEMAIL="true"
+DATABASE="true"
 # handle options
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -i|--install) INSTALL="true"; shift ;;
 	-nc|--nocomposer) COMPOSER="false" ;;
 	-ne|--noemail) SENDEMAIL="false" ;;
+        -nd|--nodatabase) DATABASE="false" ;;
 
     esac
     shift
@@ -122,7 +124,7 @@ if [[ "$INSTALL" == "true" ]] ; then
 	mysql -u $DB_USER -p$DB_PASS -h $DB_HOST -e "create database \`$DB\`"
 fi
 
-        if [[ "$SERVER" == "prod" ]] ; then
+        if [[  "$DATABASE" == "true" && "$SERVER" == "prod" ]] ; then
             echo "backing up database"
  	    NOW=`date +"%Y-%m-%d"`
             mysqldump -u $DB_USER -p$DB_PASS -h $DB_HOST prod-$SITES | gzip -9 -c > /git/sql/$SITE-$NOW.sql.gz
@@ -149,7 +151,7 @@ fi
 	fi
 
 	"syncing files from $HTML_DIR to $REMOTE_FOLDER"
-        rsync -acvz --no-perms --no-owner --no-group --no-times $HTML_DIR --delete --exclude 'html/assets/photos' --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' git@$REMOTE_IP:$REMOTE_FOLDER
+        rsync -acvz --no-perms --no-owner --no-group --no-times --delete --exclude 'html/assets/photos' --exclude 'html/assets/uploads' --exclude 'html/assets/theme' --exclude 'html/cpresources' $HTML_DIR git@$REMOTE_IP:$REMOTE_FOLDER
 
 	echo "syncing files from $REPO_DIR to $REMOTE_FOLDER"
         rsync -acvz --no-perms --no-owner --no-group --no-times --delete $REPO_DIR git@$REMOTE_IP:$REMOTE_FOLDER/src/
@@ -178,8 +180,8 @@ fi
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/craft
 		else
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
-			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/sync
-			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/plugin sp
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/apply
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft plugin/install sp
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/up --plugin=sp
  		fi
 
