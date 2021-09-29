@@ -242,7 +242,7 @@
                                 <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
                             {% endif %}
                             <td style="text-align: right;">
-                                {% if not package.packageStatus == 'complete' or not package.taskbook.isFree %}
+                                {% if not package.packageStatus == 'complete' or not package.taskbook.taskbookIsFree %}
                                     <a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a>
                                 {% endif %}
                             </td>
