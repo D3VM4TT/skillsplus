@@ -131,7 +131,7 @@
                     <h4>{{ taskbookLabel }} Locked</h4>
                     <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
                 {% elseif package.packageStatus == 'complete' %}
-                    <h4>Congratulations, you have completed this {{ taskbookLabel }}.</h4>
+                    <h4>Congratulations, you have completed this {{ taskbookLabel|lower }}.</h4>
                 {% else %}
                     <h4>Requirements</h4>
                     <div style="width: 50%;display: inline;float:left;">
