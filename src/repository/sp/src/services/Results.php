@@ -2147,7 +2147,7 @@ class Results extends Component
         $resultFilter = $this->formatResultsFilter($resultFilter);
         $allResults = $this->getSubordinateResults($subordinateIds, $resultFilter);
 
-        $reportUnits = count($resultFilter['relatedTo']) ? $resultFilter['relatedTo']['targetElement'] : [];
+        $reportUnits = is_array($resultFilter['relatedTo']) ? $resultFilter['relatedTo']['targetElement'] : [];
 
         $headerUnits = [];
 
