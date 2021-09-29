@@ -32,7 +32,8 @@ class m210929_000000_bics_categories extends Migration
         $packages = $criteria->all();
 
         foreach ($packages as $package) {
-            if ($package->packageTaskbook->one()->id == 371282)
+            $taskbook = $package->taskbook;
+            if ($taskbook && $taskbook->id == 371282)
             echo "Converting " . $package->title . '...' ;
             foreach ($package->packageModuleGroups as $row) {
                 Craft::$app->elements->deleteElement($row);
