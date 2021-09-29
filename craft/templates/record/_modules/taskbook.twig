@@ -130,6 +130,8 @@
                 {% if package.packageStatus == 'locked' %}
                     <h4>{{ taskbookLabel }} Locked</h4>
                     <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
+                {% elseif package.packageStatus == 'complete' %}
+                    <h4>Congratulations, you have completed this {{ taskbookLabel }}.</h4>
                 {% else %}
                     <h4>Requirements</h4>
                     <div style="width: 50%;display: inline;float:left;">
@@ -239,7 +241,11 @@
                             {% if package.taskbook.unitEndorse %}
                                 <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
                             {% endif %}
-                            <td style="text-align: right;"><a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a></a></td>
+                            <td style="text-align: right;">
+                                {% if not package.packageStatus == 'complete' or not package.taskbook.isFree %}
+                                    <a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
