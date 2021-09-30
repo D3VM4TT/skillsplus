@@ -20,6 +20,37 @@ use lantra\sp\Plugin as Lantra;
 class PackagesController extends BaseController
 {
     /**
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionExternalStatus()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+        $userId = Craft::$app->request->getRequiredParam('userId');
+        $externalStatus =  Craft::$app->request->getParam('externalStatus');
+        $ids =  Craft::$app->request->getParam('ids', []);
+        $updated = 0;
+        foreach ($ids as $id) {
+            if (null == $package = Craft::$app->entries->getEntryById($id)) {
+                continue;
+            }
+            $externalAssessor = $externalStatus == 'sampled' ? [$userId] : [];
+            $package->setFieldValue('externalStatus', $externalStatus);
+            $package->setFieldValue('externalAssessor', $externalAssessor);
+            if (Craft::$app->elements->saveElement($package)) {
+                $updated++;
+            }
+        }
+        $url = '/management/taskbooks/external?filter=' . ($externalStatus == 'sampled' ? 'sampled' : 'notSampled');
+        $this->_returnMessage($updated . ' packages ' . $externalStatus == 'sampled' ? 'sampled' : 'not sampled', true, $url);
+    }
+
+    /**
  * @return void|\yii\web\Response
  * @throws \Twig\Error\LoaderError
  * @throws \Twig\Error\RuntimeError

@@ -453,6 +453,7 @@ class Plugin extends BasePlugin
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/delete-results'                => 'sp/packages/delete-results',
             'sp/packages/load-template'                 => 'sp/packages/load-template',
+            'sp/packages/external-status'               => 'sp/packages/external-status',
 
             'sp/categories/delete-category'             => 'sp/categories/delete-category',
 

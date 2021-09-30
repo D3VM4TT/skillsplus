@@ -826,7 +826,7 @@ class Packages extends Component
             }
         }
         elseif ($filterBy == 'external') {
-            $criteria->id = $this->getExternalPackageIds($assessor);
+            $criteria->id = $this->getExternalPackageIds($assessor, $filterValue);
         }
         return $criteria;
     }
@@ -879,9 +879,10 @@ class Packages extends Component
 
     /**
      * @param User $eqa
+     * @param $filter
      * @return array|int[]
      */
-    public function getExternalPackageIds(User $eqa)
+    public function getExternalPackageIds(User $eqa, $externalStatus = 'all')
     {
         ## get all users related to eqa companies
         $criteria = User::find();
@@ -892,7 +893,22 @@ class Packages extends Component
         ## get relevant packages
         $criteria = Entry::find();
         $criteria->section = 'packages';
-        $criteria->relatedTo = ['targetElement' => $eqa->userExternalTaskbooks, 'field' => 'packageTaskbook'];
+        $relatedTo = [
+            'and',
+            ['targetElement' => $eqa->userExternalTaskbooks, 'field' => 'packageTaskbook']
+        ];
+        if ($externalStatus == 'sampled') {
+            $criteria->externalStatus = 'sampled';
+            $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
+        }
+        elseif ($externalStatus == 'notSampled') {
+            $criteria->externalStatus = 'notSampled';
+        }
+        elseif ($externalStatus == 'complete') {
+            $criteria->externalStatus = 'complete';
+            $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
+        }
+        $criteria->relatedTo = $relatedTo;
         $criteria->limit = null;
         $criteria->authorId = $userIds;
         return $criteria->ids();
@@ -929,14 +945,6 @@ class Packages extends Component
                     ];
                 }
             }
-        }
-        ## if external
-        if ($external && Lantra::$app->users->isExternal($user)) {
-            $ids = $this->getExternalPackageIds($user, null);
-            $types[] = [
-                'name' => 'External',
-                'count' => count($ids)
-            ];
         }
         return $types;
     }

@@ -10,7 +10,7 @@
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
-{% set filterSampled = craft.app.request.getParam('filter')|default('complete') %}
+{% set filterExternalStatus = craft.app.request.getParam('filter')|default('all') %}
 
 {% set filterDateFrom = craft.app.request.getParam('dateFrom') %}
 {% set filterDateTo = craft.app.request.getParam('dateTo') %}
@@ -20,7 +20,7 @@
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
 {% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
-{% set criteria = craft.lantra.packagesCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order, 'external', filterSampled) %}
+{% set criteria = craft.lantra.packagesCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order, 'external', filterExternalStatus) %}
 
 {% if criteria %}{% paginate criteria as pageInfo, packageEntries %}{% endif %}
 
@@ -33,14 +33,20 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterSampled:filterSampled} %}</div>
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterExternalStatus:filterExternalStatus} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
             <div class="page-content">
+                <form id="external" method="post" accept-charset="UTF-8">
                 <table class="data">
+                    {{ csrfInput() }}
+                    {{ actionInput('sp/packages/external-status') }}
+                    {{ hiddenInput('userId', currentUser.id) }}
+                    {{ hiddenInput('externalStatus', filterExternalStatus == 'sampled' ? 'notSampled' : 'sampled') }}
                     <thead>
                     <tr>
+                        <th>{% if filterExternalStatus == 'all' %}Sampled{% endif %}</th>
                         <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                         <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
                         <th>Company</th>
@@ -56,6 +62,13 @@
                         {% set nextStepReviewer = package.nextStepReviewer %}
                         {% set company = craft.lantra.userCompany(user.id) %}
                         <tr>
+                            <td>
+                                {% if filterExternalStatus == 'all' %}
+                                    {{ package.externalStatus == 'sampled' ? 'Sampled' : 'Unsampled' }}
+                                {% else %}
+                                    <input name="ids[]" type="checkbox" value="{{ package.id }}" />
+                                {% endif %}
+                            </td>
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                             <td><p class="td-title-responsive">Date Created: </p>{{ package.dateCreated|date(dateFormat) }}</td>
                             <td><p class="td-title-responsive">Company: </p>{{ company.title }}</td>
@@ -69,6 +82,12 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {% if filterExternalStatus != 'all' %}
+                    <div class="container-btn">
+                        <button type="submit" class="button primary-bg">{{ filterExternalStatus == 'sampled' ? 'Unsample' : 'Sample' }} Selected</button>
+                    </div>
+                {% endif %}
+                </form>
                 {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
             </div>
         {% else %}
