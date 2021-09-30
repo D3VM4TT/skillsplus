@@ -58,7 +58,7 @@ class Settings extends Model
     public $taskbookNew                         = true;
 
     public $labelResultOutcome0                 = 'Failed';
-    public $labelResultOutcome1                 = 'Passed';
+    public $labelResultOutcome1                 = 'Endorsed';
 
     public $managerConfirmSubmit                = false;
     public $managerConfirmText                  = 'I confirm all information submitted was completed by the user.';
