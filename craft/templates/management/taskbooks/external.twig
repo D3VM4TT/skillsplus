@@ -64,7 +64,7 @@
                         <tr>
                             <td>
                                 {% if filterExternalStatus == 'all' %}
-                                    {{ package.externalStatus == 'sampled' ? 'Sampled' : 'Unsampled' }}
+                                    {{ package.externalStatus == 'sampled' ? 'Sampled' : 'Not Sampled' }}
                                 {% else %}
                                     <input name="ids[]" type="checkbox" value="{{ package.id }}" />
                                 {% endif %}
@@ -76,8 +76,8 @@
                             <td><p class="td-title-responsive">Taskbook: </p>
                                 <a href="/cpd/{{ package.author.id }}/taskbooks/{{ package.id }}">{{ package.taskbook.title }}</a>
                             </td>
-                            <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
-                            <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
+                            <td><p class="td-title-responsive">Current Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
+                            <td><p class="td-title-responsive">Current Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

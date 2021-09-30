@@ -32,9 +32,9 @@
     {% endif %}
     {% if filterExternalStatus is defined and filterExternalStatus %}
         <select name="filter" class="sp-select">
-            <option value="notSampled"{% if filterExternalStatus == 'notSampled' %} selected="selected"{% endif %}>Not Sampled</option>
-            <option value="sampled"{% if filterExternalStatus == 'sampled' %} selected="selected"{% endif %}>Sampled</option>
             <option value="complete"{% if filterExternalStatus == 'complete' %} selected="selected"{% endif %}>Complete</option>
+            <option value="sampled"{% if filterExternalStatus == 'sampled' %} selected="selected"{% endif %}>Sampled</option>
+            <option value="submitted"{% if filterExternalStatus == 'submitted' %} selected="selected"{% endif %}>Submitted</option>
             <option value="all"{% if filterExternalStatus == 'all' %} selected="selected"{% endif %}>All External</option>
         </select>
     {% endif %}

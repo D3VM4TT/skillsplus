@@ -607,6 +607,45 @@ class Packages extends Component
 
     /**
      * @param $package
+     * @param $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function stepAddExternal($package, $userId)
+    {
+        $field = Craft::$app->fields->getFieldByHandle('packageReviews');
+        $sp = new SuperTableService();
+        $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
+        $block = new SuperTableBlockElement();
+        $block->fieldId = $field->id;
+        $block->ownerId = $package->id;
+        $block->typeId = $stepBlockType->id;
+
+        $block->setFieldValues([
+            'reviewStepId' => 'external',
+            'reviewStepName' => 'External',
+            'reviewStepType' => 'external',
+            'reviewUser' => [$userId]
+        ]);
+        Craft::$app->elements->saveElement($block);
+    }
+
+    /**
+     * @param $package
+     * @throws \Throwable
+     */
+    public function stepRemoveExternal($package)
+    {
+        foreach($package->packageReviews as $step) {
+            if ($step->reviewStepType == 'external') {
+                Craft::$app->elements->deleteElementById($step->id);
+            }
+        }
+    }
+
+    /**
+     * @param $package
      * @param $step
      * @param $sortOrder
      * @throws \Throwable
@@ -901,11 +940,12 @@ class Packages extends Component
             $criteria->externalStatus = 'sampled';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
-        elseif ($externalStatus == 'notSampled') {
+        elseif ($externalStatus == 'complete') {
+            $criteria->packageStatus = 'complete';
             $criteria->externalStatus = 'notSampled';
         }
-        elseif ($externalStatus == 'complete') {
-            $criteria->externalStatus = 'complete';
+        elseif ($externalStatus == 'submitted') {
+            $criteria->externalStatus = 'submitted';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
         $criteria->relatedTo = $relatedTo;
