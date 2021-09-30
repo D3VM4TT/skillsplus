@@ -135,9 +135,9 @@
             </p>
         {% endfor %}
     {% endif %}
-    {% if not resultLocked %}
+    {% if not resultLocked and not isManager %}
         <textarea placeholder="Add new comment" id="resultComment" name="comment"></textarea>
-        {% if not isManager and isPackage is defined and isPackage %}
+        {% if isPackage is defined and isPackage %}
             {% set nextReviewer = package.nextStepReviewer %}
             <p>Comment will be sent to {{ nextReviewer ? nextReviewer.fullName : ' your manager' }}.</p>
             <input type="hidden" name="managerId" value="{{ nextReviewer ? nextReviewer.id : '' }}" />

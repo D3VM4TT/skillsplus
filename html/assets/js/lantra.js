@@ -15,7 +15,8 @@ $(document).ready(function () {
     if ($('select#resultOutcome').length) {
         $('select#resultOutcome').change(function () {
             let outcome = $(this).val(),
-                status = outcome === '1' ? 'endorsed' : 'draft';
+                option = $(this).find('option[value="' + outcome + '"]'),
+                status = option.data('status');
             $('button#endorseStatus').data('status', status);
         });
         $('select#resultOutcome').change();
