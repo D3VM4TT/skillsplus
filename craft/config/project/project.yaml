@@ -1,4 +1,4 @@
-dateModified: 1632747955
+dateModified: 1633006637
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -113,6 +113,7 @@ meta:
     027f626e-2eaa-4fca-9665-c8812bce20a9: 'User Address' # User Address
     27f36190-a4c4-4f11-b546-5e4ffb5efc06: 'User Licence Source' # User Licence Source
     28e570b6-14a0-4b5e-be07-37e03f6b9b8f: 'URL (e-learning)' # URL (e-learning)
+    29fe57f7-c3de-4f09-ac06-d78bfd960ea5: 'External Assessor' # External Assessor
     30a277bf-ed0a-48fb-9a03-3e7d5a79b357: 'Target Hours' # Target Hours
     31a1729c-6625-4e9e-9ffe-3fcce0da9bbd: 'Field Manager Only' # Field Manager Only
     31c31961-f4f1-4f09-9c8e-cbbd46d62e97: Workflow # Workflow
@@ -313,6 +314,7 @@ meta:
     e05af851-b6aa-4f59-a43b-0ac897b54887: 'Report All Units' # Report All Units
     e1c8bc22-c8ae-487a-8cfa-074338772cbc: 'Module Group Minimum Credits' # Module Group Minimum Credits
     e4cbe147-47ff-4ad4-845e-cc788f8b8829: 'Custom Value' # Custom Value
+    e5a97ebb-756a-40bb-9b81-231b8ad564b2: 'External Status' # External Status
     e7ff470a-3e85-47be-9037-1508ea540121: 'Result Evidence' # Result Evidence
     e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a: Modules # Modules
     e21ca603-4cc1-4573-9a88-a769b8a0d695: Columns # Columns

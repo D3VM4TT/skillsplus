@@ -1,0 +1,46 @@
+columnSuffix: krfnpvlj
+contentColumnType: string
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: externalStatus
+instructions: ''
+name: 'External Status'
+searchable: false
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - 'Not Sampled'
+        -
+          - value
+          - notSampled
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Sampled
+        -
+          - value
+          - sampled
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Complete
+        -
+          - value
+          - complete
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown
