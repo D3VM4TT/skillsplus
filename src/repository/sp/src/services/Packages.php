@@ -882,19 +882,24 @@ class Packages extends Component
      */
     public function getRelatedPackageIds(User $assessor, $type = null, $name = null)
     {
-        $supertableService = new SuperTableService();
-        $params = ['elementType' => 'craft\\elements\\Entry'];
-
         ## lantra admin sees all packages
-        if (!Lantra::$app->users->isLantraAdmin($assessor)) {
-            $params['relatedTo'] = [
-                'targetElement' => $assessor->id,
-                'field' => 'packageReviews.reviewUser'
-            ];
+        if (Lantra::$app->users->isLantraAdmin($assessor)) {
+            $query = Entry::find();
+            $query->section = 'packages';
+            $query->limit = null;
         }
-
-        ## get all the related steps
-        $query = $supertableService->getRelatedElementsQuery($params);
+        else {
+            $supertableService = new SuperTableService();
+            $params = [
+                'elementType' => 'craft\\elements\\Entry',
+                'relatedTo' => [
+                    'targetElement' => $assessor->id,
+                    'field' => 'packageReviews.reviewUser'
+                ]
+            ];
+            ## get all the related steps
+            $query = $supertableService->getRelatedElementsQuery($params);
+        }
 
         if (!$type && !$name) {
             return $query ? $query->ids() : [];
