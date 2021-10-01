@@ -219,7 +219,7 @@ class PackagesController extends BaseController
                 }
                 else {
                     $result = isset($data['result']) ? $data['result'] == '1' : true;
-                    if ($step->reviewStepType == 'assessment') {
+                    if ($step->reviewStepType == 'external' || $step->reviewStepType == 'assessment') {
                         $sampled = true;
                         $passed = $result;
                     }
