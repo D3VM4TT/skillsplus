@@ -520,27 +520,32 @@ class Packages extends Component
             if ($step->reviewStepType == 'assessment') {
                 $this->endorsePackageUnits($step->owner);
             }
-            if ($step->reviewStepType == 'complete' || ($step->reviewStepType == 'assessment' && $package->totalSteps == 1)) {
+            if ($step->reviewStepType == 'external' || $step->reviewStepType == 'complete' || ($step->reviewStepType == 'assessment' && $package->totalSteps == 1)) {
                 $this->completePackage($package);
             } else {
                 $this->stepRequest($step->ownerId);
             }
         } else {
-            if ($step->reviewStepType == 'assessment') {
+            if ($step->reviewStepType == 'external') {
+                ## duplicate complete step
+                $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
+            }
+            elseif ($step->reviewStepType == 'assessment') {
                 $this->unlockPackage($package);
                 ## duplicate assessment step
                 $this->_insertReviewStep($package, $step, $step->sortOrder);
             }
-            if ($previousStep) {
+            elseif ($previousStep) {
                 ## duplicate assessment step and review step
                 $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
                 $this->_insertReviewStep($package, $step, $step->sortOrder);
             }
         }
         ## send notification to reviewer
-        if ($step->reviewStepType == 'review') {
+        if ($step->reviewStepType == 'external' || $step->reviewStepType == 'review') {
             Lantra::$app->notify->sendStepUpdate($step, $previousStep->reviewUser->one());
-        } ## send notification to user for assessment and complete
+        }
+        ## send notification to user for assessment and complete
         else {
             Lantra::$app->notify->sendStepUpdate($step, $package->author);
         }
@@ -621,6 +626,7 @@ class Packages extends Component
         $block->fieldId = $field->id;
         $block->ownerId = $package->id;
         $block->typeId = $stepBlockType->id;
+        $block->sortOrder = $package->packageReviews->count();
 
         $block->setFieldValues([
             'reviewStepId' => 'external',

@@ -870,6 +870,18 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @return bool
+     */
+    public function isLantraAdmin($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return false;
+        }
+        return $user->admin or $user->isInGroup('schemeManagers');
+    }
+
+    /**
      * Check whether this user can manage teams or companies
      *
      * @param null $userId
