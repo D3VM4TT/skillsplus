@@ -436,6 +436,17 @@ class Users extends Component
         return false;
     }
 
+    /**
+     * @param null $user
+     * @return bool
+     */
+    function isLantraAdmin($user = null)
+    {
+        if (is_null($user)) {
+            $user = Craft::$app->getUser();
+        }
+        return $user->admin or $user->isInGroup('schemeManagers');
+    }
 
     /**
      * Check whether this user has dashboard

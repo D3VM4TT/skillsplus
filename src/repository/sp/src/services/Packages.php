@@ -861,16 +861,14 @@ class Packages extends Component
         if ($filterBy == 'status' && $filterValue != 'all') {
             $criteria->packageStatus = $filterValue;
         }
-        elseif ($filterBy == 'name' && $filterValue != 'all') {
+        if ($filterBy == 'name' && $filterValue != 'all') {
             ## assessment gets all assessment steps
             if ($filterValue == 'Assessment') {
                 $criteria->id = $this->getRelatedPackageIds($assessor, 'assessment');
-            }
-            else {
+            } else {
                 $criteria->id = $this->getRelatedPackageIds($assessor, null, $filterValue);
             }
-        }
-        elseif ($filterBy == 'external') {
+        } elseif ($filterBy == 'external') {
             $criteria->id = $this->getExternalPackageIds($assessor, $filterValue);
         }
         return $criteria;
@@ -885,12 +883,16 @@ class Packages extends Component
     public function getRelatedPackageIds(User $assessor, $type = null, $name = null)
     {
         $supertableService = new SuperTableService();
-        $params = [
-            'elementType' => 'craft\\elements\\Entry',
-            'relatedTo' => [
+        $params = ['elementType' => 'craft\\elements\\Entry'];
+
+        ## lantra admin sees all packages
+        if (!Lantra::$app->users->isLantraAdmin($assessor)) {
+            $params['relatedTo'] = [
                 'targetElement' => $assessor->id,
                 'field' => 'packageReviews.reviewUser'
-            ]];
+            ];
+        }
+
         ## get all the related steps
         $query = $supertableService->getRelatedElementsQuery($params);
 
@@ -924,7 +926,6 @@ class Packages extends Component
 
     /**
      * @param User $eqa
-     * @param $filter
      * @return array|int[]
      */
     public function getExternalPackageIds(User $eqa, $externalStatus = 'all')

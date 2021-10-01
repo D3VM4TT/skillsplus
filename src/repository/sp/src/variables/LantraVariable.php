@@ -878,7 +878,7 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return false;
         }
-        return $user->admin or $user->isInGroup('schemeManagers');
+        return Lantra::$app->users->isLantraAdmin($user);
     }
 
     /**
