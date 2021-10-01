@@ -520,13 +520,18 @@ class Packages extends Component
             if ($step->reviewStepType == 'assessment') {
                 $this->endorsePackageUnits($step->owner);
             }
-            if ($step->reviewStepType == 'external' || $step->reviewStepType == 'complete' || ($step->reviewStepType == 'assessment' && $package->totalSteps == 1)) {
+            if ($step->reviewStepType == 'external') {
+                $this->completeExternal($package);
+            }
+            if ($step->reviewStepType == 'complete' || ($step->reviewStepType == 'assessment' && $package->totalSteps == 1)) {
                 $this->completePackage($package);
-            } else {
+            }
+            else {
                 $this->stepRequest($step->ownerId);
             }
         } else {
             if ($step->reviewStepType == 'external') {
+                $this->completeExternal($package);
                 ## duplicate complete step
                 $this->_insertReviewStep($package, $previousStep, $step->sortOrder);
             }
@@ -575,6 +580,15 @@ class Packages extends Component
     public function completePackage($package)
     {
         $package->setFieldValue('packageStatus', 'complete');
+        $package->save();
+    }
+
+    /**
+     * @param $package
+     */
+    public function completeExternal($package)
+    {
+        $package->setFieldValue('externalStatus', 'submitted');
         $package->save();
     }
 
@@ -673,7 +687,8 @@ class Packages extends Component
             'reviewStepId' => $step->reviewStepId,
             'reviewStepName' => $step->reviewStepName,
             'reviewStepType' => $step->reviewStepType,
-            'reviewUser' => [$step->reviewUser->one()->id]
+            'reviewUser' => [$step->reviewUser->one()->id],
+            'reviewSampled' => false
         ]);
         Craft::$app->elements->saveElement($block);
     }
