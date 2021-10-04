@@ -1,5 +1,13 @@
 $(document).ready(function () {
 
+    $('.date-field').datepicker({
+        language: 'en',
+        position: "right top",
+        autoClose: true,
+        dateFormat: 'dd/mm/yyyy'
+
+    });
+
     if ($('#confirmSubmit').length) {
         $('#confirmSubmit').change(function(){
            if ($(this).is(':checked')) {

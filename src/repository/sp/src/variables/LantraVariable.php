@@ -701,9 +701,9 @@ class LantraVariable
      * @param string $filterValue
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function packagesCriteria($search, $limit = null, $order = 'lastName',  $filterBy = null, $filterValue = 'all', $managerId = null)
+    public function packagesCriteria($search, $limit = null, $order = 'lastName',  $filterBy = null, $filterValue = 'all', $dateFrom = null, $dateTo = null, $companyId = null, $managerId = null)
     {
-        return Lantra::$app->packages->packagesCriteria($search, $limit, $order, $filterBy, $filterValue, $this->getUser($managerId));
+        return Lantra::$app->packages->packagesCriteria($search, $limit, $order, $filterBy, $filterValue, $dateFrom, $dateTo, $companyId, $this->getUser($managerId));
     }
 
     /**

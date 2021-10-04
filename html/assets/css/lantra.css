@@ -426,8 +426,7 @@ body.logged-in .btn-toggle-small {
 
 .datepickers-container {
     position: absolute;
-    left: 200px !important;
-    top: 150px !important;
+    z-index: 999999;
 }
 
 .-top-center- .datepicker--pointer, .-top-left- .datepicker--pointer, .-top-right- .datepicker--pointer {
@@ -697,6 +696,18 @@ input.text-search {
     border: none;
     padding: 15px 20px;
     background-color: #f7f7fa;
+}
+
+input.date-search {
+    border: none;
+    padding: 15px 20px;
+    background-color: #f7f7fa;
+    width:100px;
+}
+
+.datepicker--day-name,
+.datepicker--cell.-current-{
+    color:#000!important
 }
 
 .container-btn {

@@ -31,12 +31,27 @@
         </select>
     {% endif %}
     {% if filterExternalStatus is defined and filterExternalStatus %}
-        <select name="filter" class="sp-select">
+        <select name="filter" class="sp-select" style="width: 200px;">
             <option value="complete"{% if filterExternalStatus == 'complete' %} selected="selected"{% endif %}>Complete</option>
             <option value="sampled"{% if filterExternalStatus == 'sampled' %} selected="selected"{% endif %}>Sampled</option>
             <option value="submitted"{% if filterExternalStatus == 'submitted' %} selected="selected"{% endif %}>Submitted</option>
             <option value="all"{% if filterExternalStatus == 'all' %} selected="selected"{% endif %}>All External</option>
         </select>
     {% endif %}
+    {% if filterDateFrom is defined %}
+        <input placeholder="Date From" value="{{ filterDateFrom }}" type="text" name="date-from" class="date-field date-search" />
+        <input placeholder="Date To" value="{{ filterDateTo }}" type="text" name="date-to" class="date-field date-search" />
+    {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>
+    {% if filterCompany is defined %}
+        <div style="margin-top:10px;">
+            <select name="company" class="sp-select" style="width: 360px;">
+                <option value="all"{% if filterCompany == 'all' %} selected="selected"{% endif %}>All companies</option>
+                {% for company in currentUser.userExternalCompanies %}
+                    <option value="{{ company.id }}"{% if filterCompany == company.id %} selected="selected"{% endif %}>{{ company.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+
 </form>

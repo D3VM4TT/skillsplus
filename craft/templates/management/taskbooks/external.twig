@@ -12,15 +12,16 @@
 {% set filterSearch = craft.app.request.getParam('search')|default('') %}
 {% set filterExternalStatus = craft.app.request.getParam('filter')|default('all') %}
 
-{% set filterDateFrom = craft.app.request.getParam('dateFrom') %}
-{% set filterDateTo = craft.app.request.getParam('dateTo') %}
+{% set filterDateFrom = craft.app.request.getParam('date-from') %}
+{% set filterDateTo = craft.app.request.getParam('date-to') %}
+{% set filterCompany = craft.app.request.getParam('company') %}
 
 {% set sortParam = craft.app.request.getParam('sort') %}
 {% set validSorts = ['title', 'id', 'dateCreated', 'packageStatus'] %}
 {% set sort = sortParam in validSorts ? sortParam : 'title' %}
 {% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
 
-{% set criteria = craft.lantra.packagesCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order, 'external', filterExternalStatus) %}
+{% set criteria = craft.lantra.packagesCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order, 'external', filterExternalStatus, filterDateFrom, filterDateTo, filterCompany) %}
 
 {% if criteria %}{% paginate criteria as pageInfo, packageEntries %}{% endif %}
 
@@ -33,7 +34,7 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterExternalStatus:filterExternalStatus} %}</div>
+                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterExternalStatus:filterExternalStatus, filterCompany:filterCompany} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}

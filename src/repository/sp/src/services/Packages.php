@@ -14,6 +14,7 @@ use craft\events\ModelEvent;
 use craft\elements\GlobalSet;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\helpers\DateTimeHelper;
 use \DateTime;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\RecordHelper;
@@ -859,12 +860,15 @@ class Packages extends Component
      * @param string $search
      * @param int $limit
      * @param string $order
-     * @param User $assessor
      * @param null $filterBy
      * @param string $filterValue
+     * @param null $dateFrom
+     * @param null $dateTo
+     * @param User $assessor
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     * @throws \Exception
      */
-    public function packagesCriteria($search = '', $limit = 25, $order = 'title', $filterBy = null, $filterValue = 'all', User $assessor)
+    public function packagesCriteria($search = '', $limit = 25, $order = 'title', $filterBy = null, $filterValue = 'all', $dateFrom = null, $dateTo = null, $companyId = null, User $assessor)
     {
         $criteria = Entry::find();
         $criteria->section = 'packages';
@@ -883,10 +887,37 @@ class Packages extends Component
             } else {
                 $criteria->id = $this->getRelatedPackageIds($assessor, null, $filterValue);
             }
-        } elseif ($filterBy == 'external') {
-            $criteria->id = $this->getExternalPackageIds($assessor, $filterValue);
+        }
+        elseif ($filterBy == 'external') {
+            $criteria->id = $this->getExternalPackageIds($assessor, $filterValue, $companyId);
+        }
+        ## handle date filters
+        $df = $dateFrom ? $this->convertDate($dateFrom) : false;
+        $dt = $dateTo ? $this->convertDate($dateTo) : false;
+        if ($df && $dt) {
+            $criteria->dateCreated = ['and','>= '. $df, '<= '. $dt];
+        }
+        elseif ($df) {
+            $criteria->dateCreated = '> '. $df;
+        }
+        elseif ($dt) {
+            $criteria->dateCreated = '< '. $dt;
         }
         return $criteria;
+    }
+
+    /**
+     * @param string $dateString
+     * @return DateTime|false
+     * @throws \Exception
+     */
+    private function convertDate($dateString = '')
+    {
+        $parts = explode('/', $dateString);
+        if (count($parts) != 3) {
+            return;
+        }
+        return DateTimeHelper::toDateTime($parts[2] . '-' . $parts[1] . '-' . $parts[0])->format(\DateTime::ATOM);
     }
 
     /**
@@ -948,11 +979,12 @@ class Packages extends Component
      * @param User $eqa
      * @return array|int[]
      */
-    public function getExternalPackageIds(User $eqa, $externalStatus = 'all')
+    public function getExternalPackageIds(User $eqa, $externalStatus = 'all', $companyId = null)
     {
         ## get all users related to eqa companies
+        $companyIds = $companyId != 'all' ? [$companyId] : $eqa->userExternalCompanies;
         $criteria = User::find();
-        $criteria->relatedTo = ['targetElement' => $eqa->userExternalCompanies, 'field' => 'userCompany'];
+        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
         $criteria->limit = null;
         $userIds = $criteria->ids();
 
