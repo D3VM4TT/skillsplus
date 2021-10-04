@@ -445,6 +445,7 @@ class Packages extends Component
             else {
                 Lantra::$app->notify->sendStepRequest($nextStep);
             }
+            $package->log('Step request [' . $nextStep->stepId . ']');
         }
     }
 
@@ -489,8 +490,13 @@ class Packages extends Component
             return;
         }
         $step->setFieldValue('reviewUser', [$userId]);
+
         if (Craft::$app->elements->saveElement($step)) {
             Lantra::$app->notify->sendStepAssign($step);
+        }
+        $package = $step->owner;
+        if ($userId) {
+            $package->log('Review user assigned to ' . $step->reviewStepType . ' - ' . $step->reviewStepName . ' [' . $userId . ']');
         }
     }
 
@@ -555,6 +561,7 @@ class Packages extends Component
         else {
             Lantra::$app->notify->sendStepUpdate($step, $package->author);
         }
+        $package->log('Review step update ' . $step->reviewStepType . ' - ' . $step->reviewStepName . ' [' . ($passed ? 'passed' : 'failed') . ']');
     }
 
     /**
@@ -1057,9 +1064,11 @@ class Packages extends Component
     public function removeModuleGroup($package, $categoryId)
     {
         if (null !== $block = $package->moduleGroupBlock($categoryId)) {
-            return Craft::$app->elements->deleteElementById($block->id);
+           if (Craft::$app->elements->deleteElementById($block->id)) {
+                $package->log('Module group removed [' . $categoryId . ']');
+           }
         }
-        return null;
+        return;
     }
 
     /**
