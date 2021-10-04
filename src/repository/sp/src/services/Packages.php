@@ -796,8 +796,9 @@ class Packages extends Component
     {
         $categoryIds = [];
         foreach($package->packageModuleGroups->all() as $moduleGroupBlock) {
-            $moduleGroup = $moduleGroupBlock->moduleGroup->one();
-            $categoryIds[] = $moduleGroup->id;
+            if (null != $moduleGroup = $moduleGroupBlock->moduleGroup->one())  {
+                $categoryIds[] = $moduleGroup->id;
+            }
         }
         return $categoryIds;
     }
