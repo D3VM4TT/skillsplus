@@ -714,7 +714,7 @@ class LantraVariable
      */
     public function packagesCount($filterBy = null, $filterValue = 'all', $managerId = null)
     {
-        $criteria = $this->packagesCriteria('', null, 'lastName', $filterBy, $filterValue, $this->getUser($managerId));
+        $criteria = $this->packagesCriteria('', null, 'lastName', $filterBy, $filterValue, null, null, null, $this->getUser($managerId));
         return $criteria ? $criteria->count() : 0;
     }
 
