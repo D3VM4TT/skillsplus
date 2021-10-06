@@ -206,7 +206,7 @@ class AssetsController extends BaseController
             $response['success'] = true;
             $response['assets'] = [];
 
-            foreach($package->evidence() as $evidence) {
+            foreach($package->getEvidence() as $evidence) {
                 $asset = $evidence['asset'];
                 $response['assets'][$asset->id] = [
                     'asset' => $asset,
