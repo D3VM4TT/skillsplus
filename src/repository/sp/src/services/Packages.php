@@ -899,6 +899,9 @@ class Packages extends Component
         elseif ($filterBy == 'external') {
             $criteria->id = $this->getExternalPackageIds($assessor, $filterValue, $companyId);
         }
+        else {
+            $criteria->id = $this->getRelatedPackageIds($assessor);
+        }
         ## handle date filters
         $df = $dateFrom ? $this->convertDate($dateFrom) : false;
         $dt = $dateTo ? $this->convertDate($dateTo) : false;
