@@ -6,7 +6,7 @@
         <ul>
             {% include '_includes/navReports' %}
         </ul>
-    {% elseif craft.lantra.isReviewer() and craft.lantra.packagesCount() %}
+    {% elseif craft.lantra.packagesCount() %}
         {% include '_includes/navReviewer' %}
     {% endif %}
     {% include '_includes/navLinks' %}
