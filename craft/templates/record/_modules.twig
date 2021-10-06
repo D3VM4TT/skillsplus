@@ -12,9 +12,6 @@
 {% set jobRoleEndorse = craft.lantra.setting('jobRoleEndorse', false) %}
 
 <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
-    {% if craft.lantra.setting('enableTaskbooks') %}
-        {% include 'record/_modules/taskbooks' with {cpdUser:cpdUser} %}
-    {% endif %}
     {% if craft.lantra.setting('enableJobRoles') %}
         {% include 'record/_modules/jobroles' with {cpdUser:cpdUser} %}
     {% endif %}
