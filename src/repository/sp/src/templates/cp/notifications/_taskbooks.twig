@@ -24,7 +24,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: New taskbook for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    instructions:   "Default: New taskbook for {{ user.fullname }} - {{ taskbook.title }}.",
     label:			"Message New Package",
     id:				"notifyNewPackage",
     name:			"notifyNewPackage",
@@ -57,7 +57,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    instructions:   "Default: Request for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.",
     label:			"Message Step Request",
     id:				"notifyStepRequest",
     name:			"notifyStepRequest",
@@ -90,7 +90,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    instructions:   "Default: Reviewer not assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.",
     label:			"Message Step Unassigned",
     id:				"notifyStepUnassigned",
     name:			"notifyStepUnassigned",
@@ -123,7 +123,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ moduleGroup.title }}.",
+    instructions:   "Default: You have been assigned for {{ step.reviewStepName }} ({{ type }}) for {{ user.fullname }} - {{ taskbook.title }}.",
     label:			"Message Step Assign",
     id:				"notifyStepAssign",
     name:			"notifyStepAssign",
@@ -156,7 +156,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: Status update for {{ moduleGroup.title }}: result is {{ result }}. {{ step.reviewComment }}",
+    instructions:   "Default: Status update for {{ taskbook.title }}: result is {{ result }}. {{ step.reviewComment }}",
     label:			"Message Step Update",
     id:				"notifyStepUpdate",
     name:			"notifyStepUpdate",
@@ -189,7 +189,7 @@
 }) }}
 
 {{ forms.textareaField ({
-    instructions:   "Default: Assessment for {{ moduleGroup.title }}. \n\n {{ assessmentText }}",
+    instructions:   "Default: Assessment for {{ taskbook.title }}. \n\n {{ assessmentText }}",
     label:			"Message Assessment",
     id:				"notifyAssessment",
     name:			"notifyAssessment",

@@ -485,7 +485,8 @@ class Notify extends Component
             return;
         }
         $user = Craft::$app->users->getUserById($userId);
-        $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment];
+        $title = $entry->resultUnit->count() ? $entry->resultUnit->one()->title : $entry->title;
+        $variables = ['entry' => $entry, 'user' => $user, 'comment' => $comment, 'resultTitle' => $title];
         $subject = $this->getNotifySetting('subjectComment', 'New Comment');
         $cc = $this->getNotifySetting('ccComment');
         $template = $this->getNotifySetting('comment', "{{ entry.title }} - {{ user.fullName}}: {{ comment }}");
@@ -639,9 +640,10 @@ class Notify extends Component
             return;
         }
         $user = $resultEntry->getAuthor();
+        $title = $resultEntry->resultUnit->count() ? $resultEntry->resultUnit->one()->title : $resultEntry->title;
         $subject = $this->getNotifySetting('subjectEndorsementResult', 'Endorsement Required');
         $cc = $this->getNotifySetting('ccEndorsementResult');
-        $variables = ['entry' => $resultEntry, 'user' => $user];
+        $variables = ['entry' => $resultEntry, 'user' => $user, 'resultTitle' => $title];
         $template = $this->getNotifySetting('endorsementResult', "{{ user.fullName}} has submitted a result {{ entry.title }}.");
         $message = Craft::$app->view->renderString($template, $variables);
         ## send the emails to managers
