@@ -7,7 +7,7 @@
     <tbody>
     {% for assessment in package.packageAssessment %}
         {% set enabled = not assessment.assessmentDate %}
-        {% set moduleGroup = assessment.assessmentModuleGroup.one %}
+        {% set moduleGroup = assessment.assessmentModuleGroup.last %}
         {% if moduleGroup %}
         <tr>
             <td style="width:25%;">{{ moduleGroup.title }}</td>
