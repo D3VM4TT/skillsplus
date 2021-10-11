@@ -1040,18 +1040,18 @@ class Packages extends Component
             foreach($entry->workflow as $workflow) {
                 if ($workflow->stepType == 'assessment' && !$assessment) {
                     $assessment = true;
-                    $ids = $this->getRelatedPackageIds($user, 'assessment');
+                    ## $ids = $this->getRelatedPackageIds($user, 'assessment');
                     $types[] = [
                         'name' => 'Assessment',
-                        'count' => count($ids)
+                        'count' => 0 ## count($ids)
                     ];
                 }
                 ## add review steps as step name
                 else {
-                    $ids = $this->getRelatedPackageIds($user, null, $workflow->stepName);
+                    ## $ids = $this->getRelatedPackageIds($user, null, $workflow->stepName);
                     $types[] = [
                         'name' => $workflow->stepName,
-                        'count' => count($ids)
+                        'count' => 0 ## count($ids)
                     ];
                 }
             }
