@@ -218,7 +218,7 @@ class ReportHelper
 
         $items = [
             $user->id,
-            $user->fullName,
+            $html ? '<a href="/cpd/' . $user->id . '">' . $user->fullName . ' </a>' : $user->fullName,
             $company ? $company->id : 'unknown',
             $company ? $company->companyLabel : 'unknown',
             $role ? $role->title : 'unknown',
