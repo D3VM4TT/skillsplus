@@ -62,7 +62,8 @@ class Modules extends Component
             $role->setFieldValue('roleModuleCount', $this->roleCount($role->id, 'modules'));
             $role->setFieldValue('roleUnitCount', $this->roleCount($role->id, 'units'));
             ## save the role units
-            $role->setFieldValue('linkedData', json_encode(Lantra::$app->results->roleUnits($role->id)));
+            $roleUnits = Lantra::$app->results->roleUnits($role->id);
+            $role->setFieldValue('linkedData', json_encode(array_keys($roleUnits)));
             Craft::$app->elements->saveElement($role);
         }
     }
