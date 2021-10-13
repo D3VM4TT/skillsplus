@@ -51,7 +51,9 @@
                 </ul>
             </li>
         {% endif %}
-        {% if craft.lantra.isLantraAdmin or (craft.lantra.can('editTaskbooks') and craft.lantra.packagesCount()) %}
+        {% set reviewCount = craft.lantra.packagesCount() %}
+        {% set externalCount = craft.lantra.packagesCount('external') %}
+        {% if craft.lantra.isLantraAdmin or (craft.lantra.can('editTaskbooks') and (reviewCount or externalCount)) %}
             <li class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
                 <a class="secondary-bg-hover" href="#">{{ taskbookLabel|pluralize }}</a>
                 <ul>
@@ -66,7 +68,7 @@
                     {% endfor %}
                     {% if craft.lantra.isExternal(currentUser) %}
                         <li>
-                            <a href="/management/taskbooks/external">External ({{ craft.lantra.packagesCount('external')  }})</a>
+                            <a href="/management/taskbooks/external">External</a>
                         </li>
                     {% endif %}
 
