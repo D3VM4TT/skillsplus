@@ -2417,69 +2417,11 @@ class Results extends Component
      * @return array
      * @throws Exception
      */
-    public function getManagerAnnualResults($userId = null, $userFilter = [], $resultFilter)
+    public function getManagerAnnualResultUsers($userId = null, $limit = null, $search = '')
     {
-        $userFilter = $this->formatUserFilter($userFilter);
+        $userFilter = $this->formatUserFilter(['limit' => $limit, 'search' => $search]);
         $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
-
-        $header = [
-            'User ID',
-            'User Name',
-            'Company ID',
-            'Company Label',
-            'User Job Title',
-            'Start Date',
-            'Total Job Role Units',
-            'Total Completed Units',
-            'Total Unexpired Units',
-            'Total Required Units',
-            'Total Annual Units (12 months)'
-        ];
-
-        $rows = [$header];
-        foreach ($subordinates as $user) {
-            if (null == $role = $user->userRole->one()) {
-                continue;
-            }
-            $company = Lantra::$app->users->userCompany($user);
-            $roleUnitIds = $role->linkedData ? json_decode($role->linkedData) : [];
-            $totalRole = count($roleUnitIds);
-
-            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
-            $criteria->anyStatus();
-            $criteria->resultStatus = 'endorsed';
-            $totalCompleted = $criteria->count();
-
-            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
-            $criteria->resultStatus = 'endorsed';
-            $totalUnexpired = $criteria->count();
-
-            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
-            $criteria->resultStatus = 'endorsed';
-            $date = new DateTime();
-            $date->modify('-1 year');
-            $criteria->resultFinishDate = '<= '. $date->format('ATOM');
-            $totalAnnual = $criteria->count();
-
-            $format = 'd-m-y';
-
-            $row = [
-                $user->id,
-                $user->fullName,
-                $company ? $company->id : 'unknown',
-                $company ? $company->companyLabel : 'unknown',
-                $role->title,
-                $user->userStartDate ? $user->userStartDate->format($format) : '~',
-                $totalRole,
-                $totalCompleted,
-                $totalUnexpired,
-                $totalRole - $totalUnexpired,
-                $totalAnnual
-
-            ];
-            $rows[] = $row;
-        }
-        return $rows;
+        return $subordinates;
     }
 
     /**

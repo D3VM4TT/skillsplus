@@ -166,6 +166,77 @@ class ReportHelper
      * @param Entry $reportEntry
      * @return array
      */
+    static function reportHeaderStandardAnnualResults(Entry $reportEntry)
+    {
+        return [
+            'User ID',
+            'User Name',
+            'Company ID',
+            'Company Label',
+            'User Job Title',
+            'Start Date',
+            'Total Job Role Units',
+            'Total Completed Units',
+            'Total Unexpired Units',
+            'Total Required Units',
+            'Total Annual Units (12 months)'
+        ];
+    }
+
+    /**
+     * @param Entry $reportEntry
+     * @param User $user
+     * @param bool $html
+     * @return array
+     */
+    public static function reportRowStandardAnnualResults(Entry $reportEntry, User $user, $html = true)
+    {
+        $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
+
+        if (null == $role = $user->userRole->one()) {
+            return [];
+        }
+        $company = Lantra::$app->users->userCompany($user);
+        $roleUnitIds = $role && $role->linkedData ? json_decode($role->linkedData) : [];
+        $totalRole = count($roleUnitIds);
+
+        $criteria = Lantra::$app->results->getUserUnitResults($user->id, $roleUnitIds);
+        $criteria->anyStatus();
+        $criteria->resultStatus = 'endorsed';
+        $totalCompleted = $criteria->count();
+
+        $criteria = Lantra::$app->results->getUserUnitResults($user->id, $roleUnitIds);
+        $criteria->resultStatus = 'endorsed';
+        $totalUnexpired = $criteria->count();
+
+        $criteria = Lantra::$app->results->getUserUnitResults($user->id, $roleUnitIds);
+        $criteria->resultStatus = 'endorsed';
+        $date = new \DateTime();
+        $date->modify('-1 year');
+        $criteria->resultFinishDate = '<= '. $date->format('ATOM');
+        $totalAnnual = $criteria->count();
+
+        $items = [
+            $user->id,
+            $user->fullName,
+            $company ? $company->id : 'unknown',
+            $company ? $company->companyLabel : 'unknown',
+            $role ? $role->title : 'unknown',
+            $user->userStartDate ? $user->userStartDate->format($dateFormat) : '~',
+            $totalRole,
+            $totalCompleted,
+            $totalUnexpired,
+            $totalRole - $totalUnexpired,
+            $totalAnnual
+        ];
+
+        return $items;
+    }
+
+    /**
+     * @param Entry $reportEntry
+     * @return array
+     */
     public static function reportHeaderStandardCpd(Entry $reportEntry)
     {
         return [

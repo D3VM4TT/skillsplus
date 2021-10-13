@@ -140,6 +140,59 @@
             </td>
         </tr>
         <tr>
+            <td>Annual Results</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-annualResults-active",
+                    name:			"reports[standardAnnualResults][active]",
+                    on:		        settings.reports.standardAnnualResults.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardAnnualResults][title]",
+                    value:		     "Annual Results"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-annualResults-group',
+                    name: 'reports[standardAnnualResults][group]',
+                    value: settings.reports.standardAnnualResults.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-annualResults-roles",
+                    name:			    "reports[standardAnnualResults][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardAnnualResults.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-annualResults-description",
+                    name:			"reports[standardAnnualResults][description]",
+                    value:		    settings.reports.standardAnnualResults.description|default(),
+                    rows:           2,
+                    cols:           40
+                }) }}
+            </td>
+            <td style="text-align: right">
+                {{ forms.textField ({
+                    id:				"reports-annualResults-pageLimit",
+                    name:			"reports[standardAnnualResults][pageLimit]",
+                    value:		    settings.reports.standardAnnualResults.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
+                }) }}
+            </td>
+        </tr>
+        <tr>
             <td>CPD</td>
             <td>
                 {{ forms.lightswitchField ({
@@ -452,59 +505,6 @@
                     id:				"reports-expired-pageLimit",
                     name:			"reports[expired][pageLimit]",
                     value:		    settings.reports.expired.pageLimit|default(),
-                    class:          "input-small",
-                    type:           "number"
-                }) }}
-            </td>
-        </tr>
-        <tr>
-            <td>Annual Results</td>
-            <td>
-                {{ forms.lightswitchField ({
-                    id:				"reports-annualResults-active",
-                    name:			"reports[annualResults][active]",
-                    on:		        settings.reports.annualResults.active|default(false)
-                }) }}
-                {{ forms.hidden ({
-                    name:			"reports[annualResults][title]",
-                    value:		     "Annual Results"
-                }) }}
-            </td>
-            <td>
-                {{ forms.selectField({
-                    id: 'reports-annualResults-group',
-                    name: 'reports[annualResults][group]',
-                    value: settings.reports.annualResults.group|default('schemeManagers'),
-                    options: groupOptions
-                }) }}
-            </td>
-            <td>
-                {{ forms.elementSelectField ({
-                    id:				    "reports-annualResults-roles",
-                    name:			    "reports[annualResults][roles]",
-                    elementType:        config.categoryElementType,
-                    sources:            config.jobRoleCategoryGroup,
-                    criteria:           '',
-                    sourceElementId:    '',
-                    elements:           settings.reports.annualResults.roles|default([]),
-                    storageKey:         '',
-                    viewMode:           'list'
-                }) }}
-            </td>
-            <td>
-                {{ forms.textareaField ({
-                    id:				"reports-annualResults-description",
-                    name:			"reports[annualResults][description]",
-                    value:		    settings.reports.annualResults.description|default(),
-                    rows:           2,
-                    cols:           40
-                }) }}
-            </td>
-            <td style="text-align: right">
-                {{ forms.textField ({
-                    id:				"reports-annualResults-pageLimit",
-                    name:			"reports[annualResults][pageLimit]",
-                    value:		    settings.reports.annualResults.pageLimit|default(),
                     class:          "input-small",
                     type:           "number"
                 }) }}

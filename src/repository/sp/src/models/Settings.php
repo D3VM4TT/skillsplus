@@ -251,6 +251,14 @@ class Settings extends Model
             'description'  => '',
             'pageLimit' => ''
         ],
+        'standardAnnualResults'     => [
+            'active' => false,
+            'title' => 'Custom Annual Results',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
         'standardCpd'       => [
             'active' => true,
             'title' => 'CPD',
@@ -294,14 +302,6 @@ class Settings extends Model
         'expired'     => [
             'active' => false,
             'title' => 'Custom Expired (required training)',
-            'group'  => 'schemeManagers',
-            'roles'  => [],
-            'description'  => '',
-            'pageLimit' => ''
-        ],
-        'annualResults'     => [
-            'active' => false,
-            'title' => 'Custom Annual Results',
             'group'  => 'schemeManagers',
             'roles'  => [],
             'description'  => '',

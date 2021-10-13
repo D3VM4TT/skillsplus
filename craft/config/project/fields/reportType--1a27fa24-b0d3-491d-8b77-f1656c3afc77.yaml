@@ -34,6 +34,17 @@ settings:
       __assoc__:
         -
           - label
+          - 'Annual Results'
+        -
+          - value
+          - standardAnnualResults
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
           - CPD
         -
           - value
@@ -93,17 +104,6 @@ settings:
         -
           - value
           - expired
-        -
-          - default
-          - ''
-    -
-      __assoc__:
-        -
-          - label
-          - 'Custom Annual Results'
-        -
-          - value
-          - annualResults
         -
           - default
           - ''

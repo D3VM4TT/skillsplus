@@ -199,6 +199,9 @@ class Reports extends Component
                     $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
                 }
                 break;
+            case 'standardAnnualResults':
+                $criteria = Lantra::$app->results->getManagerAnnualResultUsers($userId, $limit, $search);
+                break;
             case 'standardCpd':
                 $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
                 break;
@@ -342,9 +345,6 @@ class Reports extends Component
         }
         elseif ($type == 'required') {
             $values = Lantra::$app->results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
-        }
-        elseif ($type == 'annualResults') {
-            $values = Lantra::$app->results->getManagerAnnualResults($manager->id, $userFilter, $resultFilter);
         }
         return $values;
     }
