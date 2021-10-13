@@ -78,9 +78,9 @@ fieldLayouts:
             width: 50
           -
             fieldUid: 5d67e162-9058-47ba-aa41-a025b21fce64 # Linked Data
-            instructions: null
-            label: null
-            required: false
+            instructions: ''
+            label: __blank__
+            required: ''
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
