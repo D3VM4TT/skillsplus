@@ -343,6 +343,9 @@ class Reports extends Component
         elseif ($type == 'required') {
             $values = Lantra::$app->results->getManagerUnitRequiredResults($manager->id, $userFilter, $resultFilter);
         }
+        elseif ($type == 'annualResults') {
+            $values = Lantra::$app->results->getManagerAnnualResults($manager->id, $userFilter, $resultFilter);
+        }
         return $values;
     }
 

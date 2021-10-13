@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
+use craft\elements\Category;
 use craft\events\ModelEvent;
 
 use lantra\sp\Plugin as Lantra;
@@ -44,6 +45,51 @@ class Modules extends Component
             $event->isValid = false;
             $entry->addError('moduleUnitGroups', 'You can only add one recurring unit per module.');
         }
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param Entry $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function onSaveModule(ModelEvent $event, Entry $entry)
+    {
+        ## copy the module count and unit count to the user role
+        $categories = Category::find()->group('roles')->anyStatus()->all();
+        foreach ($categories as $role) {
+            $role->setFieldValue('roleModuleCount', $this->roleCount($role->id, 'modules'));
+            $role->setFieldValue('roleUnitCount', $this->roleCount($role->id, 'units'));
+            ## save the role units
+            $role->setFieldValue('linkedData', json_encode(Lantra::$app->results->roleUnits($role->id)));
+            Craft::$app->elements->saveElement($role);
+        }
+    }
+
+    /**
+     * @param $roleId
+     * @param string $count
+     * @return int|string
+     */
+    private function roleCount($roleId, $count = 'modules') {
+
+        $criteria = Entry::find()
+            ->section('modules')
+            ->relatedTo(['targetElement' => [$roleId], 'field' => 'moduleRoles']);
+
+        ## just return the module count
+        if ($count == 'modules') {
+            return $criteria->count();
+        }
+
+        $return = 0;
+        foreach ($criteria->all() as $module) {
+            foreach ($module->moduleUnitGroups as $unitGroup) {
+                $return += $unitGroup->unitEntries->count();
+            }
+        }
+        return $return;
     }
 
     /**

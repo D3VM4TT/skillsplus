@@ -298,6 +298,14 @@ class Settings extends Model
             'roles'  => [],
             'description'  => '',
             'pageLimit' => ''
+        ],
+        'annualResults'     => [
+            'active' => false,
+            'title' => 'Custom Annual Results',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
         ]
     ];
 

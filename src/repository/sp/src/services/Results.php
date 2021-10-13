@@ -2407,6 +2407,81 @@ class Results extends Component
         return $rows;
     }
 
+
+    /**
+     * Return all required (including expired)
+     *
+     * @param null $userId
+     * @param array $userFilter
+     * @param array $resultFilter
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerAnnualResults($userId = null, $userFilter = [], $resultFilter)
+    {
+        $userFilter = $this->formatUserFilter($userFilter);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+
+        $header = [
+            'User ID',
+            'User Name',
+            'Company ID',
+            'Company Label',
+            'User Job Title',
+            'Start Date',
+            'Total Job Role Units',
+            'Total Completed Units',
+            'Total Unexpired Units',
+            'Total Required Units',
+            'Total Annual Units (12 months)'
+        ];
+
+        $rows = [$header];
+        foreach ($subordinates as $user) {
+            if (null == $role = $user->role->one()) {
+                continue;
+            }
+            $company = Lantra::$app->users->userCompany($user);
+            $roleUnitIds = $role->linkedData ? json_decode($role->linkedData) : [];
+            $totalRole = count($roleUnitIds);
+
+            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
+            $criteria->anyStatus();
+            $criteria->resultStatus = 'endorsed';
+            $totalCompleted = $criteria->count();
+
+            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
+            $criteria->resultStatus = 'endorsed';
+            $totalUnexpired = $criteria->count();
+
+            $criteria = $this->getUserUnitResults($user->id, $roleUnitIds);
+            $criteria->resultStatus = 'endorsed';
+            $date = new DateTime();
+            $date->modify('-1 year');
+            $criteria->resultFinishDate = '<= '. $date->format('ATOM');
+            $totalAnnual = $criteria->count();
+
+            $format = 'd-m-y';
+
+            $row = [
+                $user->id,
+                $user->fullName,
+                $company ? $company->id : 'unknown',
+                $company ? $company->companyLabel : 'unknown',
+                $role->title,
+                $user->userStartDate->format($format),
+                $totalRole,
+                $totalCompleted,
+                $totalUnexpired,
+                $totalRole - $totalUnexpired,
+                $totalAnnual
+
+            ];
+            $rows[] = $row;
+        }
+        return $rows;
+    }
+
     /**
      * @param $user
      * @return array
@@ -2749,14 +2824,18 @@ class Results extends Component
 
     /**
      * @param $userId
+     * @param null $unitIds
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getUserUnitResults($userId)
+    public function getUserUnitResults($userId, $unitIds = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
+        if ($unitIds) {
+            $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        }
         return $criteria;
     }
 
