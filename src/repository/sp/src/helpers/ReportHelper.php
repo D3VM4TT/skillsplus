@@ -176,7 +176,7 @@ class ReportHelper
             'User Job Title',
             'Start Date',
             'Total Job Role Units',
-            'Total Completed Units',
+            'Total Endorsed Units',
             'Total Unexpired Units',
             'Total Required Units',
             'Total Annual Units (12 months)'
