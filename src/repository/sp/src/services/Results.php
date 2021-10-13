@@ -2438,7 +2438,7 @@ class Results extends Component
 
         $rows = [$header];
         foreach ($subordinates as $user) {
-            if (null == $role = $user->role->one()) {
+            if (null == $role = $user->userRole->one()) {
                 continue;
             }
             $company = Lantra::$app->users->userCompany($user);
@@ -2469,7 +2469,7 @@ class Results extends Component
                 $company ? $company->id : 'unknown',
                 $company ? $company->companyLabel : 'unknown',
                 $role->title,
-                $user->userStartDate->format($format),
+                $user->userStartDate ? $user->userStartDate->format($format) : '~',
                 $totalRole,
                 $totalCompleted,
                 $totalUnexpired,
