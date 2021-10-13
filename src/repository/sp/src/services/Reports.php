@@ -188,6 +188,7 @@ class Reports extends Component
         $criteria = null;
         switch ($reportEntry->reportType) {
             case 'standardUsers':
+            case 'standardAnnualResults':
                 $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
             case 'standardResults':
@@ -198,9 +199,6 @@ class Reports extends Component
                 else {
                     $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
                 }
-                break;
-            case 'standardAnnualResults':
-                $criteria = Lantra::$app->results->getManagerAnnualResultUsers($userId, $limit, $search);
                 break;
             case 'standardCpd':
                 $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
