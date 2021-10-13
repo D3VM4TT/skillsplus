@@ -20,9 +20,6 @@
                 <div class="header-search">
                     {% include '_includes/filter' with{filterDays:false} %}
                 </div>
-                <div class="container-btn primary-bg">
-                    <a class="btn-add-new" href="/reporting/custom/new">Create New Report</a>
-                </div>
             </div>
         </div>
         {% if reportEntries is defined and reportEntries|length %}
@@ -58,7 +55,7 @@
                                 </td>
                             <td style="text-align: right;">
                                 <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}">run</a> |
-                                <a href="/reporting/custom/edit/{{ report.id }}">edit</a> |
+                                <a href="/reporting/edit/{{ report.id }}">edit</a> |
                                 <a class="action" href="#" data-action="entries/delete-entry" data-id="{{ report.id }}">delete</a>
                             </td>
                         </tr>
