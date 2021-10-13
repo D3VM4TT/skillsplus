@@ -10,7 +10,7 @@ settings:
   allowUploads: true
   allowedKinds:
     - image
-  defaultUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
+  defaultUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
   defaultUploadLocationSubpath: ''
   limit: '1'
   localizeRelations: false
@@ -24,7 +24,7 @@ settings:
   singleUploadLocationSubpath: ''
   source: null
   sources:
-    - 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29'
+    - 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
   targetSiteId: null
   useSingleFolder: false
   validateRelatedElements: false
