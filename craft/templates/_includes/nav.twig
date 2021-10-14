@@ -1,6 +1,7 @@
 <nav class="cpd">
     {% include '_includes/navUser' %}
-    {% if craft.lantra.canManage() %}
+    {% set isExternal = craft.lantra.isExternal(currentUser) %}
+    {% if craft.lantra.canManage() or isExternal %}
         {% include '_includes/navManager' %}
     {% elseif craft.lantra.settingReports() %}
         <ul>
