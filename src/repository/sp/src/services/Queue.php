@@ -99,10 +99,12 @@ class Queue extends Component
         }
         $job = array_shift($this->queue);
         ## expire jobs twelve hours old
+        /*
         $expired = $job['dateCreated'] < (time() - 43200);
         if ($job['status'] == 'running' && $expired) {
             $this->expired($job['elementId']);
         }
+        */
         if ($job['status'] == 'pending') {
             $this->status($job['elementId'], 'running');
             $this->run($job['elementId']);
