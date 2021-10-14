@@ -1,5 +1,11 @@
 {% import "_includes/forms" as forms %}
 
+<style>
+    .input-small{
+        width:60px;
+    }
+</style>
+
 {% set groupOptions = [
     {
         label: 'Scheme Managers',
@@ -23,7 +29,7 @@
             <th>Group</th>
             <th>Roles</th>
             <th>Description</th>
-            <th width="10%">Page Limit</th>
+            <th style="text-align: right">Page Limit</th>
         </tr>
     </thead>
     <tbody>
@@ -67,14 +73,16 @@
                     name:			"reports[standardUsers][description]",
                     value:		    settings.reports.standardUsers.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-standardUsers-pageLimit",
                     name:			"reports[standardUsers][pageLimit]",
                     value:		    settings.reports.standardUsers.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -118,14 +126,69 @@
                     name:			"reports[standardResults][description]",
                     value:		    settings.reports.standardResults.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-standardResults-pageLimit",
                     name:			"reports[standardResults][pageLimit]",
                     value:		    settings.reports.standardResults.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
+                }) }}
+            </td>
+        </tr>
+        <tr>
+            <td>Annual Results</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-annualResults-active",
+                    name:			"reports[standardAnnualResults][active]",
+                    on:		        settings.reports.standardAnnualResults.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardAnnualResults][title]",
+                    value:		     "Annual Results"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-annualResults-group',
+                    name: 'reports[standardAnnualResults][group]',
+                    value: settings.reports.standardAnnualResults.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-annualResults-roles",
+                    name:			    "reports[standardAnnualResults][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardAnnualResults.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-annualResults-description",
+                    name:			"reports[standardAnnualResults][description]",
+                    value:		    settings.reports.standardAnnualResults.description|default(),
+                    rows:           2,
+                    cols:           40
+                }) }}
+            </td>
+            <td style="text-align: right">
+                {{ forms.textField ({
+                    id:				"reports-annualResults-pageLimit",
+                    name:			"reports[standardAnnualResults][pageLimit]",
+                    value:		    settings.reports.standardAnnualResults.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -169,14 +232,16 @@
                     name:			"reports[standardCpd][description]",
                     value:		    settings.reports.standardCpd.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-standardCpd-pageLimit",
                     name:			"reports[standardCpd][pageLimit]",
                     value:		    settings.reports.standardCpd.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -220,14 +285,16 @@
                     name:			"reports[standardPayments][description]",
                     value:		    settings.reports.standardPayments.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-standardPayments-pageLimit",
                     name:			"reports[standardPayments][pageLimit]",
                     value:		    settings.reports.standardPayments.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -271,14 +338,16 @@
                     name:			"reports[standardSm][description]",
                     value:		    settings.reports.standardSm.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-standardSm-pageLimit",
                     name:			"reports[standardSm][pageLimit]",
                     value:		    settings.reports.standardSm.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -322,14 +391,16 @@
                     name:			"reports[users][description]",
                     value:		    settings.reports.users.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-users-pageLimit",
                     name:			"reports[users][pageLimit]",
                     value:		    settings.reports.users.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -373,14 +444,16 @@
                     name:			"reports[results][description]",
                     value:		    settings.reports.results.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-results-pageLimit",
                     name:			"reports[results][pageLimit]",
                     value:		    settings.reports.results.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -424,14 +497,16 @@
                     name:			"reports[expired][description]",
                     value:		    settings.reports.expired.description|default(),
                     rows:           2,
-                    cols:           50
+                    cols:           40
                 }) }}
             </td>
-            <td>
+            <td style="text-align: right">
                 {{ forms.textField ({
                     id:				"reports-expired-pageLimit",
                     name:			"reports[expired][pageLimit]",
                     value:		    settings.reports.expired.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
                 }) }}
             </td>
         </tr>
@@ -444,6 +519,5 @@
     id:				"reportNotes",
     name:			"reportNotes",
     value:		    settings.reportNotes,
-    rows:           10,
-    cols:           50
+    rows:           10
 }) }}

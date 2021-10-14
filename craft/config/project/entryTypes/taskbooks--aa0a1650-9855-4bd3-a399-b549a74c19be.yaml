@@ -1,5 +1,5 @@
 fieldLayouts:
-  cc195c64-b902-4637-9825-d5fc0d27b48e:
+  e8d523cd-161e-4cf6-9d36-39e2d444cc43:
     tabs:
       -
         elements:
@@ -27,16 +27,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4 # Module Group
-            instructions: null
-            label: null
-            required: '1'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
+            fieldUid: 5df92654-19a4-446e-a578-2b359d4bc88f # Taskbook Page Create
             instructions: null
             label: null
             required: '0'
@@ -45,7 +36,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831 # Unit Groups
+            fieldUid: 840f8f48-be42-4008-ae9e-1fa132183769 # Taskbook Page New
             instructions: null
             label: null
             required: '0'
@@ -53,26 +44,22 @@ fieldLayouts:
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
-        name: Module
+          -
+            fieldUid: f4f743d8-8e66-4bb5-920a-01bd366d6ba2 # Taskbook Page Current
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Pages
         sortOrder: 1
-      -
-        elements:
-          -
-            fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-        name: 'Column Layout'
-        sortOrder: 2
-handle: taskbook
-hasTitleField: true
-name: Taskbook
-section: e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a # Modules
-sortOrder: 3
-titleFormat: null
+handle: taskbooks
+hasTitleField: false
+name: Taskbooks
+section: 0db8b604-3d85-4638-bc64-f1d73e2e9aba # Taskbooks
+sortOrder: 1
+titleFormat: '{section.name|raw}'
 titleTranslationKeyFormat: null
 titleTranslationMethod: site

@@ -34,6 +34,17 @@ settings:
       __assoc__:
         -
           - label
+          - 'Annual Results'
+        -
+          - value
+          - standardAnnualResults
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
           - CPD
         -
           - value

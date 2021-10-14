@@ -222,6 +222,8 @@ class Plugin extends BasePlugin
                     Lantra::$app->results->onSaveResult($event, $entry);
                 } elseif ($entry->sectionId == $this->sectionId('attempts')) {
                     Lantra::$app->results->onSaveAttempt($event, $entry);
+                } elseif ($entry->sectionId == $this->sectionId('modules')) {
+                    Lantra::$app->modules->onSaveModule($event, $entry);
                 } elseif ($entry->sectionId == $this->sectionId('units')) {
                     ## add result cache unit column (if enabled)
                     Lantra::$app->results->addUnitColumn($entry->id);

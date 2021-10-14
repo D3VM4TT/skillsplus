@@ -148,24 +148,6 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 6fae9879-b107-4f41-9bc0-0f119a358ef1 # Report Results Standard Type
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 4e26dbf7-5c26-4bdd-abaf-efcd389366bc # Report Days
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
             fieldUid: a1b63d62-c6f0-443b-910f-1d6691b0e4a4 # Report Units
             instructions: null
             label: null

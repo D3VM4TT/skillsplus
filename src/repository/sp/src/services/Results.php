@@ -2407,6 +2407,23 @@ class Results extends Component
         return $rows;
     }
 
+
+    /**
+     * Return all required (including expired)
+     *
+     * @param null $userId
+     * @param array $userFilter
+     * @param array $resultFilter
+     * @return array
+     * @throws Exception
+     */
+    public function getManagerAnnualResultUsers($userId = null, $limit = null, $search = '')
+    {
+        $userFilter = $this->formatUserFilter(['limit' => $limit, 'search' => $search]);
+        $subordinates = Lantra::$app->users->getManagerUsers($userId, $userFilter['limit'], $userFilter['search'], $userFilter['relatedTo']);
+        return $subordinates;
+    }
+
     /**
      * @param $user
      * @return array
@@ -2749,14 +2766,18 @@ class Results extends Component
 
     /**
      * @param $userId
+     * @param null $unitIds
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getUserUnitResults($userId)
+    public function getUserUnitResults($userId, $unitIds = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->authorId = $userId;
+        if ($unitIds) {
+            $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        }
         return $criteria;
     }
 

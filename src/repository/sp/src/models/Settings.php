@@ -75,6 +75,7 @@ class Settings extends Model
     public $individualJobRole                   = null;
 
     public $notifyFromEmail                    = 'No-Reply@skills-plus.net';
+    public $notifyAdminEmail                   = 'No-Reply@skills-plus.net';
     public $notifyFromName                     = 'Skills+';
     public $notifyFooter                       = '';
     public $disableAllNotifications            = false;
@@ -246,6 +247,14 @@ class Settings extends Model
         'standardResults'     => [
             'active' => true,
             'title' => 'Results',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
+        'standardAnnualResults'     => [
+            'active' => false,
+            'title' => 'Custom Annual Results',
             'group'  => 'schemeManagers',
             'roles'  => [],
             'description'  => '',

@@ -1,0 +1,21 @@
+columnSuffix: pcdzzhmz
+contentColumnType: text
+fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
+handle: linkedData
+instructions: ''
+name: 'Linked Data'
+searchable: false
+settings:
+  byteLimit: null
+  charLimit: null
+  code: ''
+  columnType: null
+  initialRows: '4'
+  mode: hidden
+  modeOverride: ''
+  multiline: ''
+  placeholder: null
+  uiMode: normal
+translationKeyFormat: null
+translationMethod: none
+type: mmikkel\incognitofield\fields\IncognitoFieldType

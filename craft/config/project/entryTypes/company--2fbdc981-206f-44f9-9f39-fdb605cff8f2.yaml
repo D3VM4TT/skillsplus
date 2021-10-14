@@ -62,15 +62,6 @@ fieldLayouts:
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
-          -
-            fieldUid: 8e2495cf-1284-407e-b4eb-7bf9b4885d5b # Company Taskbooks
-            instructions: null
-            label: null
-            required: false
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
         name: Company
         sortOrder: 1
       -
