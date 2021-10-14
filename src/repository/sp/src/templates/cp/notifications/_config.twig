@@ -15,6 +15,13 @@
 }) }}
 
 {{ forms.textField ({
+    label:			"Notify Admin Email",
+    id:				"notifyAdminEmail",
+    name:			"notifyAdminEmail",
+    value:		    settings.notifyAdminEmail
+}) }}
+
+{{ forms.textField ({
     instructions:   "Default: No-Reply@skills-plus.net",
     label:			"Notify From Email",
     id:				"notifyFromEmail",
