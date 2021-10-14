@@ -10,6 +10,7 @@
         {% include '_includes/navReviewer' %}
     {% endif %}
 
+    {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
     {% set isExternal = craft.lantra.isExternal(currentUser) %}
     {% set reviewCount = craft.lantra.packagesCount() %}
     {% if craft.lantra.isLantraAdmin or reviewCount or isExternal %}
@@ -25,12 +26,11 @@
                         <a href="/management/taskbooks?filter={{ type.name }}">{{ type.name }}</a>
                     </li>
                 {% endfor %}
-                {% if craft.lantra.isExternal(currentUser) %}
+                {% if isExternal %}
                     <li>
                         <a href="/management/taskbooks/external">External</a>
                     </li>
                 {% endif %}
-
             </ul>
         </li>
     {% endif %}
