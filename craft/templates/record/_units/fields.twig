@@ -79,7 +79,7 @@
             {% if not resultLocked and not fieldDisabled %}
                 {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
                 {% if evidenceFolderId %}
-                    {% include '_includes/evidence' with {evidence:resultEvidence, accountId:cpdUser.id, fieldName:'fields[resultEvidence][]', autoSave:false} %}
+                    {% include '_includes/evidence' with {evidence:resultEvidence, accountId:accountId, fieldName:'fields[resultEvidence][]', autoSave:false} %}
                 {% else %}
                     <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
                 {% endif %}

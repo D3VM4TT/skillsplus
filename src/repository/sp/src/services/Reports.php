@@ -438,6 +438,7 @@ class Reports extends Component
         $response['total'] = count($values) - 1;
         if (!$response['total']) {
             $response['message'] = $reportEntry->title . ' returns no data.';
+            Lantra::$app->queue->delete($reportEntry->id);
             return $response;
         }
         ## create csv file in temp folder
@@ -448,6 +449,7 @@ class Reports extends Component
         $assetResponse = LantraHelper::addAsset($tempPath, $fileName, 'data');
         if (!$assetResponse['asset']) {
             $response['message'] = $assetResponse['message'];
+            Lantra::$app->queue->delete($reportEntry->id);
             return $response;
         }
         $asset = $assetResponse['asset'];
