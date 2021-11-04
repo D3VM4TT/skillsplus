@@ -1,0 +1,46 @@
+columnSuffix: omgbamdp
+contentColumnType: string
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+handle: reportFormat
+instructions: ''
+name: 'Report Format'
+searchable: false
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - CSV
+        -
+          - value
+          - csv
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Excel
+        -
+          - value
+          - xlsx
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - PDF
+        -
+          - value
+          - pdf
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown
