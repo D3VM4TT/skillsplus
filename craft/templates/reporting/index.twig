@@ -31,6 +31,7 @@
                         <th>Type</th>
                         <th>Created</th>
                         <th>Status</th>
+                        <th></th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -52,17 +53,21 @@
                             <td>{{ report.postDate|date(dateFormat) }}</td>
                             <td>
                                 {% if complete %}
+                                    Complete
+                                {% elseif job %}
+                                    {{ job.status }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if complete %}
                                     {% set asset = report.reportData.one %}
                                     <a class="icon" href="/internal/{{ asset.id }}" rel="external">
                                         <img  src="/assets/img/download.svg" title="Download" />
                                     </a>
-                                {% elseif job %}
-                                    {{ job.status }}
-                                {% else %}
-                                    <a class="icon action" href="#" data-action="reports/run-report" data-id="{{ report.id }}" href="">
-                                        <img  src="/assets/img/run.svg" title="Run" />
-                                    </a>
                                 {% endif %}
+                                <a class="icon" href="/sp/reports/run-custom-report/{{ report.id }}" data-id="{{ report.id }}">
+                                    <img  src="/assets/img/run.svg" title="Run Now" />
+                                </a>
                             </td>
                             <td style="text-align: right;">
                                 <a class="icon" href="/reporting/edit/{{ report.id }}">

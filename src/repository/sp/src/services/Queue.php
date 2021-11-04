@@ -113,11 +113,14 @@ class Queue extends Component
 
     /**
      * @param $elementId
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
      public function run($elementId)
      {
-
+         ## delete item if not valid element
         if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
+            $this->delete($elementId);
             return;
         }
         try {

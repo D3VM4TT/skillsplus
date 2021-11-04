@@ -10,6 +10,7 @@ namespace lantra\sp\controllers;
 
 use Craft;
 
+use yii\web\HttpException;
 use lantra\sp\helpers\ReportHelper;
 use lantra\sp\Plugin as Lantra;
 
@@ -92,20 +93,24 @@ class ReportsController extends BaseController
      *
      * @throws mixed
      */
-    public function actionRunReport()
+    public function actionRunCustomReport(int $entryId)
     {
-        $this->requirePostRequest();
-        ## get the posted entryId
-        $entryId = Craft::$app->request->getParam('entryId');
         if (false == $entry = Craft::$app->entries->getEntryById($entryId)) {
             $this->_returnError('Invalid entry ID ' . $entryId . '.');
         }
         $response = Lantra::$app->reports->runCustomReport($entry);
         if ($response['success']) {
-            return $this->_returnMessage( $entry->title . ' has been successfully run (' . $response['total'] . ' rows).', true);
-
+            $asset = $entry->reportData->one();
+            $volumePath = rtrim($asset->getVolume()->settings['path'], '/') . '/';
+            $folderPath = rtrim($asset->getFolder()->path, '/') . '/';
+            $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $asset->filename;
+            if (!is_file($assetFilePath)) {
+                throw new HttpException(404, "Asset file does not exist.");
+                return;
+            }
+            return Craft::$app->response->sendFile($assetFilePath);
         }
-        $this->_returnMessage($response['message'],false);
+        $this->_returnError($response['message']);
     }
 
     /**
