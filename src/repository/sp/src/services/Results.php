@@ -1416,11 +1416,42 @@ class Results extends Component
         }
 
         $ids = [];
-
         foreach ($results as $result) {
             $ids[] = $result->id;
             Craft::$app->elements->deleteElementById($result->id);
         }
+    }
+
+    /**
+     * @param $packageId
+     * @return array|void
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function resetPackageResults($packageId)
+    {
+        if (null == $package = Entry::findOne($packageId)) {
+            return [];
+        }
+        $user = $package->author;
+        $modules = Lantra::$app->packages->getPackageModuleEntries($package);
+        $results = [];
+        foreach ($modules as $moduleEntry) {
+            $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+            $results = array_merge($results, $unitResults);
+            $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+            $results = array_merge($results, $userResults);
+        }
+
+        $ids = [];
+        foreach ($results as $result) {
+            $result->setFieldValue('resultStatus', 'pending');
+            if (Craft::$app->elements->saveElement($result)) {
+                $ids[] = $result->id;
+            }
+        }
+        return $ids;
     }
 
     /**

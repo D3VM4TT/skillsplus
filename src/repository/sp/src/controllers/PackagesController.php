@@ -239,6 +239,19 @@ class PackagesController extends BaseController
     }
 
     /**
+     * @param int $entryId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function actionResetPackage(int $entryId)
+    {
+        $this->requireLogin();
+        $ids = Lantra::$app->results->resetPackageResults($entryId);
+        $this->_returnMessage(count($ids) . ' results updated to pending.', 'true', 'management/taskbooks/manage/' . $entryId);
+    }
+
+    /**
      * Saves user taskbook package
      *
      * @throws mixed

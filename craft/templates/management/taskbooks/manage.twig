@@ -17,7 +17,7 @@
 
 {% block content %}
     <div class="page-subHeader primary-bg">
-        <a class="back-link" href="{{ craft.lantra.packageUrl(package.author.id, package.id) }}"><strong>&laquo; back</a>
+        <a class="back-link" href="{{ craft.lantra.packageUrl(package.author.id, package.id) }}">&laquo; back</a>
         {% include '_includes/topNavigation' %}
     </div>
     <div class="page-header secondary-bg">
@@ -36,6 +36,7 @@
         {% else %}
             {% include 'management/taskbooks/_assign' %}
         {% endif %}
+        {% include 'management/taskbooks/_reset' %}
         {% include '_includes/taskbooks/packageLog' with {package:package, admin:true} %}
     </form>
 {% endblock %}
