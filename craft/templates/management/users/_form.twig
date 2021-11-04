@@ -226,7 +226,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    {% if account is defined %}
+                    {% if account is defined and account.id %}
                         {% set managerCompanies = craft.lantra.managerCompanies(account) %}
                         {% if managerCompanies|length %}
                             <div class="field--wrapper">
