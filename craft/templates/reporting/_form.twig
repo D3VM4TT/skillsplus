@@ -58,6 +58,17 @@
         <p style="font-size: 10px;margin:10px 0 10px 0;" id="reportTypeDescription"></p>
     </div>
     <div class="field--wrapper">
+        <label for="reportFormat">Report Format</label>
+        <select id="reportFormat" name="fields[reportFormat]">
+           <option value="csv"
+                   {% if entry is defined and entry.reportFormat == 'csv' %} selected="selected"{% endif %}>CSV</option>
+            <option value="xlsx"
+                    {% if entry is defined and entry.reportFormat == 'xlsx' %} selected="selected"{% endif %}>Excel</option>
+            <option value="pdf"
+                    {% if entry is defined and entry.reportFormat == 'pdf' %} selected="selected"{% endif %}>PDF</option>
+        </select>
+    </div>
+    <div class="field--wrapper">
         <label for="reportCompanies" class="no-float">Filter Companies</label>
         <input type="hidden" name="fields[reportCompanies]" value="" />
         <select multiple class="js-select2" name="fields[reportCompanies][]" id="reportCompanies">
