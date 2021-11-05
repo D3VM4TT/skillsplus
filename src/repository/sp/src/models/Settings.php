@@ -208,6 +208,9 @@ class Settings extends Model
 
     public $userProfileFields                   = [];
 
+    public $userPrivacyConfirm                  = true;
+    public $userPrivacyMessage                  = '';
+
     public $userEditName                        = true;
     public $userEditEmail                       = true;
     public $userEditAddress                     = true;
