@@ -37,7 +37,7 @@ class Reports extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    public function createAsset($ext, $data, $reportId, $download = false)
+    public function createAsset($ext = 'csv', $data, $reportId, $download = false)
     {
         ## create file in temp folder
         $tempFolder = Craft::$app->path->tempPath;
@@ -74,7 +74,7 @@ class Reports extends Component
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'landscape');
             $dompdf->render();
-            $dompdf->stream($tempPath);
+            file_put_contents($tempPath, $dompdf->output());
         }
         else {
             $csv = Writer::createFromPath($tempPath, "w");
@@ -100,7 +100,7 @@ class Reports extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    public function reportDownload($ext, $data, $reportId)
+    public function reportDownload($ext = 'csv', $data, $reportId)
     {
         return $this->createAsset($ext, $data, $reportId, true);
     }
