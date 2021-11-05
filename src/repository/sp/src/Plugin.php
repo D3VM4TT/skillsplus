@@ -454,6 +454,7 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/reset-package/<entryId>'       => 'sp/packages/reset-package',
+            'sp/packages/export-package/<entryId>'      => 'sp/packages/export-package',
             'sp/packages/delete-results'                => 'sp/packages/delete-results',
             'sp/packages/load-template'                 => 'sp/packages/load-template',
             'sp/packages/external-status'               => 'sp/packages/external-status',

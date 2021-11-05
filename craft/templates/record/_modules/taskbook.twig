@@ -307,6 +307,10 @@
                         <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?payment=true&packageId={{ package.id }}">Pay Now</a>
                     </p>
                 {% endif %}
+
+                <p style="text-align: right">
+                    <a class="button no-shadow primary-bg" href="/sp/packages/export-package/{{ package.id }}">Export Results</a>
+                </p>
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
             </div>

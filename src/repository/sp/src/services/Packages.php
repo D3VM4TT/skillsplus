@@ -22,6 +22,9 @@ use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Packages extends Component
 {
     /**
@@ -1103,6 +1106,73 @@ class Packages extends Component
             ['targetElement' => $jobRoleIds, 'field' => 'userRole']
         ];
         return $criteria->ids();
+    }
+
+    /**
+     * @param $package
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \yii\web\HttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function exportPackage($package)
+    {
+        $filename = 'package-' . $package->id . '-' . time() . '.xlsx';
+        $record = $package->author->record;
+        $packageItem = $record->getItem($package->id);
+        $data = [];
+        foreach($packageItem->items as $moduleGroupItem) {
+            $moduleGroupTitle = true;
+            $moduleGroup = $record->getElement($moduleGroupItem->elementId);
+            foreach($moduleGroupItem->items as $moduleItem) {
+                $moduleTitle = true;
+                $module = $record->getElement($moduleItem->elementId);
+                foreach($moduleItem->items as $unitGroupItem) {
+                    foreach($unitGroupItem->items as $unitItem) {
+                        $unit = $record->getElement($unitItem->elementId);
+                        $result = $record->getUnitResult($unitItem->elementId);
+                        $resultEvidence = [];
+
+                        if ($result) {
+                            foreach ($result->resultEvidence as $asset) {
+                                $resultEvidence[] = $asset->filename;
+                            }
+                        }
+
+                        $row = [
+                            $unit->id,
+                            $moduleGroupTitle ? $moduleGroup->title : '',
+                            $moduleTitle ? $module->title : '',
+                            $unit->title,
+                            $unit->unitHeading,
+                            $result ? strip_tags($result->resultNarrative) : '',
+                            $result ? implode(',', $resultEvidence) : ''
+                        ];
+
+                        $data[] = $row;
+
+                        $moduleGroupTitle = false;
+                        $moduleTitle = false;
+                    }
+                }
+            }
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
+            $j = 0;
+            foreach ($data[$i] as $k => $v) {
+                $sheet->setCellValueByColumnAndRow($j + 1, ($i + 1), $v);
+                $j++;
+            }
+        }
+        $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        $writer = new Xlsx($spreadsheet);
+
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+        Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
     }
 
     /**

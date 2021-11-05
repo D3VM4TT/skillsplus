@@ -239,16 +239,15 @@ class PackagesController extends BaseController
     }
 
     /**
-     * @param int $entryId
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
+     * @param int $packageId
      */
-    public function actionResetPackage(int $entryId)
+    public function actionExportPackage(int $entryId)
     {
         $this->requireLogin();
-        $ids = Lantra::$app->results->resetPackageResults($entryId);
-        $this->_returnMessage(count($ids) . ' results updated to pending.', 'true', 'management/taskbooks/manage/' . $entryId);
+        if (null == $package = Entry::findOne($entryId)) {
+            return $this->_returnError('Package not found.');
+        }
+        Lantra::$app->packages->exportPackage($package);
     }
 
     /**
