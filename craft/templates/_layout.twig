@@ -172,6 +172,13 @@
             </div>
         {% endif %}
 
+        {% if craft.lantra.setting('userPrivacyConfirm', false) and currentUser and not currentUser.userPrivacy %}
+            <div class="modal-wrapper modal-open" id="privacy-modal">
+                <div class="modal-content">
+                    {% include '_includes/privacy' %}
+                </div>
+            </div>
+        {% endif %}
 
         <!-- Scripts
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->

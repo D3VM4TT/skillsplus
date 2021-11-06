@@ -63,6 +63,22 @@ class UsersController extends BaseController {
 
     /**
      * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionPrivacyConfirm()
+    {
+        $user = Craft::$app->getUser()->getIdentity();
+        $user->setFieldValue('userPrivacy', true);
+        Craft::$app->elements->saveElement($user);
+        return $this->_returnMessage('', true);
+    }
+
+    /**
+     * @return \yii\web\Response
      * @throws \CException
      * @throws \yii\web\BadRequestHttpException
      */

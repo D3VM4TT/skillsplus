@@ -208,8 +208,8 @@ class Settings extends Model
 
     public $userProfileFields                   = [];
 
-    public $userPrivacyConfirm                  = true;
-    public $userPrivacyMessage                  = '';
+    public $userPrivacyConfirm                  = false;
+    public $userPrivacyMessage                  = 'I have read and understood the privacy policy.';
 
     public $userEditName                        = true;
     public $userEditEmail                       = true;

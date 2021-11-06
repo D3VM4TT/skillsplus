@@ -443,6 +443,7 @@ class Plugin extends BasePlugin
             'sp/users/restore-user'                     => 'sp/users/restore-user',
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
+            'sp/users/privacy-confirm'                  => 'sp/users/privacy-confirm',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 
