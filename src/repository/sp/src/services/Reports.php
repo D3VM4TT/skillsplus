@@ -294,6 +294,7 @@ class Reports extends Component
             'reportDisplayField'        => $reportEntry->reportDisplayField->value,
             'reportResultExpiry'        => $reportEntry->reportResultExpiry->value,
             'reportIncludeHierarchy'    => $reportEntry->reportIncludeHierarchy,
+            'reportIncludeExpired'      => $reportEntry->reportIncludeExpired,
             'reportIncludeRequired'     => $reportEntry->reportIncludeRequired,
             'reportCompanies'           => [],
             'reportUnits'               => [],
