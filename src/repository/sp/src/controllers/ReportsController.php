@@ -108,6 +108,7 @@ class ReportsController extends BaseController
                 throw new HttpException(404, "Asset file does not exist.");
             }
             Craft::$app->response->sendFile($assetFilePath);
+            return;
         }
         return $this->_returnError($response['message']);
     }
