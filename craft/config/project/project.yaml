@@ -379,10 +379,6 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 1.1.1
-  patrol:
-    edition: standard
-    enabled: true
-    schemaVersion: 3.0.0
   preparse-field:
     enabled: '1'
     licenseKey: null
