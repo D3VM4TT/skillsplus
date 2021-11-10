@@ -27,15 +27,6 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 75ec7211-a9c5-4390-963a-9d63dfd0dbd4 # Company Parent
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
             fieldUid: fa734878-4241-4654-86c9-50964d8a8692 # Company Primary Managers
             instructions: null
             label: null
@@ -43,7 +34,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
           -
             fieldUid: 8a8d1ecb-3c6c-4ade-a2e7-8e6996e7fe86 # Company Secondary Managers
             instructions: null
@@ -52,7 +43,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
           -
             fieldUid: a8d84419-f7b9-4d64-b7cb-ce827c7ca810 # Company Remaining Licences
             instructions: null
@@ -64,6 +55,46 @@ fieldLayouts:
             width: 100
         name: Company
         sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: 75ec7211-a9c5-4390-963a-9d63dfd0dbd4 # Company Parent
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 3629d8e1-89dd-47fd-939f-c81889682a13 # Company Label
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 069f2a42-da65-478a-852e-18a44408ab93 # Data Clean Company Parent
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 8e2495cf-1284-407e-b4eb-7bf9b4885d5b # Company Taskbooks
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Hierarchy
+        sortOrder: 2
       -
         elements:
           -
@@ -94,28 +125,6 @@ fieldLayouts:
             warning: null
             width: 100
         name: Legacy
-        sortOrder: 2
-      -
-        elements:
-          -
-            fieldUid: 3629d8e1-89dd-47fd-939f-c81889682a13 # Company Label
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 069f2a42-da65-478a-852e-18a44408ab93 # Data Clean Company Parent
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-        name: Hierarchy
         sortOrder: 3
 handle: company
 hasTitleField: true

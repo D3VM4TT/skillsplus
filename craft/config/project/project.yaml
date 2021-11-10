@@ -1,4 +1,4 @@
-dateModified: 1634152982
+dateModified: 1636546574
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -148,6 +148,7 @@ meta:
     74e30584-f92e-4d01-a638-7d173cc7b930: Question # Question
     75ec7211-a9c5-4390-963a-9d63dfd0dbd4: 'Company Parent' # Company Parent
     77c7c383-632e-462f-984c-7ab34eb2cd1e: 'Result Component Results' # Result Component Results
+    78c5a5fd-a2f0-4482-a20c-fde7866eb5c0: Package # Package
     078e3016-c25c-4a8e-a445-404a441c465c: 'Cycle Notify End' # Cycle Notify End
     080bb830-4bd6-458e-a3f3-dbb58358aeb1: 'Data Clean Managers User Company' # Data Clean Managers User Company
     82f069e1-b11c-4e0d-96f6-eaf3e5d58387: 'Result Narrative' # Result Narrative
@@ -174,6 +175,7 @@ meta:
     563ab173-4e2b-4622-b7dd-284d3df35f95: 'Result Display Hours' # Result Display Hours
     0578b9f0-6e63-4ecd-b386-295f3b276282: 'Team Company' # Team Company
     585cec7d-218d-4241-a113-0a7ab6f7503e: Dashboard # Dashboard
+    651fac2b-5f39-4c8f-96b0-4c75c3267102: Mandatory # Mandatory
     656f85bc-0a54-422d-a9a3-48d536fc7aa3: Text # Text
     703cc741-3177-4d42-88f9-c3c0f4ce9249: 'Step User Group' # Step User Group
     753f71f4-d39b-43bd-9219-b76f91626502: 'Module Group Minimum Level' # Module Group Minimum Level
@@ -185,6 +187,7 @@ meta:
     918cc95b-e5c3-468d-809a-8bbd4eb5a8e5: 'Taskbook Intro' # Taskbook Intro
     974df618-fa82-42bd-9ad4-612f8f4a985c: Read # Read
     995ba33c-928b-43a5-8d39-53c4c36782ed: 'Unit Type' # Unit Type
+    1648b942-a6f7-47b2-a284-5a971121b556: 'Module Group' # Module Group
     2347e1b1-c7d8-4870-9904-36bd73538d1a: 'Achievement Target Hours' # Achievement Target Hours
     2722a41a-2635-4f3b-8ecb-d39db9efa049: 'Team Description' # Team Description
     3103beed-feb4-4eed-b71a-68cb81d67f7e: 'Result Unit' # Result Unit
@@ -197,12 +200,14 @@ meta:
     5839b521-ccd0-4768-bbe4-ef59335fb732: 'Team Primary Manager' # Team Primary Manager
     6616a98b-5530-40e0-93db-6e73e439e274: 'Unit Image' # Unit Image
     7209f99b-e88b-403f-b8ba-fbb0301b5c0f: Paid # Paid
+    7718e01c-cd5b-43db-b9a3-e138c5c09429: 'Report Format' # Report Format
     8200bbc7-18f0-49da-a017-2fb3a82ee950: 'Report Result Expiry' # Report Result Expiry
     19794a8d-aa57-4cea-9297-7c4ccfb2d561: 'Field Label' # Field Label
     46656fa8-cf4d-4c7e-93d0-800132d01aa2: 'Unit Points Override' # Unit Points Override
     48909e73-b939-470f-b472-53ee709db6e4: 'Module Group Read Only' # Module Group Read Only
     51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3: 'Package Evidence' # Package Evidence
     64769feb-a327-4c92-8224-bfd94a529f1a: 'CPD Target Hours' # CPD Target Hours
+    72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: Level # Level
     85884bff-7c6a-4759-a769-d3f056254b7b: 'Legacy Email' # Legacy Email
     646454e2-66f9-4f03-bac7-b94a89aba17a: 'Module Expiry Days' # Module Expiry Days
     680431de-8445-48e9-8acf-e32d867f73dd: 'Module Group Costs' # Module Group Costs
@@ -236,7 +241,7 @@ meta:
     a37728d1-3a88-46ca-b9d5-ec79b66ba635: 'Field Custom Options' # Field Custom Options
     a6165775-faf3-4cc0-b6d6-069095d3ca39: CPD # CPD
     a9271765-2484-428e-8c34-62e30184b582: 'Package Paid' # Package Paid
-    aa0a1650-9855-4bd3-a399-b549a74c19be: Taskbooks # Taskbooks
+    aa0a1650-9855-4bd3-a399-b549a74c19be: Taskbook # Taskbook
     aa4a666c-db2c-4515-b356-344c43b82ca1: 'User Start Date' # User Start Date
     ab5af452-7d2f-4498-9a76-6ffbe1c7a251: 'Taskbook Free' # Taskbook Free
     ab5599bf-7e9b-4581-ab6d-6862127dd932: 'Cycle User Start Date' # Cycle User Start Date
@@ -244,6 +249,7 @@ meta:
     ab55340f-38e6-4d9f-82eb-f3785c6c6ff8: 'Report Include Hierarchy' # Report Include Hierarchy
     abaff843-e57c-4cfa-bab2-3f4927f556d3: 'Module Result' # Module Result
     abb92e86-cb1b-456e-a618-befafa8e8a28: 'Report Teams' # Report Teams
+    af49d354-08d5-422e-9f65-56c76ff7d485: Credit # Credit
     af241f00-e550-43b0-9800-e6ce4d85919e: 'Cycle Finish Date' # Cycle Finish Date
     af392c27-30aa-4dde-a30c-fd69e3dd665e: 'Manager Level' # Manager Level
     b3bb5932-8ec6-48a5-af26-7d974a69e57a: 'Auto Endorse?' # Auto Endorse?
@@ -324,6 +330,7 @@ meta:
     e510ee00-626f-454c-8022-6f855080c882: 'All Companies' # All Companies
     e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9: 'Test Questions' # Test Questions
     e927b48c-3108-4edd-a018-67e44c2989d5: 'Review Date' # Review Date
+    e4464f07-4dc5-4937-9235-ca7673e5dffe: 'Public Schema' # Public Schema
     e1099881-d76d-4c4c-9b8b-607658d27413: Data # Data
     eafc63ea-2bd3-4998-9ce8-c8fd129bbe1b: 'Role Unit Count' # Role Unit Count
     ed2a03c5-bea9-4bed-8fe2-2a9e97abb03e: Team # Team
@@ -347,6 +354,7 @@ meta:
     f16d7384-1325-4296-8acb-e213c2765770: Body # Body
     f42b01d2-8bb4-4873-8c54-3def9f400a90: 'User Taskbooks' # User Taskbooks
     f523e5d2-5acc-48c3-ab1d-fba29e427581: Asset # Asset
+    f5386b5d-29df-466e-a989-716777b0a655: 'User Privacy' # User Privacy
     f56275dc-26a8-46e7-bfb5-061917775684: 'Report Display Field' # Report Display Field
     fa734878-4241-4654-86c9-50964d8a8692: 'Company Primary Managers' # Company Primary Managers
     fabb8307-8d88-4171-bfe1-3309efb0b71a: 'Result Date Required' # Result Date Required
@@ -371,6 +379,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 1.1.1
+  patrol:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0
   preparse-field:
     enabled: '1'
     licenseKey: null
