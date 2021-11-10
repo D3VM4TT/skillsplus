@@ -329,6 +329,10 @@ class Plugin extends BasePlugin
             }
         );
 
+        ## check for maintenance mode
+        if (Craft::$app->request->isSiteRequest && Lantra::$app->settings->getSetting('maintenanceMode')) {
+            $this->maintenanceMode();
+        }
     }
 
     /**
@@ -512,11 +516,14 @@ class Plugin extends BasePlugin
     }
 
     /**
-     *
+     * @throws \yii\base\InvalidConfigException
      */
-    private function _runMigrations()
+    protected function maintenanceMode()
     {
-
+        $maintenanceUrl = '/503';
+        if (Craft::$app->request->getUrl() != $maintenanceUrl) {
+            Craft::$app->response->redirect($maintenanceUrl);
+        }
     }
 }
 
