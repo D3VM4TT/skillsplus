@@ -118,7 +118,7 @@
         <button class="button primary-bg" type="submit">Save company</button>
     </div>
 </form>
-    {% if entry %}
+    {% if entry is defined and entry.id %}
         <div class="page-content">
         {% set companyReviewers = craft.users.relatedTo({targetElement: entry, field: 'userTaskbookCompanies'}).all() %}
         <h2>Company Reviewers</h2>

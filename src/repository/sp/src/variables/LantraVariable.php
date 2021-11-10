@@ -1404,14 +1404,17 @@ class LantraVariable
      * @param $unitId
      * @param $cycle
      * @param $moduleResultId
-     * @return mixed
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
+    public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId, $companyId = null)
     {
         if (!$cycle) {
             return null;
         }
-        return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId);
+        return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId, $companyId);
     }
 
     /**

@@ -471,21 +471,24 @@ class Results extends Component
     }
 
     /**
-     * Get a unit result entry
-     *
      * @param $userId
      * @param $unitId
-     * @return null
-     * @throws Mixed
+     * @param null $cycleCode
+     * @param null $companyId
+     * @return array|\craft\base\ElementInterface|Entry|null
      */
-    function getUnitResult($userId, $unitId, $cycleCode = null)
+    function getUnitResult($userId, $unitId, $cycleCode = null, $companyId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->limit = 1;
         $criteria->authorId = $userId;
-        $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        $criteria->relatedTo = ['and'];
+        $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        if ($companyId) {
+            $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+        }
         if ($cycleCode) {
             $criteria->resultRecurringCycleCode = $cycleCode;
         }
@@ -497,12 +500,13 @@ class Results extends Component
      * @param $unitId
      * @param CyclePeriod $cycle
      * @param $moduleResultId
+     * @param null $companyId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function getRecurringResultsQuery($userId, $unitId, CyclePeriod $cycle, $moduleResultId)
+    public function getRecurringResultsQuery($userId, $unitId, CyclePeriod $cycle, $moduleResultId, $companyId = null)
     {
         if (false == $unitEntry = Craft::$app->entries->getEntryById($unitId)) {
             return null;
@@ -514,7 +518,7 @@ class Results extends Component
             $validCodes[] = $recurringCycle->code;
         }
 
-        $criteria = $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId);
+        $criteria = $this->getUnitResultsQuery($userId, $unitId, null, $moduleResultId, $companyId);
 
         if (count($validCodes)) {
             ## delete incomplete results that are no longer needed for this cycle (if cycle changed)
@@ -531,8 +535,8 @@ class Results extends Component
         ## make sure the correct number of results exist
         if ($criteria->count() != count($recurringCycles)) {
             foreach ($recurringCycles as $recurringCycle) {
-                if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code)) {
-                    $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate);
+                if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code, $companyId)) {
+                    $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate, $companyId);
                 }
                 $resultModuleResult = $resultEntry->resultModuleResult->one();
                 if (!$resultModuleResult || !$resultEntry->resultModuleResult || $resultModuleResult->id != $moduleResultId) {
@@ -722,7 +726,6 @@ class Results extends Component
     private function _setResultUserCompany(Entry $resultEntry, Entry $moduleEntry, $userId)
     {
         $user = User::findOne($userId);
-
         if (!$moduleEntry->isCompany()) {
             return;
         }
@@ -1238,7 +1241,7 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null)
+    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null, $companyId = null)
     {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionId('results');
@@ -1247,6 +1250,9 @@ class Results extends Component
         $resultEntry->authorId = $userId;
         if ($cycle) {
             $resultEntry->setFieldValue('resultRecurringCycleCode', $cycle->code);
+        }
+        if ($companyId) {
+            $resultEntry->setFieldValue('resultCompany', [$companyId]);
         }
         if ($postDate) {
             $resultEntry->postDate = $postDate;
