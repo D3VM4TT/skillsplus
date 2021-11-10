@@ -598,6 +598,23 @@ class Results extends Component
     }
 
     /**
+     * @param $companyId
+     * @param string $type
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    function getCompanyResultsQuery($companyId, $type = 'all')
+    {
+        $criteria = Entry::find();
+        $criteria->sectionId = $this->sectionId('results');
+        if ($type != 'all') {
+            $criteria->typeId = $this->entryTypeId('results', $type);
+        }
+        $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+        $criteria->status = ['live', 'expired'];
+        return $criteria;
+    }
+
+    /**
      * @param $moduleResultId
      * @param null $status
      * @param bool $count
@@ -1399,6 +1416,23 @@ class Results extends Component
         $criteria->status = null;
         $criteria->limit = null;
         return $criteria;
+    }
+
+    /**
+     * @param $companyId
+     * @return int
+     * @throws \Throwable
+     */
+    public function deleteCompanyResults($companyId)
+    {
+        $ids = [];
+        $criteria = $this->getCompanyResultsQuery($companyId);
+        $results = $criteria->all();
+        foreach ($results as $result) {
+            $ids[] = $result->id;
+            Craft::$app->elements->deleteElementById($result->id);
+        }
+        return count($ids);
     }
 
     /**

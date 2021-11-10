@@ -254,6 +254,9 @@ class Plugin extends BasePlugin
                 if ($entry->sectionId == $this->sectionId('results')) {
                     Lantra::$app->results->onDeleteResult($event, $entry);
                 }
+                if ($entry->sectionId == $this->sectionId('companies')) {
+                    Lantra::$app->structure->onDeleteCompany($event, $entry);
+                }
             });
 
         Event::on(
