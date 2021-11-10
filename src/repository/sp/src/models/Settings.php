@@ -27,6 +27,7 @@ class Settings extends Model
     public $jobRoleEndorse                      = false;
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
+    public $maintenanceMode                     = false;
 
     public $certificateLogo                     = null;
     public $certificateHeader                   = '';
