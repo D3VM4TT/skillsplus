@@ -1,6 +1,6 @@
+{% set userCompany = cpdUser.userCompany.one %}
 <div class="{% if package is not defined %}groups-tab-group{% endif %} endorse-wrapper" id="tab{{ moduleGroupElementId }}" data-label="{{ moduleGroup.title }}">
-    {% if moduleGroup.isCompany and cpdUser.userCompany %}
-        {% set userCompany = cpdUser.userCompany.one %}
+    {% if moduleGroup.isCompany and userCompany %}
         <div class="assessment" style="border-color: {{ craft.lantra.setting('themeColorPrimary') }}">
             <p>Company Name:
                 {% if craft.lantra.isManager(cpdUser.id) %}

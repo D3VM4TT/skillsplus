@@ -32,13 +32,13 @@ class ModuleGroupBehavior extends Behavior
             return false;
         }
 
-        if ($this->owner->moduleGroupAllCompanies) {
-            return true;
-        }
-
         $user = LantraHelper::getUser($userId);
         if (null == $userCompany = $user->userCompany->one()) {
             return false;
+        }
+
+        if ($this->owner->moduleGroupAllCompanies) {
+            return true;
         }
 
         return in_array($userCompany->id, $this->owner->moduleGroupCompanies->ids());
