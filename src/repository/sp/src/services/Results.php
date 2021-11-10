@@ -375,7 +375,7 @@ class Results extends Component
                 'enabled' => true,
                 'fields' => [
                     'user' => [$row->user->one()->id],
-                    'date' => DateTimeHelper::currentUTCDateTime(),
+                    'date' => $row->date,
                     'comment' => $row->comment,
                     'read' => $row->read
                 ]
