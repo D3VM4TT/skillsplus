@@ -18,24 +18,25 @@ use lantra\sp\helpers\LantraHelper;
 
 class TaskbookBehavior extends Behavior
 {
-    /**
-     * @param $categoryId
-     * @return null
-     */
-    public function moduleGroupBlock($categoryId)
-    {
-        foreach($this->moduleGroups('all') as $moduleGroup) {
-            if ($moduleGroup['category']->id == $categoryId) {
-                return $moduleGroup['block'];
-            }
-        }
-        return null;
-    }
+    private $_moduleGroups = [];
 
     /**
+     * @param string $type
      * @return array
      */
     public function moduleGroups($type = 'all')
+    {
+        if (!isset($this->_moduleGroups[$type])) {
+            $this->_moduleGroups[$type] = $this->_moduleGroups($type);
+        }
+        return $this->_moduleGroups[$type];
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    private function _moduleGroups($type = 'all')
     {
         $modulesGroups = [];
         foreach ($this->owner->taskbookModuleGroups as $block) {
@@ -51,6 +52,20 @@ class TaskbookBehavior extends Behavior
             }
         }
         return $modulesGroups;
+    }
+
+    /**
+     * @param $categoryId
+     * @return null
+     */
+    public function moduleGroupBlock($categoryId)
+    {
+        foreach($this->moduleGroups('all') as $moduleGroup) {
+            if ($moduleGroup['category']->id == $categoryId) {
+                return $moduleGroup['block'];
+            }
+        }
+        return null;
     }
 
     /**

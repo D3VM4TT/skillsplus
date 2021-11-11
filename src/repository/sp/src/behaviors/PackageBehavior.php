@@ -19,6 +19,8 @@ use lantra\sp\helpers\RecordHelper;
 
 class PackageBehavior extends Behavior
 {
+    private $_moduleGroups = [];
+
     /**
      * @return null
      */
@@ -58,6 +60,18 @@ class PackageBehavior extends Behavior
      * @return array
      */
     public function moduleGroups($type = 'all')
+    {
+        if (!isset($this->_moduleGroups[$type])) {
+            $this->_moduleGroups[$type] = $this->_moduleGroups($type);
+        }
+        return $this->_moduleGroups[$type];
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    private function _moduleGroups($type = 'all')
     {
         if ($type == 'available') {
             return $this->availableModuleGroups();
