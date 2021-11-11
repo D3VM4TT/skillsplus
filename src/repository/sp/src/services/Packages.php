@@ -995,12 +995,22 @@ class Packages extends Component
      */
     public function getExternalPackageIds(User $eqa, $externalStatus = 'all', $companyId = null)
     {
+        ## check user can eqa taskbooks
+        if (!count($eqa->userExternalTaskbooks)) {
+            return [];
+        }
+
         ## get all users related to eqa companies
-        $companyIds = $companyId != 'all' ? [$companyId] : $eqa->userExternalCompanies;
+        $companyIds = $companyId ? [$companyId] : $eqa->userExternalCompanies;
         $criteria = User::find();
         $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
         $criteria->limit = null;
         $userIds = $criteria->ids();
+
+        ## check users exist
+        if (!count($userIds)) {
+            return [];
+        }
 
         ## get relevant packages
         $criteria = Entry::find();
