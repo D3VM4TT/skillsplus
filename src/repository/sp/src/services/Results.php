@@ -1600,13 +1600,7 @@ class Results extends Component
         if ($count) {
             return $criteria->count();
         }
-        $resultEntries = $criteria->all();
-        $return = [];
-        foreach ($resultEntries as $resultEntry) {
-            $unitId = $resultEntry->resultUnit->one()->id;
-            $return[$unitId] = $resultEntry;
-        }
-        return $return;
+        return $criteria->all();
     }
 
     /**
