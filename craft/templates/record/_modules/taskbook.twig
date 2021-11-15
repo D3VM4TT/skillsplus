@@ -317,7 +317,7 @@
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
-                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
+                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage {{ taskbookLabel }}</a>
                 {% endif %}
             </div>
             {% if package.packageLog|length %}
