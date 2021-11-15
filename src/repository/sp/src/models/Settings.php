@@ -57,6 +57,7 @@ class Settings extends Model
     public $taskbookLevelLabels                 = [];
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
+    public $taskbookReset                       = true;
 
     public $labelResultOutcome0                 = 'Failed';
     public $labelResultOutcome1                 = 'Endorsed';

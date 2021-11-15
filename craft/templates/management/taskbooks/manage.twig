@@ -36,7 +36,9 @@
         {% else %}
             {% include 'management/taskbooks/_assign' %}
         {% endif %}
-        {% include 'management/taskbooks/_reset' %}
+        {% if craft.lantra.setting('taskbookReset') %}
+            {% include 'management/taskbooks/_reset' %}
+        {% endif %}
         {% include '_includes/taskbooks/packageLog' with {package:package, admin:true} %}
     </form>
 {% endblock %}

@@ -63,6 +63,13 @@
 }) }}
 
 {{ forms.lightswitchField ({
+    label:			"Enable Taskbook Reset (set all results to pending)?",
+    id:				"taskbookReset",
+    name:			"taskbookReset",
+    on:		        settings.taskbookReset == 1
+}) }}
+
+{{ forms.lightswitchField ({
     label:			"Enable Menu My Taskbooks",
     id:				"themeMyTaskbooks",
     name:			"themeMyTaskbooks",
