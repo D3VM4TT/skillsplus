@@ -14,7 +14,7 @@
 
 {% set filterDateFrom = craft.app.request.getParam('date-from') %}
 {% set filterDateTo = craft.app.request.getParam('date-to') %}
-{% set filterCompany = craft.app.request.getParam('company') %}
+{% set filterCompany = craft.app.request.getParam('company')|default('all') %}
 
 {% set sortParam = craft.app.request.getParam('sort') %}
 {% set validSorts = ['title', 'id', 'dateCreated', 'packageStatus'] %}

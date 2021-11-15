@@ -942,8 +942,10 @@ class Packages extends Component
      */
     public function getRelatedPackageIds(User $assessor, $type = null, $name = null)
     {
+        $isAdmin = Lantra::$app->users->isLantraAdmin($assessor);
+
         ## lantra admin sees all packages
-        if (Lantra::$app->users->isLantraAdmin($assessor)) {
+        if ($isAdmin) {
             $query = Entry::find();
             $query->section = 'packages';
             $query->limit = null;
@@ -964,6 +966,7 @@ class Packages extends Component
         if (!$type && !$name) {
             return $query ? $query->ids() : [];
         }
+
         ## filter ids by type or name
         $ids = [];
         foreach($query->all() as $packageEntry) {
@@ -999,6 +1002,9 @@ class Packages extends Component
         if (!count($eqa->userExternalTaskbooks)) {
             return [];
         }
+
+        ## reset company id
+        $companyId = $companyId == 'all' ? null : (int) $companyId;
 
         ## get all users related to eqa companies
         $companyIds = $companyId ? [$companyId] : $eqa->userExternalCompanies;
