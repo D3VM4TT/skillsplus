@@ -413,9 +413,19 @@ class PackageBehavior extends Behavior
      * @param bool $includeAdmin
      * @return bool
      */
+    public function isExternal(User $user = null, $includeAdmin = false)
+    {
+        return $this->isPackageManager($user, $includeAdmin, 'external');
+    }
+
+    /**
+     * @param user|null $user
+     * @param bool $includeAdmin
+     * @return bool
+     */
     public function isManager(User $user = null, $includeAdmin = false)
     {
-        return $this->isAssessor($user, $includeAdmin) || $this->isReviewer($user, $includeAdmin) || $this->isCompleter($user, $includeAdmin);
+        return $this->isExternal($user, $includeAdmin) || $this->isAssessor($user, $includeAdmin) || $this->isReviewer($user, $includeAdmin) || $this->isCompleter($user, $includeAdmin);
     }
 
     /**
