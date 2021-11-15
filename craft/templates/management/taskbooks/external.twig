@@ -39,6 +39,9 @@
         </div>
         {% if packageEntries is defined and packageEntries|length %}
             <div class="page-content">
+                {% if filterExternalStatus != 'all' %}
+                    <p style="margin-bottom: 30px;">Select complete {{ taskbookLabel|pluralize|lower }} below to {{ filterExternalStatus == 'sampled' ? 'unsample' : 'sample' }} for external review.</p>
+                {% endif %}
                 <form id="external" method="post" accept-charset="UTF-8">
                 <table class="data">
                     {{ csrfInput() }}
