@@ -127,11 +127,15 @@ class Queue extends Component
             ## only works with reports
             if ($entry->sectionId == LantraHelper::sectionId('reports')) {
                 $response = Lantra::$app->reports->runCustomReport($entry);
+                if (!$response['success']) {
+                    $message = $entry->title . ' failed to run. ' . $response['message'];
+                    $this->error($message);
+                }
             }
         }
         catch(\Exception $e) {
             $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to run. ' . $e->getMessage();
-            Lantra::$app->notify->notifyAdmin('Failed Job', $message);
+            $this->error($message);
         }
     }
 
@@ -144,7 +148,7 @@ class Queue extends Component
     {
         $entry = Craft::$app->entries->getEntryById($elementId);
         $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to complete in 12 hours.';
-        Lantra::$app->notify->notifyAdmin('Expired Job', $message);
+        $this->error($message);
         $this->delete($elementId);
     }
 
@@ -177,5 +181,14 @@ class Queue extends Component
     public function clear()
     {
         Craft::$app->db->createCommand()->truncateTable('{{%lantra_queue}}')->execute();
+    }
+
+    /**
+     * @throws \yii\db\Exception
+     */
+    private function error($message = '')
+    {
+        Craft::error($message, __METHOD__);
+        Lantra::$app->notify->notifyAdmin('Queue error', $message);
     }
 }
