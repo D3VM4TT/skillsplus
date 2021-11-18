@@ -345,9 +345,11 @@ class LantraHelper
             $asset->filename = $fileName;
             $asset->newFolderId = $folder->id;
             $asset->volumeId = $folder->volumeId;
-            $asset->uploaderId = self::getUser()->id;
             $asset->avoidFilenameConflicts = true;
             $asset->setScenario(Asset::SCENARIO_CREATE);
+            if (null != $uploader = self::getUser()) {
+                $asset->uploaderId = $uploader>id;
+            }
             if (Craft::$app->getElements()->saveElement($asset)) {
                 $response['asset'] = $asset;
             }
