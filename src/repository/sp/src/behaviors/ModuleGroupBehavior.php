@@ -16,6 +16,8 @@ use lantra\sp\helpers\LantraHelper;
 class ModuleGroupBehavior extends Behavior
 {
     /**
+     * Returns true if the module group contains units that should be saved for companies rather than users.
+     *
      * @return bool
      */
     public function isCompany()
@@ -24,6 +26,8 @@ class ModuleGroupBehavior extends Behavior
     }
 
     /**
+     * Returns true if this module group is available for the current user’s company.
+     *
      * @return bool
      */
     public function isUserCompany($userId = null)

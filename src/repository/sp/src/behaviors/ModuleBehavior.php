@@ -15,6 +15,8 @@ use lantra\sp\Plugin as Lantra;
 class ModuleBehavior extends Behavior
 {
     /**
+     * Returns true if parent module group isCompany (i.e. unit results belong to companies rather than users).
+     *
      * @return bool
      */
     public function isCompany()
@@ -24,6 +26,8 @@ class ModuleBehavior extends Behavior
     }
 
     /**
+     * Returns true if the parent module group isUserCompany (i.e. is available for the current user’s company).
+     *
      * @return bool
      */
     public function isUserCompany($userId = null)
