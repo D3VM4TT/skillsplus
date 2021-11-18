@@ -939,7 +939,7 @@ class Results extends Component
         } else {
             $moduleResultEntry = $this->getModuleResult($userId, $moduleEntry->id, true);
             $unitResultEntries = $this->getModuleUnitResults($moduleEntry, $userId);
-            $userResultEntries = $this->getModuleUserResults($moduleEntry, $userId);
+            $userResultEntries = $this->getModuleUserResults($moduleEntry->id, $userId);
         }
 
         $resultEntries = array_merge($unitResultEntries, $userResultEntries);
@@ -1381,7 +1381,7 @@ class Results extends Component
             // get unit results relating to module
             $unitResults = $this->getModuleUnitResults($moduleEntry, $userId);
             // get user results relating to module
-            $userResults = $this->getModuleUserResults($moduleEntry, $userId, false);
+            $userResults = $this->getModuleUserResults($moduleEntry->id, $userId, false);
             $results = array_merge($results, $unitResults, $userResults);
         }
         return $results;
@@ -1451,7 +1451,7 @@ class Results extends Component
             $results = $this->getUserModuleResults($moduleEntry->id);
             $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
             $results = array_merge($results, $unitResults);
-            $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+            $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false);
             $results = array_merge($results, $userResults);
         }
 
@@ -1475,23 +1475,20 @@ class Results extends Component
             return [];
         }
         $user = $package->author;
-        $modules = Lantra::$app->packages->getPackageModuleEntries($package);
-        $results = [];
-        foreach ($modules as $moduleEntry) {
-            $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
-            $results = array_merge($results, $unitResults);
-            $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
-            $results = array_merge($results, $userResults);
-        }
+        $unitIds = Lantra::$app->packages->getPackageUnitIds($package);
+        $moduleIds = Lantra::$app->packages->getPackageModuleIds($package);
 
-        $ids = [];
-        foreach ($results as $result) {
-            $result->setFieldValue('resultStatus', 'draft');
-            if (Craft::$app->elements->saveElement($result)) {
-                $ids[] = $result->id;
-            }
+        ## get all the result ids
+        $unitResultIds = $this->getAllUnitResults($user->id, $unitIds)->ids();
+        $userResultIds = $this->getModuleUserResults($moduleIds, $user->id, false, 'ids');
+        $resultIds = array_merge($unitResultIds, $userResultIds);
+
+        if (count($resultIds)) {
+            ## quicker update in one go
+            $mysql = 'UPDATE {{%content}} SET field_resultStatus = "draft" WHERE elementId IN (' . implode(',', $resultIds) . ')';
+            Craft::$app->db->createCommand($mysql)->execute();
         }
-        return $ids;
+        return $resultIds;
     }
 
     /**
@@ -1518,7 +1515,7 @@ class Results extends Component
                 }
                 if ($type == 'user' || $type == 'both') {
                     // get user results relating to module
-                    $userResults = $this->getModuleUserResults($moduleEntry, $user->id, false);
+                    $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false);
                     $results = array_merge($results, $userResults);
                 }
             }
@@ -1548,13 +1545,13 @@ class Results extends Component
     /**
      *  Get module user results with positive result value
      *
-     * @param $moduleEntry
+     * @param $moduleEntryId
      * @param $userId
      * @param $resultPoints
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntry, $userId, $resultPoints = true)
+    function getModuleUserResults($moduleEntryIds, $userId, $resultPoints = true, $return = 'all')
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -1562,11 +1559,11 @@ class Results extends Component
         $criteria->authorId = $userId;
         $criteria->status = 'live, expired';
         $criteria->limit = null;
-        $criteria->relatedTo = ['targetElement' => $moduleEntry->id, 'field' => 'resultModule'];
+        $criteria->relatedTo = ['targetElement' => $moduleEntryIds, 'field' => 'resultModule'];
         if ($resultPoints) {
             $criteria->resultPoints = '> 0';
         }
-        return $criteria->all();
+        return $return == 'ids' ? $criteria->ids() : $criteria->all();
     }
 
     /**

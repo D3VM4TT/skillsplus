@@ -782,12 +782,39 @@ class Packages extends Component
 
     /**
      * @param $package
-     * @return array
+     * @param string $return
+     * @return array|\craft\base\ElementInterface[]|Entry[]|int[]
      */
-    public function getPackageUnits($package)
+    public function getPackageUnits($package, $return = 'ids')
     {
-        $moduleEntries = $this->getPackageModuleEntries($package);
-        return Lantra::$app->modules->moduleUnits($moduleEntries);
+        $moduleEntryIds = $this->getPackageModuleIds($package);
+        $criteria = Entry::find();
+        $criteria->section = 'units';
+        $criteria->relatedTo(['sourceElement' => $moduleEntryIds, 'field' => 'moduleUnitGroups.unitEntries']);
+        return $return == 'ids' ?  $criteria->ids() : $criteria->all();
+    }
+
+    /**
+     * @param $package
+     * @return mixed
+     */
+    public function getPackageUnitIds($package)
+    {
+        return $this->getPackageUnits($package, 'ids');
+    }
+
+    /**
+     * @param $package
+     * @param string $return
+     * @return array|\craft\base\ElementInterface[]|Entry[]|int[]
+     */
+    public function getPackageModuleEntries($package, $return = 'all')
+    {
+        $categoryIds = $this->getPackageModuleGroupIds($package);
+        $criteria = Entry::find();
+        $criteria->section = 'modules';
+        $criteria->relatedTo(['targetElement' => $categoryIds, 'field' => 'moduleGroup']);
+        return $return == 'ids' ?  $criteria->ids() : $criteria->all();
     }
 
     /**
@@ -795,13 +822,9 @@ class Packages extends Component
      * @param $package
      * @return array
      */
-    public function getPackageModuleEntries($package)
+    public function getPackageModuleIds($package)
     {
-        $categoryIds = $this->getPackageModuleGroupIds($package);
-        $criteria = Entry::find();
-        $criteria->section = 'modules';
-        $criteria->relatedTo(['targetElement' => $categoryIds, 'field' => 'moduleGroup']);
-        return $criteria->all();
+        return $this->getPackageModuleEntries($package, 'ids');
     }
 
     /**
@@ -812,8 +835,8 @@ class Packages extends Component
     {
         $categoryIds = [];
         foreach($package->packageModuleGroups->all() as $moduleGroupBlock) {
-            if (null != $moduleGroup = $moduleGroupBlock->moduleGroup->one())  {
-                $categoryIds[] = $moduleGroup->id;
+            if (null != $moduleGroupId = $moduleGroupBlock->moduleGroup->one()->id)  {
+                $categoryIds[] = $moduleGroupId;
             }
         }
         return $categoryIds;
