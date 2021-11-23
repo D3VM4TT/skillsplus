@@ -907,7 +907,7 @@ class Packages extends Component
         }
         ## handle date filters
         $df = $dateFrom ? $this->convertDate($dateFrom) : false;
-        $dt = $dateTo ? $this->convertDate($dateTo) : false;
+        $dt = $dateTo ? $this->convertDate($dateTo, 12, 59, 59) : false;
         if ($df && $dt) {
             $criteria->dateCreated = ['and','>= '. $df, '<= '. $dt];
         }
@@ -922,16 +922,19 @@ class Packages extends Component
 
     /**
      * @param string $dateString
-     * @return DateTime|false
+     * @param string $h
+     * @param string $m
+     * @param string $s
+     * @return string|void
      * @throws \Exception
      */
-    private function convertDate($dateString = '')
+    private function convertDate($dateString = '', $h = '00', $m = '00', $s = '00')
     {
         $parts = explode('/', $dateString);
         if (count($parts) != 3) {
             return;
         }
-        return DateTimeHelper::toDateTime($parts[2] . '-' . $parts[1] . '-' . $parts[0])->format(\DateTime::ATOM);
+        return DateTimeHelper::toDateTime($parts[2] . '-' . $parts[1] . '-' . $parts[0])->setTime($h, $m, $s)->format(\DateTime::ATOM);
     }
 
     /**
