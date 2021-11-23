@@ -1163,8 +1163,14 @@ class Packages extends Component
                             $moduleTitle ? $module->title : '',
                             $unit->title,
                             $unit->unitHeading,
-                            $result ? strip_tags($result->resultNarrative) : '',
-                            $result ? implode(',', $resultEvidence) : ''
+                            $result && $result->resultStartDate ? $result->resultStartDate->format('d/m/Y') : '-',
+                            $result && $result->resultFinishDate ? $result->resultFinishDate->format('d/m/Y') : '-',
+                            $result && $result->expiryDate ? $result->expiryDate->format('d/m/Y') : '-',
+                            $result && $result->resultLocation ? $result->resultLocation : '-',
+                            $result && $result->resultNarrative ? strip_tags($result->resultNarrative) : '-',
+                            $result && count ($resultEvidence) ? implode(',', $resultEvidence) : '-',
+                            $result ? $result->resultStatus : '-',
+                            $result && $result->resultEndorsedDate ? $result->resultEndorsedDate->format('d/m/Y') : '-'
                         ];
 
                         $data[] = $row;
