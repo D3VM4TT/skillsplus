@@ -130,6 +130,8 @@
             <div class="container-btn">
                 <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
             </div>
+        {% else %}
+            {{ globalsHtml.pageNewDisabled }}
         {% endif %}
     </div>
 </section>
