@@ -72,7 +72,9 @@ class UsersController extends BaseController {
     public function actionPrivacyConfirm()
     {
         $user = Craft::$app->getUser()->getIdentity();
+        $now = new \DateTime();
         $user->setFieldValue('userPrivacy', true);
+        $user->setFieldValue('userPrivacyDate', $now);
         Craft::$app->elements->saveElement($user);
         return $this->_returnMessage('', true);
     }

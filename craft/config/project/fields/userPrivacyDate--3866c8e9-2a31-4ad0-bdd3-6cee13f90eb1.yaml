@@ -1,0 +1,17 @@
+columnSuffix: yvibeovr
+contentColumnType: datetime
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userPrivacyDate
+instructions: ''
+name: 'User Privacy Date'
+searchable: false
+settings:
+  max: null
+  min: null
+  minuteIncrement: '30'
+  showDate: true
+  showTime: false
+  showTimeZone: false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Date
