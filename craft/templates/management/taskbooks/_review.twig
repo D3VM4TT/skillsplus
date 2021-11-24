@@ -31,6 +31,7 @@
         <h2>{{ step.reviewStepName }}</h2>
         {% if step.reviewStepType == 'review' or step.reviewStepType == 'complete' %}
             <div class="field--wrapper">
+                <p>Please confirm whether this {{ taskbookLabel|lower }} has been sampled for review? </p>
                 <input type="hidden" name="steps[{{ nextStep.id }}][sampled]" value="0" />
                 <label for="reviewSampled">Sampled: <input id="reviewSampled" type="checkbox" name="steps[{{ nextStep.id }}][sampled]" value="1" /></label>
             </div>
