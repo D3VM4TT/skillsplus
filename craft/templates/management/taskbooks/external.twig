@@ -71,7 +71,7 @@
                             <td>
                                 {% if filterExternalStatus == 'notSelected' or filterExternalStatus == 'selected' %}
                                     <input name="ids[]" type="checkbox" value="{{ package.id }}" />
-                                {% else %}
+                                {% elseif filterExternalStatus == 'all' and package.externalStatus != 'notSelected' %}
                                     <i class="fa fa-check" />
                                 {% endif %}
                             </td>
