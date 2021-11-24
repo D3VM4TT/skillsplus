@@ -36,7 +36,7 @@
             </div>
         {% endif %}
         <div class="field--wrapper">
-            <label for="reviewResult">Result:</label>
+            <label for="reviewResult">Result</label>
             <select id="reviewResult" name="steps[{{ nextStep.id }}][result]">
                 <option value="">Please select:</option>
                 <option value="1">{{ craft.lantra.setting('labelResultOutcome1') }}</option>
@@ -44,7 +44,7 @@
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="comment">Comment <em style="color: red">(required)</em>:</label>
+            <label for="comment">Comment<em style="color: red">*</em></label>
             <textarea name="steps[{{ nextStep.id }}][comment]" required="required"></textarea>
         </div>
         <div class="field--wrapper">
