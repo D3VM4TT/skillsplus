@@ -506,6 +506,26 @@ class PackageBehavior extends Behavior
      * @param user|null $user
      * @return bool
      */
+    public function canExternal(User $user = null)
+    {
+        $eqa = LantraHelper::getUser($user);
+        if (!Lantra::$app->packages->isExternalReviewer($this->owner->authorId, $eqa)) {
+            return false;
+        }
+        $taskbook = $this->getTaskbook();
+        $externalTaskbookIds = $eqa->userExternalTaskbooks ? $eqa->userExternalTaskbooks->ids() : [];
+        if (!$taskbook || !count($eqa->userExternalTaskbooks)) {
+            return false;
+        }
+        return in_array($taskbook->id, $externalTaskbookIds);
+    }
+
+    /**
+     * Returns true if $user can assign reviewers.
+     *
+     * @param user|null $user
+     * @return bool
+     */
     public function canAssign(User $user = null)
     {
         $manager = LantraHelper::getUser($user);

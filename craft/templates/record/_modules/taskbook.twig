@@ -10,6 +10,10 @@
     {% set level = packageModuleGroup.level %}
 {% endif %}
 
+{% if isExternalReviewer and not package.isComplete %}
+    {% set readOnly = true %}
+{% endif %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">

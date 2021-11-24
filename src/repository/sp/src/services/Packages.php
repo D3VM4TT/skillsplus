@@ -428,6 +428,19 @@ class Packages extends Component
     }
 
     /**
+     * @param $subordinateId
+     * @param User|null $manager
+     * @return bool
+     */
+    public function isExternalReviewer($subordinateId, User $manager = null)
+    {
+        if (!Lantra::$app->users->isExternal($manager)) {
+            return false;
+        }
+        $externalUserIds = $this->getExternalUserIds($manager);
+        return in_array($subordinateId, $externalUserIds);
+    }
+    /**
      * @param $packageId
      * @return null
      * @throws \Twig\Error\LoaderError
@@ -995,6 +1008,15 @@ class Packages extends Component
         return $ids;
     }
 
+    public function getExternalUserIds(User $eqa, $companyId = null)
+    {
+        $companyIds = $companyId ? [$companyId] : $eqa->userExternalCompanies;
+        $criteria = User::find();
+        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
+        $criteria->limit = null;
+        return $criteria->ids();
+    }
+
     /**
      * @param User $eqa
      * @return array|int[]
@@ -1008,13 +1030,7 @@ class Packages extends Component
 
         ## reset company id
         $companyId = $companyId == 'all' ? null : (int) $companyId;
-
-        ## get all users related to eqa companies
-        $companyIds = $companyId ? [$companyId] : $eqa->userExternalCompanies;
-        $criteria = User::find();
-        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
-        $criteria->limit = null;
-        $userIds = $criteria->ids();
+        $userIds = $this->getExternalUserIds($eqa, $companyId);
 
         ## check users exist
         if (!count($userIds)) {
