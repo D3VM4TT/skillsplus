@@ -754,7 +754,7 @@ $(document).ready(function () {
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
-            moduleGroupLink = $('a[href="#' + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
+            moduleGroupLink = $('a[href="#' + moduleLink.data('mgref') + '"]'),
             tabContainer = moduleGroupLink.closest('div.tab-container');
         if (tabContainer.length) {
             tabContainer.find('a.jobroleEndorseExpand').click();

@@ -34,7 +34,7 @@
                     {% set moduleElementId = moduleGroupElementId ~ module.id %}
                     {% set options = options ~ '<option value="#module' ~ moduleElementId ~ '">' ~ module.title ~ '</option>' %}
                     <li>
-                        <a href="#module{{ moduleElementId }}" class="module-status">
+                        <a href="#module{{ moduleElementId }}" class="module-status" data-mgref="tab{{ moduleGroupElementId }}">
                             <span class="status-active"></span>
                             {{ module.title }}
                         </a>
