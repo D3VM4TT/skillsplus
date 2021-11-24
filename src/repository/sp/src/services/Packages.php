@@ -599,7 +599,7 @@ class Packages extends Component
      */
     public function completeExternal($package)
     {
-        $package->setFieldValue('externalStatus', 'submitted');
+        $package->setFieldValue('externalStatus', 'sampled');
         $package->save();
     }
 

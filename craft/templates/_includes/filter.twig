@@ -31,7 +31,7 @@
         </select>
     {% endif %}
     {% if filterExternalStatus is defined and filterExternalStatus %}
-        <select name="filter" class="sp-select" style="width: 200px;">
+        <select name="filter" class="sp-select" style="width: 240px;">
             <option value="notSelected"{% if filterExternalStatus == 'notSelected' %} selected="selected"{% endif %}>Not Selected (complete)</option>
             <option value="selected"{% if filterExternalStatus == 'selected' %} selected="selected"{% endif %}>Selected</option>
             <option value="sampled"{% if filterExternalStatus == 'sampled' %} selected="selected"{% endif %}>Sampled</option>
