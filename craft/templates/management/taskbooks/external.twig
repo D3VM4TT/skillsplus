@@ -69,10 +69,10 @@
                         {% set company = craft.lantra.userCompany(user.id) %}
                         <tr>
                             <td>
-                                {% if filterExternalStatus == 'all' and package.externalStatus == 'selected' %}
-                                    <i class="fa fa-check" />
-                                {% else %}
+                                {% if filterExternalStatus == 'notSelected' or filterExternalStatus == 'selected' %}
                                     <input name="ids[]" type="checkbox" value="{{ package.id }}" />
+                                {% else %}
+                                    <i class="fa fa-check" />
                                 {% endif %}
                             </td>
                             <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
@@ -88,7 +88,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                {% if filterExternalStatus != 'all' %}
+                {% if filterExternalStatus == 'notSelected' or filterExternalStatus == 'selected' %}
                     <div class="container-btn">
                         <button type="submit" class="button primary-bg">{{ filterExternalStatus == 'selected' ? 'Remove' : 'Select' }}</button>
                     </div>
