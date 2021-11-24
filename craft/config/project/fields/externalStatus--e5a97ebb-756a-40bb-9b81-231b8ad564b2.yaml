@@ -12,13 +12,24 @@ settings:
       __assoc__:
         -
           - label
-          - 'Not Sampled'
+          - 'Not Selected'
         -
           - value
-          - notSampled
+          - notSelected
         -
           - default
           - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Selected
+        -
+          - value
+          - selected
+        -
+          - default
+          - ''
     -
       __assoc__:
         -
@@ -27,17 +38,6 @@ settings:
         -
           - value
           - sampled
-        -
-          - default
-          - ''
-    -
-      __assoc__:
-        -
-          - label
-          - Submitted
-        -
-          - value
-          - submitted
         -
           - default
           - ''

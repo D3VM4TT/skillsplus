@@ -39,7 +39,7 @@ class PackagesController extends BaseController
             if (null == $package = Craft::$app->entries->getEntryById($id)) {
                 continue;
             }
-            $externalAssessor = $externalStatus == 'sampled' ? [$userId] : [];
+            $externalAssessor = $externalStatus == 'selected' ? [$userId] : [];
             $package->setFieldValue('externalStatus', $externalStatus);
             $package->setFieldValue('externalAssessor', $externalAssessor);
 
@@ -48,15 +48,15 @@ class PackagesController extends BaseController
             }
 
             ## add/remove external reviews
-            if ($externalStatus == 'sampled') {
+            if ($externalStatus == 'selected') {
                 Lantra::$app->packages->stepAddExternal($package, $userId);
             }
             else {
                 Lantra::$app->packages->stepRemoveExternal($package);
             }
         }
-        $url = '/management/taskbooks/external?filter=' . ($externalStatus == 'sampled' ? 'sampled' : 'complete');
-        $this->_returnMessage($updated . ' packages ' . $externalStatus == 'sampled' ? 'sampled' : 'not sampled', true, $url);
+        $url = '/management/taskbooks/external?filter=' . ($externalStatus == 'selected' ? 'selected' : 'notSelected');
+        $this->_returnMessage($updated . ' packages ' . $externalStatus == 'selected' ? 'selected' : 'unselected', true, $url);
     }
 
     /**

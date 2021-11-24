@@ -1028,16 +1028,16 @@ class Packages extends Component
             'and',
             ['targetElement' => $eqa->userExternalTaskbooks, 'field' => 'packageTaskbook']
         ];
-        if ($externalStatus == 'sampled') {
-            $criteria->externalStatus = 'sampled';
+        if ($externalStatus == 'selected') {
+            $criteria->externalStatus = 'selected';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
-        elseif ($externalStatus == 'complete') {
+        elseif ($externalStatus == 'notSelected') {
             $criteria->packageStatus = 'complete';
-            $criteria->externalStatus = 'notSampled';
+            $criteria->externalStatus = 'notSelected';
         }
-        elseif ($externalStatus == 'submitted') {
-            $criteria->externalStatus = 'submitted';
+        elseif ($externalStatus == 'sampled') {
+            $criteria->externalStatus = 'sampled';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
         $criteria->relatedTo = $relatedTo;

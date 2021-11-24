@@ -34,23 +34,25 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterExternalStatus:filterExternalStatus, filterCompany:filterCompany} %}</div>
+                <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterExternalStatus:filterExternalStatus, filterCompany:filterCompany} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
             <div class="page-content">
-                {% if filterExternalStatus != 'all' %}
-                    <p style="margin-bottom: 30px;">Select complete {{ taskbookLabel|pluralize|lower }} below to {{ filterExternalStatus == 'sampled' ? 'unsample' : 'sample' }} for external review.</p>
+                {% if filterExternalStatus == 'selected' %}
+                    <p style="margin-bottom: 30px;">Remove selected {{ taskbookLabel|pluralize|lower }} below from external review.</p>
+                {% elseif filterExternalStatus == 'complete' %}
+                    <p style="margin-bottom: 30px;">Select complete {{ taskbookLabel|pluralize|lower }} below for external review.</p>
                 {% endif %}
                 <form id="external" method="post" accept-charset="UTF-8">
                 <table class="data">
                     {{ csrfInput() }}
                     {{ actionInput('sp/packages/external-status') }}
                     {{ hiddenInput('userId', currentUser.id) }}
-                    {{ hiddenInput('externalStatus', filterExternalStatus == 'sampled' ? 'notSampled' : 'sampled') }}
+                    {{ hiddenInput('externalStatus', filterExternalStatus == 'selected' ? 'notSelected' : 'selected') }}
                     <thead>
                     <tr>
-                        <th>{% if filterExternalStatus == 'all' %}Sampled{% endif %}</th>
+                        <th>{% if filterExternalStatus == 'all' %}Selected{% endif %}</th>
                         <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
                         <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
                         <th>Company</th>
@@ -67,8 +69,8 @@
                         {% set company = craft.lantra.userCompany(user.id) %}
                         <tr>
                             <td>
-                                {% if filterExternalStatus == 'all' %}
-                                    {{ package.externalStatus == 'sampled' ? 'Sampled' : 'Not Sampled' }}
+                                {% if filterExternalStatus == 'all' and package.externalStatus == 'selected' %}
+                                    <i class="fa fa-check" />
                                 {% else %}
                                     <input name="ids[]" type="checkbox" value="{{ package.id }}" />
                                 {% endif %}
@@ -88,7 +90,7 @@
                 </table>
                 {% if filterExternalStatus != 'all' %}
                     <div class="container-btn">
-                        <button type="submit" class="button primary-bg">{{ filterExternalStatus == 'sampled' ? 'Unsample' : 'Sample' }} Selected</button>
+                        <button type="submit" class="button primary-bg">{{ filterExternalStatus == 'selected' ? 'Remove' : 'Select' }}</button>
                     </div>
                 {% endif %}
                 </form>
