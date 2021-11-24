@@ -39,13 +39,13 @@
             <label for="reviewResult">Result:</label>
             <select id="reviewResult" name="steps[{{ nextStep.id }}][result]">
                 <option value="">Please select:</option>
-                <option value="1">Complete</option>
-                <option value="0">Retry</option>
+                <option value="1">{{ craft.lantra.setting('labelResultOutcome1') }}</option>
+                <option value="0">{{ craft.lantra.setting('labelResultOutcome0') }}</option>
             </select>
         </div>
         <div class="field--wrapper">
-            <label for="comment">Comment:</label>
-            <textarea name="steps[{{ nextStep.id }}][comment]"></textarea>
+            <label for="comment">Comment <em style="color: red">(required)</em>:</label>
+            <textarea name="steps[{{ nextStep.id }}][comment]" required="required"></textarea>
         </div>
         <div class="field--wrapper">
             {{ workflowStep ? workflowStep.stepMessage : '' }}
