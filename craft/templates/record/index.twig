@@ -25,11 +25,6 @@
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 {% set jobRoleLabel = craft.lantra.setting('labelJobRole', 'Job Role') %}
 
-{# redirect to manage taskbooks page #}
-{% if isTaskbooks and not account.record.totalPackages %}
-    {% redirect 'cpd/' ~ account.id ~ '/taskbooks/manage'  %}
-{% endif %}
-
 {% set accountPhoto = account.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
