@@ -234,8 +234,7 @@ class PackagesController extends BaseController
         if (!Craft::$app->elements->saveElement($package)) {
             return Craft::$app->urlManager->setRouteParams(['package' => $package]);
         }
-        $redirect = LantraHelper::packageUrl($package->authorId, $packageId);
-        $this->_returnMessage('Package has been updated', true, $redirect);
+        $this->_returnMessage('Package has been updated', true, 'management/taskbooks');
     }
 
     /**
