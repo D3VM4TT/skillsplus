@@ -6,8 +6,6 @@
         <ul>
             {% include '_includes/navReports' %}
         </ul>
-    {% elseif craft.lantra.packagesCount() %}
-        {% include '_includes/navReviewer' %}
     {% endif %}
 
     {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}

@@ -18,6 +18,7 @@
         {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem, moduleGroupId:moduleGroupId} %}
     </article>
 {% else %}
+    {{ globalsHtml.pageCurrent }}
     <table class="data">
         <thead>
         <tr>
