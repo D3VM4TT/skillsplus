@@ -63,7 +63,7 @@
                             <td><p class="td-title-responsive">Taskbook: </p>
                                 <a href="/cpd/{{ package.author.id }}/taskbooks/{{ package.id }}">{{ package.taskbook.title }}</a>
                             </td>
-                            <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName }}</td>
+                            <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName : 'Complete' }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
                             {% if filterValue == 'all' %}
                             <td class="icons" style="width:140px;text-align:right">

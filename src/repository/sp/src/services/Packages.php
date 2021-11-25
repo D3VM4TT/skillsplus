@@ -990,19 +990,15 @@ class Packages extends Component
             if (in_array($packageEntry->id, $ids)) {
                 continue;
             }
-            foreach($packageEntry->packageReviews as $packageReview) {
-                $reviewUser = $packageReview->reviewUser->one();
-                if ($reviewUser && $reviewUser->id == $assessor->id) {
-                    if ($type && $name && $packageReview->reviewStepType == $type && $packageReview->reviewStepName == $name) {
-                        $ids[] = $packageEntry->id;
-                    }
-                    elseif ($type && $packageReview->reviewStepType == $type) {
-                        $ids[] = $packageEntry->id;
-                    }
-                    elseif ($name && $packageReview->reviewStepName == $name) {
-                        $ids[] = $packageEntry->id;
-                    }
-                }
+            ## ignore complete packages
+            if (null == $nextStep = $packageEntry->getNextStep()) {
+                continue;
+            }
+            ## match both type and name or type or name
+            if (($type && $name && $nextStep->reviewStepType == $type && $nextStep->reviewStepName == $name) ||
+                ($type && $nextStep->reviewStepType == $type) ||
+                ($name && $nextStep->reviewStepName == $name)) {
+                $ids[] = $packageEntry->id;
             }
         }
         return $ids;

@@ -57,20 +57,16 @@
     {% elseif step.reviewDate|length %}
         <h2>{{ step.reviewStepName }}</h2>
         <p>{{ step.reviewDate|date(dateFormat) }}</p>
-        {% if step.stepType == 'review' or step.stepType == 'complete' %}
-        <p>{{ step.reviewSampled ? 'Sampled' : 'Not Sampled'  }}</p>
-        {% endif %}
-        <div class="field--wrapper">
-            <label for="result">Review Step Result:</label>
-            <select disabled id="result" name="steps[{{ step.id }}][result]">
-                <option{% if step.reviewPassed == '' %} selected{% endif %} value="">Please select:</option>
-                <option{% if step.reviewPassed == 1 %} selected{% endif %}  value="1">Complete</option>
-                <option{% if step.reviewPassed == 0 %} selected{% endif %}  value="0">Retry</option>
-            </select>
-        </div>
-        <div class="field--wrapper">
-            <label for="comment">Comment:</label>
-            <textarea disabled name="steps[{{ step.id }}][comment]"> {{ step.reviewComment }}</textarea>
-        </div>
+        <p>
+            <strong>Review Step Result:</strong><br /> {{ craft.lantra.setting('labelResultOutcome' ~ step.reviewPassed ) }}
+            {% if step.reviewStepType == 'review' or step.reviewStepType == 'complete' %}
+            ({{ step.reviewSampled ? 'Sampled' : 'Not Sampled'  }})
+            {% endif %}
+        </p>
+        <p><strong>Comment:</strong><br />{{ step.reviewComment ? step.reviewComment : '~' }}</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <hr />
+        <p>&nbsp;</p>
     {% endif %}
 {% endfor %}
