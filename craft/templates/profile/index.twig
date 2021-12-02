@@ -48,7 +48,7 @@
                         <h6 class="primary">user id: {{ currentUser.id }}</h6>
                     {% endif %}
                     {% if craft.lantra.setting('userPrivacyConfirm', false) and currentUser.userPrivacyDate %}
-                        <h6 class="primary">privacy: {{ currentUser.userPrivacyDate|date(dateFormat) }}</h6>
+                        <h6 class="primary">{{ craft.lantra.setting('userPrivacyMessage') }} <br />Accepted on : {{ currentUser.userPrivacyDate|date(dateFormat) }}</h6>
                     {% endif %}
                 </div>
             </div>
