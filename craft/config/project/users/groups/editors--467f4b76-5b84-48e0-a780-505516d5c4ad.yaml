@@ -34,6 +34,16 @@ permissions:
   - 'deletepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'editpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'createentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'deleteentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'deletepeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'editpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'deletepeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'editpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'editentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
   - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
   - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
