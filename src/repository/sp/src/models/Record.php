@@ -177,7 +177,7 @@ class Record extends Model
         $userRoles = $this->user->userRole->all();
         if ($userRoles) {
             foreach ($userRoles as $jobRoleCategory) {
-                $this->_resetData();
+                ## $this->_resetData();
                 $relatedModules = Lantra::$app->records->getRelatedModules($jobRoleCategory);
                 $moduleGroupCategories = Lantra::$app->records->getModuleGroups($relatedModules);
                 $moduleGroups = [];
@@ -195,7 +195,7 @@ class Record extends Model
         ## set user packages
         $packages = Lantra::$app->packages->getUserPackages($this->user);
         foreach ($packages as $package) {
-            $this->_resetData();
+            ## $this->_resetData();
             $moduleGroups = [];
             foreach ($package->moduleGroupCategories() as $moduleGroup) {
                 $relatedModules = Lantra::$app->records->getRelatedModules($moduleGroup);
@@ -317,7 +317,7 @@ class Record extends Model
         }
         $results = Lantra::$app->results->getAllUnitResults($this->user->id, $unitIds)->all();
         foreach($results as $result) {
-            $resultUnitId = $result->resultUnit->ids()[0];
+            $resultUnitId = $result->resultUnit->one()->id;
             $this->_results[$resultUnitId] = $result;
         }
     }

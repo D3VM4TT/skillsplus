@@ -1160,7 +1160,7 @@ class Packages extends Component
                 foreach($moduleItem->items as $unitGroupItem) {
                     foreach($unitGroupItem->items as $unitItem) {
                         $unit = $record->getElement($unitItem->elementId);
-                        $result = $record->getUnitResult($unitItem->elementId);
+                        $result = $record->getUnitResult($unit->id);
                         $resultEvidence = [];
 
                         if ($result) {
@@ -1184,6 +1184,14 @@ class Packages extends Component
                             $result ? $result->resultStatus : '-',
                             $result && $result->resultEndorsedDate ? $result->resultEndorsedDate->format('d/m/Y') : '-'
                         ];
+
+                        if (getenv('SITE') == 'bics') {
+                            foreach ($result->resultCustom as $row) {
+                                if ($row->customKey == 'sa_status' || $row->customKey == 'ae_status') {
+                                    $row[] = $row->customValue;
+                                }
+                            }
+                        }
 
                         $data[] = $row;
 
