@@ -15,9 +15,9 @@ DB_PASS="RIrYmX!rFp2fxPRT%yu4"
 DB_HOST="10.1.4.6"
 
 # remote server ips
-DEV_IP="10.1.4.4"
-UAT_IP="10.1.4.5"
-PROD_IP="10.1.4.9"
+DEV_IP="10.1.4.21"
+UAT_IP="10.1.4.23"
+PROD_IP="10.1.4.20"
 
 ##################################
 #                                #
