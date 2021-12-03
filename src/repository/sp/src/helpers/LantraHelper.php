@@ -331,13 +331,13 @@ class LantraHelper
         }
         if ($folderName) {
             $folder = Craft::$app->assets->findFolder(['volumeId' => $volume->id, 'name' => $folderName]);
-            if (!$folder) {
-                $response['message'] = 'Folder not found.';
-                return $response;
-            }
         }
         else {
             $folder = Craft::$app->assets->getRootFolderByVolumeId($volume->id);
+        }
+        if (!$folder) {
+            $response['message'] = 'Folder not found.';
+            return $response;
         }
         try {
             $asset = new Asset();
@@ -348,7 +348,7 @@ class LantraHelper
             $asset->avoidFilenameConflicts = true;
             $asset->setScenario(Asset::SCENARIO_CREATE);
             if (null != $uploader = self::getUser()) {
-                $asset->uploaderId = $uploader>id;
+                $asset->uploaderId = $uploader->id;
             }
             if (Craft::$app->getElements()->saveElement($asset)) {
                 $response['asset'] = $asset;
