@@ -9,7 +9,7 @@
  */
 
 $dbPort = '3306';
-if (getenv('SITE') == 'bics') {
+if (getenv('ENVIRONMENT') == 'prod' && getenv('SITE') == 'bics') {
     ## barracuda
     $dbServer = '10.1.4.13';
 }
