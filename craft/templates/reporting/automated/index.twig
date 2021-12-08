@@ -54,9 +54,17 @@
                                 {% endif %}
                                 </td>
                             <td style="text-align: right;">
-                                <a class="action" href="#" data-action="reports/run-report" data-id="{{ report.id }}">run</a> |
-                                <a href="/reporting/edit/{{ report.id }}">edit</a> |
-                                <a class="action" href="#" data-action="entries/delete-entry" data-id="{{ report.id }}">delete</a>
+                                <a class="icon" href="/sp/reports/run-custom-report/{{ report.id }}" data-id="{{ report.id }}">
+                                    <img  src="/assets/img/run.svg" title="Run Now" />
+                                </a>
+                            </td>
+                            <td style="text-align: right;">
+                                <a class="icon" href="/reporting/edit/{{ report.id }}">
+                                    <img  src="/assets/img/edit.svg" title="Edit" />
+                                </a>
+                                <a class="icon action" href="#" data-action="reports/delete-report" data-id="{{ report.id }}">
+                                    <img src="/assets/img/delete.svg" title="Delete" />
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
