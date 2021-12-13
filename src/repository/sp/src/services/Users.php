@@ -1130,9 +1130,12 @@ class Users extends Component
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getReportUsers($userIds)
+    public function getReportUsers($userIds = [])
     {
-
+        $return = [];
+        if (!count($userIds)) {
+            return $return;
+        }
         $mysql = 'SELECT 
             u.id,           
             CONCAT(u.firstName, " ", u.lastName) as fullName,
@@ -1155,7 +1158,6 @@ class Users extends Component
             AND u.id IN(' . implode(',', $userIds) . ')';
 
         $rows = Craft::$app->db->createCommand($mysql)->query();
-        $return = [];
         $format = 'd-m-Y';
         foreach ($rows as $user) {
             if ($user['userDateOfBirth']) {
