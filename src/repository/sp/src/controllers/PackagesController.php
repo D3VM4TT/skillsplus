@@ -259,7 +259,7 @@ class PackagesController extends BaseController
     {
         $this->requireLogin();
         $ids = Lantra::$app->results->resetPackageResults($entryId);
-        $this->_returnMessage(count($ids) . ' results updated to pending.', 'true', 'management/taskbooks/manage/' . $entryId);
+        $this->_returnMessage(count($ids) . ' results updated to draft.', 'true', 'management/taskbooks/manage/' . $entryId);
     }
 
     /**

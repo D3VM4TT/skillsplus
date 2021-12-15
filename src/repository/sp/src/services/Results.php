@@ -1486,7 +1486,7 @@ class Results extends Component
 
         $ids = [];
         foreach ($results as $result) {
-            $result->setFieldValue('resultStatus', 'pending');
+            $result->setFieldValue('resultStatus', 'draft');
             if (Craft::$app->elements->saveElement($result)) {
                 $ids[] = $result->id;
             }
