@@ -1173,7 +1173,29 @@ class Packages extends Component
         $filename = 'package-' . $package->id . '-' . time() . '.xlsx';
         $record = $package->author->record;
         $packageItem = $record->getItem($package->id);
-        $data = [];
+
+        $header = [
+            'ID',
+            'Module Group Title',
+            'Module Title',
+            'Unit Title',
+            'Unit Heading',
+            'Start Date',
+            'Finish Date',
+            'Expiry Date',
+            'Location',
+            'Narrative',
+            'Evidence',
+            'Comments',
+            'Status',
+            'Endorsed Date'
+        ];
+
+        if (getenv('SITE') == 'bics') {
+            $header = array_merge($header, ['SA Status', 'AE Status']);
+        }
+
+        $data = [$header];
         foreach($packageItem->items as $moduleGroupItem) {
             $moduleGroupTitle = true;
             $moduleGroup = $record->getElement($moduleGroupItem->elementId);
@@ -1185,10 +1207,14 @@ class Packages extends Component
                         $unit = $record->getElement($unitItem->elementId);
                         $result = $record->getUnitResult($unit->id);
                         $resultEvidence = [];
+                        $resultComments = [];
 
                         if ($result) {
                             foreach ($result->resultEvidence as $asset) {
                                 $resultEvidence[] = $asset->filename;
+                            }
+                            foreach ($result->resultComments as $comment) {
+                                $resultComments[] = '[ ' . ($comment->date ? $comment->date->format('d/m/Y') : '-') . '] ' . $comment->comment;
                             }
                         }
 
@@ -1204,6 +1230,7 @@ class Packages extends Component
                             $result && $result->resultLocation ? $result->resultLocation : '-',
                             $result && $result->resultNarrative ? strip_tags($result->resultNarrative) : '-',
                             $result && count ($resultEvidence) ? implode(',', $resultEvidence) : '-',
+                            $result && count ($resultComments) ? implode(',', $resultComments) : '-',
                             $result ? $result->resultStatus : '-',
                             $result && $result->resultEndorsedDate ? $result->resultEndorsedDate->format('d/m/Y') : '-'
                         ];
