@@ -82,7 +82,7 @@
         <select style="width:100%" multiple class="js-select2" name="fields[companyPrimaryManagers][]" id="companyPrimaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
-                        {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+                  {% if entry is defined and userEntry.id in entry.companyPrimaryManagers.ids() %} selected="selected"{% endif %}>{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>
@@ -92,18 +92,18 @@
         <select style="width:100%" multiple class="js-select2" name="fields[companySecondaryManagers][]" id="companySecondaryManagers">
             {% for userEntry in userCompanyManagers %}
                 <option value="{{ userEntry.id }}"
-                        {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected{% endif %}">{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
+                  {% if entry is defined and userEntry.id in entry.companySecondaryManagers.ids() %} selected="selected"{% endif %}>{{ userEntry.id }} - {{ userEntry.getFullName() }}</option>
             {% endfor %}
         </select>
     </div>
     {% set taskbookEntries = craft.entries.section('taskbooks').limit(null) %}
     <div class="field--wrapper">
-        <label for="companySecondaryManagers">Company {{ taskbookLabel|pluralize|lower }}:</label>
+        <label for="companyTaskbooks">Company {{ taskbookLabel|pluralize|lower }}:</label>
         <input type="hidden" name="fields[companyTaskbooks]" value="" />
         <select style="width:100%" multiple class="js-select2" name="fields[companyTaskbooks][]" id="companyTaskbooks">
             {% for taskbookEntry in taskbookEntries %}
                 <option value="{{ taskbookEntry.id }}"
-                        {% if entry is defined and taskbookEntry.id in entry.companyTaskbooks.ids() %} selected="selected{% endif %}">{{ taskbookEntry.title }}</option>
+                  {% if entry is defined and taskbookEntry.id in entry.companyTaskbooks.ids() %} selected="selected"{% endif %}>{{ taskbookEntry.title }}</option>
             {% endfor %}
         </select>
     </div>
@@ -118,7 +118,7 @@
         <button class="button primary-bg" type="submit">Save company</button>
     </div>
 </form>
-    {% if entry %}
+    {% if entry is defined and entry.id %}
         <div class="page-content">
         {% set companyReviewers = craft.users.relatedTo({targetElement: entry, field: 'userTaskbookCompanies'}).all() %}
         <h2>Company Reviewers</h2>

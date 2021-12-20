@@ -512,6 +512,10 @@ class Users extends Component
         if (Lantra::$app->packages->isPackageManager($subordinateId, $manager)) {
             return true;
         }
+        ## check whether can external review
+        if (Lantra::$app->packages->isExternalReviewer($subordinateId, $manager)) {
+            return true;
+        }
         $subordinateIds = $this->getManagerSubordinateIds($manager, $includeHierarchy);
         if (!count($subordinateIds)) {
             return false;

@@ -9,7 +9,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 50
       -
         fieldUid: ca3cc99a-ddf3-4e81-b35c-37d0ecd39ebb # User Team
         instructions: null
@@ -18,7 +18,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 50
       -
         fieldUid: dbbf1f49-3b86-4c6d-aa5a-4170483a35f1 # User Role
         instructions: null
@@ -27,7 +27,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 25
       -
         fieldUid: af392c27-30aa-4dde-a30c-fd69e3dd665e # Manager Level
         instructions: null
@@ -36,7 +36,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 25
       -
         fieldUid: e39c693b-aafd-4f9c-8e82-53aa5da6694e # User Read Only
         instructions: null
@@ -45,7 +45,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 25
       -
         fieldUid: 8df69537-0612-4b94-af60-c27617fddb4d # Manager Read Only
         instructions: null
@@ -54,7 +54,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 25
       -
         fieldUid: 6e432459-1ae7-4301-a7cd-e23c574bd569 # User Dummy Email
         instructions: null
@@ -63,7 +63,7 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 25
       -
         fieldUid: 27f36190-a4c4-4f11-b546-5e4ffb5efc06 # User Licence Source
         instructions: null
@@ -72,7 +72,16 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
+        width: 50
+      -
+        fieldUid: f5386b5d-29df-466e-a989-716777b0a655 # User Privacy
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 25
     name: Structure
     sortOrder: 1
   -
@@ -173,19 +182,6 @@ tabs:
         type: craft\fieldlayoutelements\CustomField
         warning: null
         width: 50
-    name: 'Taskbook Reviews'
-    sortOrder: 3
-  -
-    elements:
-      -
-        fieldUid: 6dba4616-7b94-4aa0-b8f2-a9f278b1ca8e # External Taskbooks
-        instructions: null
-        label: null
-        required: false
-        tip: null
-        type: craft\fieldlayoutelements\CustomField
-        warning: null
-        width: 100
       -
         fieldUid: 7e30bff3-999f-48c7-b8aa-5f3498fba501 # External Companies
         instructions: null
@@ -194,9 +190,18 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 100
-    name: 'External (EQA)'
-    sortOrder: 4
+        width: 50
+      -
+        fieldUid: 6dba4616-7b94-4aa0-b8f2-a9f278b1ca8e # External Taskbooks
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+    name: 'Taskbook Reviews'
+    sortOrder: 3
   -
     elements:
       -
@@ -209,7 +214,7 @@ tabs:
         warning: null
         width: 100
     name: Payments
-    sortOrder: 5
+    sortOrder: 4
   -
     elements:
       -
@@ -222,7 +227,7 @@ tabs:
         warning: null
         width: 100
     name: 'Custom Scheme User Fields'
-    sortOrder: 6
+    sortOrder: 5
   -
     elements:
       -
@@ -334,4 +339,4 @@ tabs:
         warning: null
         width: 100
     name: Legacy
-    sortOrder: 7
+    sortOrder: 6

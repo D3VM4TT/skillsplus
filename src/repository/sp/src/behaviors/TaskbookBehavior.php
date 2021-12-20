@@ -18,7 +18,25 @@ use lantra\sp\helpers\LantraHelper;
 
 class TaskbookBehavior extends Behavior
 {
+    private $_moduleGroups = [];
+
     /**
+     * Return module groups by type.
+     *
+     * @param string $type
+     * @return array
+     */
+    public function moduleGroups($type = 'all')
+    {
+        if (!isset($this->_moduleGroups[$type])) {
+            $this->_moduleGroups[$type] = $this->_moduleGroups($type);
+        }
+        return $this->_moduleGroups[$type];
+    }
+
+    /**
+     * Return the module group matrix block by id.
+     *
      * @param $categoryId
      * @return null
      */
@@ -33,27 +51,8 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
-     * @return array
-     */
-    public function moduleGroups($type = 'all')
-    {
-        $modulesGroups = [];
-        foreach ($this->owner->taskbookModuleGroups as $block) {
-            if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
-                $category = $block->moduleGroup->one();
-                $modulesGroups[] = [
-                    'category' => $category,
-                    'mandatory' => $block->moduleGroupMandatory,
-                    'credit' => $block->moduleGroupCredit,
-                    'level' => $block->moduleGroupLevel,
-                    'block' => $block
-                ];
-            }
-        }
-        return $modulesGroups;
-    }
-
-    /**
+     * Return array of module group categories.
+     *
      * @param string $type
      * @return array
      */
@@ -67,6 +66,8 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
+     * Return count of module group credits.
+     *
      * @param string $type
      * @return int
      */
@@ -82,6 +83,8 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
+     * Return count of mandatory module groups.
+     *
      * @return int
      */
     public function countMandatory()
@@ -90,6 +93,8 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
+     * Return count of optional module groups.
+     *
      * @return int
      */
     public function countOptional()
@@ -98,6 +103,8 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
+     * Return count of mandatory credits.
+     *
      * @return int
      */
     public function creditsMandatory()
@@ -106,10 +113,36 @@ class TaskbookBehavior extends Behavior
     }
 
     /**
+     * Return count of optional credits.
+     *
      * @return int
      */
     public function creditsOptional()
     {
         return $this->moduleGroupCredits('optional');
+    }
+
+    /**
+     * Cache the module groups.
+     *
+     * @param string $type
+     * @return array
+     */
+    private function _moduleGroups($type = 'all')
+    {
+        $modulesGroups = [];
+        foreach ($this->owner->taskbookModuleGroups as $block) {
+            if ($type == 'all' || ($type == 'mandatory' && $block->moduleGroupMandatory) || ($type == 'optional' && !$block->moduleGroupMandatory))  {
+                $category = $block->moduleGroup->one();
+                $modulesGroups[] = [
+                    'category' => $category,
+                    'mandatory' => $block->moduleGroupMandatory,
+                    'credit' => $block->moduleGroupCredit,
+                    'level' => $block->moduleGroupLevel,
+                    'block' => $block
+                ];
+            }
+        }
+        return $modulesGroups;
     }
 }

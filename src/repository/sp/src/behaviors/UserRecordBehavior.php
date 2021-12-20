@@ -16,6 +16,8 @@ class UserRecordBehavior extends Behavior
     private $_record;
 
     /**
+     * Return user record.
+     *
      * @return null
      */
     public function getRecord()

@@ -1,0 +1,14 @@
+columnSuffix: afcgultu
+contentColumnType: boolean
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userPrivacy
+instructions: ''
+name: 'User Privacy'
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

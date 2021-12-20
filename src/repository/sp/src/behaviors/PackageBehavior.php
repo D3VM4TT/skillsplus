@@ -19,7 +19,11 @@ use lantra\sp\helpers\RecordHelper;
 
 class PackageBehavior extends Behavior
 {
+    private $_moduleGroups = [];
+
     /**
+     * Returns the package taskbook element.
+     *
      * @return null
      */
     public function getTaskbook()
@@ -28,6 +32,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the taskbook matrix block for this category.
+     *
      * @param $categoryId
      * @return null
      */
@@ -40,6 +46,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns a module group array with various info such as category element, whether the module group is mandatory and at what level the user is completing (if applicable).
+     *
      * @param $categoryId
      * @return mixed|null
      */
@@ -54,10 +62,24 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns an array of module group arrays (see above) grouped by type (all, unpaid, optional, mandatory, paid).
+     *
      * @param string $type
      * @return array
      */
     public function moduleGroups($type = 'all')
+    {
+        if (!isset($this->_moduleGroups[$type])) {
+            $this->_moduleGroups[$type] = $this->_moduleGroups($type);
+        }
+        return $this->_moduleGroups[$type];
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    private function _moduleGroups($type = 'all')
     {
         if ($type == 'available') {
             return $this->availableModuleGroups();
@@ -89,6 +111,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns array containing all the category element ids contained with the package.
+     *
      * @return array
      */
     public function moduleGroupIds($type = 'all')
@@ -97,6 +121,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns array of category elements by type.
+     *
      * @return null
      */
     public function moduleGroupCategories($type = 'all')
@@ -109,6 +135,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if the category element is included in the current package.
+     *
      * @param $categoryId
      * @return bool
      */
@@ -118,6 +146,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns an array of the optional category elements.
+     *
      * @return array
      */
     public function getOptionalModuleGroups()
@@ -130,6 +160,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the matching matrix block.
+     *
      * @param $categoryId
      * @return mixed|null
      */
@@ -145,6 +177,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the total cost of unpaid module groups (i.e. that have been added but not yet paid).
+     *
      * @return int
      */
     public function unpaidCost()
@@ -157,6 +191,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns array of data for PayPal transaction.
+     *
      * @return array
      */
     public function unpaidPayPalParams()
@@ -172,6 +208,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Sets module groups as paid within a package.
+     *
      * @param $moduleGroupIds
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
@@ -189,6 +227,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if package has available module groups.
+     *
      * @return bool
      */
     public function hasAvailable()
@@ -197,6 +237,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns available module group categories with level and credit values.
+     *
      * @return array
      */
     public function availableModuleGroups()
@@ -218,6 +260,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns array of module groups categories.
+     *
      * @return null
      */
     public function availableModuleGroupCategories()
@@ -235,6 +279,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns array of module groups categories for resit.
+     *
      * @return null
      */
     public function resitModuleGroupCategories()
@@ -250,6 +296,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns assessment matrix block by category id.
+     *
      * @param int $moduleGroupId
      * @return null
      */
@@ -265,6 +313,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if package is complete.
+     *
      * @param bool $includeOptional
      * @return mixed
      */
@@ -275,6 +325,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns total credits of package module groups.
+     *
      * @param bool $level
      * @return int
      */
@@ -291,6 +343,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns count and info about complete module groups.
+     *
      * @return array
      */
     public function complete()
@@ -324,6 +378,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns count and info about required module groups.
+     *
      * @param bool $includeOptional
      * @return array|bool
      */
@@ -349,6 +405,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if sufficient credits have been selected for the package.
+     *
      * @return array
      */
     public function creditsSelected()
@@ -365,6 +423,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is an assessor.
+     *
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool
@@ -375,6 +435,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is a reviewer.
+     *
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool
@@ -385,6 +447,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is a completer.
+     *
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool
@@ -395,16 +459,32 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is external reviewer.
+     *
+     * @param user|null $user
+     * @param bool $includeAdmin
+     * @return bool
+     */
+    public function isExternal(User $user = null, $includeAdmin = false)
+    {
+        return $this->isPackageManager($user, $includeAdmin, 'external');
+    }
+
+    /**
+     * Returns true if $user is manager.
+     *
      * @param user|null $user
      * @param bool $includeAdmin
      * @return bool
      */
     public function isManager(User $user = null, $includeAdmin = false)
     {
-        return $this->isAssessor($user, $includeAdmin) || $this->isReviewer($user, $includeAdmin) || $this->isCompleter($user, $includeAdmin);
+        return $this->isExternal($user, $includeAdmin) || $this->isAssessor($user, $includeAdmin) || $this->isReviewer($user, $includeAdmin) || $this->isCompleter($user, $includeAdmin);
     }
 
     /**
+     * Returns steps for which this $user is a manager.
+     *
      * @param user|null $user
      * @return array
      */
@@ -421,6 +501,28 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user can assign reviewers.
+     *
+     * @param user|null $user
+     * @return bool
+     */
+    public function canExternal(User $user = null)
+    {
+        $eqa = LantraHelper::getUser($user);
+        if (!Lantra::$app->packages->isExternalReviewer($this->owner->authorId, $eqa)) {
+            return false;
+        }
+        $taskbook = $this->getTaskbook();
+        $externalTaskbookIds = $eqa->userExternalTaskbooks ? $eqa->userExternalTaskbooks->ids() : [];
+        if (!$taskbook || !count($eqa->userExternalTaskbooks)) {
+            return false;
+        }
+        return in_array($taskbook->id, $externalTaskbookIds);
+    }
+
+    /**
+     * Returns true if $user can assign reviewers.
+     *
      * @param user|null $user
      * @return bool
      */
@@ -436,6 +538,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user can assign specific step.
+     *
      * @param $step
      * @param user|null $user
      * @return bool
@@ -464,6 +568,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns package workflow step by id.
+     *
      * @param $stepId
      * @return mixed|null
      */
@@ -479,6 +585,7 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the package workflow element.
      *
      */
     public function getWorkflow()
@@ -487,6 +594,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Shortcut to save the package element.
+     *
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
@@ -497,6 +606,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Send a package comment.
+     *
      * @param $comment
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
@@ -509,6 +620,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Adds a log message to the package.
+     *
      * @param $userMessage
      * @param string $adminMessage
      * @throws \Throwable
@@ -534,6 +647,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if the package has been locked.
+     *
      * @return bool
      */
     public function isLocked()
@@ -542,6 +657,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if the package is complete.
+     *
      * @return bool
      */
     public function isStatusComplete()
@@ -550,6 +667,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Translates the package status for templates.
+     *
      * @return string
      */
     public function statusLabel()
@@ -568,6 +687,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is the review user for specific $step.
+     *
      * @param User $user
      * @param SuperTableBlockElement $step
      * @param bool $includeAdmin
@@ -585,6 +706,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns all possible step managers.
+     *
      * @param SuperTableBlockElement $step
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\UserQuery|null
      */
@@ -607,6 +730,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the date when review was submitted.
+     *
      * Get the complete date
      *
      * @return null
@@ -654,6 +779,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if a next step exists.
+     *
      * @return bool
      */
     public function hasNextStep()
@@ -662,7 +789,7 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     *
+     * Returns count of total steps.
      */
     public function getTotalSteps()
     {
@@ -670,6 +797,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if next step has been assigned.
+     *
      * @return bool
      */
     public function isNextStepAssigned()
@@ -681,6 +810,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns the next step reviewer if one exists.
+     *
      * @return null
      */
     public function getNextStepReviewer()
@@ -777,6 +908,8 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * Returns true if $user is a package manager.
+     *
      * @param User $user
      * @param bool $includeAdmin
      * @param string $type assessment|review|complete

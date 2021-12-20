@@ -1,0 +1,81 @@
+{% do craft.lantra.requirePermission('editTaskbooks') %}
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Taskbooks > Structure" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set taskbooks = craft.entries.section('taskbooks').all %}
+
+{% block content %}
+
+    <section class="page">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <h2>Taskbooks</h2>
+        </div>
+        <div class="page-content">
+
+            {% for taskbook in taskbooks %}
+                <h3>{{ taskbook.title }}</h3>
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th>
+                            Module Group ID
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Module ID
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Unit ID
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                    </tr>
+                    </thead>
+                    {% for moduleGroup in taskbook.moduleGroups() %}
+                        {% set category = moduleGroup.category %}
+                        {% set modules = craft.entries.section('modules').relatedTo(category).all() %}
+                        {% for module in modules %}
+                            {% for unitGroup in module.moduleUnitGroups %}
+                                {% for unit in unitGroup.unitEntries %}
+                                    <tr>
+                                        <td>
+                                            {{ category.id }}
+                                        </td>
+                                        <td>
+                                            {{ category.title }}
+                                        </td>
+                                        <td>
+                                            {{ module.id }}
+                                        </td>
+                                        <td>
+                                            {{ module.title }}
+                                        </td>
+                                        <td>
+                                            {{ unit.id }}
+                                        </td>
+                                        <td>
+                                            {{ unit.title }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+                <p></p>
+                <p></p>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

@@ -405,6 +405,10 @@ $(document).ready(function () {
             var data = {userId: $(this).data('id')};
             reload = true;
         }
+        else if (action == 'users/privacy-confirm') {
+            var data = {};
+            $('#privacy-modal').removeClass('modal-open');
+        }
         else if (action == 'users/delete-user') {
             if (!confirm('Are you sure you want to delete this user?')) {
                 return false;
@@ -470,8 +474,9 @@ $(document).ready(function () {
                 if (reload) {
                     window.location = window.location;
                 }
-                alert(response.message);
-
+                if (response.message) {
+                    alert(response.message);
+                }
                 if (action == 'entries/endorse-evidence') {
                     endorseRow(link);
                 }
@@ -749,7 +754,7 @@ $(document).ready(function () {
     var cpdWrapper = $('#cpd-wrapper');
     if (cpdWrapper.data('ref')) {
         var moduleLink = $('.tabs a[href="#' + cpdWrapper.data('ref') + '"]'),
-            moduleGroupLink = $('a[href="#' + moduleLink.closest('div.groups-tab-group').attr('id') + '"]'),
+            moduleGroupLink = $('a[href="#' + moduleLink.data('mgref') + '"]'),
             tabContainer = moduleGroupLink.closest('div.tab-container');
         if (tabContainer.length) {
             tabContainer.find('a.jobroleEndorseExpand').click();

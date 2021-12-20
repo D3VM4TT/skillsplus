@@ -34,7 +34,7 @@
                 <td>
                     Please select:
                     <select id="resultOutcome" name="fields[resultOutcome]">
-                        <option value="" data-status="{{ resultEntry is defined ? resultEntry.resultStatus : 'draft' }}">Save Progress/Comments</option>
+                        <option value="" data-status="{{ resultEntry is defined and resultEntry ? resultEntry.resultStatus : 'draft' }}">Save Progress/Comments</option>
                         <option value="1" data-status="endorsed">{{ craft.lantra.setting('labelResultOutcome1') }}</option>
                         <option value="0" data-status="draft">{{ craft.lantra.setting('labelResultOutcome0') }}</option>
                     </select>

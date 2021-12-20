@@ -38,12 +38,24 @@ class Structure extends Component
     /**
      * @param $event
      * @param $entry
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function onSaveCompany($event, $entry)
     {
         $this->saveCompanyChildren($entry);
         ## delete hierarchy cache
         Lantra::$app->structure->clearHierarchyCache();
+    }
+
+    /**
+     * @param $event
+     * @param $entry
+     */
+    public function onDeleteCompany($event, $entry)
+    {
+        Lantra::$app->results->deleteCompanyResults($entry->id);
     }
 
     /**

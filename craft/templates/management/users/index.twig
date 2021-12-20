@@ -69,7 +69,7 @@
                     <a href="?sort=userCompanyName&order={{ order == 'desc' ? 'asc' : 'desc' }}">Company</a>
                 {% case 'userLocation' %}
                     <a href="?sort=userLocation&order={{ order == 'desc' ? 'asc' : 'desc' }}">Location</a>
-                {% case 'role' %}
+                {% case 'userRole' %}
                     <a href="?sort=role&order={{ order == 'desc' ? 'asc' : 'desc' }}">Role</a>
                 {% case 'lastLogin' %}
                     Last Login
@@ -103,7 +103,7 @@
                                 <p class="td-title-responsive">Company: </p>{{ company ? company.title }}
                             {% case 'userLocation' %}
                                 <p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}
-                            {% case 'role' %}
+                            {% case 'userRole' %}
                                 <p class="td-title-responsive">Role: </p>
                                 {% if user.userRole.count %}
                                     {% for role in user.userRole %}{{ role.title }}{% if loop.index != loop.length %}, {% endif %}{% endfor %}

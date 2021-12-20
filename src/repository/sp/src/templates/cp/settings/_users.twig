@@ -61,3 +61,18 @@
     rows:           settings.userEditCustomFields
 }) }}
 
+{{ forms.lightswitchField ({
+    label:			"User Privacy Required?",
+    id:				"userPrivacyConfirm",
+    name:			"userPrivacyConfirm",
+    on:		        settings.userPrivacyConfirm == 1
+}) }}
+
+{{ forms.textareaField ({
+    label:			"User Privacy Message",
+    id:				"userPrivacyMessage",
+    name:			"userPrivacyMessage",
+    value:		    settings.userPrivacyMessage,
+    rows:           4,
+    cols:           50
+}) }}

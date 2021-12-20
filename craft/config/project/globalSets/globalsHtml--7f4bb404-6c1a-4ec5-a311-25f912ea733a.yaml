@@ -5,27 +5,36 @@ fieldLayouts:
         elements:
           -
             fieldUid: 5df92654-19a4-446e-a578-2b359d4bc88f # Taskbook Page Create
-            instructions: null
-            label: null
-            required: false
+            instructions: 'Shown when users are purchasing/selecting a new taskbook.'
+            label: 'Taskbook Create'
+            required: ''
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
           -
             fieldUid: f4f743d8-8e66-4bb5-920a-01bd366d6ba2 # Taskbook Page Current
-            instructions: null
-            label: null
-            required: false
+            instructions: 'Shown above the table of users taskbooks.'
+            label: 'Taskbook Current '
+            required: ''
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
           -
             fieldUid: 840f8f48-be42-4008-ae9e-1fa132183769 # Taskbook Page New
-            instructions: null
-            label: null
-            required: false
+            instructions: 'Shown above unpaid taskbooks and PayPal button.'
+            label: 'Taskbook New'
+            required: ''
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 340df041-c315-4178-b695-9e98e8581d7d # Taskbook Page New Disabled
+            instructions: 'Shown if new taskbooks is disabled in Lantra Skills+ settings.'
+            label: 'Taskbook New (disabled)'
+            required: ''
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null

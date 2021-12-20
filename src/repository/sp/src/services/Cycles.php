@@ -31,13 +31,21 @@ class Cycles extends Component
      */
     public function getCycleResult($userId = null, $moduleId, CyclePeriod $cycle, $create = false)
     {
+        if (null == $moduleEntry = Craft::$app->entries->getEntryById($moduleId)) {
+            return null;
+        }
         if ($cycle->finishDate) {
             $postDate= ['and', '>= '.$cycle->startDate->format('Y-m-d H:i'), '<= '.$cycle->finishDate->format('Y-m-d H:i')];
         } else {
             $postDate = '<= '.$cycle->startDate->format('Y-m-d H:i');
         }
-
-        return Lantra::$app->results->getModuleResult($userId, $moduleId, $create, $postDate);
+        $companyId = null;
+        if ($moduleEntry->isCompany()) {
+            $user = Craft::$app->users->getUserById($userId);
+            $company = Lantra::$app->users->userCompany($user);
+            $companyId = $company ? $company->id : null;
+        }
+        return Lantra::$app->results->getModuleResult($userId, $moduleId, $create, $postDate, $companyId);
     }
 
     /**

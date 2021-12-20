@@ -10,6 +10,10 @@
     {% set level = packageModuleGroup.level %}
 {% endif %}
 
+{% if isExternalReviewer and not package.isComplete %}
+    {% set readOnly = true %}
+{% endif %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -242,7 +246,7 @@
                                 <td>{{ totalEndorsed ~ '/' ~ totalUnits }}</td>
                             {% endif %}
                             <td style="text-align: right;">
-                                {% if not package.packageStatus == 'complete' or not package.taskbook.taskbookIsFree %}
+                                {% if package.taskbook.taskbookIsFree or not package.packageStatus == 'complete' %}
                                     <a href="/confirm?controller=packages&method=remove-module-group&packageId={{ package.id }}&moduleGroupId={{ moduleGroup.category.id }}">Remove</a>
                                 {% endif %}
                             </td>
@@ -307,13 +311,19 @@
                         <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/taskbooks/single?payment=true&packageId={{ package.id }}">Pay Now</a>
                     </p>
                 {% endif %}
+
+                <p style="text-align: right">
+                    <a class="button no-shadow primary-bg" href="/sp/packages/export-package/{{ package.id }}">Export Results</a>
+                </p>
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}evidence">
             </div>
             <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}reviews">
                 {% include '_includes/taskbooks/packageReviews' with {admin:false} %}
                 {% if package.canAssign(currentUser) or package.isManager(currentUser, true) %}
-                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage Reviewers</a>
+                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}">Manage {{ taskbookLabel }}</a>
+                    <a class="button no-shadow primary-bg" href="/management/taskbooks/manage/{{ package.id }}/review">{{ taskbookLabel }} Reviews</a>
+
                 {% endif %}
             </div>
             {% if package.packageLog|length %}

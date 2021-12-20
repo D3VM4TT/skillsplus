@@ -1,4 +1,12 @@
 {% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Maintenance Mode",
+    id:				"maintenanceMode",
+    name:			"maintenanceMode",
+    on:		        settings.maintenanceMode == 1
+}) }}
+
 {{ forms.lightswitchField ({
     label:			"Scheme Teams",
     instructions:   "Enable teams for this scheme?",

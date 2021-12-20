@@ -15,6 +15,8 @@ class MagicTitleBehavior extends Behavior
     public $owner;
 
     /**
+     * Returns element title with code in brackets if applicable (modules, taskbooks, units, module groups)
+     *
      * @return mixed
      */
     public function magicTitle()

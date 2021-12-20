@@ -1,9 +1,9 @@
-columnSuffix: krfnpvlj
+columnSuffix: omgbamdp
 contentColumnType: string
-fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
-handle: externalStatus
+fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
+handle: reportFormat
 instructions: ''
-name: 'External Status'
+name: 'Report Format'
 searchable: false
 settings:
   optgroups: true
@@ -12,10 +12,10 @@ settings:
       __assoc__:
         -
           - label
-          - 'Not Selected'
+          - CSV
         -
           - value
-          - notSelected
+          - csv
         -
           - default
           - '1'
@@ -23,10 +23,10 @@ settings:
       __assoc__:
         -
           - label
-          - Selected
+          - Excel
         -
           - value
-          - selected
+          - xlsx
         -
           - default
           - ''
@@ -34,10 +34,10 @@ settings:
       __assoc__:
         -
           - label
-          - Sampled
+          - PDF
         -
           - value
-          - sampled
+          - pdf
         -
           - default
           - ''

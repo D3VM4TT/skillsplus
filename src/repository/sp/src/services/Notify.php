@@ -328,12 +328,14 @@ class Notify extends Component
             return null;
         }
         $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
+        $user = $resultEntry->author;
 
         $subject = $this->getNotifySetting('subjectCycleComplete', 'CPD Cycle Complete');
         $variables = [
             'module'    => $moduleEntry,
             'result'    => $resultEntry,
-            'cycle'     => $cycle
+            'cycle'     => $cycle,
+            'user'      => $user
         ];
         $template = $this->getNotifySetting('cycleComplete', "{{ module.title }} {{ cycle.name }} has been completed.");
         $message = Craft::$app->view->renderString($template, $variables);

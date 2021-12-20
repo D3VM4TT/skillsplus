@@ -254,6 +254,9 @@ class Plugin extends BasePlugin
                 if ($entry->sectionId == $this->sectionId('results')) {
                     Lantra::$app->results->onDeleteResult($event, $entry);
                 }
+                if ($entry->sectionId == $this->sectionId('companies')) {
+                    Lantra::$app->structure->onDeleteCompany($event, $entry);
+                }
             });
 
         Event::on(
@@ -326,6 +329,10 @@ class Plugin extends BasePlugin
             }
         );
 
+        ## check for maintenance mode
+        if (Craft::$app->request->isSiteRequest && Lantra::$app->settings->getSetting('maintenanceMode')) {
+            $this->maintenanceMode();
+        }
     }
 
     /**
@@ -443,6 +450,7 @@ class Plugin extends BasePlugin
             'sp/users/restore-user'                     => 'sp/users/restore-user',
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
+            'sp/users/privacy-confirm'                  => 'sp/users/privacy-confirm',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 
@@ -454,6 +462,7 @@ class Plugin extends BasePlugin
             'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
             'sp/packages/update-package'                => 'sp/packages/update-package',
             'sp/packages/reset-package/<entryId>'       => 'sp/packages/reset-package',
+            'sp/packages/export-package/<entryId>'      => 'sp/packages/export-package',
             'sp/packages/delete-results'                => 'sp/packages/delete-results',
             'sp/packages/load-template'                 => 'sp/packages/load-template',
             'sp/packages/external-status'               => 'sp/packages/external-status',
@@ -507,11 +516,14 @@ class Plugin extends BasePlugin
     }
 
     /**
-     *
+     * @throws \yii\base\InvalidConfigException
      */
-    private function _runMigrations()
+    protected function maintenanceMode()
     {
-
+        $maintenanceUrl = '/503';
+        if (Craft::$app->request->getUrl() != $maintenanceUrl) {
+            Craft::$app->response->redirect($maintenanceUrl);
+        }
     }
 }
 

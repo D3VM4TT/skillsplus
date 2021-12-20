@@ -897,6 +897,19 @@ class LantraVariable
     }
 
     /**
+     * Check whether this user can submit external reviews
+     *
+     * @param null $subordinateId
+     * @param bool $managerId
+     * @return bool
+     */
+    public function canExternal($subordinateId = null, $managerId = null)
+    {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return Lantra::$app->packages->canExternal($subordinateId, $manager);
+    }
+
+    /**
      * @param null $userId
      * @return bool
      */
@@ -994,6 +1007,17 @@ class LantraVariable
     {
         $reviewer = (is_null($reviewerId)) ? null : $this->getUser($reviewerId);
         return Lantra::$app->packages->isCompleter($package, $reviewer, $includeAdmin);
+    }
+
+    /**
+     * @param null $subordinateId
+     * @param null $managerId
+     * @return bool
+     */
+    public function isExternalReviewer($subordinateId = null, $managerId = null)
+    {
+        $manager = (is_null($managerId)) ? null : $this->getUser($managerId);
+        return Lantra::$app->packages->isExternalReviewer($subordinateId, $manager);
     }
 
     /**
@@ -1404,14 +1428,17 @@ class LantraVariable
      * @param $unitId
      * @param $cycle
      * @param $moduleResultId
-     * @return mixed
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
-    public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId)
+    public function recurringResultsQuery($userId, $unitId, $cycle, $moduleResultId, $companyId = null)
     {
         if (!$cycle) {
             return null;
         }
-        return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId);
+        return Lantra::$app->results->getRecurringResultsQuery($userId, $unitId, $cycle, $moduleResultId, $companyId);
     }
 
     /**

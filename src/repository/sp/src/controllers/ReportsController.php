@@ -106,11 +106,11 @@ class ReportsController extends BaseController
             $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $asset->filename;
             if (!is_file($assetFilePath)) {
                 throw new HttpException(404, "Asset file does not exist.");
-                return;
             }
-            return Craft::$app->response->sendFile($assetFilePath);
+            Craft::$app->response->sendFile($assetFilePath);
+            return;
         }
-        $this->_returnError($response['message']);
+        return $this->_returnError($response['message']);
     }
 
     /**

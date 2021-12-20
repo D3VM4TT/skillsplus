@@ -22,6 +22,9 @@ use lantra\sp\Plugin as Lantra;
 use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Packages extends Component
 {
     /**
@@ -425,6 +428,19 @@ class Packages extends Component
     }
 
     /**
+     * @param $subordinateId
+     * @param User|null $manager
+     * @return bool
+     */
+    public function isExternalReviewer($subordinateId, User $manager = null)
+    {
+        if (!Lantra::$app->users->isExternal($manager)) {
+            return false;
+        }
+        $externalUserIds = $this->getExternalUserIds($manager);
+        return in_array($subordinateId, $externalUserIds);
+    }
+    /**
      * @param $packageId
      * @return null
      * @throws \Twig\Error\LoaderError
@@ -596,7 +612,7 @@ class Packages extends Component
      */
     public function completeExternal($package)
     {
-        $package->setFieldValue('externalStatus', 'submitted');
+        $package->setFieldValue('externalStatus', 'sampled');
         $package->save();
     }
 
@@ -766,12 +782,39 @@ class Packages extends Component
 
     /**
      * @param $package
-     * @return array
+     * @param string $return
+     * @return array|\craft\base\ElementInterface[]|Entry[]|int[]
      */
-    public function getPackageUnits($package)
+    public function getPackageUnits($package, $return = 'ids')
     {
-        $moduleEntries = $this->getPackageModuleEntries($package);
-        return Lantra::$app->modules->moduleUnits($moduleEntries);
+        $moduleEntryIds = $this->getPackageModuleIds($package);
+        $criteria = Entry::find();
+        $criteria->section = 'units';
+        $criteria->relatedTo(['sourceElement' => $moduleEntryIds, 'field' => 'moduleUnitGroups.unitEntries']);
+        return $return == 'ids' ?  $criteria->ids() : $criteria->all();
+    }
+
+    /**
+     * @param $package
+     * @return mixed
+     */
+    public function getPackageUnitIds($package)
+    {
+        return $this->getPackageUnits($package, 'ids');
+    }
+
+    /**
+     * @param $package
+     * @param string $return
+     * @return array|\craft\base\ElementInterface[]|Entry[]|int[]
+     */
+    public function getPackageModuleEntries($package, $return = 'all')
+    {
+        $categoryIds = $this->getPackageModuleGroupIds($package);
+        $criteria = Entry::find();
+        $criteria->section = 'modules';
+        $criteria->relatedTo(['targetElement' => $categoryIds, 'field' => 'moduleGroup']);
+        return $return == 'ids' ?  $criteria->ids() : $criteria->all();
     }
 
     /**
@@ -779,13 +822,9 @@ class Packages extends Component
      * @param $package
      * @return array
      */
-    public function getPackageModuleEntries($package)
+    public function getPackageModuleIds($package)
     {
-        $categoryIds = $this->getPackageModuleGroupIds($package);
-        $criteria = Entry::find();
-        $criteria->section = 'modules';
-        $criteria->relatedTo(['targetElement' => $categoryIds, 'field' => 'moduleGroup']);
-        return $criteria->all();
+        return $this->getPackageModuleEntries($package, 'ids');
     }
 
     /**
@@ -796,8 +835,8 @@ class Packages extends Component
     {
         $categoryIds = [];
         foreach($package->packageModuleGroups->all() as $moduleGroupBlock) {
-            if (null != $moduleGroup = $moduleGroupBlock->moduleGroup->one())  {
-                $categoryIds[] = $moduleGroup->id;
+            if (null != $moduleGroupId = $moduleGroupBlock->moduleGroup->one()->id)  {
+                $categoryIds[] = $moduleGroupId;
             }
         }
         return $categoryIds;
@@ -904,7 +943,7 @@ class Packages extends Component
         }
         ## handle date filters
         $df = $dateFrom ? $this->convertDate($dateFrom) : false;
-        $dt = $dateTo ? $this->convertDate($dateTo) : false;
+        $dt = $dateTo ? $this->convertDate($dateTo, 12, 59, 59) : false;
         if ($df && $dt) {
             $criteria->dateCreated = ['and','>= '. $df, '<= '. $dt];
         }
@@ -919,16 +958,19 @@ class Packages extends Component
 
     /**
      * @param string $dateString
-     * @return DateTime|false
+     * @param string $h
+     * @param string $m
+     * @param string $s
+     * @return string|void
      * @throws \Exception
      */
-    private function convertDate($dateString = '')
+    private function convertDate($dateString = '', $h = '00', $m = '00', $s = '00')
     {
         $parts = explode('/', $dateString);
         if (count($parts) != 3) {
             return;
         }
-        return DateTimeHelper::toDateTime($parts[2] . '-' . $parts[1] . '-' . $parts[0])->format(\DateTime::ATOM);
+        return DateTimeHelper::toDateTime($parts[2] . '-' . $parts[1] . '-' . $parts[0])->setTime($h, $m, $s)->format(\DateTime::ATOM);
     }
 
     /**
@@ -939,8 +981,10 @@ class Packages extends Component
      */
     public function getRelatedPackageIds(User $assessor, $type = null, $name = null)
     {
+        $isAdmin = Lantra::$app->users->isLantraAdmin($assessor);
+
         ## lantra admin sees all packages
-        if (Lantra::$app->users->isLantraAdmin($assessor)) {
+        if ($isAdmin) {
             $query = Entry::find();
             $query->section = 'packages';
             $query->limit = null;
@@ -961,6 +1005,7 @@ class Packages extends Component
         if (!$type && !$name) {
             return $query ? $query->ids() : [];
         }
+
         ## filter ids by type or name
         $ids = [];
         foreach($query->all() as $packageEntry) {
@@ -968,22 +1013,27 @@ class Packages extends Component
             if (in_array($packageEntry->id, $ids)) {
                 continue;
             }
-            foreach($packageEntry->packageReviews as $packageReview) {
-                $reviewUser = $packageReview->reviewUser->one();
-                if ($reviewUser && $reviewUser->id == $assessor->id) {
-                    if ($type && $name && $packageReview->reviewStepType == $type && $packageReview->reviewStepName == $name) {
-                        $ids[] = $packageEntry->id;
-                    }
-                    elseif ($type && $packageReview->reviewStepType == $type) {
-                        $ids[] = $packageEntry->id;
-                    }
-                    elseif ($name && $packageReview->reviewStepName == $name) {
-                        $ids[] = $packageEntry->id;
-                    }
-                }
+            ## ignore complete packages
+            if (null == $nextStep = $packageEntry->getNextStep()) {
+                continue;
+            }
+            ## match both type and name or type or name
+            if (($type && $name && $nextStep->reviewStepType == $type && $nextStep->reviewStepName == $name) ||
+                ($type && $nextStep->reviewStepType == $type) ||
+                ($name && $nextStep->reviewStepName == $name)) {
+                $ids[] = $packageEntry->id;
             }
         }
         return $ids;
+    }
+
+    public function getExternalUserIds(User $eqa, $companyId = null)
+    {
+        $companyIds = $companyId ? [$companyId] : $eqa->userExternalCompanies;
+        $criteria = User::find();
+        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
+        $criteria->limit = null;
+        return $criteria->ids();
     }
 
     /**
@@ -992,12 +1042,19 @@ class Packages extends Component
      */
     public function getExternalPackageIds(User $eqa, $externalStatus = 'all', $companyId = null)
     {
-        ## get all users related to eqa companies
-        $companyIds = $companyId != 'all' ? [$companyId] : $eqa->userExternalCompanies;
-        $criteria = User::find();
-        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
-        $criteria->limit = null;
-        $userIds = $criteria->ids();
+        ## check user can eqa taskbooks
+        if (!count($eqa->userExternalTaskbooks)) {
+            return [];
+        }
+
+        ## reset company id
+        $companyId = $companyId == 'all' ? null : (int) $companyId;
+        $userIds = $this->getExternalUserIds($eqa, $companyId);
+
+        ## check users exist
+        if (!count($userIds)) {
+            return [];
+        }
 
         ## get relevant packages
         $criteria = Entry::find();
@@ -1006,16 +1063,16 @@ class Packages extends Component
             'and',
             ['targetElement' => $eqa->userExternalTaskbooks, 'field' => 'packageTaskbook']
         ];
-        if ($externalStatus == 'sampled') {
-            $criteria->externalStatus = 'sampled';
+        if ($externalStatus == 'selected') {
+            $criteria->externalStatus = 'selected';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
-        elseif ($externalStatus == 'complete') {
+        elseif ($externalStatus == 'notSelected') {
             $criteria->packageStatus = 'complete';
-            $criteria->externalStatus = 'notSampled';
+            $criteria->externalStatus = 'notSelected';
         }
-        elseif ($externalStatus == 'submitted') {
-            $criteria->externalStatus = 'submitted';
+        elseif ($externalStatus == 'sampled') {
+            $criteria->externalStatus = 'sampled';
             $relatedTo[] = ['targetElement' => $eqa->id, 'field' => 'externalAssessor'];
         }
         $criteria->relatedTo = $relatedTo;
@@ -1103,6 +1160,114 @@ class Packages extends Component
             ['targetElement' => $jobRoleIds, 'field' => 'userRole']
         ];
         return $criteria->ids();
+    }
+
+    /**
+     * @param $package
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \yii\web\HttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function exportPackage($package)
+    {
+        $filename = 'package-' . $package->id . '-' . time() . '.xlsx';
+        $record = $package->author->record;
+        $packageItem = $record->getItem($package->id);
+
+        $header = [
+            'ID',
+            'Module Group Title',
+            'Module Title',
+            'Unit Title',
+            'Unit Heading',
+            'Start Date',
+            'Finish Date',
+            'Expiry Date',
+            'Location',
+            'Narrative',
+            'Evidence',
+            'Comments',
+            'Status',
+            'Endorsed Date'
+        ];
+
+        if (getenv('SITE') == 'bics') {
+            $header = array_merge($header, ['SA Status', 'AE Status']);
+        }
+
+        $data = [$header];
+        foreach($packageItem->items as $moduleGroupItem) {
+            $moduleGroupTitle = true;
+            $moduleGroup = $record->getElement($moduleGroupItem->elementId);
+            foreach($moduleGroupItem->items as $moduleItem) {
+                $moduleTitle = true;
+                $module = $record->getElement($moduleItem->elementId);
+                foreach($moduleItem->items as $unitGroupItem) {
+                    foreach($unitGroupItem->items as $unitItem) {
+                        $unit = $record->getElement($unitItem->elementId);
+                        $result = $record->getUnitResult($unit->id);
+                        $resultEvidence = [];
+                        $resultComments = [];
+
+                        if ($result) {
+                            foreach ($result->resultEvidence as $asset) {
+                                $resultEvidence[] = $asset->filename;
+                            }
+                            foreach ($result->resultComments as $comment) {
+                                $resultComments[] = '[ ' . ($comment->date ? $comment->date->format('d/m/Y') : '-') . '] ' . $comment->comment;
+                            }
+                        }
+
+                        $row = [
+                            $unit->id,
+                            $moduleGroupTitle ? $moduleGroup->title : '',
+                            $moduleTitle ? $module->title : '',
+                            $unit->title,
+                            $unit->unitHeading,
+                            $result && $result->resultStartDate ? $result->resultStartDate->format('d/m/Y') : '-',
+                            $result && $result->resultFinishDate ? $result->resultFinishDate->format('d/m/Y') : '-',
+                            $result && $result->expiryDate ? $result->expiryDate->format('d/m/Y') : '-',
+                            $result && $result->resultLocation ? $result->resultLocation : '-',
+                            $result && $result->resultNarrative ? strip_tags($result->resultNarrative) : '-',
+                            $result && count ($resultEvidence) ? implode(',', $resultEvidence) : '-',
+                            $result && count ($resultComments) ? implode(',', $resultComments) : '-',
+                            $result ? $result->resultStatus : '-',
+                            $result && $result->resultEndorsedDate ? $result->resultEndorsedDate->format('d/m/Y') : '-'
+                        ];
+
+                        if (getenv('SITE') == 'bics') {
+                            foreach ($result->resultCustom as $r) {
+                                if ($r->customKey == 'sa_status' || $r->customKey == 'ae_status') {
+                                    $row[] = $r->customValue;
+                                }
+                            }
+                        }
+
+                        $data[] = $row;
+
+                        $moduleGroupTitle = false;
+                        $moduleTitle = false;
+                    }
+                }
+            }
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
+            $j = 0;
+            foreach ($data[$i] as $k => $v) {
+                $sheet->setCellValueByColumnAndRow($j + 1, ($i + 1), $v);
+                $j++;
+            }
+        }
+        $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        $writer = new Xlsx($spreadsheet);
+
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+        Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
     }
 
     /**

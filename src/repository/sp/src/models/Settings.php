@@ -27,6 +27,7 @@ class Settings extends Model
     public $jobRoleEndorse                      = false;
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
+    public $maintenanceMode                     = false;
 
     public $certificateLogo                     = null;
     public $certificateHeader                   = '';
@@ -56,6 +57,7 @@ class Settings extends Model
     public $taskbookLevelLabels                 = [];
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
+    public $taskbookReset                       = true;
 
     public $labelResultOutcome0                 = 'Failed';
     public $labelResultOutcome1                 = 'Endorsed';
@@ -207,6 +209,9 @@ class Settings extends Model
     public $defaultWorkflow                     = null;
 
     public $userProfileFields                   = [];
+
+    public $userPrivacyConfirm                  = false;
+    public $userPrivacyMessage                  = 'I have read and understood the privacy policy.';
 
     public $userEditName                        = true;
     public $userEditEmail                       = true;

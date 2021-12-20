@@ -24,19 +24,27 @@ use Dompdf\Dompdf;
 
 class Reports extends Component
 {
+
     /**
      * @param $ext
      * @param $data
      * @param $reportId
-     * @throws \yii\web\HttpException
-     * @throws \yii\web\RangeNotSatisfiableHttpException
+     * @param bool $download
+     * @return \craft\web\Response|\yii\console\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
-    public function reportDownload($ext, $data, $reportId)
+    public function createAsset($ext = 'csv', $data, $reportId, $download = false)
     {
-        $filename = 'report-' . $reportId . '.' . $ext;
+        ## create file in temp folder
+        $tempFolder = Craft::$app->path->tempPath;
+        $filename = 'report-' . $reportId .  '-' . time() . '.' . $ext;
+        $tempPath = $tempFolder . $filename;
 
-        if ($ext == 'xlsx')
-        {
+        if ($ext == 'xlsx') {
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             for ($i = 0, $l = sizeof($data); $i < $l; $i++) {
@@ -50,16 +58,9 @@ class Reports extends Component
                 $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
                 $writer = new Xlsx($spreadsheet);
             }
-            ob_start();
-            $writer->save('php://output');
-            $content = ob_get_clean();
-
-            Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => $mime]);
-            return;
+            $writer->save($tempPath);
         }
-
-        if ($ext == 'pdf')
-        {
+        elseif ($ext == 'pdf') {
             $header = array_shift($data);
             $variables = [
                 'filename'  => $filename,
@@ -73,19 +74,35 @@ class Reports extends Component
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'landscape');
             $dompdf->render();
-            $dompdf->stream($filename);
-            return;
+            file_put_contents($tempPath, $dompdf->output());
+        }
+        else {
+            $csv = Writer::createFromPath($tempPath, "w");
+            $csv->insertAll($data);
         }
 
-        ob_start();
-        $export = fopen('php://output', 'w');
-        foreach ($data as $row) {
-            fputcsv($export, $row);
+        if ($download) {
+            return Craft::$app->response->sendFile($tempPath);
         }
-        fclose($export);
-        $content = ob_get_clean();
-        $content = str_replace("\n", "\r\n", $content);
-        Craft::$app->response->sendContentAsFile($content, $filename, ['mimeType' => 'text/csv']);
+
+        $response = LantraHelper::addAsset($tempPath, $filename, 'data');
+        return $response['asset'];
+    }
+
+    /**
+     * @param $ext
+     * @param $data
+     * @param $reportId
+     * @return \craft\web\Response|\yii\console\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     */
+    public function reportDownload($ext = 'csv', $data, $reportId)
+    {
+        return $this->createAsset($ext, $data, $reportId, true);
     }
 
     /**
@@ -319,7 +336,7 @@ class Reports extends Component
         elseif ($type == 'expired') {
             $resultFilter['status'] = 'expired';
             if (isset($filter['reportResultExpiry'])) {
-                $resultFilter['status'] = null;
+                $resultFilter['status'] = ['live', 'expired'];
                 $resultFilter['expiryDate'] = ':notempty';
                 // expired
                 if ($filter['reportResultExpiry'] == '0') {
@@ -442,18 +459,12 @@ class Reports extends Component
             Lantra::$app->queue->delete($reportEntry->id);
             return $response;
         }
-        ## create csv file in temp folder
-        $tempFolder = Craft::$app->path->tempPath;
-        $fileName = $reportEntry->slug . '-' . time() . '.csv';
-        $tempPath = $tempFolder . $fileName;
-        $this->reportCsv($values, $tempPath);
-        $assetResponse = LantraHelper::addAsset($tempPath, $fileName, 'data');
-        if (!$assetResponse['asset']) {
-            $response['message'] = $assetResponse['message'];
+        ## create report data asset
+        if (null == $asset = $this->createAsset($reportEntry->reportFormat, $values, $reportEntry->id)) {
             Lantra::$app->queue->delete($reportEntry->id);
+            $response['message'] = 'Could not create report asset';
             return $response;
         }
-        $asset = $assetResponse['asset'];
         ## append asset to report entry
         $reportData = array_merge($reportEntry->reportData->ids(), [$asset->id]);
         $reportEntry->setFieldValue('reportData', $reportData);

@@ -49,7 +49,7 @@
                         {% set unitPoints = craft.lantra.unitPoints(unit, module) %}
                         {% if unit.unitRecurring %}
                             {# get or create results for recurring period #}
-                            {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unit.id, cycle, moduleResultEntry.id) %}
+                            {% set resultQuery = craft.lantra.recurringResultsQuery(cpdUser.id, unit.id, cycle, moduleResultEntry.id, moduleResultCompany ? moduleResultCompany.id : null) %}
                         {% else %}
                             {# get only results linked to this module result if a cpd type module #}
                             {% set resultQuery = craft.lantra.unitResultsQuery(cpdUser.id, unit.id, addResult ? null : 1, module.type == 'cpd' ? moduleResultEntry.id : null, moduleResultCompany ? moduleResultCompany.id : null) %}
