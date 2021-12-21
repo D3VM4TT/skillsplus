@@ -58,7 +58,8 @@ class Install extends Migration
     {
         $admins = [
           'robin@coffeebean.design' => 'Robin Willmott',
-          'jason@thisistraffic.co.uk' => 'Jason Church'
+          'jason@thisistraffic.co.uk' => 'Jason Church',
+          'portia.hartley@skills-plus.co.uk' => 'Portia Hartley'
         ];
 
         echo "create default Skills+ admin users:";
