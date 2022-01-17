@@ -17,7 +17,7 @@
   },
   "autoload": {
     "psr-4": {
-      "modules\\": "modules/"
+      "lantra\\spbase\\": "../src/repository/spbase/src/"
     }
   },
   "config": {

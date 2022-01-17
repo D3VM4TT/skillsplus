@@ -36,6 +36,7 @@ return [
             '@assetsPath' => '/datadisk/azureshare/' . getenv('SITE') . '/',
             '@server' => getenv('ENVIRONMENT'),
             '@site' => getenv('SITE'),
+            '@spBaseUrl' => 'https://base.skills-plus.net/api'
         ],
     ],
     'cbd' => [
@@ -45,6 +46,7 @@ return [
         'aliases' => [
             '@basePath' => '/var/www/sp.coffeebean.design',
             '@assetsPath' => '/var/www/sp.coffeebean.design/assets/',
+            '@spBaseUrl' => 'http://base.coffeebean.design/api'
         ],
     ],
     'local' => [
@@ -55,6 +57,7 @@ return [
             '@basePath' => '/app/',
             '@assetsPath' => '/app/craft-assets/',
         ],
+        'spbaseUrl' => 'http://base.coffeebean.design/api'
     ],
     'jason' => [
         'siteUrl' => 'http://cpd.lantra.co.uk:8888',

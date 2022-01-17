@@ -73,6 +73,17 @@ return [
                 $config = App::mailerConfig($settings);
                 return Craft::createObject($config);
             },
-        ]
+        ],
+        'modules' => [
+            'spbase' => [
+                'class' => \lantra\spbase\Module::class,
+                'components' => [
+                    'spbase' => [
+                        'class' => 'lantra\spbase\services\SpBase',
+                    ],
+                ],
+            ],
+        ],
+        'bootstrap' => ['spbase'],
     ]
 ];
