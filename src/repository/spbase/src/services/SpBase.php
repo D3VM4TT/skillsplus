@@ -70,6 +70,17 @@ class SpBase
     }
 
     /**
+     * @param $userId
+     * @return array
+     */
+    public function getPayments($userId)
+    {
+        $licence = $this->getLicence($userId);
+
+        return $licence->valid ? $licence->payments : [];
+    }
+
+    /**
      *
      */
     public function getCompany($companyId, $create = true)

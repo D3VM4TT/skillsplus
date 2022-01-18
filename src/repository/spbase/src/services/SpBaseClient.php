@@ -146,7 +146,15 @@ class SpBaseClient
                   expiryDate @formatDateTime (format: "Y-m-d")
                   relatedSite {
                     id
-                  }                  
+                  }
+                  payments {
+                    ...on payments_BlockType {
+                        date @formatDateTime (format: "Y-m-d")
+                        amount 
+                        paid
+                        reference
+                    }
+                  }       
               }
           }
         }';
