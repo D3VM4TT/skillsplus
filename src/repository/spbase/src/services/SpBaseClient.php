@@ -58,14 +58,15 @@ class SpBaseClient
     public function getSite()
     {
         $query = 'query getSite($subdomain: [QueryArgument!]) {  
-          entry (section:"sites", subdomain: $subdomain limit: 1, orderBy: "dateCreated DESC") {
-              ... on sites_site_Entry {
+            entry (section:"sites", subdomain: $subdomain limit: 1, orderBy: "dateCreated DESC") {
+                ... on sites_site_Entry {
+                    __typename
                     id         
                     dateCreated @formatDateTime (format: "Y-m-d")
                     expiryDate @formatDateTime (format: "Y-m-d")
                     subdomain          
               }
-          }
+            }
         }';
 
         $variables = [
@@ -130,22 +131,22 @@ class SpBaseClient
     }
 
     /**
-     * @param $entryId
+     * @param $model
      * @param $meta
      * @return bool
      * @throws gql\exceptions\GraphQLError
      * @throws gql\exceptions\GraphQLResponseError
      */
-    public function saveMeta($entryId, $meta)
+    public function saveMeta($model, $meta)
     {
         $query = 'mutation saveMeta($entryId: ID, $meta: String) {
-            save_licences_licence_Entry(id: $entryId, meta: $meta) {
+            save_' . $model->__typename . '(id: $entryId, meta: $meta) {
                 id    
             }  
         }';
 
         $variables = [
-            'entryId' => $entryId,
+            'entryId' => $model->id,
             'meta' => json_encode($meta),
         ];
 
@@ -164,6 +165,7 @@ class SpBaseClient
         $query = 'query getLicence($siteId: [QueryArgument!], $userId: [QueryArgument!]) {  
           entry (section:"licences", userId: $userId, relatedTo: $siteId) {
               ... on licences_licence_Entry {
+                  __typename
                   id
                   userId
                   valid
@@ -206,6 +208,7 @@ class SpBaseClient
         $query = 'query getCompany($siteId: [QueryArgument!], $companyId: [QueryArgument!]) {  
           entry (section:"companies" relatedTo: $siteId companyId: $companyId limit: 1 orderBy: "dateCreated DESC") {
               ... on companies_company_Entry {
+                  __typename
                   id
                   dateCreated @formatDateTime (format: "Y-m-d")
                   expiryDate @formatDateTime (format: "Y-m-d")

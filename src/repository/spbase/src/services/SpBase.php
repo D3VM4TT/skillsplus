@@ -35,9 +35,9 @@ class SpBase
     /**
      *
      */
-    public function log($entryId, $comment)
+    public function log($element, $comment)
     {
-        return $this->client->saveMeta($entryId, ['log' => $comment]);
+        return $this->client->saveMeta($element, ['log' => $comment]);
     }
 
     /**
