@@ -33,6 +33,14 @@ class SpBase
     }
 
     /**
+     *
+     */
+    public function log($entryId, $comment)
+    {
+        return $this->client->saveMeta($entryId, ['log' => $comment]);
+    }
+
+    /**
      * @param $userId
      * @return bool
      */

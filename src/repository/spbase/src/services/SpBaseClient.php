@@ -130,6 +130,31 @@ class SpBaseClient
     }
 
     /**
+     * @param $entryId
+     * @param $meta
+     * @return bool
+     * @throws gql\exceptions\GraphQLError
+     * @throws gql\exceptions\GraphQLResponseError
+     */
+    public function saveMeta($entryId, $meta)
+    {
+        $query = 'mutation saveMeta($entryId: ID, $meta: String) {
+            save_licences_licence_Entry(id: $entryId, meta: $meta) {
+                id    
+            }  
+        }';
+
+        $variables = [
+            'entryId' => $entryId,
+            'meta' => json_encode($meta),
+        ];
+
+        $response = $this->query($query, $variables);
+
+        return !$response->hasErrors();
+    }
+
+    /**
      * @param $userId
      * @return Licence
      * @throws \yii\db\Exception

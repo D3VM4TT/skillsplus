@@ -46,16 +46,18 @@ class Client
     {
         $response = $this->request($query, $variables);
 
-        $json = json_decode($response->getBody()->getContents(), false);
+        $contents = $response->getBody()->getContents();
+
+        $json = json_decode($contents, false);
 
         if ($json === null) {
-            throw new GraphQLResponseError('Invalid GraphQL json.', $critical);
+            throw new GraphQLResponseError("Invalid GraphQL json. \n" . $contents, $critical);
         }
 
         $response = new Response($json);
 
         if ($response->hasErrors()) {
-            throw new GraphQLResponseError($response->errors()[0]->message, $critical);
+            throw new GraphQLResponseError($response->errors()[0]->message . "\n" . $contents, $critical);
         }
 
         return $response;
