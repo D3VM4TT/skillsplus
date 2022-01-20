@@ -23,19 +23,17 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
 use lantra\spbase\services\SpBase;
-use verbb\supertable\elements\SuperTableBlockElement;
-use verbb\supertable\services\SuperTableService;
 
-use DateTime;
 use yii\db\Query;
+use yii\web\UserEvent as YiiUserEvent;
 
 class Users extends Component
 {
     /**
-     * @param ModelEvent $event
+     * @param YiiUserEvent $event
      * @param User $user
      */
-    public function onBeforeLoginUser(ModelEvent $event, User $user)
+    public function onBeforeLoginUser(YiiUserEvent $event, User $user)
     {
         if (Craft::$app->request->isSiteRequest) {
             if ($user->isLicenced) {
@@ -44,11 +42,12 @@ class Users extends Component
             }
         }
     }
+
     /**
      * @param ModelEvent $event
      * @param User $user
      */
-    public function onAfterLoginUser(ModelEvent $event, User $user)
+    public function onAfterLoginUser(YiiUserEvent $event, User $user)
     {
         ## log user_login to licence
         if (Craft::$app->request->isSiteRequest) {
