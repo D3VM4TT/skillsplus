@@ -35,9 +35,13 @@ class SpBase
     /**
      *
      */
-    public function log($element, $comment)
+    public function log($element, $action, $comment = '')
     {
-        return $this->client->saveMeta($element, ['log' => $comment]);
+        $log = [
+            'action' => $action,
+            'comment' => $comment
+        ];
+        return $this->client->saveMeta($element, ['log' => $log]);
     }
 
     /**
@@ -57,9 +61,11 @@ class SpBase
     {
         $licence = $this->client->getLicence($userId);
 
+        ## create new licence
         if ($create && !$licence->valid) {
-            ## create new licence
             $this->client->saveLicence(null, ['userId' => $userId]);
+            $licence = $this->getLicence($userId, false);
+            $this->log($licence,'created');
             return $this->getLicence($userId, false);
         }
 
@@ -68,10 +74,27 @@ class SpBase
 
     /**
      * @param $userId
+     * @throws \yii\db\Exception
+     * @throws gql\exceptions\GraphQLError
+     * @throws gql\exceptions\GraphQLResponseError
+     */
+    public function cancelLicence($userId)
+    {
+        $licence = $this->client->getLicence($userId);
+
+        if ($licence->valid) {
+            $this->client->saveLicence($licence->id, ['enabled' => false]);
+            $this->log($licence, 'cancelled');
+        }
+    }
+
+    /**
+     * @param $userId
      */
     public function updateLicence($userId, $data = [])
     {
         $licence = $this->client->getLicence($userId);
+
         if ($licence->valid) {
             $this->client->saveLicence($licence->id, $data);
         }

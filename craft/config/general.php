@@ -56,8 +56,8 @@ return [
         'aliases' => [
             '@basePath' => '/app/',
             '@assetsPath' => '/app/craft-assets/',
+            '@spBaseUrl' => 'http://base.coffeebean.design/api'
         ],
-        'spbaseUrl' => 'http://base.coffeebean.design/api'
     ],
     'jason' => [
         'siteUrl' => 'http://cpd.lantra.co.uk:8888',
@@ -71,8 +71,14 @@ return [
     'dev' => [
         'devMode' => true,
         'allowAdminChanges' => true,
+        'aliases' => [
+            '@spBaseUrl' => 'https://base.newdev.skills-plus.net/api'
+        ]
     ],
     'uat' => [
+        'aliases' => [
+            '@spBaseUrl' => 'http://base.newuat.skills-plus.net/api'
+        ]
     ],
     'prod' => [
     ],

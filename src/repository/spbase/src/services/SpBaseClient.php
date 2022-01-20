@@ -112,8 +112,8 @@ class SpBaseClient
      */
     public function saveLicence($entryId = null, $data = [])
     {
-        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $userId: Number) {
-            save_licences_licence_Entry(id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId) {
+        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $userId: Number, $enabled: Boolean) {
+            save_licences_licence_Entry(id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId, enabled: $enabled) {
                 id
             }
         }';
@@ -121,9 +121,10 @@ class SpBaseClient
         $variables = [
             'siteId' => $this->getSiteId(),
             'authorId' => $this->getAuthorId(),
-            'entryId' => $entryId,
-            'userId' => $data['userId']
+            'entryId' => $entryId
         ];
+
+        $variables = array_merge($variables, $data);
 
         $response = $this->query($query, $variables);
 

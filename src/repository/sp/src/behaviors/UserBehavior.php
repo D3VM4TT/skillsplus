@@ -11,7 +11,7 @@ namespace lantra\sp\behaviors;
 use lantra\sp\models\Record;
 use yii\base\Behavior;
 
-class UserRecordBehavior extends Behavior
+class UserBehavior extends Behavior
 {
     private $_record;
 
@@ -35,5 +35,21 @@ class UserRecordBehavior extends Behavior
     public function getResult($elementId, $type = 'unit')
     {
 
+    }
+
+    /**
+     * @return false|mixed
+     */
+    public function getIsLicenced()
+    {
+        if ($this->owner->admin) {
+            return false;
+        }
+
+        if ($this->owner->isInGroup('schemeManagers') || $this->owner->isInGroup('editors')) {
+            return false;
+        }
+
+        return $this->owner->hasLicence;
     }
 }

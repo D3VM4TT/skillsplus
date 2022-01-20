@@ -22,6 +22,7 @@ use craft\elements\MatrixBlock;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use lantra\spbase\services\SpBase;
 use verbb\supertable\elements\SuperTableBlockElement;
 use verbb\supertable\services\SuperTableService;
 
@@ -30,6 +31,34 @@ use yii\db\Query;
 
 class Users extends Component
 {
+    /**
+     * @param ModelEvent $event
+     * @param User $user
+     */
+    public function onBeforeLoginUser(ModelEvent $event, User $user)
+    {
+        if (Craft::$app->request->isSiteRequest) {
+            if ($user->isLicenced) {
+                $spbase = new SpBase();
+                $event->isValid = $spbase->validateLicence($user->id);
+            }
+        }
+    }
+    /**
+     * @param ModelEvent $event
+     * @param User $user
+     */
+    public function onAfterLoginUser(ModelEvent $event, User $user)
+    {
+        ## log user_login to licence
+        if (Craft::$app->request->isSiteRequest) {
+            if ($user->isLicenced) {
+                $spbase = new SpBase();
+                $licence = $spbase->getLicence($user->id);
+                $event->isValid = $spbase->log($licence, 'user_login');
+            }
+        }
+    }
 
     /**
      * @param ModelEvent $event
@@ -42,6 +71,10 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
+        if ($event->isNew && $user->isLicenced) {
+            $spbase = new SpBase();
+            $licence = $spbase->getLicence($user->id);
+        }
         Lantra::$app->results->saveUserResultCache($user->id);
     }
 
@@ -139,11 +172,17 @@ class Users extends Component
     /**
      * @param $event
      */
-    public function onBeforeDeleteUser($event)
+    public function onBeforeDeleteUser($user, $event)
     {
-        $user = Craft::$app->getUser();
-        if (!Craft::$app->request->isCpRequest && !$user->isInGroup('schemeManagers') && !$user->admin){
+        $loggedInUser = Craft::$app->getUser();
+
+        if (!Craft::$app->request->isCpRequest && !$loggedInUser->isInGroup('schemeManagers') && !$loggedInUser->admin){
             $event->performAction = false;
+        }
+
+        if ($user->isLicenced) {
+            $spbase = new SpBase();
+            $spbase->cancelLicence($user->id);
         }
     }
 

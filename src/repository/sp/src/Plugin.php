@@ -15,6 +15,7 @@ use craft\elements\Asset;
 use craft\elements\Category;
 use craft\elements\User;
 use craft\elements\Entry;
+use craft\events\AuthenticateUserEvent;
 use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
@@ -34,12 +35,14 @@ use craft\web\UrlManager;
 use lantra\sp\models\Record;
 use yii\base\Event;
 use yii\db\Query;
+use yii\web\User as YiiUser;
+use yii\web\UserEvent as YiiUserEvent;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
 use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\ModuleGroupBehavior;
-use lantra\sp\behaviors\UserRecordBehavior;
+use lantra\sp\behaviors\UserBehavior;
 use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\behaviors\MagicTitleBehavior;
 use lantra\sp\services\App;
@@ -47,7 +50,7 @@ use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
 use lantra\sp\assetbundles\SpCpAsset;
 
-
+use lantra\spbase\services\SpBase;
 
 /**
  * Class LantraPlugin
@@ -129,6 +132,24 @@ class Plugin extends BasePlugin
             function (Event $event) {
                 $variable = $event->sender;
                 $variable->set('lantra', LantraVariable::class);
+            }
+        );
+
+        Event::on(
+            YiiUser::class,
+            YiiUser::EVENT_BEFORE_LOGIN,
+            function (YiiUserEvent $event) {
+                $user = User::findOne($event->identity->id);
+                Lantra::$app->users->onBeforeLoginUser($event, $user);
+            }
+        );
+
+        Event::on(
+            YiiUser::class,
+            YiiUser::EVENT_AFTER_LOGIN,
+            function (YiiUserEvent $event) {
+                $user = User::findOne($event->identity->id);
+                Lantra::$app->users->onAfterLoginUser($event, $user);
             }
         );
 
@@ -295,7 +316,7 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                $event->behaviors[] = UserRecordBehavior::class;
+                $event->behaviors[] = UserBehavior::class;
             });
 
         Event::on(
