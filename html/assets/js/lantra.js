@@ -602,7 +602,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#reportAutomated').hide();
+    $('#reportAutomated').not('.isAutomated').hide();
 
     // toggle automated report inputs
     $('#buttonAutomated').click(function (e) {
