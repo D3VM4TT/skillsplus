@@ -87,7 +87,11 @@ class Plugin extends BasePlugin
         $this::$app = $this->get('app');
 
         ## add the lantra log file
-        $fileTarget = new FileTarget(['logFile' => '@storage/logs/lantra.log', 'categories' => ['lantra\sp\*']]);
+        $fileTarget = new FileTarget([
+            'logVars' => [],
+            'logFile' => '@storage/logs/lantra.log',
+            'categories' => ['lantra\sp\*']
+        ]);
         Craft::getLogger()->dispatcher->targets[] = $fileTarget;
 
         Event::on(

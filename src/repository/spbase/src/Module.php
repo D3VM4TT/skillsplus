@@ -16,6 +16,7 @@ class Module extends \yii\base\Module
     {
         ## add the spbase log file
         $fileTarget = new FileTarget([
+            'logVars' => [],
             'logFile' => '@storage/logs/spbase.log',
             'categories' => ['spbase']
         ]);
