@@ -1,4 +1,4 @@
-dateModified: 1642625101
+dateModified: 1642774446
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -381,6 +381,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 1.1.1
+  logs:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0
   preparse-field:
     enabled: '1'
     licenseKey: null
