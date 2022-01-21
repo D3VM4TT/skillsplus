@@ -324,6 +324,8 @@ class Reports extends Component
     {
         $userFilter = $this->_parseUserFilter($filter);
         $resultFilter = $this->_parseResultFilter($filter);
+        
+        $values = [];
 
         if ($type == 'users') {
             $values = Lantra::$app->results->getManagerUserSummary($manager->id, $userFilter, $resultFilter);
