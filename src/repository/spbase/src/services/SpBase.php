@@ -56,6 +56,8 @@ class SpBase
 
     /**
      * @param $userId
+     * @param bool $create
+     * @return \lantra\spbase\models\Licence
      */
     public function getLicence($userId, $create = true)
     {
@@ -74,15 +76,12 @@ class SpBase
 
     /**
      * @param $userId
-     * @throws \yii\db\Exception
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function cancelLicence($userId)
     {
-        $licence = $this->client->getLicence($userId, false);
+        $licence = $this->client->getLicence($userId);
 
-        if ($licence->valid) {
+        if ($licence->id) {
             $this->client->saveLicence($licence->id, ['enabled' => false]);
             $this->log($licence, 'cancelled');
         }
@@ -90,6 +89,7 @@ class SpBase
 
     /**
      * @param $userId
+     * @param array $data
      */
     public function updateLicence($userId, $data = [])
     {

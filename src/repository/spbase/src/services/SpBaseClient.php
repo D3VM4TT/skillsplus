@@ -83,7 +83,7 @@ class SpBaseClient
 
         $attributes = $response->entry ?? [];
 
-        if (!isset($attributes['id'])) {
+        if (!isset($attributes->id)) {
             SpBase::error('Invalid Site ID');
         }
 
@@ -92,7 +92,8 @@ class SpBaseClient
 
     /**
      * @param $username
-     * @return int|mixed
+     * @return int
+     * @throws GuzzleException
      */
     public function getUserId($username)
     {
@@ -110,7 +111,7 @@ class SpBaseClient
 
         $response = $this->query($query, $variables);
 
-        return $response->user ?? (int) $response->user->id;
+        return $response->user ? $response->user->id : 0;
     }
 
     /**
@@ -329,7 +330,7 @@ class SpBaseClient
                 throw new GraphQLResponseError("Invalid GraphQL json.");
             }
 
-            $response->load($guzzleResponse);
+            $response->load($json);
 
             if ($response->hasErrors()) {
                 throw new GraphQLResponseError($response->errors()[0]->message);
