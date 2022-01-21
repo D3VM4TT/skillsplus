@@ -39,6 +39,11 @@ class Reports extends Component
      */
     public function createAsset($ext = 'csv', $data, $reportId, $download = false)
     {
+        ## force default format
+        if (empty($ext) || !in_array($ext, ['csv', 'xlsx', 'pdf'])) {
+            $ext = 'csv';
+        }
+
         ## create file in temp folder
         $tempFolder = Craft::$app->path->tempPath;
         $filename = 'report-' . $reportId .  '-' . time() . '.' . $ext;
