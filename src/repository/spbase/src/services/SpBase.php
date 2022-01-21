@@ -64,7 +64,7 @@ class SpBase
         $licence = $this->client->getLicence($userId);
 
         ## create new licence
-        if ($create && !$licence->valid) {
+        if ($create && !$licence->id) {
             $this->client->saveLicence(null, ['userId' => $userId]);
             $licence = $this->getLicence($userId, false);
             $this->log($licence,'created');
