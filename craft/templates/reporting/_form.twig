@@ -213,7 +213,7 @@
     </div>
 
     {% if currentUser.admin or currentUser.isInGroup('schemeManagers') %}
-        <div id="reportAutomated">
+        <div id="reportAutomated" class="{% if entry is defined and entry.reportAutomated %}isAutomated{% endif %}">
             <h2>Automated Report Settings</h2>
             <div class="field--wrapper">
                 <label id="reportRecipientsLabel" for="reportRecipients" class="">Report recipients (managers of companies selected above):
