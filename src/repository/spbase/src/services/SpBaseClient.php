@@ -83,6 +83,10 @@ class SpBaseClient
 
         $attributes = $response->entry ?? [];
 
+        if (!isset($attributes['id'])) {
+            SpBase::error('Invalid Site ID');
+        }
+
         return new Site($attributes);
     }
 
@@ -265,17 +269,18 @@ class SpBaseClient
     {
         if (!$this->siteId) {
             ## siteId is cached for infinity
-            $this->siteId = Craft::$app->cache->getOrSet('spBaseSiteId', function () {
+            $this->siteId = (int) Craft::$app->cache->getOrSet('spBaseSiteId', function () {
                 $site = $this->getSite();
                 return $site->id;
             }, 0);
         }
 
-        if (null == $siteId = (int) $this->siteId) {
+        if (!$this->siteId) {
             SpBase::error('Invalid Site ID');
+            Craft::$app->cache->delete('spBaseSiteId');
         }
 
-        return $siteId;
+        return $this->siteId;
     }
 
     /**
@@ -285,16 +290,17 @@ class SpBaseClient
     {
         if (!$this->authorId) {
             ## authorId is cached for infinity
-            $this->authorId = Craft::$app->cache->getOrSet('spBaseAuthorId', function () {
+            $this->authorId = (int) Craft::$app->cache->getOrSet('spBaseAuthorId', function () {
                 return $this->getUserId('graphql');
             }, 0);
         }
 
-        if (null == $authorId = (int) $this->authorId) {
+        if (!$this->authorId) {
             SpBase::error('Invalid GraphQL API User ID');
+            Craft::$app->cache->delete('spBaseAuthorId');
         }
 
-        return $authorId;
+        return $this->authorId;
     }
 
     /**

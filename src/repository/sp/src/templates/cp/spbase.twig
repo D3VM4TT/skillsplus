@@ -1,0 +1,16 @@
+{% set title = 'Lantra Skills+ Base' %}
+{% extends "sp/cp/_layout" %}
+{% import "_includes/forms" as forms %}
+{% set selectedSubnavItem = 'spbase' %}
+
+{% set fullPageForm = false %}
+{% set saveButton = null %}
+
+{% block content %}
+
+    <h2>Site Variables</h2>
+    <pre>{{ dump(site) }}</pre>
+
+    <hr />
+
+{% endblock %}

@@ -22,8 +22,6 @@ use craft\elements\MatrixBlock;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
-use lantra\spbase\services\SpBase;
-
 use yii\db\Query;
 use yii\web\UserEvent as YiiUserEvent;
 
@@ -37,8 +35,7 @@ class Users extends Component
     {
         if (Craft::$app->request->isSiteRequest) {
             if ($user->isLicenced) {
-                $spbase = new SpBase();
-                $event->isValid = $spbase->validateLicence($user->id);
+                $event->isValid = Lantra::$app->spbase->validateLicence($user->id);
             }
         }
     }
@@ -52,9 +49,8 @@ class Users extends Component
         ## log user_login to licence
         if (Craft::$app->request->isSiteRequest) {
             if ($user->isLicenced) {
-                $spbase = new SpBase();
-                $licence = $spbase->getLicence($user->id);
-                $event->isValid = $spbase->log($licence, 'user_login');
+                $licence = Lantra::$app->spbase->getLicence($user->id);
+                $event->isValid = Lantra::$app->spbase->log($licence, 'user_login');
             }
         }
     }
@@ -71,8 +67,7 @@ class Users extends Component
     public function onSaveUser(ModelEvent $event, User $user)
     {
         if ($event->isNew && $user->isLicenced) {
-            $spbase = new SpBase();
-            $licence = $spbase->getLicence($user->id);
+            $licence = Lantra::$app->spbase->getLicence($user->id);
         }
         Lantra::$app->results->saveUserResultCache($user->id);
     }
@@ -180,8 +175,7 @@ class Users extends Component
         }
 
         if ($user->isLicenced) {
-            $spbase = new SpBase();
-            $spbase->cancelLicence($user->id);
+            Lantra::$app->spbase->cancelLicence($user->id);
         }
     }
 

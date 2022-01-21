@@ -373,7 +373,8 @@ class Plugin extends BasePlugin
             'notifications' => ['label' => 'Notifications', 'url' => 'sp/notifications'],
             'import' => ['label' => 'Import', 'url' => 'sp/import'],
             'tools' => ['label' => 'Tools', 'url' => 'sp/tools'],
-            'queue' => ['label' => 'Queue', 'url' => 'sp/queue']
+            'queue' => ['label' => 'Queue', 'url' => 'sp/queue'],
+            'spbase' => ['label' => 'Base', 'url' => 'sp/spbase']
         ];
         return $ret;
     }
@@ -406,6 +407,7 @@ class Plugin extends BasePlugin
             'sp/queue'                          => 'sp/cp/settings/queue',
             'sp/cache'                          => 'sp/cp/settings/cache',
             'sp/tools'                          => 'sp/cp/tools',
+            'sp/spbase'                         => 'sp/cp/spbase',
             'sp/import'                         => 'sp/cp/import/index',
             'sp/queue/delete-job'               => 'sp/cp/settings/delete-job',
         ];
