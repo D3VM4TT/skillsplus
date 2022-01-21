@@ -66,7 +66,7 @@ class SpBase
             $this->client->saveLicence(null, ['userId' => $userId]);
             $licence = $this->getLicence($userId, false);
             $this->log($licence,'created');
-            return $this->getLicence($userId, false);
+            return $licence;
         }
 
         return $licence;
@@ -80,7 +80,7 @@ class SpBase
      */
     public function cancelLicence($userId)
     {
-        $licence = $this->client->getLicence($userId);
+        $licence = $this->client->getLicence($userId, false);
 
         if ($licence->valid) {
             $this->client->saveLicence($licence->id, ['enabled' => false]);

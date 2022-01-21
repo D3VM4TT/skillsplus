@@ -9,19 +9,27 @@
 namespace lantra\spbase\services;
 
 use Craft;
-use lantra\sp\Plugin as Lantra;
+use GuzzleHttp\Exception\GuzzleException;
+use lantra\spbase\Module as SpBase;
 
-use lantra\spbase\services\gql\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use lantra\spbase\models\Licence;
 use lantra\spbase\models\Company;
 use lantra\spbase\models\Site;
+use lantra\spbase\services\gql\exceptions\GraphQLResponseError;
+use lantra\spbase\services\gql\Response;
 
 class SpBaseClient
 {
     /**
-     * @var $gql
+     * @var $endpoint
      */
-    protected $gql;
+    protected $endpoint;
+
+    /**
+     * @var $guzzle
+     */
+    protected $guzzle;
 
     /**
      * @var
@@ -43,17 +51,15 @@ class SpBaseClient
      */
     public function __construct()
     {
-        $endpoint = Craft::getAlias('@spBaseUrl');
+        $this->endpoint = Craft::getAlias('@spBaseUrl');
 
         $this->subdomain = Craft::getAlias('@site');
 
-        $this->gql = new Client($endpoint);
+        $this->guzzle = new GuzzleClient();
     }
 
     /**
      * @return Site
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function getSite()
     {
@@ -73,15 +79,16 @@ class SpBaseClient
             'subdomain' => $this->subdomain
         ];
 
-        $response = $this->query($query, $variables, true);
+        $response = $this->query($query, $variables);
 
-        return new Site($response->entry);
+        $attributes = $response->entry ?? [];
+
+        return new Site($attributes);
     }
 
     /**
-     * @return int
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * @param $username
+     * @return int|mixed
      */
     public function getUserId($username)
     {
@@ -97,18 +104,15 @@ class SpBaseClient
             'username' => $username
         ];
 
-        $response = $this->query($query, $variables, true);
+        $response = $this->query($query, $variables);
 
-        return (int)$response->user->id;
+        return $response->user ?? (int) $response->user->id;
     }
 
     /**
-     * @param $userId
      * @param null $entryId
+     * @param array $data
      * @return bool
-     * @throws \yii\db\Exception
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function saveLicence($entryId = null, $data = [])
     {
@@ -135,8 +139,6 @@ class SpBaseClient
      * @param $model
      * @param $meta
      * @return bool
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function saveMeta($model, $meta)
     {
@@ -159,7 +161,6 @@ class SpBaseClient
     /**
      * @param $userId
      * @return Licence
-     * @throws \yii\db\Exception
      */
     public function getLicence($userId)
     {
@@ -202,7 +203,6 @@ class SpBaseClient
     /**
      * @param $companyId
      * @return Company
-     * @throws \yii\db\Exception
      */
     public function getCompany($companyId)
     {
@@ -227,16 +227,15 @@ class SpBaseClient
 
         $response = $this->query($query, $variables);
 
-        return new Company($response->entry);
+        $attributes = $response->entry ?? [];
+
+        return new Company($attributes);
     }
 
     /**
-     * @param $userId
+     * @param $companyId
      * @param null $entryId
      * @return bool
-     * @throws \yii\db\Exception
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function saveCompany($companyId, $entryId = null)
     {
@@ -260,25 +259,9 @@ class SpBaseClient
     }
 
     /**
-     * @param $query
-     * @param array $variables
-     * @param false $critical
-     * @return gql\Response
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * @return int
      */
-    protected function query($query, $variables = [], $critical = false)
-    {
-        $response = $this->gql->response($query, $variables, $critical);
-
-        return $response;
-    }
-
-    /**
-     * @return mixed|null
-     * @throws \yii\db\Exception
-     */
-    protected function getSiteId()
+    private function getSiteId()
     {
         if (!$this->siteId) {
             ## siteId is cached for infinity
@@ -288,13 +271,17 @@ class SpBaseClient
             }, 0);
         }
 
-        return (int)$this->siteId;
+        if (null == $siteId = (int) $this->siteId) {
+            SpBase::error('Invalid Site ID');
+        }
+
+        return $siteId;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    protected function getAuthorId()
+    private function getAuthorId()
     {
         if (!$this->authorId) {
             ## authorId is cached for infinity
@@ -303,6 +290,49 @@ class SpBaseClient
             }, 0);
         }
 
-        return (int)$this->authorId;
+        if (null == $authorId = (int) $this->authorId) {
+            SpBase::error('Invalid GraphQL API User ID');
+        }
+
+        return $authorId;
+    }
+
+    /**
+     * @param $query
+     * @param array $variables
+     * @param array $headers
+     * @return Response
+     * @throws GuzzleException
+     */
+    private function query($query, array $variables = [], array $headers = []): Response
+    {
+        $response = new Response();
+
+        try {
+            $guzzleResponse = $this->guzzle->request('POST', $this->endpoint, [
+                'json' => [
+                    'query' => $query,
+                    'variables' => $variables
+                ],
+                'headers' => $headers
+            ]);
+
+            $json = json_decode($guzzleResponse->getBody()->getContents(), false);
+
+            if ($json === null) {
+                throw new GraphQLResponseError("Invalid GraphQL json.");
+            }
+
+            $response->load($guzzleResponse);
+
+            if ($response->hasErrors()) {
+                throw new GraphQLResponseError($response->errors()[0]->message);
+            }
+
+        } catch (\Exception $e) {
+            SpBase::error($e->getMessage());
+        }
+
+        return $response;
     }
 }
