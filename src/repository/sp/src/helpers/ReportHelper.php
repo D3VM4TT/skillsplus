@@ -213,7 +213,7 @@ class ReportHelper
         $criteria->resultStatus = 'endorsed';
         $date = new \DateTime();
         $date->modify('-1 year');
-        $criteria->resultFinishDate = '>= '. $date->format('ATOM');
+        $criteria->resultFinishDate = '>= '. $date->format('Y-m-d');
         $totalAnnual = $criteria->count();
 
         $items = [
