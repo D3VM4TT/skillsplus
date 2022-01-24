@@ -456,7 +456,8 @@ class Reports extends Component
         $response = [
             'success'   => false,
             'total'     => 0,
-            'message'   => ''
+            'message'   => '',
+            'asset'     => null
         ];
         $filter = $this->getReportFilter($reportEntry);
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
@@ -467,21 +468,24 @@ class Reports extends Component
             return $response;
         }
         ## create report data asset
-        if (null == $asset = $this->createAsset($reportEntry->reportFormat, $values, $reportEntry->id)) {
+        if (null == $response['asset'] = $this->createAsset($reportEntry->reportFormat, $values, $reportEntry->id)) {
             Lantra::$app->queue->delete($reportEntry->id);
-            $response['message'] = 'Could not create report asset';
+            $response['message'] = 'Could not create report asset.';
             return $response;
         }
         ## append asset to report entry
-        $reportData = array_merge($reportEntry->reportData->ids(), [$asset->id]);
+        $reportData = array_merge($reportEntry->reportData->ids(), [$response['asset']->id]);
         $reportEntry->setFieldValue('reportData', $reportData);
-        Craft::$app->elements->saveElement($reportEntry);
+        if (!Craft::$app->elements->saveElement($reportEntry)) {
+            $response['message'] = 'Could not save asset to report entry.';
+            return $response;
+        }
         ## send notification if applicable
         if ($reportEntry->reportSendFrequency != 'never' && Lantra::$app->settings->getSetting('notifyEnableCustomReport')) {
             $attachment = [
-                'path' => LantraHelper::assetPath($asset),
-                'filename' => $asset->fileName,
-                'mimeType' => $asset->mimeType
+                'path' => LantraHelper::assetPath($response['asset']),
+                'filename' => $response['asset']->fileName,
+                'mimeType' => $response['asset']->mimeType
             ];
             $emails = [];
             foreach($reportEntry->reportRecipients as $user) {
