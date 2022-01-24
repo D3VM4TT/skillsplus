@@ -100,10 +100,9 @@ class ReportsController extends BaseController
         }
         $response = Lantra::$app->reports->runCustomReport($entry);
         if ($response['success']) {
-            $asset = $entry->reportData->one();
-            $volumePath = rtrim($asset->getVolume()->settings['path'], '/') . '/';
-            $folderPath = rtrim($asset->getFolder()->path, '/') . '/';
-            $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $asset->filename;
+            $volumePath = rtrim($response['asset']->getVolume()->settings['path'], '/') . '/';
+            $folderPath = rtrim($response['asset']->getFolder()->path, '/') . '/';
+            $assetFilePath = Craft::getAlias($volumePath) . $folderPath . $response['asset']->filename;
             if (!is_file($assetFilePath)) {
                 throw new HttpException(404, "Asset file does not exist.");
             }
