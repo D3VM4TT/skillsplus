@@ -201,7 +201,7 @@ class ReportHelper
         $totalRole = count($roleUnitIds);
 
         $criteria = Lantra::$app->results->getUserUnitResults($user->id, $roleUnitIds);
-        $criteria->anyStatus();
+        $criteria->status(['not', 'disabled']);
         $criteria->resultStatus = 'endorsed';
         $totalCompleted = $criteria->count();
 
