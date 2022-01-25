@@ -45,7 +45,7 @@ return [
         'allowAdminChanges' => true,
         'aliases' => [
             '@basePath' => '/var/www/sp.coffeebean.design',
-            '@assetsPath' => '/var/www/sp.coffeebean.design/assets/',
+            '@assetsPath' => '/var/www/sp.coffeebean.design/craft-assets/',
             '@spBaseUrl' => 'http://base.coffeebean.design/api'
         ],
     ],
