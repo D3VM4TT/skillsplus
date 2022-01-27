@@ -65,7 +65,7 @@ tabs:
         warning: null
         width: 25
       -
-        fieldUid: e0b2d8e4-6152-404e-b62c-e48c5d14cbb5 # User Licence
+        fieldUid: e0b2d8e4-6152-404e-b62c-e48c5d14cbb5 # User Not Licenced
         instructions: null
         label: null
         required: false

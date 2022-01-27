@@ -50,6 +50,6 @@ class UserBehavior extends Behavior
             return false;
         }
 
-        return $this->owner->hasLicence;
+        return !$this->owner->userNotLicenced;
     }
 }

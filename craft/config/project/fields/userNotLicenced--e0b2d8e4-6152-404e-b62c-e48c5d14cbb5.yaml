@@ -1,9 +1,9 @@
 columnSuffix: xsvzzowl
 contentColumnType: boolean
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
-handle: hasLicence
+handle: userNotLicenced
 instructions: ''
-name: 'User Licence'
+name: 'User Not Licenced'
 searchable: false
 settings:
   default: false
