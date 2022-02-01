@@ -160,7 +160,7 @@ class SpBaseClient
             'postDate' => $postDate,
             'siteId' => $this->getSiteId(),
             'authorId' => $this->getAuthorId(),
-            'userId' => $userId,
+            'userId' => (string) $userId,
             'month' => $month,
             'meta' => json_encode($meta)
         ];
