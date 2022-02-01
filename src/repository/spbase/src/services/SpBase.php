@@ -8,6 +8,8 @@
 
 namespace lantra\spbase\services;
 
+use Craft;
+
 class SpBase
 {
     /**
@@ -37,7 +39,9 @@ class SpBase
      */
     public function log($element, $action, $comment = '')
     {
+        $user = Craft::$app->getUser()->getIdentity();
         $log = [
+            'userId' => $user->id,
             'action' => $action,
             'comment' => $comment
         ];

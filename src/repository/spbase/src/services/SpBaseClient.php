@@ -9,7 +9,6 @@
 namespace lantra\spbase\services;
 
 use Craft;
-use \DateTime;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleClient;
@@ -142,7 +141,7 @@ class SpBaseClient
      */
     public function saveLicence($userId, string $month = '01', string $postDate = null, array $meta = [], $entryId = null)
     {
-        $query = 'mutation saveEntry($entryId: ID, $postDate: DateTime, $authorId: ID, $siteId: Int, $userId: Number, $month: String, $meta: String) {
+        $query = 'mutation saveEntry($entryId: ID, $postDate: DateTime, $authorId: ID, $siteId: Int, $userId: String, $month: String, $meta: String) {
             save_licences_licence_Entry(
                 id: $entryId,
                 postDate: $postDate,
@@ -293,9 +292,9 @@ class SpBaseClient
      */
     public function saveCompany($companyId, $entryId = null)
     {
-        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $companyId: Number) {
+        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $companyId: String) {
             save_companies_company_Entry(
-            id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId) {
+            id: $entryId, authorId: $authorId, relatedSite: [$siteId], companyId: $companyId) {
                 id
             }
         }';
