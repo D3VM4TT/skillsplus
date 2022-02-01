@@ -85,6 +85,8 @@ class Users extends Component
             return;
         }
 
+        $meta = [];
+
         if (null != $company = $user->userLicenceCompany->one()) {
             $meta['companyId'] = $company->id;
             $meta['companyName'] = $company->title;
