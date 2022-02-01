@@ -1,4 +1,4 @@
-dateModified: 1643284640
+dateModified: 1643466140
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -209,6 +209,7 @@ meta:
     48909e73-b939-470f-b472-53ee709db6e4: 'Module Group Read Only' # Module Group Read Only
     51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3: 'Package Evidence' # Package Evidence
     64769feb-a327-4c92-8224-bfd94a529f1a: 'CPD Target Hours' # CPD Target Hours
+    67368df0-4936-4ba3-9b2a-82871f72d79d: 'User Licence Company' # User Licence Company
     72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: Level # Level
     85884bff-7c6a-4759-a769-d3f056254b7b: 'Legacy Email' # Legacy Email
     646454e2-66f9-4f03-bac7-b94a89aba17a: 'Module Expiry Days' # Module Expiry Days
@@ -321,6 +322,7 @@ meta:
     e4cbe147-47ff-4ad4-845e-cc788f8b8829: 'Custom Value' # Custom Value
     e5a97ebb-756a-40bb-9b81-231b8ad564b2: 'External Status' # External Status
     e7ff470a-3e85-47be-9037-1508ea540121: 'Result Evidence' # Result Evidence
+    e8e5de3b-79a6-4e11-ba75-6b78df9cc95f: 'User Licence Month' # User Licence Month
     e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a: Modules # Modules
     e21ca603-4cc1-4573-9a88-a769b8a0d695: Columns # Columns
     e34f85df-0855-47ca-a101-0519afac3c0a: 'User Result' # User Result

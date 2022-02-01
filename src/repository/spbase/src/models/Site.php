@@ -11,4 +11,7 @@ namespace lantra\spbase\models;
 class Site extends SpBase
 {
     public $subdomain;
+    public $licenceType;
+    public $licenceSitePayment;
+    public $hasCompanyLicences;
 }

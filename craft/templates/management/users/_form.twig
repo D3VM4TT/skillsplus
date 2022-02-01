@@ -26,6 +26,8 @@
 
 {% set taskbookEntries = craft.entries.section('taskbooks').limit(null).all() %}
 
+{% set siteLicence = craft.lantra.siteLicence() %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
      {% if hierarchyNode %}
@@ -51,7 +53,7 @@
         {% if hierarchyNode %}
             {{ redirectInput('/management/hierarchy?node=' ~ hierarchyNode) }}
         {% else %}
-            {{ redirectInput('management/users') }}
+            {{ redirectInput('/management/users') }}
         {% endif %}
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
 
@@ -273,7 +275,50 @@
                 {% endif %}
             </div>
         </div>
-        
+
+        <div class="field--wrapper">
+            <h2>Licence</h2>
+            <div>
+                <div class="col-6 field--wrapper">
+                    <label for="userNotLicenced" class="no-float">
+                        <input type="hidden" name="fields[userNotLicenced]" value="0">
+                        <input type="checkbox" id="userNotLicenced" name="fields[userNotLicenced]" value="1" {% if account.userNotLicenced is defined and account.userNotLicenced %}checked="checked"{% endif %}>
+                        Not Licenced
+                    </label>
+                    <p>Unlicenced users will not be able to record data or view dashboards.</p>
+                </div>
+                <div class="col-6 field--wrapper">
+                    <label for="userLicenceMonth">Licence Renewal Month</label>
+                    {%  set userLicenceMonth = account.userLicenceMonth is defined and account.userLicenceMonth ? account.userLicenceMonth : '01' %}
+                    <select name="fields[userLicenceMonth]" id="userLicenceMonth">
+                        <option{{ userLicenceMonth == '01' ? ' selected' : '' }} value="01">January</option>
+                        <option{{ userLicenceMonth == '02' ? ' selected' : '' }} value="02">February</option>
+                        <option{{ userLicenceMonth == '03' ? ' selected' : '' }} value="03">March</option>
+                        <option{{ userLicenceMonth == '04' ? ' selected' : '' }} value="04">April</option>
+                        <option{{ userLicenceMonth == '05' ? ' selected' : '' }} value="05">May</option>
+                        <option{{ userLicenceMonth == '06' ? ' selected' : '' }} value="06">June</option>
+                        <option{{ userLicenceMonth == '07' ? ' selected' : '' }} value="07">July</option>
+                        <option{{ userLicenceMonth == '08' ? ' selected' : '' }} value="08">August</option>
+                        <option{{ userLicenceMonth == '09' ? ' selected' : '' }} value="09">September</option>
+                        <option{{ userLicenceMonth == '10' ? ' selected' : '' }} value="10">October</option>
+                        <option{{ userLicenceMonth == '11' ? ' selected' : '' }} value="11">November</option>
+                        <option{{ userLicenceMonth == '12' ? ' selected' : '' }} value="12">December</option>
+                    </select>
+                </div>
+                {% if siteLicence.hasCompanyLicences %}
+                <div>
+                    <label for="userLicenceCompany">Licence Company</label>
+                    <select data-relation="fields[userLicenceCompany]" data-value="{{ account.userLicenceCompany.one().id|default() }}" id="userLicenceCompany">
+                        <option value="">--- No Licence Company ---</option>
+                        {% for companyEntry in companyEntries %}
+                        <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
         {% if craft.lantra.setting('enableEditCredentials') or (currentUser.isInGroup('schemeManagers') or currentUser.admin) %}
             <h2>Advanced</h2>
             <div class="field--wrapper">

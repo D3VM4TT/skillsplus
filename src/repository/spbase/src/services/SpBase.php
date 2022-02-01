@@ -65,7 +65,7 @@ class SpBase
 
         ## create new licence
         if ($create && !$licence->id) {
-            $this->client->saveLicence(null, ['userId' => $userId]);
+            $this->client->saveLicence($userId);
             $licence = $this->getLicence($userId, false);
             $this->log($licence,'created');
             return $licence;
@@ -82,22 +82,22 @@ class SpBase
         $licence = $this->client->getLicence($userId);
 
         if ($licence->id) {
-            $this->client->saveLicence($licence->id, ['enabled' => false]);
+            $this->client->suspendEntry($licence);
             $this->log($licence, 'cancelled');
         }
     }
 
     /**
      * @param $userId
-     * @param array $data
+     * @param $month
+     * @param $postDate
+     * @param string $meta
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function updateLicence($userId, $data = [])
+    public function updateLicence($userId, $month, $postDate, $meta = [])
     {
         $licence = $this->client->getLicence($userId);
-
-        if ($licence->valid) {
-            $this->client->saveLicence($licence->id, $data);
-        }
+        $this->client->saveLicence($userId, $month, $postDate, $meta, $licence->id);
     }
 
     /**
@@ -107,7 +107,6 @@ class SpBase
     public function getPayments($userId)
     {
         $licence = $this->getLicence($userId);
-
         return $licence->valid ? $licence->payments : [];
     }
 

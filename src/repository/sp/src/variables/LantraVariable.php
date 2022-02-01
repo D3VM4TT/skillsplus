@@ -25,6 +25,14 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @return \lantra\spbase\models\Site
+     */
+    public function siteLicence()
+    {
+        return Lantra::$app->spbase->getSite();
+    }
+
+    /**
      * @param null $resultEntry
      * @return string|null
      */

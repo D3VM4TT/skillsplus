@@ -9,15 +9,18 @@
 namespace lantra\spbase\services;
 
 use Craft;
-use GuzzleHttp\Exception\GuzzleException;
-use lantra\spbase\Module as SpBase;
+use \DateTime;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleClient;
+
+use lantra\spbase\Module as SpBase;
 use lantra\spbase\models\Licence;
 use lantra\spbase\models\Company;
 use lantra\spbase\models\Site;
 use lantra\spbase\services\gql\exceptions\GraphQLResponseError;
 use lantra\spbase\services\gql\Response;
+
 
 class SpBaseClient
 {
@@ -63,6 +66,23 @@ class SpBaseClient
      */
     public function getSite()
     {
+        $attributes = (object)Craft::$app->cache->getOrSet('spBaseSiteLicence', function () {
+            return $this->getSiteAttributes();
+        }, (86400));
+
+        if (!isset($attributes->id)) {
+            SpBase::error('Invalid Site ID');
+        }
+
+        return new Site($attributes);
+    }
+
+    /**
+     * @return object
+     * @throws GuzzleException
+     */
+    protected function getSiteAttributes()
+    {
         $query = 'query getSite($subdomain: [QueryArgument!]) {  
             entry (section:"sites", subdomain: $subdomain limit: 1, orderBy: "dateCreated DESC") {
                 ... on sites_site_Entry {
@@ -70,8 +90,11 @@ class SpBaseClient
                     id         
                     dateCreated @formatDateTime (format: "Y-m-d")
                     expiryDate @formatDateTime (format: "Y-m-d")
-                    subdomain          
-              }
+                    subdomain
+                    licenceType
+                    licenceSitePayment
+                    hasCompanyLicences
+              }              
             }
         }';
 
@@ -81,13 +104,7 @@ class SpBaseClient
 
         $response = $this->query($query, $variables);
 
-        $attributes = $response->entry ?? [];
-
-        if (!isset($attributes->id)) {
-            SpBase::error('Invalid Site ID');
-        }
-
-        return new Site($attributes);
+        return $response->entry ?? new \stdClass();
     }
 
     /**
@@ -115,25 +132,59 @@ class SpBaseClient
     }
 
     /**
+     * @param $userId
+     * @param string $month
+     * @param string|null $postDate
+     * @param array $meta
      * @param null $entryId
-     * @param array $data
      * @return bool
+     * @throws GuzzleException
      */
-    public function saveLicence($entryId = null, $data = [])
+    public function saveLicence($userId, string $month = '01', string $postDate = null, array $meta = [], $entryId = null)
     {
-        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $userId: Number, $enabled: Boolean) {
-            save_licences_licence_Entry(id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId, enabled: $enabled) {
+        $query = 'mutation saveEntry($entryId: ID, $postDate: DateTime, $authorId: ID, $siteId: Int, $userId: Number, $month: String, $meta: String) {
+            save_licences_licence_Entry(
+                id: $entryId,
+                postDate: $postDate,
+                authorId: $authorId,                
+                relatedSite: [$siteId], 
+                userId: $userId,
+                month: $month,
+                meta: $meta
+            ) {
                 id
             }
         }';
 
         $variables = [
+            'entryId' => $entryId,
+            'postDate' => $postDate,
             'siteId' => $this->getSiteId(),
             'authorId' => $this->getAuthorId(),
-            'entryId' => $entryId
+            'userId' => $userId,
+            'month' => $month,
+            'meta' => json_encode($meta)
         ];
 
-        $variables = array_merge($variables, $data);
+        $response = $this->query($query, $variables);
+
+        return !$response->hasErrors();
+    }
+
+    /**
+     * @param $model
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function suspendEntry($model)
+    {
+        $query = 'mutation saveEntry($entryId: ID) {
+            save_' . $model->__typename . '(id: $entryId, enabled: false)
+        }';
+
+        $variables = [
+            'entryId' => $model->id
+        ];
 
         $response = $this->query($query, $variables);
 
@@ -148,9 +199,7 @@ class SpBaseClient
     public function saveMeta($model, $meta)
     {
         $query = 'mutation saveMeta($entryId: ID, $meta: String) {
-            save_' . $model->__typename . '(id: $entryId, meta: $meta) {
-                id    
-            }  
+            save_' . $model->__typename . '(id: $entryId, meta: $meta)
         }';
 
         $variables = [
@@ -339,7 +388,6 @@ class SpBaseClient
         } catch (\Exception $e) {
             SpBase::error($e->getMessage());
         }
-
         return $response;
     }
 }

@@ -66,10 +66,31 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
-        if ($event->isNew && $user->isLicenced) {
-            $licence = Lantra::$app->spbase->getLicence($user->id);
+        $this->syncUserLicence($user);
+
+        ## Lantra::$app->results->saveUserResultCache($user->id);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function syncUserLicence(User $user)
+    {
+        ## manage cancellation
+        if (!$user->isLicenced) {
+            $existing = Lantra::$app->spbase->getLicence($user->id, false);
+            if ($existing->id) {
+                Lantra::$app->spbase->cancelLicence($user->id);
+            }
+            return;
         }
-        Lantra::$app->results->saveUserResultCache($user->id);
+
+        if (null != $company = $user->userLicenceCompany->one()) {
+            $meta['companyId'] = $company->id;
+            $meta['companyName'] = $company->title;
+        }
+
+        Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
     }
 
     /**
