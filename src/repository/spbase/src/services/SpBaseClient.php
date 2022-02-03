@@ -178,7 +178,9 @@ class SpBaseClient
     public function suspendEntry($model)
     {
         $query = 'mutation saveEntry($entryId: ID) {
-            save_' . $model->__typename . '(id: $entryId, enabled: false)
+            save_' . $model->__typename . '(id: $entryId, enabled: false) {
+                id
+            }
         }';
 
         $variables = [
@@ -198,7 +200,9 @@ class SpBaseClient
     public function saveMeta($model, $meta)
     {
         $query = 'mutation saveMeta($entryId: ID, $meta: String) {
-            save_' . $model->__typename . '(id: $entryId, meta: $meta)
+            save_' . $model->__typename . '(id: $entryId, meta: $meta) {
+                id
+            }
         }';
 
         $variables = [

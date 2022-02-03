@@ -50,6 +50,10 @@ class UserBehavior extends Behavior
             return false;
         }
 
+        if ($this->owner->status != 'active') {
+            return false;
+        }
+
         return !$this->owner->userNotLicenced;
     }
 }

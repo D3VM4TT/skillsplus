@@ -86,7 +86,9 @@ class SpBase
         $licence = $this->client->getLicence($userId);
 
         if ($licence->id) {
-            $this->client->suspendEntry($licence);
+            if (!$this->client->suspendEntry($licence)) {
+
+            }
             $this->log($licence, 'cancelled');
         }
     }

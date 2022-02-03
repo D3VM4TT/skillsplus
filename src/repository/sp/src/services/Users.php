@@ -22,6 +22,7 @@ use craft\elements\MatrixBlock;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use lantra\spbase\Module as SpBase;
 use yii\db\Query;
 use yii\web\UserEvent as YiiUserEvent;
 
@@ -72,16 +73,24 @@ class Users extends Component
     }
 
     /**
+     * @param UserEvent $event
+     * @param User $user
+     */
+    public function onAfterSuspendUser(UserEvent $event, User $user)
+    {
+        Lantra::$app->spbase->cancelLicence($user->id);
+    }
+
+    /**
      * @param User $user
      */
     public function syncUserLicence(User $user)
     {
+        SpBase::log('syncUserLicence [' . $user->id . ']');
+
         ## manage cancellation
         if (!$user->isLicenced) {
-            $existing = Lantra::$app->spbase->getLicence($user->id, false);
-            if ($existing->id) {
-                Lantra::$app->spbase->cancelLicence($user->id);
-            }
+            Lantra::$app->spbase->cancelLicence($user->id);
             return;
         }
 
