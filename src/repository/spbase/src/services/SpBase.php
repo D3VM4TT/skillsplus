@@ -102,7 +102,8 @@ class SpBase
      */
     public function updateLicence($userId, $month, $postDate, $meta = [])
     {
-        $licence = $this->client->getLicence($userId);
+        ## create if it doesn't exist
+        $licence = $this->getLicence($userId);
         $this->client->saveLicence($userId, $month, $postDate, $meta, $licence->id);
     }
 
