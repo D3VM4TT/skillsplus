@@ -156,7 +156,7 @@ class SpBaseClient
                 authorId: $authorId,                
                 relatedSite: [$siteId], 
                 userId: $userId,
-                month: $month,
+                renewalMonth: $month,
                 meta: $meta
             ) {
                 id
@@ -243,7 +243,8 @@ class SpBaseClient
                   }
                   payments {
                     ...on payments_BlockType {
-                        date @formatDateTime (format: "Y-m-d")
+                        dateCreated @formatDateTime (format: "Y-m-d")
+                        code
                         amount 
                         paid
                         reference
