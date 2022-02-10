@@ -10,6 +10,8 @@ namespace lantra\spbase\services;
 
 use Craft;
 
+use lantra\spbase\Module;
+
 class SpBase
 {
     /**
@@ -69,6 +71,7 @@ class SpBase
 
         ## create new licence
         if ($create && !$licence->id) {
+            Module::log('create user licence [' . $userId . ']');
             $this->client->saveLicence($userId);
             $licence = $this->getLicence($userId, false);
             $this->log($licence,'created');

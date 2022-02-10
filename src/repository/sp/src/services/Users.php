@@ -86,13 +86,14 @@ class Users extends Component
      */
     public function syncUserLicence(User $user)
     {
-        SpBase::log('syncUserLicence [' . $user->id . ']');
-
         ## manage cancellation
         if (!$user->isLicenced) {
+            SpBase::log('user not licenced [' . $user->id . ']');
             Lantra::$app->spbase->cancelLicence($user->id);
             return;
         }
+
+        SpBase::log('syncUserLicence [' . $user->id . ']');
 
         $meta = [];
 

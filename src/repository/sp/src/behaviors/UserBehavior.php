@@ -50,7 +50,7 @@ class UserBehavior extends Behavior
             return false;
         }
 
-        if ($this->owner->status != 'active') {
+        if (!in_array($this->owner->status, ['active', 'pending'])) {
             return false;
         }
 
