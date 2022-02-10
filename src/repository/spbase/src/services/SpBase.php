@@ -28,9 +28,9 @@ class SpBase
     /**
      *
      */
-    public function getSite()
+    public function getSite($cache = true)
     {
-        $site = $this->client->getSite();
+        $site = $this->client->getSite($cache);
         return $site;
     }
 
@@ -41,7 +41,7 @@ class SpBase
     {
         $user = Craft::$app->getUser()->getIdentity();
         $log = [
-            'userId' => $user->id,
+            'userId' => $user ? $user->id : 0,
             'action' => $action,
             'comment' => $comment
         ];

@@ -61,13 +61,20 @@ class SpBaseClient
     }
 
     /**
+     * @param true $cache
      * @return Site
+     * @throws GuzzleException
      */
-    public function getSite()
+    public function getSite($cache = true)
     {
-        $attributes = (object)Craft::$app->cache->getOrSet('spBaseSiteLicence', function () {
-            return $this->getSiteAttributes();
-        }, (86400));
+        if ($cache) {
+            $attributes = (object)Craft::$app->cache->getOrSet('spBaseSiteLicence', function () {
+                return $this->getSiteAttributes();
+            }, (86400));
+        }
+        else {
+            $attributes = $this->getSiteAttributes();
+        }
 
         if (!isset($attributes->id)) {
             SpBase::error('Invalid Site ID');
@@ -88,11 +95,12 @@ class SpBaseClient
                     __typename
                     id         
                     dateCreated @formatDateTime (format: "Y-m-d")
-                    expiryDate @formatDateTime (format: "Y-m-d")
+                    siteExpiryDate @formatDateTime (format: "Y-m-d")
                     subdomain
-                    licenceType
-                    licenceSitePayment
+                    licenceModel
                     hasCompanyLicences
+                    totalActive
+                    totalRemaining
               }              
             }
         }';

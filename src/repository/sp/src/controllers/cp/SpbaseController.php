@@ -25,7 +25,7 @@ class SpbaseController extends Controller
      */
     public function actionIndex()
     {
-        $variables['site'] = Lantra::$app->spbase->getSite();
+        $variables['site'] = Lantra::$app->spbase->getSite(false);
         $this->renderTemplate('sp/cp/spbase', $variables);
     }
 }

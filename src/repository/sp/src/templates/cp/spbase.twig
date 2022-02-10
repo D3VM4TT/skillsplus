@@ -12,8 +12,34 @@
     <p>{{ alias('@spBaseUrl') }}</p>
 
     <h2>Site Variables</h2>
-    <pre>{{ dump(site) }}</pre>
 
-    <hr />
+    <table class="data fullwidth">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Licence Model</td>
+            <td>{{ site.licenceModelLabel }}</td>
+        </tr>
+        <tr>
+            <td>Expiry Date</td>
+            <td>{{ site.siteExpiryDate|date('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <td>Total Active</td>
+            <td>{{ site.totalActive }}</td>
+        </tr>
+        {% if site.licenceModel == 1 %}
+        <tr>
+            <td>Total Remaining</td>
+            <td>{{ site.totalRemaining }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+    </table>
 
 {% endblock %}
