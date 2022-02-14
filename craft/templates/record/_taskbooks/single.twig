@@ -20,6 +20,7 @@
 {% set payment = craft.request.getParam('payment') %}
 {% set package = craft.entries.id(packageId).one() %}
 {% set unpaidCost = package.unpaidCost %}
+{% set redirect = 'cpd/' ~ account.id ~ '/taskbooks/' ~ package.id %}
 
 {% if not package %}
     {% exit 404 %}
@@ -27,11 +28,12 @@
 
 {% if payment and not unpaidCost %}
     {# redirect back to package if nothing to pay #}
-    {% redirect 'cpd/' ~ account.id ~ '/taskbooks/' ~ package.id %}
+    {% redirect redirect %}
 {% endif %}
 
 {% set availableModuleGroups = package.moduleGroups('available') %}
 {% set cost = craft.lantra.getModuleGroupCost(package.taskbook, singleType) %}
+{% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
 
 {% set isTaskbooks = true %}
 
@@ -53,7 +55,13 @@
             <div class="field--wrapper">
                 <p>There is £{{ unpaidCost }} outstanding to pay.</p>
                 <p>&nbsp;</p>
-                {{ craft.lantra.payPalButton(package.title ~ ' [optional]', unpaidCost, 'Pay £' ~ unpaidCost, siteUrl('sp/paypal/pay/' ~ package.id), package.unpaidPayPalParams)|raw }}
+                {% set paymentMeta = {
+                    'product' : packageTitle ~ ' [optional]',
+                    'packageId' : package.id,
+                    'moduleGroupIds' : package.unpaidModuleGroupIds,
+                    'redirect' : siteUrl(redirect)
+                } %}
+                {{ craft.lantra.basePaypalButton(account.id, unpaidCost, 'optional-' ~ package.id, paymentMeta, 'Pay £' ~ unpaidCost)|raw }}
             </div>
         {% elseif not availableModuleGroups|length %}
             <div class="field--wrapper">

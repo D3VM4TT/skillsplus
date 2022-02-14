@@ -191,20 +191,15 @@ class PackageBehavior extends Behavior
     }
 
     /**
-     * Returns array of data for PayPal transaction.
-     *
      * @return array
      */
-    public function unpaidPayPalParams()
+    public function unpaidModuleGroupIds()
     {
-        $params = [
-            'packageId' => $this->owner->id,
-            'moduleGroupIds' => []
-        ];
+        $ids = [];
         foreach ($this->moduleGroups('unpaid') as $unpaid) {
-            $params['moduleGroupIds'][] = $unpaid['category']->id;
+            $ids[] = $unpaid['category']->id;
         }
-        return $params;
+        return $ids;
     }
 
     /**

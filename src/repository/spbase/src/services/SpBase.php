@@ -63,7 +63,8 @@ class SpBase
             if (isset($meta['packageId'])) {
                 $this->processTaskbookPayment($meta);
             }
-            elseif (isset($meta['reference']) && $payment['reference'] == 'membership' && $user->isInGroup('usersMembershipPending')) {
+            ## handle membership
+            elseif (isset($meta['isMembership']) && $user->isInGroup('usersMembershipPending')) {
                 $this->processMembershipPayment($user);
             }
             $this->setPaymentProcessed($userId, $payment->id);
@@ -92,8 +93,9 @@ class SpBase
             Module::error('processTaskbookPayment() invalid package id [' . $meta['packageId'] . ']');
         }
 
+        ## handle module groups
         if (isset($meta['moduleGroupIds'])) {
-            $package->payModuleGroups($meta->moduleGroupIds);
+            $package->payModuleGroups($meta['moduleGroupIds']);
         }
         else {
             $package->setFieldValue('packagePaid', true);
