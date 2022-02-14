@@ -186,18 +186,8 @@ class LantraVariable
      */
     public function basePaypalButton($userId, $amount, $reference, $meta = [], $label = 'Pay Now')
     {
-        ## add some randomness
-        $reference .= '-' . StringHelper::randomString(6);
-
-        if (!Lantra::$app->spbase->addPayment($userId, 'paypal', $amount, $reference, $meta)) {
-            return '[[ could not create payment ]]';
-        }
-
-        if (null == $payment = Lantra::$app->spbase->getPayment($userId, $reference)) {
-            return '[[ invalid payment reference ]]';
-        }
-
-        return Lantra::$app->spbase->getPaypalButton($payment, $label);
+        $meta['reference'] = $reference;
+        return Lantra::$app->spbase->getPaypalButton($userId, $amount, $meta, $label);
     }
 
     /**

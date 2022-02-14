@@ -212,18 +212,23 @@ class SpBase
     }
 
     /**
-     * @param $paymentId
-     * @param $product
+     * @param $userId
+     * @param $amount
+     * @param $reference
+     * @param array $meta
      * @param string $label
-     * @param string $redirect
      * @return \Psr\Http\Message\ResponseInterface|string
      * @throws GuzzleException
      */
-    public function getPaypalButton($payment, $label = 'Pay Now')
+    public function getPaypalButton($userId, $amount, $meta = [], $label = 'Pay Now')
     {
+        $licence = $this->getLicence($userId);
+
         return $this->client->request('spbase/payment/button', [
-                'label' => $label,
-                'paymentId' => $payment->id
+                'licenceId' => $licence->id,
+                'amount' => $amount,
+                'meta' => $meta,
+                'label' => $label
             ]);
     }
 
