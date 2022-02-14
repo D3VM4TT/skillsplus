@@ -13,6 +13,7 @@ use craft\db\Query;
 use craft\elements\Entry;
 
 use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
@@ -187,6 +188,7 @@ class LantraVariable
     public function basePaypalButton($userId, $amount, $reference, $meta = [], $label = 'Pay Now')
     {
         $meta['reference'] = $reference;
+        $meta['siteUrl'] = UrlHelper::siteUrl();
         return Lantra::$app->spbase->getPaypalButton($userId, $amount, $meta, $label);
     }
 

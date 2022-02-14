@@ -66,7 +66,7 @@
                 {% set paymentMeta = {
                     'product' : packageTitle,
                     'packageId' : package.id,
-                    'redirect' : siteUrl('/cpd/' ~ userId ~ '/taskbooks')
+                    'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
                 } %}
                 {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
                 <p>&nbsp;</p>

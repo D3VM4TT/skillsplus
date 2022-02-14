@@ -381,9 +381,6 @@ class Plugin extends BasePlugin
         if (Craft::$app->request->isSiteRequest && Lantra::$app->settings->getSetting('maintenanceMode')) {
             $this->maintenanceMode();
         }
-
-        ## check for payment to process
-        Lantra::$app->spbase->processPayments();
     }
 
     /**
@@ -531,10 +528,7 @@ class Plugin extends BasePlugin
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
             'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
 
-            'sp/paypal/ipn'                             => 'sp/paypal/ipn',
-            'sp/paypal/pay/<entryId>'                   => 'sp/paypal/pay',
-            'sp/paypal/pay/'                            => 'sp/paypal/pay',
-            'sp/paypal/verify-payment'                  => 'sp/paypal/verify-payment'
+            'sp/paypal/process/<userId>/<paymentId>'    => 'sp/paypal/process',
         ];
     }
 

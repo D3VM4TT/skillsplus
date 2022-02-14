@@ -13,6 +13,7 @@ use Craft;
 use craft\elements\Entry;
 use craft\elements\User;
 use craft\helpers\Json;
+use craft\helpers\UrlHelper;
 use GuzzleHttp\Exception\GuzzleException;
 use lantra\sp\Plugin as Lantra;
 use lantra\spbase\Module;
@@ -35,40 +36,29 @@ class SpBase
     /**
      *
      */
-    public function processPayments()
+    public function processPayment(User $user, $paymentId)
     {
-        $paymentId = Craft::$app->request->getParam('paymentId');
-        $userId = Craft::$app->request->getParam('userId');
+        $uri = '/';
 
-        ## validate params
-        if (!$paymentId && !$userId) {
-            return;
+        if (null == $payment = $this->getPayment($user->id, $paymentId)) {
+            Module::error('processPayment() invalid payment');
+            return $uri;
         }
 
-        ## validate user
-        if (null == $user = User::findOne($userId)) {
-            return;
+        $meta = Json::decodeifJson($payment->meta, true);
+        $uri = isset($meta['redirect']) ? $meta['redirect'] : '/';
+
+        ## handle packages
+        if (isset($meta['packageId'])) {
+            $this->processTaskbookPayment($meta);
+        }
+        ## handle membership
+        elseif (isset($meta['isMembership']) && $user->isInGroup('usersMembershipPending')) {
+            $this->processMembershipPayment($user);
         }
 
-        $licence = $this->getLicence($userId);
-
-        ## validate all unprocessed payments
-        foreach($licence->payments as $payment) {
-            if ($payment->isProcessed) {
-                continue;
-            }
-            $meta = Json::decodeifJson($payment->meta, true);
-
-            ## handle packages
-            if (isset($meta['packageId'])) {
-                $this->processTaskbookPayment($meta);
-            }
-            ## handle membership
-            elseif (isset($meta['isMembership']) && $user->isInGroup('usersMembershipPending')) {
-                $this->processMembershipPayment($user);
-            }
-            $this->setPaymentProcessed($userId, $payment->id);
-        }
+        $this->setPaymentProcessed($user->id, $payment->id);
+        return $uri;
     }
 
     /**
@@ -200,15 +190,15 @@ class SpBase
      * @param $userId
      * @return array
      */
-    public function getPayment($userId, $reference)
+    public function getPayment($userId, $paymentId)
     {
         $payments = $this->getPayments($userId);
         foreach ($payments as $payment) {
-            if ($payment->reference == $reference) {
+            if ($payment->id == $paymentId) {
                 return $payment;
             }
         }
-        return false;
+        return null;
     }
 
     /**

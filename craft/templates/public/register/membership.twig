@@ -25,8 +25,8 @@
                     {{ globalsHtml.pageMembership }}
                     {% set paymentMeta = {
                         'product' : membership.title,
-                        'isMembership' : true,
-                        'redirect' : siteUrl('/')
+                        'isMembership' : 1,
+                        'redirect' : '/'
                     } %}
                     {{ craft.lantra.basePaypalButton(currentUser.id, membership.cost, 'membership', paymentMeta, 'Pay £' ~ membership.cost)|raw }}
                 </div>
