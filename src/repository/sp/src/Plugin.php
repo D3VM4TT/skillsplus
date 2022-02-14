@@ -381,6 +381,9 @@ class Plugin extends BasePlugin
         if (Craft::$app->request->isSiteRequest && Lantra::$app->settings->getSetting('maintenanceMode')) {
             $this->maintenanceMode();
         }
+
+        ## check for payment to process
+        Lantra::$app->spbase->processPayments();
     }
 
     /**

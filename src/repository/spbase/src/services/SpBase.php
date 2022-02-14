@@ -10,6 +10,11 @@ namespace lantra\spbase\services;
 
 use Craft;
 
+use craft\elements\Entry;
+use craft\elements\User;
+use craft\helpers\Json;
+use GuzzleHttp\Exception\GuzzleException;
+use lantra\sp\Plugin as Lantra;
 use lantra\spbase\Module;
 
 class SpBase
@@ -25,6 +30,75 @@ class SpBase
     public function __construct()
     {
         $this->client = new SpBaseClient();
+    }
+
+    /**
+     *
+     */
+    public function processPayments()
+    {
+        $paymentId = Craft::$app->request->getParam('paymentId');
+        $userId = Craft::$app->request->getParam('userId');
+
+        ## validate params
+        if (!$paymentId && !$userId) {
+            return;
+        }
+
+        ## validate user
+        if (null == $user = User::findOne($userId)) {
+            return;
+        }
+
+        $licence = $this->getLicence($userId);
+
+        ## validate all unprocessed payments
+        foreach($licence->payments as $payment) {
+            if ($payment->isProcessed) {
+                continue;
+            }
+            $meta = Json::decodeifJson($payment->meta, true);
+
+            ## handle packages
+            if (isset($meta['packageId'])) {
+                $this->processTaskbookPayment($meta);
+            }
+            elseif (isset($meta['reference']) && $payment['reference'] == 'membership' && $user->isInGroup('usersMembershipPending')) {
+                $this->processMembershipPayment($user);
+            }
+            $this->setPaymentProcessed($userId, $payment->id);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
+     */
+    private function processMembershipPayment(User $user)
+    {
+        $group = Craft::$app->userGroups->getGroupByHandle('users');
+        Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+        Lantra::$app->notify->sendNewMembership($user);
+    }
+
+    /**
+     * @param $meta
+     */
+    private function processTaskbookPayment($meta)
+    {
+        if (null == $package = Entry::findOne($meta['packageId'])) {
+            Module::error('processTaskbookPayment() invalid package id [' . $meta['packageId'] . ']');
+        }
+
+        if (isset($meta['moduleGroupIds'])) {
+            $package->payModuleGroups($meta->moduleGroupIds);
+        }
+        else {
+            $package->setFieldValue('packagePaid', true);
+        }
+        $package->save();
     }
 
     /**
@@ -118,6 +192,70 @@ class SpBase
     {
         $licence = $this->getLicence($userId);
         return $licence->valid ? $licence->payments : [];
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getPayment($userId, $reference)
+    {
+        $payments = $this->getPayments($userId);
+        foreach ($payments as $payment) {
+            if ($payment->reference == $reference) {
+                return $payment;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $paymentId
+     * @param $product
+     * @param string $label
+     * @param string $redirect
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws GuzzleException
+     */
+    public function getPaypalButton($payment, $label = 'Pay Now')
+    {
+        return $this->client->request('spbase/payment/button', [
+                'label' => $label,
+                'paymentId' => $payment->id
+            ]);
+    }
+
+    /**
+     * @param $userId
+     * @param $amount
+     * @param $reference
+     * @return bool
+     */
+    public function addPayment($userId, $method, $amount, $reference, $meta = [])
+    {
+        $licence = $this->getLicence($userId);
+        $payment = [
+            'method' => $method,
+            'amount' => $amount,
+            'reference' => $reference,
+            'meta' => Json::encode($meta)
+        ];
+        return $this->client->saveMeta($licence, ['payment' => $payment]);
+    }
+
+    /**
+     * @param $userId
+     * @param $paymentId
+     * @return bool
+     */
+    public function setPaymentProcessed($userId, $paymentId)
+    {
+        $licence = $this->getLicence($userId);
+        $payment = [
+            'id' => $paymentId,
+            'isProcessed' => true
+        ];
+        return $this->client->saveMeta($licence, ['payment' => $payment]);
     }
 
     /**

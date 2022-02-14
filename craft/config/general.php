@@ -36,7 +36,7 @@ return [
             '@assetsPath' => '/datadisk/azureshare/' . getenv('SITE') . '/',
             '@server' => getenv('ENVIRONMENT'),
             '@site' => getenv('SITE'),
-            '@spBaseUrl' => 'https://base.skills-plus.net/api'
+            '@spBaseUrl' => 'https://base.skills-plus.net'
         ],
     ],
     'cbd' => [
@@ -46,7 +46,7 @@ return [
         'aliases' => [
             '@basePath' => '/var/www/sp.coffeebean.design',
             '@assetsPath' => '/var/www/sp.coffeebean.design/craft-assets/',
-            '@spBaseUrl' => 'http://base.coffeebean.design/api'
+            '@spBaseUrl' => 'https://base.coffeebean.design'
         ],
     ],
     'local' => [
@@ -56,7 +56,7 @@ return [
         'aliases' => [
             '@basePath' => '/app/',
             '@assetsPath' => '/app/craft-assets/',
-            '@spBaseUrl' => 'http://base.coffeebean.design/api'
+            '@spBaseUrl' => 'http://base.coffeebean.design'
         ],
     ],
     'jason' => [
@@ -72,12 +72,12 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@spBaseUrl' => 'http://base.coffeebean.design/api'
+            '@spBaseUrl' => 'http://base.coffeebean.design'
         ]
     ],
     'uat' => [
         'aliases' => [
-            '@spBaseUrl' => 'http://base.coffeebean.design/api'
+            '@spBaseUrl' => 'http://base.coffeebean.design'
         ]
     ],
     'prod' => [

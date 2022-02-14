@@ -12,6 +12,7 @@ use Craft;
 use craft\db\Query;
 use craft\elements\Entry;
 
+use craft\helpers\StringHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
@@ -172,6 +173,31 @@ class LantraVariable
     public function payPalButton($product = null, $amount = 0, $label = 'Pay Now', $return = '', $custom = [])
     {
         return Lantra::$app->paypal->getButton($product, $amount, $label, $return, $custom);
+    }
+
+    /**
+     * @param $userId
+     * @param $amount
+     * @param $reference
+     * @param array $meta
+     * @param string $label
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function basePaypalButton($userId, $amount, $reference, $meta = [], $label = 'Pay Now')
+    {
+        ## add some randomness
+        $reference .= '-' . StringHelper::randomString(6);
+
+        if (!Lantra::$app->spbase->addPayment($userId, 'paypal', $amount, $reference, $meta)) {
+            return '[[ could not create payment ]]';
+        }
+
+        if (null == $payment = Lantra::$app->spbase->getPayment($userId, $reference)) {
+            return '[[ invalid payment reference ]]';
+        }
+
+        return Lantra::$app->spbase->getPaypalButton($payment, $label);
     }
 
     /**

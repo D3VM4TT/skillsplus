@@ -13,6 +13,7 @@ use Craft;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleClient;
 
+use lantra\spbase\Module;
 use lantra\spbase\Module as SpBase;
 use lantra\spbase\models\Licence;
 use lantra\spbase\models\Company;
@@ -53,7 +54,7 @@ class SpBaseClient
      */
     public function __construct()
     {
-        $this->endpoint = Craft::getAlias('@spBaseUrl');
+        $this->endpoint = Craft::getAlias('@spBaseUrl') . '/api';
 
         $this->subdomain = Craft::getAlias('@site');
 
@@ -243,11 +244,15 @@ class SpBaseClient
                   }
                   payments {
                     ...on payments_BlockType {
+                        id                        
                         dateCreated @formatDateTime (format: "Y-m-d")
+                        method
                         code
-                        amount 
-                        paid
+                        amount                        
                         reference
+                        meta
+                        isPaid
+                        isProcessed
                     }
                   }       
               }
@@ -322,6 +327,31 @@ class SpBaseClient
         $response = $this->query($query, $variables);
 
         return !$response->hasErrors();
+    }
+
+    /**
+     * Bypass GQL and call api directly (i.e. get button html)
+     *
+     * @param $method
+     * @param array $params
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws GuzzleException
+     */
+    public function request($method, array $params = [])
+    {
+        $response = '[[ empty response ]]';
+
+        $endpoint = Craft::getAlias('@spBaseUrl') . '/actions/' . $method;
+
+        try {
+            $guzzleResponse = $this->guzzle->request('POST', $endpoint, ['form_params' => $params]);
+            $response = $guzzleResponse->getBody()->getContents();
+        } catch (\Exception $e) {
+            $response = $e->getMessage();
+            Module::error($e->getMessage());
+        }
+
+        return $response;
     }
 
     /**
