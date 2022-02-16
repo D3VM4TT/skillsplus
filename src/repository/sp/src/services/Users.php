@@ -100,12 +100,14 @@ class Users extends Component
             'email' => $user->email
         ];
 
-        if (null != $company = $user->userLicenceCompany->one()) {
-            $meta['companyId'] = $company->id;
-            $meta['companyName'] = $company->title;
-        }
-
         Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
+
+        if (null != $company = $user->userLicenceCompany->one()) {
+            Lantra::$app->spbase->processLicence($user->id, [
+                'companyId' => $company->id,
+                'companyName' => $company->title
+            ]);
+        }
     }
 
     /**

@@ -166,7 +166,7 @@ class SpBase
      * @param $userId
      * @param $month
      * @param $postDate
-     * @param string $meta
+     * @param array $meta
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateLicence($userId, $month, $postDate, $meta = [])
@@ -174,6 +174,16 @@ class SpBase
         ## create if it doesn't exist
         $licence = $this->getLicence($userId);
         $this->client->saveLicence($userId, $month, $postDate, $meta, $licence->id);
+    }
+
+    /**
+     * @param $userId
+     * @param array $process
+     */
+    public function processLicence($userId, $process = [])
+    {
+        $licence = $this->getLicence($userId);
+        $this->client->saveProcess($licence, $process);
     }
 
     /**
