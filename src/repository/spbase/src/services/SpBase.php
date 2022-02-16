@@ -113,7 +113,7 @@ class SpBase
             'action' => $action,
             'comment' => $comment
         ];
-        return $this->client->saveMeta($element, ['log' => $log]);
+        return $this->client->saveProcess($element, ['log' => $log]);
     }
 
     /**
@@ -237,7 +237,7 @@ class SpBase
             'reference' => $reference,
             'meta' => Json::encode($meta)
         ];
-        return $this->client->saveMeta($licence, ['payment' => $payment]);
+        return $this->client->saveProcess($licence, ['payment' => $payment]);
     }
 
     /**
@@ -252,7 +252,7 @@ class SpBase
             'id' => $paymentId,
             'isProcessed' => true
         ];
-        return $this->client->saveMeta($licence, ['payment' => $payment]);
+        return $this->client->saveProcess($licence, ['payment' => $payment]);
     }
 
     /**

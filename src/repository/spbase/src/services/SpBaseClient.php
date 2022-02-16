@@ -12,6 +12,7 @@ use Craft;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleClient;
+use craft\helpers\Json;
 
 use lantra\spbase\Module;
 use lantra\spbase\Module as SpBase;
@@ -171,7 +172,7 @@ class SpBaseClient
             'authorId' => $this->getAuthorId(),
             'userId' => (string) $userId,
             'month' => $month,
-            'meta' => json_encode($meta)
+            'meta' => Json::encode($meta)
         ];
 
         $response = $this->query($query, $variables);
@@ -203,20 +204,20 @@ class SpBaseClient
 
     /**
      * @param $model
-     * @param $meta
+     * @param $process
      * @return bool
      */
-    public function saveMeta($model, $meta)
+    public function saveProcess($model, $process)
     {
-        $query = 'mutation saveMeta($entryId: ID, $meta: String) {
-            save_' . $model->__typename . '(id: $entryId, meta: $meta) {
+        $query = 'mutation saveProcess($entryId: ID, $process: String) {
+            save_' . $model->__typename . '(id: $entryId, process: $process) {
                 id
             }
         }';
 
         $variables = [
             'entryId' => $model->id,
-            'meta' => json_encode($meta),
+            'process' => Json::encode($process),
         ];
 
         $response = $this->query($query, $variables);
@@ -415,7 +416,7 @@ class SpBaseClient
                 'headers' => $headers
             ]);
 
-            $json = json_decode($guzzleResponse->getBody()->getContents(), false);
+            $json = Json::decodeIfJson($guzzleResponse->getBody()->getContents(), false);
 
             if ($json === null) {
                 throw new GraphQLResponseError("Invalid GraphQL json.");
