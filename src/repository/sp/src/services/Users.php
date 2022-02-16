@@ -95,7 +95,10 @@ class Users extends Component
 
         SpBase::log('syncUserLicence [' . $user->id . ']');
 
-        $meta = [];
+        $meta = [
+            'userFullName' => $user->fullName,
+            'email' => $user->email
+        ];
 
         if (null != $company = $user->userLicenceCompany->one()) {
             $meta['companyId'] = $company->id;
