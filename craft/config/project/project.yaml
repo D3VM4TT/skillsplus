@@ -1,4 +1,4 @@
-dateModified: 1643466140
+dateModified: 1645112852
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -204,6 +204,7 @@ meta:
     7209f99b-e88b-403f-b8ba-fbb0301b5c0f: Paid # Paid
     7718e01c-cd5b-43db-b9a3-e138c5c09429: 'Report Format' # Report Format
     8200bbc7-18f0-49da-a017-2fb3a82ee950: 'Report Result Expiry' # Report Result Expiry
+    12871de0-f772-46c9-a3e4-d4d6578bc35f: 'User Licence ID' # User Licence ID
     19794a8d-aa57-4cea-9297-7c4ccfb2d561: 'Field Label' # Field Label
     46656fa8-cf4d-4c7e-93d0-800132d01aa2: 'Unit Points Override' # Unit Points Override
     48909e73-b939-470f-b472-53ee709db6e4: 'Module Group Read Only' # Module Group Read Only

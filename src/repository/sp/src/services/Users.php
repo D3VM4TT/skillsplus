@@ -93,20 +93,24 @@ class Users extends Component
             return;
         }
 
-        SpBase::log('syncUserLicence [' . $user->id . ']');
-
         $meta = [
             'userFullName' => $user->fullName,
             'email' => $user->email
         ];
 
-        Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
+        $licence = Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
 
         if (null != $company = $user->userLicenceCompany->one()) {
             Lantra::$app->spbase->processLicence($user->id, [
                 'companyId' => $company->id,
                 'companyName' => $company->title
             ]);
+        }
+
+        ## save the licence id
+        if (!$user->userLicenceId) {
+            $user->setFieldValue('userLicenceId', $licence->id);
+            Craft::$app->elements->saveElement($user, false);
         }
     }
 

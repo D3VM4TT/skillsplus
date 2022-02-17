@@ -1,0 +1,21 @@
+columnSuffix: jxeigeam
+contentColumnType: text
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userLicenceId
+instructions: ''
+name: 'User Licence ID'
+searchable: false
+settings:
+  byteLimit: null
+  charLimit: null
+  code: ''
+  columnType: null
+  initialRows: '4'
+  mode: readonly
+  modeOverride: ''
+  multiline: ''
+  placeholder: null
+  uiMode: normal
+translationKeyFormat: null
+translationMethod: none
+type: mmikkel\incognitofield\fields\IncognitoFieldType

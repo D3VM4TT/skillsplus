@@ -167,13 +167,15 @@ class SpBase
      * @param $month
      * @param $postDate
      * @param array $meta
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \lantra\spbase\models\Licence
+     * @throws GuzzleException
      */
     public function updateLicence($userId, $month, $postDate, $meta = [])
     {
         ## create if it doesn't exist
         $licence = $this->getLicence($userId);
         $this->client->saveLicence($userId, $month, $postDate, $meta, $licence->id);
+        return $licence;
     }
 
     /**
