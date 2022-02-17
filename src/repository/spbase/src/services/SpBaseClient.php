@@ -149,7 +149,7 @@ class SpBaseClient
      * @return bool
      * @throws GuzzleException
      */
-    public function saveLicence($userId, string $month = '01', string $postDate = null, array $meta, $entryId = null)
+    public function saveLicence($userId, string $month = '01', string $postDate = null, array $meta = [], $entryId = null)
     {
         $query = 'mutation saveEntry($entryId: ID, $postDate: DateTime, $authorId: ID, $siteId: Int, $userId: String, $month: String, $meta: String) {
             save_licences_licence_Entry(
