@@ -12,17 +12,15 @@ use yii\log\Logger;
 
 class Module extends \yii\base\Module
 {
-    /**
-     * @var
-     */
-    public static $module;
+    public static $plugin;
 
     /**
      *
      */
     public function init()
     {
-        self::$module = $this;
+        parent::init();
+        self::$plugin = $this;
 
         ## add the spbase log file
         $fileTarget = new FileTarget([
@@ -41,6 +39,18 @@ class Module extends \yii\base\Module
         );
 
         parent::init();
+    }
+
+    /**
+     * @param $message
+     * @return string[]
+     */
+    public static function getSiteUrlRules()
+    {
+        return [
+            'spbase/users/info/<action{slug}>' => 'spbase/users/info',
+            'spbase/users/resave' => 'spbase/users/resave'
+        ];
     }
 
     /**
@@ -68,15 +78,5 @@ class Module extends \yii\base\Module
     public static function log($message, $level = Logger::LEVEL_INFO)
     {
         Craft::getLogger()->log($message, $level, 'spbase');
-    }
-
-    /**
-     * @return array
-     */
-    private function getSiteUrlRules()
-    {
-        return [
-            'spbase/users/<action:{slug}>' => 'spbase/base/users'
-        ];
     }
 }

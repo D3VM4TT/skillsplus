@@ -11,9 +11,10 @@ namespace lantra\spbase\controllers;
 use craft\elements\User;
 use craft\web\Controller;
 
-use lantra\spbase\Module;
+use lantra\spbase\jobs\ResaveUsersJob;
+use craft\helpers\Queue;
 
-class BaseController extends Controller {
+class UsersController extends Controller {
 
     public $allowAnonymous = true;
     public $enableCsrfValidation = false;
@@ -22,14 +23,14 @@ class BaseController extends Controller {
      * @param string $action
      * @return \yii\web\Response
      */
-    public function actionUsers($action = 'count')
+    public function actionInfo($action = 'count')
     {
         $criteria = User::find();
         $criteria->group = ['users', 'companyManagers', 'teamManagers'];
         $criteria->admin(0);
         $criteria->userNotLicenced(false);
         $result = $action == 'count' ? $criteria->count() : $criteria->ids();
-        return $this->asJson($result);
+        return $this->response($result);
     }
 
     /**
@@ -37,8 +38,24 @@ class BaseController extends Controller {
      */
     public function actionResave()
     {
-        Module::$module->controllerNamespace = 'craft\console\controllers';
-        Module::$module->runAction('resave/users');
-        return $this->asJson(1);
+        $resaveUsersJob = new ResaveUsersJob([
+            'hasLicence' => false
+        ]);
+
+        Queue::push($resaveUsersJob);
+        return $this->response('Resave users added to queue.');
+    }
+
+    /**
+     * @param bool $success
+     * @param string $message
+     * @return \yii\web\Response
+     */
+    public function response($message = '', $success = true)
+    {
+        return $this->asJson([
+            'success' => $success,
+            'message' => $message
+        ]);
     }
 }
