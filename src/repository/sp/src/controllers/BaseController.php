@@ -44,8 +44,10 @@ class BaseController extends Controller {
         }
 
         if ($redirect) {
-            return $this->redirect($redirect);
+            $this->redirect($redirect);
         }
-        $this->redirectToPostedUrl();
+        else {
+            $this->redirectToPostedUrl();
+        }
     }
 }
