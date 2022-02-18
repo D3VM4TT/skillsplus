@@ -26,7 +26,7 @@ class UsersController extends Controller {
     public function actionInfo($action = 'count')
     {
         $criteria = User::find();
-        $criteria->group = ['users', 'companyManagers', 'teamManagers'];
+        $criteria->group('users');
         $criteria->admin(0);
         $criteria->userNotLicenced(false);
         $result = $action == 'count' ? $criteria->count() : $criteria->ids();

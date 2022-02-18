@@ -42,11 +42,11 @@ class UserBehavior extends Behavior
      */
     public function getIsLicenced()
     {
-        if ($this->owner->admin) {
+        if ($this->owner->admin || $this->owner->isInGroup('editors')) {
             return false;
         }
 
-        if ($this->owner->isInGroup('schemeManagers') || $this->owner->isInGroup('editors')) {
+        if (!$this->owner->isInGroup('users')) {
             return false;
         }
 
