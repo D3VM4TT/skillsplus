@@ -1,10 +1,17 @@
-{% set usersAll = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status(null).count() %}
-{% set usersActive = craft.users.group('users, teamManagers, companyManagers, schemeManagers').status('active').count() %}
-{% set licencesCompany = craft.lantra.totalCompanyLicences() %}
-{% set licencesScheme = craft.lantra.setting('schemeRemainingLicences', 0) %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
-{% set lantraLicences = not craft.lantra.setting('lantraDisableLicences') %}
-{% set schemeExpiryDate = craft.lantra.setting('schemeExpiryDate')  %}
+
+{% set usersNotLicenced = craft.users.userNotLicenced(true).count() %}
+{% set siteLicence = craft.lantra.siteLicence(false) %}
+{% set schemeExpiryDate = siteLicence.siteExpiryDate  %}
+
+{% set licenceModels = {
+    '1': 'Site Advance',
+    '2': 'Site Arrears',
+    '3': 'User Advance',
+    '4': 'User Arrears'
+}
+%}
+
 {% extends "_layout" %}
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -13,19 +20,17 @@
     <section class="page">
         <div class="page-header secondary-bg">
             <h2>Scheme Profile</h2>
-            <p>An overview of your Scheme{% if lantraLicences %} and licence allocations{% endif %}.</p>
+            <p>An overview of your Scheme.</p>
         </div>
         <div class="page-content">
             <p class="scheme-profile">
                 <span class="label">Scheme Name:</span> {{ craft.lantra.setting('schemeName', 'unknown') }}<br />
-                <span class="label">Scheme Renewal Date:</span> {{ schemeExpiryDate ? schemeExpiryDate|date(dateFormat) : 'Never' }}<br />
-                <span class="label">Active Users (inc. Managers):</span> {{ usersActive }}<br />
-                <span class="label">Inactive users:</span> {{ usersAll - usersActive }}<br />
-                {% if lantraLicences %}
-                    <span class="label">Total licences issued:</span> {{ licencesScheme + licencesCompany + usersAll }}<br />
-                    <span class="label">Licences available to Scheme Manager:</span>{{ licencesScheme }}<br />
-                    <span class="label">Licences available to Company Managers :</span> {{ licencesCompany }}<br />
-                    <span class="label">Total currently available:</span> {{ licencesScheme + licencesCompany }}<br />
+                <span class="label">Scheme Expiry Date:</span> {{ schemeExpiryDate ? schemeExpiryDate|date(dateFormat) : 'Never' }}<br />
+                <span class="label">Licence Model:</span> {{ licenceModels[siteLicence.licenceModel] }}<br />
+                <span class="label">Licenced Users:</span> {{ siteLicence.totalActive }}<br />
+                <span class="label">Unlicenced Users:</span> {{ usersNotLicenced }}<br />
+                {% if siteLicence.licenceModel == 1 %}
+                    <span class="label">Remaining Licences:</span> {{ siteLicence.totalRemaining }}
                 {% endif %}
             </p>
         </div>

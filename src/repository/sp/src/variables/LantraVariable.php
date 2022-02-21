@@ -29,9 +29,9 @@ class LantraVariable
     /**
      * @return \lantra\spbase\models\Site
      */
-    public function siteLicence()
+    public function siteLicence($cache = true)
     {
-        return Lantra::$app->spbase->getSite();
+        return Lantra::$app->spbase->getSite($cache);
     }
 
     /**
