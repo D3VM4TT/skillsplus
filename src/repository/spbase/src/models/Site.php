@@ -12,7 +12,8 @@ class Site extends SpBase
 {
     public $subdomain;
     public $siteExpiryDate;
-    public $licenceModel;
+    public $licenceTypeSite;
+    public $licenceTypeUser;
     public $hasCompanyLicences;
     public $totalActive;
     public $totalRemaining;
@@ -22,17 +23,16 @@ class Site extends SpBase
      */
     public function getLicenceModelLabel()
     {
-        if ($this->licenceModel == 1) {
-            return 'Site Advance';
+        $model = '';
+
+        if ($this->licenceTypeSite != 'none') {
+            $model = 'Site ' . ucfirst($this->licenceTypeSite);
         }
-        if ($this->licenceModel == 2) {
-            return 'Site Arrears';
+
+        if ($this->licenceTypeUser != 'none') {
+            $model .= ($model ? ' - '  : '') . 'User ' . ucfirst($this->licenceTypeUser);
         }
-        if ($this->licenceModel == 3) {
-            return 'User Advance';
-        }
-        if ($this->licenceModel == 4) {
-            return 'User Arrears';
-        }
+
+        return $model;
     }
 }

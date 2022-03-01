@@ -99,7 +99,8 @@ class SpBaseClient
                     dateCreated @formatDateTime (format: "Y-m-d")
                     siteExpiryDate @formatDateTime (format: "Y-m-d")
                     subdomain
-                    licenceModel
+                    licenceTypeSite
+                    licenceTypeUser
                     hasCompanyLicences
                     totalActive
                     totalRemaining

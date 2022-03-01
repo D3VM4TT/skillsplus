@@ -4,14 +4,6 @@
 {% set siteLicence = craft.lantra.siteLicence(false) %}
 {% set schemeExpiryDate = siteLicence.siteExpiryDate  %}
 
-{% set licenceModels = {
-    '1': 'Site Advance',
-    '2': 'Site Arrears',
-    '3': 'User Advance',
-    '4': 'User Arrears'
-}
-%}
-
 {% extends "_layout" %}
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -26,10 +18,10 @@
             <p class="scheme-profile">
                 <span class="label">Scheme Name:</span> {{ craft.lantra.setting('schemeName', 'unknown') }}<br />
                 <span class="label">Scheme Expiry Date:</span> {{ schemeExpiryDate ? schemeExpiryDate|date(dateFormat) : 'Never' }}<br />
-                <span class="label">Licence Model:</span> {{ licenceModels[siteLicence.licenceModel] }}<br />
+                <span class="label">Licence Model:</span> {{ siteLicence.licenceModelLabel }}<br />
                 <span class="label">Licenced Users:</span> {{ siteLicence.totalActive }}<br />
                 <span class="label">Unlicenced Users:</span> {{ usersNotLicenced }}<br />
-                {% if siteLicence.licenceModel == 1 %}
+                {% if siteLicence.licenceTypeSite == 'advance' %}
                     <span class="label">Remaining Licences:</span> {{ siteLicence.totalRemaining }}
                 {% endif %}
             </p>
