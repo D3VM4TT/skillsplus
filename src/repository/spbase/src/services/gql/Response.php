@@ -10,7 +10,7 @@ namespace lantra\spbase\services\gql;
 
 class Response
 {
-    public $valid;
+    public $valid = false;
 
     /**
      * @var
@@ -25,7 +25,7 @@ class Response
     /**
      * @param $response
      */
-    public function __construct($response)
+    public function load($response)
     {
         if (isset($response->data)) {
             $this->data = $response->data;
@@ -34,6 +34,8 @@ class Response
         if (isset($response->errors)) {
             $this->errors = $response->errors;
         }
+
+        $this->valid = !$this->hasErrors();
     }
 
     /**

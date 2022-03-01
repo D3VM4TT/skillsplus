@@ -1,0 +1,49 @@
+{% set title = 'Lantra Skills+ Base' %}
+{% extends "sp/cp/_layout" %}
+{% import "_includes/forms" as forms %}
+{% set selectedSubnavItem = 'spbase' %}
+
+{% set fullPageForm = false %}
+{% set saveButton = null %}
+
+{% block content %}
+
+    <h2>Server</h2>
+    <p>{{ alias('@spBaseUrl') }}</p>
+
+    <h2>Site Variables</h2>
+
+    <table class="data fullwidth">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Site</td>
+            <td>{{ site.subdomain }} #{{ site.id }}</td>
+        </tr>
+        <tr>
+            <td>Licence Model</td>
+            <td>{{ site.licenceModelLabel }}</td>
+        </tr>
+        <tr>
+            <td>Expiry Date</td>
+            <td>{{ site.siteExpiryDate|date('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <td>Total Active</td>
+            <td>{{ site.totalActive }}</td>
+        </tr>
+        {% if site.licenceTypeSite == 'advance' %}
+        <tr>
+            <td>Total Remaining</td>
+            <td>{{ site.totalRemaining }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+    </table>
+
+{% endblock %}

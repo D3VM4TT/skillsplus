@@ -12,6 +12,7 @@ use craft\base\Model;
 
 class SpBase extends Model
 {
+    public $__typename;
     public $id;
     public $dateCreated;
     public $expiryDate;

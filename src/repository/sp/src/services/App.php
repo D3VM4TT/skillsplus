@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use craft\base\Component;
 
 use lantra\sp\services\paypal\PayPal;
+use lantra\spbase\services\SpBase;
 
 /**
  * Class App
@@ -29,6 +30,7 @@ use lantra\sp\services\paypal\PayPal;
  * @property-read \lantra\sp\services\Reports $reports
  * @property-read \lantra\sp\services\Results $results
  * @property-read \lantra\sp\services\Settings $settings
+ * @property-read \lantra\spbase\services\SpBase $spbase
  * @property-read \lantra\sp\services\Structure $structure
  * @property-read \lantra\sp\services\Users $users
  *
@@ -50,6 +52,7 @@ class App extends Component
     public $reports;
     public $results;
     public $settings;
+    public $spbase;
     public $structure;
     public $users;
 
@@ -73,6 +76,7 @@ class App extends Component
         $this->reports = new Reports();
         $this->results = new Results();
         $this->settings = new Settings();
+        $this->spbase = new SpBase();
         $this->structure = new Structure();
         $this->users = new Users();
     }

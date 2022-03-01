@@ -15,6 +15,7 @@ use craft\elements\Asset;
 use craft\elements\Category;
 use craft\elements\User;
 use craft\elements\Entry;
+use craft\events\AuthenticateUserEvent;
 use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
@@ -34,12 +35,14 @@ use craft\web\UrlManager;
 use lantra\sp\models\Record;
 use yii\base\Event;
 use yii\db\Query;
+use yii\web\User as YiiUser;
+use yii\web\UserEvent as YiiUserEvent;
 
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\behaviors\PackageBehavior;
 use lantra\sp\behaviors\ModuleBehavior;
 use lantra\sp\behaviors\ModuleGroupBehavior;
-use lantra\sp\behaviors\UserRecordBehavior;
+use lantra\sp\behaviors\UserBehavior;
 use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\behaviors\MagicTitleBehavior;
 use lantra\sp\services\App;
@@ -47,7 +50,7 @@ use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
 use lantra\sp\assetbundles\SpCpAsset;
 
-
+use lantra\spbase\services\SpBase;
 
 /**
  * Class LantraPlugin
@@ -84,7 +87,11 @@ class Plugin extends BasePlugin
         $this::$app = $this->get('app');
 
         ## add the lantra log file
-        $fileTarget = new FileTarget(['logFile' => '@storage/logs/lantra.log', 'categories' => ['lantra\sp\*']]);
+        $fileTarget = new FileTarget([
+            'logVars' => [],
+            'logFile' => '@storage/logs/lantra.log',
+            'categories' => ['lantra\sp\*']
+        ]);
         Craft::getLogger()->dispatcher->targets[] = $fileTarget;
 
         Event::on(
@@ -133,10 +140,51 @@ class Plugin extends BasePlugin
         );
 
         Event::on(
+            YiiUser::class,
+            YiiUser::EVENT_BEFORE_LOGIN,
+            function (YiiUserEvent $event) {
+                $user = User::findOne($event->identity->id);
+                Lantra::$app->users->onBeforeLoginUser($event, $user);
+            }
+        );
+
+        Event::on(
+            YiiUser::class,
+            YiiUser::EVENT_AFTER_LOGIN,
+            function (YiiUserEvent $event) {
+                $user = User::findOne($event->identity->id);
+                Lantra::$app->users->onAfterLoginUser($event, $user);
+            }
+        );
+
+        Event::on(
+            Users::class,
+            Users::EVENT_AFTER_SUSPEND_USER,
+            function (UserEvent $event) {
+                Lantra::$app->users->onAfterSuspendUser($event, $event->user);
+            }
+        );
+
+        Event::on(
+            Users::class,
+            Users::EVENT_BEFORE_UNSUSPEND_USER,
+            function (UserEvent $event) {
+                ## stop unsuspend users
+                $event->isValid = false;
+            }
+        );
+
+        Event::on(
             User::class,
             User::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
                 $user = $event->sender;
+                ## gah..! preparse field makes all elements save twice
+                foreach (debug_backtrace(2, 12) as $trace) {
+                    if (isset($trace['class']) && $trace['class'] == 'besteadfast\preparsefield\PreparseField') {
+                        return;
+                    }
+                }
                 Lantra::$app->users->onSaveUser($event, $user);
             }
         );
@@ -295,7 +343,7 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_DEFINE_BEHAVIORS,
             function(DefineBehaviorsEvent $event) {
-                $event->behaviors[] = UserRecordBehavior::class;
+                $event->behaviors[] = UserBehavior::class;
             });
 
         Event::on(
@@ -348,7 +396,8 @@ class Plugin extends BasePlugin
             'notifications' => ['label' => 'Notifications', 'url' => 'sp/notifications'],
             'import' => ['label' => 'Import', 'url' => 'sp/import'],
             'tools' => ['label' => 'Tools', 'url' => 'sp/tools'],
-            'queue' => ['label' => 'Queue', 'url' => 'sp/queue']
+            'queue' => ['label' => 'Queue', 'url' => 'sp/queue'],
+            'spbase' => ['label' => 'Base', 'url' => 'sp/spbase']
         ];
         return $ret;
     }
@@ -381,6 +430,7 @@ class Plugin extends BasePlugin
             'sp/queue'                          => 'sp/cp/settings/queue',
             'sp/cache'                          => 'sp/cp/settings/cache',
             'sp/tools'                          => 'sp/cp/tools',
+            'sp/spbase'                         => 'sp/cp/spbase',
             'sp/import'                         => 'sp/cp/import/index',
             'sp/queue/delete-job'               => 'sp/cp/settings/delete-job',
         ];
@@ -478,10 +528,7 @@ class Plugin extends BasePlugin
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
             'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
 
-            'sp/paypal/ipn'                             => 'sp/paypal/ipn',
-            'sp/paypal/pay/<entryId>'                   => 'sp/paypal/pay',
-            'sp/paypal/pay/'                            => 'sp/paypal/pay',
-            'sp/paypal/verify-payment'                  => 'sp/paypal/verify-payment'
+            'sp/paypal/process/<userId>/<paymentId>'    => 'sp/paypal/process',
         ];
     }
 

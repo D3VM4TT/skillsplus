@@ -12,6 +12,8 @@ use Craft;
 use craft\db\Query;
 use craft\elements\Entry;
 
+use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\helpers\CycleHelper;
@@ -24,6 +26,14 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+    /**
+     * @return \lantra\spbase\models\Site
+     */
+    public function siteLicence($cache = true)
+    {
+        return Lantra::$app->spbase->getSite($cache);
+    }
+
     /**
      * @param null $resultEntry
      * @return string|null
@@ -164,6 +174,22 @@ class LantraVariable
     public function payPalButton($product = null, $amount = 0, $label = 'Pay Now', $return = '', $custom = [])
     {
         return Lantra::$app->paypal->getButton($product, $amount, $label, $return, $custom);
+    }
+
+    /**
+     * @param $userId
+     * @param $amount
+     * @param $reference
+     * @param array $meta
+     * @param string $label
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function basePaypalButton($userId, $amount, $reference, $meta = [], $label = 'Pay Now')
+    {
+        $meta['reference'] = $reference;
+        $meta['siteUrl'] = UrlHelper::siteUrl();
+        return Lantra::$app->spbase->getPaypalButton($userId, $amount, $meta, $label);
     }
 
     /**

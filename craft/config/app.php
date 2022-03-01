@@ -56,6 +56,22 @@ return [
     ],
     '*' => [
         'components' => [
+            'log' => function() {
+                $config = [
+                    'class' => yii\log\Dispatcher::class,
+                    'targets' => [
+                        [
+                            'class' => 'yii\log\FileTarget',
+                            'levels' => ['info', 'error', 'warning'],
+                            'except' => [
+                                'yii\db\*',
+                            ],
+                            'logVars' => ['_GET', '_POST'],
+                        ],
+                    ],
+                ];
+                return Craft::createObject($config);
+            },
             'mailer' => function() {
                 $settings = App::mailSettings();
                 $settings->fromEmail = LantraHelper::setting('notifyFromEmail', 'No-Reply@skills-plus.net');

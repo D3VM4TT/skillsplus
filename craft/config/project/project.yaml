@@ -1,4 +1,4 @@
-dateModified: 1638465014
+dateModified: 1645112852
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -204,11 +204,13 @@ meta:
     7209f99b-e88b-403f-b8ba-fbb0301b5c0f: Paid # Paid
     7718e01c-cd5b-43db-b9a3-e138c5c09429: 'Report Format' # Report Format
     8200bbc7-18f0-49da-a017-2fb3a82ee950: 'Report Result Expiry' # Report Result Expiry
+    12871de0-f772-46c9-a3e4-d4d6578bc35f: 'User Licence ID' # User Licence ID
     19794a8d-aa57-4cea-9297-7c4ccfb2d561: 'Field Label' # Field Label
     46656fa8-cf4d-4c7e-93d0-800132d01aa2: 'Unit Points Override' # Unit Points Override
     48909e73-b939-470f-b472-53ee709db6e4: 'Module Group Read Only' # Module Group Read Only
     51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3: 'Package Evidence' # Package Evidence
     64769feb-a327-4c92-8224-bfd94a529f1a: 'CPD Target Hours' # CPD Target Hours
+    67368df0-4936-4ba3-9b2a-82871f72d79d: 'User Licence Company' # User Licence Company
     72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: Level # Level
     85884bff-7c6a-4759-a769-d3f056254b7b: 'Legacy Email' # Legacy Email
     646454e2-66f9-4f03-bac7-b94a89aba17a: 'Module Expiry Days' # Module Expiry Days
@@ -313,6 +315,7 @@ meta:
     dd61054f-d009-4e76-9315-7bf23e0cbc22: 'Report Result Type' # Report Result Type
     de561917-2808-45e4-b7db-324c21a2aebf: Notes # Notes
     df065216-2242-4a91-8b81-fa97ca27d449: 'Package Assessment' # Package Assessment
+    e0b2d8e4-6152-404e-b62c-e48c5d14cbb5: 'User Not Licenced' # User Not Licenced
     e0c4c343-2eda-4447-baf6-836f09723985: 'Report Recipients' # Report Recipients
     e0eca823-9419-4b9d-bbdb-e6161cc76f1c: 'Data Clean Password' # Data Clean Password
     e05af851-b6aa-4f59-a43b-0ac897b54887: 'Report All Units' # Report All Units
@@ -320,6 +323,7 @@ meta:
     e4cbe147-47ff-4ad4-845e-cc788f8b8829: 'Custom Value' # Custom Value
     e5a97ebb-756a-40bb-9b81-231b8ad564b2: 'External Status' # External Status
     e7ff470a-3e85-47be-9037-1508ea540121: 'Result Evidence' # Result Evidence
+    e8e5de3b-79a6-4e11-ba75-6b78df9cc95f: 'User Licence Month' # User Licence Month
     e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a: Modules # Modules
     e21ca603-4cc1-4573-9a88-a769b8a0d695: Columns # Columns
     e34f85df-0855-47ca-a101-0519afac3c0a: 'User Result' # User Result
@@ -380,6 +384,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 1.1.1
+  logs:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0
   preparse-field:
     enabled: '1'
     licenseKey: null

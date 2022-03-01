@@ -23,7 +23,12 @@
             {% if currentUser %}
                 <div class="content-main">
                     {{ globalsHtml.pageMembership }}
-                    {{ craft.lantra.payPalButton(membership.title, membership.cost, 'Pay £' ~ membership.cost, siteUrl('sp/paypal/pay'), {'isMembership':true})|raw }}
+                    {% set paymentMeta = {
+                        'product' : membership.title,
+                        'isMembership' : 1,
+                        'redirect' : '/'
+                    } %}
+                    {{ craft.lantra.basePaypalButton(currentUser.id, membership.cost, 'membership', paymentMeta, 'Pay £' ~ membership.cost)|raw }}
                 </div>
             {% else %}
                 {% include '_forms/register' with {isMembership:true} %}

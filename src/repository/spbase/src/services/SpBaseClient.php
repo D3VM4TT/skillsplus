@@ -9,19 +9,31 @@
 namespace lantra\spbase\services;
 
 use Craft;
-use lantra\sp\Plugin as Lantra;
 
-use lantra\spbase\services\gql\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client as GuzzleClient;
+use craft\helpers\Json;
+
+use lantra\spbase\Module;
+use lantra\spbase\Module as SpBase;
 use lantra\spbase\models\Licence;
 use lantra\spbase\models\Company;
 use lantra\spbase\models\Site;
+use lantra\spbase\services\gql\exceptions\GraphQLResponseError;
+use lantra\spbase\services\gql\Response;
+
 
 class SpBaseClient
 {
     /**
-     * @var $gql
+     * @var $endpoint
      */
-    protected $gql;
+    protected $endpoint;
+
+    /**
+     * @var $guzzle
+     */
+    protected $guzzle;
 
     /**
      * @var
@@ -43,44 +55,72 @@ class SpBaseClient
      */
     public function __construct()
     {
-        $endpoint = Craft::getAlias('@spBaseUrl');
+        $this->endpoint = Craft::getAlias('@spBaseUrl') . '/api';
 
         $this->subdomain = Craft::getAlias('@site');
 
-        $this->gql = new Client($endpoint);
+        $this->guzzle = new GuzzleClient();
     }
 
     /**
+     * @param true $cache
      * @return Site
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * @throws GuzzleException
      */
-    public function getSite()
+    public function getSite($cache = true)
+    {
+        if ($cache) {
+            $attributes = (object)Craft::$app->cache->getOrSet('spBaseSiteLicence', function () {
+                return $this->getSiteAttributes();
+            }, (86400));
+        }
+        else {
+            $attributes = $this->getSiteAttributes();
+        }
+
+        if (!isset($attributes->id)) {
+            SpBase::error('Invalid Site ID');
+        }
+
+        return new Site($attributes);
+    }
+
+    /**
+     * @return object
+     * @throws GuzzleException
+     */
+    protected function getSiteAttributes()
     {
         $query = 'query getSite($subdomain: [QueryArgument!]) {  
-          entry (section:"sites", subdomain: $subdomain limit: 1, orderBy: "dateCreated DESC") {
-              ... on sites_site_Entry {
+            entry (section:"sites", subdomain: $subdomain limit: 1, orderBy: "dateCreated DESC") {
+                ... on sites_site_Entry {
+                    __typename
                     id         
                     dateCreated @formatDateTime (format: "Y-m-d")
-                    expiryDate @formatDateTime (format: "Y-m-d")
-                    subdomain          
-              }
-          }
+                    siteExpiryDate @formatDateTime (format: "Y-m-d")
+                    subdomain
+                    licenceTypeSite
+                    licenceTypeUser
+                    hasCompanyLicences
+                    totalActive
+                    totalRemaining
+              }              
+            }
         }';
 
         $variables = [
             'subdomain' => $this->subdomain
         ];
 
-        $response = $this->query($query, $variables, true);
+        $response = $this->query($query, $variables);
 
-        return new Site($response->entry);
+        return $response->entry ?? new \stdClass();
     }
 
     /**
+     * @param $username
      * @return int
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * @throws GuzzleException
      */
     public function getUserId($username)
     {
@@ -96,32 +136,89 @@ class SpBaseClient
             'username' => $username
         ];
 
-        $response = $this->query($query, $variables, true);
+        $response = $this->query($query, $variables);
 
-        return (int)$response->user->id;
+        return $response->user ? $response->user->id : 0;
     }
 
     /**
      * @param $userId
+     * @param string $month
+     * @param string|null $postDate
+     * @param array $meta
      * @param null $entryId
      * @return bool
-     * @throws \yii\db\Exception
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * @throws GuzzleException
      */
-    public function saveLicence($entryId = null, $data = [])
+    public function saveLicence($userId, string $month = '01', string $postDate = null, array $meta = [], $entryId = null)
     {
-        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $userId: Number) {
-            save_licences_licence_Entry(id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId) {
+        $query = 'mutation saveEntry($entryId: ID, $postDate: DateTime, $authorId: ID, $siteId: Int, $userId: String, $month: String, $meta: String) {
+            save_licences_licence_Entry(
+                id: $entryId,
+                postDate: $postDate,
+                authorId: $authorId,                
+                relatedSite: [$siteId], 
+                userId: $userId,
+                renewalMonth: $month,
+                meta: $meta
+            ) {
                 id
             }
         }';
 
         $variables = [
+            'entryId' => $entryId,
+            'postDate' => $postDate,
             'siteId' => $this->getSiteId(),
             'authorId' => $this->getAuthorId(),
-            'entryId' => $entryId,
-            'userId' => $data['userId']
+            'userId' => (string) $userId,
+            'month' => $month,
+            'meta' => Json::encode($meta)
+        ];
+
+        $response = $this->query($query, $variables);
+
+        return !$response->hasErrors();
+    }
+
+    /**
+     * @param $model
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function suspendEntry($model)
+    {
+        $query = 'mutation saveEntry($entryId: ID) {
+            save_' . $model->__typename . '(id: $entryId, enabled: false) {
+                id
+            }
+        }';
+
+        $variables = [
+            'entryId' => $model->id
+        ];
+
+        $response = $this->query($query, $variables);
+
+        return !$response->hasErrors();
+    }
+
+    /**
+     * @param $model
+     * @param $process
+     * @return bool
+     */
+    public function saveProcess($model, $process)
+    {
+        $query = 'mutation saveProcess($entryId: ID, $process: String) {
+            save_' . $model->__typename . '(id: $entryId, process: $process) {
+                id
+            }
+        }';
+
+        $variables = [
+            'entryId' => $model->id,
+            'process' => Json::encode($process),
         ];
 
         $response = $this->query($query, $variables);
@@ -132,13 +229,13 @@ class SpBaseClient
     /**
      * @param $userId
      * @return Licence
-     * @throws \yii\db\Exception
      */
     public function getLicence($userId)
     {
         $query = 'query getLicence($siteId: [QueryArgument!], $userId: [QueryArgument!]) {  
           entry (section:"licences", userId: $userId, relatedTo: $siteId) {
               ... on licences_licence_Entry {
+                  __typename
                   id
                   userId
                   valid
@@ -146,7 +243,20 @@ class SpBaseClient
                   expiryDate @formatDateTime (format: "Y-m-d")
                   relatedSite {
                     id
-                  }                  
+                  }
+                  payments {
+                    ...on payments_BlockType {
+                        id                        
+                        dateCreated @formatDateTime (format: "Y-m-d")
+                        method
+                        code
+                        amount                        
+                        reference
+                        meta
+                        isPaid
+                        isProcessed
+                    }
+                  }       
               }
           }
         }';
@@ -166,13 +276,13 @@ class SpBaseClient
     /**
      * @param $companyId
      * @return Company
-     * @throws \yii\db\Exception
      */
     public function getCompany($companyId)
     {
         $query = 'query getCompany($siteId: [QueryArgument!], $companyId: [QueryArgument!]) {  
           entry (section:"companies" relatedTo: $siteId companyId: $companyId limit: 1 orderBy: "dateCreated DESC") {
               ... on companies_company_Entry {
+                  __typename
                   id
                   dateCreated @formatDateTime (format: "Y-m-d")
                   expiryDate @formatDateTime (format: "Y-m-d")
@@ -190,22 +300,21 @@ class SpBaseClient
 
         $response = $this->query($query, $variables);
 
-        return new Company($response->entry);
+        $attributes = $response->entry ?? [];
+
+        return new Company($attributes);
     }
 
     /**
-     * @param $userId
+     * @param $companyId
      * @param null $entryId
      * @return bool
-     * @throws \yii\db\Exception
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
      */
     public function saveCompany($companyId, $entryId = null)
     {
-        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $companyId: Number) {
+        $query = 'mutation saveEntry($entryId: ID, $authorId: ID, $siteId: Int, $companyId: String) {
             save_companies_company_Entry(
-            id: $entryId, authorId: $authorId, relatedSite: [$siteId], userId: $userId) {
+            id: $entryId, authorId: $authorId, relatedSite: [$siteId], companyId: $companyId) {
                 id
             }
         }';
@@ -223,49 +332,106 @@ class SpBaseClient
     }
 
     /**
-     * @param $query
-     * @param array $variables
-     * @param false $critical
-     * @return gql\Response
-     * @throws gql\exceptions\GraphQLError
-     * @throws gql\exceptions\GraphQLResponseError
+     * Bypass GQL and call api directly (i.e. get button html)
+     *
+     * @param $method
+     * @param array $params
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws GuzzleException
      */
-    protected function query($query, $variables = [], $critical = false)
+    public function request($method, array $params = [])
     {
-        $response = $this->gql->response($query, $variables, $critical);
+        $response = '[[ empty response ]]';
+
+        $endpoint = Craft::getAlias('@spBaseUrl') . '/actions/' . $method;
+
+        try {
+            $guzzleResponse = $this->guzzle->request('POST', $endpoint, ['form_params' => $params]);
+            $response = $guzzleResponse->getBody()->getContents();
+        } catch (\Exception $e) {
+            $response = $e->getMessage();
+            Module::error($e->getMessage());
+        }
 
         return $response;
     }
 
     /**
-     * @return mixed|null
-     * @throws \yii\db\Exception
+     * @return int
      */
-    protected function getSiteId()
+    private function getSiteId()
     {
         if (!$this->siteId) {
             ## siteId is cached for infinity
-            $this->siteId = Craft::$app->cache->getOrSet('spBaseSiteId', function () {
+            $this->siteId = (int) Craft::$app->cache->getOrSet('spBaseSiteId', function () {
                 $site = $this->getSite();
                 return $site->id;
             }, 0);
         }
 
-        return (int)$this->siteId;
+        if (!$this->siteId) {
+            SpBase::error('Invalid Site ID');
+            Craft::$app->cache->delete('spBaseSiteId');
+        }
+
+        return $this->siteId;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    protected function getAuthorId()
+    private function getAuthorId()
     {
         if (!$this->authorId) {
             ## authorId is cached for infinity
-            $this->authorId = Craft::$app->cache->getOrSet('spBaseAuthorId', function () {
+            $this->authorId = (int) Craft::$app->cache->getOrSet('spBaseAuthorId', function () {
                 return $this->getUserId('graphql');
             }, 0);
         }
 
-        return (int)$this->authorId;
+        if (!$this->authorId) {
+            SpBase::error('Invalid GraphQL API User ID');
+            Craft::$app->cache->delete('spBaseAuthorId');
+        }
+
+        return $this->authorId;
+    }
+
+    /**
+     * @param $query
+     * @param array $variables
+     * @param array $headers
+     * @return Response
+     * @throws GuzzleException
+     */
+    private function query($query, array $variables = [], array $headers = []): Response
+    {
+        $response = new Response();
+
+        try {
+            $guzzleResponse = $this->guzzle->request('POST', $this->endpoint, [
+                'json' => [
+                    'query' => $query,
+                    'variables' => $variables
+                ],
+                'headers' => $headers
+            ]);
+
+            $json = Json::decodeIfJson($guzzleResponse->getBody()->getContents(), false);
+
+            if ($json === null) {
+                throw new GraphQLResponseError("Invalid GraphQL json.");
+            }
+
+            $response->load($json);
+
+            if ($response->hasErrors()) {
+                throw new GraphQLResponseError($response->errors()[0]->message);
+            }
+
+        } catch (\Exception $e) {
+            SpBase::error($e->getMessage());
+        }
+        return $response;
     }
 }

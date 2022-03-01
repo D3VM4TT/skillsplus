@@ -63,7 +63,12 @@
                     </p>
                 {% endif %}
                 <p>&nbsp;</p>
-                {{ craft.lantra.payPalButton(packageTitle, package.packageCost, 'Pay £' ~ package.packageCost, siteUrl('sp/paypal/pay/' ~ package.id), {'packageId':package.id})|raw }}
+                {% set paymentMeta = {
+                    'product' : packageTitle,
+                    'packageId' : package.id,
+                    'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
+                } %}
+                {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
                 <p>&nbsp;</p>
                 <p>&nbsp;</p>
             {% endfor %}

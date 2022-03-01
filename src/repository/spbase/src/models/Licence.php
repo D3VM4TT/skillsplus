@@ -11,7 +11,11 @@ namespace lantra\spbase\models;
 class Licence extends SpBase
 {
     public $siteId;
+
     public $userId;
+
+    public $payments;
+
     public $valid = false;
 
     /**

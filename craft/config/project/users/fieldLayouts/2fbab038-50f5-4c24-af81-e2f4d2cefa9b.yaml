@@ -65,15 +65,6 @@ tabs:
         warning: null
         width: 25
       -
-        fieldUid: 27f36190-a4c4-4f11-b546-5e4ffb5efc06 # User Licence Source
-        instructions: null
-        label: null
-        required: '0'
-        tip: null
-        type: craft\fieldlayoutelements\CustomField
-        warning: null
-        width: 50
-      -
         fieldUid: f5386b5d-29df-466e-a989-716777b0a655 # User Privacy
         instructions: null
         label: null
@@ -93,6 +84,46 @@ tabs:
         width: 25
     name: Structure
     sortOrder: 1
+  -
+    elements:
+      -
+        fieldUid: e0b2d8e4-6152-404e-b62c-e48c5d14cbb5 # User Not Licenced
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+      -
+        fieldUid: e8e5de3b-79a6-4e11-ba75-6b78df9cc95f # User Licence Month
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+      -
+        fieldUid: 12871de0-f772-46c9-a3e4-d4d6578bc35f # User Licence ID
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+      -
+        fieldUid: 67368df0-4936-4ba3-9b2a-82871f72d79d # User Licence Company
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+    name: Licence
+    sortOrder: 2
   -
     elements:
       -
@@ -170,7 +201,7 @@ tabs:
         warning: null
         width: 50
     name: Profile
-    sortOrder: 2
+    sortOrder: 3
   -
     elements:
       -
@@ -210,7 +241,7 @@ tabs:
         warning: null
         width: 50
     name: 'Taskbook Reviews'
-    sortOrder: 3
+    sortOrder: 4
   -
     elements:
       -
@@ -223,7 +254,7 @@ tabs:
         warning: null
         width: 100
     name: Payments
-    sortOrder: 4
+    sortOrder: 5
   -
     elements:
       -
@@ -236,7 +267,7 @@ tabs:
         warning: null
         width: 100
     name: 'Custom Scheme User Fields'
-    sortOrder: 5
+    sortOrder: 6
   -
     elements:
       -
@@ -348,4 +379,4 @@ tabs:
         warning: null
         width: 100
     name: Legacy
-    sortOrder: 6
+    sortOrder: 7

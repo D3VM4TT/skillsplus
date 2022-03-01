@@ -1,0 +1,145 @@
+columnSuffix: rkaastuh
+contentColumnType: string
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userLicenceMonth
+instructions: ''
+name: 'User Licence Month'
+searchable: false
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - January
+        -
+          - value
+          - '01'
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Febraury
+        -
+          - value
+          - '02'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - March
+        -
+          - value
+          - '03'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - April
+        -
+          - value
+          - '04'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - May
+        -
+          - value
+          - '05'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - June
+        -
+          - value
+          - '06'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - July
+        -
+          - value
+          - '07'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - August
+        -
+          - value
+          - '08'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - September
+        -
+          - value
+          - '09'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - October
+        -
+          - value
+          - '10'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - November
+        -
+          - value
+          - '11'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - December
+        -
+          - value
+          - '12'
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

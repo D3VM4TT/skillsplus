@@ -22,14 +22,39 @@ use craft\elements\MatrixBlock;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
-use verbb\supertable\elements\SuperTableBlockElement;
-use verbb\supertable\services\SuperTableService;
-
-use DateTime;
+use lantra\spbase\Module as SpBase;
 use yii\db\Query;
+use yii\web\UserEvent as YiiUserEvent;
 
 class Users extends Component
 {
+    /**
+     * @param YiiUserEvent $event
+     * @param User $user
+     */
+    public function onBeforeLoginUser(YiiUserEvent $event, User $user)
+    {
+        if (Craft::$app->request->isSiteRequest) {
+            if ($user->isLicenced) {
+                $event->isValid = Lantra::$app->spbase->validateLicence($user->id);
+            }
+        }
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @param User $user
+     */
+    public function onAfterLoginUser(YiiUserEvent $event, User $user)
+    {
+        ## log user_login to licence
+        if (Craft::$app->request->isSiteRequest) {
+            if ($user->isLicenced) {
+                $licence = Lantra::$app->spbase->getLicence($user->id);
+                $event->isValid = Lantra::$app->spbase->log($licence, 'user_login');
+            }
+        }
+    }
 
     /**
      * @param ModelEvent $event
@@ -42,7 +67,51 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
-        Lantra::$app->results->saveUserResultCache($user->id);
+        $this->syncUserLicence($user);
+
+        ## Lantra::$app->results->saveUserResultCache($user->id);
+    }
+
+    /**
+     * @param UserEvent $event
+     * @param User $user
+     */
+    public function onAfterSuspendUser(UserEvent $event, User $user)
+    {
+        Lantra::$app->spbase->cancelLicence($user->id);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function syncUserLicence(User $user)
+    {
+        ## manage cancellation
+        if (!$user->isLicenced) {
+            SpBase::log('user not licenced [' . $user->id . ']');
+            Lantra::$app->spbase->cancelLicence($user->id);
+            return;
+        }
+
+        $meta = [
+            'userFullName' => $user->fullName,
+            'email' => $user->email
+        ];
+
+        $licence = Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
+
+        if (null != $company = $user->userLicenceCompany->one()) {
+            Lantra::$app->spbase->processLicence($user->id, [
+                'companyId' => $company->id,
+                'companyName' => $company->title
+            ]);
+        }
+
+        ## save the licence id
+        if (!$user->userLicenceId) {
+            $user->setFieldValue('userLicenceId', $licence->id);
+            Craft::$app->elements->saveElement($user, false);
+        }
     }
 
     /**
@@ -139,11 +208,16 @@ class Users extends Component
     /**
      * @param $event
      */
-    public function onBeforeDeleteUser($event)
+    public function onBeforeDeleteUser($user, $event)
     {
-        $user = Craft::$app->getUser();
-        if (!Craft::$app->request->isCpRequest && !$user->isInGroup('schemeManagers') && !$user->admin){
+        $loggedInUser = Craft::$app->getUser();
+
+        if (!Craft::$app->request->isCpRequest && !$loggedInUser->isInGroup('schemeManagers') && !$loggedInUser->admin){
             $event->performAction = false;
+        }
+
+        if ($user->isLicenced) {
+            Lantra::$app->spbase->cancelLicence($user->id);
         }
     }
 
