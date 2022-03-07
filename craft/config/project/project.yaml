@@ -1,4 +1,4 @@
-dateModified: 1646649935
+dateModified: 1646658430
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -38,6 +38,7 @@ meta:
     3ccae116-4500-45d0-a56a-024f2e8d4d03: 'Result Status' # Result Status
     3cff7796-6519-48a5-97e7-e4dbb14befcc: 'Result Endorsed User' # Result Endorsed User
     3d52518d-7b85-4ef8-af1c-fb8a813e0cce: 'Legacy Parent ID' # Legacy Parent ID
+    3e71d4f7-d155-457a-9e53-497f9c3ff348: 'Module Optional' # Module Optional
     3f2f2e5a-9c13-4199-aaa4-0d0d1eb8abfc: 'Legacy Company ID' # Legacy Company ID
     3f934bd7-b755-4330-88af-dd41d6ea990b: Theme # Theme
     3ffef8f2-5599-4a8c-b8e7-ce6b7113d648: Comment # Comment
@@ -257,6 +258,7 @@ meta:
     ab55340f-38e6-4d9f-82eb-f3785c6c6ff8: 'Report Include Hierarchy' # Report Include Hierarchy
     abaff843-e57c-4cfa-bab2-3f4927f556d3: 'Module Result' # Module Result
     abb92e86-cb1b-456e-a618-befafa8e8a28: 'Report Teams' # Report Teams
+    aca49f37-5a2d-48d3-b0a3-793f13750dd4: 'User Optional Modules' # User Optional Modules
     af49d354-08d5-422e-9f65-56c76ff7d485: Credit # Credit
     af241f00-e550-43b0-9800-e6ce4d85919e: 'Cycle Finish Date' # Cycle Finish Date
     af392c27-30aa-4dde-a30c-fd69e3dd665e: 'Manager Level' # Manager Level
