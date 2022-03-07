@@ -85,6 +85,8 @@ fieldLayouts:
             warning: null
             width: 50
           -
+            type: craft\fieldlayoutelements\HorizontalRule
+          -
             fieldUid: da81a368-f84c-47f8-9e3a-b83346be0865 # Module Group Minimum Optional
             instructions: null
             label: null
@@ -92,7 +94,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 25
           -
             fieldUid: e1c8bc22-c8ae-487a-8cfa-074338772cbc # Module Group Minimum Credits
             instructions: null
@@ -101,7 +103,7 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 25
           -
             fieldUid: 753f71f4-d39b-43bd-9219-b76f91626502 # Module Group Minimum Level
             instructions: null
@@ -110,12 +112,23 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 25
           -
             fieldUid: 809b8647-dd59-44cf-b5d5-63dac0021cb1 # Module Group Minimum Level Credits
             instructions: null
             label: null
             required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            type: craft\fieldlayoutelements\HorizontalRule
+          -
+            fieldUid: 699e2d79-cad0-47dc-b93d-e55e9c9ddf50 # Unit Result Rollover
+            instructions: null
+            label: null
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null

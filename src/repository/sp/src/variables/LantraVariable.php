@@ -337,27 +337,27 @@ class LantraVariable
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalComplete($recordItem, $userId = null)
+    public function totalComplete($recordItem, $userId = null, $packageId = null)
     {
-        return RecordHelper::totalComplete($recordItem, $this->getUser($userId));
+        return RecordHelper::totalComplete($recordItem, $this->getUser($userId), null, $packageId);
     }
 
     /**
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalEndorsed($recordItem, $userId = null)
+    public function totalEndorsed($recordItem, $userId = null, $packageId = null)
     {
-        return RecordHelper::totalEndorsed($recordItem, $this->getUser($userId));
+        return RecordHelper::totalEndorsed($recordItem, $this->getUser($userId), $packageId);
     }
 
     /**
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalPending($recordItem, $userId = null)
+    public function totalPending($recordItem, $userId = null, $packageId = null)
     {
-        return RecordHelper::totalPending($recordItem, $this->getUser($userId));
+        return RecordHelper::totalPending($recordItem, $this->getUser($userId), $packageId);
     }
 
     /**
@@ -1475,9 +1475,9 @@ class LantraVariable
      * @param int $limit
      * @return mixed
      */
-    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null)
+    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null)
     {
-        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId, $companyId);
+        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId, $companyId, $packageId);
     }
 
     /**

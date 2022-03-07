@@ -67,11 +67,11 @@ class RecordHelper
      * @param Entry|null $taskbook
      * @return int
      */
-    public static function totalComplete(RecordItem $recordItem, User $user, Entry $taskbook = null)
+    public static function totalComplete(RecordItem $recordItem, User $user, Entry $taskbook = null, $packageId = null)
     {
         ## taskbook unitEndorse requires individual units to be endorsed
         $status = $taskbook && $taskbook->unitEndorse ? ['endorsed'] : ['not', 'draft'];
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), $status);
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), $status, $packageId);
     }
 
     /**
@@ -79,9 +79,9 @@ class RecordHelper
      * @param User $user
      * @return null
      */
-    public static function totalEndorsed(RecordItem $recordItem, User $user)
+    public static function totalEndorsed(RecordItem $recordItem, User $user, $packageId = null)
     {
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['endorsed']);
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['endorsed'], $packageId);
     }
 
     /**
@@ -89,9 +89,9 @@ class RecordHelper
      * @param User $user
      * @return null
      */
-    public static function totalPending(RecordItem $recordItem, User $user)
+    public static function totalPending(RecordItem $recordItem, User $user, $packageId = null)
     {
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['pending']);
+        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), ['pending'], $packageId);
     }
 
     /**

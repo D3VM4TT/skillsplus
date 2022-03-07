@@ -40,6 +40,13 @@
     {% set package = craft.entries.id(packageId).one() %}
 {% endif %}
 
+{# set result package from existing result or taskbook settings #}
+{% if resultEntry %}
+    {% set resultPackageId = resultEntry.resultPackage ? resultEntry.resultPackage.one.id : false %}
+{% else %}
+    {% set resultPackageId = isPackage and package.taskbook.unitResultRollover ? false : package.id %}
+{% endif %}
+
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
@@ -173,7 +180,16 @@
                         <h5>{{ unitEntry.unitPoints }} points</h5>
                     </div>
                 {% endif %}
-                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry, readOnly:readOnly} %}
+                {% include 'record/_units/evidence' with {
+                    entry:unitEntry,
+                    resultEntry:resultEntry,
+                    account:account,
+                    moduleGroup:moduleGroup,
+                    isManager:isManager,
+                    moduleResultEntry:moduleResultEntry,
+                    readOnly:readOnly,
+                    resultPackageId: resultPackageId
+                } %}
             </div>
         </section>
     {% endif %}

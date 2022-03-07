@@ -456,7 +456,7 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function countUnitResults($userId, $unitIds, $resultStatus = null)
+    function countUnitResults($userId, $unitIds, $resultStatus = null, $packageId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -467,6 +467,9 @@ class Results extends Component
             $criteria->resultStatus = $resultStatus;
         }
         $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        if ($packageId) {
+            $criteria->andRelatedTo(['targetElement' => $packageId, 'field' => 'resultPackage']);
+        }
         return $criteria->count();
     }
 
@@ -573,7 +576,7 @@ class Results extends Component
      * @param $companyId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null)
+    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null)
     {
         $criteria = Entry::find();
         $criteria->sectionId = $this->sectionId('results');
@@ -592,6 +595,9 @@ class Results extends Component
         }
         if ($companyId) {
             $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+        }
+        if ($packageId) {
+            $criteria->relatedTo[] = ['targetElement' => $packageId, 'field' => 'resultPackage'];
         }
         $criteria->status = ['live', 'expired'];
         return $criteria;

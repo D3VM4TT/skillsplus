@@ -125,6 +125,15 @@ fieldLayouts:
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
+          -
+            fieldUid: 4556c45d-9692-44ba-aed8-56d8ce7f36a7 # Result Package
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
         name: Result
         sortOrder: 1
       -
