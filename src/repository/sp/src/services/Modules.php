@@ -11,6 +11,7 @@ namespace lantra\sp\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
+use craft\elements\User;
 use craft\elements\Category;
 use craft\events\ModelEvent;
 
@@ -45,6 +46,16 @@ class Modules extends Component
             $event->isValid = false;
             $entry->addError('moduleUnitGroups', 'You can only add one recurring unit per module.');
         }
+    }
+
+    /**
+     * @param $module
+     * @param User $user
+     * @return bool
+     */
+    public function isUserModule($module, User $user)
+    {
+        return !$module->moduleOptional || in_array($module->id, $user->userOptionalModules->ids());
     }
 
     /**

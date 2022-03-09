@@ -23,7 +23,6 @@ use lantra\sp\Plugin as Lantra;
 class Record extends Model
 {
     public $user;
-    private $_optionalModuleIds = [];
     private $_record = [
         'jobRoles'  => [],
         'packages'  => []
@@ -41,7 +40,6 @@ class Record extends Model
     public function __construct(User $user)
     {
         parent::__construct(['user' => $user]);
-        $this->_optionalModuleIds = $user->userOptionalModules->ids();
         $this->_setRecordFromDb();
         $this->_setUnitResults();
     }
@@ -257,7 +255,7 @@ class Record extends Model
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
             ## add optional module check
-            if ($moduleEntry->moduleOptional and !in_array($moduleEntry->id, $this->_optionalModuleIds)) {
+            if (!Lantra::$app->modules->isUserModule($moduleEntry, $this->user)) {
                 continue;
             }
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {

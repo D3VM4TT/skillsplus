@@ -27,6 +27,16 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param $module
+     * @param null $userId
+     * @return mixed
+     */
+    public function isUserModule($module, $userId = null)
+    {
+        return Lantra::$app->modules->isUserModule($module, $this->getUser($userId));
+    }
+
+    /**
      * @return \lantra\spbase\models\Site
      */
     public function siteLicence($cache = true)
