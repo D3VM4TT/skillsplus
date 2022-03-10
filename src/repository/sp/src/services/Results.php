@@ -456,7 +456,7 @@ class Results extends Component
      * @return null
      * @throws Mixed
      */
-    function countUnitResults($userId, $unitIds, $resultStatus = null, $packageId = null)
+    function countUnitResults($userId, $unitIds, $resultStatus = null, $packageId = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -467,8 +467,12 @@ class Results extends Component
             $criteria->resultStatus = $resultStatus;
         }
         $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
+        ## packageId and $moduleGroupId given if taskbook > unit result rollover is off
         if ($packageId) {
             $criteria->andRelatedTo(['targetElement' => $packageId, 'field' => 'resultPackage']);
+        }
+        if ($moduleGroupId) {
+            $criteria->andRelatedTo(['targetElement' => $moduleGroupId, 'field' => 'resultModuleGroup']);
         }
         return $criteria->count();
     }
@@ -576,7 +580,7 @@ class Results extends Component
      * @param $companyId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null)
+    function getUnitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->sectionId = $this->sectionId('results');
@@ -596,8 +600,12 @@ class Results extends Component
         if ($companyId) {
             $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         }
+        ## packageId and $moduleGroupId given if taskbook > unit result rollover is off
         if ($packageId) {
             $criteria->relatedTo[] = ['targetElement' => $packageId, 'field' => 'resultPackage'];
+        }
+        if ($moduleGroupId) {
+            $criteria->relatedTo[] = ['targetElement' => $moduleGroupId, 'field' => 'resultModuleGroup'];
         }
         $criteria->status = ['live', 'expired'];
         return $criteria;

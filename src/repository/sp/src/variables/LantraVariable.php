@@ -347,27 +347,27 @@ class LantraVariable
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalComplete($recordItem, $userId = null, $packageId = null)
+    public function totalComplete($recordItem, $userId = null, $packageId = null, $moduleGroupId = null)
     {
-        return RecordHelper::totalComplete($recordItem, $this->getUser($userId), null, $packageId);
+        return RecordHelper::totalComplete($recordItem, $this->getUser($userId), null, $packageId, $moduleGroupId);
     }
 
     /**
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalEndorsed($recordItem, $userId = null, $packageId = null)
+    public function totalEndorsed($recordItem, $userId = null, $packageId = null, $moduleGroupId = null)
     {
-        return RecordHelper::totalEndorsed($recordItem, $this->getUser($userId), $packageId);
+        return RecordHelper::totalEndorsed($recordItem, $this->getUser($userId), $packageId, $moduleGroupId);
     }
 
     /**
      * @param RecordItem $recordItem
      * @return bool
      */
-    public function totalPending($recordItem, $userId = null, $packageId = null)
+    public function totalPending($recordItem, $userId = null, $packageId = null, $moduleGroupId = null)
     {
-        return RecordHelper::totalPending($recordItem, $this->getUser($userId), $packageId);
+        return RecordHelper::totalPending($recordItem, $this->getUser($userId), $packageId, $moduleGroupId);
     }
 
     /**
@@ -1485,9 +1485,9 @@ class LantraVariable
      * @param int $limit
      * @return mixed
      */
-    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null)
+    public function unitResultsQuery($userId, $unitId, $limit = 1, $moduleResultId = null, $companyId = null, $packageId = null, $moduleGroupId = null)
     {
-        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId, $companyId, $packageId);
+        return Lantra::$app->results->getUnitResultsQuery($userId, $unitId, $limit, $moduleResultId, $companyId, $packageId, $moduleGroupId);
     }
 
     /**

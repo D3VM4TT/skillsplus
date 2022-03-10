@@ -40,13 +40,6 @@
     {% set package = craft.entries.id(packageId).one() %}
 {% endif %}
 
-{# set result package from existing result or taskbook settings #}
-{% if resultEntry %}
-    {% set resultPackageId = resultEntry.resultPackage ? resultEntry.resultPackage.one.id : false %}
-{% else %}
-    {% set resultPackageId = isPackage and package.taskbook.unitResultRollover ? false : package.id %}
-{% endif %}
-
 {% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 {% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
@@ -63,6 +56,15 @@
 
 {% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 {% set currentUserPhotoUrl = currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
+
+{# set result package from existing result or taskbook settings #}
+{% if resultEntry %}
+    {% set resultPackageId = resultEntry.resultPackage ? resultEntry.resultPackage.one.id : false %}
+    {% set resultModuleGroupId = resultEntry.resultModuleGroup ? resultEntry.resultModuleGroup.one.id : false %}
+{% else %}
+    {% set resultPackageId = isPackage and package.taskbook.unitResultRollover ? false : package.id %}
+    {% set resultModuleGroupId = isPackage and package.taskbook.unitResultRollover ? false : moduleGroup.id %}
+{% endif %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -188,7 +190,8 @@
                     isManager:isManager,
                     moduleResultEntry:moduleResultEntry,
                     readOnly:readOnly,
-                    resultPackageId: resultPackageId
+                    resultPackageId: resultPackageId,
+                    resultModuleGroupId:resultModuleGroupId,
                 } %}
             </div>
         </section>

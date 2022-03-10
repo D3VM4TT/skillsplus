@@ -1,4 +1,4 @@
-dateModified: 1646853951
+dateModified: 1646912816
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -259,6 +259,7 @@ meta:
     abaff843-e57c-4cfa-bab2-3f4927f556d3: 'Module Result' # Module Result
     abb92e86-cb1b-456e-a618-befafa8e8a28: 'Report Teams' # Report Teams
     aca49f37-5a2d-48d3-b0a3-793f13750dd4: 'User Optional Modules' # User Optional Modules
+    aecf7067-ebfd-4bd0-8360-cd167eac91d3: 'Result Module Group' # Result Module Group
     af49d354-08d5-422e-9f65-56c76ff7d485: Credit # Credit
     af241f00-e550-43b0-9800-e6ce4d85919e: 'Cycle Finish Date' # Cycle Finish Date
     af392c27-30aa-4dde-a30c-fd69e3dd665e: 'Manager Level' # Manager Level
