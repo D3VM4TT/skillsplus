@@ -93,9 +93,12 @@ class Users extends Component
             return;
         }
 
+        $userCompany = $this->userCompany($user);
+
         $meta = [
+            'email' => $user->email,
             'userFullName' => $user->fullName,
-            'email' => $user->email
+            'userCompany' => $userCompany ? $userCompany->title : 'Unknown'
         ];
 
         $licence = Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
