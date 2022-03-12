@@ -39,11 +39,12 @@ class UsersController extends Controller {
     public function actionResave()
     {
         $resaveUsersJob = new ResaveUsersJob([
-            'hasLicence' => false
+            'hasLicence' => false,
+            'userId' => $this->request->getParam('userId')
         ]);
 
         Queue::push($resaveUsersJob);
-        return $this->response('Resave users added to queue.');
+        return $this->response('Resave user(s) added to queue.');
     }
 
     /**

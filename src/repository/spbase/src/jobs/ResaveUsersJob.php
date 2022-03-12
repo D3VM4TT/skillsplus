@@ -22,13 +22,24 @@ class ResaveUsersJob extends BaseJob
     public $hasLicence = true;
 
     /**
+     * @var bool
+     */
+    public $userId;
+
+    /**
      * @inheritdoc
      */
     public function execute($queue): void
     {
         $criteria = User::find();
-        $criteria->group = ['users', 'companyManagers', 'teamManagers'];
-        $criteria->admin(0);
+
+        if ($this->userId) {
+            $criteria->id($this->userId);
+        }
+        else {
+            $criteria->group = ['users', 'companyManagers', 'teamManagers'];
+            $criteria->admin(0);
+        }
 
         if ($this->hasLicence) {
             $criteria->userLicenceId(':notempty:');
