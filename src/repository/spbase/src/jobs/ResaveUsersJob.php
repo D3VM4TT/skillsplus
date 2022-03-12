@@ -12,8 +12,6 @@ use Craft;
 use craft\elements\User;
 use craft\queue\BaseJob;
 
-use lantra\sp\Plugin as Lantra;
-
 use lantra\spbase\Module;
 
 class ResaveUsersJob extends BaseJob
@@ -55,8 +53,7 @@ class ResaveUsersJob extends BaseJob
             $this->setProgress($queue, $i / $total, $label);
 
             try {
-                ## Craft::$app->elements->saveElement($user);
-                Lantra::$app->users->syncUserLicence($user);
+                Craft::$app->elements->saveElement($user);
             } catch (\Throwable $e) {
                 Module::warning("Could not save user {$user->id}: {$e->getMessage()}");
             }
