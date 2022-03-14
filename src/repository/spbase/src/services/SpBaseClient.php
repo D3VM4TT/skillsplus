@@ -166,6 +166,11 @@ class SpBaseClient
             }
         }';
 
+        ## force month to avoid error
+        if (!in_array($month, ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])) {
+            $month = '01';
+        }
+
         $variables = [
             'entryId' => $entryId,
             'postDate' => $postDate,
@@ -430,7 +435,7 @@ class SpBaseClient
             }
 
         } catch (\Exception $e) {
-            SpBase::error($e->getMessage());
+            SpBase::error($e->getMessage() . "\n\n" . $e->getTraceAsString());
         }
         return $response;
     }
