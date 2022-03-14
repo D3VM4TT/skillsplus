@@ -1681,4 +1681,21 @@ class Users extends Component
         $criteria->fieldId = $field->id;
         return $criteria;
     }
+
+    /**
+     * @param null $companyId
+     * @return array|\craft\base\ElementInterface[]|User[]
+     */
+    public function getCompanySubordinates($companyId = null, $includeHierarchy = false)
+    {
+        $companyIds = [$companyId];
+        ## include subordinates in hierarchy
+        if ($includeHierarchy) {
+            $companyIds = array_merge($companyIds, $this->getCompanyChildrenIds($companyId));
+        }
+        $criteria = User::find();
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
+        return $criteria->all();
+    }
 }

@@ -161,5 +161,25 @@
                 <button class="button primary-bg" type="submit">Suspend Company Users</button>
             </div>
         </form>
+
+        {% set siteLicence = craft.lantra.siteLicence() %}
+        {% if siteLicence.hasCompanyLicences %}
+            <form id="update-subordinates" class="page-form" method="post" role="form" accept-charset="UTF-8">
+                <h2>Manage Company Subordinates Licence</h2>
+                {{ csrfInput() }}
+                {{ actionInput('sp/users/subordinate-licence-company') }}
+                <input type="hidden" name="companyId" value="{{ entry.id }}">
+                <div class="field--wrapper" style="margin-top:30px;">
+                    <label for="includeHierarchySubordinates">
+                        <input type="hidden" name="includeHierarchy" value="0">
+                        <input type="checkbox" id="includeHierarchySubordinates" name="includeHierarchy" value="1" />
+                        <span>Include hierarchy?</span>
+                    </label>
+                </div>
+                <div class="container-btn">
+                    <button class="button primary-bg" type="submit">Update Subordinates</button>
+                </div>
+            </form>
+        {% endif %}
     {% endif %}
 {% endblock %}
