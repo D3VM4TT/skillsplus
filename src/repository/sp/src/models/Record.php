@@ -254,6 +254,10 @@ class Record extends Model
     {
         $return = [];
         foreach ($relatedEntries->with(['moduleUnitGroups.unitGroup:unitEntries'])->all() as $moduleEntry) {
+            ## add optional module check
+            if (!Lantra::$app->modules->isUserModule($moduleEntry, $this->user)) {
+                continue;
+            }
             if (in_array($moduleGroup->id, $moduleEntry->moduleGroup->ids())) {
                 $items = $this->_getModuleUnitGroupItems($moduleEntry->moduleUnitGroups);
                 $return[$moduleEntry->id] = $this->_addItem('module', $moduleEntry, $items);

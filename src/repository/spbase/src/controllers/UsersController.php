@@ -12,6 +12,7 @@ use craft\elements\User;
 use craft\web\Controller;
 
 use lantra\spbase\jobs\ResaveUsersJob;
+use lantra\spbase\jobs\SetRenewalMonthJob;
 use craft\helpers\Queue;
 
 class UsersController extends Controller {
@@ -39,11 +40,25 @@ class UsersController extends Controller {
     public function actionResave()
     {
         $resaveUsersJob = new ResaveUsersJob([
-            'hasLicence' => false
+            'hasLicence' => false,
+            'userId' => $this->request->getParam('userId')
         ]);
 
         Queue::push($resaveUsersJob);
-        return $this->response('Resave users added to queue.');
+        return $this->response('Resave user(s) added to queue.');
+    }
+
+    /**
+     *
+     */
+    public function actionSetRenewalMonth()
+    {
+        $setRenewalMonthJob = new SetRenewalMonthJob([
+            'userId' => $this->request->getParam('userId')
+        ]);
+
+        Queue::push($setRenewalMonthJob);
+        return $this->response('Set renewal month(s) added to queue.');
     }
 
     /**

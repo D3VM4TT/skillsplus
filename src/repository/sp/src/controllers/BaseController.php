@@ -43,11 +43,6 @@ class BaseController extends Controller {
             Craft::$app->session->setError($message);
         }
 
-        if ($redirect) {
-            $this->redirect($redirect);
-        }
-        else {
-            $this->redirectToPostedUrl();
-        }
+        return $redirect ? $this->redirect($redirect) : $this->redirectToPostedUrl();
     }
 }

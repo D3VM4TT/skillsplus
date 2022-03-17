@@ -27,7 +27,18 @@ tabs:
         tip: null
         type: craft\fieldlayoutelements\CustomField
         warning: null
-        width: 25
+        width: 50
+      -
+        fieldUid: aca49f37-5a2d-48d3-b0a3-793f13750dd4 # User Optional Modules
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 50
+      -
+        type: craft\fieldlayoutelements\HorizontalRule
       -
         fieldUid: af392c27-30aa-4dde-a30c-fd69e3dd665e # Manager Level
         instructions: null
@@ -64,6 +75,8 @@ tabs:
         type: craft\fieldlayoutelements\CustomField
         warning: null
         width: 25
+      -
+        type: craft\fieldlayoutelements\HorizontalRule
       -
         fieldUid: f5386b5d-29df-466e-a989-716777b0a655 # User Privacy
         instructions: null

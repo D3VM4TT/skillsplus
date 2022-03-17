@@ -57,6 +57,15 @@
 {% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 {% set currentUserPhotoUrl = currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
+{# set result package from existing result or taskbook settings #}
+{% if resultEntry %}
+    {% set resultPackageId = resultEntry.resultPackage ? resultEntry.resultPackage.one.id : false %}
+    {% set resultModuleGroupId = resultEntry.resultModuleGroup ? resultEntry.resultModuleGroup.one.id : false %}
+{% else %}
+    {% set resultPackageId = isPackage and package.taskbook.unitResultRollover ? false : package.id %}
+    {% set resultModuleGroupId = isPackage and package.taskbook.unitResultRollover ? false : moduleGroup.id %}
+{% endif %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         {% if not isPackageManager %}
@@ -173,7 +182,17 @@
                         <h5>{{ unitEntry.unitPoints }} points</h5>
                     </div>
                 {% endif %}
-                {% include 'record/_units/evidence' with{entry:unitEntry, resultEntry:resultEntry, account:account, moduleGroup:moduleGroup, isManager:isManager, moduleResultEntry:moduleResultEntry, readOnly:readOnly} %}
+                {% include 'record/_units/evidence' with {
+                    entry:unitEntry,
+                    resultEntry:resultEntry,
+                    account:account,
+                    moduleGroup:moduleGroup,
+                    isManager:isManager,
+                    moduleResultEntry:moduleResultEntry,
+                    readOnly:readOnly,
+                    resultPackageId: resultPackageId,
+                    resultModuleGroupId:resultModuleGroupId,
+                } %}
             </div>
         </section>
     {% endif %}

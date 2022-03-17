@@ -127,6 +127,7 @@
                 <span>Make Read Only User</span>
             </div>
         {% endif %}
+
         <div class="field--wrapper">
             <label for="userRole">Job Roles (optional):</label>
             {% set roleCategories = craft.categories.group('roles') %}
@@ -140,6 +141,20 @@
                     </option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="field--wrapper">
+            <label for="userOptionalModules">Modules (optional):</label>
+            <input type="hidden" name="fields[userOptionalModules]" value="" />
+            <select multiple class="js-select2" name="fields[userOptionalModules][]" id="userOptionalModules">
+                {% set optionalModuleCategories = craft.entries.section('modules').moduleOptional(true).all() %}
+                {% for moduleEntry in optionalModuleCategories %}
+                    <option value="{{ moduleEntry.id }}"
+                            {% if account is defined and moduleEntry.id in account.userOptionalModules.ids() %} selected="selected"{% endif %}>
+                        {{ moduleEntry.title }}
+                    </option>
+                {% endfor %}
+            </select>
+            <p>Note: only modules assigned to the user's job role will display on their dashboard.</p>
         </div>
 
         <div id="taskbook-review">

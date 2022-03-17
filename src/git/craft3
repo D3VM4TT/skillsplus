@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space) included in 'all' command
-PROD_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs fisa ptb tmp fencing lantraeportfolio d1 d2 d3 d4 d5 d6 d7 d8 d9 d10"
+SITE_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs fisa ptb tmp fencing lantraeportfolio ashtas"
 
-# demo sites not deployed to prod if using 'all' command
-DEMO_DOMAINS="demo demo1 demo2 demo3 demo4 demo5 demo6 demo7 demo8 demo9 demo10"
+# demo domains
+DEMO_DOMAINS="d1 d2 d3 d4 d5 d6 d7 d8 d9 d10"
 
 # email address for notification
 EMAIL="portia.hartley@skills-plus.co.uk"
@@ -38,17 +38,7 @@ if [[ "$1" != "dev" && "$1" != "uat" && "$1" != "prod" ]] ; then
 fi
 
 SERVER="$1"
-
-# set sites (might be one or all)
-if [[ "$2" == "all" ]] ; then
-    if [[ "$1" == "prod" ]] ; then
-    	SITES="$PROD_DOMAINS"
-    else
-	SITES="$PROD_DOMAINS $DEMO_DOMAINS"
-    fi
-else
-    SITES="$2"
-fi
+SITES="$2"
 
 # set branch
 if [[ "$1" == "prod" ]] ; then
@@ -62,10 +52,12 @@ else
    REMOTE_IP="$DEV_IP"
 fi
 
+# set options
 INSTALL="false"
 COMPOSER="true"
 SENDEMAIL="true"
 DATABASE="true"
+DEMO="false"
 # handle options
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -73,10 +65,19 @@ while [[ "$#" -gt 0 ]]; do
 	-nc|--nocomposer) COMPOSER="false" ;;
 	-ne|--noemail) SENDEMAIL="false" ;;
         -nd|--nodatabase) DATABASE="false" ;;
-
+	-d|--demo) DEMO="true" ;;
     esac
     shift
 done
+
+# set sites (might be one or all)
+if [[ "$SITES" == "all" ]] ; then
+    if [[ "$DEMO" == "true" ]] ; then
+    	SITES="$SITE_DOMAINS $DEMO_DOMAINS"
+    else
+	SITES="$SITE_DOMAINS"
+    fi
+fi
 
 # make temp directory for checkout
 TMP_DIR="/git/tmp/$BRANCH"
@@ -138,6 +139,8 @@ fi
         cp /git/config/.env $CRAFT_DIR
         echo "ENVIRONMENT='$SERVER'" >> $CRAFT_DIR/.env
         echo "SITE='${SITE}'" >> $CRAFT_DIR/.env
+	      echo "PRIMARY_SITE_URL='/'" >> $CRAFT_DIR/.env
+
 
         # switch directory ownership to git
         ssh git@$REMOTE_IP sudo chown git:apache -R $REMOTE_FOLDER
@@ -177,12 +180,13 @@ fi
 
 		if [[ "$INSTALL" == "true" ]] ; then
 			echo "installing new site..."
-			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/craft
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft install/craft --email="info@skills-plus.co.uk" --username="info@skills-plus.co.uk" --password="letmein"
 		else
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/all
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft project-config/apply
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft plugin/install sp
 			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft migrate/up --plugin=sp
+			ssh git@$REMOTE_IP sudo $REMOTE_FOLDER/craft/./craft clear-caches/data
  		fi
 
         # write deployment to database

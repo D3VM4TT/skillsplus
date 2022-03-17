@@ -12,10 +12,12 @@ use Craft;
 use craft\elements\User;
 use craft\elements\MatrixBlock;
 use craft\elements\Entry;
+use craft\helpers\Queue;
 use craft\web\UploadedFile;
 use craft\helpers\Image;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
+use lantra\sp\jobs\SetSubordinatesLicenceCompanyJob;
 use verbb\supertable\elements\SuperTableBlockElement;
 
 class UsersController extends BaseController {
@@ -370,6 +372,23 @@ class UsersController extends BaseController {
             Lantra::$app->results->refreshResultCache($users);
         }
         $this->_returnMessage($total . ' users refreshed', true, 'management/' . ($companyId ? 'companies' : 'users'));
+    }
+
+    /**
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionSubordinateLicenceCompany()
+    {
+        $this->requireLogin();
+        $companyId = Craft::$app->request->getParam('companyId');
+        $setSubordinatesLicenceCompanyJob = new SetSubordinatesLicenceCompanyJob([
+            'companyId' => $companyId,
+            'includeHierarchy' =>  Craft::$app->request->getParam('includeHierarchy', false)
+        ]);
+        Queue::push($setSubordinatesLicenceCompanyJob);
+        return $this->_returnMessage('Company licence update added to queue.');
     }
 
     /**

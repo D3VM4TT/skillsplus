@@ -1,0 +1,22 @@
+columnSuffix: null
+contentColumnType: string
+fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
+handle: userOptionalModules
+instructions: ''
+name: 'User Optional Modules'
+searchable: false
+settings:
+  allowSelfRelations: false
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  showSiteMenu: false
+  source: null
+  sources:
+    - 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Entries

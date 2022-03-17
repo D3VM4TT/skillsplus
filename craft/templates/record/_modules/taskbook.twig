@@ -14,6 +14,9 @@
     {% set readOnly = true %}
 {% endif %}
 
+{# only get unit results linked to this package  #}
+{% set resultPackageId = package.taskbook.unitResultRollover ? false : package.id %}
+
 <div class="package tab-container" style="position: relative;">
     <div class="align-vertical">
         <div class="align-horizontal">
@@ -52,7 +55,7 @@
                 {% if moduleGroupId %}
                     {% set moduleGroupItem = cpdUser.record.getItem(moduleGroupId) %}
                     {% set totalUnits = moduleGroupItem.allUnits|length %}
-                    {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                    {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id, resultPackageId) %}
                     {% set isComplete = totalComplete >= totalUnits %}
                     <li>
                         <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
@@ -183,12 +186,13 @@
                     <tbody>
                     {% for moduleGroup in mandatoryModuleGroups %}
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set resultModuleGroupId = resultPackageId ? moduleGroup.category.id : false %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
-                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId) %}
                         {% set isComplete = totalComplete >= totalUnits %}
-                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId) %}
                         {% set isEndorsed = totalEndorsed >= totalUnits %}
-                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId)  %}
                         <tr class="taskbook-module-group {% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
@@ -226,12 +230,13 @@
                     <tbody>
                     {% for moduleGroup in package.moduleGroups('optional')  %}
                         {% set moduleGroupItem = cpdUser.record.getItem(moduleGroup.category.id) %}
+                        {% set resultModuleGroupId = resultPackageId ? moduleGroup.category.id : false %}
                         {% set totalUnits = moduleGroupItem.allUnits|length %}
-                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id) %}
+                        {% set totalComplete = craft.lantra.totalComplete(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId) %}
                         {% set isComplete = totalComplete >= totalUnits %}
-                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id) %}
+                        {% set totalEndorsed = craft.lantra.totalEndorsed(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId) %}
                         {% set isEndorsed = totalEndorsed >= totalUnits %}
-                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id)  %}
+                        {% set totalPending = craft.lantra.totalPending(moduleGroupItem, cpdUser.id, resultPackageId, resultModuleGroupId)  %}
                         <tr class="taskbook-module-group {% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>

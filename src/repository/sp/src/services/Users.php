@@ -93,9 +93,12 @@ class Users extends Component
             return;
         }
 
+        $userCompany = $this->userCompany($user);
+
         $meta = [
+            'email' => $user->email,
             'userFullName' => $user->fullName,
-            'email' => $user->email
+            'userCompany' => $userCompany ? $userCompany->title : 'Unknown'
         ];
 
         $licence = Lantra::$app->spbase->updateLicence($user->id, $user->userLicenceMonth, $user->dateCreated->format('Y-m-d'), $meta);
@@ -1677,5 +1680,22 @@ class Users extends Component
         $criteria = MatrixBlock::find();
         $criteria->fieldId = $field->id;
         return $criteria;
+    }
+
+    /**
+     * @param null $companyId
+     * @return array|\craft\base\ElementInterface[]|User[]
+     */
+    public function getCompanySubordinates($companyId = null, $includeHierarchy = false)
+    {
+        $companyIds = [$companyId];
+        ## include subordinates in hierarchy
+        if ($includeHierarchy) {
+            $companyIds = array_merge($companyIds, $this->getCompanyChildrenIds($companyId));
+        }
+        $criteria = User::find();
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
+        return $criteria->all();
     }
 }

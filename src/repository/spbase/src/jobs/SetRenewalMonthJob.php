@@ -14,13 +14,8 @@ use craft\queue\BaseJob;
 
 use lantra\spbase\Module;
 
-class ResaveUsersJob extends BaseJob
+class SetRenewalMonthJob extends BaseJob
 {
-    /**
-     * @var bool
-     */
-    public $hasLicence = true;
-
     /**
      * @var bool
      */
@@ -32,17 +27,10 @@ class ResaveUsersJob extends BaseJob
     public function execute($queue): void
     {
         $criteria = User::find();
+        $criteria->userStartDate(':notempty:');
 
         if ($this->userId) {
             $criteria->id($this->userId);
-        }
-        else {
-            $criteria->group = ['users', 'companyManagers', 'teamManagers'];
-            $criteria->admin(0);
-        }
-
-        if ($this->hasLicence) {
-            $criteria->userLicenceId(':notempty:');
         }
 
         $total = $criteria->count();
@@ -53,6 +41,8 @@ class ResaveUsersJob extends BaseJob
             $this->setProgress($queue, $i / $total, $label);
 
             try {
+                $month = $user->userStartDate->format('m');
+                $user->setFieldValue('userLicenceMonth', $month);
                 Craft::$app->elements->saveElement($user);
             } catch (\Throwable $e) {
                 Module::warning("Could not save user {$user->id}: {$e->getMessage()}");
