@@ -64,8 +64,8 @@
                                 addResult ? null : 1,
                                 module.type == 'cpd' ? moduleResultEntry.id : null,
                                 moduleResultCompany ? moduleResultCompany.id : null,
-                                resultPackageId is defined ? resultPackageId : null,
-                                resultPackageId is defined ? moduleGroup.id : null
+                                resultPackageId is defined and resultPackageId ? resultPackageId : null,
+                                resultPackageId is defined and resultPackageId ? moduleGroup.id : null
                             ) %}
                         {% endif %}
 
