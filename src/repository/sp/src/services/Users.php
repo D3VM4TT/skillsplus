@@ -68,17 +68,6 @@ class Users extends Component
     public function onSaveUser(ModelEvent $event, User $user)
     {
         $this->syncUserLicence($user);
-
-        ## Lantra::$app->results->saveUserResultCache($user->id);
-    }
-
-    /**
-     * @param UserEvent $event
-     * @param User $user
-     */
-    public function onAfterSuspendUser(UserEvent $event, User $user)
-    {
-        Lantra::$app->spbase->cancelLicence($user->id);
     }
 
     /**

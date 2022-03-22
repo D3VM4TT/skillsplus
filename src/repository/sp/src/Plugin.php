@@ -158,23 +158,6 @@ class Plugin extends BasePlugin
         );
 
         Event::on(
-            Users::class,
-            Users::EVENT_AFTER_SUSPEND_USER,
-            function (UserEvent $event) {
-                Lantra::$app->users->onAfterSuspendUser($event, $event->user);
-            }
-        );
-
-        Event::on(
-            Users::class,
-            Users::EVENT_BEFORE_UNSUSPEND_USER,
-            function (UserEvent $event) {
-                ## stop unsuspend users
-                $event->isValid = false;
-            }
-        );
-
-        Event::on(
             User::class,
             User::EVENT_AFTER_SAVE,
             function (ModelEvent $event) {
