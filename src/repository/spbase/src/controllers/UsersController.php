@@ -26,7 +26,9 @@ class UsersController extends Controller {
      */
     public function actionInfo($action = 'count')
     {
+        $status = $this->request->getParam('status', 'active');
         $criteria = User::find();
+        $criteria->status($status);
         $criteria->group('users');
         $criteria->admin(0);
         $criteria->userNotLicenced(false);
