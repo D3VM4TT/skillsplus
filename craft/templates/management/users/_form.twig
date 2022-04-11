@@ -110,12 +110,12 @@
         {%  for block in userCustomFields %}
             <div class="field--wrapper">
                 <label for="custom-{{ loop.index }}" class="no-float">{{ block.label }}:</label>
-                {% set userCustomBlock = account is defined ? account.userCustomFields.customName('='~block.name).one() : null %}
+                {% set userCustomBlock = account is defined ? account.customFields.customName('='~block.name).one() : null %}
                 {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
-                <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
-                <input type="text" id="custom-{{ loop.index }}" class="float-label" name="fields[userCustomFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][type]" value="customField">
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][enabled]" value="1">
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][fields][customName]" value="{{ block.name }}" />
+                <input type="text" id="custom-{{ loop.index }}" class="float-label" name="fields[customFields][{{ fieldId }}][fields][customValue]" value="{{ userCustomBlock.customValue|default('') }}">
             </div>
         {%  endfor %}
         <h2>User settings</h2>

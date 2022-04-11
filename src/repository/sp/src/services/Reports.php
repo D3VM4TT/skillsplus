@@ -576,7 +576,7 @@ class Reports extends Component
                 $user->userAddress,
                 $user->userTelephone,
             ];
-            foreach ($user->userCustomFields as $block) {
+            foreach ($user->customFields as $block) {
                 $record = array_merge($record, [$block->customValue]);
             }
             ## add the result fields

@@ -58,7 +58,7 @@ fieldLayouts:
       -
         elements:
           -
-            fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # User Custom Fields
+            fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # Custom Fields
             instructions: null
             label: null
             required: false
