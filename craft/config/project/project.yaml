@@ -1,4 +1,4 @@
-dateModified: 1646912816
+dateModified: 1649410625
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -37,6 +37,7 @@ meta:
     3c50a00d-c61b-4018-bed4-f1685a215e01: Comment # Comment
     3ccae116-4500-45d0-a56a-024f2e8d4d03: 'Result Status' # Result Status
     3cff7796-6519-48a5-97e7-e4dbb14befcc: 'Result Endorsed User' # Result Endorsed User
+    3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad: Products # Products
     3d52518d-7b85-4ef8-af1c-fb8a813e0cce: 'Legacy Parent ID' # Legacy Parent ID
     3e71d4f7-d155-457a-9e53-497f9c3ff348: 'Module Optional' # Module Optional
     3f2f2e5a-9c13-4199-aaa4-0d0d1eb8abfc: 'Legacy Company ID' # Legacy Company ID
@@ -76,6 +77,7 @@ meta:
     6f94bf9b-3168-437e-b8f2-7d082dcdd831: 'Unit Groups' # Unit Groups
     6f6554bf-571c-46f8-a4eb-37e34c65b1a8: Asset # Asset
     6fae9879-b107-4f41-9bc0-0f119a358ef1: 'Report Results Standard Type' # Report Results Standard Type
+    7ac02e26-c0e2-4b21-b756-bfe7243fa353: Products # Products
     7b7af1dc-c01f-4f73-b3f4-a83ff572e941: 'Report All Teams' # Report All Teams
     7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0: 'CPD Target Points' # CPD Target Points
     7c46cc43-e0d3-411f-a100-808e295ac8ce: Product # Product
@@ -112,6 +114,7 @@ meta:
     22c29753-9e14-4e97-9291-ca025bc83380: Passed # Passed
     22f6cba0-1e8a-4d82-8678-9a33b1d06163: 'Unit Recurring Period' # Unit Recurring Period
     24e619f3-3a4b-47a9-beea-4dc60343c548: Results # Results
+    26b4e668-8bdc-4798-bc5f-7cd76851378f: 'Product Manufacturer Name' # Product Manufacturer Name
     27ae4aac-8776-4581-9548-667541eefd7c: Location # Location
     27e57a2d-2938-41e8-ab58-72f377ca20c1: 'Report All Roles' # Report All Roles
     027f626e-2eaa-4fca-9665-c8812bce20a9: 'User Address' # User Address
@@ -160,6 +163,7 @@ meta:
     89bc5035-7e58-43a7-a7e5-bcaa9de73d4a: Image # Image
     090b3c24-a9ac-4935-a919-c4fc8a3099b0: Units # Units
     92d2e862-77f6-43f3-aa6e-cd75c38d424d: 'Step Name' # Step Name
+    93bfbd0a-65ff-4156-aa22-f140fc2a744a: Product # Product
     98a87e5b-9324-4727-ab66-b99bfdccbc68: 'Module Groups' # Module Groups
     98e01bd1-bcac-4523-8399-0c55010d13b6: 'Unit Tootlip' # Unit Tootlip
     111e6e76-917a-43f6-aa70-c659bd131921: Title # Title
@@ -190,6 +194,7 @@ meta:
     840f8f48-be42-4008-ae9e-1fa132183769: 'Taskbook Page New' # Taskbook Page New
     892d5048-f63d-468f-a926-c89daebf07f9: 'Short Title' # Short Title
     918cc95b-e5c3-468d-809a-8bbd4eb5a8e5: 'Taskbook Intro' # Taskbook Intro
+    941f2df5-26eb-4a6c-8772-f52e0fd5789b: 'Product Manufacturer Email' # Product Manufacturer Email
     974df618-fa82-42bd-9ad4-612f8f4a985c: Read # Read
     995ba33c-928b-43a5-8d39-53c4c36782ed: 'Unit Type' # Unit Type
     1648b942-a6f7-47b2-a284-5a971121b556: 'Module Group' # Module Group
@@ -315,6 +320,7 @@ meta:
     d3594414-790c-479e-ada1-8e93cd99e906: 'Cycle Start Date' # Cycle Start Date
     da81a368-f84c-47f8-9e3a-b83346be0865: 'Module Group Minimum Optional' # Module Group Minimum Optional
     db4d8830-6fbb-45c9-bdb4-cc058820b1ae: 'Taskbook Files' # Taskbook Files
+    db267693-1bd5-427d-b65d-4f74c7f0f42d: 'Product Company' # Product Company
     dbbf1f49-3b86-4c6d-aa5a-4170483a35f1: 'User Role' # User Role
     dbd7f9dd-1424-48cc-8aba-f0533bce83be: Qualification # Qualification
     dbedebea-c884-4f61-8f0f-ebc64b3a5ed2: 'Report Send Frequency' # Report Send Frequency
