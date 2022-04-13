@@ -9,11 +9,10 @@
 {% set tabs = {
     scheme: {label: 'Scheme', url: '#settings-tab-scheme' },
     theme: {label: 'Theme', url: '#settings-tab-theme' },
-    licences: {label: 'Licences', url: '#settings-tab-licences' },
     users: {label: 'Users', url: '#settings-tab-users' },
     reports: {label: 'Reports', url: '#settings-tab-reports' },
     config: {label: 'Config', url: '#settings-tab-config' },
-    paypal: {label: 'PayPal', url: '#settings-tab-paypal' },
+    products: {label: 'Products', url: '#settings-tab-products' },
     taskbooks: {label: 'Taskbooks', url: '#settings-tab-taskbooks' },
     registration: {label: 'Registration', url: '#settings-tab-registration' },
     certificate: {label: 'Certificate', url: '#settings-tab-certificate' }
@@ -40,11 +39,6 @@
         {% include 'sp/cp/settings/_theme.twig' with {settings:settings, config:config} %}
         </div>
     </div>
-    <div id="tab-licences" class="hidden">
-        <div id="fields">
-        {% include 'sp/cp/settings/_licences.twig' with {settings:settings, config:config} %}
-        </div>
-    </div>
     <div id="tab-users" class="hidden">
         <div id="fields">
         {% include 'sp/cp/settings/_users.twig' with {settings:settings, config:config} %}
@@ -60,9 +54,9 @@
         {% include 'sp/cp/settings/_config.twig' with {settings:settings, config:config} %}
         </div>
     </div>
-    <div id="tab-paypal" class="hidden">
+    <div id="tab-products" class="hidden">
         <div id="fields">
-            {% include 'sp/cp/settings/_paypal.twig' with {settings:settings, config:config} %}
+            {% include 'sp/cp/settings/_products.twig' with {settings:settings, config:config} %}
         </div>
     </div>
     <div id="tab-taskbooks" class="hidden">
