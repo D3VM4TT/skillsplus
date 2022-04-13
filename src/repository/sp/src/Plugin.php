@@ -67,9 +67,6 @@ class Plugin extends BasePlugin
 
     public $schemaVersion = '0.0.1';
 
-    private $_sectionIds;
-    private $_groupIds;
-
     /**
      * @throws \yii\base\InvalidConfigException
      */
@@ -519,30 +516,73 @@ class Plugin extends BasePlugin
      * @param $handle
      * @return null
      */
-    private function sectionId($handle)
+    public static function sectionId($handle)
     {
-        if (!$this->_sectionIds) {
-            $sections = Craft::$app->sections->getAllSections();
-            foreach($sections as $section) {
-                $this->_sectionIds[$section->handle] = $section->id;
-            }
-        }
-        return isset($this->_sectionIds[$handle]) ? $this->_sectionIds[$handle] : null;
+        return self::sectionProperty($handle, 'id');
     }
 
     /**
      * @param $handle
      * @return null
      */
-    private function groupId($handle)
+    public static function sectionUid($handle)
     {
-        if (!$this->_groupIds) {
-            $groups = Craft::$app->categories->getAllGroups();
-            foreach($groups as $group) {
-                $this->_groupIds[$group->handle] = $group->id;
+        return self::sectionProperty($handle, 'uid');
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    public static function groupId($handle)
+    {
+        return self::groupProperty($handle, 'id');
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    public static function groupUid($handle)
+    {
+        return self::groupProperty($handle, 'uid');
+    }
+
+    private static $_sections;
+    private static $_groups;
+
+    /**
+     * @param $handle
+     * @param string $property
+     * @return mixed|null
+     */
+    private function sectionProperty($handle, $property = 'id')
+    {
+        if (!self::$_sections) {
+            $sections = Craft::$app->sections->getAllSections();
+            foreach($sections as $section) {
+                self::$_sections[$section->handle] = $section;
             }
         }
-        return isset($this->_groupIds[$handle]) ? $this->_groupIds[$handle] : null;
+
+        return isset(self::$_sections[$handle]) ? self::$_sections[$handle]->$property : null;
+    }
+
+    /**
+     * @param $handle
+     * @param string $property
+     * @return mixed|null
+     */
+    private function groupProperty($handle, $property = 'id')
+    {
+        if (!self::$_groups) {
+            $groups = Craft::$app->categories->getAllGroups();
+            foreach($groups as $group) {
+                self::$_groups[$group->handle] = $group;
+            }
+        }
+
+        return isset(self::$_groups[$handle]) ? self::$_groups[$handle]->$property : null;
     }
 
     /**

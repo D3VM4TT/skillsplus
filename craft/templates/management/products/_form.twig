@@ -1,0 +1,96 @@
+{% do craft.lantra.requirePermission('editProducts') %}
+{% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Products" %}
+
+{% set productId = craft.app.request.getSegment(4) %}
+{% if productId and product is not defined %}
+    {% set product = craft.entries.id(productId).one %}
+{% endif %}
+
+{% set section = craft.sections.getSectionByHandle('products') %}
+{% if isAdmin %}
+    {% set companyEntries = craft.entries.section('companies').all() %}
+{% else %}
+    {% set companyEntries = craft.lantra.managerCompanies(currentUser.id) %}
+{% endif %}
+
+{% set productModels = craft.categories.group('productModels').all %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        <a class="back-link" href="/management/products">&laquo; back</a>
+        {% include '_includes/topNavigation' %}
+    </div>
+    {% if product is defined %}
+        {{ ui.errorList(product.getFirstErrors()) }}
+    {% endif %}
+
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8">
+        {{ csrfInput() }}
+        {{ actionInput('entries/save-entry') }}
+        {{ redirectInput('/management/products') }}
+        <input type="hidden" name="sectionId" value="{{ section.id }}">
+        <input type="hidden" name="enabled" value="1">
+        <input type="hidden" name="entryId" value="{{ product.id|default('') }}">
+
+        <div class="field--wrapper">
+            <label for="productCompany" class="no-float">Company:</label>
+            {% if companyEntries|length == 1 %}
+                <strong>{{ companyEntries[0].companyLabel }}</strong>
+                <input type="hidden" name="fields[productCompany][]" value="{{ companyEntries[0].id }}">
+            {% else %}
+                <select data-relation="fields[productCompany]" data-value="{{ product.productCompany.one.id|default(companyEntries[0].id) }}" id="productCompany" >
+                    {% for companyEntry in companyEntries %}
+                        <option value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+
+        <div class="field--wrapper">
+            <label for="productModel" class="no-float">Model:</label>
+            {% if productModels|length == 1 %}
+                <strong>{{ productModels[0].productManufacturerName }} {{ productModels[0].title }}</strong>
+                <input type="hidden" name="fields[productModel][]" value="{{ productModels[0].id }}">
+            {% else %}
+                <select data-relation="fields[productModel]" data-value="{{ product.productModel.one.id|default(productModels[0].id) }}" id="productModel" >
+                    {% for productModel in productModels %}
+                        <option value="{{ productModel.id }}">{{ productModel.title }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+
+        <div class="field--wrapper">
+            <label for="title" class="no-float">Reference:</label>
+            <input required id="title" type="text" class="float-label" placeholder="Enter the product reference" name="title" value="{{ product.title|default('') }}">
+        </div>
+
+        {% for row in craft.lantra.setting('productCustomFields') %}
+            <div class="field--wrapper">
+                <label for="custom-{{ row.name }}" class="no-float">{{ row.label }}:</label>
+                {% set productCustomBlock = product is defined ? product.customFields.customName('='~row.name).one() : null %}
+                {% set fieldId = productCustomBlock|length ? productCustomBlock.id : 'new'~loop.index %}
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][type]" value="customField">
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][enabled]" value="1">
+                <input type="hidden" name="fields[customFields][{{ fieldId }}][fields][customName]" value="{{ row.name }}"/>
+                <input {{ row.required ? 'required' }}
+                    type="text"
+                    id="custom-{{ row.name }}"
+                    class="float-label"
+                    name="fields[customFields][{{ fieldId }}][fields][customValue]"
+                    value="{{ productCustomBlock.customValue|default('') }}"
+                    placeholder="Enter the product {{ row.label|lower }}"
+                />
+            </div>
+        {% endfor %}
+
+        <div class="container-btn">
+            <button class="button primary-bg" type="submit">Save product</button>
+        </div>
+
+    </form>
+{% endblock %}

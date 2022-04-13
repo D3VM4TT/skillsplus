@@ -36,6 +36,11 @@
                     <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks/structure">Taskbooks</a>
                 </li>
             {% endif %}
+            {% if craft.lantra.setting('products', false) and craft.lantra.can('editProducts') %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'products' %}active{% endif %}" href="/management/products">Products</a>
+                </li>
+            {% endif %}
         </ul>
     </li>
     {% if craft.lantra.settingReports() %}

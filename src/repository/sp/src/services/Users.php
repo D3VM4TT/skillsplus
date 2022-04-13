@@ -953,7 +953,7 @@ class Users extends Component
      * @return array
      * @throws Exception
      */
-    function getCompanyManagerCompanyIds(User $user, $type = 'both')
+    function getCompanyManagerCompanyIds(User $user = null, $type = 'both')
     {
         if (is_null($user)) {
             $user = Craft::$app->getUser();

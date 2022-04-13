@@ -1,5 +1,6 @@
+defaultPlacement: end
 fieldLayouts:
-  f54eef12-6131-4721-94a4-834583923074:
+  6b497f1f-cd55-4082-9ba0-463e8dd5acfc:
     tabs:
       -
         elements:
@@ -10,8 +11,8 @@ fieldLayouts:
             class: null
             disabled: false
             id: null
-            instructions: ''
-            label: Reference
+            instructions: null
+            label: null
             max: null
             min: null
             name: null
@@ -23,43 +24,36 @@ fieldLayouts:
             step: null
             tip: null
             title: null
-            type: craft\fieldlayoutelements\EntryTitleField
+            type: craft\fieldlayoutelements\TitleField
             warning: null
-            width: 50
+            width: 100
           -
-            fieldUid: d70de7c6-ac60-452b-87eb-91754b7bbffa # Product Model
+            fieldUid: 26b4e668-8bdc-4798-bc5f-7cd76851378f # Product Manufacturer Name
             instructions: ''
             label: ''
             required: '1'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 25
-          -
-            fieldUid: db267693-1bd5-427d-b65d-4f74c7f0f42d # Product Company
-            instructions: ''
-            label: ''
-            required: '1'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 25
-          -
-            fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # Custom Fields
-            instructions: null
-            label: null
-            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
-        name: Product
+          -
+            fieldUid: 941f2df5-26eb-4a6c-8772-f52e0fd5789b # Product Manufacturer Email
+            instructions: ''
+            label: ''
+            required: '1'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Product Type'
         sortOrder: 1
-handle: product
-hasTitleField: true
-name: Product
-section: 3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad # Products
-sortOrder: 1
-titleFormat: null
-titleTranslationKeyFormat: null
-titleTranslationMethod: site
+handle: productModels
+name: 'Product Models'
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
+    hasUrls: false
+    template: null
+    uriFormat: null
+structure:
+  maxLevels: null
+  uid: 7bc535aa-9db7-42ed-9c9d-4a68890fe31b

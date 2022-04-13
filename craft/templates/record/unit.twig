@@ -58,12 +58,14 @@
 {% set currentUserPhotoUrl = currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {# set result package from existing result or taskbook settings #}
+{% set resultPackageId = false %}
+{% set resultModuleGroupId = false %}
 {% if resultEntry %}
-    {% set resultPackageId = resultEntry.resultPackage ? resultEntry.resultPackage.one.id : false %}
-    {% set resultModuleGroupId = resultEntry.resultModuleGroup ? resultEntry.resultModuleGroup.one.id : false %}
-{% else %}
-    {% set resultPackageId = isPackage and package.taskbook.unitResultRollover ? false : package.id %}
-    {% set resultModuleGroupId = isPackage and package.taskbook.unitResultRollover ? false : moduleGroup.id %}
+    {% set resultPackageId = resultEntry.resultPackage.one ? resultEntry.resultPackage.one.id : false %}
+    {% set resultModuleGroupId = resultEntry.resultModuleGroup.one ? resultEntry.resultModuleGroup.one.id : false %}
+{% elseif isPackage %}
+    {% set resultPackageId = package.taskbook.unitResultRollover ? false : package.id %}
+    {% set resultModuleGroupId = package.taskbook.unitResultRollover ? false : moduleGroup.id %}
 {% endif %}
 
 {% block content %}

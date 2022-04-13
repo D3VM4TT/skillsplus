@@ -730,6 +730,17 @@ class LantraVariable
 
     /**
      * @param $search
+     * @param $limit
+     * @param $order
+     * @return mixed
+     */
+    public function productCriteria($search, $limit, $order)
+    {
+        return Lantra::$app->products->productCriteria($search, $limit, $order);
+    }
+
+    /**
+     * @param $search
      * @param null $limit
      * @param string $order
      * @param null $managerId
@@ -875,33 +886,20 @@ class LantraVariable
             return false;
         }
         $permission = false;
-        if ($task == 'editCompanies') {
-            $section = Craft::$app->sections->getSectionByHandle('companies');
-            $permission = 'editEntries:'.$section->uid;
+
+        if (in_array($task, ['editCompanies', 'editTeams', 'editModules', 'editReports', 'editTaskbooks', 'editProducts'])){
+            $section = strtolower(ltrim($task, 'edit'));
+            $permission = 'editEntries:' . Lantra::sectionUid($section);
         }
-        if ($task == 'editTeams') {
-            $section = Craft::$app->sections->getSectionByHandle('teams');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editModules') {
-            $section = Craft::$app->sections->getSectionByHandle('modules');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editReports') {
-            $section = Craft::$app->sections->getSectionByHandle('reports');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editRoles') {
-            $category = Craft::$app->categories->getGroupByHandle('roles');
-            $permission = 'editCategories:'.$category->uid;
-        }
+
         if ($task == 'editUsers') {
             $permission = 'editUsers';
         }
-        if ($task == 'editTaskbooks') {
-            $section = Craft::$app->sections->getSectionByHandle('packages');
-            $permission = 'editEntries:'.$section->uid;
+
+        if ($task == 'editRoles') {
+            $permission = 'editCategories:' . Lantra::groupUid('roles');
         }
+
         return $permission ? $user->can($permission) : false;
     }
 

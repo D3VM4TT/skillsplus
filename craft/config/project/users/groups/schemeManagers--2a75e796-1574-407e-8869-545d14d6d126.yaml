@@ -1,35 +1,16 @@
-description: null
+description: ''
 handle: schemeManagers
 name: 'Scheme Managers'
 permissions:
-  - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
-  - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - registerusers
-  - assignuserpermissions
-  - administrateusers
   - moderateusers
+  - assignuserpermissions
+  - 'assignusergroup:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6' # Company Managers
+  - 'assignusergroup:2a75e796-1574-407e-8869-545d14d6d126' # Scheme Managers
+  - 'assignusergroup:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a' # Team Managers
+  - 'assignusergroup:ab9197b3-7032-4015-ba4e-4939118952dd' # Users
+  - assignusergroups
+  - administrateusers
   - editusers
   - deleteusers
   - 'createentries:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
@@ -42,12 +23,6 @@ permissions:
   - 'deletepeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
   - 'editpeerentrydrafts:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
   - 'editentries:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
-  - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
-  - assignusergroups
-  - 'assignusergroup:0ff8d9a2-50f8-473e-93c9-5eb5d41750f6' # Company Managers
-  - 'assignusergroup:2a75e796-1574-407e-8869-545d14d6d126' # Scheme Managers
-  - 'assignusergroup:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a' # Team Managers
-  - 'assignusergroup:ab9197b3-7032-4015-ba4e-4939118952dd' # Users
   - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
@@ -58,6 +33,16 @@ permissions:
   - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'editpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'editentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'createentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'publishentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'deleteentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'publishpeerentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'deletepeerentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'editpeerentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'publishpeerentrydrafts:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'deletepeerentrydrafts:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'editpeerentrydrafts:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+  - 'editentries:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
   - 'createentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - 'publishentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - 'deleteentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
@@ -68,22 +53,16 @@ permissions:
   - 'deletepeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - 'editpeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - 'editentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
-  - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'editpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'saveassetinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
-  - 'createfoldersinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
-  - 'deletefilesandfoldersinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
-  - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
-  - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'editimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'createentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'publishentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'deleteentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'publishpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'deletepeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'editpeerentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'publishpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'deletepeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'editpeerentrydrafts:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
@@ -94,15 +73,46 @@ permissions:
   - 'deletepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'editpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'createentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'publishentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'deleteentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'publishpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'deletepeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'editpeerentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'publishpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'deletepeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'editpeerentrydrafts:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'editentries:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+  - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'saveassetinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'createfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'deletefilesandfoldersinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'replacefilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'editimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
   - 'editpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
   - 'replacepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
   - 'deletepeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
   - 'editpeerimagesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
   - 'viewpeerfilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'viewvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'saveassetinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'createfoldersinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'deletefilesandfoldersinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'replacefilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'editimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - 'editpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - 'replacepeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - 'deletepeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - 'editpeerimagesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - 'viewpeerfilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
-  - 'replacefilesinvolume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  - 'replacefilesinvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'viewvolume:e1099881-d76d-4c4c-9b8b-607658d27413' # Data

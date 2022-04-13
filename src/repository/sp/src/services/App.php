@@ -25,6 +25,7 @@ use lantra\spbase\services\SpBase;
  * @property-read \lantra\sp\services\Notify $notify
  * @property-read \lantra\sp\services\Queue $queue
  * @property-read \lantra\sp\services\Packages $packages
+ * @property-read \lantra\sp\services\Products $products
  * @property-read \lantra\sp\services\paypal\PayPal $paypal
  * @property-read \lantra\sp\services\Records $records
  * @property-read \lantra\sp\services\Reports $reports
@@ -48,6 +49,7 @@ class App extends Component
     public $queue;
     public $packages;
     public $paypal;
+    public $products;
     public $records;
     public $reports;
     public $results;
@@ -72,6 +74,7 @@ class App extends Component
         $this->queue = new Queue();
         $this->paypal = new PayPal();
         $this->packages = new Packages();
+        $this->products = new Products();
         $this->records = new Records();
         $this->reports = new Reports();
         $this->results = new Results();
