@@ -1,0 +1,40 @@
+{% import "_macros" as ui %}
+{% set product = craft.app.entries.getEntryById(productId) %}
+{% set productModel = product.productModel.one %}
+{% set productLabel = (productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '') ~  ' [' ~ product.title ~ ']' %}
+
+{% set section = craft.sections.getSectionByHandle('results') %}
+{% set entryType = craft.app.sections.getEntryTypesByHandle('productResult')[0] %}
+
+{% set entry = entry ?? create('craft\\elements\\Entry') %}
+{% set resultEntry = resultId == 'new' ? entry : craft.entries.section('results').status(null).id(resultId).one() %}
+
+<h3>{{ productLabel }}</h3>
+
+<form class="page-form" method="post" role="form" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    {{ actionInput('entries/save-entry') }}
+    {{ redirectInput('/cpd/' ~ currentUser.id ~ '/products') }}
+    <input type="hidden" name="sectionId" value="{{ section.id }}">
+    <input type="hidden" name="typeId" value="{{ entryType.id }}">
+    <input type="hidden" name="enabled" value="1">
+    <input type="hidden" name="entryId" value="{{ resultEntry.id|default('') }}">
+    <input type="hidden" name="fields[resultProduct][]" value="{{ productId }}">
+    <input type="hidden" name="title" value="{{ productLabel }}">
+
+    <div class="field--wrapper">
+        {{ ui.errorList(resultEntry.getFirstErrors()) }}
+    </div>
+
+    <div class="field--wrapper" data-type="date" data-required="1">
+        {% include '_includes/date' with {label:'Inspection Date', name:'userStartDate', value: resultEntry ? resultEntry.resultStartDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
+    </div>
+
+    <div class="field--wrapper" data-type="date" data-required="1">
+        {% include '_includes/date' with {label:'Expiry Date', name:'userExpiryDate', value: resultEntry ? resultEntry.expiryDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
+    </div>
+
+    <div class="container-btn">
+        <button class="button primary-bg" type="submit">Save result</button>
+    </div>
+</form>

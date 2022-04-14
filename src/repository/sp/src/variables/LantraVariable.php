@@ -12,6 +12,7 @@ use Craft;
 use craft\db\Query;
 use craft\elements\Entry;
 
+use craft\elements\User;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use lantra\sp\Plugin as Lantra;
@@ -737,6 +738,15 @@ class LantraVariable
     public function productCriteria($search, $limit, $order)
     {
         return Lantra::$app->products->productCriteria($search, $limit, $order);
+    }
+
+    /**
+     * @param $productId
+     * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
+     */
+    public function productResults($productId)
+    {
+        return Lantra::$app->results->getProductResults($productId);
     }
 
     /**
@@ -1595,18 +1605,10 @@ class LantraVariable
      * Get the user
      *
      * @param null $userId
-     * @return UserModel
+     * @return User
      */
     private function getUser($userId = null)
     {
-        if (is_object($userId)) {
-            return $userId;
-        }
-        elseif (is_null($userId)) {
-            return $user = Craft::$app->getUser()->getIdentity();
-        }
-        else {
-            return $user = Craft::$app->users->getUserById($userId);
-        }
+        return LantraHelper::getUser($userId);
     }
 }

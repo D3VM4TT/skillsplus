@@ -19,6 +19,11 @@
                 <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/taskbooks">My {{ taskbookLabel|pluralize }}</a>
             </li>
         {% endif %}
+        {% if craft.lantra.setting('products') %}
+            <li class="{% if craft.app.request.getSegment(3) == 'products' %}nav-open{% else %}nav-closed{% endif %}">
+                <a class="secondary-bg-hover" href="/cpd/{{ currentUser.id }}/products">My Products</a>
+            </li>
+        {% endif %}
         <li class="{% if craft.app.request.getSegment(2) == 'profile' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="/profile">My Profile</a>
         </li>

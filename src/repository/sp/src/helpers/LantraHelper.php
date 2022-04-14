@@ -436,8 +436,9 @@ class LantraHelper
         if (is_object($userId)) {
             return $userId;
         }
-        elseif (is_null($userId)) {
-            return Craft::$app->getUser()->getIdentity();
+
+        if (is_null($userId)) {
+            $userId = Craft::$app->getUser()->id;
         }
 
         return (int) $userId > 0 ? Craft::$app->users->getUserById( (int) $userId) : null;

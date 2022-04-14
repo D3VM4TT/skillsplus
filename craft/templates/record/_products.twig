@@ -1,0 +1,70 @@
+{% set defaultProduct = cpdUser.record.getFirstProduct() %}
+{% set productId = craft.app.request.getParam('productId', defaultProduct.elementId) %}
+{% set resultId = craft.app.request.getParam('resultId') %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% if resultId %}
+    {% include 'record/_products/form' with { productId:productId, resultId:resultId } %}
+{% elseif not defaultProduct %}
+    <p>There are no products associated to your profile.</p>
+{% else %}
+    <form method="get" action="">
+        <label for="productId">Product
+        {% if cpdUser.record.products|length == 1 %}
+            <strong>
+                {% set productItem = cpdUser.record.products|first %}
+                {% set product = cpdUser.record.getElement(productItem.elementId) %}
+                {% set productModel = product.productModel.one %}
+                {{ productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '' }} [{{ product.title }}]
+            </strong>
+        {% else %}
+            <select id="productId" name="productId" onchange="this.form.submit()">
+                {% for productItem in cpdUser.record.products %}
+                    {% set product = cpdUser.record.getElement(productItem.elementId) %}
+                    {% set productModel = product.productModel.one %}
+                    <option value="{{ product.id }}"{% if productId == product.id %} selected{% endif %}>
+                        {{ productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '' }} [{{ product.title }}]
+                    </option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        </label>
+    </form>
+    {% set productResults = craft.lantra.productResults(productId) %}
+    <table class="data">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Inspection Date</th>
+            <th>Expiry Date</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for productResult in productResults %}
+            <tr>
+                <td>{{ productResult.id }}</td>
+                <td>{{ productResult.resultStartDate|date(dateFormat) }}</td>
+                <td>{{ productResult.expiryDate ? productResult.expiryDate|date(dateFormat) : '~' }}</td>
+                <td class="icons" style="width:140px;text-align:right">
+                    <a class="icon" href="/cpd/{{ currentUser.id }}/products/?productId={{ productId }}&resultId={{ productResult.id }}">
+                        <img src="/assets/img/edit.svg" title="Edit" />
+                    </a>
+                    <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ productResult.id }}">
+                        <img src="/assets/img/delete.svg" title="Delete" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="container-btn">
+        <a class="button primary-bg" href="/cpd/{{ currentUser.id }}/products/?productId={{ productId }}&resultId=new">Add result</a>
+    </div>
+
+{% endif %}
+
+
+

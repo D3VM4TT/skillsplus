@@ -46,6 +46,7 @@ class Results extends Component
     {
         $userId = Craft::$app->getUser()->id;
         $unitEntry = $entry->resultUnit ? $entry->resultUnit->one() : null;
+        $dateTime = new \DateTime();
         if ($entry->type == 'unitResult' && !$unitEntry) {
             $event->isValid = false;
             $entry->addError('resultUnit', 'You must select a Result Unit for Unit Results');
@@ -91,7 +92,6 @@ class Results extends Component
                     $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 }
             }
-            $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
             $managerId = Craft::$app->request->getParam('managerId');
@@ -132,6 +132,9 @@ class Results extends Component
                     Lantra::$app->notify->sendManagerEndorsementResult($entry);
                 }
             }
+        }
+
+        if ($entry->type == 'unitResult' || $entry->type == 'userResult' || $entry->type == 'productResult') {
             $request = Craft::$app->getRequest();
             $userStartDate = Craft::$app->request->getParam('userStartDate');
             $userFinishDate = Craft::$app->request->getParam('userFinishDate');
@@ -626,6 +629,24 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         $criteria->status = ['live', 'expired'];
         return $criteria;
+    }
+
+    /**
+     * @param $productId
+     * @param string[] $status
+     * @param null $limit
+     * @param false $count
+     * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
+     */
+    function getProductResults($productId, $status = ['live', 'expired'], $limit = null, $count = false)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->limit = $limit;
+        $criteria->relatedTo = ['targetElement' => $productId, 'field' => 'resultProduct'];
+        $criteria->status = $status;
+        $criteria->type = 'productResult';
+        return $count ? $criteria->count() : $criteria->all();
     }
 
     /**

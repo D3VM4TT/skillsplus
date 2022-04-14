@@ -19,6 +19,18 @@ use lantra\sp\helpers\LantraHelper;
 class Products extends Component
 {
     /**
+     * @param null $user
+     * @param null $limit
+     * @param string $order
+     * @return array|\craft\base\ElementInterface[]|Entry[]
+     */
+    public function getUserProducts($user = null, $limit = null, $order = 'title')
+    {
+        $user = LantraHelper::getUser($user);
+        return $this->productCriteria('', $limit, $order, null, $user)->all();
+    }
+
+    /**
      * @param string $search
      * @param int $limit
      * @param string $order
@@ -28,8 +40,8 @@ class Products extends Component
      */
     public function productCriteria($search = '', $limit = 25, $order = 'title', $companyId = null, $user = null)
     {
-        $user = Craft::$app->getUser();
-        $isAdmin = $user->getIsAdmin() || $user->getIdentity()->isInGroup('schemeManagers');
+        $user = LantraHelper::getUser($user);
+        $isAdmin = $user->admin || $user->isInGroup('schemeManagers');
 
         $criteria = Entry::find();
         $criteria->section = 'products';
@@ -49,7 +61,7 @@ class Products extends Component
         ## admins see all company products by default
         elseif (!$isAdmin) {
             $criteria->relatedTo([
-                'targetElement' => Lantra::$app->users->getCompanyManagerCompanyIds($user->getIdentity()),
+                'targetElement' => Lantra::$app->users->getCompanyManagerCompanyIds($user),
                 'field' => 'productCompany'
             ]);
         }

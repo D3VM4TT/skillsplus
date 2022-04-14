@@ -25,7 +25,8 @@ class Record extends Model
     public $user;
     private $_record = [
         'jobRoles'  => [],
-        'packages'  => []
+        'packages'  => [],
+        'products'  => []
     ];
     private $_elements = [];
     private $_elementIds = [];
@@ -88,6 +89,27 @@ class Record extends Model
         }
         foreach($this->_record['packages'] as $package) {
             return $package;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function totalProducts()
+    {
+        return count($this->_record['products']);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getFirstProduct()
+    {
+        if (!count($this->_record['products'])) {
+            return null;
+        }
+        foreach($this->_record['products'] as $product) {
+            return $product;
         }
     }
 
@@ -204,7 +226,11 @@ class Record extends Model
             }
             $this->_record['packages'][$package->id] = $this->_addItem('package', $package, $moduleGroups, $this->_data);
         }
-        ## $this->_setCache();
+        ## set user products
+        $products = Lantra::$app->products->getUserProducts($this->user);
+        foreach ($products as $product) {
+            $this->_record['products'][$product->id] = $this->_addItem('product', $product);
+        }
     }
 
     /**
@@ -227,7 +253,7 @@ class Record extends Model
         if ($item->itemType == 'moduleGroup' || $itemType == 'jobRole') {
             $this->_addElementId('Category', $element->id);
         }
-        elseif ($item->itemType == 'package' || $item->itemType == 'module' || $item->itemType == 'unit') {
+        elseif ($item->itemType == 'product' || $item->itemType == 'package' || $item->itemType == 'module' || $item->itemType == 'unit') {
             $this->_addElementId('Entry', $element->id);
         }
         elseif ($item->itemType == 'unitGroup') {

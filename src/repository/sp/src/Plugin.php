@@ -435,6 +435,9 @@ class Plugin extends BasePlugin
 
             ## cpd routes
 
+            ## product routes
+            'cpd/<userId>/products'                            => ['template' => 'record/index'],
+
             ## taskbook routes
             'cpd/<userId>/taskbooks'                            => ['template' => 'record/index'],
             'cpd/<userId>/taskbooks/manage'                     => ['template' => 'record/_taskbooks/manage'],
