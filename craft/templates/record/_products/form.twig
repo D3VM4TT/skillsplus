@@ -1,7 +1,7 @@
 {% import "_macros" as ui %}
 {% set product = craft.app.entries.getEntryById(productId) %}
-{% set productModel = product.productModel.one %}
-{% set productLabel = (productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '') ~  ' [' ~ product.title ~ ']' %}
+{% set productType = product.productType.one %}
+{% set productLabel = (productType ? productType.title : '') ~  ' [' ~ product.title ~ ']' %}
 
 {% set section = craft.sections.getSectionByHandle('results') %}
 {% set entryType = craft.app.sections.getEntryTypesByHandle('productResult')[0] %}

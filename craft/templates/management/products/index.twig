@@ -16,6 +16,8 @@
 
 {% if criteria %}{% paginate criteria as pageInfo, productEntries %}{% endif %}
 
+{% set multipleProductTypes = craft.categories.group('productTypes').count > 1 %}
+
 {% block content %}
 
     <section class="page">
@@ -33,7 +35,9 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th class="title">Model</th>
+                        {% if multipleProductTypes  %}
+                            <th class="title">Type</th>
+                        {% endif %}
                         <th>Reference</th>
                         <th>Company</th>
                         <th>&nbsp;</th>
@@ -42,10 +46,12 @@
                     <tbody>
                     {% for product in productEntries %}
                         {% set productCompany = product.productCompany.one %}
-                        {% set productModel = product.productModel.one %}
                         <tr>
                             <td>{{ product.id }}</td>
-                            <td>{{ productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : 'unknown'  }}</td>
+                            {% if multipleProductTypes  %}
+                                {% set productType = product.productType.one %}
+                                <td>{{ productType ? productType.title : 'unknown'  }}</td>
+                            {% endif %}
                             <td>{{ product.title }}</td>
                             <td>{{ productCompany ? productCompany.title : 'unknown' }}</td>
                             <td class="icons" style="width:140px;text-align:right">

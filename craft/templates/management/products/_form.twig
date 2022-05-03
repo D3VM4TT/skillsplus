@@ -17,7 +17,7 @@
     {% set companyEntries = craft.lantra.managerCompanies(currentUser.id) %}
 {% endif %}
 
-{% set productModels = craft.categories.group('productModels').all %}
+{% set productTypes = craft.categories.group('productTypes').all %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">
@@ -50,19 +50,18 @@
             {% endif %}
         </div>
 
-        <div class="field--wrapper">
-            <label for="productModel" class="no-float">Model:</label>
-            {% if productModels|length == 1 %}
-                <strong>{{ productModels[0].productManufacturerName }} {{ productModels[0].title }}</strong>
-                <input type="hidden" name="fields[productModel][]" value="{{ productModels[0].id }}">
-            {% else %}
-                <select data-relation="fields[productModel]" data-value="{{ product.productModel.one.id|default(productModels[0].id) }}" id="productModel" >
-                    {% for productModel in productModels %}
-                        <option value="{{ productModel.id }}">{{ productModel.title }}</option>
+        {% if productTypes|length == 1 %}
+            <input type="hidden" name="fields[productType][]" value="{{ productTypes[0].id }}">
+        {% else %}
+            <div class="field--wrapper">
+                <label for="productType" class="no-float">Type:</label>
+                <select data-relation="fields[productType]" data-value="{{ product.productType.one.id|default(productTypes[0].id) }}" id="productType" >
+                    {% for productType in productTypes %}
+                        <option value="{{ productType.id }}">{{ productType.title }}</option>
                     {% endfor %}
                 </select>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
 
         <div class="field--wrapper">
             <label for="title" class="no-float">Reference:</label>

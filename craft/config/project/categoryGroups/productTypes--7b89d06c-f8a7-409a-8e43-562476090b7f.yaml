@@ -11,8 +11,8 @@ fieldLayouts:
             class: null
             disabled: false
             id: null
-            instructions: null
-            label: null
+            instructions: ''
+            label: Type
             max: null
             min: null
             name: null
@@ -27,28 +27,10 @@ fieldLayouts:
             type: craft\fieldlayoutelements\TitleField
             warning: null
             width: 100
-          -
-            fieldUid: 26b4e668-8bdc-4798-bc5f-7cd76851378f # Product Manufacturer Name
-            instructions: ''
-            label: ''
-            required: '1'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 941f2df5-26eb-4a6c-8772-f52e0fd5789b # Product Manufacturer Email
-            instructions: ''
-            label: ''
-            required: '1'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
         name: 'Product Type'
         sortOrder: 1
-handle: productModels
-name: 'Product Models'
+handle: productTypes
+name: 'Product Types'
 siteSettings:
   47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
     hasUrls: false

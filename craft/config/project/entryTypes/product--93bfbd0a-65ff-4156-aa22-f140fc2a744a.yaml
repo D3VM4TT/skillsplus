@@ -27,7 +27,7 @@ fieldLayouts:
             warning: null
             width: 50
           -
-            fieldUid: d70de7c6-ac60-452b-87eb-91754b7bbffa # Product Model
+            fieldUid: 3e69befc-ae77-49af-aba1-136fa684574a # Product Type
             instructions: ''
             label: ''
             required: '1'

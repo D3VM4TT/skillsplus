@@ -15,16 +15,16 @@
             <strong>
                 {% set productItem = cpdUser.record.products|first %}
                 {% set product = cpdUser.record.getElement(productItem.elementId) %}
-                {% set productModel = product.productModel.one %}
-                {{ productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '' }} [{{ product.title }}]
+                {% set productType = product.productType.one %}
+                {{ productType ? productType.title : '' }} [{{ product.title }}]
             </strong>
         {% else %}
             <select id="productId" name="productId" onchange="this.form.submit()">
                 {% for productItem in cpdUser.record.products %}
                     {% set product = cpdUser.record.getElement(productItem.elementId) %}
-                    {% set productModel = product.productModel.one %}
+                    {% set productType = product.productType.one %}
                     <option value="{{ product.id }}"{% if productId == product.id %} selected{% endif %}>
-                        {{ productModel ? productModel.productManufacturerName ~ ' ' ~ productModel.title : '' }} [{{ product.title }}]
+                        {{ productType ? productType.title : '' }} [{{ product.title }}]
                     </option>
                 {% endfor %}
             </select>
