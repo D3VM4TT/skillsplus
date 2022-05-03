@@ -61,6 +61,7 @@ class Settings extends Model
 
     public $products                            = false;
     public $productCustomFields                 = true;
+    public $productResultLabel                  = 'Result';
 
     public $labelResultOutcome0                 = 'Failed';
     public $labelResultOutcome1                 = 'Endorsed';

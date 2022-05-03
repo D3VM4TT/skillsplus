@@ -468,6 +468,7 @@ class Plugin extends BasePlugin
             'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
+            'management/products/results/<productId>'   => ['template' => 'management/products/results'],
 
             ## reporting routes
             'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],

@@ -635,10 +635,9 @@ class Results extends Component
      * @param $productId
      * @param string[] $status
      * @param null $limit
-     * @param false $count
      * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
      */
-    function getProductResults($productId, $status = ['live', 'expired'], $limit = null, $count = false)
+    function getProductResultsCriteria($productId, $status = ['live', 'expired'], $limit = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -646,7 +645,7 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $productId, 'field' => 'resultProduct'];
         $criteria->status = $status;
         $criteria->type = 'productResult';
-        return $count ? $criteria->count() : $criteria->all();
+        return $criteria;
     }
 
     /**

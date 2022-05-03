@@ -22,7 +22,6 @@
 {% endif %}
 
 {% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
-{% set isProducts = craft.lantra.setting('products') and craft.request.getSegment(3) == 'products' %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 {% set jobRoleLabel = craft.lantra.setting('labelJobRole', 'Job Role') %}
 
@@ -58,8 +57,6 @@
             {% if not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
                 <h2>Hello {{ account.firstName }}</h2>
                 <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
-            {% elseif isProducts %}
-                <h2>Products</h2>
             {% else %}
                 <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
             {% endif %}
@@ -69,7 +66,7 @@
         {% if craft.lantra.setting('taskbooks') and isManager and not isPackageManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
-                    {% if isProducts or isTaskbooks %}
+                    {% if isTaskbooks %}
                         <a class="btn-add-new" href="/cpd/{{ account.id  }}">Dashboard</a>
                     {% else %}
                         <a class="btn-add-new" href="/cpd/{{ account.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
@@ -94,9 +91,7 @@
                 </tbody>
             </table>
         </div>
-        {% if isProducts %}
-            {% include 'record/_products' with {cpdUser:account} %}
-        {% elseif isTaskbooks %}
+        {% if isTaskbooks %}
             {% include 'record/_taskbooks' with {cpdUser:account} %}
         {% else %}
             {% include 'record/_modules' with {cpdUser:account} %}

@@ -1,6 +1,7 @@
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set isProducts = craft.app.request.getSegment(2) == 'products' %}
 <ul>
-    <li class="{% if craft.app.request.getSegment(1) == 'management' %}nav-open{% else %}nav-closed{% endif %}">
+    <li class="{% if craft.app.request.getSegment(1) == 'management' and not isProducts %}nav-open{% else %}nav-closed{% endif %}">
         <a class="secondary-bg-hover" href="#">Management</a>
         <ul>
             {% if craft.lantra.canManage(null, true) %}
@@ -34,11 +35,6 @@
             {% if currentUser.admin %}
                 <li>
                     <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks/structure">Taskbooks</a>
-                </li>
-            {% endif %}
-            {% if craft.lantra.setting('products', false) and craft.lantra.can('editProducts') %}
-                <li>
-                    <a class="{% if craft.app.request.getSegment(2) == 'products' %}active{% endif %}" href="/management/products">Products</a>
                 </li>
             {% endif %}
         </ul>

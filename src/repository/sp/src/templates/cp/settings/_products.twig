@@ -7,6 +7,13 @@
     on:		        settings.products == 1
 }) }}
 
+{{ forms.textField ({
+    label:			"Product Result Label",
+    id:				"productResultLabel",
+    name:			"productResultLabel",
+    value:		    settings.productResultLabel
+}) }}
+
 {{ forms.editableTableField ({
     label:			"Product Custom Fields",
     instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom field.",

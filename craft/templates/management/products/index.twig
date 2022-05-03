@@ -17,6 +17,7 @@
 {% if criteria %}{% paginate criteria as pageInfo, productEntries %}{% endif %}
 
 {% set multipleProductTypes = craft.categories.group('productTypes').count > 1 %}
+{% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
 
 {% block content %}
 
@@ -41,6 +42,7 @@
                         <th>Reference</th>
                         <th>Company</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -54,6 +56,7 @@
                             {% endif %}
                             <td>{{ product.title }}</td>
                             <td>{{ productCompany ? productCompany.title : 'unknown' }}</td>
+                            <td><a href="/management/products/results/{{ product.id }}">View {{ productResultLabel|pluralize }}</a></td>
                             <td class="icons" style="width:140px;text-align:right">
                                 <a class="icon" href="/management/products/edit/{{ product.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
                                 <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ product.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>

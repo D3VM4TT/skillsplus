@@ -1,0 +1,79 @@
+{% do craft.lantra.requirePermission('editProducts') %}
+{% set product = craft.entries.id(productId).one() %}
+
+{% if not product %}
+    {% exit 404 %}
+{% endif %}
+
+{% set productType = product.productType.one %}
+{% set productLabel = (productType ? productType.title : '') ~  ' [' ~ product.title ~ ']' %}
+{% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > products > " ~ productLabel %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+
+{% set resultId = craft.app.request.getParam('resultId') %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>{{ productLabel }} {{ productResultLabel|pluralize }}</h2>
+        <p><a href="/management/products">&laquo; back to all products</a></p>
+    </div>
+    <div class="page-content">
+    {% if resultId %}
+        {# show the result form #}
+        {% include 'management/products/_result' with { productId:productId, resultId:resultId } %}
+    {% else %}
+        {# show the results table #}
+        {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+        {% set filterSearch = craft.app.request.getParam('search')|default('') %}
+
+        {% set criteria = craft.lantra.productResultsCriteria(productId) %}
+        {% if criteria %}{% paginate criteria as pageInfo, resultEntries %}{% endif %}
+        {% if resultEntries is defined and resultEntries|length %}
+            <table class="data">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Inspection Date</th>
+                <th>Expiry Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for productResult in resultEntries %}
+                <tr>
+                    <td>{{ productResult.id }}</td>
+                    <td>{{ productResult.resultStartDate|date(dateFormat) }}</td>
+                    <td>{{ productResult.expiryDate ? productResult.expiryDate|date(dateFormat) : '~' }}</td>
+                    <td class="icons" style="width:140px;text-align:right">
+                        <a class="icon" href="/management/products/results/{{ productId }}?resultId={{ productResult.id }}">
+                            <img src="/assets/img/edit.svg" title="Edit" />
+                        </a>
+                        <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ productResult.id }}">
+                            <img src="/assets/img/delete.svg" title="Delete" />
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+            {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+
+        {% else %}
+            <h3>There are no {{ productResultLabel|pluralize|lower }} for this product.</h3>
+            <p>&nbsp;</p>
+        {% endif %}
+        <div class="container-btn">
+            <a class="button primary-bg" href="/management/products/results/{{ productId }}?resultId=new">Add {{ productResultLabel }}</a>
+        </div>
+    {% endif %}
+    </div>
+</section>
+{% endblock %}

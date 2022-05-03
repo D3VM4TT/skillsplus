@@ -744,9 +744,9 @@ class LantraVariable
      * @param $productId
      * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
      */
-    public function productResults($productId)
+    public function productResultsCriteria($productId)
     {
-        return Lantra::$app->results->getProductResults($productId);
+        return Lantra::$app->results->getProductResultsCriteria($productId);
     }
 
     /**
