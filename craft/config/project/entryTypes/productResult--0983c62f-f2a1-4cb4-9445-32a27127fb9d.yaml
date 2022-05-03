@@ -46,6 +46,19 @@ fieldLayouts:
             width: 25
         name: Content
         sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: a75d2fa6-54eb-4155-9483-d7729fb83004 # Result Custom
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Custom Values'
+        sortOrder: 2
 handle: productResult
 hasTitleField: true
 name: 'Product Result'

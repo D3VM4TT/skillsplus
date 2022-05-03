@@ -60,7 +60,7 @@ class Settings extends Model
     public $taskbookReset                       = true;
 
     public $products                            = false;
-    public $productCustomFields                 = true;
+    public $productCustomFields                 = [];
     public $productResultLabel                  = 'Result';
 
     public $labelResultOutcome0                 = 'Failed';

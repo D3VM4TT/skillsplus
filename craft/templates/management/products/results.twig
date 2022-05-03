@@ -8,6 +8,7 @@
 {% set productType = product.productType.one %}
 {% set productLabel = (productType ? productType.title : '') ~  ' [' ~ product.title ~ ']' %}
 {% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
+{% set productResultTableColumnFields = craft.lantra.customFieldsByType(productType.productResultCustomFields, 'tableColumn') %}
 
 {% extends "_layout" %}
 
@@ -41,8 +42,11 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>Inspection Date</th>
+                <th>{{ productResultLabel }} Date</th>
                 <th>Expiry Date</th>
+                {% for row in productResultTableColumnFields %}
+                    <th>{{ row.label }}</th>
+                {% endfor %}
                 <th></th>
             </tr>
             </thead>
@@ -52,6 +56,9 @@
                     <td>{{ productResult.id }}</td>
                     <td>{{ productResult.resultStartDate|date(dateFormat) }}</td>
                     <td>{{ productResult.expiryDate ? productResult.expiryDate|date(dateFormat) : '~' }}</td>
+                    {% for row in productResultTableColumnFields %}
+                        <td>{{ craft.lantra.resultCustom(productResult.id, row.name) }}</td>
+                    {% endfor %}
                     <td class="icons" style="width:140px;text-align:right">
                         <a class="icon" href="/management/products/results/{{ productId }}?resultId={{ productResult.id }}">
                             <img src="/assets/img/edit.svg" title="Edit" />
@@ -65,7 +72,6 @@
             </tbody>
             </table>
             {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
-
         {% else %}
             <h3>There are no {{ productResultLabel|pluralize|lower }} for this product.</h3>
             <p>&nbsp;</p>

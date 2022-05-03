@@ -69,7 +69,7 @@ class LantraVariable
      * @param int $limit
      * @return array
      */
-    private function _userFields($field, $type, $limit = 0)
+    private function _customFields($field, $type, $limit = 0)
     {
         $fields = LantraHelper::setting($field, []);
         $return = [];
@@ -91,7 +91,7 @@ class LantraVariable
      */
     public function userCustomFields($type, $limit = 0)
     {
-        return $this->_userFields('userEditCustomFields', $type, $limit);
+        return $this->_customFields('userEditCustomFields', $type, $limit);
     }
 
     /**
@@ -101,7 +101,7 @@ class LantraVariable
      */
     public function userProfileFields($type, $limit = 0)
     {
-        return $this->_userFields('userProfileFields', $type, $limit);
+        return $this->_customFields('userProfileFields', $type, $limit);
     }
 
     /**
@@ -124,6 +124,43 @@ class LantraVariable
     {
         $field = LantraHelper::userProfileField($field);
         return $field ? $field['label'] : $default;
+    }
+
+    /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function productCustomFields($type, $limit = 0)
+    {
+        return $this->_customFields('productCustomFields', $type, $limit);
+    }
+
+    /**
+     * @param $fields
+     * @param $type
+     * @return array
+     */
+    public function customFieldsByType($fields, $type)
+    {
+        $return = [];
+        foreach($fields as $row) {
+            if (isset($row[$type]) && $row[$type]) {
+                $return[] = $row;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $entry
+     * @param $customName
+     * @return mixed|null
+     */
+    public function customBlockValue($entry, $customName)
+    {
+        $customBlock = $entry->customFields->customName($customName)->one();
+        return $customBlock ? $customBlock->customValue : null;
     }
 
     /**

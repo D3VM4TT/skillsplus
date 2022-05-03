@@ -4,7 +4,8 @@
 {% set entryType = craft.app.sections.getEntryTypesByHandle('productResult')[0] %}
 
 {% set entry = entry ?? create('craft\\elements\\Entry') %}
-{% set resultEntry = resultId == 'new' ? entry : craft.entries.section('results').status(null).id(resultId).one() %}
+{% set isNew = resultId == 'new' %}
+{% set resultEntry = isNew ? entry : craft.entries.section('results').status(null).id(resultId).one() %}
 
 <form class="page-form" method="post" role="form" accept-charset="UTF-8">
     {{ csrfInput() }}
@@ -28,6 +29,34 @@
     <div class="field--wrapper" data-type="date" data-required="1">
         {% include '_includes/date' with {label:'Expiry Date', name:'userExpiryDate', value: resultEntry ? resultEntry.expiryDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
     </div>
+
+    {% set customNew = 1 %}
+    {% for row in productType.productResultCustomFields %}
+        <div class="field--wrapper" data-type="{{ row.type }}" data-required="{{ row.required }}">
+            {% set customBlockId = false %}
+            {% set customValue = '' %}
+            {% if not isNew %}
+                {% set customBlockId = craft.lantra.resultCustom(resultEntry.id, row.name, true) %}
+                {% set customValue = craft.lantra.resultCustom(resultEntry.id, row.name) %}
+            {% endif %}
+            {% set fieldKey = customBlockId ? customBlockId : 'new' ~ customNew %}
+            {% set field = craft.app.fields.getFieldByHandle('resultCustom') %}
+            {% set blocktype = craft.superTable.getSuperTableBlocks(field.id)[0] %}
+
+            <label for="fields[resultCustom][{{ fieldKey }}][fields][customValue]" class="">{{ row.label|raw }}</label>
+
+            {% if row.type == 'text' %}
+                <input{% if row.required %} required{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
+            {% elseif row.type == 'textarea' %}
+                <textarea{% if row.required %} required{% endif %}  name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label">{{ customValue }}</textarea>
+            {% endif %}
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="{{ blocktype.id }}">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">
+            <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][fields][customKey]" value="{{ row.name }}">
+            {# increment new1, new2 #}
+            {% set customNew = customNew + 1 %}
+        </div>
+    {% endfor %}
 
     <div class="container-btn">
         <button class="button primary-bg" type="submit">Save {{ productResultLabel }}</button>
