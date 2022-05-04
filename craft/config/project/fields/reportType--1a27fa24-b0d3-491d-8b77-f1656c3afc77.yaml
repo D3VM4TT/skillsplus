@@ -67,6 +67,17 @@ settings:
       __assoc__:
         -
           - label
+          - Products
+        -
+          - value
+          - standardProducts
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
           - 'Scheme Manager'
         -
           - value

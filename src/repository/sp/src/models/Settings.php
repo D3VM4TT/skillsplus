@@ -285,6 +285,14 @@ class Settings extends Model
             'description'  => '',
             'pageLimit' => ''
         ],
+        'standardProducts'       => [
+            'active' => true,
+            'title' => 'Products',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
         'standardSm'       => [
             'active' => true,
             'title' => 'Scheme Manager',

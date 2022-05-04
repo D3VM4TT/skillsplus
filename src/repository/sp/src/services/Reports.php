@@ -214,8 +214,12 @@ class Reports extends Component
                 $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
             case 'standardResults':
+            case 'standardProducts':
                 $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
-                if ($reportEntry->reportResultStandardType == 'endorsed') {
+                if ($reportEntry->reportType == 'standardProducts') {
+                    $criteria = Lantra::$app->products->getProductResults($userId, $days, $limit, $filter);
+                }
+                elseif ($reportEntry->reportResultStandardType == 'endorsed') {
                     $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
                 }
                 else {
@@ -228,6 +232,7 @@ class Reports extends Component
             case 'standardPayments':
                 $criteria = Lantra::$app->users->getUserPayments();
                 break;
+
         }
         if ($criteria) {
             return ($count) ? $criteria->count() : $criteria;

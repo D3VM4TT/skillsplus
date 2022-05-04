@@ -9,11 +9,11 @@ settings:
   allowLimit: false
   allowMultipleSources: false
   allowSelfRelations: false
-  branchLimit: ''
+  branchLimit: '1'
   limit: null
   localizeRelations: false
   selectionLabel: ''
-  showSiteMenu: false
+  showSiteMenu: true
   source: 'group:7b89d06c-f8a7-409a-8e43-562476090b7f' # Product Types
   sources: '*'
   targetSiteId: null

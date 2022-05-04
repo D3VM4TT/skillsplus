@@ -27,7 +27,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: f7a6d059-9c07-4f32-a734-4bd9b5f2e210 # Result Start date
+            fieldUid: f7a6d059-9c07-4f32-a734-4bd9b5f2e210 # Result Start Date
             instructions: null
             label: null
             required: false

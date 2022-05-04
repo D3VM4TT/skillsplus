@@ -227,6 +227,13 @@ class Results extends Component
                 }
             }
         }
+        ## update product with result dates (for searching/reporting)
+        if ($entry->type == 'productResult') {
+            $productEntry = $entry->resultProduct->one();
+            $productEntry->setFieldValue('productResultStartDate', $entry->resultStartDate);
+            $productEntry->setFieldValue('productResultExpiryDate', $entry->expiryDate);
+            Craft::$app->elements->saveElement($productEntry);
+        }
     }
 
     /**

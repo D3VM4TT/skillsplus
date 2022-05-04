@@ -19,6 +19,37 @@ use lantra\sp\helpers\LantraHelper;
 class Products extends Component
 {
     /**
+     * @param null $userId
+     * @param string $days
+     * @param int $limit
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function getProductResults($userId = null, $days = 'all', $limit = 10, $filter = [])
+    {
+        $manager = is_null($userId) ? Craft::$app->getUser() : Craft::$app->users->getUserById($userId);
+
+        ## @todo should this be in reports service?
+        if ($filter['reportIncludeHierarchy']) {
+            $filter['reportCompanies'] = Lantra::$app->structure->appendCompanyDescendants($filter['reportCompanies']);
+        }
+
+        $criteria = $this->productCriteria('', $limit, 'productResultExpiryDate desc', $filter['reportCompanies'], $manager);
+
+        if ($days == 'all') {
+            $expiryDate = '<' . time();
+        }
+        else {
+            $expiryDate = '<' . (time() + ($days * 86400));
+            if (!$filter['reportIncludeExpired']) {
+                $expiryDate = 'and, >' . time() . ', ' . $expiryDate;
+            }
+        }
+
+        $criteria->productResultExpiryDate = $expiryDate;
+        return $criteria;
+    }
+
+    /**
      * @param null $user
      * @param null $limit
      * @param string $order
@@ -54,7 +85,7 @@ class Products extends Component
 
         if ($companyId) {
             $criteria->relatedTo([
-                'targetElement' => [$companyId],
+                'targetElement' => is_array($companyId) ? $companyId : [$companyId],
                 'field' => 'productCompany'
             ]);
         }

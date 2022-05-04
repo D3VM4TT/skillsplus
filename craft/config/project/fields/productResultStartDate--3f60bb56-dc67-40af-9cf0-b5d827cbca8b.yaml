@@ -1,10 +1,10 @@
-columnSuffix: null
+columnSuffix: javfpubs
 contentColumnType: datetime
-fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
-handle: resultStartDate
+fieldGroup: 7ac02e26-c0e2-4b21-b756-bfe7243fa353 # Products
+handle: productResultStartDate
 instructions: ''
-name: 'Result Start Date'
-searchable: true
+name: 'Product Result Start Date'
+searchable: false
 settings:
   max: null
   min: null

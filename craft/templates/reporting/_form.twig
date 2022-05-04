@@ -112,23 +112,30 @@
             </option>
         </select>
     </div>
-    <div class="field--wrapper fields fields-standardResults">
+    <div class="field--wrapper fields fields-standardResults fields-standardProducts fields-expired">
         <div id="resultExpiringOptions">
-        <label for="reportResultExpiry" class="no-float">Result expiry:</label>
-        <select name="fields[reportResultExpiry]" id="reportResultExpiry">
-            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
-            <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
-            <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
-            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
-            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
-            <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
-        </select>
-        <label for="reportIncludeExpired" class="no-float">
-            <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
-                    {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
-            Include expired results with expiring results
-        </label>
+            <label for="reportResultExpiry" class="no-float">Result expiry:</label>
+            <select name="fields[reportResultExpiry]" id="reportResultExpiry">
+                <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
+                <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
+                <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
+                <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
+                <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
+                <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
+            </select>
+            <label for="reportIncludeExpired" class="no-float">
+                <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
+                        {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
+                Include expired results with expiring results
+            </label>
         </div>
+    </div>
+    <div class="field--wrapper fields fields-expired">
+        <label for="reportIncludeRequired" class="no-float">
+            <input name="fields[reportIncludeRequired]" id="reportIncludeRequired" type="checkbox" value="1"
+                    {% if entry is defined and entry.reportIncludeRequired %} checked{% endif %}>
+            Include incomplete mandatory units
+        </label>
     </div>
     <div class="field--wrapper fields fields-standardCpd">
         <label for="reportModules" class="no-float">Filter Modules</label>
@@ -175,27 +182,6 @@
                 {% endfor %}
             </select>
         </div>
-    </div>
-    <div class="field--wrapper fields fields-expired">
-        <label for="reportResultExpiry" class="no-float">Result expiry:</label>
-        <select name="fields[reportResultExpiry]" id="reportResultExpiry">
-            <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
-            <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
-            <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
-            <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
-            <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
-            <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
-        </select>
-        <label for="reportIncludeExpired" class="no-float">
-            <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"
-                    {% if entry is defined and entry.reportIncludeExpired %} checked{% endif %}>
-            Include expired results with expiring results
-        </label>
-        <label for="reportIncludeRequired" class="no-float">
-            <input name="fields[reportIncludeRequired]" id="reportIncludeRequired" type="checkbox" value="1"
-                    {% if entry is defined and entry.reportIncludeRequired %} checked{% endif %}>
-            Include incomplete mandatory units
-        </label>
     </div>
     <div class="field--wrapper fields fields-results">
         <label for="reportDisplayField" class="no-float">Display Field</label>
