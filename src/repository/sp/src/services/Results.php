@@ -645,6 +645,7 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $productId, 'field' => 'resultProduct'];
         $criteria->status = $status;
         $criteria->type = 'productResult';
+        $criteria->orderBy('expiryDate desc');
         return $criteria;
     }
 

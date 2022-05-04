@@ -141,12 +141,14 @@ class LantraVariable
      * @param $type
      * @return array
      */
-    public function customFieldsByType($fields, $type)
+    public function customFieldsByType($fields = [], $type)
     {
         $return = [];
-        foreach($fields as $row) {
-            if (isset($row[$type]) && $row[$type]) {
-                $return[] = $row;
+        if (is_array($fields) && count($fields)) {
+            foreach ($fields as $row) {
+                if (isset($row[$type]) && $row[$type]) {
+                    $return[] = $row;
+                }
             }
         }
         return $return;

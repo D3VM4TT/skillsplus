@@ -44,6 +44,7 @@
                         {% for row in craft.lantra.productCustomFields('tableColumn') %}
                             <th>{{ row.label }}</th>
                         {% endfor %}
+                        <th>{{ productResultLabel }} Expiry</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -51,6 +52,7 @@
                     <tbody>
                     {% for product in productEntries %}
                         {% set productCompany = product.productCompany.one %}
+                        {% set productResult = craft.lantra.productResultsCriteria(product.id).one() %}
                         <tr>
                             <td>{{ product.id }}</td>
                             {% if multipleProductTypes  %}
@@ -62,6 +64,7 @@
                             {% for row in craft.lantra.productCustomFields('tableColumn') %}
                                 <td>{{ craft.lantra.customBlockValue(product, row.name) }}</td>
                             {% endfor %}
+                            <td>{{ productResult ? productResult.expiryDate|date(dateFormat) : '~' }}
                             <td><a href="/management/products/results/{{ product.id }}">View {{ productResultLabel|pluralize }}</a></td>
                             <td class="icons" style="width:140px;text-align:right">
                                 <a class="icon" href="/management/products/edit/{{ product.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>

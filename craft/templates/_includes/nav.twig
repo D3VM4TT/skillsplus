@@ -38,7 +38,7 @@
     {% if craft.lantra.setting('products', false) and craft.lantra.can('editProducts') %}
     <ul>
         <li class="{% if craft.app.request.getSegment(2) == 'products' %}nav-open{% else %}nav-closed{% endif %}">
-            <a class="{% if craft.app.request.getSegment(2) == 'products' %}active{% endif %}" href="/management/products">Products</a>
+            <a class="secondary-bg-hover {% if craft.app.request.getSegment(2) == 'products' %}active{% endif %}" href="/management/products">Products</a>
         </li>
     </ul>
     {% endif %}
