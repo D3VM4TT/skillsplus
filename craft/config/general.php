@@ -72,7 +72,7 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@spBaseUrl' => 'http://base.newdev.skills-plus.net'
+            '@spBaseUrl' => 'http://base.coffeebean.design'
         ]
     ],
     'uat' => [
