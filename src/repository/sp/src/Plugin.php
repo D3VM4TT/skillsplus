@@ -45,6 +45,7 @@ use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserBehavior;
 use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\behaviors\MagicTitleBehavior;
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
@@ -520,73 +521,18 @@ class Plugin extends BasePlugin
      * @param $handle
      * @return null
      */
-    public static function sectionId($handle)
+    private function sectionId($handle)
     {
-        return self::sectionProperty($handle, 'id');
+        return LantraHelper::sectionId($handle);
     }
 
     /**
      * @param $handle
      * @return null
      */
-    public static function sectionUid($handle)
+    private function groupId($handle)
     {
-        return self::sectionProperty($handle, 'uid');
-    }
-
-    /**
-     * @param $handle
-     * @return null
-     */
-    public static function groupId($handle)
-    {
-        return self::groupProperty($handle, 'id');
-    }
-
-    /**
-     * @param $handle
-     * @return null
-     */
-    public static function groupUid($handle)
-    {
-        return self::groupProperty($handle, 'uid');
-    }
-
-    private static $_sections;
-    private static $_groups;
-
-    /**
-     * @param $handle
-     * @param string $property
-     * @return mixed|null
-     */
-    private function sectionProperty($handle, $property = 'id')
-    {
-        if (!self::$_sections) {
-            $sections = Craft::$app->sections->getAllSections();
-            foreach($sections as $section) {
-                self::$_sections[$section->handle] = $section;
-            }
-        }
-
-        return isset(self::$_sections[$handle]) ? self::$_sections[$handle]->$property : null;
-    }
-
-    /**
-     * @param $handle
-     * @param string $property
-     * @return mixed|null
-     */
-    private function groupProperty($handle, $property = 'id')
-    {
-        if (!self::$_groups) {
-            $groups = Craft::$app->categories->getAllGroups();
-            foreach($groups as $group) {
-                self::$_groups[$group->handle] = $group;
-            }
-        }
-
-        return isset(self::$_groups[$handle]) ? self::$_groups[$handle]->$property : null;
+        return LantraHelper::groupId($handle);
     }
 
     /**

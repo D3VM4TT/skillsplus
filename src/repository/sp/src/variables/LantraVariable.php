@@ -938,7 +938,7 @@ class LantraVariable
 
         if (in_array($task, ['editCompanies', 'editTeams', 'editModules', 'editReports', 'editTaskbooks', 'editProducts'])){
             $section = strtolower(ltrim($task, 'edit'));
-            $permission = 'editEntries:' . Lantra::sectionUid($section);
+            $permission = 'editEntries:' . LantraHelper::sectionUid($section);
         }
 
         if ($task == 'editUsers') {
@@ -946,7 +946,7 @@ class LantraVariable
         }
 
         if ($task == 'editRoles') {
-            $permission = 'editCategories:' . Lantra::groupUid('roles');
+            $permission = 'editCategories:' . LantraHelper::groupUid('roles');
         }
 
         return $permission ? $user->can($permission) : false;
