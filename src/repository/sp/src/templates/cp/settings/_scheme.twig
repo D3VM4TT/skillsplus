@@ -8,6 +8,13 @@
 }) }}
 
 {{ forms.lightswitchField ({
+    label:			"Enable Base",
+    id:				"enableBase",
+    name:			"enableBase",
+    on:		        settings.enableBase == 1
+}) }}
+
+{{ forms.lightswitchField ({
     label:			"Scheme Teams",
     instructions:   "Enable teams for this scheme?",
     id:				"schemeTeams",

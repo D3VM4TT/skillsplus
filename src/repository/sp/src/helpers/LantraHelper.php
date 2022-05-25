@@ -222,6 +222,14 @@ class LantraHelper
     }
 
     /**
+     * @return bool
+     */
+    public static function enableBase()
+    {
+        return LantraHelper::setting('enableBase') === 1;
+    }
+
+    /**
      * @param $userId
      * @param $packageId
      * @return string

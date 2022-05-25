@@ -291,6 +291,8 @@
             </div>
         </div>
 
+        {% if siteLicence.enabled %}
+
         <div class="field--wrapper">
             <h2>Licence</h2>
             <div>
@@ -333,6 +335,8 @@
                 {% endif %}
             </div>
         </div>
+
+        {% endif %}
 
         {% if craft.lantra.setting('enableEditCredentials') or (currentUser.isInGroup('schemeManagers') or currentUser.admin) %}
             <h2>Advanced</h2>

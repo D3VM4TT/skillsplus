@@ -8,12 +8,14 @@
 
 namespace lantra\spbase\models;
 
+use lantra\sp\helpers\LantraHelper;
+
 class Site extends SpBase
 {
     public $subdomain;
     public $siteExpiryDate;
-    public $licenceTypeSite;
-    public $licenceTypeUser;
+    public $licenceTypeSite = 'none';
+    public $licenceTypeUser = 'none';
     public $hasCompanyLicences;
     public $totalActive;
     public $totalRemaining;
@@ -34,5 +36,13 @@ class Site extends SpBase
         }
 
         return $model;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getEnabled()
+    {
+        return LantraHelper::enableBase();
     }
 }

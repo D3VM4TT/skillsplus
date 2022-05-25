@@ -28,6 +28,7 @@ class Settings extends Model
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
     public $maintenanceMode                     = false;
+    public $enableBase                          = true;
 
     public $certificateLogo                     = null;
     public $certificateHeader                   = '';

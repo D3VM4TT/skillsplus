@@ -11,6 +11,10 @@
     <h2>Server</h2>
     <p>{{ alias('@spBaseUrl') }}</p>
 
+    {% if not site.enabled %}
+        <h2>Base is disabled</h2>
+    {% else %}
+
     <h2>Site Variables</h2>
 
     <table class="data fullwidth">
@@ -45,5 +49,7 @@
         {% endif %}
     </tbody>
     </table>
+
+    {% endif %}
 
 {% endblock %}

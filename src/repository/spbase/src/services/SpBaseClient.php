@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client as GuzzleClient;
 use craft\helpers\Json;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\spbase\Module;
 use lantra\spbase\Module as SpBase;
 use lantra\spbase\models\Licence;
@@ -51,6 +52,11 @@ class SpBaseClient
     protected $authorId;
 
     /**
+     * @var bool
+     */
+    public $enabled;
+
+    /**
      * @param array $config
      */
     public function __construct()
@@ -69,6 +75,10 @@ class SpBaseClient
      */
     public function getSite($cache = true)
     {
+        if (!$this->isEnabled()) {
+            return new Site();
+        }
+
         if ($cache) {
             $attributes = (object)Craft::$app->cache->getOrSet('spBaseSiteLicence', function () {
                 return $this->getSiteAttributes();
@@ -366,6 +376,10 @@ class SpBaseClient
      */
     private function getSiteId()
     {
+        if (!$this->isEnabled()) {
+            return $this->siteId;
+        }
+
         if (!$this->siteId) {
             ## siteId is cached for infinity
             $this->siteId = (int) Craft::$app->cache->getOrSet('spBaseSiteId', function () {
@@ -387,6 +401,10 @@ class SpBaseClient
      */
     private function getAuthorId()
     {
+        if (!$this->isEnabled()) {
+            return $this->authorId;
+        }
+
         if (!$this->authorId) {
             ## authorId is cached for infinity
             $this->authorId = (int) Craft::$app->cache->getOrSet('spBaseAuthorId', function () {
@@ -412,6 +430,10 @@ class SpBaseClient
     private function query($query, array $variables = [], array $headers = []): Response
     {
         $response = new Response();
+
+        if (!$this->isEnabled()) {
+            return $response;
+        }
 
         try {
             $guzzleResponse = $this->guzzle->request('POST', $this->endpoint, [
@@ -439,4 +461,17 @@ class SpBaseClient
         }
         return $response;
     }
+
+    /**
+     * @return bool
+     */
+    private function isEnabled()
+    {
+        if (is_null($this->enabled)) {
+            $this->enabled = LantraHelper::enableBase();
+        }
+
+        return $this->enabled;
+    }
+
 }
