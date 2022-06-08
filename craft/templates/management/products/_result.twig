@@ -31,6 +31,7 @@
     </div>
 
     {% set customNew = 1 %}
+    {% set showEvidence = true %}
     {% for row in productType.productResultCustomFields %}
         <div class="field--wrapper" data-type="{{ row.type }}" data-required="{{ row.required }}">
             {% set customBlockId = false %}
@@ -49,6 +50,22 @@
                 <input{% if row.required %} required{% endif %} name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label" value="{{ customValue }}">
             {% elseif row.type == 'textarea' %}
                 <textarea{% if row.required %} required{% endif %}  name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label">{{ customValue }}</textarea>
+            {% elseif row.type == 'passFail' %}
+                {% set value = productCustomBlock.customValue|default(0) %}
+                <select name="fields[customFields][{{ fieldKey }}][fields][customValue]">
+                    <option{% if value == 0 %} selected{% endif %} value="0">Fail</option>
+                    <option{% if value == 1 %} selected{% endif %} value="1">Pass</option>
+                </select>
+            {% elseif showEvidence and row.type == 'evidence' %}
+                {# only show one evidence field #}
+                {% set showEvidence = false %}
+                {% set accountId = currentUser.id %}
+                {% set evidenceFolderId = craft.lantra.evidenceFolderId(accountId) %}
+                {% if evidenceFolderId %}
+                    {% include '_includes/evidence' with {evidence:resultEntry.resultEvidence, accountId:accountId, fieldName:'fields[resultEvidence][]', autoSave:false} %}
+                {% else %}
+                    <p style="color:#FF0000;font-weight:700">ERROR: Could not create evidence folder, contact technical support.</p>
+                {% endif %}
             {% endif %}
             <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][type]" value="{{ blocktype.id }}">
             <input type="hidden" name="fields[resultCustom][{{ fieldKey }}][enabled]" value="1">

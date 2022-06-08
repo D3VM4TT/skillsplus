@@ -39,7 +39,7 @@ settings:
                       - text
                     -
                       - default
-                      - false
+                      - true
                 -
                   __assoc__:
                     -
@@ -48,6 +48,28 @@ settings:
                     -
                       - value
                       - textarea
+                    -
+                      - default
+                      - false
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Pass/Fail
+                    -
+                      - value
+                      - passFail
+                    -
+                      - default
+                      - false
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Evidence
+                    -
+                      - value
+                      - evidence
                     -
                       - default
                       - false
