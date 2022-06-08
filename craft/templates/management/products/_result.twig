@@ -22,12 +22,15 @@
         {{ ui.errorList(resultEntry.getFirstErrors()) }}
     </div>
 
+    {% set defaultStartDate = date('') %}
+    {% set defaultExpiryDate = date('+1year') %}
+
     <div class="field--wrapper" data-type="date" data-required="1">
-        {% include '_includes/date' with {label:productResultLabel ~ ' Date', name:'userStartDate', value: resultEntry ? resultEntry.resultStartDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
+        {% include '_includes/date' with {label:productResultLabel ~ ' Date', name:'userStartDate', value: isNew ? defaultStartDate:resultEntry.resultStartDate, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
     </div>
 
     <div class="field--wrapper" data-type="date" data-required="1">
-        {% include '_includes/date' with {label:'Expiry Date', name:'userExpiryDate', value: resultEntry ? resultEntry.expiryDate : null, ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
+        {% include '_includes/date' with {label:'Expiry Date', name:'userExpiryDate', value: isNew ? defaultExpiryDate:resultEntry.expiryDate  , ys: now|date('Y') + 5, ye: now|date('Y') - 50} %}
     </div>
 
     {% set customNew = 1 %}
