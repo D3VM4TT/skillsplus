@@ -8,10 +8,11 @@
         </ul>
     {% endif %}
 
-    {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
-    {% set isExternal = craft.lantra.isExternal(currentUser) %}
-    {% set reviewCount = craft.lantra.packagesCount() %}
-    {% if craft.lantra.isLantraAdmin or reviewCount or isExternal %}
+    {% if craft.lantra.setting('taskbooks') %}
+        {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+        {% set isExternal = craft.lantra.isExternal(currentUser) %}
+        {% set reviewCount = craft.lantra.packagesCount() %}
+        {% if craft.lantra.isLantraAdmin or reviewCount or isExternal %}
         <ul>
         <li class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}nav-open{% else %}nav-closed{% endif %}">
             <a class="secondary-bg-hover" href="#">{{ taskbookLabel|pluralize }}</a>
@@ -33,6 +34,7 @@
             </ul>
         </li>
         </ul>
+        {% endif %}
     {% endif %}
 
     {% if craft.lantra.setting('products', false) and craft.lantra.can('editProducts') %}

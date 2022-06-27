@@ -31,8 +31,8 @@
                 <li>
                     <a class="{% if craft.app.request.getSegment(2) == 'modules' %}active{% endif %}" href="/management/modules">Roles / Modules</a>
                 </li>
-            {%  endif %}
-            {% if currentUser.admin %}
+            {% endif %}
+            {% if craft.lantra.setting('taskbooks') and currentUser.admin %}
                 <li>
                     <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks/structure">Taskbooks</a>
                 </li>
