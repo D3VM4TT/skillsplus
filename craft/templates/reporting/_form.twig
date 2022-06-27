@@ -117,11 +117,13 @@
             <label for="reportResultExpiry" class="no-float">Result expiry:</label>
             <select name="fields[reportResultExpiry]" id="reportResultExpiry">
                 <option value="0" {% if entry is defined and entry.reportResultExpiry == '0' %} selected="selected{% endif %}">All Expired</option>
+                <option value="60" {% if entry is defined and entry.reportResultExpiry == '60' %} selected="selected{% endif %}">Expiring within 60 days</option>
                 <option value="30" {% if entry is defined and entry.reportResultExpiry == '30' %} selected="selected{% endif %}">Expiring within 30 days</option>
                 <option value="90" {% if entry is defined and entry.reportResultExpiry == '90' %} selected="selected{% endif %}">Expiring within 90 days</option>
                 <option value="180" {% if entry is defined and entry.reportResultExpiry == '180' %} selected="selected{% endif %}">Expiring within 180 days</option>
                 <option value="365" {% if entry is defined and entry.reportResultExpiry == '365' %} selected="selected{% endif %}">Expiring within 365 days</option>
                 <option value="365+" {% if entry is defined and entry.reportResultExpiry == '365+' %} selected="selected{% endif %}">Expiring after 365 days</option>
+                <option value="notExpired" {% if entry is defined and entry.reportResultExpiry == 'notExpired' %} selected="selected{% endif %}">Not Expired</option>
             </select>
             <label for="reportIncludeExpired" class="no-float">
                 <input name="fields[reportIncludeExpired]" id="reportIncludeExpired" type="checkbox" value="1"

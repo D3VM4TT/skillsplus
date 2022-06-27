@@ -215,15 +215,21 @@ class Reports extends Component
                 break;
             case 'standardResults':
             case 'standardProducts':
-                $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
+                $expiryDays = $reportEntry->reportResultExpiry->value;
+                if ($expiryDays == '0') {
+                    $expiryDays = 'all';
+                }
+                elseif ($expiryDays == 'notExpired') {
+                    $expiryDays = 'none';
+                }
                 if ($reportEntry->reportType == 'standardProducts') {
-                    $criteria = Lantra::$app->products->getProductResults($userId, $days, $limit, $filter);
+                    $criteria = Lantra::$app->products->getProductResults($userId, $expiryDays, $limit, $filter);
                 }
                 elseif ($reportEntry->reportResultStandardType == 'endorsed') {
-                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
+                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $expiryDays, $limit, $search);
                 }
                 else {
-                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $expiryDays, $limit, $search);
                 }
                 break;
             case 'standardCpd':

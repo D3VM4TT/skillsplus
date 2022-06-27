@@ -34,6 +34,17 @@ settings:
       __assoc__:
         -
           - label
+          - '60'
+        -
+          - value
+          - '60'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
           - '90'
         -
           - value
@@ -74,6 +85,17 @@ settings:
         -
           - default
           - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - 'Not Expired'
+        -
+          - value
+          - notExpired
+        -
+          - default
+          - ''
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Dropdown

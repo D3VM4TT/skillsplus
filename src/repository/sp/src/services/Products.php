@@ -20,11 +20,11 @@ class Products extends Component
 {
     /**
      * @param null $userId
-     * @param string $days
+     * @param string $expiryDays
      * @param int $limit
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
      */
-    public function getProductResults($userId = null, $days = 'all', $limit = 10, $filter = [])
+    public function getProductResults($userId = null, $expiryDays = 'all', $limit = 10, $filter = [])
     {
         $manager = is_null($userId) ? Craft::$app->getUser() : Craft::$app->users->getUserById($userId);
 
@@ -35,11 +35,15 @@ class Products extends Component
 
         $criteria = $this->productCriteria('', $limit, 'productResultExpiryDate desc', $filter['reportCompanies'], $manager);
 
-        if ($days == 'all') {
+        ## expiry = none i.e. valid product
+        if ($expiryDays == 'none') {
+            $expiryDate = '>' . time();
+        }
+        elseif ($expiryDays == 'all') {
             $expiryDate = '<' . time();
         }
         else {
-            $expiryDate = '<' . (time() + ($days * 86400));
+            $expiryDate = '<' . (time() + ($expiryDays * 86400));
             if (!$filter['reportIncludeExpired']) {
                 $expiryDate = 'and, >' . time() . ', ' . $expiryDate;
             }

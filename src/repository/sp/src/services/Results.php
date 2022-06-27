@@ -2786,7 +2786,7 @@ class Results extends Component
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<' . (time() + ($days * 86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
-        } elseif ($days != 'all') {
+        } elseif ($days != 'all' && $days != 'none') {
             $criteria->postDate = '>' . (time() - ($days * 86400));
         }
         if ($status) {
