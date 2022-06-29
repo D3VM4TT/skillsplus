@@ -19,7 +19,11 @@
             {% for question in unitEntry.testQuestions.all() %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
+                {% set questionImage = question.asset.one %}
                 <div class="field--wrapper test">
+                    {% if questionImage %}
+                        <img src="{{ questionImage.url }}" />
+                    {% endif %}
                     <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
@@ -33,8 +37,14 @@
                     <ul class="choices">
                         <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][answer]">
                         {% for choice in question.answers %}
+                            {% set choiceImage = choice.image.one %}
                         <li>
-                            <input type="checkbox" value="{{ choice.answer }}"> {{ choice.answer }}
+                            <input type="checkbox" value="{{ choice.answer }}">
+                            {% if choiceImage %}
+                                <img src="{{ choiceImage.url }}" />
+                            {% else %}
+                                {{ choice.answer }}
+                            {% endif %}
                         </li>
                         {% endfor %}
                     </ul>

@@ -1,11 +1,11 @@
-field: e875ae7a-06f3-4063-a7c9-0b3fbb8f75b9 # Test Questions
+field: 6e83784c-1c34-4973-9929-0307ffb6cff0 # Answers
 fieldLayouts:
-  18bf33fe-444c-4031-b481-cd8db9cd2ecb:
+  f084b756-8fce-410b-898a-c6453ce96d15:
     tabs:
       -
         elements:
           -
-            fieldUid: 265e7462-688b-4c0b-a1b2-6f25d1b08525 # Question
+            fieldUid: d9049b67-c562-4142-baad-49de0077690b # Answer
             instructions: null
             label: null
             required: false
@@ -14,7 +14,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 9bb07531-d5ed-4c48-9a33-67ca0c17882b # Answer
+            fieldUid: a4e95883-3e35-47c5-bf4b-9d6357859fe8 # Image
             instructions: null
             label: null
             required: false
@@ -23,7 +23,7 @@ fieldLayouts:
             warning: null
             width: 100
           -
-            fieldUid: 6f6554bf-571c-46f8-a4eb-37e34c65b1a8 # Asset
+            fieldUid: 2e7aa32f-0920-4c19-973f-fd93c62c21d3 # Correct
             instructions: null
             label: null
             required: false
@@ -34,14 +34,29 @@ fieldLayouts:
         name: Content
         sortOrder: 1
 fields:
-  6f6554bf-571c-46f8-a4eb-37e34c65b1a8: # Asset
+  2e7aa32f-0920-4c19-973f-fd93c62c21d3: # Correct
+    columnSuffix: null
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: correct
+    instructions: ''
+    name: Correct
+    searchable: false
+    settings:
+      default: false
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  a4e95883-3e35-47c5-bf4b-9d6357859fe8: # Image
     columnSuffix: null
     contentColumnType: string
     fieldGroup: null
-    handle: asset
+    handle: image
     instructions: ''
-    name: Asset
-    searchable: true
+    name: Image
+    searchable: false
     settings:
       allowSelfRelations: false
       allowUploads: true
@@ -55,11 +70,12 @@ fields:
       selectionLabel: ''
       showSiteMenu: true
       showUnpermittedFiles: false
-      showUnpermittedVolumes: true
+      showUnpermittedVolumes: false
       singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
       singleUploadLocationSubpath: ''
       source: null
-      sources: '*'
+      sources:
+        - 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
       targetSiteId: null
       useSingleFolder: false
       validateRelatedElements: false
@@ -67,34 +83,19 @@ fields:
     translationKeyFormat: null
     translationMethod: site
     type: craft\fields\Assets
-  9bb07531-d5ed-4c48-9a33-67ca0c17882b: # Answer
-    columnSuffix: null
-    contentColumnType: boolean
-    fieldGroup: null
-    handle: answer
-    instructions: 'Lightswitch off (grey) is false, on (green) is true.'
-    name: Answer
-    searchable: true
-    settings:
-      default: false
-      offLabel: null
-      onLabel: null
-    translationKeyFormat: null
-    translationMethod: none
-    type: craft\fields\Lightswitch
-  265e7462-688b-4c0b-a1b2-6f25d1b08525: # Question
+  d9049b67-c562-4142-baad-49de0077690b: # Answer
     columnSuffix: null
     contentColumnType: text
     fieldGroup: null
-    handle: question
+    handle: answer
     instructions: ''
-    name: Question
-    searchable: true
+    name: Answer
+    searchable: false
     settings:
       byteLimit: null
       charLimit: null
       code: ''
-      columnType: text
+      columnType: null
       initialRows: '4'
       multiline: ''
       placeholder: null
@@ -102,6 +103,3 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-handle: trueFalse
-name: 'True False'
-sortOrder: 1
