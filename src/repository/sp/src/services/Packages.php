@@ -33,6 +33,10 @@ class Packages extends Component
      */
     public function onBeforeSavePackageWorkflow(ModelEvent $event, Entry $entry)
     {
+        if ($entry->autoComplete) {
+            return;
+        }
+
         ## check steps in order assessment -> review -> complete
         $assessment = false;
         $review = false;
@@ -137,13 +141,17 @@ class Packages extends Component
             $entry->setFieldValue('packageLog', []);
         }
 
-        ## set default workflow
+        ## set workflow
         if (!$entry->packageWorkflow->count()) {
+            $taskbookWorkflow = $taskbook->packageWorkflow->one();
             $defaultWorkflow = LantraHelper::setting('defaultWorkflow');
-            if (!$defaultWorkflow) {
+            if (!$taskbookWorkflow && !$defaultWorkflow) {
                 $entry->addError('packageWorkflow', 'You must select a package workflow or set default workflow in settings.');
                 $event->isValid = false;
-            } else {
+            } elseif ($taskbookWorkflow) {
+                $entry->setFieldValue('packageWorkflow', [$taskbookWorkflow->id]);
+            }
+            else {
                 $entry->setFieldValue('packageWorkflow', [$defaultWorkflow->id]);
             }
         }
@@ -287,16 +295,19 @@ class Packages extends Component
      */
     public function applyPackageWorkflow(Entry $entry)
     {
-        $packageWorkflow = $entry->packageWorkflow->one()->workflow;
-        if (!count($packageWorkflow)) {
+        $packageWorkflow = $entry->packageWorkflow->one();
+
+        ## skip if no workflow or auto complete
+        if (!$packageWorkflow || !count($packageWorkflow->workflow) || $packageWorkflow->autoComplete) {
             return;
         }
+
         $sp = new SuperTableService();
         $field = Craft::$app->fields->getFieldByHandle('packageReviews');
         $stepBlockType = $sp->getBlockTypesByFieldId($field->id)[0];
         $packageReviews = [];
         $n = 1;
-        foreach ($packageWorkflow as $step) {
+        foreach ($packageWorkflow->workflow as $step) {
             $packageReviews['new' . $n] = [
                 'type' => $stepBlockType->id,
                 'enabled' => true,
@@ -614,6 +625,32 @@ class Packages extends Component
     {
         $package->setFieldValue('externalStatus', 'sampled');
         $package->save();
+    }
+
+    /**
+     * @param $userId
+     * @param $taskbookId
+     */
+    public function completeByTaskbook($userId, $taskbookId)
+    {
+        ## get the package for this user
+        $user = LantraHelper::getUser($userId);
+
+        $packages = Entry::find()
+            ->section('packages')
+            ->authorId($user->id)
+            ->packagePaid(true)
+            ->all();
+
+        ## run through user record to find packages
+        ## if we find a match with this taskbook, autocomplete
+        foreach($packages as $package) {
+            $taskbook = $package->packageTaskbook->one();
+            $workflow = $taskbook->packageWorkflow->one();
+            if ($taskbook->id == $taskbookId && $workflow->autoComplete) {
+                $this->completePackage($package);
+            }
+        }
     }
 
     /**

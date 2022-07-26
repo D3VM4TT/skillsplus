@@ -91,7 +91,7 @@ class Attempts extends Component
      */
     private function getQuestionBlockAnswer($questionBlock)
     {
-        if (is_array($questionBlock->answers)) {
+        if (count($questionBlock->answers)) {
             $answers = [];
             foreach ($questionBlock->answers as $row) {
                 if ($row['correct']) {

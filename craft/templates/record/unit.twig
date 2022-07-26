@@ -114,7 +114,7 @@
                 <div class="col-12 col-pd-btm">
                     <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
                     <div class="cpd-comment-txt">(Questions will appear below)</div>
-                <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test?ref={{ craft.app.request.getParam('ref') }}&moduleResultId={{ moduleResultId }}">Complete unit test</a></p>
+                <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test?ref={{ craft.app.request.getParam('ref') }}&moduleResultId={{ moduleResultId }}&packageId={{ packageId }}">Complete unit test</a></p>
                     {% set resultPassed = false %}
                     {% if resultEntry|length %}
                         {% set resultPassed = resultEntry.resultScore >= unitEntry.testPassPercent %}

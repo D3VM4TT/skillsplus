@@ -336,6 +336,11 @@ class Results extends Component
                 $resultEntry->setFieldValue('resultEndorsedDate', time());
             }
             Craft::$app->elements->saveElement($resultEntry, false);
+            ## test auto completes package
+            $testCompleteTaskbook = $unitEntry->testCompleteTaskbook->one();
+            if ($passed && $testCompleteTaskbook) {
+                Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id);
+            }
         }
     }
 
