@@ -54,11 +54,10 @@
             {% elseif row.type == 'textarea' %}
                 <textarea{% if row.required %} required{% endif %}  name="fields[resultCustom][{{ fieldKey }}][fields][customValue]" type="text" class="float-label">{{ customValue }}</textarea>
             {% elseif row.type == 'passFail' %}
-                {% set value = productCustomBlock.customValue|default('') %}
-                <select name="fields[customFields][{{ fieldKey }}][fields][customValue]">
-                    <option{% if value == '' %} selected{% endif %} value="0">Please select:</option>
-                    <option{% if value == 0 %} selected{% endif %} value="0">Fail</option>
-                    <option{% if value == 1 %} selected{% endif %} value="1">Pass</option>
+                <select name="fields[resultCustom][{{ fieldKey }}][fields][customValue]">
+                    <option{% if customValue == '' %} selected{% endif %} value="">Please select:</option>
+                    <option{% if customValue == 'fail' %} selected{% endif %} value="fail">Fail</option>
+                    <option{% if customValue == 'pass' %} selected{% endif %} value="pass">Pass</option>
                 </select>
             {% elseif showEvidence and row.type == 'evidence' %}
                 {# only show one evidence field #}

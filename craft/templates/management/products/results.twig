@@ -57,7 +57,23 @@
                     <td>{{ productResult.resultStartDate|date(dateFormat) }}</td>
                     <td>{{ productResult.expiryDate ? productResult.expiryDate|date(dateFormat) : '~' }}</td>
                     {% for row in productResultTableColumnFields %}
-                        <td>{{ craft.lantra.resultCustom(productResult.id, row.name) }}</td>
+                        {% set customValue = craft.lantra.resultCustom(productResult.id, row.name) %}
+                        <td>
+                            {% if row.type == 'text' %}
+                                {{ customValue }}
+                            {% elseif row.type == 'textarea' %}
+                                {{ customValue|trim(50) }}
+                            {% elseif row.type == 'passFail' %}
+                                {{ customValue|ucwords }}
+                            {% elseif row.type == 'evidence' %}
+                                  {% for resultEvidenceAsset in productResult.resultEvidence %}
+                                    <a data-tooltip title="{{ resultEvidenceAsset.filename }}" target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">
+                                        Evidence {{ loop.index }} - {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}
+                                    </a>
+                                    <br />
+                                {% endfor %}
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td class="icons" style="width:140px;text-align:right">
                         <a class="icon" href="/management/products/results/{{ productId }}?resultId={{ productResult.id }}">
