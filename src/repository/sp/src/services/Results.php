@@ -1820,23 +1820,24 @@ class Results extends Component
     }
 
     /**
-     * @param null $userId
+     * @param null $subordinateIds
      * @param string $days
      * @param int $limit
      * @param string $search
      * @param null $relatedTo
-     * @return ElementCriteriaModel|null
+     * @return object
      */
-    public function getManagerModuleCpdResults($userId = null, $days = 'all', $limit = 10, $search = '', $relatedTo = null)
+    public function getSubordinateModuleCpdResults($subordinateIds = null, $days = 'all', $limit = 10, $search = '', $relatedTo = null)
     {
-        if (is_null($relatedTo))
-        {
+        ## related to all cpd modules
+        if (is_null($relatedTo)) {
             $relatedTo = [
                 'targetElement' => $this->getCpdModules()->ids(),
                 'field' => 'resultModule'
             ];
         }
-        return $this->getManagerModuleResults($userId, $days, $limit, false, 'active', $search, null, $relatedTo);
+
+        return $this->getModuleResults($days, $limit, false, 'active', $search, $subordinateIds, $relatedTo);
     }
 
     /**

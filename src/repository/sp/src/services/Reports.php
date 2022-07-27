@@ -233,7 +233,9 @@ class Reports extends Component
                 }
                 break;
             case 'standardCpd':
-                $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
+                ## get related users/subordinates
+                $userCriteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
+                $criteria = Lantra::$app->results->getSubordinateModuleCpdResults($userCriteria->ids(), 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
                 break;
             case 'standardPayments':
                 $criteria = Lantra::$app->users->getUserPayments();
