@@ -8,7 +8,7 @@ fieldLayouts:
             fieldUid: 265e7462-688b-4c0b-a1b2-6f25d1b08525 # Question
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -17,7 +17,7 @@ fieldLayouts:
             fieldUid: 9bb07531-d5ed-4c48-9a33-67ca0c17882b # Answer
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -26,7 +26,7 @@ fieldLayouts:
             fieldUid: 6f6554bf-571c-46f8-a4eb-37e34c65b1a8 # Asset
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -59,7 +59,7 @@ fields:
       singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
       singleUploadLocationSubpath: ''
       source: null
-      sources: '*'
+      sources: 'folder:2'
       targetSiteId: null
       useSingleFolder: false
       validateRelatedElements: false
@@ -93,7 +93,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
       initialRows: '4'
       multiline: ''
