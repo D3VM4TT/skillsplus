@@ -76,11 +76,13 @@
                         <h4>Evidence</h4>
                     </a>
                 </li>
-                <li>
-                    <a href="#tab{{ package.id }}reviews" class="primary-bg">
-                        <h4>Reviews</h4>
-                    </a>
-                </li>
+                {% if package.packageReviews|length %}
+                    <li>
+                        <a href="#tab{{ package.id }}reviews" class="primary-bg">
+                            <h4>Reviews</h4>
+                        </a>
+                    </li>
+                {% endif %}
                 {% if package.packageLog|length %}
                     <li>
                         <a href="#tab{{ package.id }}log" class="primary-bg">

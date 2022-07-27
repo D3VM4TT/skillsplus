@@ -25,12 +25,6 @@ class Structure extends Component
      */
     public function onBeforeSaveCompany($event, $entry)
     {
-        ## check licences
-        if (!Lantra::$app->settings->getSetting('lantraDisableLicences') && !Lantra::$app->licences->updateCompanyLicences($entry)){
-            $entry->addError('companyRemainingLicences', 'There are insufficient company licences.');
-            $event->performAction = false;
-        }
-
         ## update company label
         $entry->setFieldValue('companyLabel', Lantra::$app->structure->getCompanyLabel($entry));
     }

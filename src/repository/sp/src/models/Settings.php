@@ -28,6 +28,7 @@ class Settings extends Model
     public $enableCreateAccount                 = false;
     public $enableEditCredentials               = false;
     public $maintenanceMode                     = false;
+    public $enableBase                          = true;
 
     public $certificateLogo                     = null;
     public $certificateHeader                   = '';
@@ -58,6 +59,10 @@ class Settings extends Model
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
     public $taskbookReset                       = true;
+
+    public $products                            = false;
+    public $productCustomFields                 = [];
+    public $productResultLabel                  = 'Result';
 
     public $labelResultOutcome0                 = 'Failed';
     public $labelResultOutcome1                 = 'Endorsed';
@@ -281,6 +286,14 @@ class Settings extends Model
             'description'  => '',
             'pageLimit' => ''
         ],
+        'standardProducts'       => [
+            'active' => true,
+            'title' => 'Products',
+            'group'  => 'schemeManagers',
+            'roles'  => [],
+            'description'  => '',
+            'pageLimit' => ''
+        ],
         'standardSm'       => [
             'active' => true,
             'title' => 'Scheme Manager',
@@ -316,11 +329,6 @@ class Settings extends Model
     ];
 
     public $reportNotes                         = '';
-
-    public $payPalBusiness                      = '';
-    public $payPalLantraCert                    = '';
-    public $payPalLantraKey                     = '';
-    public $payPalCertId                        = '';
 
     /*
      * modified values

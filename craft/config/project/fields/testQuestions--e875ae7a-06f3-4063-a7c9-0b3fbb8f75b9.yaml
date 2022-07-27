@@ -6,9 +6,9 @@ instructions: ''
 name: 'Test Questions'
 searchable: true
 settings:
-  contentTable: '`craft_matrixcontent_testquestions`'
-  maxBlocks: null
-  minBlocks: null
+  contentTable: '{{%matrixcontent_testquestions_1}}'
+  maxBlocks: ''
+  minBlocks: ''
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

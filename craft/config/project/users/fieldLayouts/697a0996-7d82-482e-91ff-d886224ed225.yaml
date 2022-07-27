@@ -271,7 +271,7 @@ tabs:
   -
     elements:
       -
-        fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # User Custom Fields
+        fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # Custom Fields
         instructions: null
         label: null
         required: '0'
@@ -279,7 +279,7 @@ tabs:
         type: craft\fieldlayoutelements\CustomField
         warning: null
         width: 100
-    name: 'Custom Scheme User Fields'
+    name: 'Custom Fields'
     sortOrder: 6
   -
     elements:
@@ -393,3 +393,25 @@ tabs:
         width: 100
     name: Legacy
     sortOrder: 7
+  -
+    elements:
+      -
+        fieldUid: 286eea1c-9d50-4e56-9200-1bedf0a0e34a # User Secondary Companies
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 25
+      -
+        fieldUid: 5cafe361-f567-45be-bd55-410783dc262e # User Linked User
+        instructions: null
+        label: null
+        required: false
+        tip: null
+        type: craft\fieldlayoutelements\CustomField
+        warning: null
+        width: 25
+    name: 'Linked Users'
+    sortOrder: 8

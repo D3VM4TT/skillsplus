@@ -44,7 +44,7 @@
                             <td>{{ report.id }}</td>
                             <td>{{ report.title }}</td>
                             <td>{{ report.author.fullName }}</td>
-                            <td>{{ report.reportType|title }}</td>
+                            <td>{{ craft.lantra.reportTypeLabel(report) }}</td>
                             <td>{{ report.reportSendFrequency|title }}</td>
                             <td>{{ report.reportLastSentDate ? report.reportLastSentDate|date(dateFormat) : 'Never' }}</td>
                             <td>

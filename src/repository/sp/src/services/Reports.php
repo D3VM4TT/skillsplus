@@ -214,20 +214,33 @@ class Reports extends Component
                 $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
             case 'standardResults':
-                $days = $reportEntry->reportResultExpiry->value == '0' ? 'all' : $reportEntry->reportResultExpiry->value;
-                if ($reportEntry->reportResultStandardType == 'endorsed') {
-                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $days, $limit, $search);
+            case 'standardProducts':
+                $expiryDays = $reportEntry->reportResultExpiry->value;
+                if ($expiryDays == '0') {
+                    $expiryDays = 'all';
+                }
+                elseif ($expiryDays == 'notExpired') {
+                    $expiryDays = 'none';
+                }
+                if ($reportEntry->reportType == 'standardProducts') {
+                    $criteria = Lantra::$app->products->getProductResults($userId, $expiryDays, $limit, $filter);
+                }
+                elseif ($reportEntry->reportResultStandardType == 'endorsed') {
+                    $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $expiryDays, $limit, $search);
                 }
                 else {
-                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $days, $limit, $search);
+                    $criteria = Lantra::$app->results->getManagerUnitExpiringResults($userId, $expiryDays, $limit, $search);
                 }
                 break;
             case 'standardCpd':
-                $criteria = Lantra::$app->results->getManagerModuleCpdResults($userId, 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
+                ## get related users/subordinates
+                $userCriteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
+                $criteria = Lantra::$app->results->getSubordinateModuleCpdResults($userCriteria->ids(), 'all', $limit, $resultFilter['search'], $resultFilter['relatedTo']);
                 break;
             case 'standardPayments':
                 $criteria = Lantra::$app->users->getUserPayments();
                 break;
+
         }
         if ($criteria) {
             return ($count) ? $criteria->count() : $criteria;
@@ -576,7 +589,7 @@ class Reports extends Component
                 $user->userAddress,
                 $user->userTelephone,
             ];
-            foreach ($user->userCustomFields as $block) {
+            foreach ($user->customFields as $block) {
                 $record = array_merge($record, [$block->customValue]);
             }
             ## add the result fields

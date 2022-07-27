@@ -1,14 +1,14 @@
 columnSuffix: null
 contentColumnType: string
-fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
-handle: userCustomFields
+fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
+handle: customFields
 instructions: ''
-name: 'User Custom Fields'
+name: 'Custom Fields'
 searchable: true
 settings:
-  contentTable: '`craft_matrixcontent_usercustomfields`'
-  maxBlocks: null
-  minBlocks: null
+  contentTable: '{{%matrixcontent_customfields}}'
+  maxBlocks: ''
+  minBlocks: ''
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

@@ -45,6 +45,7 @@ use lantra\sp\behaviors\ModuleGroupBehavior;
 use lantra\sp\behaviors\UserBehavior;
 use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\behaviors\MagicTitleBehavior;
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\services\App;
 use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
@@ -66,9 +67,6 @@ class Plugin extends BasePlugin
     public $hasCpSection = true;
 
     public $schemaVersion = '0.0.1';
-
-    private $_sectionIds;
-    private $_groupIds;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -438,6 +436,9 @@ class Plugin extends BasePlugin
 
             ## cpd routes
 
+            ## product routes
+            'cpd/<userId>/products'                            => ['template' => 'record/index'],
+
             ## taskbook routes
             'cpd/<userId>/taskbooks'                            => ['template' => 'record/index'],
             'cpd/<userId>/taskbooks/manage'                     => ['template' => 'record/_taskbooks/manage'],
@@ -468,6 +469,7 @@ class Plugin extends BasePlugin
             'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
+            'management/products/results/<productId>'   => ['template' => 'management/products/results'],
 
             ## reporting routes
             'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],
@@ -521,13 +523,7 @@ class Plugin extends BasePlugin
      */
     private function sectionId($handle)
     {
-        if (!$this->_sectionIds) {
-            $sections = Craft::$app->sections->getAllSections();
-            foreach($sections as $section) {
-                $this->_sectionIds[$section->handle] = $section->id;
-            }
-        }
-        return isset($this->_sectionIds[$handle]) ? $this->_sectionIds[$handle] : null;
+        return LantraHelper::sectionId($handle);
     }
 
     /**
@@ -536,13 +532,7 @@ class Plugin extends BasePlugin
      */
     private function groupId($handle)
     {
-        if (!$this->_groupIds) {
-            $groups = Craft::$app->categories->getAllGroups();
-            foreach($groups as $group) {
-                $this->_groupIds[$group->handle] = $group->id;
-            }
-        }
-        return isset($this->_groupIds[$handle]) ? $this->_groupIds[$handle] : null;
+        return LantraHelper::groupId($handle);
     }
 
     /**

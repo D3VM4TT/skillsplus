@@ -1,4 +1,5 @@
     {% set section = craft.sections.getSectionByHandle('attempts') %}
+    {% set packageId = craft.app.request.getQueryParam('packageId') %}
     {% import "_macros" as ui %}
     {% if unitEntry is defined %}
         {{ ui.errorList(unitEntry.getFirstErrors()) }}
@@ -8,7 +9,11 @@
         <form class="test" method="post" role="form" accept-charset="UTF-8">
             {{ csrfInput() }}
             {{ actionInput('entries/save-entry') }}
-            {{ redirectInput('/cpd/' ~ userId ~ '?ref=' ~ craft.app.request.getParam('ref')) }}
+            {% if packageId %}
+                {{ redirectInput('cpd/' ~ userId ~ '/taskbooks/' ~ packageId) }}
+            {% else %}
+                {{ redirectInput(craft.lantra.returnRef()) }}
+            {% endif %}
             <input type="hidden" name="sectionId" value="{{ section.id }}">
             <input type="hidden" name="enabled" value="1">
             <input type="hidden" name="moduleResultId" value="{{ moduleResultId|default('') }}">
@@ -19,27 +24,49 @@
             {% for question in unitEntry.testQuestions.all() %}
                 {% set questionNumber = loop.index  %}
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
+                {% set questionImage = question.asset.one %}
                 <div class="field--wrapper test">
+                    {% if questionImage %}
+                        <img src="{{ questionImage.url }}" />
+                    {% endif %}
                     <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
                     {% if question.type == "trueFalse" %}
-                    <ul class="trueFalse">
-                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true"> True</li>
-                        <li><input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false"> False</li>
-                    </ul>
+                        <ul class="trueFalse">
+                            <li>
+                                <label>
+                                    <input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="true">
+                                    True
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" name="fields[attemptAnswers][{{ questionId }}][fields][answer]" value="false">
+                                    False
+                                </label>
+                            </li>
+                        </ul>
                     {% elseif question.type == "choices" %}
-                    <ul class="choices">
-                        <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][answer]">
-                        {% for choice in question.answers %}
-                        <li>
-                            <input type="checkbox" value="{{ choice.answer }}"> {{ choice.answer }}
-                        </li>
-                        {% endfor %}
-                    </ul>
+                        <ul class="choices">
+                            <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][answer]">
+                            {% for choice in question.answers %}
+                                {% set choiceImage = choice.image.one %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" value="{{ choice.answer }}">
+                                        {% if choiceImage %}
+                                            <img src="{{ choiceImage.url }}" />
+                                        {% else %}
+                                            {{ choice.answer }}
+                                        {% endif %}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     {% else %}
-                    <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
+                        <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
                     {% endif %}
                 </div>
             {% endfor %}

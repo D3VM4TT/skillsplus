@@ -70,6 +70,41 @@ class ReportHelper
      * @param Entry $reportEntry
      * @return array
      */
+    static function reportHeaderStandardProducts(Entry $reportEntry)
+    {
+        return [
+            'Type',
+            'Reference',
+            'Company',
+            'Result Date',
+            'Expiry Date'
+        ];
+    }
+
+    /**
+     * @param User $user
+     * @param bool $html
+     * @return array
+     */
+    public static function reportRowStandardProducts(Entry $reportEntry, Entry $productEntry, $html = true)
+    {
+        $dateFormat = LantraHelper::setting('themeDateFormat', 'd-m-Y');
+        $productType = $productEntry->productType->one();
+        $productCompany = $productEntry->productCompany->one();
+        return [
+            $productType->title,
+            $productEntry->title,
+            $productCompany ? $productCompany->title : '~',
+            $productEntry->productResultStartDate ? $productEntry->productResultStartDate->format($dateFormat) : '~',
+            $productEntry->productResultExpiryDate ? $productEntry->productResultExpiryDate->format($dateFormat) : '~'
+
+        ];
+    }
+
+    /**
+     * @param Entry $reportEntry
+     * @return array
+     */
     static function reportHeaderStandardUsers(Entry $reportEntry)
     {
         return [
@@ -84,6 +119,7 @@ class ReportHelper
             'Last Login Date'
         ];
     }
+
     /**
      * @param User $user
      * @param bool $html

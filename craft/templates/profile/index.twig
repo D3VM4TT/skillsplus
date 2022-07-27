@@ -77,7 +77,7 @@
             {% endfor %}
 
             {% for row in craft.lantra.userCustomFields('profile') %}
-                {% set userCustomBlock = currentUser.userCustomFields.customName('='~row.name).one() %}
+                {% set userCustomBlock = currentUser.customFields.customName('='~row.name).one() %}
                 <p>{{ row.label }}: {{ userCustomBlock.customValue|default('~') }}</p>
             {% endfor %}
 

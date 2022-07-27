@@ -1,4 +1,4 @@
-field: 53b87ea0-021a-4671-bfbd-8000933bcf0e # User Custom Fields
+field: 53b87ea0-021a-4671-bfbd-8000933bcf0e # Custom Fields
 fieldLayouts:
   d7aeffce-740a-42a3-b581-cd245fa7934c:
     tabs:
@@ -8,7 +8,7 @@ fieldLayouts:
             fieldUid: 03b567a4-41fe-44fc-8b41-a896abbe328f # Custom Name
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -17,7 +17,7 @@ fieldLayouts:
             fieldUid: e4cbe147-47ff-4ad4-845e-cc788f8b8829 # Custom Value
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -36,7 +36,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: false
+      code: ''
       columnType: text
       initialRows: '4'
       multiline: ''
@@ -56,7 +56,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: false
+      code: ''
       columnType: text
       initialRows: '4'
       multiline: ''
@@ -65,6 +65,6 @@ fields:
     translationKeyFormat: null
     translationMethod: none
     type: craft\fields\PlainText
-handle: userCustomField
-name: 'User Custom Field'
+handle: customField
+name: 'Custom Field'
 sortOrder: 1

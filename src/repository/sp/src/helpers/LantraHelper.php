@@ -54,16 +54,6 @@ class LantraHelper
      * @param $handle
      * @return null
      */
-    public static function groupId($handle)
-    {
-        $group = Craft::$app->categories->getGroupByHandle($handle);
-        return $group ? $group->id : null;
-    }
-
-    /**
-     * @param $handle
-     * @return null
-     */
     public static function userGroupId($handle)
     {
         $group = Craft::$app->userGroups->getGroupByHandle($handle);
@@ -102,14 +92,77 @@ class LantraHelper
         return implode (', ', $roles);
     }
 
+    private static $_sections;
+    private static $_groups;
+
     /**
      * @param $handle
-     * @return int|null
+     * @param string $property
+     * @return mixed|null
+     */
+    private static function sectionProperty($handle, $property = 'id')
+    {
+        if (!self::$_sections) {
+            $sections = Craft::$app->sections->getAllSections();
+            foreach($sections as $section) {
+                self::$_sections[$section->handle] = $section;
+            }
+        }
+
+        return isset(self::$_sections[$handle]) ? self::$_sections[$handle]->$property : null;
+    }
+
+    /**
+     * @param $handle
+     * @param string $property
+     * @return mixed|null
+     */
+    private static function groupProperty($handle, $property = 'id')
+    {
+        if (!self::$_groups) {
+            $groups = Craft::$app->categories->getAllGroups();
+            foreach($groups as $group) {
+                self::$_groups[$group->handle] = $group;
+            }
+        }
+
+        return isset(self::$_groups[$handle]) ? self::$_groups[$handle]->$property : null;
+    }
+
+    /**
+     * @param $handle
+     * @return null
      */
     public static function sectionId($handle)
     {
-        $section = Craft::$app->sections->getSectionByHandle($handle);
-        return $section ? $section->id : null;
+        return self::sectionProperty($handle, 'id');
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    public static function sectionUid($handle)
+    {
+        return self::sectionProperty($handle, 'uid');
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    public static function groupId($handle)
+    {
+        return self::groupProperty($handle, 'id');
+    }
+
+    /**
+     * @param $handle
+     * @return null
+     */
+    public static function groupUid($handle)
+    {
+        return self::groupProperty($handle, 'uid');
     }
 
     /**
@@ -166,6 +219,14 @@ class LantraHelper
             }
         }
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function enableBase()
+    {
+        return LantraHelper::setting('enableBase') === 1;
     }
 
     /**
@@ -436,8 +497,9 @@ class LantraHelper
         if (is_object($userId)) {
             return $userId;
         }
-        elseif (is_null($userId)) {
-            return Craft::$app->getUser()->getIdentity();
+
+        if (is_null($userId)) {
+            $userId = Craft::$app->getUser()->id;
         }
 
         return (int) $userId > 0 ? Craft::$app->users->getUserById( (int) $userId) : null;

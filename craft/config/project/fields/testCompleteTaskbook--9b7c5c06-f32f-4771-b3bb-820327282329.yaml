@@ -1,0 +1,22 @@
+columnSuffix: pnxstway
+contentColumnType: string
+fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
+handle: testCompleteTaskbook
+instructions: ''
+name: 'Test Complete Taskbook'
+searchable: false
+settings:
+  allowSelfRelations: false
+  limit: ''
+  localizeRelations: false
+  selectionLabel: ''
+  showSiteMenu: true
+  source: null
+  sources:
+    - 'section:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Entries

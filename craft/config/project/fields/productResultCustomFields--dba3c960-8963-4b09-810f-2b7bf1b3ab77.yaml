@@ -1,0 +1,181 @@
+columnSuffix: jfgnoutl
+contentColumnType: text
+fieldGroup: 7ac02e26-c0e2-4b21-b756-bfe7243fa353 # Products
+handle: productResultCustomFields
+instructions: ''
+name: 'Product Result Custom Fields'
+searchable: false
+settings:
+  addRowLabel: 'Add a row'
+  columnType: text
+  columns:
+    __assoc__:
+      -
+        - col5
+        -
+          __assoc__:
+            -
+              - heading
+              - Type
+            -
+              - handle
+              - type
+            -
+              - width
+              - ''
+            -
+              - type
+              - select
+            -
+              - options
+              -
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Text
+                    -
+                      - value
+                      - text
+                    -
+                      - default
+                      - true
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Textarea
+                    -
+                      - value
+                      - textarea
+                    -
+                      - default
+                      - false
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Pass/Fail
+                    -
+                      - value
+                      - passFail
+                    -
+                      - default
+                      - false
+                -
+                  __assoc__:
+                    -
+                      - label
+                      - Evidence
+                    -
+                      - value
+                      - evidence
+                    -
+                      - default
+                      - false
+      -
+        - col1
+        -
+          __assoc__:
+            -
+              - heading
+              - Name
+            -
+              - handle
+              - name
+            -
+              - width
+              - ''
+            -
+              - type
+              - singleline
+      -
+        - col2
+        -
+          __assoc__:
+            -
+              - heading
+              - Label
+            -
+              - handle
+              - label
+            -
+              - width
+              - ''
+            -
+              - type
+              - singleline
+      -
+        - col3
+        -
+          __assoc__:
+            -
+              - heading
+              - 'Table Column'
+            -
+              - handle
+              - tableColumn
+            -
+              - width
+              - ''
+            -
+              - type
+              - lightswitch
+      -
+        - col6
+        -
+          __assoc__:
+            -
+              - heading
+              - Public
+            -
+              - handle
+              - public
+            -
+              - width
+              - ''
+            -
+              - type
+              - lightswitch
+      -
+        - col4
+        -
+          __assoc__:
+            -
+              - heading
+              - Required
+            -
+              - handle
+              - required
+            -
+              - width
+              - ''
+            -
+              - type
+              - lightswitch
+  defaults:
+    -
+      __assoc__:
+        -
+          - col5
+          - text
+        -
+          - col1
+          - ''
+        -
+          - col2
+          - ''
+        -
+          - col3
+          - ''
+        -
+          - col6
+          - ''
+        -
+          - col4
+          - ''
+  maxRows: ''
+  minRows: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Table

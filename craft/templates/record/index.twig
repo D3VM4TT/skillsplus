@@ -92,9 +92,9 @@
             </table>
         </div>
         {% if isTaskbooks %}
-            {% include 'record/_taskbooks' with{cpdUser:account} %}
+            {% include 'record/_taskbooks' with {cpdUser:account} %}
         {% else %}
-            {% include 'record/_modules' with{cpdUser:account} %}
+            {% include 'record/_modules' with {cpdUser:account} %}
         {% endif %}
     </div>
 </section>

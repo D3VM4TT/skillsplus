@@ -12,6 +12,7 @@ use Craft;
 use craft\db\Query;
 use craft\elements\Entry;
 
+use craft\elements\User;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use lantra\sp\Plugin as Lantra;
@@ -68,7 +69,7 @@ class LantraVariable
      * @param int $limit
      * @return array
      */
-    private function _userFields($field, $type, $limit = 0)
+    private function _customFields($field, $type, $limit = 0)
     {
         $fields = LantraHelper::setting($field, []);
         $return = [];
@@ -90,7 +91,7 @@ class LantraVariable
      */
     public function userCustomFields($type, $limit = 0)
     {
-        return $this->_userFields('userEditCustomFields', $type, $limit);
+        return $this->_customFields('userEditCustomFields', $type, $limit);
     }
 
     /**
@@ -100,7 +101,7 @@ class LantraVariable
      */
     public function userProfileFields($type, $limit = 0)
     {
-        return $this->_userFields('userProfileFields', $type, $limit);
+        return $this->_customFields('userProfileFields', $type, $limit);
     }
 
     /**
@@ -123,6 +124,45 @@ class LantraVariable
     {
         $field = LantraHelper::userProfileField($field);
         return $field ? $field['label'] : $default;
+    }
+
+    /**
+     * @param $type
+     * @param $limit
+     * @return array
+     */
+    public function productCustomFields($type, $limit = 0)
+    {
+        return $this->_customFields('productCustomFields', $type, $limit);
+    }
+
+    /**
+     * @param $fields
+     * @param $type
+     * @return array
+     */
+    public function customFieldsByType($fields = [], $type)
+    {
+        $return = [];
+        if (is_array($fields) && count($fields)) {
+            foreach ($fields as $row) {
+                if (isset($row[$type]) && $row[$type]) {
+                    $return[] = $row;
+                }
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $entry
+     * @param $customName
+     * @return mixed|null
+     */
+    public function customBlockValue($entry, $customName)
+    {
+        $customBlock = $entry->customFields->customName($customName)->one();
+        return $customBlock ? $customBlock->customValue : null;
     }
 
     /**
@@ -730,6 +770,26 @@ class LantraVariable
 
     /**
      * @param $search
+     * @param $limit
+     * @param $order
+     * @return mixed
+     */
+    public function productCriteria($search, $limit, $order)
+    {
+        return Lantra::$app->products->productCriteria($search, $limit, $order);
+    }
+
+    /**
+     * @param $productId
+     * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
+     */
+    public function productResultsCriteria($productId)
+    {
+        return Lantra::$app->results->getProductResultsCriteria($productId);
+    }
+
+    /**
+     * @param $search
      * @param null $limit
      * @param string $order
      * @param null $managerId
@@ -875,33 +935,20 @@ class LantraVariable
             return false;
         }
         $permission = false;
-        if ($task == 'editCompanies') {
-            $section = Craft::$app->sections->getSectionByHandle('companies');
-            $permission = 'editEntries:'.$section->uid;
+
+        if (in_array($task, ['editCompanies', 'editTeams', 'editModules', 'editReports', 'editTaskbooks', 'editProducts'])){
+            $section = strtolower(ltrim($task, 'edit'));
+            $permission = 'editEntries:' . LantraHelper::sectionUid($section);
         }
-        if ($task == 'editTeams') {
-            $section = Craft::$app->sections->getSectionByHandle('teams');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editModules') {
-            $section = Craft::$app->sections->getSectionByHandle('modules');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editReports') {
-            $section = Craft::$app->sections->getSectionByHandle('reports');
-            $permission = 'editEntries:'.$section->uid;
-        }
-        if ($task == 'editRoles') {
-            $category = Craft::$app->categories->getGroupByHandle('roles');
-            $permission = 'editCategories:'.$category->uid;
-        }
+
         if ($task == 'editUsers') {
             $permission = 'editUsers';
         }
-        if ($task == 'editTaskbooks') {
-            $section = Craft::$app->sections->getSectionByHandle('packages');
-            $permission = 'editEntries:'.$section->uid;
+
+        if ($task == 'editRoles') {
+            $permission = 'editCategories:' . LantraHelper::groupUid('roles');
         }
+
         return $permission ? $user->can($permission) : false;
     }
 
@@ -1597,18 +1644,10 @@ class LantraVariable
      * Get the user
      *
      * @param null $userId
-     * @return UserModel
+     * @return User
      */
     private function getUser($userId = null)
     {
-        if (is_object($userId)) {
-            return $userId;
-        }
-        elseif (is_null($userId)) {
-            return $user = Craft::$app->getUser()->getIdentity();
-        }
-        else {
-            return $user = Craft::$app->users->getUserById($userId);
-        }
+        return LantraHelper::getUser($userId);
     }
 }

@@ -46,6 +46,7 @@ class Results extends Component
     {
         $userId = Craft::$app->getUser()->id;
         $unitEntry = $entry->resultUnit ? $entry->resultUnit->one() : null;
+        $dateTime = new \DateTime();
         if ($entry->type == 'unitResult' && !$unitEntry) {
             $event->isValid = false;
             $entry->addError('resultUnit', 'You must select a Result Unit for Unit Results');
@@ -91,7 +92,6 @@ class Results extends Component
                     $entry->title = '[unit ' . $unitEntry->id . '] ' . $author->firstName . ' ' . $author->lastName;
                 }
             }
-            $dateTime = new \DateTime();
             ## set comment
             $comment = Craft::$app->request->getParam('comment');
             $managerId = Craft::$app->request->getParam('managerId');
@@ -132,6 +132,9 @@ class Results extends Component
                     Lantra::$app->notify->sendManagerEndorsementResult($entry);
                 }
             }
+        }
+
+        if ($entry->type == 'unitResult' || $entry->type == 'userResult' || $entry->type == 'productResult') {
             $request = Craft::$app->getRequest();
             $userStartDate = Craft::$app->request->getParam('userStartDate');
             $userFinishDate = Craft::$app->request->getParam('userFinishDate');
@@ -223,6 +226,13 @@ class Results extends Component
                     Lantra::$app->notify->sendCycleComplete($entry);
                 }
             }
+        }
+        ## update product with result dates (for searching/reporting)
+        if ($entry->type == 'productResult') {
+            $productEntry = $entry->resultProduct->one();
+            $productEntry->setFieldValue('productResultStartDate', $entry->resultStartDate);
+            $productEntry->setFieldValue('productResultExpiryDate', $entry->expiryDate);
+            Craft::$app->elements->saveElement($productEntry);
         }
     }
 
@@ -326,6 +336,11 @@ class Results extends Component
                 $resultEntry->setFieldValue('resultEndorsedDate', time());
             }
             Craft::$app->elements->saveElement($resultEntry, false);
+            ## test auto completes package
+            $testCompleteTaskbook = $unitEntry->testCompleteTaskbook->one();
+            if ($passed && $testCompleteTaskbook) {
+                Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id);
+            }
         }
     }
 
@@ -625,6 +640,24 @@ class Results extends Component
         }
         $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         $criteria->status = ['live', 'expired'];
+        return $criteria;
+    }
+
+    /**
+     * @param $productId
+     * @param string[] $status
+     * @param null $limit
+     * @return array|bool|\craft\base\ElementInterface[]|Entry[]|int|string|null
+     */
+    function getProductResultsCriteria($productId, $status = ['live', 'expired'], $limit = null)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->limit = $limit;
+        $criteria->relatedTo = ['targetElement' => $productId, 'field' => 'resultProduct'];
+        $criteria->status = $status;
+        $criteria->type = 'productResult';
+        $criteria->orderBy('expiryDate desc');
         return $criteria;
     }
 
@@ -1787,23 +1820,24 @@ class Results extends Component
     }
 
     /**
-     * @param null $userId
+     * @param null $subordinateIds
      * @param string $days
      * @param int $limit
      * @param string $search
      * @param null $relatedTo
-     * @return ElementCriteriaModel|null
+     * @return object
      */
-    public function getManagerModuleCpdResults($userId = null, $days = 'all', $limit = 10, $search = '', $relatedTo = null)
+    public function getSubordinateModuleCpdResults($subordinateIds = null, $days = 'all', $limit = 10, $search = '', $relatedTo = null)
     {
-        if (is_null($relatedTo))
-        {
+        ## related to all cpd modules
+        if (is_null($relatedTo)) {
             $relatedTo = [
                 'targetElement' => $this->getCpdModules()->ids(),
                 'field' => 'resultModule'
             ];
         }
-        return $this->getManagerModuleResults($userId, $days, $limit, false, 'active', $search, null, $relatedTo);
+
+        return $this->getModuleResults($days, $limit, false, 'active', $search, $subordinateIds, $relatedTo);
     }
 
     /**
@@ -2758,7 +2792,7 @@ class Results extends Component
         if ($expiring) {
             $criteria->expiryDate = $days != 'all' ? '<' . (time() + ($days * 86400)) : ':notempty:';
             $criteria->order = 'expiryDate asc';
-        } elseif ($days != 'all') {
+        } elseif ($days != 'all' && $days != 'none') {
             $criteria->postDate = '>' . (time() - ($days * 86400));
         }
         if ($status) {

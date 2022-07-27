@@ -1,0 +1,64 @@
+{% set sidebar = 'closed' %}
+{% extends "_layout" %}
+
+{% set ref = craft.request.param('ref') %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        {% include '_includes/topNavigation' %}
+    </div>
+    <section class="page">
+        <div class="page-header secondary-bg">
+            <h2>Product Search</h2>
+        </div>
+        {% include '_forms/product' %}
+        {% if ref %}
+            <div class="page-form">
+            {% set product = craft.entries.section('products').search('title:' ~ ref).one() %}
+            {% if not product %}
+                <div class="alert alert-warning">Product not found.</div>
+            {% else %}
+                {% set productType = product.productType.one %}
+                {% set productResult = craft.lantra.productResultsCriteria(product.id).one() %}
+                {% set productResultPublicFields = craft.lantra.customFieldsByType(productType.productResultCustomFields, 'public') %}
+                {% if not productResult %}
+                    <div class="alert alert-warning">{{ productResultLabel}} not found.</div>
+                {% else %}
+                    <table class="data">
+                       <tbody>
+                          <tr>
+                              <td>
+                                  <strong>{{ productResultLabel }} Date</strong>
+                              </td>
+                              <td>
+                                  {{ productResult.postDate|date(dateFormat) }}
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>
+                                  <strong>{{ productResultLabel }} Expiry</strong>
+                              </td>
+                              <td>
+                                  {{ productResult.expiryDate|date(dateFormat) }}
+                              </td>
+                          </tr>
+                          {% for row in productResultPublicFields %}
+                              <tr>
+                                  <td>
+                                      <strong>{{ row.label }}</strong>
+                                  </td>
+                                  <td>
+                                      <strong>{{ craft.lantra.resultCustom(productResult.id, row.name) }}</strong>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                       </tbody>
+                    </table>
+                {% endif %}
+            {% endif %}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

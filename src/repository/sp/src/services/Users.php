@@ -165,30 +165,6 @@ class Users extends Component
             $event->isValid = false;
         }
 
-        ## set licence source
-        $licenceSource = 'None';
-        $lantraLicences = !LantraHelper::setting('lantraDisableLicences');
-        if ($lantraLicences && $event->isNew && !$user->admin) {
-            ## assign company licence if joining a team
-            if ($user->userCompany->count() || $user->userTeam->count()) {
-                $companyEntry = Lantra::$app->users->userCompany($user);
-                if (false == Lantra::$app->licences->assignCompanyLicence($user, $companyEntry)) {
-                    $user->addError('userCompany', 'There are insufficient company licences.');
-                    $event->isValid = false;
-                } else {
-                    $licenceSource = 'Company #' . $companyEntry->id;
-                }
-            }
-            ## assign scheme licence
-            elseif (false == Lantra::$app->licences->assignSchemeLicence()) {
-                $event->isValid = false;
-                $user->addError('userCompany', 'There are insufficient scheme licences.');
-            } else {
-                $licenceSource = 'Scheme';
-            }
-        }
-        $user->userLicenceSource = $licenceSource;
-
         ## set company from register form
         if (null != $companyId = Craft::$app->request->getParam('registerCompany')) {
             if (null != $companyEntry = Entry::findOne($companyId)) {
@@ -953,7 +929,7 @@ class Users extends Component
      * @return array
      * @throws Exception
      */
-    function getCompanyManagerCompanyIds(User $user, $type = 'both')
+    function getCompanyManagerCompanyIds(User $user = null, $type = 'both')
     {
         if (is_null($user)) {
             $user = Craft::$app->getUser();

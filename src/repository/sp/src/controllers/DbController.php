@@ -68,7 +68,7 @@ class DbController extends BaseController
                 'field_userStartDate' => '',
                 'field_userDateOfBirth' => '',
                 'field_userAddress' => '',
-                'field_schemeUserCustomFields' => '',
+                'field_customFields' => '',
             ];
 
             ## cleanse profile data

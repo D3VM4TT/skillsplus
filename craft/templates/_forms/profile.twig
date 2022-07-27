@@ -75,14 +75,14 @@
     {% for row in craft.lantra.userCustomFields('userEdit') %}
         <div class="field--wrapper">
             <label for="custom-{{ row.name }}" class="no-float">{{ row.label }}:</label>
-            {% set userCustomBlock = formUser.userCustomFields.customName('='~row.name).one() %}
+            {% set userCustomBlock = formUser.customFields.customName('='~row.name).one() %}
             {% set fieldId = userCustomBlock|length ? userCustomBlock.id : 'new'~loop.index %}
-            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][type]" value="userCustomField">
-            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][enabled]" value="1">
-            <input type="hidden" name="fields[userCustomFields][{{ fieldId }}][fields][customName]"
+            <input type="hidden" name="fields[customFields][{{ fieldId }}][type]" value="customField">
+            <input type="hidden" name="fields[customFields][{{ fieldId }}][enabled]" value="1">
+            <input type="hidden" name="fields[customFields][{{ fieldId }}][fields][customName]"
                    value="{{ row.name }}"/>
             <input {{ row.required ? 'required' }} type="text" id="custom-{{ row.name }}" class="float-label"
-                   name="fields[userCustomFields][{{ fieldId }}][fields][customValue]"
+                   name="fields[customFields][{{ fieldId }}][fields][customValue]"
                    value="{{ userCustomBlock.customValue|default('') }}">
         </div>
     {% endfor %}

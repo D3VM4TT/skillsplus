@@ -1,0 +1,14 @@
+columnSuffix: ywmgrzei
+contentColumnType: boolean
+fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
+handle: autoComplete
+instructions: 'Select if no steps are required because another process (i.e. quiz) will complete the package.'
+name: 'Auto Complete?'
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

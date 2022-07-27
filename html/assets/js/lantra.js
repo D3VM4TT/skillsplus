@@ -627,6 +627,7 @@ $(document).ready(function () {
         $('form#reports').find('div.fields').hide();
         $('form#reports').find('div.fields-' + type).show();
         $('p#reportTypeDescription').text(description);
+        $('#reportResultStandardType').change();
     });
 
     $('#reportType').change();
@@ -659,8 +660,9 @@ $(document).ready(function () {
 
     // show expiring options if relevant
     $('#reportResultStandardType').change(function () {
-        var type = $(this).val();
-        if (type == 'expiring') {
+        var type = $(this).val(),
+            reportType = $('#reportType').val();
+        if (reportType == 'expired' || reportType == 'standardProducts' || type == 'expiring') {
             $('div#resultExpiringOptions').show();
         }
         else {

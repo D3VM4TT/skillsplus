@@ -1,0 +1,105 @@
+field: 6e83784c-1c34-4973-9929-0307ffb6cff0 # Answers
+fieldLayouts:
+  f084b756-8fce-410b-898a-c6453ce96d15:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: d9049b67-c562-4142-baad-49de0077690b # Answer
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: a4e95883-3e35-47c5-bf4b-9d6357859fe8 # Image
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 2e7aa32f-0920-4c19-973f-fd93c62c21d3 # Correct
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  2e7aa32f-0920-4c19-973f-fd93c62c21d3: # Correct
+    columnSuffix: null
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: correct
+    instructions: ''
+    name: Correct
+    searchable: false
+    settings:
+      default: false
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
+  a4e95883-3e35-47c5-bf4b-9d6357859fe8: # Image
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: image
+    instructions: ''
+    name: Image
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      allowUploads: true
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
+      defaultUploadLocationSubpath: ''
+      limit: '1'
+      localizeRelations: false
+      previewMode: full
+      restrictFiles: ''
+      selectionLabel: ''
+      showSiteMenu: true
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+      singleUploadLocationSubpath: ''
+      source: null
+      sources:
+        - 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: false
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
+  d9049b67-c562-4142-baad-49de0077690b: # Answer
+    columnSuffix: null
+    contentColumnType: text
+    fieldGroup: null
+    handle: answer
+    instructions: ''
+    name: Answer
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText

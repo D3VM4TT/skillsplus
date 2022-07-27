@@ -1,0 +1,88 @@
+{% do craft.lantra.requirePermission('editProducts') %}
+{% set isAdmin = currentUser.admin or currentUser.isInGroup('schemeManagers') %}
+
+{% extends "_layout" %}
+
+{% set metaTitle = "Management > Products" %}
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+{% set sortParam = craft.app.request.getParam('sort') %}
+{% set validSorts = ['id', 'title'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'id' %}
+{% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
+
+{% set criteria = craft.lantra.productCriteria(filterSearch, pageLimit, sort ~ ' ' ~ order) %}
+
+{% if criteria %}{% paginate criteria as pageInfo, productEntries %}{% endif %}
+
+{% set multipleProductTypes = craft.categories.group('productTypes').count > 1 %}
+{% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
+
+{% block content %}
+
+    <section class="page">
+        <div class="page-subHeader primary-bg">
+            {% include '_includes/topNavigation' %}
+        </div>
+        <div class="page-header secondary-bg">
+            <h2>Products</h2>
+            <p>Products within your company</p>
+            {% include '_includes/filter' with {filterDays:false} %}
+        </div>
+        <div class="page-content">
+            {% if productEntries is defined and productEntries|length %}
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        {% if multipleProductTypes  %}
+                            <th class="title">Type</th>
+                        {% endif %}
+                        <th>Reference</th>
+                        <th>Company</th>
+                        {% for row in craft.lantra.productCustomFields('tableColumn') %}
+                            <th>{{ row.label }}</th>
+                        {% endfor %}
+                        <th>{{ productResultLabel }} Expiry</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in productEntries %}
+                        {% set productCompany = product.productCompany.one %}
+                        {% set productResult = craft.lantra.productResultsCriteria(product.id).one() %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            {% if multipleProductTypes  %}
+                                {% set productType = product.productType.one %}
+                                <td>{{ productType ? productType.title : 'unknown'  }}</td>
+                            {% endif %}
+                            <td>{{ product.title }}</td>
+                            <td>{{ productCompany ? productCompany.title : 'unknown' }}</td>
+                            {% for row in craft.lantra.productCustomFields('tableColumn') %}
+                                <td>{{ craft.lantra.customBlockValue(product, row.name) }}</td>
+                            {% endfor %}
+                            <td>{{ productResult ? productResult.expiryDate|date(dateFormat) : '~' }}
+                            <td><a href="/management/products/results/{{ product.id }}">View {{ productResultLabel|pluralize }}</a></td>
+                            <td class="icons" style="width:140px;text-align:right">
+                                <a class="icon" href="/management/products/edit/{{ product.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
+                                <a class="icon action" href="#" data-action="entries/delete-entry" data-id="{{ product.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+            {% else %}
+                <h3>There are no products to display.</h3>
+            {% endif %}
+            {% if not currentUser.managerReadOnly %}
+                <div class="container-btn">
+                    <a class="button primary-bg" href="/management/products/new">Create product</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

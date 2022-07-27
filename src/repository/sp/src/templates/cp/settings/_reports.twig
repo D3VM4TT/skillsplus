@@ -299,6 +299,59 @@
             </td>
         </tr>
         <tr>
+            <td>Products</td>
+            <td>
+                {{ forms.lightswitchField ({
+                    id:				"reports-standardProducts-active",
+                    name:			"reports[standardProducts][active]",
+                    on:		        settings.reports.standardProducts.active|default(false)
+                }) }}
+                {{ forms.hidden ({
+                    name:			"reports[standardProducts][title]",
+                    value:		     "Products"
+                }) }}
+            </td>
+            <td>
+                {{ forms.selectField({
+                    id: 'reports-standardProducts-group',
+                    name: 'reports[standardProducts][group]',
+                    value: settings.reports.standardProducts.group|default('schemeManagers'),
+                    options: groupOptions
+                }) }}
+            </td>
+            <td>
+                {{ forms.elementSelectField ({
+                    id:				    "reports-standardProducts-roles",
+                    name:			    "reports[standardProducts][roles]",
+                    elementType:        config.categoryElementType,
+                    sources:            config.jobRoleCategoryGroup,
+                    criteria:           '',
+                    sourceElementId:    '',
+                    elements:           settings.reports.standardProducts.roles|default([]),
+                    storageKey:         '',
+                    viewMode:           'list'
+                }) }}
+            </td>
+            <td>
+                {{ forms.textareaField ({
+                    id:				"reports-standardProducts-description",
+                    name:			"reports[standardProducts][description]",
+                    value:		    settings.reports.standardProducts.description|default(),
+                    rows:           2,
+                    cols:           40
+                }) }}
+            </td>
+            <td style="text-align: right">
+                {{ forms.textField ({
+                    id:				"reports-standardProducts-pageLimit",
+                    name:			"reports[standardProducts][pageLimit]",
+                    value:		    settings.reports.standardProducts.pageLimit|default(),
+                    class:          "input-small",
+                    type:           "number"
+                }) }}
+            </td>
+        </tr>
+        <tr>
             <td>Scheme Manager</td>
             <td>
                 {{ forms.lightswitchField ({

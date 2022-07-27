@@ -1,0 +1,31 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.lightswitchField ({
+    label:			"Enable Products?",
+    id:				"products",
+    name:			"products",
+    on:		        settings.products == 1
+}) }}
+
+{{ forms.textField ({
+    label:			"Product Result Label",
+    id:				"productResultLabel",
+    name:			"productResultLabel",
+    value:		    settings.productResultLabel
+}) }}
+
+{{ forms.editableTableField ({
+    label:			"Product Custom Fields",
+    instrunctions:  "Enter a name (lowercase, no spaces) and label text for each custom field.",
+    id:				"productCustomFields",
+    name:			"productCustomFields",
+    addRowLabel:    "Add a custom field",
+    cols:
+    {
+        name:       {heading: "Name", type: "singleline"},
+        label:      {heading: "Label", type: "singleline"},
+        tableColumn:   {heading: "Table Column", type: "checkbox"},
+        required:   {heading: "Required", type: "checkbox"}
+    },
+    rows:           settings.productCustomFields
+}) }}

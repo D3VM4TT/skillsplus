@@ -204,7 +204,6 @@ class Record extends Model
             }
             $this->_record['packages'][$package->id] = $this->_addItem('package', $package, $moduleGroups, $this->_data);
         }
-        ## $this->_setCache();
     }
 
     /**

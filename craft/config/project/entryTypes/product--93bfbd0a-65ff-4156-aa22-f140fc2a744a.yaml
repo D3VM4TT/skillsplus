@@ -1,0 +1,87 @@
+fieldLayouts:
+  f54eef12-6131-4721-94a4-834583923074:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: ''
+            label: Reference
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\EntryTitleField
+            warning: null
+            width: 50
+          -
+            fieldUid: 3e69befc-ae77-49af-aba1-136fa684574a # Product Type
+            instructions: ''
+            label: ''
+            required: '1'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: db267693-1bd5-427d-b65d-4f74c7f0f42d # Product Company
+            instructions: ''
+            label: ''
+            required: '1'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 3f60bb56-dc67-40af-9cf0-b5d827cbca8b # Product Result Start Date
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+          -
+            fieldUid: 98230cf5-a49f-406b-8a74-238122570f5d # Product Result Expiry Date
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+        name: Product
+        sortOrder: 1
+      -
+        elements:
+          -
+            fieldUid: 53b87ea0-021a-4671-bfbd-8000933bcf0e # Custom Fields
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: 'Custom Values'
+        sortOrder: 2
+handle: product
+hasTitleField: true
+name: Product
+section: 3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad # Products
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

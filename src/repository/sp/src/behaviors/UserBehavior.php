@@ -8,6 +8,7 @@
 
 namespace lantra\sp\behaviors;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\models\Record;
 use yii\base\Behavior;
 
@@ -42,6 +43,10 @@ class UserBehavior extends Behavior
      */
     public function getIsLicenced()
     {
+        if (!LantraHelper::enableBase()) {
+            return false;
+        }
+
         if ($this->owner->admin || $this->owner->isInGroup('editors')) {
             return false;
         }
