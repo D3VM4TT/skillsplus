@@ -26,10 +26,10 @@
                 {% set questionId = 'new_' ~ (questionNumber - 1)  %}
                 {% set questionImage = question.asset.one %}
                 <div class="field--wrapper test">
+                    <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
                     {% if questionImage %}
                         <img src="{{ questionImage.url }}" />
                     {% endif %}
-                    <label for="question_{{ loop.index }}">{{ questionNumber }}. {{ question.question }}</label>
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][type]" value="answer">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][enabled]" value="1">
                     <input type="hidden" name="fields[attemptAnswers][{{ questionId }}][fields][questionId]" value="{{ question.id }}">
@@ -68,6 +68,7 @@
                     {% else %}
                         <textarea id="question_{{ loop.index }}" name="fields[attemptAnswers][{{ questionId }}][fields][answer]"></textarea>
                     {% endif %}
+                    <hr />
                 </div>
             {% endfor %}
             <div class="container-btn">
