@@ -8,7 +8,7 @@ fieldLayouts:
             fieldUid: 29245631-dbe4-4182-85d0-ae4290604622 # Question
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -17,7 +17,7 @@ fieldLayouts:
             fieldUid: 6e83784c-1c34-4973-9929-0307ffb6cff0 # Answers
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -26,7 +26,7 @@ fieldLayouts:
             fieldUid: f523e5d2-5acc-48c3-ab1d-fba29e427581 # Asset
             instructions: null
             label: null
-            required: false
+            required: '0'
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -36,47 +36,63 @@ fieldLayouts:
 fields:
   6e83784c-1c34-4973-9929-0307ffb6cff0: # Answers
     columnSuffix: null
-    contentColumnType: string
+    contentColumnType: text
     fieldGroup: null
     handle: answers
     instructions: ''
     name: Answers
     searchable: true
     settings:
+      addRowLabel: 'Add a row'
+      columnType: text
       columns:
         __assoc__:
           -
-            - d9049b67-c562-4142-baad-49de0077690b # Answer
+            - col1
             -
               __assoc__:
                 -
+                  - heading
+                  - Answer
+                -
+                  - handle
+                  - answer
+                -
                   - width
                   - ''
+                -
+                  - type
+                  - singleline
           -
-            - a4e95883-3e35-47c5-bf4b-9d6357859fe8 # Image
+            - col2
             -
               __assoc__:
                 -
-                  - width
-                  - ''
-          -
-            - 2e7aa32f-0920-4c19-973f-fd93c62c21d3 # Correct
-            -
-              __assoc__:
+                  - heading
+                  - Correct
+                -
+                  - handle
+                  - correct
                 -
                   - width
                   - ''
-      contentTable: '{{%stc_3_answers}}'
-      fieldLayout: table
-      maxRows: ''
-      minRows: ''
-      placeholderKey: null
-      propagationMethod: all
-      selectionLabel: ''
-      staticField: ''
+                -
+                  - type
+                  - checkbox
+      defaults:
+        -
+          __assoc__:
+            -
+              - col1
+              - ''
+            -
+              - col2
+              - ''
+      maxRows: null
+      minRows: null
     translationKeyFormat: null
-    translationMethod: site
-    type: verbb\supertable\fields\SuperTableField
+    translationMethod: none
+    type: craft\fields\Table
   29245631-dbe4-4182-85d0-ae4290604622: # Question
     columnSuffix: null
     contentColumnType: text
@@ -88,7 +104,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
       initialRows: '4'
       multiline: ''
@@ -122,7 +138,7 @@ fields:
       singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
       singleUploadLocationSubpath: ''
       source: null
-      sources: '*'
+      sources: 'folder:2'
       targetSiteId: null
       useSingleFolder: false
       validateRelatedElements: false

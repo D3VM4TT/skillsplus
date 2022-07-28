@@ -213,8 +213,10 @@ class Reports extends Component
             case 'standardAnnualResults':
                 $criteria = Lantra::$app->users->getManagerUsers($userId, $limit, $userFilter['search'], $userFilter['relatedTo'], $userFilter['lastLoginDate']);
                 break;
-            case 'standardResults':
             case 'standardProducts':
+                $criteria = Lantra::$app->products->getProductResults($userId, null, $limit, $filter);
+                break;
+            case 'standardResults':
                 $expiryDays = $reportEntry->reportResultExpiry->value;
                 if ($expiryDays == '0') {
                     $expiryDays = 'all';
@@ -222,10 +224,7 @@ class Reports extends Component
                 elseif ($expiryDays == 'notExpired') {
                     $expiryDays = 'none';
                 }
-                if ($reportEntry->reportType == 'standardProducts') {
-                    $criteria = Lantra::$app->products->getProductResults($userId, $expiryDays, $limit, $filter);
-                }
-                elseif ($reportEntry->reportResultStandardType == 'endorsed') {
+                if ($reportEntry->reportResultStandardType == 'endorsed') {
                     $criteria = Lantra::$app->results->getManagerUnitEndorsedResults($userId, $expiryDays, $limit, $search);
                 }
                 else {
@@ -240,7 +239,6 @@ class Reports extends Component
             case 'standardPayments':
                 $criteria = Lantra::$app->users->getUserPayments();
                 break;
-
         }
         if ($criteria) {
             return ($count) ? $criteria->count() : $criteria;

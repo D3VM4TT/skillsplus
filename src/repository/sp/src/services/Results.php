@@ -736,9 +736,12 @@ class Results extends Component
         $criteria->type = 'moduleResult';
         $criteria->structureId = false;
         $criteria->limit = 1;
-        $criteria->relatedTo = ['targetElement' => $moduleId, 'field' => 'resultModule'];
+        $criteria->relatedTo = [
+            'and',
+            ['targetElement' => $moduleId, 'field' => 'resultModule']
+        ];
         if ($companyId) {
-            $criteria->relatedTo = ['targetElement' => $companyId, 'field' => 'resultCompany'];
+            $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         } else {
             $criteria->authorId = $userId;
         }
@@ -1075,7 +1078,7 @@ class Results extends Component
             $targetPoints = (int)$unitGroup->cpdTargetPoints;
             $endorsedHours = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'hours');
             $endorsedPoints = $this->getUnitGroupEndorsed($moduleEntry, $unitResultEntries, $unitGroup, 'points');
-            $complete = ($endorsedHours >= $targetHours && $endorsedPoints >= $targetPoints) ? 1 : 0;
+            $complete = ($targetHours && ($endorsedHours >= $targetHours) && ($targetPoints && $endorsedPoints >= $targetPoints)) ? 1 : 0;
 
             $row = [
                 'col1' => $unitGroup->id,
@@ -1190,9 +1193,12 @@ class Results extends Component
             }
             $targetType = (string)$moduleEntry->targetType->value;
             if ($targetType == 'hours') {
-                return $moduleResult->resultHours >= $moduleEntry->targetHours;
+                return $moduleEntry->targetHours && $moduleResult->resultHours >= $moduleEntry->targetHours;
             } elseif ($targetType == 'points') {
-                return $moduleResult->resultPoints >= $moduleEntry->targetPoints;
+                return $moduleEntry->targetPoints && $moduleResult->resultPoints >= $moduleEntry->targetPoints;
+            }
+            elseif (!$moduleEntry->targetHours && $moduleEntry->targetPoints) {
+                return false;
             } else {
                 $remainingPoints = max($moduleEntry->targetHours - $moduleResult->resultHours, 0);
                 $remainingHours = max($moduleEntry->targetPoints - $moduleResult->resultPoints, 0);

@@ -36,20 +36,21 @@ class Products extends Component
         $criteria = $this->productCriteria('', $limit, 'productResultExpiryDate desc', $filter['reportCompanies'], $manager);
 
         ## expiry = none i.e. valid product
-        if ($expiryDays == 'none') {
-            $expiryDate = '>' . time();
-        }
-        elseif ($expiryDays == 'all') {
-            $expiryDate = '<' . time();
-        }
-        else {
-            $expiryDate = '<' . (time() + ($expiryDays * 86400));
-            if (!$filter['reportIncludeExpired']) {
-                $expiryDate = 'and, >' . time() . ', ' . $expiryDate;
-            }
-        }
+        if (!is_null($expiryDays)) {
+            if ($expiryDays == 'none') {
+                $expiryDate = '>' . time();
+            } elseif ($expiryDays == 'all') {
+                $expiryDate = '<' . time();
+            } else {
+                $expiryDate = '<' . (time() + ($expiryDays * 86400));
+                if (!$filter['reportIncludeExpired']) {
+                    $expiryDate = 'and, >' . time() . ', ' . $expiryDate;
+                }
 
-        $criteria->productResultExpiryDate = $expiryDate;
+            }
+            $criteria->productResultExpiryDate = $expiryDate;
+        }
+        $criteria->orderBy = 'productResultExpiryDate ASC';
         return $criteria;
     }
 

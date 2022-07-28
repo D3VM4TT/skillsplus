@@ -89,7 +89,7 @@ class SpBaseClient
         }
 
         if (!isset($attributes->id)) {
-            SpBase::error('Invalid Site ID');
+            SpBase::error('Invalid Site ID [' . $this->subdomain . ']');
         }
 
         return new Site($attributes);
