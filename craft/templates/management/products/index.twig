@@ -66,7 +66,7 @@
                                 <td>{{ craft.lantra.customBlockValue(product, row.name) }}</td>
                             {% endfor %}
                             <td>{{ productResult ? productResult.expiryDate|date(dateFormat) : '~' }}</td>
-                            <td>{{ productResult ? craft.lantra.productExpiryStatus(expiryDate) : '~' }}</td>
+                            <td>{{ productResult ? craft.lantra.productExpiryStatus(productResult.expiryDate) : '~' }}</td>
                             <td><a href="/management/products/results/{{ product.id }}">View {{ productResultLabel|pluralize }}</a></td>
                             <td class="icons" style="width:140px;text-align:right">
                                 <a class="icon" href="/management/products/edit/{{ product.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
