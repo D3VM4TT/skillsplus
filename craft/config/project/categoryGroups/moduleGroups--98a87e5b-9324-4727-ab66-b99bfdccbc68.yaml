@@ -95,73 +95,6 @@ fieldLayouts:
       -
         elements:
           -
-            fieldUid: a1f70b85-8550-4cf0-87a5-1f16cde82405 # Taskbooks
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: da81a368-f84c-47f8-9e3a-b83346be0865 # Module Group Minimum Optional
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 680431de-8445-48e9-8acf-e32d867f73dd # Module Group Costs
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: e427fbb1-c8bc-4ad3-9913-e5c7931d63f2 # Module Group Max Cost
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 294cd8d8-83ae-4d68-a8b1-5acd3d3f6ca3 # Module Group Single Cost
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 5bdda926-785f-4d89-aebe-9a805b3dab29 # Module Group Resit Cost
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: dbbf1f49-3b86-4c6d-aa5a-4170483a35f1 # User Role
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-        name: Taskbooks
-        sortOrder: 2
-      -
-        elements:
-          -
             fieldUid: e510ee00-626f-454c-8022-6f855080c882 # All Companies
             instructions: null
             label: null
@@ -180,7 +113,7 @@ fieldLayouts:
             warning: null
             width: 100
         name: 'Company Results'
-        sortOrder: 3
+        sortOrder: 2
 handle: moduleGroups
 name: 'Module Groups'
 siteSettings:

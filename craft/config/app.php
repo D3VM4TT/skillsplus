@@ -21,7 +21,7 @@ use craft\helpers\App;
 use lantra\sp\helpers\LantraHelper;
 
 return [
-    'local' => [
+    'cbd' => [
         'components' => [
             'mailer' => function() {
                 $settings = App::mailSettings();
@@ -34,24 +34,7 @@ return [
                 ];
                 $config = App::mailerConfig($settings);
                 return Craft::createObject($config);
-            },
-            'mutex' => function() {
-                $config = craft\helpers\App::mutexConfig();
-                $config['isWindows'] = true;
-                return Craft::createObject($config);
-            },
-            'dbCleansed' => [
-                'class' => craft\db\Connection::class,
-                'driver' => getenv('DB_DRIVER'),
-                'schema' => getenv('DB_SCHEMA'),
-                'tablePrefix' => getenv('DB_TABLE_PREFIX'),
-                'port' => getenv('DB_PORT'),
-                'server' => getenv('DB_CLEANSED_SERVER'),
-                'username' => getenv('DB_CLEANSED_USER'),
-                'password' => getenv('DB_CLEANSED_PASSWORD'),
-                'database' => getenv('DB_CLEANSED_DATABASE')
-            ],
-
+            }
         ]
     ],
     '*' => [
