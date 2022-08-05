@@ -121,7 +121,7 @@ fieldLayouts:
       -
         elements:
           -
-            fieldUid: 9b7c5c06-f32f-4771-b3bb-820327282329 # Test Complete Taskbook
+            fieldUid: 9b7c5c06-f32f-4771-b3bb-820327282329
             instructions: null
             label: null
             required: false
