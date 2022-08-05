@@ -83,6 +83,32 @@ class ReportHelper
     }
 
     /**
+     * @param $date
+     * @return string
+     */
+    public static function expiryStatus($date)
+    {
+        $now = new \DateTime();
+        $d30 = new \DateTime("+30 days");
+        $d60 = new \DateTime("+60 days");
+
+        if ($date < $now) {
+            $expiryStatus = 'Expired';
+        }
+        elseif ($date > $now && $date < $d30) {
+            $expiryStatus = 'Expiring in 30 days';
+        }
+        elseif ($date > $now && $date < $d60) {
+            $expiryStatus = 'Expiring in 60 days';
+        }
+        else {
+            $expiryStatus = 'Valid';
+        }
+
+        return $expiryStatus;
+    }
+
+    /**
      * @param User $user
      * @param bool $html
      * @return array
@@ -93,29 +119,13 @@ class ReportHelper
         $productType = $productEntry->productType->one();
         $productCompany = $productEntry->productCompany->one();
 
-        $now = new \DateTime();
-        $d30 = new \DateTime("+30 days");
-        $d60 = new \DateTime("+60 days");
-        if ($productEntry->productResultExpiryDate < $now) {
-            $expiryStatus = 'Expired';
-        }
-        elseif ($productEntry->productResultExpiryDate > $now && $productEntry->productResultExpiryDate < $d30) {
-            $expiryStatus = 'Expiring in 30 days';
-        }
-        elseif ($productEntry->productResultExpiryDate > $now && $productEntry->productResultExpiryDate < $d60) {
-            $expiryStatus = 'Expiring in 60 days';
-        }
-        else {
-            $expiryStatus = 'Valid';
-        }
-
         return [
             $productType->title,
             $productEntry->title,
             $productCompany ? $productCompany->title : '~',
             $productEntry->productResultStartDate ? $productEntry->productResultStartDate->format($dateFormat) : '~',
             $productEntry->productResultExpiryDate ? $productEntry->productResultExpiryDate->format($dateFormat) : '~',
-            $expiryStatus
+            self::expiryStatus($productEntry->productResultExpiryDate)
         ];
     }
 

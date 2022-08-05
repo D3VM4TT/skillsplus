@@ -789,6 +789,15 @@ class LantraVariable
     }
 
     /**
+     * @param $date
+     * @return mixed|string
+     */
+    public function productExpiryStatus($date)
+    {
+        return ReportHelper::expiryStatus($date);
+    }
+
+    /**
      * @param $search
      * @param null $limit
      * @param string $order
