@@ -1,5 +1,7 @@
 {% import "_includes/forms" as forms %}
 
+<h2>General Settings</h2>
+
 {{ forms.lightswitchField ({
     label:			"Enable Taskbooks?",
     id:				"taskbooks",
@@ -21,12 +23,15 @@
     on:		        settings.enableCreateAccount == 1
 }) }}
 
-{{ forms.textField ({
-    label:			"Taskbook Label",
-    id:				"taskbookLabel",
-    name:			"taskbookLabel",
-    value:		    settings.taskbookLabel
+{{ forms.lightswitchField ({
+    label:			"Limit taskbooks by company?",
+    id:				"taskbookCompanies",
+    name:			"taskbookCompanies",
+    on:		        settings.taskbookCompanies == 1
 }) }}
+
+<hr />
+<h2>Levels</h2>
 
 {{ forms.lightswitchField ({
     label:			"Taskbook Levels",
@@ -48,6 +53,9 @@
     rows:           settings.taskbookLevelLabels
 }) }}
 
+<hr />
+<h2>Registration</h2>
+
 {{ forms.elementSelectField ({
     label:			    "Default Taskbook Job Role",
     id:				    "taskbookJobRole",
@@ -61,6 +69,36 @@
     viewMode:           'list',
     limit:              1
 }) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Default Taskbook Company",
+    id:				    "defaultTaskbookCompany",
+    name:			    "defaultTaskbookCompany",
+    elementType:        config.entryElementType,
+    sources:            config.companiesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.defaultTaskbookCompany ? settings.defaultTaskbookCompany,
+    storageKey:         '',
+    viewMode:           'list',
+    limit:              1
+}) }}
+
+{{ forms.elementSelectField ({
+    label:			    "Taskbook Registration Companies",
+    id:				    "taskbookRegistrationCompanies",
+    name:			    "taskbookRegistrationCompanies",
+    elementType:        config.entryElementType,
+    sources:            config.companiesSection,
+    criteria:           '',
+    sourceElementId:    '',
+    elements:           settings.taskbookRegistrationCompanies ? settings.taskbookRegistrationCompanies,
+    storageKey:         '',
+    viewMode:           'list'
+}) }}
+
+<hr />
+<h2>Config</h2>
 
 {{ forms.lightswitchField ({
     label:			"Enable Taskbook Reset (set all results to pending)?",

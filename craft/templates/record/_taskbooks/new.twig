@@ -18,7 +18,14 @@
 {% set section = craft.sections.getSectionByHandle('packages') %}
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% set taskbookCompanies = craft.lantra.setting('taskbookCompanies') %}
 {% set userCompany = account.userCompany.one() %}
+
+{% if taskbookCompanies %}
+    {% set availableTaskbooks = userCompany.companyTaskbooks %}
+{% else %}
+    {% set availableTaskbooks = craft.entries.section('taskbooks').all() %}
+{% endif %}
 
 {% block content %}
     <section class="page dashboard">
@@ -37,7 +44,7 @@
             {{ globalsHtml.pageCreate }}
             <p>&nbsp;</p>
             <p>&nbsp;</p>
-            {% if not userCompany %}
+            {% if taskbookCompanies and not userCompany %}
                 <p style="color:red;">Only users assigned to a company can create {{ taskbookLabel|pluralize|lower  }}.</p>
             {% else %}
                 {% set levelsOptions = '' %}
@@ -54,7 +61,7 @@
                     {{ hiddenInput('enabled', 1) }}
                     {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/manage') }}
                     {{ hiddenInput('author[]', account.id) }}
-                    {% include '_forms/taskbook' with {taskbooks:userCompany.companyTaskbooks} %}
+                    {% include '_forms/taskbook' with {taskbooks:availableTaskbooks} %}
                     <div class="container-btn">
                         <button type="submit" class="button primary-bg">Continue</button>
                     </div>

@@ -59,6 +59,9 @@ class Settings extends Model
     public $taskbookJobRole                     = [];
     public $taskbookNew                         = true;
     public $taskbookReset                       = true;
+    public $taskbookCompanies                   = true;
+    public $defaultTaskbookCompany              = true;
+    public $taskbookRegistrationCompanies       = true;
 
     public $products                            = false;
     public $productCustomFields                 = [];
