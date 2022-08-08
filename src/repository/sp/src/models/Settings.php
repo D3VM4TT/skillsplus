@@ -60,8 +60,8 @@ class Settings extends Model
     public $taskbookNew                         = true;
     public $taskbookReset                       = true;
     public $taskbookCompanies                   = true;
-    public $defaultTaskbookCompany              = true;
-    public $taskbookRegistrationCompanies       = true;
+    public $defaultTaskbookCompany              = [];
+    public $taskbookRegistrationCompanies       = [];
 
     public $products                            = false;
     public $productCustomFields                 = [];
@@ -345,7 +345,9 @@ class Settings extends Model
         'themeNavigationPublic',
         'themeNavigationPrivate',
         'individualCompany',
-        'defaultWorkflow'
+        'defaultWorkflow',
+        'defaultTaskbookCompany',
+        'taskbookRegistrationCompanies'
     ];
 
     private $categoryFields = [
