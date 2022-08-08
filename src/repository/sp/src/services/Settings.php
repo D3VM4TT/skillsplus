@@ -92,6 +92,9 @@ class Settings extends Component
         if ($key == 'taskbookJobRole') {
             return $settings['taskbookJobRole'] ? $settings['taskbookJobRole'][0] : null;
         }
+        if ($key == 'defaultTaskbookCompany') {
+            return $settings['defaultTaskbookCompany'] ? $settings['defaultTaskbookCompany'][0] : null;
+        }
         return isset($settings[$key]) ? $settings[$key] : $default;
     }
 
