@@ -7,7 +7,7 @@
         {% set taskbookCompanies = craft.lantra.setting('taskbookRegistrationCompanies') %}
         {% set defaultTaskbookCompany = craft.lantra.setting('defaultTaskbookCompany') %}
         {% if defaultTaskbookCompany|length %}
-            {{ hiddenInput('fields[userCompany][]', defaultTaskbookCompany.id) }}
+            {{ hiddenInput('fields[userCompany][]', defaultTaskbookCompany.one.id) }}
         {% endif %}
         {% if taskbookCompanies|length %}
         <div class="field--wrapper" style="">
