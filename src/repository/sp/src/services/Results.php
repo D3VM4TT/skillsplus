@@ -505,9 +505,11 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->type = 'unitResult';
         $criteria->limit = 1;
-        $criteria->authorId = $userId;
         $criteria->relatedTo = ['and'];
         $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
+        if (!$companyId) {
+            $criteria->authorId = $userId;
+        }
         if ($companyId) {
             $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         }
@@ -555,7 +557,7 @@ class Results extends Component
         $startDate = $cycle->startDate;
 
         ## make sure the correct number of results exist
-        if ($criteria->count() != count($recurringCycles)) {
+        if ($criteria->count() < count($recurringCycles)) {
             foreach ($recurringCycles as $recurringCycle) {
                 if (null == $resultEntry = $this->getUnitResult($userId, $unitId, $recurringCycle->code, $companyId)) {
                     $resultEntry = $this->createUnitResult($userId, $unitId, $moduleResultId, $recurringCycle, $startDate, $companyId);
