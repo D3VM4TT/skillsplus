@@ -71,7 +71,11 @@ class RecordHelper
     {
         ## taskbook unitEndorse requires individual units to be endorsed
         $status = $taskbook && $taskbook->unitEndorse ? ['endorsed'] : ['not', 'draft'];
-        return Lantra::$app->results->countUnitResults($user->id, $recordItem->unitIds(), $status, $packageId, $moduleGroupId);
+        $unitIds = $recordItem->unitIds();
+        $unitResults = Lantra::$app->results->countUnitResults($user->id, $unitIds, $status, $packageId, $moduleGroupId);
+        $totalUnits = count($unitIds);
+        ## hack to fix duplicated unit results
+        return $unitResults > $totalUnits ? $totalUnits : $unitResults;
     }
 
     /**
