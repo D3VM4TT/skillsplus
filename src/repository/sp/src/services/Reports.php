@@ -356,15 +356,15 @@ class Reports extends Component
             if (isset($filter['reportResultExpiry'])) {
                 $resultFilter['status'] = ['live', 'expired'];
                 $resultFilter['expiryDate'] = ':notempty';
-                // expired
+                ## expired
                 if ($filter['reportResultExpiry'] == '0') {
                     $resultFilter['expiryDate'] = '<' . time();
                 }
-                // after 365
+                ## after 365
                 elseif ($filter['reportResultExpiry'] == '365+') {
                     $resultFilter['expiryDate'] = '>' . (time() + (365*86400));
                 }
-                // within x days
+                ## within x days
                 else {
                     $days = $filter['reportResultExpiry'];
                     if (isset($filter['reportIncludeExpired']) && $filter['reportIncludeExpired']) {
@@ -471,24 +471,27 @@ class Reports extends Component
             'asset'     => null
         ];
         $filter = $this->getReportFilter($reportEntry);
+        ## check companies are still active
+        if (!$reportEntry->reportAllCompanies && !count($filter['reportCompanies'])) {
+            $response['message'] = $reportEntry->title . ' has no active companies.';
+            return $response;
+        }
         $values = $this->getCustomReportData($reportEntry->getAuthor(), $reportEntry->reportType, $filter);
         $response['total'] = count($values) - 1;
         if (!$response['total']) {
             $response['message'] = $reportEntry->title . ' returns no data.';
-            Lantra::$app->queue->delete($reportEntry->id);
             return $response;
         }
         ## create report data asset
         if (null == $response['asset'] = $this->createAsset($reportEntry->reportFormat, $values, $reportEntry->id)) {
-            Lantra::$app->queue->delete($reportEntry->id);
-            $response['message'] = 'Could not create report asset.';
+            $response['message'] = $reportEntry->title . ' could not create report asset.';
             return $response;
         }
         ## append asset to report entry
         $reportData = array_merge($reportEntry->reportData->ids(), [$response['asset']->id]);
         $reportEntry->setFieldValue('reportData', $reportData);
         if (!Craft::$app->elements->saveElement($reportEntry)) {
-            $response['message'] = 'Could not save asset to report entry.';
+            $response['message'] = $reportEntry->title . ' could not save asset to report entry.';
             return $response;
         }
         ## send notification if applicable
@@ -514,8 +517,6 @@ class Reports extends Component
             $reportEntry->setFieldValue('reportLastSentDate', DateTimeHelper::currentUTCDateTime());
             Craft::$app->elements->saveElement($reportEntry);
         }
-        ## delete from queue (if it came from the queue)
-        Lantra::$app->queue->success($reportEntry->id);
         $response['success'] = true;
         return $response;
     }

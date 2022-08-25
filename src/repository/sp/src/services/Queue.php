@@ -118,25 +118,23 @@ class Queue extends Component
      */
      public function run($elementId)
      {
-         ## delete item if not valid element
-        if (null == $entry = Craft::$app->entries->getEntryById($elementId)) {
-            $this->delete($elementId);
-            return;
-        }
-        try {
-            ## only works with reports
-            if ($entry->sectionId == LantraHelper::sectionId('reports')) {
-                $response = Lantra::$app->reports->runCustomReport($entry);
-                if (!$response['success']) {
-                    $message = $entry->title . ' failed to run. ' . $response['message'];
-                    $this->error($message);
+        if (null != $entry = Craft::$app->entries->getEntryById($elementId)) {
+            try {
+                ## only works with reports
+                if ($entry->sectionId == LantraHelper::sectionId('reports')) {
+                    $response = Lantra::$app->reports->runCustomReport($entry);
+                    if (!$response['success']) {
+                        $message = $entry->title . ' failed to run. ' . $response['message'];
+                        $this->error($message);
+                    }
                 }
+            } catch (\Exception $e) {
+                $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to run. ' . $e->getMessage();
+                $this->error($message);
             }
         }
-        catch(\Exception $e) {
-            $message = ($entry ? $entry->title : 'Unknown job ' . $elementId) . ' failed to run. ' . $e->getMessage();
-            $this->error($message);
-        }
+        ## remove from queue
+        $this->delete($elementId);
     }
 
     /**
