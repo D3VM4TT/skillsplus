@@ -37,6 +37,13 @@ settings:
               - width
               - ''
       -
+        - a9a76741-6219-4e4d-8be5-4d7ee9808c4a # Review User Name
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
         - e927b48c-3108-4edd-a018-67e44c2989d5 # Review Date
         -
           __assoc__:

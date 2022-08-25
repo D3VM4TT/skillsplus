@@ -541,7 +541,9 @@ class Packages extends Component
     public function stepUpdate(SuperTableBlockElement $step, $sampled, $passed, $comment = '')
     {
         $package = $step->owner;
+        $user = LantraHelper::getUser();
         $previousStep = $package->previousStep;
+        $step->setFieldValue('reviewUserName', $user ? $user->fullName : 'unknown');
         $step->setFieldValue('reviewSampled', $sampled);
         $step->setFieldValue('reviewPassed', $passed);
         $step->setFieldValue('reviewComment', $comment);
