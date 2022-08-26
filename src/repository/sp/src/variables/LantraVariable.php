@@ -28,6 +28,23 @@ use yii\web\ForbiddenHttpException;
 class LantraVariable
 {
     /**
+     * @param null $level
+     * @param null $levels
+     * @return string
+     */
+    public function skillMatrixLevel($level = null, $levels = [])
+    {
+        if (!$level or !count($levels)) {
+            return '';
+        }
+        foreach ($levels as $levelBlock) {
+            if ($levelBlock->levelValue == $level) {
+                return '<span class="sm-dot" style="background-color: ' . $levelBlock->levelColour . '"></span>' . $levelBlock->levelLabel;
+            }
+        }
+    }
+
+    /**
      * @param $module
      * @param null $userId
      * @return mixed

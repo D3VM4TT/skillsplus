@@ -1,0 +1,92 @@
+field: 6c70653d-cca3-40d6-9f15-925d6a48659c # Skills Matrix Levels
+fieldLayouts:
+  0300b786-89e7-4f66-ae6e-a1d5b423a475:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 684abb41-7e15-4532-8738-bb3c0813d81c # Colour
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: f0b39eae-ee34-4afe-ae1a-198097eb41b1 # Value
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 7bf30451-76de-41d6-8830-1a4ed1ab2fdc # Label
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+        name: Content
+        sortOrder: 1
+fields:
+  7bf30451-76de-41d6-8830-1a4ed1ab2fdc: # Label
+    columnSuffix: rpntyicm
+    contentColumnType: text
+    fieldGroup: null
+    handle: levelLabel
+    instructions: ''
+    name: Label
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  684abb41-7e15-4532-8738-bb3c0813d81c: # Colour
+    columnSuffix: yaznialw
+    contentColumnType: string(7)
+    fieldGroup: null
+    handle: levelColour
+    instructions: ''
+    name: Colour
+    searchable: false
+    settings:
+      defaultColor: '#333333'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Color
+  f0b39eae-ee34-4afe-ae1a-198097eb41b1: # Value
+    columnSuffix: exhooxde
+    contentColumnType: text
+    fieldGroup: null
+    handle: levelValue
+    instructions: ''
+    name: Value
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+handle: skillMatrixLevel
+name: 'Skill Matrix Level'
+sortOrder: 1

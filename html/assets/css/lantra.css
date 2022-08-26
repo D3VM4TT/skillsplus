@@ -2777,3 +2777,13 @@ span.module-select i.fa-times,
 tr.module-selected span.module-select i.fa-check {
     display:inline-block;
 }
+
+.sm-dot {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 3px 10px 0 0;
+    line-height: 20px;
+    float: left;
+}

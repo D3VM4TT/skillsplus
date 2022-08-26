@@ -52,6 +52,18 @@
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
+    {% if moduleEntry.isSkillsMatrix %}
+        {% set resultSkillsMatrixLevel = resultEntry is defined and resultEntry ? resultEntry.skillsMatrixLevel : false %}
+        <div class="field--wrapper">
+            <label for="fields[skillsMatrixLevel]">Level</label>
+            <select name="fields[skillsMatrixLevel]" id="fields[skillsMatrixLevel]">
+                {% for levelBlock in moduleEntry.skillsMatrixLevels %}
+                    <option {% if resultSkillsMatrixLevel and resultSkillsMatrixLevel == levelBlock.levelValue %}selected="selected"{% endif %}
+                            value="{{ levelBlock.levelValue }}">{{ levelBlock.levelLabel }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
     {% if not readOnly %}
         {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
