@@ -40,7 +40,7 @@
                     </td>
                     {% for user in users %}
                     <td>
-                        {% set result = craft.entries.section('results').relatedTo({'targetElement': unit.id, field: 'resultUnit'}).one %}
+                        {% set result = craft.entries.section('results').authorId(user.id).relatedTo({'targetElement': unit.id, field: 'resultUnit'}).one %}
                         {% if result %}
                             {% set skillLevel = result.skillLevel.one %}
                             <span class="sm-dot" style="background-color:{{ skillLevel.skillLevelColour }}"></span>
