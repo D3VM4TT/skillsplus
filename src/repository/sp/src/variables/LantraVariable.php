@@ -40,6 +40,14 @@ class LantraVariable
     }
 
     /**
+     * @param null $module
+     */
+    public function skillsMatrixIds($module = null)
+    {
+        return Lantra::$app->modules->skillsMatrixIds($module);
+    }
+
+    /**
      * @param $module
      * @param null $userId
      * @return mixed

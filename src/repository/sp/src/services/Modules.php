@@ -59,6 +59,37 @@ class Modules extends Component
     }
 
     /**
+     * @param $module
+     * @return array[]|null
+     */
+    public function skillsMatrixIds($module)
+    {
+        if (!$module->isSkillsMatrix) {
+            return null;
+        }
+        $return = [
+            'unitIds' => [],
+            'userIds' => []
+        ];
+        foreach ($module->moduleUnitGroups->all() as $unitGroup) {
+            $return['unitIds'] = array_merge($return['unitIds'], $unitGroup->unitEntries->ids());
+        }
+
+        $results = Entry::find()
+            ->section('results')
+            ->relatedTo(['targetElement' => $return['unitIds'], 'field' => 'resultUnit'])
+            ->all();
+
+        foreach ($results as $result) {
+            if (!in_array($result->authorId, $return['userIds'])) {
+                $return['userIds'][] = $result->authorId;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * @param ModelEvent $event
      * @param Entry $entry
      * @throws \Throwable

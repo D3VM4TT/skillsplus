@@ -1,0 +1,58 @@
+{% set moduleId = craft.app.request.getSegment(4) %}
+{% set moduleEntry = craft.entries.section('modules').isSkillsMatrix(true).id(moduleId).one %}
+{% if not moduleId or not moduleEntry %}
+    {% exit 404 %}
+{% endif %}
+
+{% extends "_layout" %}
+{% import "_macros" as ui %}
+{% set metaTitle = "Management > Skills > " ~ moduleEntry.title %}
+
+{# returns array of unit and user ids #}
+{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry) %}
+
+{% set unitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
+{% set users = craft.users.id(skillsMatrixIds['userIds']) %}
+
+{% block content %}
+    <div class="page-subHeader primary-bg">
+        <a class="back-link" href="/management/skills">&laquo; back</a>
+        {% include '_includes/topNavigation' %}
+    </div>
+    <div class="page-header secondary-bg">
+        <h2>{{ moduleEntry.title }}</h2>
+    </div>
+    <div class="page-content">
+        <table class="data">
+            <thead>
+                <tr>
+                    <th></th>
+                    {% for user in users %}
+                        <th>{{ user.fullName }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for unit in unitEntries %}
+                <tr>
+                    <td>
+                        {{ unit.title }}
+                    </td>
+                    {% for user in users %}
+                    <td>
+                        {% set result = craft.entries.section('results').relatedTo({'targetElement': unit.id, field: 'resultUnit'}).one %}
+                        {% if result %}
+                            {% set skillLevel = result.skillLevel.one %}
+                            <span class="sm-dot" style="background-color:{{ skillLevel.skillLevelColour }}"></span>
+                            {{ skillLevel.title }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
