@@ -43,8 +43,10 @@
                         {% set result = craft.entries.section('results').authorId(user.id).relatedTo({'targetElement': unit.id, field: 'resultUnit'}).one %}
                         {% if result %}
                             {% set skillLevel = result.skillLevel.one %}
-                            <span class="sm-dot" style="background-color:{{ skillLevel.skillLevelColour }}"></span>
-                            {{ skillLevel.title }}
+                                <span title="Result status : {{  result.resultStatus }}" style="opacity: {{ result.resultStatus == 'endorsed' ? '1' : '0.5' }}">
+                                <span class="sm-dot" style="background-color:{{ skillLevel.skillLevelColour }}"></span>
+                                {{ skillLevel.title }}
+                            </span>
                         {% else %}
                             -
                         {% endif %}
