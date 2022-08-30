@@ -52,14 +52,15 @@
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
-    {% if moduleEntry.isSkillsMatrix %}
-        {% set resultSkillsMatrixLevel = resultEntry is defined and resultEntry ? resultEntry.skillsMatrixLevel : false %}
+    {% set skillLevels = moduleEntry.skillLevels %}
+    {% if moduleEntry.isSkillsMatrix and skillLevels.count %}
+        {% set resultSkillLevel = resultEntry is defined and resultEntry ? resultEntry.skillLevel.one : false %}
         <div class="field--wrapper">
             <label for="fields[skillsMatrixLevel]">Level</label>
-            <select name="fields[skillsMatrixLevel]" id="fields[skillsMatrixLevel]">
-                {% for levelBlock in moduleEntry.skillsMatrixLevels %}
-                    <option {% if resultSkillsMatrixLevel and resultSkillsMatrixLevel == levelBlock.levelValue %}selected="selected"{% endif %}
-                            value="{{ levelBlock.levelValue }}">{{ levelBlock.levelLabel }}</option>
+            <select name="fields[skillLevel][]" id="fields[skillLevel]">
+                {% for skillLevel in skillLevels.all %}
+                    <option {% if resultSkillLevel and resultSkillLevel.id == skillLevel.id %}selected="selected"{% endif %}
+                            value="{{ skillLevel.id }}">{{ skillLevel.title }}</option>
                 {% endfor %}
             </select>
         </div>

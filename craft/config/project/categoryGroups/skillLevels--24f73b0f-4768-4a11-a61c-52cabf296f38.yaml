@@ -1,0 +1,50 @@
+defaultPlacement: end
+fieldLayouts:
+  e4641130-2c90-42a4-8392-a308af83bcf5:
+    tabs:
+      -
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\TitleField
+            warning: null
+            width: 50
+          -
+            fieldUid: 96a57c04-a9bc-4f29-97e3-d09fcfa07d37 # Skill Level Colour
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+        name: Content
+        sortOrder: 1
+handle: skillLevels
+name: 'Skill Levels'
+siteSettings:
+  47b102e1-4aed-4206-8420-dfd6e6684f7c: # Skills Plus (en-GB)
+    hasUrls: true
+    template: null
+    uriFormat: 'skill-levels/{slug}'
+structure:
+  maxLevels: 1
+  uid: c90a789c-7ae2-4ea1-ba9a-bef7303b2a07

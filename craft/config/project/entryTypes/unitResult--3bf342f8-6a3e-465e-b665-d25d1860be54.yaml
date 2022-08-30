@@ -126,7 +126,7 @@ fieldLayouts:
             warning: null
             width: 25
           -
-            fieldUid: 9b4cfbab-e364-40da-a9fc-b6c86033074b # Skills Matrix Level
+            fieldUid: 119c90c9-10db-4cf5-aa99-01416a994a39 # Skill Level
             instructions: null
             label: null
             required: false

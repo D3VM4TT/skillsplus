@@ -29,19 +29,14 @@ class LantraVariable
 {
     /**
      * @param null $level
-     * @param null $levels
      * @return string
      */
-    public function skillMatrixLevel($level = null, $levels = [])
+    public function skillLevel($level = null)
     {
-        if (!$level or !count($levels)) {
+        if (!$level) {
             return '';
         }
-        foreach ($levels as $levelBlock) {
-            if ($levelBlock->levelValue == $level) {
-                return '<span class="sm-dot" style="background-color: ' . $levelBlock->levelColour . '"></span>' . $levelBlock->levelLabel;
-            }
-        }
+        return '<span class="sm-dot" style="background-color: ' . $level->skillLevelColour . '"></span>' . $level->title;
     }
 
     /**

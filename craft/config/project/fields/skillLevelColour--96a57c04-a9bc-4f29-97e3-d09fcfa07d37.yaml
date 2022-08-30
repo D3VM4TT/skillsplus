@@ -1,0 +1,12 @@
+columnSuffix: htilanbo
+contentColumnType: string(7)
+fieldGroup: fa8667ae-97e6-4811-8904-29e4cfd55fdd # Skill Matrix
+handle: skillLevelColour
+instructions: ''
+name: 'Skill Level Colour'
+searchable: false
+settings:
+  defaultColor: '#000000'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Color
