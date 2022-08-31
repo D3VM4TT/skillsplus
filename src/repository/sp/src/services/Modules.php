@@ -60,9 +60,11 @@ class Modules extends Component
 
     /**
      * @param $module
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
      * @return array[]|null
      */
-    public function skillsMatrixIds($module)
+    public function skillsMatrixIds($module, $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none')
     {
         if (!$module->isSkillsMatrix) {
             return null;
@@ -71,13 +73,46 @@ class Modules extends Component
             'unitIds' => [],
             'userIds' => []
         ];
+
+        ## get all unit ids for module
         foreach ($module->moduleUnitGroups->all() as $unitGroup) {
             $return['unitIds'] = array_merge($return['unitIds'], $unitGroup->unitEntries->ids());
         }
 
+        $unitIds = $return['unitIds'];
+
+        ## filter by specific unitId
+        if ($unitId != 'all') {
+            $unitIds = [$unitId];
+        }
+
+        ## build list of all skill level ids
+        $skillLevelIds = Category::find()
+            ->group('skillLevels')
+            ->ids();
+
+        if ($minSkillLevel != 'none') {
+            $beforeIds = Category::find()
+                ->group('skillLevels')
+                ->positionedBefore($minSkillLevel)
+                ->ids();
+            ## filter out before ids
+            $skillLevelIds = array_diff($skillLevelIds, $beforeIds);
+        }
+
+        if ($maxSkillLevel != 'none') {
+            $afterIds = Category::find()
+                ->group('skillLevels')
+                ->positionedAfter($maxSkillLevel)
+                ->ids();
+            ## filter out after ids
+            $skillLevelIds = array_diff($skillLevelIds, $afterIds);
+        }
+
         $results = Entry::find()
             ->section('results')
-            ->relatedTo(['targetElement' => $return['unitIds'], 'field' => 'resultUnit'])
+            ->relatedTo(['targetElement' => $unitIds, 'field' => 'resultUnit'])
+            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel'])
             ->all();
 
         foreach ($results as $result) {

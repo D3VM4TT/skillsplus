@@ -42,9 +42,9 @@ class LantraVariable
     /**
      * @param null $module
      */
-    public function skillsMatrixIds($module = null)
+    public function skillsMatrixIds($module = null, $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none')
     {
-        return Lantra::$app->modules->skillsMatrixIds($module);
+        return Lantra::$app->modules->skillsMatrixIds($module, $unitId, $minSkillLevel, $maxSkillLevel);
     }
 
     /**

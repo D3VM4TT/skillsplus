@@ -12,7 +12,9 @@
     </span>
     </p>
     {% endif %}
-    <input type="text" class="text-search" placeholder="search" name="search" value="{{ filterSearch }}" />
+    {% if filterHideSearch is not defined %}
+        <input type="text" class="text-search" placeholder="search" name="search" value="{{ filterSearch }}" />
+    {% endif %}
     {% if filterUserStatus is defined and filterUserStatus %}
         <select name="status" class="sp-select">
             <option value="active"{% if filterUserStatus == 'active' %} selected="selected"{% endif %}>Active Users</option>
@@ -42,6 +44,29 @@
         <input placeholder="Date From" value="{{ filterDateFrom }}" type="text" name="date-from" class="date-field date-search" />
         <input placeholder="Date To" value="{{ filterDateTo }}" type="text" name="date-to" class="date-field date-search" />
     {% endif %}
+    {% if filterUnit is defined %}
+        <select name="filterUnit" class="sp-select" style="width: 160px;">
+            <option value="all"{% if filterUnit == 'all' %} selected="selected"{% endif %}>All Skills</option>
+            {% for unitEntry in unitEntries %}
+                <option value="{{ unitEntry.id }}"{% if filterUnit == unitEntry.id %} selected="selected"{% endif %}>{{ unitEntry.title }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+    {% if filterMinSkill is defined and filterMaxSkill is defined %}
+        {% set skillLevels = craft.categories.group('skillLevels').all %}
+        <select name="filterMinSkill" class="sp-select" style="width: 160px;">
+            <option value="none"{% if filterMinSkill == 'none' %} selected="selected"{% endif %}>Min Skill Level</option>
+            {% for skillLevel in skillLevels %}
+                <option value="{{ skillLevel.id }}"{% if filterMinSkill == skillLevel.id %} selected="selected"{% endif %}>{{ skillLevel.title }}</option>
+            {% endfor %}
+        </select>
+        <select name="filterMaxSkill" class="sp-select" style="width: 160px;">
+            <option value="none"{% if filterMaxSkill == 'none' %} selected="selected"{% endif %}>Max Skill Level</option>
+            {% for skillLevel in skillLevels %}
+                <option value="{{ skillLevel.id }}"{% if filterMaxSkill == skillLevel.id %} selected="selected"{% endif %}>{{ skillLevel.title }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
     <button type="submit" class="btn-search primary-bg">Search</button>
     {% if filterCompany is defined %}
         <div style="margin-top:10px;">
@@ -53,5 +78,4 @@
             </select>
         </div>
     {% endif %}
-
 </form>

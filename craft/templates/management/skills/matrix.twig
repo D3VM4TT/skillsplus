@@ -8,8 +8,12 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Skills > " ~ moduleEntry.title %}
 
+{% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
+{% set filterMinSkill = craft.app.request.getParam('filterMinSkill')|default('none') %}
+{% set filterMaxSkill = craft.app.request.getParam('filterMaxSkill')|default('none') %}
+
 {# returns array of unit and user ids #}
-{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry) %}
+{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnit, filterMinSkill, filterMaxSkill) %}
 
 {% set unitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
 {% set users = craft.users.id(skillsMatrixIds['userIds']) %}
@@ -21,8 +25,12 @@
     </div>
     <div class="page-header secondary-bg">
         <h2>{{ moduleEntry.title }}</h2>
+        <div class="header-controls">
+            <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterHideSearch:true} %}</div>
+        </div>
     </div>
     <div class="page-content">
+        {% if users.count %}
         <table class="data">
             <thead>
                 <tr>
@@ -56,5 +64,8 @@
             {% endfor %}
             </tbody>
         </table>
+        {% else %}
+            <h3>There are no users to display.</h3>
+        {% endif %}
     </div>
 {% endblock %}
