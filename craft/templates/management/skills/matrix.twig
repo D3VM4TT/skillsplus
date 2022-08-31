@@ -15,7 +15,8 @@
 {# returns array of unit and user ids #}
 {% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnit, filterMinSkill, filterMaxSkill) %}
 
-{% set unitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
+{% set allUnitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
+{% set filteredUnitEntries = craft.entries.section('units').id(skillsMatrixIds['filterUnitIds']) %}
 {% set users = craft.users.id(skillsMatrixIds['userIds']) %}
 
 {% block content %}
@@ -41,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for unit in unitEntries %}
+            {% for unit in filteredUnitEntries %}
                 <tr>
                     <td>
                         {{ unit.title }}

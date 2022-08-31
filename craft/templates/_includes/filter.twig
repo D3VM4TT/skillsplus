@@ -47,7 +47,7 @@
     {% if filterUnit is defined %}
         <select name="filterUnit" class="sp-select" style="width: 160px;">
             <option value="all"{% if filterUnit == 'all' %} selected="selected"{% endif %}>All Skills</option>
-            {% for unitEntry in unitEntries %}
+            {% for unitEntry in allUnitEntries %}
                 <option value="{{ unitEntry.id }}"{% if filterUnit == unitEntry.id %} selected="selected"{% endif %}>{{ unitEntry.title }}</option>
             {% endfor %}
         </select>

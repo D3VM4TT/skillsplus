@@ -69,9 +69,11 @@ class Modules extends Component
         if (!$module->isSkillsMatrix) {
             return null;
         }
+
         $return = [
+            'userIds' => [],
             'unitIds' => [],
-            'userIds' => []
+            'filterUnitIds' => []
         ];
 
         ## get all unit ids for module
@@ -79,12 +81,7 @@ class Modules extends Component
             $return['unitIds'] = array_merge($return['unitIds'], $unitGroup->unitEntries->ids());
         }
 
-        $unitIds = $return['unitIds'];
-
-        ## filter by specific unitId
-        if ($unitId != 'all') {
-            $unitIds = [$unitId];
-        }
+        $return['filterUnitIds'] = $unitId == 'all' ? $return['unitIds'] : [$unitId];
 
         ## build list of all skill level ids
         $skillLevelIds = Category::find()
@@ -111,7 +108,7 @@ class Modules extends Component
 
         $results = Entry::find()
             ->section('results')
-            ->relatedTo(['targetElement' => $unitIds, 'field' => 'resultUnit'])
+            ->relatedTo(['targetElement' => $return['filterUnitIds'], 'field' => 'resultUnit'])
             ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel'])
             ->all();
 
