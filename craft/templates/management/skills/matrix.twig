@@ -37,7 +37,7 @@
                 <tr>
                     <th></th>
                     {% for user in users %}
-                        <th>{{ user.fullName }}</th>
+                        <th><a href="/cpd/{{ user.id }}">{{ user.fullName }}</a></th>
                     {% endfor %}
                 </tr>
             </thead>
