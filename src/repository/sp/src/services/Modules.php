@@ -83,6 +83,29 @@ class Modules extends Component
 
         $return['filterUnitIds'] = $unitId == 'all' ? $return['unitIds'] : [$unitId];
 
+        $skillLevelIds = $this->skillLevelIds($minSkillLevel, $maxSkillLevel);
+
+        $results = Entry::find()
+            ->section('results')
+            ->relatedTo(['targetElement' => $return['filterUnitIds'], 'field' => 'resultUnit'])
+            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel'])
+            ->all();
+
+        foreach ($results as $result) {
+            if (!in_array($result->authorId, $return['userIds'])) {
+                $return['userIds'][] = $result->authorId;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     */
+    public function skillLevelIds($minSkillLevel = 'none', $maxSkillLevel = 'none')
+    {
         ## build list of all skill level ids
         $skillLevelIds = Category::find()
             ->group('skillLevels')
@@ -105,20 +128,7 @@ class Modules extends Component
             ## filter out after ids
             $skillLevelIds = array_diff($skillLevelIds, $afterIds);
         }
-
-        $results = Entry::find()
-            ->section('results')
-            ->relatedTo(['targetElement' => $return['filterUnitIds'], 'field' => 'resultUnit'])
-            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel'])
-            ->all();
-
-        foreach ($results as $result) {
-            if (!in_array($result->authorId, $return['userIds'])) {
-                $return['userIds'][] = $result->authorId;
-            }
-        }
-
-        return $return;
+        return $skillLevelIds;
     }
 
     /**

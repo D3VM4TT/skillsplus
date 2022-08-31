@@ -48,6 +48,17 @@ class LantraVariable
     }
 
     /**
+     * @param $userId
+     * @param $unitId
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     */
+    public function getUserSkillResult($userId, $unitId, $minSkillLevel = 'none', $maxSkillLevel = 'none')
+    {
+        return Lantra::$app->results->getUserSkillResult($userId, $unitId, $minSkillLevel, $maxSkillLevel);
+    }
+
+    /**
      * @param $module
      * @param null $userId
      * @return mixed

@@ -49,7 +49,7 @@
                     </td>
                     {% for user in users %}
                     <td>
-                        {% set result = craft.entries.section('results').authorId(user.id).relatedTo({'targetElement': unit.id, field: 'resultUnit'}).one %}
+                        {% set result = craft.lantra.getUserSkillResult(user.id, unit.id, filterMinSkill, filterMaxSkill) %}
                         {% if result %}
                             {% set skillLevel = result.skillLevel.one %}
                                 <span title="Result status : {{  result.resultStatus }}" style="opacity: {{ result.resultStatus == 'endorsed' ? '1' : '0.5' }}">
