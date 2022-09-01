@@ -11,7 +11,12 @@
 {% set tableView = craft.app.request.getParam('tableView')|default('users') %}
 {% set filterStatus = craft.app.request.getParam('filterStatus')|default('all') %}
 {% set filterUnitGroup = craft.app.request.getParam('filterUnitGroup')|default('all') %}
-{% set filterUnit = filterUnitGroup == 'all' ? craft.app.request.getParam('filterUnit')|default('all') : 'all' %}
+{% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
+
+{#  reset unit/unitGroup #}
+{% set filterUnitGroup = filterUnit == 'all' ? filterUnitGroup : 'all' %}
+{% set filterUnit = filterUnitGroup == 'all' ? filterUnit : 'all' %}
+
 {% set filterMinSkill = craft.app.request.getParam('filterMinSkill')|default('none') %}
 {% set filterMaxSkill = craft.app.request.getParam('filterMaxSkill')|default('none') %}
 
