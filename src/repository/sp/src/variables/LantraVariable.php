@@ -40,8 +40,9 @@ class LantraVariable
         $title = $level->title . ($endorsed ? ' [endorsed]' : ' [not endorsed]');
         $class = 'sm-dot sm-' . ($endorsed ? 'endorsed' : 'unendorsed');
         $style = 'border-color:' . $level->skillLevelColour . ';background-color: ' . $level->skillLevelColour;
+        $number = $level->skillLevelNumber !== null ? number_format($level->skillLevelNumber, 1) : '';
 
-        return '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . number_format($level->skillLevelNumber, 1) . '</span>';
+        return '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . $number . '</span>';
     }
 
     /**
