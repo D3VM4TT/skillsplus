@@ -35,7 +35,16 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 50
+            width: 25
+          -
+            fieldUid: e3bdad35-e6f0-4c85-ac0e-239f77776eb7 # Skill Level Number
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
         name: Content
         sortOrder: 1
 handle: skillLevels
