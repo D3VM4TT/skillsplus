@@ -1,0 +1,7 @@
+{% set result = craft.lantra.getUserSkillResult(user.id, unit.id, filterMinSkill, filterMaxSkill, filterStatus) %}
+{% if result %}
+    {% set skillLevel = result.skillLevel.one %}
+    {{ craft.lantra.skillLevel(skillLevel, result.resultStatus == 'endorsed')|raw }}
+{% else %}
+    -
+{% endif %}

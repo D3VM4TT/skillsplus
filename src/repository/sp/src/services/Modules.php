@@ -64,7 +64,7 @@ class Modules extends Component
      * @param string $maxSkillLevel
      * @return array[]|null
      */
-    public function skillsMatrixIds($module, $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none')
+    public function skillsMatrixIds($module, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all')
     {
         if (!$module->isSkillsMatrix) {
             return null;
@@ -73,23 +73,38 @@ class Modules extends Component
         $return = [
             'userIds' => [],
             'unitIds' => [],
+            'unitGroupIds' => [],
             'filterUnitIds' => []
         ];
 
         ## get all unit ids for module
         foreach ($module->moduleUnitGroups->all() as $unitGroup) {
+            $return['unitGroupIds'][] = $unitGroup->id;
             $return['unitIds'] = array_merge($return['unitIds'], $unitGroup->unitEntries->ids());
         }
 
-        $return['filterUnitIds'] = $unitId == 'all' ? $return['unitIds'] : [$unitId];
+        ## filter by unit group
+        if ($unitGroupId != 'all') {
+            $unitGroup = $module->moduleUnitGroups->id($unitGroupId)->one();
+            $return['filterUnitIds'] = $unitGroup ? $unitGroup->unitEntries->ids() : [];
+        }
+        else {
+            $return['filterUnitIds'] = $unitId == 'all' ? $return['unitIds'] : [$unitId];
+        }
 
         $skillLevelIds = $this->skillLevelIds($minSkillLevel, $maxSkillLevel);
 
-        $results = Entry::find()
+        $criteria = Entry::find()
             ->section('results')
             ->relatedTo(['targetElement' => $return['filterUnitIds'], 'field' => 'resultUnit'])
-            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel'])
-            ->all();
+            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel']);
+
+        ## add result status
+        if ($status != 'all') {
+            $criteria->resultStatus = $status;
+        }
+
+        $results = $criteria->all();
 
         foreach ($results as $result) {
             if (!in_array($result->authorId, $return['userIds'])) {

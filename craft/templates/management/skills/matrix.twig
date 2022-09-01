@@ -8,14 +8,18 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Skills > " ~ moduleEntry.title %}
 
-{% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
+{% set tableView = craft.app.request.getParam('tableView')|default('users') %}
+{% set filterStatus = craft.app.request.getParam('filterStatus')|default('all') %}
+{% set filterUnitGroup = craft.app.request.getParam('filterUnitGroup')|default('all') %}
+{% set filterUnit = filterUnitGroup == 'all' ? craft.app.request.getParam('filterUnit')|default('all') : 'all' %}
 {% set filterMinSkill = craft.app.request.getParam('filterMinSkill')|default('none') %}
 {% set filterMaxSkill = craft.app.request.getParam('filterMaxSkill')|default('none') %}
 
 {# returns array of unit and user ids #}
-{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnit, filterMinSkill, filterMaxSkill) %}
+{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnitGroup, filterUnit, filterMinSkill, filterMaxSkill, filterStatus) %}
 
 {% set allUnitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
+
 {% set filteredUnitEntries = craft.entries.section('units').id(skillsMatrixIds['filterUnitIds']) %}
 {% set users = craft.users.id(skillsMatrixIds['userIds']) %}
 
@@ -32,39 +36,57 @@
     </div>
     <div class="page-content">
         {% if users.count %}
-        <table class="data">
-            <thead>
-                <tr>
-                    <th></th>
-                    {% for user in users %}
-                        <th><a href="/cpd/{{ user.id }}">{{ user.fullName }}</a></th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for unit in filteredUnitEntries %}
-                <tr>
-                    <td>
-                        {{ unit.title }}
-                    </td>
-                    {% for user in users %}
-                    <td>
-                        {% set result = craft.lantra.getUserSkillResult(user.id, unit.id, filterMinSkill, filterMaxSkill) %}
-                        {% if result %}
-                            {% set skillLevel = result.skillLevel.one %}
-                                <span title="Result status : {{  result.resultStatus }}" style="opacity: {{ result.resultStatus == 'endorsed' ? '1' : '0.5' }}">
-                                <span class="sm-dot" style="background-color:{{ skillLevel.skillLevelColour }}"></span>
-                                {{ skillLevel.title }}
-                            </span>
+        <div class="sm-scroll">
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th></th>
+                        {% if tableView == 'users' %}
+                            {% for user in users %}
+                                <th>
+                                    <a href="/cpd/{{ user.id }}">
+                                        <span title="{{ user.fullName }}" class="sm-dot sm-initials">{{ user.firstName|first }}{{ user.lastName|first }}</span>
+                                    </a>
+                                </th>
+                            {% endfor %}
                         {% else %}
-                            -
+                            {% for unit in filteredUnitEntries %}
+                                <th>{{ unit.title }}</th>
+                            {% endfor %}
                         {% endif %}
-                    </td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if tableView == 'users' %}
+                    {% for unit in filteredUnitEntries %}
+                        <tr>
+                            <td>
+                                {{ unit.title }}
+                            </td>
+                            {% for user in users %}
+                                <td>
+                                    {% include 'management/skills/_result' %}
+                                </td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                {% else %}
+                    {% for user in users %}
+                        <tr>
+                            <td>
+                                <a href="/cpd/{{ user.id }}">{{ user.fullName }}</a>
+                            </td>
+                            {% for unit in filteredUnitEntries %}
+                                <td>
+                                    {% include 'management/skills/_result' %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
             <h3>There are no users to display.</h3>
         {% endif %}

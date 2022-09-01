@@ -44,6 +44,30 @@
         <input placeholder="Date From" value="{{ filterDateFrom }}" type="text" name="date-from" class="date-field date-search" />
         <input placeholder="Date To" value="{{ filterDateTo }}" type="text" name="date-to" class="date-field date-search" />
     {% endif %}
+    {% if tableView is defined %}
+        <div style="margin-bottom: 20px">
+            <select name="tableView" class="sp-select" style="width: 260px;">
+                <option value="units"{% if tableView == 'units' %} selected="selected"{% endif %}>Display: by units</option>
+                <option value="users"{% if tableView == 'users' %} selected="selected"{% endif %}>Display: by users</option>
+            </select>
+        </div>
+    {% endif %}
+    {% if filterStatus is defined %}
+        <select name="filterStatus" class="sp-select" style="width: 160px;">
+            <option value="all"{% if filterStatus == 'all' %} selected="selected"{% endif %}>All Status</option>
+            <option value="endorsed"{% if filterStatus == 'endorsed' %} selected="selected"{% endif %}>Endorsed</option>
+            <option value="pending"{% if filterStatus == 'pending' %} selected="selected"{% endif %}>Pending</option>
+            <option value="draft"{% if filterStatus == 'draft' %} selected="selected"{% endif %}>Draft</option>
+        </select>
+    {% endif %}
+    {% if filterUnitGroup is defined %}
+        <select name="filterUnitGroup" class="sp-select" style="width: 160px;">
+            <option value="all"{% if filterUnitGroup == 'all' %} selected="selected"{% endif %}>All Skill Groups</option>
+            {% for unitGroup in moduleEntry.moduleUnitGroups.id(null).all %}
+                <option value="{{ unitGroup.id }}"{% if filterUnitGroup == unitGroup.id %} selected="selected"{% endif %}>{{ unitGroup.groupName }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
     {% if filterUnit is defined %}
         <select name="filterUnit" class="sp-select" style="width: 160px;">
             <option value="all"{% if filterUnit == 'all' %} selected="selected"{% endif %}>All Skills</option>

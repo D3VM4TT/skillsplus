@@ -31,20 +31,25 @@ class LantraVariable
      * @param null $level
      * @return string
      */
-    public function skillLevel($level = null)
+    public function skillLevel($level = null, $endorsed = false)
     {
         if (!$level) {
             return '';
         }
-        return '<span class="sm-dot" style="background-color: ' . $level->skillLevelColour . '"></span>' . $level->title;
+
+        $title = $level->title . ($endorsed ? ' [endorsed]' : ' [not endorsed]');
+        $class = 'sm-dot sm-' . ($endorsed ? 'endorsed' : 'unendorsed');
+        $style = 'border-color:' . $level->skillLevelColour . ';background-color: ' . $level->skillLevelColour;
+
+        return '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . number_format($level->skillLevelNumber, 1) . '</span>';
     }
 
     /**
      * @param null $module
      */
-    public function skillsMatrixIds($module = null, $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none')
+    public function skillsMatrixIds($module = null, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all')
     {
-        return Lantra::$app->modules->skillsMatrixIds($module, $unitId, $minSkillLevel, $maxSkillLevel);
+        return Lantra::$app->modules->skillsMatrixIds($module, $unitGroupId, $unitId, $minSkillLevel, $maxSkillLevel, $status);
     }
 
     /**
@@ -53,9 +58,9 @@ class LantraVariable
      * @param string $minSkillLevel
      * @param string $maxSkillLevel
      */
-    public function getUserSkillResult($userId, $unitId, $minSkillLevel = 'none', $maxSkillLevel = 'none')
+    public function getUserSkillResult($userId, $unitId, $minSkillLevel = 'none', $maxSkillLevel = 'none', $filterStatus = 'all')
     {
-        return Lantra::$app->results->getUserSkillResult($userId, $unitId, $minSkillLevel, $maxSkillLevel);
+        return Lantra::$app->results->getUserSkillResult($userId, $unitId, $minSkillLevel, $maxSkillLevel, $filterStatus);
     }
 
     /**
