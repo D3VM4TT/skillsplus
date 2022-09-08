@@ -50,7 +50,7 @@ class SpBase
 
         ## handle packages
         if (isset($meta['packageId'])) {
-            $this->processTaskbookPayment($meta);
+            $this->processTaskbookPayment($user, $meta);
         }
         ## handle membership
         elseif (isset($meta['isMembership']) && $user->isInGroup('usersMembershipPending')) {
@@ -69,19 +69,23 @@ class SpBase
      */
     private function processMembershipPayment(User $user)
     {
-        $group = Craft::$app->userGroups->getGroupByHandle('users');
-        Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
+        ## set user to user group
+        $this->assignUserToUsers($user);
+
         Lantra::$app->notify->sendNewMembership($user);
     }
 
     /**
      * @param $meta
      */
-    private function processTaskbookPayment($meta)
+    private function processTaskbookPayment(User $user, $meta)
     {
         if (null == $package = Entry::findOne($meta['packageId'])) {
             Module::error('processTaskbookPayment() invalid package id [' . $meta['packageId'] . ']');
         }
+
+        ## set user to user group
+        $this->assignUserToUsers($user);
 
         ## handle module groups
         if (isset($meta['moduleGroupIds'])) {
@@ -90,7 +94,18 @@ class SpBase
         else {
             $package->setFieldValue('packagePaid', true);
         }
+
         $package->save();
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     */
+    private function assignUserToUsers(User $user)
+    {
+        $group = Craft::$app->userGroups->getGroupByHandle('users');
+        Craft::$app->users->assignUserToGroups($user->id, [$group->id]);
     }
 
     /**
