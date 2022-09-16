@@ -34,6 +34,7 @@
         isManager: isManager
     } %}
     {% if unitType == 'elearning' %}
+        <td>{{ resultEntry ? resultEntry.dateUpdated|date(dateFormat) : '' }}</td>
         <td>{{ craft.lantra.assessmentScore(unit, resultEntry, cpdUser.id) }}</td>
         <td>{{ craft.lantra.remainingAttempts(unit, resultEntry, cpdUser.id) }}</td>
     {% endif %}

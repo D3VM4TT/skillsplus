@@ -286,6 +286,13 @@ class Results extends Component
                 if (false != $moduleResultId = Craft::$app->request->post('moduleResultId')) {
                     $resultEntry->setFieldValue('resultModuleResult', [$moduleResultId]);
                 }
+                ## make sure result is properly linked to taskbook package
+                if (false != $packageId = Craft::$app->request->post('packageId')) {
+                    $resultEntry->setFieldValue('resultPackage', [$packageId]);
+                }
+                if (false != $moduleGroupId = Craft::$app->request->post('moduleGroupId')) {
+                    $resultEntry->setFieldValue('resultModuleGroup', [$moduleGroupId]);
+                }
                 if (!Craft::$app->elements->saveElement($resultEntry)) {
                     $event->isValid = false;
                     $entry->addError('attemptUnit', 'Could not save result entry.');

@@ -16,9 +16,14 @@
             {% endif %}
             <input type="hidden" name="sectionId" value="{{ section.id }}">
             <input type="hidden" name="enabled" value="1">
-            <input type="hidden" name="moduleResultId" value="{{ moduleResultId|default('') }}">
             {% if userId != currentUser.id %}
                 <input type="hidden" name="author[]" value="{{ userId }}">
+            {% endif %}
+            <input type="hidden" name="moduleResultId" value="{{ moduleResultId|default('') }}">
+            {# if rollover is off unit results are locked to package and module #}
+            {% if resultPackageId is defined and resultPackageId %}
+                <input type="hidden" name="packageId" value="{{ resultPackageId }}" />
+                <input type="hidden" name="moduleGroupId" value="{{ resultModuleGroupId }}" />
             {% endif %}
             <input type="hidden" name="fields[attemptUnit][]" value="{{ unitEntry.id }}">
             {% for question in unitEntry.testQuestions.all() %}
