@@ -32,6 +32,7 @@
                         <th>Unit title</th>
                         {% include '_includes/columnLayout' with {header:true, columnLayout:columnLayout, isManager:isManager} %}
                         {% if hasAssessmentUnit %}
+                            <th>Assessment Date</th>
                             <th>Assessment Score</th>
                             <th>Remaining Attempts</th>
                         {% endif %}
