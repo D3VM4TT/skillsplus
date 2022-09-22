@@ -21,7 +21,7 @@
             {{ hiddenInput('fields[userCompany][]', defaultTaskbookCompany.id) }}
         {% endif %}
         {% if defaultTaskbookJobRole|length %}
-            <input type="hidden" name="fields[userRole][]" value="{{ defaultTaskbookJobRole }}" />
+            <input type="hidden" name="fields[userRole][]" value="{{ defaultTaskbookJobRole.id }}" />
         {% endif %}
     {% else %}
         {{ redirectInput('') }}
