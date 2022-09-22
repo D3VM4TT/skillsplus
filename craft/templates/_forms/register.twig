@@ -6,7 +6,7 @@
         {{ redirectInput('/') }}
         {% set taskbookCompanies = craft.lantra.setting('taskbookRegistrationCompanies') %}
         {% set defaultTaskbookCompany = craft.lantra.setting('defaultTaskbookCompany') %}
-        {% set defaultTaskbookJobRole = craft.lantra.setting('defaultTaskbookJobRole') %}
+        {% set defaultTaskbookJobRole = craft.lantra.setting('taskbookJobRole') %}
         {% if taskbookCompanies|length %}
             <div class="field--wrapper" style="">
                 <label for="userCompany" class="no-float">Company</label>
