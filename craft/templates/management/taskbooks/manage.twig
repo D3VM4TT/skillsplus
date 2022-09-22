@@ -1,4 +1,3 @@
-{% do craft.lantra.requirePermission('editTaskbooks') %}
 {% set packageId = craft.app.request.getSegment(4) %}
 {% if packageId and package is not defined %}
     {% set package = craft.entries.id(packageId).one %}
