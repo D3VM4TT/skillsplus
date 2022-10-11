@@ -97,7 +97,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if alias('@site') == 'bics' and not isManager %}
+                {% if not isManager %}
                     {% if resitModuleGroups|length %}
                         <li>
                             <a href="#tab{{ package.id }}resits" class="primary-bg">
@@ -139,6 +139,8 @@
                 {% if package.packageStatus == 'locked' %}
                     <h4>{{ taskbookLabel }} Locked</h4>
                     <p>Your {{ taskbookLabel|lower }} has been submitted for assessment.</p>
+                {% elseif package.packageStatus == 'failed' %}
+                    <h4>You have failed this {{ taskbookLabel|lower }}.</h4>
                 {% elseif package.packageStatus == 'complete' %}
                     <h4>Congratulations, you have completed this {{ taskbookLabel|lower }}.</h4>
                 {% else %}

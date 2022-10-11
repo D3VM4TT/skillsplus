@@ -345,8 +345,8 @@ class Results extends Component
             Craft::$app->elements->saveElement($resultEntry, false);
             ## test auto completes package
             $testCompleteTaskbook = $unitEntry->testCompleteTaskbook->one();
-            if ($passed && $testCompleteTaskbook) {
-                Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id);
+            if ($testCompleteTaskbook) {
+                Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id, $unitEntry->id, $passed);
             }
         }
     }

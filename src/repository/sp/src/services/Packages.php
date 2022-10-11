@@ -14,6 +14,8 @@ use craft\events\ModelEvent;
 use craft\elements\GlobalSet;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\elements\Category;
+use craft\elements\MatrixBlock;
 use craft\helpers\DateTimeHelper;
 use \DateTime;
 use lantra\sp\helpers\LantraHelper;
@@ -614,6 +616,15 @@ class Packages extends Component
     /**
      * @param $package
      */
+    public function failPackage($package)
+    {
+        $package->setFieldValue('packageStatus', 'failed');
+        $package->save();
+    }
+
+    /**
+     * @param $package
+     */
     public function completePackage($package)
     {
         $package->setFieldValue('packageStatus', 'complete');
@@ -632,8 +643,10 @@ class Packages extends Component
     /**
      * @param $userId
      * @param $taskbookId
+     * @param $unitId
+     * @param $passed
      */
-    public function completeByTaskbook($userId, $taskbookId)
+    public function completeByTaskbook($userId, $taskbookId, $unitId, $passed)
     {
         ## get the package for this user
         $user = LantraHelper::getUser($userId);
@@ -646,13 +659,60 @@ class Packages extends Component
 
         ## run through user record to find packages
         ## if we find a match with this taskbook, autocomplete
-        foreach($packages as $package) {
+        foreach ($packages as $package) {
             $taskbook = $package->packageTaskbook->one();
             $workflow = $taskbook->packageWorkflow->one();
             if ($taskbook->id == $taskbookId && $workflow->autoComplete) {
-                $this->completePackage($package);
+                $this->completePackageAssessmentByUnit($user, $package, $unitId, $passed);
+                if ($passed) {
+                    $this->completePackage($package);
+                }
+                else {
+                    $this->failPackage($package);
+                }
             }
         }
+    }
+
+    /**
+     * @param $package
+     * @param $unitId
+     * @param $passed
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function completePackageAssessmentByUnit($user, $package, $unitId, $passed)
+    {
+        $p = $passed ? 1 :0;
+
+        ## get the module groups where this unit is present (should only be one)
+        $moduleGroupIds = $this->getPackageUnitModuleGroupIds($package, $unitId);
+
+        foreach ($moduleGroupIds as $moduleGroupId) {
+            ## get the package assessment block, mimic assessment form
+            $assessment = $this->moduleGroupAssessment($package, $moduleGroupId);
+            $data = [$assessment->id => [
+                'assessmentPassed' => $p,
+                'assessmentComment' => '[auto assessment from unit test]'
+            ]];
+            $this->assessment($package, $data);
+        }
+    }
+
+    /**
+     * @param $package
+     * @param $moduleGroupId
+     * @return mixed|null
+     */
+    public function moduleGroupAssessment($package, $moduleGroupId)
+    {
+        foreach($package->packageAssessment as $a) {
+            if (in_array($moduleGroupId, $a->assessmentModuleGroup->ids())) {
+                return $a;
+            }
+        }
+        return null;
     }
 
     /**
@@ -831,6 +891,33 @@ class Packages extends Component
         $criteria->section = 'units';
         $criteria->relatedTo(['sourceElement' => $moduleEntryIds, 'field' => 'moduleUnitGroups.unitEntries']);
         return $return == 'ids' ?  $criteria->ids() : $criteria->all();
+    }
+
+    /**
+     * @param $package
+     * @param $unitId
+     * @return mixed
+     */
+    public function getPackageUnitModuleGroupIds($package, $unitId)
+    {
+        $field = Craft::$app->fields->getFieldByHandle('moduleUnitGroups');
+
+        ## find related modules
+        $criteria = MatrixBlock::find();
+        $criteria->fieldId($field->id);
+        $criteria->relatedTo([$unitId]);
+
+        $moduleIds = [];
+        foreach($criteria->all() as $block) {
+            $moduleIds[] = $block->ownerId;
+        }
+
+        ## find related module groups
+        $criteria = Category::find();
+        $criteria->group = 'moduleGroups';
+        $criteria->relatedTo($moduleIds);
+
+        return $criteria->ids();
     }
 
     /**
