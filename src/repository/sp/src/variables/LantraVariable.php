@@ -179,6 +179,18 @@ class LantraVariable
      * @param null $userId
      * @return array
      */
+    public function getUnpaidPackages($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return;
+        }
+        return Lantra::$app->packages->getUnpaidPackages($user);
+    }
+
+    /**
+     * @param null $userId
+     * @return array
+     */
     public function getOptionalModuleGroups($userId = null)
     {
         if (false == $user = $this->getUser($userId)) {

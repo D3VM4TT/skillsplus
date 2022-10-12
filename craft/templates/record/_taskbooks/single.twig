@@ -18,7 +18,7 @@
 {% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
 {% set singleType = craft.request.getParam('type') %}
 {% set payment = craft.request.getParam('payment') %}
-{% set package = craft.entries.id(packageId).one() %}
+{% set package = craft.entries.section('packages').id(packageId).one() %}
 {% set unpaidCost = package.unpaidCost %}
 {% set redirect = 'cpd/' ~ account.id ~ '/taskbooks/' ~ package.id %}
 

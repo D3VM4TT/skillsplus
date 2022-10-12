@@ -12,6 +12,8 @@
     {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
 
+{% set unpaidPackages = craft.lantra.getUnpaidPackages(cpdUser.id) %}
+
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
@@ -19,6 +21,33 @@
     </article>
 {% else %}
     {{ globalsHtml.pageCurrent }}
+    {% if unpaidPackages|length %}
+        <h4>Unpaid Packages</h4>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>{{ taskbookLabel }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for package in unpaidPackages %}
+                {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
+                <tr>
+                    <td>{{ packageTitle }}</td>
+                    <td>
+                        {% set paymentMeta = {
+                            'product' : packageTitle,
+                            'packageId' : package.id,
+                            'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
+                        } %}
+                        {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
     <table class="data">
         <thead>
         <tr>
@@ -29,15 +58,13 @@
             <th>Next Step</th>
             <th>Status</th>
             <th>Cost</th>
-            <th>PayPal Email</th>
-            <th>Reference</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
             {% for packageItem in cpdUser.record.packages %}
                 {% set package = cpdUser.record.getElement(packageItem.elementId) %}
-                {% set payment = package.userPayments.one %}
+                {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
                 <tr>
                     <td>
                         <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
@@ -54,12 +81,6 @@
                         {{ package.packageStatus|title }}
                     </td>
                     <td>£{{ package.packageCost }}</td>
-                    <td>
-                        {{ payment ? payment.payer_email : 'unknown' }}
-                    </td>
-                    <td>
-                        {{ payment ? payment.txn_id : 'unknown' }}
-                    </td>
                     <td>
                         {% set certificateUrl = craft.lantra.certificateUrl(package) %}
                         {% if certificateUrl %}

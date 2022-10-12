@@ -1014,6 +1014,19 @@ class Packages extends Component
     }
 
     /**
+     * @param $user
+     * @return null
+     */
+    public function getUnpaidPackages(User $user)
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'packages';
+        $criteria->authorId = $user->id;
+        $criteria->packagePaid = false;
+        return $criteria->all();
+    }
+
+    /**
      * @param $package
      * @param $unitId
      * @return bool
