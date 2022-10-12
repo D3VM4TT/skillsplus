@@ -200,7 +200,11 @@
                         <tr class="taskbook-module-group {% if package.taskbook.unitEndorse and totalPending %}endorse{% endif %}">
                             <td>
                                 <a href="/cpd/{{ cpdUser.id }}/taskbooks/{{ package.id }}/{{ moduleGroup.category.id }}">{{ moduleGroup.category.title }}</a>
-                                {% if isComplete %} [<span style="color:#006600">complete</span>]{% endif %}
+                                {% if package.packageStatus == 'failed' %}
+                                    [<span style="color:#FF0000">failed</span>]
+                                {% elseif isComplete %}
+                                    [<span style="color:#006600">complete</span>]
+                                {% endif %}
                             </td>
                             <td>{{ craft.lantra.taskbookLevel(moduleGroup.level) }}</td>
                             {% if package.taskbook.moduleMinimumCredits %}
@@ -344,7 +348,7 @@
                 <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}comments">
                 </div>
             {% endif %}
-            {% if not isManager %}
+            {% if alias('@site') == 'bics' and not isManager %}
                 {% if resitModuleGroups|length %}
                     <div class="groups-tab-group-{{ package.id }}" id="tab{{ package.id }}resits">
                         {% include '_includes/taskbooks/packageResits' with {admin:false, resitModuleGroups:resitModuleGroups} %}
