@@ -143,6 +143,8 @@
                     <h4>You have failed this {{ taskbookLabel|lower }}.</h4>
                 {% elseif package.packageStatus == 'complete' %}
                     <h4>Congratulations, you have completed this {{ taskbookLabel|lower }}.</h4>
+                {% elseif package.autoComplete %}
+
                 {% else %}
                     <h4>Requirements</h4>
                     <div style="width: 50%;display: inline;float:left;">

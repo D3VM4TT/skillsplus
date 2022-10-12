@@ -32,6 +32,14 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @return bool
+     */
+    public function getAutoComplete()
+    {
+        return $this->owner->packageWorkflow->one()->autoComplete;
+    }
+
+    /**
      * Returns the taskbook matrix block for this category.
      *
      * @param $categoryId
