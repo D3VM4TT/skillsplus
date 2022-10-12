@@ -1275,9 +1275,11 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return 0;
         }
+        /*
         if (is_null($resultEntry)) {
             $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
         }
+        */
         return Lantra::$app->attempts->remainingAttempts($unitEntry, $resultEntry, $user->id);
     }
 
@@ -1294,9 +1296,11 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return 0;
         }
+        /*
         if (is_null($resultEntry)) {
             $resultEntry = Lantra::$app->results->getUnitResult($user->id, $unitEntry->id);
         }
+        */
         if (is_null($resultEntry)) {
             return '~';
         }
