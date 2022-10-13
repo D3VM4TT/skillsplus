@@ -27,6 +27,10 @@
             <thead>
             <tr>
                 <th>{{ taskbookLabel }}</th>
+                {% if craft.lantra.setting('taskbookLevels') %}
+                    <th>Level</th>
+                {% endif %}
+                <th>Date Created</th>
                 <th></th>
             </tr>
             </thead>
@@ -35,6 +39,14 @@
                 {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
                 <tr>
                     <td>{{ packageTitle }}</td>
+                    {% if craft.lantra.setting('taskbookLevels') %}
+                        <td>
+                            {{ craft.lantra.taskbookLevel(package.packageLevel) }}
+                        </td>
+                    {% endif %}
+                    <td>
+                        {{ package.dateCreated|date(dateFormat) }}
+                    </td>
                     <td>
                         {% set paymentMeta = {
                             'product' : packageTitle,
@@ -55,6 +67,7 @@
             {% if craft.lantra.setting('taskbookLevels') %}
                 <th>Level</th>
             {% endif %}
+            <th>Date Created</th>
             <th>Next Step</th>
             <th>Status</th>
             <th>Cost</th>
@@ -74,6 +87,9 @@
                         {{ craft.lantra.taskbookLevel(package.packageLevel) }}
                     </td>
                     {% endif %}
+                    <td>
+                        {{ package.dateCreated|date(dateFormat) }}
+                    </td>
                     <td>
                         {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
                     </td>
