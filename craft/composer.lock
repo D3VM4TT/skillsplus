@@ -1,11 +1,75 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0a256ec14c03447b2510a5497e78c4e",
+    "content-hash": "bf45737c891cdd92710a1ac0be1f194a",
     "packages": [
+        {
+            "name": "amici/craft-super-pdf",
+            "version": "1.0.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amici-infotech/craft-super-pdf.git",
+                "reference": "60e5e3b90cec56c75e8da4b329d637370e72ce02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amici-infotech/craft-super-pdf/zipball/60e5e3b90cec56c75e8da4b329d637370e72ce02",
+                "reference": "60e5e3b90cec56c75e8da4b329d637370e72ce02",
+                "shasum": ""
+            },
+            "require": {
+                "craftcms/cms": "^3.6.0",
+                "dompdf/dompdf": "^1.0.2"
+            },
+            "type": "craft-plugin",
+            "extra": {
+                "handle": "super-pdf",
+                "name": "Super PDF",
+                "developer": "Amici Infotech",
+                "developerUrl": "https://amiciinfotech.com",
+                "documentationUrl": "https://docs.amiciinfotech.com/craft-cms/super-pdf",
+                "changelogUrl": "https://github.com/mufi/craft-super-pdf/master/CHANGELOG.md",
+                "downloadUrl": "https://github.com/mufi/craft-super-pdf/archive/master.zip",
+                "class": "amici\\SuperPdf\\SuperPdf"
+            },
+            "autoload": {
+                "psr-4": {
+                    "amici\\SuperPdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Amici Infotech",
+                    "homepage": "https://amiciinfotech.com"
+                }
+            ],
+            "description": "Create PDF files from html",
+            "keywords": [
+                "Craft",
+                "amici",
+                "cms",
+                "craft-plugin",
+                "craftcms",
+                "create-pdf",
+                "dompdf",
+                "pdf",
+                "twig-to-pdf"
+            ],
+            "support": {
+                "docs": "https://github.com/mufi/craft-super-pdf",
+                "email": "contact@amiciinfotech.com",
+                "issues": "https://github.com/mufi/craft-super-pdf/issues?state=open",
+                "source": "https://github.com/mufi/craft-super-pdf"
+            },
+            "time": "2022-09-23T13:05:17+00:00"
+        },
         {
             "name": "besteadfast/craft-preparse-field",
             "version": "1.2.5",
@@ -1760,8 +1824,7 @@
             "dist": {
                 "type": "path",
                 "url": "../src/repository/sp",
-                "reference": "c44772cdeeb3034786754138eca5709b4e28e86c",
-                "shasum": null
+                "reference": "235b81f5782f85dd24390a05fe6e39c991e38034"
             },
             "require": {
                 "craftcms/cms": "^3.0.0",
@@ -1799,7 +1862,10 @@
                 "craft",
                 "craft-plugin",
                 "craftcms"
-            ]
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "league/csv",
@@ -6259,5 +6325,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.2.33"
-    }
+    },
+    "plugin-api-version": "2.3.0"
 }
