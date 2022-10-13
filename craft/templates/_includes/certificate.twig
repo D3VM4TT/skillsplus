@@ -91,7 +91,7 @@
 {% endif %}
 <header>
     {% if certLogo %}
-        <img src="{{ certLogo.url }}">
+        <img src="{{ siteUrl(certLogo.url) }}">
     {% endif %}
     <h2>{{ certHeader }}</h2>
     {% if certSubheader %}
