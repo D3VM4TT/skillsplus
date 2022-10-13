@@ -1,5 +1,6 @@
 {
   "require": {
+    "amici/craft-super-pdf": "1.0.8.1",
     "besteadfast/craft-preparse-field": "1.2.5",
     "craftcms/cms": "3.7.8",
     "craftcms/redactor": "2.8.8",
@@ -26,6 +27,10 @@
     "optimize-autoloader": true,
     "platform": {
       "php": "7.2.33"
+    },
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
     }
   },
   "scripts": {
