@@ -126,6 +126,28 @@ fieldLayouts:
             width: 100
         name: 'Column Layout'
         sortOrder: 3
+      -
+        elements:
+          -
+            fieldUid: 44d48073-7cb3-44e1-a245-66bbb18eefa7 # Is Skills Matrix?
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: d34de3f0-4642-49dd-a796-fa9098339e54 # Skill Levels
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 75
+        name: 'Skills Matrix'
+        sortOrder: 4
 handle: qualification
 hasTitleField: true
 name: Qualification
