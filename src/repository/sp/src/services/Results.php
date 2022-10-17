@@ -273,30 +273,11 @@ class Results extends Component
                 $event->isValid = false;
                 $entry->addError('resultUnit', 'You have no remaining attempts.');
             }
-            ## create result entry
-            if (false == $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
-                $resultEntry = new Entry();
-                $resultEntry->sectionId = $this->sectionId('results');
-                $resultEntry->typeId = $this->entryTypeId('results', 'unitResult');
-                $resultEntry->enabled = true;
-                $resultEntry->authorId = $entry->authorId;
-                $resultEntry->setFieldValue('resultUnit', [$unitEntry->id]);
-                $resultEntry->setFieldValue('resultStatus', 'active');
-                ## make sure result is properly linked to module result
-                if (false != $moduleResultId = Craft::$app->request->post('moduleResultId')) {
-                    $resultEntry->setFieldValue('resultModuleResult', [$moduleResultId]);
-                }
-                ## make sure result is properly linked to taskbook package
-                if (false != $packageId = Craft::$app->request->post('packageId')) {
-                    $resultEntry->setFieldValue('resultPackage', [$packageId]);
-                }
-                if (false != $moduleGroupId = Craft::$app->request->post('moduleGroupId')) {
-                    $resultEntry->setFieldValue('resultModuleGroup', [$moduleGroupId]);
-                }
-                if (!Craft::$app->elements->saveElement($resultEntry)) {
-                    $event->isValid = false;
-                    $entry->addError('attemptUnit', 'Could not save result entry.');
-                }
+            ## make sure we have a valid result to link this attempt
+            $resultId = Craft::$app->request->getParam('resultId');
+            if (!$resultId || null == $resultEntry = Entry::findOne($resultId)) {
+                $event->isValid = false;
+                $entry->addError('resultId', 'Invalid result entry.');
             }
         }
     }
@@ -332,22 +313,22 @@ class Results extends Component
         ## passed if greater than unit setting
         $passed = $score >= $unitEntry->testPassPercent;
         ## update result
-        if (false != $resultEntry = $this->getUnitResult($entry->authorId, $unitEntry->id)) {
-            $resultAttempts = $resultEntry->resultAttempts ? array_merge($resultEntry->resultAttempts->ids(), [$entry->id]) : [$entry->id];
-            $resultEntry->setFieldValue('resultAttempts', $resultAttempts);
-            if ($score > $resultEntry->resultScore) {
-                $resultEntry->setFieldValue('resultStatus', $passed ? 'endorsed' : 'active');
-                $resultEntry->setFieldValue('resultScore', $score);
-            }
-            if ($passed) {
-                $resultEntry->setFieldValue('resultEndorsedDate', time());
-            }
-            Craft::$app->elements->saveElement($resultEntry, false);
-            ## test auto completes package
-            $testCompleteTaskbook = $unitEntry->testCompleteTaskbook->one();
-            if ($testCompleteTaskbook) {
-                Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id, $unitEntry->id, $passed);
-            }
+        $resultId = Craft::$app->request->getParam('resultId');
+        $resultEntry = Entry::findOne($resultId);
+        $resultAttempts = $resultEntry->resultAttempts ? array_merge($resultEntry->resultAttempts->ids(), [$entry->id]) : [$entry->id];
+        $resultEntry->setFieldValue('resultAttempts', $resultAttempts);
+        if ($score > $resultEntry->resultScore) {
+            $resultEntry->setFieldValue('resultStatus', $passed ? 'endorsed' : 'active');
+            $resultEntry->setFieldValue('resultScore', $score);
+        }
+        if ($passed) {
+            $resultEntry->setFieldValue('resultEndorsedDate', time());
+        }
+        Craft::$app->elements->saveElement($resultEntry, false);
+        ## test auto completes package
+        $testCompleteTaskbook = $unitEntry->testCompleteTaskbook->one();
+        if ($testCompleteTaskbook) {
+            Lantra::$app->packages->completeByTaskbook($entry->authorId, $testCompleteTaskbook->id, $unitEntry->id, $passed);
         }
     }
 
@@ -506,7 +487,7 @@ class Results extends Component
      * @param null $companyId
      * @return array|\craft\base\ElementInterface|Entry|null
      */
-    function getUnitResult($userId, $unitId, $cycleCode = null, $companyId = null)
+    function getUnitResult($userId, $unitId, $cycleCode = null, $moduleResultId = null, $companyId = null, $packageId = null, $moduleGroupId = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -514,14 +495,24 @@ class Results extends Component
         $criteria->limit = 1;
         $criteria->relatedTo = ['and'];
         $criteria->relatedTo[] = ['targetElement' => $unitId, 'field' => 'resultUnit'];
-        if (!$companyId) {
-            $criteria->authorId = $userId;
+        if ($cycleCode) {
+            $criteria->resultRecurringCycleCode = $cycleCode;
+        }
+        if ($moduleResultId) {
+            $criteria->relatedTo[] = ['targetElement' => $moduleResultId, 'field' => 'resultModuleResult'];
         }
         if ($companyId) {
             $criteria->relatedTo[] = ['targetElement' => $companyId, 'field' => 'resultCompany'];
         }
-        if ($cycleCode) {
-            $criteria->resultRecurringCycleCode = $cycleCode;
+        else {
+            $criteria->authorId = $userId;
+        }
+        ## packageId and $moduleGroupId given if taskbook > unit result rollover is off
+        if ($packageId !== null) {
+            $criteria->relatedTo[] = ['targetElement' => $packageId, 'field' => 'resultPackage'];
+        }
+        if ($moduleGroupId !== null) {
+            $criteria->relatedTo[] = ['targetElement' => $moduleGroupId, 'field' => 'resultModuleGroup'];
         }
         return $criteria->one();
     }
@@ -1320,7 +1311,7 @@ class Results extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null, $companyId = null)
+    function createUnitResult($userId, $unitId, $resultModuleResult = null, $cycle = null, $postDate = null, $companyId = null, $packageId = null, $moduleGroupId = null)
     {
         $resultEntry = new Entry();
         $resultEntry->sectionId = $this->sectionId('results');
@@ -1338,6 +1329,12 @@ class Results extends Component
         }
         if ($resultModuleResult) {
             $resultEntry->setFieldValue('resultModuleResult', [$resultModuleResult]);
+        }
+        if ($packageId) {
+            $resultEntry->setFieldValue('resultPackage', [$packageId]);
+        }
+        if ($moduleGroupId) {
+            $resultEntry->setFieldValue('resultModuleGroup', [$moduleGroupId]);
         }
         $resultEntry->setFieldValue('resultUnit', [$unitId]);
         $resultEntry->setFieldValue('resultStatus', 'incomplete');
