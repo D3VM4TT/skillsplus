@@ -1589,6 +1589,23 @@ class LantraVariable
     /**
      * @param $userId
      * @param $unitId
+     * @param null $companyId
+     * @param null $packageId
+     * @param null $moduleGroupId
+     */
+    public function getUnitResult($userId, $unitId, $cycleCode = null, $moduleResultId = null, $companyId = null, $packageId = null, $moduleGroupId = null, $create = false)
+    {
+        ## get or create unit result
+        $unitResult = Lantra::$app->results->getUnitResult($userId, $unitId, $cycleCode, $moduleResultId, $companyId, $packageId, $moduleGroupId);
+        if (!$unitResult && $create) {
+            $unitResult = Lantra::$app->results->createUnitResult($userId, $unitId, $moduleResultId, null, null, $companyId, $packageId, $moduleGroupId);
+        }
+        return $unitResult;
+    }
+
+    /**
+     * @param $userId
+     * @param $unitId
      * @param null $moduleResultId
      * @param $companyId
      * @param int $limit

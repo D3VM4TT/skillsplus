@@ -23,6 +23,10 @@
 {% if not moduleEntry %}{% exit 404 %}{% endif %}
 {% set unitEntry = craft.entries.id(unitId).one() %}
 {% if not unitEntry %}{% exit 404 %}{% endif %}
+{% set moduleGroup = moduleEntry.moduleGroup.one %}
+{% if not moduleGroup %}{% exit 404 %}{% endif %}
+
+{% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
 
 {% set moduleResultId = craft.app.request.getParam('moduleResultId') %}
 {% if moduleResultId %}
@@ -31,23 +35,31 @@
     {% set moduleResultEntry = craft.lantra.currentModuleResult(moduleId) %}
 {% endif %}
 
-{% set addNew = craft.app.request.getSegment(5) == 'new' %}
+{% set addNew = craft.app.request.getSegment(5) == '' %}
 {% set resultEntry = false %}
 
 {% set packageId = craft.app.request.getParam('packageId') %}
 {% set isPackage = packageId ? true : false %}
 {% if isPackage %}
     {% set package = craft.entries.id(packageId).one() %}
+    {% set resultPackageId = package.taskbook.unitResultRollover ? false : package.id %}
+    {% set resultModuleGroupId = package.taskbook.unitResultRollover ? false : moduleGroup.id %}
 {% endif %}
 
-{% set dashboardUri = dashboardUri ~ '#m' ~ moduleEntry.id %}
-{% set moduleGroup = moduleEntry.moduleGroup.one %}
 {% set columnLayout = moduleEntry.columnLayout.count ?  moduleEntry.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
 {% if resultId is defined and resultId %}
     {% set resultEntry = craft.entries.status(['live', 'expired']).id(resultId).one() %}
 {% elseif not addNew %}
-    {% set resultQuery = craft.lantra.unitResultsQuery(account.id, unitEntry.id, 1, moduleEntry.type == 'cpd' ? moduleResultEntry.id : null) %}
-    {% set resultEntry = resultQuery.one() %}
+    {% set resultEntry = craft.lantra.getUnitResult(
+        account.id,
+        unitEntry.id,
+        null,
+        moduleEntry.type == 'cpd' ? moduleResultEntry.id : null,
+        null,
+        resultPackageId,
+        resultModuleGroupId,
+        unitEntry.unitType == 'elearning'
+    ) %}
 {% endif %}
 {% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
 
@@ -57,18 +69,8 @@
 {% set currentUserPhoto = currentUser ? currentUser.getPhoto() %}
 {% set currentUserPhotoUrl = currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{# set result package from existing result or taskbook settings #}
-{% set resultPackageId = false %}
-{% set resultModuleGroupId = false %}
-{% if resultEntry %}
-    {% set resultPackageId = resultEntry.resultPackage.one ? resultEntry.resultPackage.one.id : false %}
-    {% set resultModuleGroupId = resultEntry.resultModuleGroup.one ? resultEntry.resultModuleGroup.one.id : false %}
-{% elseif isPackage %}
-    {% set resultPackageId = package.taskbook.unitResultRollover ? false : package.id %}
-    {% set resultModuleGroupId = package.taskbook.unitResultRollover ? false : moduleGroup.id %}
-{% endif %}
-
 {% block content %}
+
     <div class="page-subHeader primary-bg">
         {% if not isPackageManager %}
             <a class="back-link" href="{{ dashboardUri }}">&laquo; back</a>
@@ -76,6 +78,7 @@
         {% include '_includes/topNavigation' %}
     </div>
     {% if unitEntry.unitType == 'elearning' %}
+        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
@@ -109,14 +112,14 @@
                     {% endif %}
                 </div>
                 <div class="col-12">
-                    {% include 'record/_units/files' with{unitEntry:unitEntry} %}
+                    {% include 'record/_units/files' with {unitEntry:unitEntry} %}
                 </div>
                 <div class="col-12 col-pd-btm">
                     <h5>Click 'Complete unit test' to take the test and complete the Unit.</h5>
                     <div class="cpd-comment-txt">(Questions will appear below)</div>
                 <p class="col-pd-top col-pd-btm"><a class="button primary-bg" href="/cpd/{{ userId }}/{{ moduleId }}/{{ unitId }}/test?ref={{ craft.app.request.getParam('ref') }}&moduleResultId={{ moduleResultId }}&packageId={{ packageId }}">Complete unit test</a></p>
                     {% set resultPassed = false %}
-                    {% if resultEntry|length %}
+                    {% if totalAttempts > 0 %}
                         {% set resultPassed = resultEntry.resultScore >= unitEntry.testPassPercent %}
                         <div class="col-pd-top col-pd-btm col-flex">
                         {% if resultPassed %}
@@ -127,7 +130,7 @@
                             <h2>Sorry, you have not passed this test.</h2>
                         {% endif %}
                         </div>
-                        {% set totalAttempts = resultEntry ? resultEntry.resultAttempts|length : 0 %}
+
                         <p>You have made <span class="link-bold">{{ totalAttempts }}</span> attempts and you have {{ remainingAttempts }} attempts remaining.</p>
                         <p>Your best result is <span class="link-bold">{{ resultEntry.resultScore }}%</span></p>
                         {% set attempts = resultEntry.resultAttempts.all() %}
@@ -144,7 +147,7 @@
                             userId: userId,
                             moduleEntry: moduleEntry,
                             resultPackageId: resultPackageId,
-                            resultModuleGroupId:resultModuleGroupId
+                            resultModuleGroupId: resultModuleGroupId
                         } %}
                     {% endif %}
                 </div>
@@ -191,13 +194,13 @@
                     </div>
                 {% endif %}
                 {% include 'record/_units/evidence' with {
-                    entry:unitEntry,
-                    resultEntry:resultEntry,
-                    account:account,
-                    moduleGroup:moduleGroup,
-                    isManager:isManager,
-                    moduleResultEntry:moduleResultEntry,
-                    readOnly:readOnly,
+                    entry: unitEntry,
+                    resultEntry: resultEntry,
+                    account: account,
+                    moduleGroup: moduleGroup,
+                    isManager: isManager,
+                    moduleResultEntry: moduleResultEntry,
+                    readOnly: readOnly,
                     resultPackageId: resultPackageId,
                     resultModuleGroupId:resultModuleGroupId
                 } %}
