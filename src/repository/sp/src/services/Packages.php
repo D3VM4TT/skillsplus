@@ -171,6 +171,11 @@ class Packages extends Component
     {
         if ($event->isNew) {
             $this->applyPackageModuleGroups($entry);
+            ## move user to users if package free
+            if ($entry->packagePaid) {
+                $group = Craft::$app->userGroups->getGroupByHandle('users');
+                Craft::$app->users->assignUserToGroups($entry->authorId, [$group->id]);
+            }
         }
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
