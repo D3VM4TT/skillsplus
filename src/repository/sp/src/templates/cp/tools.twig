@@ -59,4 +59,7 @@
         <p style="color:#FF0000"><strong>WARNING - LIVE DATA</strong></p>
         <p><a href="{{ url('sp/tools?method=copyDatabaseProd') }}" class="btn btn-small">Copy DB to PROD</a></p>
     {% endif %}
+    <hr />
+    <h3>Sync Payments</h3>
+    <p><a href="{{ url('sp/tools?method=syncPayments') }}" class="btn btn-small">Sync Payments</a></p>
 {% endblock %}

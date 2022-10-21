@@ -11,8 +11,11 @@ namespace lantra\sp\controllers\cp;
 use Craft;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\helpers\Queue;
 use craft\web\Controller;
 
+use lantra\sp\jobs\SyncBasePaymentsJob;
+use lantra\sp\jobs\SyncUserPaymentsJob;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
@@ -454,6 +457,22 @@ class ToolsController extends Controller
         } else {
             Craft::$app->session->setError($message);
         }
+        $this->redirectToPostedUrl();
+    }
+
+    /**
+     *
+     */
+    private function syncPayments()
+    {
+        $this->requireLogin();
+        $syncUserPaymentsJob = new SyncUserPaymentsJob();
+        Queue::push($syncUserPaymentsJob);
+
+        $syncBasePaymentsJob = new SyncBasePaymentsJob();
+        Queue::push($syncBasePaymentsJob);
+
+        Craft::$app->session->setNotice('Sync base payments added to the queue.');
         $this->redirectToPostedUrl();
     }
 }
