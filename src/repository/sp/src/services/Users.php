@@ -1701,9 +1701,12 @@ class Users extends Component
             $field = Craft::$app->fields->getFieldByHandle('basePayments');
             $blockType = Craft::$app->matrix->getBlockTypesByFieldId($field->id)[0];
 
+            $dt = \DateTime::createFromFormat('Y-m-d', $payment->dateCreated);
+
             $block = new MatrixBlock();
             $block->fieldId = $field->id;
             $block->typeId = $blockType->id;
+            $block->dateCreated = $dt;
             $block->ownerId = $user->id;
             $block->setFieldValues([
                 'paymentId' => $payment->id,
