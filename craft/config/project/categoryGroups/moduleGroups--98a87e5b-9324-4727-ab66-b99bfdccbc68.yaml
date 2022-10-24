@@ -26,7 +26,76 @@ fieldLayouts:
             title: null
             type: craft\fieldlayoutelements\TitleField
             warning: null
-            width: 100
+            width: 50
+          -
+            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+          -
+            fieldUid: c3c65d33-35c6-416d-9e88-c5a678f09161 # Include Add Achievement? 
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 48909e73-b939-470f-b472-53ee709db6e4 # Module Group Read Only
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: b3bb5932-8ec6-48a5-af26-7d974a69e57a # Auto Endorse?
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 1d522b30-9aa0-4fc8-afd1-84e738233479 # Certificate
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            type: craft\fieldlayoutelements\HorizontalRule
+          -
+            fieldUid: a14afbef-0a93-407a-92e5-5cae1d2ecb1e # Module Group Visibility
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+          -
+            fieldUid: fb5bee58-9ee4-4a57-b03f-59c886c40cad # Module Group Menu
+            instructions: null
+            label: null
+            required: '0'
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
+        name: Settings
+        sortOrder: 1
+      -
+        elements:
           -
             fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
             instructions: null
@@ -36,62 +105,8 @@ fieldLayouts:
             type: craft\fieldlayoutelements\CustomField
             warning: null
             width: 100
-          -
-            fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: c3c65d33-35c6-416d-9e88-c5a678f09161 # Include Add Achievement? 
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 48909e73-b939-470f-b472-53ee709db6e4 # Module Group Read Only
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: fb5bee58-9ee4-4a57-b03f-59c886c40cad # Module Group Menu
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: b3bb5932-8ec6-48a5-af26-7d974a69e57a # Auto Endorse?
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-          -
-            fieldUid: 1d522b30-9aa0-4fc8-afd1-84e738233479 # Certificate
-            instructions: null
-            label: null
-            required: '0'
-            tip: null
-            type: craft\fieldlayoutelements\CustomField
-            warning: null
-            width: 100
-        name: Settings
-        sortOrder: 1
+        name: 'Column Layout'
+        sortOrder: 2
       -
         elements:
           -
@@ -113,7 +128,7 @@ fieldLayouts:
             warning: null
             width: 100
         name: 'Company Results'
-        sortOrder: 2
+        sortOrder: 3
 handle: moduleGroups
 name: 'Module Groups'
 siteSettings:
