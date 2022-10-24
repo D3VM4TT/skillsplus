@@ -176,6 +176,15 @@ class Packages extends Component
                 $group = Craft::$app->userGroups->getGroupByHandle('users');
                 Craft::$app->users->assignUserToGroups($entry->authorId, [$group->id]);
             }
+            ## add custom payment to base
+            $payment = Craft::$app->request->getParam('payment');
+            if (isset($payment['method']) && $payment['method'] != '') {
+                $meta = [
+                    'product' => $entry->title,
+                    'packageId' => $entry->id
+                ];
+                Lantra::$app->spbase->addPayment($entry->authorId, $payment['method'], $payment['amount'], $payment['reference'], $meta, true, true);
+            }
         }
         if (!$entry->packageReviews->count()) {
             $this->applyPackageWorkflow($entry);
