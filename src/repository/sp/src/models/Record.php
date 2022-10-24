@@ -18,6 +18,7 @@ use craft\elements\User;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Json;
 
+use lantra\sp\helpers\RecordHelper;
 use lantra\sp\Plugin as Lantra;
 
 class Record extends Model
@@ -187,7 +188,8 @@ class Record extends Model
                         continue;
                     }
                     $items = $this->_getModuleGroupModuleItems($moduleGroup, $relatedModules);
-                    $moduleGroups[$moduleGroup->id] = $this->_addItem('moduleGroup', $moduleGroup, $items);
+                    $isHidden = RecordHelper::isHiddenModuleGroup($moduleGroup->moduleGroupVisibility, $this->user);
+                    $moduleGroups[$moduleGroup->id] = $this->_addItem('moduleGroup', $moduleGroup, $items, [], $isHidden);
                 }
                 $this->_record['jobRoles'][$jobRoleCategory->id] = $this->_addItem('jobRole', $jobRoleCategory, $moduleGroups, $this->_data);
             }
@@ -213,14 +215,15 @@ class Record extends Model
      * @param $data
      * @return RecordItem
      */
-    private function _addItem($itemType, Element $element, $items = [], $data = [])
+    private function _addItem($itemType, Element $element, $items = [], $data = [], $isHidden = false)
     {
         $this->_elements[$element->id] = $element;
         $item = new RecordItem([
             'itemType' => $itemType,
             'elementId' => $element->id,
             'items' => $items,
-            'data' => $data
+            'data' => $data,
+            'isHidden' => $isHidden
         ]);
         $this->_items[$element->id] = $item;
         if ($item->itemType == 'moduleGroup' || $itemType == 'jobRole') {

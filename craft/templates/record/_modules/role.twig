@@ -18,11 +18,13 @@
                     {% for moduleGroupItem in roleItem.moduleGroups %}
                         {% set moduleGroup = cpdUser.record.getElement(moduleGroupItem.elementId) %}
                         {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
+                        {% if not moduleGroupItem.isHidden %}
                         <li>
                             <a href="#tab{{ moduleGroupElementId }}" class="primary-bg">
                                 <h4>{{ moduleGroup.title }}</h4>
                             </a>
                         </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>
@@ -34,7 +36,9 @@
                         {% set readOnly = true %}
                     {% endif %}
                     {% set moduleGroupElementId = role.id ~ moduleGroup.id %}
-                    {% include 'record/_modules/moduleGroup' with {moduleGroupItem:moduleGroupItem, moduleGroup:moduleGroup} %}
+                    {% if not moduleGroupItem.isHidden %}
+                        {% include 'record/_modules/moduleGroup' with {moduleGroupItem:moduleGroupItem, moduleGroup:moduleGroup} %}
+                    {% endif %}
                     {% set readOnly = readOnlyDefault %}
                 {% endfor %}
             </section>
