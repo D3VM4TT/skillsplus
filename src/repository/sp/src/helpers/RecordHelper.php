@@ -23,12 +23,12 @@ class RecordHelper
      */
     public static function isHiddenModuleGroup($moduleGroupVisibility, User $cpdUser, $userId = null)
     {
-        $manager = LantraHelper::getUser($userId);
-
-        ## never hidden for owner/all
-        if ($cpdUser->id == $manager->id || $moduleGroupVisibility == 'all') {
+        ## never hidden for all
+        if ($moduleGroupVisibility == 'all') {
             return false;
         }
+
+        $manager = LantraHelper::getUser($userId);
 
         ## never hidden for admin
         if ($manager->admin) {
@@ -41,7 +41,11 @@ class RecordHelper
         }
 
         ## manager hidden
-        return $moduleGroupVisibility != 'manager';
+        if (Lantra::$app->users->isManager($cpdUser->id, $manager, true)) {
+            return $moduleGroupVisibility != 'manager';
+        }
+
+        return true;
     }
 
     /**
