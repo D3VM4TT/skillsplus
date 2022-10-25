@@ -16,6 +16,39 @@ use craft\elements\User;
 class RecordHelper
 {
     /**
+     * @param $moduleGroupVisibility
+     * @param User $cpdUser
+     * @param null $userId
+     * @return false|void
+     */
+    public static function isHiddenModuleGroup($moduleGroupVisibility, User $cpdUser, $userId = null)
+    {
+        ## never hidden for all
+        if ($moduleGroupVisibility == 'all') {
+            return false;
+        }
+
+        $manager = LantraHelper::getUser($userId);
+
+        ## never hidden for admin
+        if ($manager->admin) {
+            return false;
+        }
+
+        ## scheme manager hidden if admin
+        if ($manager->isInGroup('schemeManagers'))  {
+            return $moduleGroupVisibility == 'admin';
+        }
+
+        ## manager hidden
+        if (Lantra::$app->users->isManager($cpdUser->id, $manager, true)) {
+            return $moduleGroupVisibility != 'manager';
+        }
+
+        return true;
+    }
+
+    /**
      * @param RecordItem $recordItem
      * @return int
      */

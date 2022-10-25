@@ -10,6 +10,7 @@ namespace lantra\sp\models;
 
 use craft\base\Model;
 use craft\helpers\Json;
+use lantra\sp\helpers\LantraHelper;
 
 class RecordItem extends Model
 {
@@ -17,6 +18,7 @@ class RecordItem extends Model
     public $elementId;
     public $items = [];
     public $data = [];
+    public $isHidden = false;
 
     /**
      * RecordItem constructor.
@@ -130,7 +132,6 @@ class RecordItem extends Model
     {
         return Json::encode($this->getData());
     }
-
 
     /**
      * @param string $name

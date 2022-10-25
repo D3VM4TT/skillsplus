@@ -1,0 +1,57 @@
+columnSuffix: xedqzvgw
+contentColumnType: string
+fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
+handle: moduleGroupVisibility
+instructions: ''
+name: 'Module Group Visibility'
+searchable: false
+settings:
+  optgroups: true
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - All
+        -
+          - value
+          - all
+        -
+          - default
+          - '1'
+    -
+      __assoc__:
+        -
+          - label
+          - Manager
+        -
+          - value
+          - manager
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - 'Scheme Manager'
+        -
+          - value
+          - schemeManager
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Admin
+        -
+          - value
+          - admin
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

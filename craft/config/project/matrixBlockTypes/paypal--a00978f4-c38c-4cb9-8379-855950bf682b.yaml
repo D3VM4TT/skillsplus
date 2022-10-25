@@ -8,7 +8,7 @@ fieldLayouts:
             fieldUid: 70223568-9924-4df6-a581-7134a87dc443 # Payer Email
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -17,7 +17,7 @@ fieldLayouts:
             fieldUid: 0507fd56-62a9-42b1-a4ce-7f5e221df8a2 # Payment Amount
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -26,7 +26,16 @@ fieldLayouts:
             fieldUid: c82b9786-ae99-4b9d-89ef-a97b92d4366d # Transaction ID
             instructions: null
             label: null
-            required: '0'
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 8e163b19-5447-4841-852c-c7c3ba58f29e # Synced To Base
+            instructions: null
+            label: null
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
@@ -34,6 +43,21 @@ fieldLayouts:
         name: Content
         sortOrder: 1
 fields:
+  8e163b19-5447-4841-852c-c7c3ba58f29e: # Synced To Base
+    columnSuffix: fmepwveg
+    contentColumnType: boolean
+    fieldGroup: null
+    handle: syncedToBase
+    instructions: ''
+    name: 'Synced To Base'
+    searchable: false
+    settings:
+      default: false
+      offLabel: null
+      onLabel: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Lightswitch
   0507fd56-62a9-42b1-a4ce-7f5e221df8a2: # Payment Amount
     columnSuffix: null
     contentColumnType: text
@@ -45,7 +69,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: false
+      code: ''
       columnType: text
       initialRows: '4'
       multiline: ''
@@ -65,7 +89,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: false
+      code: ''
       columnType: text
       initialRows: '4'
       multiline: ''
@@ -85,7 +109,7 @@ fields:
     settings:
       byteLimit: null
       charLimit: null
-      code: false
+      code: ''
       columnType: text
       initialRows: '4'
       multiline: ''

@@ -1,0 +1,160 @@
+field: 352c0bfb-8be5-46ba-88e6-d2882d2f4d75 # Base Payments
+fieldLayouts:
+  d27b1794-215c-496c-b94f-9e205eb8c6bf:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 013c6627-71a4-44cd-a46e-06e43e886a59 # Payment ID
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 65dad800-1c57-4a04-b5f6-50e52eccbe24 # Method
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: d87afbe4-19d6-4ee6-aca1-db355f971bda # Amount
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 798ebed6-6a0d-4433-bc73-fa437d176890 # Reference
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+          -
+            fieldUid: 2f422e5a-5da8-4012-afbe-4754aab9c900 # Related Entry
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 25
+        name: Content
+        sortOrder: 1
+fields:
+  2f422e5a-5da8-4012-afbe-4754aab9c900: # Related Entry
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: relatedEntry
+    instructions: ''
+    name: 'Related Entry'
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      limit: '1'
+      localizeRelations: false
+      selectionLabel: ''
+      showSiteMenu: true
+      source: null
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
+  013c6627-71a4-44cd-a46e-06e43e886a59: # Payment ID
+    columnSuffix: null
+    contentColumnType: text
+    fieldGroup: null
+    handle: paymentId
+    instructions: ''
+    name: 'Payment ID'
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  65dad800-1c57-4a04-b5f6-50e52eccbe24: # Method
+    columnSuffix: null
+    contentColumnType: text
+    fieldGroup: null
+    handle: method
+    instructions: ''
+    name: Method
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  798ebed6-6a0d-4433-bc73-fa437d176890: # Reference
+    columnSuffix: null
+    contentColumnType: text
+    fieldGroup: null
+    handle: reference
+    instructions: ''
+    name: Reference
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  d87afbe4-19d6-4ee6-aca1-db355f971bda: # Amount
+    columnSuffix: null
+    contentColumnType: integer(10)
+    fieldGroup: null
+    handle: amount
+    instructions: ''
+    name: Amount
+    searchable: false
+    settings:
+      decimals: 0
+      defaultValue: null
+      max: null
+      min: '0'
+      prefix: null
+      previewCurrency: ''
+      previewFormat: decimal
+      size: null
+      suffix: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Number
+handle: basePayment
+name: 'Base Payment'
+sortOrder: 1
