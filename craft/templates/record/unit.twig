@@ -40,6 +40,8 @@
 
 {% set packageId = craft.app.request.getParam('packageId') %}
 {% set isPackage = packageId ? true : false %}
+{% set resultPackageId = false %}
+{% set resultModuleGroupId = false %}
 {% if isPackage %}
     {% set package = craft.entries.id(packageId).one() %}
     {% set resultPackageId = package.taskbook.unitResultRollover ? false : package.id %}
