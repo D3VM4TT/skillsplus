@@ -22,7 +22,7 @@
 {% set userCompany = account.userCompany.one() %}
 
 {% if taskbookCompanies %}
-    {% set availableTaskbooks = userCompany.companyTaskbooks %}
+    {% set availableTaskbooks = userCompany ? userCompany.companyTaskbooks : [] %}
 {% else %}
     {% set availableTaskbooks = craft.entries.section('taskbooks').all() %}
 {% endif %}

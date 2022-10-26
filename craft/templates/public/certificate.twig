@@ -45,6 +45,7 @@
     certTextTwo: craft.lantra.setting('certificateTextTwo'),
     certFooter: craft.lantra.setting('certificateFooter'),
     certTitle: certTitle|raw,
+    certId: getenv('SITE') ~ resultEntry.id,
     certDate: certDate,
     certFullName: resultEntry.author.fullName,
     cpdResultEntry: cpdResultEntry,
