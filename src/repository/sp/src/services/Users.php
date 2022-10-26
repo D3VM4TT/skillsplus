@@ -44,8 +44,11 @@ class Users extends Component
     }
 
     /**
-     * @param ModelEvent $event
+     * @param YiiUserEvent $event
      * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function onAfterLoginUser(YiiUserEvent $event, User $user)
     {
@@ -54,7 +57,7 @@ class Users extends Component
             if ($user->isLicenced) {
                 $licence = Lantra::$app->spbase->getLicence($user->id);
                 $event->isValid = Lantra::$app->spbase->log($licence, 'user_login');
-                Lantra::$app->spbase->syncPayments($licence);
+                $this->syncUserPayments($user);
             }
         }
     }
