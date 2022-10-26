@@ -67,10 +67,10 @@ $(document).ready(function () {
         var level = $(this).val(),
             optionalSelectInputs = $('div.taskbook-optional').find('select.optional-level');
         if (level == 5) {
-            optionalSelectInputs.val(level).prop('disabled', true).css('opacity', 0.5);
+            optionalSelectInputs.val(level).css('opacity', 0.5);
         }
         else {
-            optionalSelectInputs.prop('disabled', false).css('opacity', 1);
+            optionalSelectInputs.css('opacity', 1);
         }
     }).change();
 
