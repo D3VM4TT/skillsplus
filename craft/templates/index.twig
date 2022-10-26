@@ -1,8 +1,10 @@
-{% if not craft.lantra.setting('themeMyDashboard') and not craft.lantra.setting('themeMyTaskbooks') %}
-    {% redirect '/profile' %}
-{% endif %}
-{% if not craft.lantra.setting('themeMyDashboard') and craft.lantra.setting('themeMyTaskbooks') %}
-    {% redirect '/cpd/' ~ currentUser.id ~ '/taskbooks' %}
+{% set defaultHome = craft.lantra.setting('themeDefaultHome') %}
+{% if defaultHome == 'taskbooks' %}
+    {% redirect 'cpd/' ~ currentUser.id ~ '/taskbooks'  %}
+{% elseif defaultHome == 'products' %}
+    {% redirect 'management/products' %}
+{% elseif defaultHome == 'profile' %}
+    {% redirect 'profile' %}
 {% endif %}
 
 {% set currentUserCompany = craft.lantra.userCompany() %}

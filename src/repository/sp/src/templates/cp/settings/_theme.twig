@@ -24,6 +24,9 @@
     criteria:           {"kind":[],"localeEnabled":'null'},
 }) }}
 
+<hr />
+<h2>Colour Scheme</h2>
+
 {{ forms.colorField ({
     label:			"Theme Colour Primary",
     id:				"themeColorPrimary",
@@ -37,6 +40,9 @@
     name:			"themeColorSecondary",
     value:		    settings.themeColorSecondary,
 }) }}
+
+<hr />
+<h2>Navigation</h2>
 
 {{ forms.elementSelectField ({
     label:			    "Theme Navigation Public",
@@ -65,6 +71,9 @@
     viewMode:           'list',
     limit:              ''
 }) }}
+
+<hr />
+<h2>Config</h2>
 
 {{ forms.textField ({
     label:			"Theme Date Format (default d-m-Y)",
@@ -120,6 +129,17 @@
 }) }}
 
 {{ forms.textField ({
+    label:			"Auto Logout Minutes",
+    id:				"idleMinutes",
+    name:			"idleMinutes",
+    value:		    settings.idleMinutes,
+    type:           "number"
+}) }}
+
+<hr />
+<h2>Labels</h2>
+
+{{ forms.textField ({
     instructions:   "Default: Job Role",
     label:			"Label Job Role",
     id:				"labelJobRole",
@@ -143,12 +163,8 @@
     value:		    settings.labelResultOutcome1
 }) }}
 
-{{ forms.lightswitchField ({
-    label:			"Enable Job Roles on Dashboard?",
-    id:				"enableJobRoles",
-    name:			"enableJobRoles",
-    on:		        settings.enableJobRoles == 1
-}) }}
+<hr />
+<h2>Dashboard</h2>
 
 {{ forms.lightswitchField ({
     label:			"Enable Menu My Dashboard",
@@ -157,12 +173,38 @@
     on:		        settings.themeMyDashboard == 1
 }) }}
 
-{{ forms.textField ({
-    label:			"Auto Logout Minutes",
-    id:				"idleMinutes",
-    name:			"idleMinutes",
-    value:		    settings.idleMinutes,
-    type:           "number"
+{{ forms.lightswitchField ({
+    label:			"Enable Job Roles on Dashboard?",
+    id:				"enableJobRoles",
+    name:			"enableJobRoles",
+    on:		        settings.enableJobRoles == 1
+}) }}
+
+{% set themeDefaultHomeOptions = [
+    {
+        label: 'Dashboard',
+        value: 'dashboard'
+    },
+    {
+        label: 'Taskbooks',
+        value: 'taskbooks'
+    },
+    {
+        label: 'Products',
+        value: 'products'
+    },
+    {
+        label: 'Profile',
+        value: 'profile'
+    }
+] %}
+
+{{ forms.selectField({
+    label: 'Default Home Page',
+    id: 'themeDefaultHome',
+    name: 'themeDefaultHome',
+    value: settings.themeDefaultHome|default('dashboard'),
+    options: themeDefaultHomeOptions
 }) }}
 
 

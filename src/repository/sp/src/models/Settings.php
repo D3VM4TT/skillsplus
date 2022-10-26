@@ -51,6 +51,7 @@ class Settings extends Model
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
     public $idleMinutes                         = 60;
+    public $themeDefaultHome                    = 'dashboard';
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
