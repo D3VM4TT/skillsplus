@@ -60,7 +60,7 @@
 
         footer {
             width: 85%;
-            height: 30px;
+            height: 50px;
             position: absolute;
             bottom: 10%;
         }
@@ -109,12 +109,12 @@
     {% endif %}
     <p>{{ certTextTwo }}</p>
     <h2>{{ certDate }}</h2>
+    <p class="small">Certificate ID #{{ certId }}</p>
 </section>
 <footer>
     {% if certFooter %}
         <h3>{{ certFooter }}</h3>
     {% endif %}
-    <p class="small">Certificate ID #{{ certId }}</p>
 </footer>
 </body>
 </html>
