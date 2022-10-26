@@ -189,6 +189,15 @@ class Plugin extends BasePlugin
         );
 
         Event::on(
+            User::class,
+            User::EVENT_AFTER_DELETE,
+            function (Event $event) {
+                $user = $event->sender;
+                Lantra::$app->users->onAfterDeleteUser($user, $event);
+            }
+        );
+
+        Event::on(
             Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             function (UserEvent $event) {
