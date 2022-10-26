@@ -284,6 +284,10 @@ class Packages extends Component
             }
             $taskbookModuleGroupBlock = $taskbook->moduleGroupBlock($categoryId);
             $postedLevel = isset($row['level']) ? $row['level'] : 0;
+            ## override level for bics (5)
+            if (getenv('SITE') == 'bics' && $package->packageLevel == 5) {
+                $postedLevel = 5;
+            }
             $level = $taskbook->taskbookFixedLevels ? $taskbookModuleGroupBlock->moduleGroupLevel : $postedLevel;
             $block = new SuperTableBlockElement();
             $block->fieldId = $field->id;
