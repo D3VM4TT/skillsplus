@@ -8,7 +8,7 @@
 {% import "_macros" as ui %}
 {% set metaTitle = "Management > Skills > " ~ moduleEntry.title %}
 
-{% set tableView = craft.app.request.getParam('tableView')|default('users') %}
+{% set tableView = craft.app.request.getSegment(5)|default('users') %}
 {% set filterStatus = craft.app.request.getParam('filterStatus')|default('all') %}
 {% set filterUnitGroup = craft.app.request.getParam('filterUnitGroup')|default('all') %}
 {% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
@@ -45,7 +45,7 @@
             <table class="data">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th><a class="icon" href="/management/skills/matrix/{{ moduleId }}/{{ tableView == 'users' ? 'units' : 'users' }}?{{ craft.app.request.queryStringWithoutPath }}"><img src="/assets/img/toggle.svg" /></a></th>
                         {% if tableView == 'users' %}
                             {% for user in users %}
                                 <th>

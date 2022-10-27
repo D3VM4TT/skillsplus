@@ -44,14 +44,6 @@
         <input placeholder="Date From" value="{{ filterDateFrom }}" type="text" name="date-from" class="date-field date-search" />
         <input placeholder="Date To" value="{{ filterDateTo }}" type="text" name="date-to" class="date-field date-search" />
     {% endif %}
-    {% if tableView is defined %}
-        <div style="margin-bottom: 20px">
-            <select name="tableView" class="sp-select" style="width: 260px;">
-                <option value="units"{% if tableView == 'units' %} selected="selected"{% endif %}>Display: by units</option>
-                <option value="users"{% if tableView == 'users' %} selected="selected"{% endif %}>Display: by users</option>
-            </select>
-        </div>
-    {% endif %}
     {% if filterStatus is defined %}
         <select name="filterStatus" class="sp-select" style="width: 160px;">
             <option value="all"{% if filterStatus == 'all' %} selected="selected"{% endif %}>All Status</option>
