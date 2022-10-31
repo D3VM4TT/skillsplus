@@ -15,6 +15,7 @@ use craft\elements\User;
 use craft\elements\Category;
 use craft\events\ModelEvent;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class Modules extends Component
@@ -64,7 +65,7 @@ class Modules extends Component
      * @param string $maxSkillLevel
      * @return array[]|null
      */
-    public function skillsMatrixIds($module, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all')
+    public function skillsMatrixIds($module, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all', $users = 'default')
     {
         if (!$module->isSkillsMatrix) {
             return null;
@@ -102,6 +103,22 @@ class Modules extends Component
         ## add result status
         if ($status != 'all') {
             $criteria->resultStatus = $status;
+        }
+
+        ## limit results to users according to config > setting
+        $skillsMatrixUsersSetting = LantraHelper::setting('skillsMatrixUsers');
+        ## users set by template
+        $skillsMatrixUsers = $users == 'default' ? $skillsMatrixUsersSetting : $users;
+        if ($skillsMatrixUsers != 'all') {
+            $manager = Craft::$app->getUser()->getIdentity();
+            $includeHierarchy = $skillsMatrixUsers != 'direct';
+            $userIds = Lantra::$app->users->getManagerSubordinateIds($manager, $includeHierarchy);
+
+            if (!count($userIds)) {
+                return $return;
+            }
+
+            $criteria->authorId = $userIds;
         }
 
         $results = $criteria->all();

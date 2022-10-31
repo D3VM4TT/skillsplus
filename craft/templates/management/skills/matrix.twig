@@ -12,6 +12,8 @@
 {% set filterStatus = craft.app.request.getParam('filterStatus')|default('all') %}
 {% set filterUnitGroup = craft.app.request.getParam('filterUnitGroup')|default('all') %}
 {% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
+{% set skillsMatrixUsersSetting = craft.lantra.setting('skillsMatrixUsers') %}
+{% set filterSkillMatrixUsers = craft.app.request.getParam('filterSkillMatrixUsers')|default(skillsMatrixUsersSetting) %}
 
 {#  reset unit/unitGroup #}
 {% set filterUnitGroup = filterUnit == 'all' ? filterUnitGroup : 'all' %}
@@ -21,7 +23,7 @@
 {% set filterMaxSkill = craft.app.request.getParam('filterMaxSkill')|default('none') %}
 
 {# returns array of unit and user ids #}
-{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnitGroup, filterUnit, filterMinSkill, filterMaxSkill, filterStatus) %}
+{% set skillsMatrixIds = craft.lantra.skillsMatrixIds(moduleEntry, filterUnitGroup, filterUnit, filterMinSkill, filterMaxSkill, filterStatus, filterSkillMatrixUsers) %}
 
 {% set allUnitEntries = craft.entries.section('units').id(skillsMatrixIds['unitIds']) %}
 
