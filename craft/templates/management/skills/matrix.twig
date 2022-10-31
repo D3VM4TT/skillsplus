@@ -28,6 +28,8 @@
 {% set filteredUnitEntries = craft.entries.section('units').id(skillsMatrixIds['filterUnitIds']) %}
 {% set users = craft.users.id(skillsMatrixIds['userIds']) %}
 
+{% set basePageUrl = "/management/skills/matrix/" ~ moduleId ~ "/" ~ (tableView == 'users' ? 'units' : 'users') %}
+
 {% block content %}
     <div class="page-subHeader primary-bg">
         <a class="back-link" href="/management/skills">&laquo; back</a>
@@ -37,6 +39,9 @@
         <h2>{{ moduleEntry.title }}</h2>
         <div class="header-controls">
             <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterHideSearch:true} %}</div>
+            <p style="clear: both">
+                <strong><a href="{{ basePageUrl}}">Reset all filters</a></strong>
+            </p>
         </div>
     </div>
     <div class="page-content">
@@ -45,7 +50,7 @@
             <table class="data">
                 <thead>
                     <tr>
-                        <th><a class="icon" href="/management/skills/matrix/{{ moduleId }}/{{ tableView == 'users' ? 'units' : 'users' }}?{{ craft.app.request.queryStringWithoutPath }}"><img src="/assets/img/toggle.svg" /></a></th>
+                        <th><a class="icon" href="{{ basePageUrl }}?{{ craft.app.request.queryStringWithoutPath }}"><img src="/assets/img/toggle.svg" /></a></th>
                         {% if tableView == 'users' %}
                             {% for user in users %}
                                 <th>
