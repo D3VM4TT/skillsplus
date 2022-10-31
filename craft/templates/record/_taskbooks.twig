@@ -22,7 +22,7 @@
 {% else %}
     {{ globalsHtml.pageCurrent }}
     {% if unpaidPackages|length %}
-        <h4>Unpaid Packages</h4>
+        <h4>Unpaid {{ taskbookLabel|lower }} packages</h4>
         <table class="data">
             <thead>
             <tr>
@@ -60,6 +60,7 @@
             </tbody>
         </table>
     {% endif %}
+    {% if cpdUser.record.packages|length %}
     <table class="data">
         <thead>
         <tr>
@@ -109,6 +110,10 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <p>You have no {{ taskbookLabel|lower }} packages.</p>
+        <p>&nbsp;</p>
+    {% endif %}
     {% if craft.lantra.setting('taskbookNew') %}
         <div class="container-btn">
             <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
