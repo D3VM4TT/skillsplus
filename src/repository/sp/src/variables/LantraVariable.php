@@ -31,18 +31,28 @@ class LantraVariable
      * @param null $level
      * @return string
      */
-    public function skillLevel($level = null, $endorsed = false)
+    public function skillLevel($level = null, $endorsed = false, $upskiller = false)
     {
         if (!$level) {
             return '';
         }
+
+        $return = '<span class="skill">';
 
         $title = $level->title . ($endorsed ? ' [endorsed]' : ' [not endorsed]');
         $class = 'sm-dot sm-' . ($endorsed ? 'endorsed' : 'unendorsed');
         $style = 'border-color:' . $level->skillLevelColour . ';background-color: ' . $level->skillLevelColour;
         $number = $level->skillLevelNumber !== null ? number_format($level->skillLevelNumber, 1) : '';
 
-        return '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . $number . '</span>';
+        $return .= '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . $number . '</span>';
+
+        if ($upskiller) {
+            $return .= '<span class="upskiller"><img src="/assets/img/upskiller.svg" title="Upskiller" /></span>';
+        }
+
+        $return .= '</span>';
+
+        return $return;
     }
 
     /**

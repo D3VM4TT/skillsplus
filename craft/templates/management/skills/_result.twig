@@ -1,14 +1,7 @@
 {% set result = craft.lantra.getUserSkillResult(user.id, unit.id, filterMinSkill, filterMaxSkill, filterStatus) %}
 {% if result %}
     {% set skillLevel = result.skillLevel.one %}
-    <span class="skill">
-    {{ craft.lantra.skillLevel(skillLevel, result.resultStatus == 'endorsed')|raw }}
-    {% if result.resultUpskiller %}
-        <span class="upskiller">
-            <img src="/assets/img/upskiller.svg" title="Upskiller" />
-        </span>
-    {% endif %}
-    </span>
+    {{ craft.lantra.skillLevel(skillLevel, result.resultStatus == 'endorsed', result.resultUpskiller)|raw }}
 {% else %}
     -
 {% endif %}

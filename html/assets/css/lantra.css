@@ -2818,6 +2818,9 @@ tr.module-selected span.module-select i.fa-check {
 
 .skill {
     position: relative;
+    height: 48px;
+    width: 48px;
+    display: inline-block;
 }
 
 .skill .upskiller {
