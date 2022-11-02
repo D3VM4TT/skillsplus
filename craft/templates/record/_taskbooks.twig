@@ -95,10 +95,10 @@
                         {{ package.dateCreated|date(dateFormat) }}
                     </td>
                     <td>
-                        {{ package.paymentMethod }}
+                        {{ package.paymentMethod|ucwords }}
                     </td>
                     <td>
-                        {{ package.paymentReference|ucwords }}
+                        {{ package.paymentReference }}
                     </td>
                     <td>£{{ package.packageCost }}</td>
                     <td>
