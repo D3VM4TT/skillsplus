@@ -14,6 +14,8 @@
 
 {% set unpaidPackages = craft.lantra.getUnpaidPackages(cpdUser.id) %}
 
+{{ craft.lantra.syncUserPayments(cpdUser.id) }}
+
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
@@ -69,9 +71,10 @@
                 <th>Level</th>
             {% endif %}
             <th>Date Created</th>
-            <th>Next Step</th>
-            <th>Status</th>
+            <th>Payment Method</th>
+            <th>Payment Reference</th>
             <th>Cost</th>
+            <th>Status</th>
             <th></th>
         </tr>
         </thead>
@@ -92,12 +95,15 @@
                         {{ package.dateCreated|date(dateFormat) }}
                     </td>
                     <td>
-                        {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
+                        {{ package.paymentMethod }}
                     </td>
+                    <td>
+                        {{ package.paymentReference }}
+                    </td>
+                    <td>£{{ package.packageCost }}</td>
                     <td>
                         {{ package.packageStatus|title }}
                     </td>
-                    <td>£{{ package.packageCost }}</td>
                     <td>
                         {% set certificateUrl = craft.lantra.certificateUrl(package) %}
                         {% if certificateUrl %}

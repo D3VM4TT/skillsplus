@@ -27,6 +27,19 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+
+    /**
+     * @param null $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function syncUserPayments($userId = null)
+    {
+        $user = LantraHelper::getUser($userId);
+        Lantra::$app->users->syncUserPayments($user);
+    }
+
     /**
      * @param null $level
      * @return string

@@ -9,6 +9,7 @@
 namespace lantra\sp\behaviors;
 
 use Craft;
+use craft\elements\MatrixBlock;
 use craft\elements\user;
 use verbb\supertable\elements\SuperTableBlockElement;
 use yii\base\Behavior;
@@ -849,6 +850,65 @@ class PackageBehavior extends Behavior
             }
         }
         return $assets;
+    }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function getPackagePayments()
+    {
+        $return = [
+            'total' => 0,
+            'payments' => []
+        ];
+
+        $field = Craft::$app->fields->getFieldByHandle('basePayments');
+
+        ## find related payments
+        $criteria = MatrixBlock::find();
+        $criteria->fieldId($field->id);
+        $criteria->relatedTo([$this->owner->id]);
+
+        $payments = $criteria->all();
+        foreach ($payments as $payment) {
+            $return['payments'][] = $payment;
+            $return['total'] += $payment->amount;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function getPaymentMethod()
+    {
+        $payments = $this->getPackagePayments();
+        if (count($payments['payments'])) {
+            return $payments['payments'][0]['method'];
+        }
+        return '';
+    }
+
+    /**
+     * @return array
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function getPaymentReference()
+    {
+        $payments = $this->getPackagePayments();
+        if (count($payments['payments'])) {
+            return $payments['payments'][0]['reference'];
+        }
+        return '';
     }
 
     /**
