@@ -410,7 +410,7 @@ $(document).ready(function () {
             $('#privacy-modal').removeClass('modal-open');
         }
         else if (action == 'users/delete-user') {
-            if (!confirm('Are you sure you want to delete this user?')) {
+            if (!confirm('Are you sure you want to delete this user? You will permanently remove the record and all associated data.')) {
                 return false;
             }
             var data = {userId: $(this).data('id')};
