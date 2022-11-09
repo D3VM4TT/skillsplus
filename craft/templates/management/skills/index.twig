@@ -1,0 +1,53 @@
+{% extends "_layout" %}
+{% set metaTitle = "Management > Skills" %}
+{% set pageTitle = "Skills" %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
+{% set filterSearch = craft.app.request.getParam('search')|default('') %}
+{% set filterValue = craft.app.request.getParam('filter')|default('all') %}
+{% set sortParam = craft.app.request.getParam('sort') %}
+
+{% set validSorts = ['title', 'id', 'dateCreated'] %}
+{% set sort = sortParam in validSorts ? sortParam : 'title' %}
+{% set order = craft.app.request.getParam('order') == 'desc' ? 'desc' : 'asc' %}
+{% set filterBy = filterValue == 'External' ? 'external' : 'name' %}
+
+{% set criteria = craft.entries.section('modules').isSkillsMatrix(true).orderBy('title').limit(null) %}
+{% if criteria %}{% paginate criteria as pageInfo, skillMatrixModules %}{% endif %}
+
+{% block content %}
+<div class="page-subHeader primary-bg">
+    {% include '_includes/topNavigation' %}
+</div>
+<section class="page">
+    <div class="page-header secondary-bg">
+        <h2>{{ pageTitle }}</h2>
+    </div>
+    <div class="page-content">
+    {% if skillMatrixModules is defined and skillMatrixModules|length %}
+        <table class="data">
+            <thead>
+            <tr>
+                <th><a href="?sort=id&order={{ order == 'desc' ? 'asc' : 'desc' }}">ID</a></th>
+                <th><a href="?sort=dateCreated&order={{ order == 'desc' ? 'asc' : 'desc' }}">Date Created</a></th>
+                <th>Module</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for skillMatrixModule in skillMatrixModules %}
+                <tr>
+                    <td>{{ skillMatrixModule.id }}</td>
+                    <td>{{ skillMatrixModule.dateCreated|date(dateFormat) }}</td>
+                    <td><a href="/management/skills/matrix/{{ skillMatrixModule.id }}">{{ skillMatrixModule.title }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagelinks' with {pageInfo:pageInfo} %}
+    {% else %}
+        <h3>There are no skill modules to display.</h3>
+    {% endif %}
+    </div>
+</section>
+{% endblock %}

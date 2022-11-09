@@ -3114,5 +3114,28 @@ class Results extends Component
         return $this->entryTypeIds[$handle . $typeHandle];
     }
 
+    /**
+     * @param $userId
+     * @param $unitId
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     * @return array|\craft\base\ElementInterface|Entry|null
+     * @throws \yii\base\NotSupportedException
+     */
+    public function getUserSkillResult($userId, $unitId, $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all')
+    {
+        $skillLevelIds = Lantra::$app->modules->skillLevelIds($minSkillLevel, $maxSkillLevel);
 
+        $criteria = Entry::find()
+            ->sectionId($this->sectionId('results'))
+            ->authorId($userId)
+            ->relatedTo(['targetElement' => [$unitId], 'field' => 'resultUnit'])
+            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel']);
+
+        if ($status != 'all') {
+            $criteria->resultStatus = $status;
+        }
+
+        return $criteria->one();
+    }
 }

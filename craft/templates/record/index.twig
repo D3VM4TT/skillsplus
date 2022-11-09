@@ -54,7 +54,9 @@
         {% else %}
             <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
         {% endif %}
-            {% if not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
+            {% if pageClass == 'print' %}
+                <h2>{{ account.fullname ~ "'s" }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+            {% elseif not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
                 <h2>Hello {{ account.firstName }}</h2>
                 <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
             {% else %}

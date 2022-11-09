@@ -189,6 +189,15 @@ class Plugin extends BasePlugin
         );
 
         Event::on(
+            User::class,
+            User::EVENT_AFTER_DELETE,
+            function (Event $event) {
+                $user = $event->sender;
+                Lantra::$app->users->onAfterDeleteUser($user, $event);
+            }
+        );
+
+        Event::on(
             Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             function (UserEvent $event) {
@@ -470,6 +479,8 @@ class Plugin extends BasePlugin
             'management/<section>/new'                  => ['template' => 'management/index'],
             'management/users/company/<companyId>'      => ['template' => 'management/users'],
             'management/products/results/<productId>'   => ['template' => 'management/products/results'],
+            'management/skills/matrix/<moduleId>'       => ['template' => 'management/skills/matrix'],
+            'management/skills/matrix/<moduleId>/<tableView>' => ['template' => 'management/skills/matrix'],
 
             ## reporting routes
             'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],

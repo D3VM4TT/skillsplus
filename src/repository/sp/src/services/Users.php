@@ -19,9 +19,11 @@ use craft\elements\db\UserQuery;
 use craft\helpers\DateTimeHelper;
 
 use craft\elements\MatrixBlock;
+use craft\helpers\Json;
 use lantra\sp\Plugin as Lantra;
 use lantra\sp\helpers\LantraHelper;
 
+use lantra\spbase\models\Licence;
 use lantra\spbase\Module as SpBase;
 use yii\db\Query;
 use yii\web\UserEvent as YiiUserEvent;
@@ -42,8 +44,11 @@ class Users extends Component
     }
 
     /**
-     * @param ModelEvent $event
+     * @param YiiUserEvent $event
      * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
      */
     public function onAfterLoginUser(YiiUserEvent $event, User $user)
     {
@@ -52,6 +57,7 @@ class Users extends Component
             if ($user->isLicenced) {
                 $licence = Lantra::$app->spbase->getLicence($user->id);
                 $event->isValid = Lantra::$app->spbase->log($licence, 'user_login');
+                $this->syncUserPayments($user);
             }
         }
     }
@@ -67,7 +73,7 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
-        $this->syncUserLicence($user);
+        ## $this->syncUserLicence($user);
     }
 
     /**
@@ -174,19 +180,24 @@ class Users extends Component
     }
 
     /**
+     * @param $user
      * @param $event
      */
     public function onBeforeDeleteUser($user, $event)
     {
-        $loggedInUser = Craft::$app->getUser();
-
-        if (!Craft::$app->request->isCpRequest && !$loggedInUser->isInGroup('schemeManagers') && !$loggedInUser->admin){
+        $manager = Craft::$app->getUser()->getIdentity();
+        if (Craft::$app->request->isSiteRequest && !$manager->isInGroup('schemeManagers') && !$manager->admin){
             $event->performAction = false;
         }
+    }
 
-        if ($user->isLicenced) {
-            Lantra::$app->spbase->cancelLicence($user->id);
-        }
+    /**
+     * @param $user
+     * @param $event
+     */
+    public function onAfterDeleteUser($user, $event)
+    {
+        Lantra::$app->spbase->cancelLicence($user->id);
     }
 
     private $nodeId = 0;
@@ -1641,7 +1652,7 @@ class Users extends Component
      */
     function getUserPayments()
     {
-        $field = Craft::$app->fields->getFieldByHandle('userPayments');
+        $field = Craft::$app->fields->getFieldByHandle('basePayments');
         $criteria = MatrixBlock::find();
         $criteria->fieldId = $field->id;
         return $criteria;
@@ -1662,5 +1673,62 @@ class Users extends Component
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $companyIds, 'field' => 'userCompany'];
         return $criteria->all();
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function syncUserPayments(User $user)
+    {
+        $licence = Lantra::$app->spbase->getLicence($user->id);
+
+        if (!$licence->valid) {
+            Craft::info('syncUserPayments licence is invalid - ' . $user->fullName,__METHOD__);
+            return;
+        }
+
+        $basePaymentIds = [];
+
+        foreach ($user->basePayments as $block) {
+            $basePaymentIds[] = $block->paymentId;
+        }
+
+        $count = 0;
+
+        foreach ($licence->payments as $payment) {
+            ## skip if already saved
+            if (in_array($payment->id, $basePaymentIds)) {
+                continue;
+            }
+            $meta = Json::decodeifJson($payment->meta, true);
+            $entryId = $meta['packageId'] ?? '';
+
+            $field = Craft::$app->fields->getFieldByHandle('basePayments');
+            $blockType = Craft::$app->matrix->getBlockTypesByFieldId($field->id)[0];
+
+            $dt = \DateTime::createFromFormat('Y-m-d', $payment->dateCreated);
+
+            $block = new MatrixBlock();
+            $block->fieldId = $field->id;
+            $block->typeId = $blockType->id;
+            $block->dateCreated = $dt;
+            $block->ownerId = $user->id;
+            $block->setFieldValues([
+                'paymentId' => $payment->id,
+                'method' => $payment->method,
+                'amount' => $payment->amount,
+                'reference' => $payment->reference,
+                'relatedEntry' => [$entryId]
+            ]);
+            Craft::$app->elements->saveElement($block);
+            $count++;
+
+            Craft::info('syncUserPayments - adding payment for ' . $user->fullName,__METHOD__);
+        }
+
+        return $count;
     }
 }

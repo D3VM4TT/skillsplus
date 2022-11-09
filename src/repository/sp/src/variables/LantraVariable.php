@@ -27,6 +27,66 @@ use yii\web\ForbiddenHttpException;
 
 class LantraVariable
 {
+
+    /**
+     * @param null $userId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function syncUserPayments($userId = null)
+    {
+        $user = LantraHelper::getUser($userId);
+        Lantra::$app->users->syncUserPayments($user);
+    }
+
+    /**
+     * @param null $level
+     * @return string
+     */
+    public function skillLevel($level = null, $endorsed = false, $upskiller = false)
+    {
+        if (!$level) {
+            return '';
+        }
+
+        $return = '<span class="skill">';
+
+        $title = $level->title . ($endorsed ? ' [endorsed]' : ' [not endorsed]');
+        $class = 'sm-dot sm-' . ($endorsed ? 'endorsed' : 'unendorsed');
+        $style = 'border-color:' . $level->skillLevelColour . ';background-color: ' . $level->skillLevelColour;
+        $number = $level->skillLevelNumber !== null ? number_format($level->skillLevelNumber, 1) : '';
+
+        $return .= '<span title="' . $title  . '" class="' . $class . '" style="' . $style . '">' . $number . '</span>';
+
+        if ($upskiller) {
+            $return .= '<span class="upskiller"><img src="/assets/img/upskiller.svg" title="Upskiller" /></span>';
+        }
+
+        $return .= '</span>';
+
+        return $return;
+    }
+
+    /**
+     * @param null $module
+     */
+    public function skillsMatrixIds($module = null, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all', $users = 'default')
+    {
+        return Lantra::$app->modules->skillsMatrixIds($module, $unitGroupId, $unitId, $minSkillLevel, $maxSkillLevel, $status, $users);
+    }
+
+    /**
+     * @param $userId
+     * @param $unitId
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     */
+    public function getUserSkillResult($userId, $unitId, $minSkillLevel = 'none', $maxSkillLevel = 'none', $filterStatus = 'all')
+    {
+        return Lantra::$app->results->getUserSkillResult($userId, $unitId, $minSkillLevel, $maxSkillLevel, $filterStatus);
+    }
+
     /**
      * @param $module
      * @param null $userId

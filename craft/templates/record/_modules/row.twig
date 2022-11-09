@@ -38,6 +38,9 @@
         <td>{{ craft.lantra.assessmentScore(unit, resultEntry, cpdUser.id) }}</td>
         <td>{{ craft.lantra.remainingAttempts(unit, resultEntry, cpdUser.id) }}</td>
     {% endif %}
+    {% if module.isSkillsMatrix %}
+        <td>{{ resultEntry ? craft.lantra.skillLevel(resultEntry.skillLevel.one, resultEntry.resultStatus == 'endorsed', resultEntry.resultUpskiller)|raw : '' }}</td>
+    {% endif %}
     <td class="icons">
         {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
             {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}

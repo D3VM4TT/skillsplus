@@ -51,6 +51,7 @@ class Settings extends Model
     public $themeMyDashboard                    = true;
     public $themeMyTaskbooks                    = false;
     public $idleMinutes                         = 60;
+    public $themeDefaultHome                    = 'dashboard';
 
     public $taskbooks                           = false;
     public $taskbookLabel                       = 'Taskbook';
@@ -62,6 +63,8 @@ class Settings extends Model
     public $taskbookCompanies                   = true;
     public $defaultTaskbookCompany              = [];
     public $taskbookRegistrationCompanies       = [];
+
+    public $skillsMatrixUsers                   = 'all';
 
     public $products                            = false;
     public $productCustomFields                 = [];

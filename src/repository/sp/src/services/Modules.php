@@ -15,6 +15,7 @@ use craft\elements\User;
 use craft\elements\Category;
 use craft\events\ModelEvent;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class Modules extends Component
@@ -56,6 +57,110 @@ class Modules extends Component
     public function isUserModule($module, User $user)
     {
         return !$module->moduleOptional || in_array($module->id, $user->userOptionalModules->ids());
+    }
+
+    /**
+     * @param $module
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     * @return array[]|null
+     */
+    public function skillsMatrixIds($module, $unitGroupId = 'all', $unitId = 'all', $minSkillLevel = 'none', $maxSkillLevel = 'none', $status = 'all', $users = 'default')
+    {
+        if (!$module->isSkillsMatrix) {
+            return null;
+        }
+
+        $return = [
+            'userIds' => [],
+            'unitIds' => [],
+            'unitGroupIds' => [],
+            'filterUnitIds' => []
+        ];
+
+        ## get all unit ids for module
+        foreach ($module->moduleUnitGroups->all() as $unitGroup) {
+            $return['unitGroupIds'][] = $unitGroup->id;
+            $return['unitIds'] = array_merge($return['unitIds'], $unitGroup->unitEntries->ids());
+        }
+
+        ## filter by unit group
+        if ($unitGroupId != 'all') {
+            $unitGroup = $module->moduleUnitGroups->id($unitGroupId)->one();
+            $return['filterUnitIds'] = $unitGroup ? $unitGroup->unitEntries->ids() : [];
+        }
+        else {
+            $return['filterUnitIds'] = $unitId == 'all' ? $return['unitIds'] : [$unitId];
+        }
+
+        $skillLevelIds = $this->skillLevelIds($minSkillLevel, $maxSkillLevel);
+
+        $criteria = Entry::find()
+            ->section('results')
+            ->relatedTo(['targetElement' => $return['filterUnitIds'], 'field' => 'resultUnit'])
+            ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel']);
+
+        ## add result status
+        if ($status != 'all') {
+            $criteria->resultStatus = $status;
+        }
+
+        ## limit results to users according to config > setting
+        $skillsMatrixUsersSetting = LantraHelper::setting('skillsMatrixUsers');
+        ## users set by template
+        $skillsMatrixUsers = $users == 'default' ? $skillsMatrixUsersSetting : $users;
+        if ($skillsMatrixUsers != 'all') {
+            $manager = Craft::$app->getUser()->getIdentity();
+            $includeHierarchy = $skillsMatrixUsers != 'direct';
+            $userIds = Lantra::$app->users->getManagerSubordinateIds($manager, $includeHierarchy);
+
+            if (!count($userIds)) {
+                return $return;
+            }
+
+            $criteria->authorId = $userIds;
+        }
+
+        $results = $criteria->all();
+
+        foreach ($results as $result) {
+            if (!in_array($result->authorId, $return['userIds'])) {
+                $return['userIds'][] = $result->authorId;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $minSkillLevel
+     * @param string $maxSkillLevel
+     */
+    public function skillLevelIds($minSkillLevel = 'none', $maxSkillLevel = 'none')
+    {
+        ## build list of all skill level ids
+        $skillLevelIds = Category::find()
+            ->group('skillLevels')
+            ->ids();
+
+        if ($minSkillLevel != 'none') {
+            $beforeIds = Category::find()
+                ->group('skillLevels')
+                ->positionedBefore($minSkillLevel)
+                ->ids();
+            ## filter out before ids
+            $skillLevelIds = array_diff($skillLevelIds, $beforeIds);
+        }
+
+        if ($maxSkillLevel != 'none') {
+            $afterIds = Category::find()
+                ->group('skillLevels')
+                ->positionedAfter($maxSkillLevel)
+                ->ids();
+            ## filter out after ids
+            $skillLevelIds = array_diff($skillLevelIds, $afterIds);
+        }
+        return $skillLevelIds;
     }
 
     /**

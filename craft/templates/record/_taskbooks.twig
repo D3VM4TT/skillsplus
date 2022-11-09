@@ -14,6 +14,8 @@
 
 {% set unpaidPackages = craft.lantra.getUnpaidPackages(cpdUser.id) %}
 
+{{ craft.lantra.syncUserPayments(cpdUser.id) }}
+
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
@@ -22,7 +24,7 @@
 {% else %}
     {{ globalsHtml.pageCurrent }}
     {% if unpaidPackages|length %}
-        <h4>Unpaid Packages</h4>
+        <h4>Unpaid {{ taskbookLabel|lower }} packages</h4>
         <table class="data">
             <thead>
             <tr>
@@ -60,6 +62,7 @@
             </tbody>
         </table>
     {% endif %}
+    {% if cpdUser.record.packages|length %}
     <table class="data">
         <thead>
         <tr>
@@ -68,9 +71,10 @@
                 <th>Level</th>
             {% endif %}
             <th>Date Created</th>
-            <th>Next Step</th>
-            <th>Status</th>
+            <th>Payment Method</th>
+            <th>Payment Reference</th>
             <th>Cost</th>
+            <th>Status</th>
             <th></th>
         </tr>
         </thead>
@@ -91,12 +95,15 @@
                         {{ package.dateCreated|date(dateFormat) }}
                     </td>
                     <td>
-                        {{ package.nextStep ? package.nextStep.reviewStepName : '' }}
+                        {{ package.paymentMethod|ucwords }}
                     </td>
+                    <td>
+                        {{ package.paymentReference }}
+                    </td>
+                    <td>£{{ package.packageCost }}</td>
                     <td>
                         {{ package.packageStatus|title }}
                     </td>
-                    <td>£{{ package.packageCost }}</td>
                     <td>
                         {% set certificateUrl = craft.lantra.certificateUrl(package) %}
                         {% if certificateUrl %}
@@ -109,6 +116,10 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <p>You have no {{ taskbookLabel|lower }} packages.</p>
+        <p>&nbsp;</p>
+    {% endif %}
     {% if craft.lantra.setting('taskbookNew') %}
         <div class="container-btn">
             <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>

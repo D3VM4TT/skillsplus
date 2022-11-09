@@ -255,13 +255,15 @@ class SpBase
      * @param $reference
      * @return bool
      */
-    public function addPayment($userId, $method, $amount, $reference, $meta = [])
+    public function addPayment($userId, $method, $amount, $reference, $meta = [], $isPaid = false, $isProcessed = false)
     {
         $licence = $this->getLicence($userId);
         $payment = [
             'method' => $method,
             'amount' => $amount,
             'reference' => $reference,
+            'isPaid' => $isPaid,
+            'isProcessed' => $isProcessed,
             'meta' => Json::encode($meta)
         ];
         return $this->client->saveProcess($licence, ['payment' => $payment]);

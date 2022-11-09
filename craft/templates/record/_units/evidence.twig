@@ -52,6 +52,32 @@
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
+    {% set skillLevels = moduleEntry.skillLevels %}
+    {% if moduleEntry.isSkillsMatrix and skillLevels.count %}
+        {% set resultSkillLevel = resultEntry is defined and resultEntry ? resultEntry.skillLevel.one : false %}
+        <div class="field--wrapper">
+            <label for="fields[skillsMatrixLevel]">Level</label>
+            <select name="fields[skillLevel][]" id="fields[skillLevel]">
+                {% for skillLevel in skillLevels.all %}
+                    <option {% if resultSkillLevel and resultSkillLevel.id == skillLevel.id %}selected="selected"{% endif %}
+                            value="{{ skillLevel.id }}">{{ skillLevel.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+    {% if moduleEntry.isSkillsMatrix %}
+        <div class="field--wrapper">
+            <label for="fields[resultUpskiller]">Upskiller?</label>
+            <input type="hidden" name="fields[resultUpskiller]" value="0" />
+            <input
+                type="checkbox"
+                name="fields[resultUpskiller]"
+                id="fields[resultUpskiller]"
+                value="1"
+                {% if resultEntry and resultEntry.resultUpskiller %}checked{% endif %}
+            />
+        </div>
+    {% endif %}
     {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
     {% if not readOnly %}
         {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}

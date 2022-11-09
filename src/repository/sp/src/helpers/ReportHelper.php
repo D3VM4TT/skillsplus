@@ -376,7 +376,8 @@ class ReportHelper
             'User Name',
             'Email',
             'Transaction Date',
-            'Transaction Total',
+            'Transaction Amount',
+            'Transaction Method',
             'Transaction ID'
         ];
     }
@@ -403,8 +404,9 @@ class ReportHelper
             $user->fullName,
             $user->email,
             $paymentBlock->dateCreated->format($dateFormat),
-            $paymentBlock->mc_gross,
-            $paymentBlock->txn_id
+            $paymentBlock->amount,
+            $paymentBlock->method,
+            $paymentBlock->paymentId,
         ];
 
         return $items;

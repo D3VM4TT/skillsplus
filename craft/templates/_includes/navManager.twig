@@ -37,6 +37,11 @@
                     <a class="{% if craft.app.request.getSegment(2) == 'taskbooks' %}active{% endif %}" href="/management/taskbooks/structure">Taskbooks</a>
                 </li>
             {% endif %}
+            {% if craft.entries.section('modules').isSkillsMatrix(true).count %}
+                <li>
+                    <a class="{% if craft.app.request.getSegment(2) == 'skills' %}active{% endif %}" href="/management/skills">Skills Matrix</a>
+                </li>
+            {% endif %}
         </ul>
     </li>
     {% if craft.lantra.settingReports() %}
