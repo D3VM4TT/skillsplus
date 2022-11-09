@@ -64,6 +64,8 @@ class Settings extends Model
     public $defaultTaskbookCompany              = [];
     public $taskbookRegistrationCompanies       = [];
 
+    public $skillsMatrixUsers                   = 'all';
+
     public $products                            = false;
     public $productCustomFields                 = [];
     public $productResultLabel                  = 'Result';

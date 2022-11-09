@@ -24,7 +24,7 @@ class RecordHelper
     public static function isHiddenModuleGroup($moduleGroupVisibility, User $cpdUser, $userId = null)
     {
         ## never hidden for all
-        if ($moduleGroupVisibility == 'all') {
+        if (!$moduleGroupVisibility || $moduleGroupVisibility == 'all') {
             return false;
         }
 

@@ -184,6 +184,8 @@ class Packages extends Component
                     'packageId' => $entry->id
                 ];
                 Lantra::$app->spbase->addPayment($entry->authorId, $payment['method'], $payment['amount'], $payment['reference'], $meta, true, true);
+                $entry->setFieldValue('packageCost', $payment['amount']);
+                Craft::$app->elements->saveElement($entry);
             }
         }
         if (!$entry->packageReviews->count()) {

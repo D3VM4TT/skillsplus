@@ -6,6 +6,9 @@
 {% elseif defaultHome == 'profile' %}
     {% redirect 'profile' %}
 {% endif %}
+{% if not craft.lantra.setting('themeMyDashboard') and craft.lantra.setting('themeMyTaskbooks') %}
+    {% redirect '/cpd/' ~ currentUser.id ~ '/taskbooks' %}
+{% endif %}
 
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% extends "_layout" %}

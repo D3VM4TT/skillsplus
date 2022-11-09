@@ -88,7 +88,7 @@
                     {% set secondaryManagerCompanies = craft.entries.section('companies').relatedTo({targetElement: user, field: 'companySecondaryManagers'}).limit(null) %}
                     {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
                 {% endif %}
-                <tr class="type-{{ user.userType }}">
+                <tr class="item type-{{ user.userType }}">
                     <td>{% if user.userType == 'manager' %}<a class="icon" href="#"><img src="/assets/img/manager.svg"></a>{% endif %}</td>
                     {% for row in craft.lantra.userProfileFields('tableColumn') %}
                         <td>
@@ -126,11 +126,9 @@
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}
                                 <a class="icon action" href="#" data-action="users/restore-user" data-id="{{ user.id }}"><img src="/assets/img/endorse.svg" title="Restore" /></a>
                             {% endif %}
-                            {#
-                            {% if currentUser.isInGroup('schemeManagers') or currentUser.admin %}
-                                | <a class="action" href="#" data-action="users/delete-user" data-id="{{ user.id }}">delete</a>
+                            {% if user.status == 'suspended' and (currentUser.isInGroup('schemeManagers') or currentUser.admin) %}
+                                <a class="icon action" href="#" data-action="users/delete-user" data-id="{{ user.id }}"><img src="/assets/img/delete.svg" title="Delete" /></a>
                             {% endif %}
-                            #}
                         {% endif %}
                     </td>
                 </tr>

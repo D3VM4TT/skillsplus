@@ -27,3 +27,28 @@
     name:			"managerConfirmText",
     value:		    settings.managerConfirmText,
 }) }}
+
+{% set skillsMatrixUsersOptions = [
+    {
+        label: 'All Users',
+        value: 'all'
+    },
+    {
+        label: 'Hierarchy Subordinates',
+        value: 'hierarchy'
+    },
+    {
+        label: 'Direct Subordinates',
+        value: 'direct'
+    }
+] %}
+
+{{ forms.selectField({
+    label: "Skills Matrix Users",
+    id: 'skillsMatrixUsers',
+    name: 'skillsMatrixUsers',
+    value: settings.skillsMatrixUsers,
+    options: skillsMatrixUsersOptions
+}) }}
+
+
