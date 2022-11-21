@@ -1,0 +1,6 @@
+<form action="{{ url }}" class="paypal-form" method="post" accept-charset="UTF-8">
+    {{ hiddenInput('licenceId', licenceId) }}
+    {{ hiddenInput('amount', amount) }}
+    {{ hiddenInput('meta', meta) }}
+    <button class="button primary-bg"><span>{{ label }}</span></button>
+</form>

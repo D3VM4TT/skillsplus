@@ -5,8 +5,13 @@ use Craft;
 
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
-use lantra\sp\Plugin as Lantra;
 use craft\log\FileTarget;
+use craft\events\RegisterTemplateRootsEvent;
+use craft\web\View;
+
+use lantra\sp\Plugin as Lantra;
+use lantra\spbase\services\SpBase;
+
 use yii\base\Event;
 use yii\log\Logger;
 
@@ -21,6 +26,10 @@ class Module extends \yii\base\Module
     {
         parent::init();
         self::$plugin = $this;
+
+        $this->setComponents([
+            'spbase' => SpBase::class
+        ]);
 
         ## add the spbase log file
         $fileTarget = new FileTarget([
@@ -38,6 +47,14 @@ class Module extends \yii\base\Module
             }
         );
 
+        Event::on(
+            View::class,
+            View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS,
+            function(RegisterTemplateRootsEvent $event) {
+                $event->roots['spbase'] = __DIR__ . '/templates/';
+            }
+        );
+
         parent::init();
     }
 
@@ -48,6 +65,7 @@ class Module extends \yii\base\Module
     public static function getSiteUrlRules()
     {
         return [
+            'spbase/paypal/process/<userId{slug}>/<reference{slug}>' => 'spbase/paypal/process',
             'spbase/users/info/<action{slug}>' => 'spbase/users/info',
             'spbase/users/resave' => 'spbase/users/resave'
         ];
