@@ -14,6 +14,7 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
+use craft\web\View;
 use GuzzleHttp\Exception\GuzzleException;
 use lantra\sp\Plugin as Lantra;
 use lantra\spbase\Module;
@@ -36,11 +37,11 @@ class SpBase
     /**
      *
      */
-    public function processPayment(User $user, $paymentId)
+    public function processPayment(User $user, $reference)
     {
         $uri = '/';
 
-        if (null == $payment = $this->getPayment($user->id, $paymentId)) {
+        if (null == $payment = $this->getPaymentByReference($user->id, $reference)) {
             Module::error('processPayment() invalid payment');
             return $uri;
         }
@@ -58,7 +59,7 @@ class SpBase
         }
 
         $this->setPaymentProcessed($user->id, $payment->id);
-        return $uri;
+        return UrlHelper::siteUrl($uri);
     }
 
     /**
@@ -215,7 +216,8 @@ class SpBase
 
     /**
      * @param $userId
-     * @return array
+     * @param $paymentId
+     * @return mixed|null
      */
     public function getPayment($userId, $paymentId)
     {
@@ -230,23 +232,48 @@ class SpBase
 
     /**
      * @param $userId
-     * @param $amount
      * @param $reference
+     * @return mixed|null
+     */
+    public function getPaymentByReference($userId, $reference)
+    {
+        $payments = $this->getPayments($userId);
+        foreach ($payments as $payment) {
+            if ($payment->reference == $reference) {
+                return $payment;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $userId
+     * @param $amount
      * @param array $meta
      * @param string $label
-     * @return \Psr\Http\Message\ResponseInterface|string
-     * @throws GuzzleException
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getPaypalButton($userId, $amount, $meta = [], $label = 'Pay Now')
     {
         $licence = $this->getLicence($userId);
 
-        return $this->client->request('spbase/payment/button', [
-                'licenceId' => $licence->id,
-                'amount' => $amount,
-                'meta' => $meta,
-                'label' => $label
-            ]);
+        if (!$licence->valid) {
+            return '[invalid licence]';
+        }
+
+        $variables = [
+            'url' => Craft::getAlias('@spBaseUrl') . '/paypal/checkout',
+            'licenceId' => $licence->id,
+            'amount' => $amount,
+            'meta' => Json::encode($meta),
+            'label' => $label
+        ];
+
+        return Craft::$app->view->renderTemplate('spbase/button', $variables);
     }
 
     /**
