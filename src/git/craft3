@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # domains i.e. folders (separated by space) included in 'all' command
-SITE_DOMAINS="bcsa bics cha fbaass iopf ltp poultec poultrypassport ptr frs fisa ptb tmp fencing lantraeportfolio ashtas"
+SITE_DOMAINS="ashtas bcsa bics cha fbaass iopf lantraeportfolio ltp poultec poultrypassport ptr redskylearning tmata ttt"
 
 # demo domains
 DEMO_DOMAINS="d1 d2 d3 d4 d5 d6 d7 d8 d9 d10"

@@ -73,7 +73,7 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
-        ## $this->syncUserLicence($user);
+        $this->syncUserLicence($user);
     }
 
     /**
@@ -108,7 +108,7 @@ class Users extends Component
         ## save the licence id
         if (!$user->userLicenceId) {
             $user->setFieldValue('userLicenceId', $licence->id);
-            Craft::$app->elements->saveElement($user, false);
+            ## Craft::$app->elements->saveElement($user, false);
         }
     }
 
