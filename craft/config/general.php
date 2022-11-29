@@ -56,7 +56,7 @@ return [
         'aliases' => [
             '@basePath' => '/app/',
             '@assetsPath' => '/app/craft-assets/',
-            '@spBaseUrl' => 'http://base.coffeebean.design'
+            '@spBaseUrl' => 'https://base.coffeebean.design'
         ],
     ],
     'jason' => [
@@ -72,12 +72,12 @@ return [
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
-            '@spBaseUrl' => 'http://base.coffeebean.design'
+            '@spBaseUrl' => 'https://base.coffeebean.design'
         ]
     ],
     'uat' => [
         'aliases' => [
-            '@spBaseUrl' => 'http://base.newuat.skills-plus.net'
+            '@spBaseUrl' => 'https://base.newuat.skills-plus.net'
         ]
     ],
     'prod' => [

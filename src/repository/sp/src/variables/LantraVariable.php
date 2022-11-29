@@ -310,7 +310,6 @@ class LantraVariable
     public function basePaypalButton($userId, $amount, $reference, $meta = [], $label = 'Pay Now')
     {
         $meta['reference'] = $reference;
-        $meta['siteUrl'] = UrlHelper::siteUrl();
         return Lantra::$app->spbase->getPaypalButton($userId, $amount, $meta, $label);
     }
 
