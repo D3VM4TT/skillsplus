@@ -120,7 +120,8 @@
                             <a class="icon" href="mailto:{{ user.email }}"><img src="/assets/img/email.svg" title="Email" /></a>
                         {% endif %}
                         {% if not currentUser.managerReadOnly %}
-                            <a class="icon" href="/management/users/edit/{{ user.id }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
+                            {% set editId = user.isInGroup('usersInactive') ? user.userActiveUser.one.id : user.id %}
+                            <a class="icon" href="/management/users/edit/{{ editId }}"><img src="/assets/img/edit.svg" title="Edit" /></a>
                             {% if user.status == 'active' %}
                                 <a class="icon action" href="#" data-action="users/suspend-user" data-id="{{ user.id }}"><img src="/assets/img/suspend.svg" title="Suspend" /></a>
                             {% elseif currentUser.isInGroup('schemeManagers') or currentUser.admin %}

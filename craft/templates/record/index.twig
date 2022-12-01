@@ -62,6 +62,11 @@
             {% else %}
                 <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
             {% endif %}
+
+        {% if account.hasLinkedUsers %}
+            {% include '_includes/switchUser' with {cpdUser:account} %}
+        {% endif %}
+
         {% if account.userRole|length %}
             <p style="padding:0;">Allocated {{ jobRoleLabel|pluralize(account.userRole|length) }}: {% for role in account.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
         {% endif %}
@@ -77,7 +82,7 @@
             </div>
         {% endif %}
     </div>
-    {% include '_includes/account' with{cpdUser:account} %}
+    {% include '_includes/account' with {cpdUser:account} %}
     <div class="page-content">
         <div id="endorsements" style="display:none;">
             <h4>Endorsements</h4>

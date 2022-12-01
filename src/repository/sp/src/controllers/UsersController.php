@@ -392,6 +392,36 @@ class UsersController extends BaseController {
     }
 
     /**
+     * Switch user login
+     *
+     * @throws mixed
+     */
+    public function actionSwitchUser()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+
+        $userId1 = Craft::$app->request->getRequiredParam('userId1');
+        $userId2 = Craft::$app->request->getRequiredParam('userId2');
+
+        $user1 = Craft::$app->users->getUserById($userId1);
+        $user2 = Craft::$app->users->getUserById($userId2);
+
+        if (!$user1 || ! $user2) {
+            return $this->_returnError('Invalid user IDs');
+        }
+
+        if (!Lantra::$app->users->areLinkedUsers($user1, $user2)) {
+            return $this->_returnError('User are not linked');
+        }
+        ## logged in user
+        if (LantraHelper::getUser()->id == $userId1) {
+            Craft::$app->user->loginByUserId($userId2);
+        }
+        return $this->_returnMessage('', true, '/cpd/' . $userId2);
+    }
+
+    /**
      * @param User $user
      * @throws \craft\errors\ImageException
      * @throws \craft\errors\VolumeException

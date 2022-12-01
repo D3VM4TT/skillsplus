@@ -73,6 +73,8 @@ class Users extends Component
      */
     public function onSaveUser(ModelEvent $event, User $user)
     {
+        $this->syncSecondaryCompanies($user);
+
         $this->syncUserLicence($user);
     }
 
@@ -237,19 +239,27 @@ class Users extends Component
         $criteria->limit = $limit;
         $criteria->order = $order;
 
+        $relatedCompanyIds = [];
+
         if ($user->isInGroup('companyManagers')) {
-            $criteria->group = ['users', 'teamManagers'];
-            $criteria->relatedTo = ['targetElement' => $this->getManagerCompanies($user, true, 'companyLabel', true), 'field' => 'userCompany'];
-        } elseif ($user->isInGroup('teamManagers')) {
-            $criteria->group = ['users', 'teamManagers'];
-            $criteria->relatedTo = ['targetElement' => $this->getManagerTeams($user, false, true), 'field' => 'userCompany'];
+            $relatedCompanyIds = $this->getManagerCompanies($user, true, 'companyLabel', true);
+            $criteria->group = ['usersInactive', 'users', 'teamManagers'];
         }
         else {
             $criteria->group = ['users', 'companyManagers', 'teamManagers'];
         }
+
         if ($companyId) {
-            $criteria->relatedTo = ['targetElement' => [$companyId], 'field' => 'userCompany'];
+            $relatedCompanyIds = [$companyId];
         }
+
+        if (count($relatedCompanyIds)) {
+            $criteria->relatedTo = [
+                'or',
+                ['targetElement' => $relatedCompanyIds, 'field' => 'userCompany']
+            ];
+        }
+
         return $criteria;
     }
 
@@ -1730,5 +1740,170 @@ class Users extends Component
         }
 
         return $count;
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     */
+    public function syncSecondaryCompanies(User $user)
+    {
+        $secondaryCompanyIds = $user->userSecondaryCompanies->ids();
+        $linkedUsers = $this->getLinkedUsers($user);
+        $hasLinkedUsers = count($linkedUsers);
+
+        $userCompany = $this->userCompany($user);
+
+        ## ignore userCompany
+        if ($userCompany && ($key = array_search($userCompany->id, $secondaryCompanyIds)) !== false) {
+            unset($secondaryCompanyIds[$key]);
+        }
+
+        ## no secondary companies
+        if (!count($secondaryCompanyIds)) {
+            if ($hasLinkedUsers) {
+                foreach ($linkedUsers as $u) {
+                    ## hard delete any unused linked users
+                    $this->deleteLinkedUser($u->id);
+                }
+            }
+            return;
+        }
+
+        $companyIds = [];
+        foreach ($linkedUsers as $u) {
+            if (null != $uCompany = $this->userCompany($u)) {
+                ## no longer required
+                if (!in_array($uCompany->id, $secondaryCompanyIds)) {
+                    $this->deleteLinkedUser($u->id);
+                } else {
+                    $companyIds[] = $uCompany->id;
+                }
+            }
+        }
+
+        ## create new inactive users
+        $newCompanyIds = array_diff_assoc($secondaryCompanyIds, $companyIds);
+        foreach ($newCompanyIds as $companyId) {
+            $this->addLinkedUser($user, $companyId);
+        }
+    }
+
+    /**
+     * @param $user
+     * @param $companyId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function addLinkedUser($user, $companyId)
+    {
+        $fields = [
+            'userNotLicenced' => true,
+            'userActiveUser' => [$user->id],
+            'userCompany' => [$companyId]
+        ];
+
+        $newUser = new User();
+        $newUser->firstName = $user->firstName;
+        $newUser->lastName = $user->lastName;
+        $newUser->email = $newUser->username = $this->generateEmail('[inactive] ' . $user->firstName, $user->lastName);
+        $newUser->setFieldValues($fields);
+        if (Craft::$app->elements->saveElement($newUser)) {
+            $groupId = LantraHelper::userGroupId('usersInactive');
+            Craft::$app->getUsers()->assignUserToGroups($newUser->id, [$groupId]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     * @throws \Throwable
+     */
+    public function deleteLinkedUser($id)
+    {
+        return Craft::$app->elements->deleteElementById($id, null, null, true);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasLinkedUsers(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->count() > 0;
+    }
+
+    /**
+     * @param User $user
+     * @return array|int[]
+     */
+    public function getLinkedUserIds(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->ids();
+    }
+
+    /**
+     * @param User $user
+     * @return array|\craft\base\ElementInterface[]|User[]
+     */
+    public function getLinkedUsers(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->all();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function getLinkedUserCompanyIds(User $user)
+    {
+        $companyIds = [];
+        $linkedUsers = $this->getLinkedUsers($user);
+        foreach($linkedUsers as $u) {
+            if (null != $userCompany = $u->userCompany->one()) {
+                $companyIds[] = $userCompany->id;
+            }
+        }
+        return $companyIds;
+    }
+
+    /**
+     * @param User $user
+     * @return \craft\elements\db\ElementQueryInterface|UserQuery
+     */
+    public function getLinkedUsersCriteria(User $user)
+    {
+        $criteria = User::find();
+        $criteria->limit = null;
+
+        $criteria->groupId = LantraHelper::userGroupId('usersInactive');
+        $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'userActiveUser'];
+
+        return $criteria;
+    }
+
+    /**
+     * @param User $user1
+     * @param User $user2
+     * @return bool
+     */
+    public function areLinkedUsers(User $user1, User $user2)
+    {
+        ## both users are inactive (share same active user)
+        if ($user1->isInactive && $user2->isInactive) {
+            $user1ActiveUser = $user1->userActiveUser->one;
+            $user2ActiveUser = $user2->userActiveUser->one;
+            return $user1ActiveUser && $user2ActiveUser && $user1ActiveUser->id == $user2ActiveUser->id;
+        }
+
+        if (!$user1->isInactive) {
+            return in_array($user2->id, $this->getLinkedUserIds($user1));
+        }
+
+        return in_array($user1->id, $this->getLinkedUserIds($user2));
     }
 }

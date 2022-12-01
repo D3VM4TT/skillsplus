@@ -1,3 +1,4 @@
+{% requireLogin %}
 {% set defaultHome = craft.lantra.setting('themeDefaultHome') %}
 {% if defaultHome == 'taskbooks' %}
     {% redirect 'cpd/' ~ currentUser.id ~ '/taskbooks'  %}
@@ -9,6 +10,8 @@
 {% if not craft.lantra.setting('themeMyDashboard') and craft.lantra.setting('themeMyTaskbooks') %}
     {% redirect '/cpd/' ~ currentUser.id ~ '/taskbooks' %}
 {% endif %}
+
+{% redirect '/cpd/' ~ currentUser.id %}
 
 {% set currentUserCompany = craft.lantra.userCompany() %}
 {% extends "_layout" %}
