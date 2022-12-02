@@ -12,7 +12,8 @@ settings:
   selectionLabel: ''
   showSiteMenu: true
   source: null
-  sources: '*'
+  sources:
+    - 'group:ab9197b3-7032-4015-ba4e-4939118952dd' # Users
   targetSiteId: null
   validateRelatedElements: false
   viewMode: null
