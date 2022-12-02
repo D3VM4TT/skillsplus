@@ -1742,6 +1742,18 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @return User|null
+     */
+    public function activeUser($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->users->getActiveUser($user);
+    }
+
+    /**
      * Get the user
      *
      * @param null $userId
