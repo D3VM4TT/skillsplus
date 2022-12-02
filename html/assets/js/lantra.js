@@ -900,4 +900,23 @@ $(document).ready(function () {
         }
     });
     $('#linkedUser').change();
+
+    // select switch company
+    $('select#switchUser').on('change', function (e) {
+        $('body').addClass('loading');
+        var data = {userId1: $(this).data('user'), userId2: $(this).val()};
+        data[window.csrfTokenName] = window.csrfTokenValue;
+        $.post("/sp/users/switch-user", data, function (response) {
+            if (!response.success) {
+                $('body').removeClass('loading');
+                alert(response.message);
+            }
+            window.location = response.redirect;
+        }).fail(function (error) {
+            $('body').removeClass('loading');
+            console.log(error);
+            alert('Server error, check the console.');
+        });
+    });
+
 });

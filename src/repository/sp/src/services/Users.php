@@ -1731,4 +1731,83 @@ class Users extends Component
 
         return $count;
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasLinkedUsers(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->count() > 0;
+    }
+
+    /**
+     * @param User $user
+     * @return array|int[]
+     */
+    public function getLinkedUserIds(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->ids();
+    }
+
+    /**
+     * @param User $user
+     * @return array|\craft\base\ElementInterface[]|User[]
+     */
+    public function getLinkedUsers(User $user)
+    {
+        $criteria = $this->getLinkedUsersCriteria($user);
+        return $criteria->all();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function getLinkedUserCompanyIds(User $user)
+    {
+        $companyIds = [];
+        $linkedUsers = $this->getLinkedUsers($user);
+        foreach($linkedUsers as $u) {
+            if (null != $userCompany = $u->userCompany->one()) {
+                $companyIds[] = $userCompany->id;
+            }
+        }
+        return $companyIds;
+    }
+
+    /**
+     * @param User $user
+     * @return \craft\elements\db\ElementQueryInterface|UserQuery
+     */
+    public function getLinkedUsersCriteria(User $user)
+    {
+        $criteria = User::find();
+        $criteria->limit = null;
+        $criteria->relatedTo = ['targetElement' => $user->id, 'field' => 'userLinkedUser'];
+        return $criteria;
+    }
+
+    /**
+     * @param User $user1
+     * @param User $user2
+     * @return bool
+     */
+    public function areLinkedUsers(User $user1, User $user2)
+    {
+        ## both users are linked (share same linked user)
+        if ($user1->isLinked && $user2->isLinked) {
+            $user1LinkedUser = $user1->userLinkedUser->one;
+            $user2LinkedUser = $user2->userLinkedUser->one;
+            return $user1LinkedUser && $user2LinkedUser && $user1LinkedUser->id == $user2LinkedUser->id;
+        }
+
+        if (!$user1->isLinked) {
+            return in_array($user2->id, $this->getLinkedUserIds($user1));
+        }
+
+        return in_array($user1->id, $this->getLinkedUserIds($user2));
+    }
 }
