@@ -20,7 +20,8 @@ use lantra\sp\Plugin as Lantra;
 use lantra\sp\jobs\SetSubordinatesLicenceCompanyJob;
 use verbb\supertable\elements\SuperTableBlockElement;
 
-class UsersController extends BaseController {
+class UsersController extends BaseController
+{
 
     /**
      * @return \yii\web\Response
@@ -33,15 +34,14 @@ class UsersController extends BaseController {
         $user = Craft::$app->getUser()->getIdentity();
         ## look in cache
         $name = 'lantraHierarchy' . $user->id;
-        if (false == $cache = Craft::$app->cache->get($name)){
+        if (false == $cache = Craft::$app->cache->get($name)) {
             $cache = [];
             Craft::$app->cache->set($name, $cache);
         }
         $key = (!$companyId ? 'root' : $companyId . $type);
         if (isset($cache[$key])) {
             $node = $cache[$key];
-        }
-        else {
+        } else {
             $node = Lantra::$app->structure->getHierarchy($companyId, $type);
             ## set cache
             $cache[$key] = $node;
@@ -158,8 +158,7 @@ class UsersController extends BaseController {
         if ($isNew) {
             $this->requirePermission('registerUsers');
             $user = new User();
-        }
-        else {
+        } else {
             $user = User::find()
                 ->id($userId)
                 ->anyStatus()
@@ -170,28 +169,42 @@ class UsersController extends BaseController {
             }
         }
 
-        ## set basic account fields
-        $user->firstName = $request->getBodyParam('firstName', $user->firstName);
-        $user->lastName = $request->getBodyParam('lastName', $user->lastName);
+        ## set custom fields
+        $user->setFieldValuesFromRequest('fields');
 
         ## set email
         $postedEmail = Craft::$app->request->getParam('email');
-        if (isset($fields['userDummyEmail']) && $fields['userDummyEmail'] == 1 && !$postedEmail) {
-            $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
-        }
-        else {
-            $user->email = $postedEmail;
-        }
+        $user->email = $postedEmail;
 
-        ## set custom fields
-        $user->setFieldValuesFromRequest('fields');
+        ## handle linked user
+        if ($isNew && Craft::$app->request->getParam('linkedUser')) {
+            if (!$postedEmail || null == $linkedUser = Craft::$app->users->getUserByUsernameOrEmail($postedEmail)) {
+                $user->addErrors(['linkedUser' => 'Linked user not found.']);
+                return Craft::$app->urlManager->setRouteParams(['account' => $user]);
+            }
+            $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
+            $user->firstName = $linkedUser->firstName;
+            $user->lastName = $linkedUser->lastName;
+            $user->setFieldValues([
+                'userAddress' => $user->userAddress,
+                'userTelephone' => $user->userTelephone,
+                'userDateOfBirth' => $user->userDateOfBirth,
+                'userLinkedUser' => [$linkedUser->id],
+                'userNotLicenced' => true
+            ]);
+        } else {
+            $user->firstName = $request->getBodyParam('firstName', $user->firstName);
+            $user->lastName = $request->getBodyParam('lastName', $user->lastName);
+            if (isset($fields['userDummyEmail']) && $fields['userDummyEmail'] == 1 && !$postedEmail) {
+                $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
+            }
+        }
 
         ## username is email
         if (false != $username = Craft::$app->request->getBodyParam('username')) {
             $user->username = $username;
-        }
-        else {
-           $user->username = $user->email;
+        } else {
+            $user->username = $user->email;
         }
 
         $usersId = LantraHelper::userGroupId('users');
@@ -207,8 +220,7 @@ class UsersController extends BaseController {
         if ($fields['userType'] == 'manager') {
             $groupIds[] = $companyManagersId;
             $companyManager = true;
-        }
-        ## remove as manager from all companies
+        } ## remove as manager from all companies
         elseif (!$isNew && false != $companies = Lantra::$app->users->getManagerCompanies($user)) {
             foreach ($companies as $company) {
                 Lantra::$app->users->removeCompanyManager($company, $user);
@@ -235,8 +247,7 @@ class UsersController extends BaseController {
         if ($user->newPassword && ($user->newPassword != $confirmPassword)) {
             $user->addErrors(['confirmPassword' => 'Passwords do not match']);
             return Craft::$app->urlManager->setRouteParams(array('account' => $user));
-        }
-        ## save user
+        } ## save user
         elseif (!Craft::$app->elements->saveElement($user)) {
             return Craft::$app->urlManager->setRouteParams(['account' => $user, 'saveUserError' => true]);
         }
@@ -267,7 +278,8 @@ class UsersController extends BaseController {
      *
      * @throws mixed
      */
-    public function actionDeleteUser() {
+    public function actionDeleteUser()
+    {
         $this->requirePostRequest();
         ## get the posted userId
         $userId = Craft::$app->request->getParam('userId');
@@ -285,7 +297,8 @@ class UsersController extends BaseController {
      *
      * @throws mixed
      */
-    public function actionSuspendUser() {
+    public function actionSuspendUser()
+    {
         $this->requirePostRequest();
         $this->requireLogin();
         // get the posted userId
@@ -293,7 +306,7 @@ class UsersController extends BaseController {
         if (false == $user = Craft::$app->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
-        if (! Craft::$app->users->suspendUser($user)) {
+        if (!Craft::$app->users->suspendUser($user)) {
             $this->_returnError('Error suspending user.');
         }
         $this->_returnMessage('User has been suspended.');
@@ -318,11 +331,10 @@ class UsersController extends BaseController {
         $count = 0;
         $errorIds = [];
         $users = Lantra::$app->structure->getCompanyUsers($companyId, $includeHierarchy);
-        foreach($users as $user) {
+        foreach ($users as $user) {
             if (!Craft::$app->users->suspendUser($user)) {
                 $errorIds[] = $user->id;
-            }
-            else {
+            } else {
                 $count++;
             }
         }
@@ -343,7 +355,7 @@ class UsersController extends BaseController {
         if (false == $user = Craft::$app->users->getUserById($userId)) {
             $this->_returnError('Invalid user ID ' . $userId . '.');
         }
-        if (! Craft::$app->users->unsuspendUser($user)) {
+        if (!Craft::$app->users->unsuspendUser($user)) {
             $this->_returnError('Error restoring user.');
         }
         $this->_returnMessage('User has been restored.');
@@ -363,8 +375,7 @@ class UsersController extends BaseController {
         if ($companyId) {
             $criteria = Lantra::$app->users->getCompanyUsers($companyId);
             $users = $criteria ? $criteria->all() : [];
-        }
-        elseif ($userId) {
+        } elseif ($userId) {
             $users = [Craft::$app->users->getUserById($userId)];
         }
         $total = count($users);
@@ -385,7 +396,7 @@ class UsersController extends BaseController {
         $companyId = Craft::$app->request->getParam('companyId');
         $setSubordinatesLicenceCompanyJob = new SetSubordinatesLicenceCompanyJob([
             'companyId' => $companyId,
-            'includeHierarchy' =>  Craft::$app->request->getParam('includeHierarchy', false)
+            'includeHierarchy' => Craft::$app->request->getParam('includeHierarchy', false)
         ]);
         Queue::push($setSubordinatesLicenceCompanyJob);
         return $this->_returnMessage('Company licence update added to queue.');
@@ -410,7 +421,7 @@ class UsersController extends BaseController {
             $user->addError('photo', 'Could not move profile photo.');
             return;
         }
-        if (!Craft::$app->users->saveUserPhoto($tempFilePath, $user, $user->id . '.' . $photo->extension))  {
+        if (!Craft::$app->users->saveUserPhoto($tempFilePath, $user, $user->id . '.' . $photo->extension)) {
             $user->addError('photo', 'Could not save profile photo.');
         }
     }

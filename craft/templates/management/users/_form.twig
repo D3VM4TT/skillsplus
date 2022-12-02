@@ -17,6 +17,9 @@
     {% if not account %}{% exit 404 %}{% endif %}
 {% endif %}
 
+{% set isNew = account is not defined or not account.id %}
+{% set isEdit = not isNew %}
+
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set hierarchyCompany = craft.app.request.getParam('company') %}
 {% set hierarchyTeam = craft.app.request.getParam('team') %}
@@ -38,10 +41,10 @@
     {% include '_includes/topNavigation' %}
     </div>
     <div class="page-header secondary-bg">
-        {% if account is defined and account.id %}
-            <h2>Edit user</h2>
-        {% else %}
+        {% if isNew %}
             <h2>Create a New User</h2>
+        {% else %}
+            <h2>Edit user</h2>
         {% endif %}
     </div>
     {% if account is defined %}
@@ -57,54 +60,71 @@
         {% endif %}
         <input type="hidden" name="editUserId" value="{{ account.id|default('') }}">
 
-        {% if account is defined and account.id %}
+        {% if isEdit %}
             <div id="name-fields">
                 <div class="col-6 field--wrapper">
                     <h3>Account ID: {{ account.id }}</h3>
+                    {% if account.isLinked %}
+                        <p>Linked to: <strong>{{ account.linkedUser.fullName }} [{{ account.linkedUser.email }}]</strong></p>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
-        
-        <div id="name-fields">
-        <div class="col-6 field--wrapper">
-            <label for="firstName" class="no-float"><em class="required">*</em> First name:</label>
-            <input type="text" required="required" id="firstName" name="firstName" class="float-label" placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+
+        {% if isNew or (isEdit and not account.isLinked) %}
+            <div class="field--wrapper">
+                <label for="email" class="no-float">Email:</label>
+                <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
+            </div>
+        <div class="field--wrapper">
+            <div>
+                <label for="dummyEmail" class="no-float">
+                <input type="hidden" name="fields[userDummyEmail]" value="0">
+                <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
+                    Generate dummy email?</label>
+            </div>
+            {% if isNew %}
+            <div>
+                <label for="linkedUser" class="no-float">
+                <input type="hidden" name="linkedUser" value="0">
+                <input type="checkbox" id="linkedUser" name="linkedUser" value="1" {% if craft.app.request.getParam('linkedUser') %}checked="checked"{% endif %}>
+                    Link existing user?</label>
+            </div>
+            {% endif %}
         </div>
-        <div class="col-6 field--wrapper">
-            <label for="lastName" class="no-float"><em class="required">*</em> Last name:</label>
-            <input type="text" required="required" id="lastName" name="lastName" class="float-label" placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+        <div class="linked-fields">
+            <div id="name-fields">
+            <div class="col-6 field--wrapper">
+                <label for="firstName" class="no-float"><em class="required">*</em> First name:</label>
+                <input type="text" id="firstName" name="firstName" class="float-label"
+                       placeholder="Enter the first name" value="{{ account.firstName|default('') }}">
+            </div>
+            <div class="col-6 field--wrapper">
+                <label for="lastName" class="no-float"><em class="required">*</em> Last name:</label>
+                <input type="text" id="lastName" name="lastName" class="float-label"
+                       placeholder="Enter the last name" value="{{ account.lastName|default('') }}">
+            </div>
+            </div>
+            <div id="address-fields">
+            <div class="col-6 field--wrapper">
+                <label for="address" class="no-float">Address:</label>
+                <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
+            </div>
+            <div class="col-6 field--wrapper">
+                <label for="telephone" class="no-float">Telephone:</label>
+                <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
+            </div>
+            </div>
+            <div class="field--wrapper">
+                {% set dateOfBirthValue = account is defined ? account.userDateOfBirth : false %}
+                {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value:dateOfBirthValue, ys: now.year - 10, ye: now.year - 100} %}
+            </div>
         </div>
-        </div>
-        <div id="name-fields">
-        <div class="col-6 field--wrapper">
-            <label for="email" class="no-float">Email:</label>
-            <input type="text" id="email" name="email" class="float-label" placeholder="Enter the email" value="{{ account.email|default('') }}">
-        </div>
-        <div class="col-6 field--wrapper">
-            <label for="dummyEmail" class="no-float">Generate Dummy Email?</label>
-            <input type="hidden" name="fields[userDummyEmail]" value="0">
-            <input type="checkbox" id="dummyEmail" name="fields[userDummyEmail]" value="1" {% if account.userDummyEmail is defined and account.userDummyEmail %}checked="checked"{% endif %}>
-        </div>
-        </div>
-        <div id="date-fields">
-        <div class="col-6 field--wrapper">
+        {% endif %}
+        <h2>User profile</h2>
+        <div class="field--wrapper">
             {% set startDateValue = account is defined ? account.userStartDate : now %}
             {% include '_includes/date' with {label:'Start date', name:'fields[userStartDate]', value:startDateValue, ys: now.year + 5, ye: now.year - 50} %}
-        </div>
-        <div class="col-6 field--wrapper">
-            {% set dateOfBirthValue = account is defined ? account.userDateOfBirth : false %}
-            {% include '_includes/date' with {label:'Date of birth', name:'fields[userDateOfBirth]', value:dateOfBirthValue, ys: now.year - 10, ye: now.year - 100} %}
-        </div>
-        </div>
-        <div id="address-fields">
-        <div class="col-6 field--wrapper">
-            <label for="address" class="no-float">Address:</label>
-            <textarea id="address" name="fields[userAddress]" class="float-label" placeholder="Enter the address">{{ account.userAddress|default('') }}</textarea>
-        </div>
-        <div class="col-6 field--wrapper">
-            <label for="telephone" class="no-float">Telephone:</label>
-            <input type="text" id="telephone" name="fields[userTelephone]" class="float-label" placeholder="Enter the telephone" value="{{ account.userTelephone|default('') }}">
-        </div>
         </div>
         {%  set userCustomFields = craft.lantra.setting('userEditCustomFields') %}
         {%  for block in userCustomFields %}
@@ -178,9 +198,6 @@
                 </select>
             </div>
         </div>
-
-
-
         <div class="field--wrapper">
             <label for="userCompany">Primary Location: For Hierarchy and Reporting</label>
             <select data-relation="fields[userCompany]" data-value="{{ account.userCompany.one().id|default(hierarchyCompany) }}" id="userCompany" >
@@ -190,7 +207,6 @@
             </select>
         </div>
         <div class="field--wrapper">
-
             {# just in case validation fails #}
             {% if saveUserError is defined and saveUserError %}
                 {% set isCompanyManager = craft.app.request.post('companyManagers')  %}
@@ -290,11 +306,11 @@
                 {% endif %}
             </div>
         </div>
-
+        {% if isNew or (isEdit and not account.isLinked) %}
+            <div class="linked-fields">
         {% if siteLicence.enabled %}
-
         <div class="field--wrapper">
-            <h2>Licence</h2>
+            <h2>User licence</h2>
             <div>
                 <div class="col-6 field--wrapper">
                     <label for="userNotLicenced" class="no-float">
@@ -339,7 +355,7 @@
         {% endif %}
 
         {% if craft.lantra.setting('enableEditCredentials') or (currentUser.isInGroup('schemeManagers') or currentUser.admin) %}
-            <h2>Advanced</h2>
+            <h2>Login</h2>
             <div class="field--wrapper">
                 <label for="username" class="no-float">Username:</label>
                 <input type="text" autocomplete="off" id="username" name="username" class="float-label" placeholder="Enter the username" value="{{ account.username|default('') }}">
@@ -353,7 +369,8 @@
                 <input type="password" autocomplete="off" id="password" name="confirmPassword" class="float-label" placeholder="Enter the password" value="">
             </div>
         {% endif %}
-
+        </div>
+        {% endif %}
         <div class="container-btn">
             <button class="button primary-bg" type="submit">Save user</button>
         </div>

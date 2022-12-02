@@ -57,4 +57,20 @@ class UserBehavior extends Behavior
 
         return !$this->owner->userNotLicenced;
     }
+
+    /**
+     * @return bool
+     */
+    public function getIsLinked()
+    {
+        return $this->owner->userLinkedUser->count() > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getLinkedUser()
+    {
+        return $this->owner->userLinkedUser->one();
+    }
 }

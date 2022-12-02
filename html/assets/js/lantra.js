@@ -890,4 +890,14 @@ $(document).ready(function () {
         });
         $('#reviewSampled').change();
     }
+
+    $('#linkedUser').change(function(e){
+        if ($(this).is(':checked')) {
+            $('.linked-fields').hide();
+        }
+        else {
+            $('.linked-fields').show();
+        }
+    });
+    $('#linkedUser').change();
 });
