@@ -89,7 +89,10 @@
                     {% set managerCompanies = primaryManagerCompanies|merge(secondaryManagerCompanies) %}
                 {% endif %}
                 <tr class="item type-{{ user.userType }}">
-                    <td>{% if user.userType == 'manager' %}<a class="icon" href="#"><img src="/assets/img/manager.svg"></a>{% endif %}</td>
+                    <td>
+                        {% if user.userType == 'manager' %}<a class="icon" title="Manager" href="#"><img src="/assets/img/manager.svg"></a>{% endif %}
+                        {% if user.isLinked %}<a class="icon" title="Linked User" href="#"><img src="/assets/img/linked.svg"></a>{% endif %}
+                    </td>
                     {% for row in craft.lantra.userProfileFields('tableColumn') %}
                         <td>
                             {% switch row.field %}
