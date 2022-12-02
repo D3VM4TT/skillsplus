@@ -40,7 +40,7 @@ tabs:
       -
         type: craft\fieldlayoutelements\HorizontalRule
       -
-        fieldUid: 58240fad-08ba-4e18-bc50-6a1ee991fb06 # User Active User
+        fieldUid: 58240fad-08ba-4e18-bc50-6a1ee991fb06 # User Linked User
         instructions: null
         label: null
         required: false
