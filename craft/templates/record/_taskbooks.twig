@@ -1,8 +1,13 @@
 {% set packageId = craft.app.request.getSegment(4) %}
 {% set moduleGroupId = craft.app.request.getSegment(5) %}
+
+{% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
+{% set isManager = false %}
 {% set isAssessor = false %}
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
-{% if isManager %}
+{% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
+{% if cpdUser.id != currentUser.id %}
+    {% set isManager = true %}
     {% set readOnly = currentUser.managerReadOnly %}
     {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
@@ -14,7 +19,7 @@
 {% if packageId %}
     {% set packageItem = cpdUser.record.getItem(packageId) %}
     <article id="cpd-wrapper" class="cpd" data-ref="{{ craft.app.request.getParam('ref')|default('') }}">
-        {% include 'record/_modules/taskbook' with {cpdUser:cpdUser, packageItem:packageItem, moduleGroupId:moduleGroupId} %}
+        {% include 'record/_modules/taskbook' with{cpdUser:cpdUser, packageItem:packageItem, moduleGroupId:moduleGroupId} %}
     </article>
 {% else %}
     {{ globalsHtml.pageCurrent }}
@@ -50,7 +55,7 @@
                             'packageId' : package.id,
                             'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
                         } %}
-                        {{ craft.lantra.basePaypalButton(activeUser.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
+                        {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
                     </td>
                 </tr>
             {% endfor %}
@@ -79,7 +84,7 @@
                 {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
                 <tr>
                     <td>
-                        <a href="{{ craft.lantra.packageUrl(userId, package.id) }}">{{ package.taskbook.title }}</a>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
                     </td>
                     {% if craft.lantra.setting('taskbookLevels') %}
                     <td>
@@ -117,7 +122,7 @@
     {% endif %}
     {% if craft.lantra.setting('taskbookNew') %}
         <div class="container-btn">
-            <p><a href="/cpd/{{ userId }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
+            <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
         </div>
     {% endif %}
 {% endif %}

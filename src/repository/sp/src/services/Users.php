@@ -1895,8 +1895,8 @@ class Users extends Component
     {
         ## both users are inactive (share same active user)
         if ($user1->isInactive && $user2->isInactive) {
-            $user1ActiveUser = $user1->userActiveUser->one();
-            $user2ActiveUser = $user2->userActiveUser->one();
+            $user1ActiveUser = $user1->userActiveUser->one;
+            $user2ActiveUser = $user2->userActiveUser->one;
             return $user1ActiveUser && $user2ActiveUser && $user1ActiveUser->id == $user2ActiveUser->id;
         }
 
@@ -1905,14 +1905,5 @@ class Users extends Component
         }
 
         return in_array($user1->id, $this->getLinkedUserIds($user2));
-    }
-
-    /**
-     * @param User $user
-     * @return User
-     */
-    public function getActiveUser(User $user)
-    {
-        return $user->isInactive ? $user->userActiveUser->one() : $user;
     }
 }
