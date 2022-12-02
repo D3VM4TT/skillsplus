@@ -55,7 +55,7 @@
                             'packageId' : package.id,
                             'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
                         } %}
-                        {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
+                        {{ craft.lantra.basePaypalButton(cpdUser.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
                     </td>
                 </tr>
             {% endfor %}
@@ -122,7 +122,7 @@
     {% endif %}
     {% if craft.lantra.setting('taskbookNew') %}
         <div class="container-btn">
-            <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
+            <p><a href="/cpd/{{ cpdUser.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
         </div>
     {% endif %}
 {% endif %}

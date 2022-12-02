@@ -1,3 +1,10 @@
+{% requireLogin %}
+
+{% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
+{% set isManager = cpdUser.id != currentUser.id %}
+{% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
+{%  set dashboardUri = '/cpd/' ~ cpdUser.id %}
+
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% extends "_layout" %}
 
@@ -5,18 +12,11 @@
 {% set readOnly = (craft.lantra.setting('schemeUserReadOnly') or (cpdUser['userReadOnly'] is defined and cpdUser.userReadOnly)) %}
 
 {% set isPackageManager = false %}
-{% set isManager = false %}
 
-{% if userId != currentUser.id %}
-    {% set account = craft.users.id(userId).one %}
-    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
-    {%  set dashboardUri = '/cpd/' ~ userId %}
-    {% set isManager = true %}
+{% if isManager %}
+    {% if not account or not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
     {% set readOnly = currentUser.managerReadOnly %}
-    {% set isPackageManager = craft.lantra.isPackageManager(account.id, currentUser.id) %}
-{% else %}
-    {% set account = currentUser %}
-    {% set dashboardUri = '/' %}
+    {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
 
 {% set moduleEntry = craft.entries.id(moduleId).one() %}
@@ -53,7 +53,7 @@
     {% set resultEntry = craft.entries.status(['live', 'expired']).id(resultId).one() %}
 {% elseif not addNew %}
     {% set resultEntry = craft.lantra.getUnitResult(
-        account.id,
+        cpdUser.id,
         unitEntry.id,
         null,
         moduleEntry.type == 'cpd' ? moduleResultEntry.id : null,
@@ -63,7 +63,7 @@
         unitEntry.unitType == 'elearning'
     ) %}
 {% endif %}
-{% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, account.id) %}
+{% set remainingAttempts = craft.lantra.remainingAttempts(unitEntry, resultEntry, cpdUser.id) %}
 
 {% set metaTitle = moduleEntry.title ~ ' ' ~ unitEntry.title %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
@@ -84,9 +84,9 @@
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
-                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
                 {% else %}
-                    <a href="/management/users"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/users"><img src="{{ currentUserPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
@@ -159,9 +159,9 @@
         <section class="page">
             <div class="page-header secondary-bg">
                 {% if hierarchyNode %}
-                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ (cpdUser.photoUrl ? cpdUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
                 {% else %}
-                    <a href="/management/users"><img src="{{ (account.photoUrl ? account.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                    <a href="/management/users"><img src="{{ (cpdUser.photoUrl ? cpdUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
                 {% endif %}
                 <h2>{{ moduleEntry.title }}</h2>
                 <p>
@@ -181,7 +181,7 @@
                         {{ unitEntry.unitIntro }}
                     </div>
                 {% endif %}
-                {% include 'record/_units/files' with{unitEntry:unitEntry} %}
+                {% include 'record/_units/files' with {unitEntry:unitEntry} %}
                 {% if not resultEntry %}
                     <div class="col-pd-btm">
                         <h5>Complete the form below and attach files to submit evidence for endorsement.</h5>
@@ -198,7 +198,6 @@
                 {% include 'record/_units/evidence' with {
                     entry: unitEntry,
                     resultEntry: resultEntry,
-                    account: account,
                     moduleGroup: moduleGroup,
                     isManager: isManager,
                     moduleResultEntry: moduleResultEntry,

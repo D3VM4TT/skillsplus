@@ -1,4 +1,4 @@
-{% if isManager and account.id != currentUser.id %}
+{% if isManager %}
     {% if craft.lantra.setting('managerConfirmSubmit') %}
         <label for="confirmSubmit">
             <input id="confirmSubmit" type="checkbox" value="0" name="confirmSubmit" />

@@ -1,17 +1,11 @@
-{% extends "_layout" %}
+{% requireLogin %}
 
-{% if userId != currentUser.id %}
-    {% set account = craft.users.id(userId).one %}
-    {% if not account or not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
-    {% set isManager = true %}
-{% else %}
-    {% set account = currentUser %}
-    {% set isManager = false %}
-{% endif %}
+{% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
+{% set isManager = cpdUser.id != currentUser.id %}
+{% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
 
-{% set readOnly = currentUser.managerReadOnly %}
-
-{% set dashboardUri = '/cpd/' ~ account.id %}
+{% set readOnly = cpdUser.managerReadOnly %}
+{% set dashboardUri = '/cpd/' ~ cpdUser.id %}
 
 {# if save-entry fails #}
 {% if entry is defined %}
@@ -26,7 +20,7 @@
 {% set moduleResultEntry = false %}
 {% set isPackage = false %}
 
-{% set userUnitIds = craft.lantra.userUnitIds(account.id) %}
+{% set userUnitIds = craft.lantra.userUnitIds(cpdUser.id) %}
 {% set excludeString = userUnitIds|length ? 'and, not ' ~ userUnitIds|join(', not ') : '' %}
 {% set optionalUnits = craft.entries.section('units').id(excludeString).orderBy('title') %}
 
@@ -34,7 +28,7 @@
 {% if craft.app.request.segment(3) == 'achievement' and entryId %}
     {% set moduleEntry = craft.entries.id(entryId).one %}
     {% if not moduleEntry %}{% exit 404 %}{% endif %}
-    {% set dashboardUri = '/cpd/' ~ account.id ~ '#m' ~ moduleEntry.id %}
+    {% set dashboardUri = '/cpd/' ~ cpdUser.id ~ '#m' ~ moduleEntry.id %}
 {# editing result #}
 {% elseif not resultEntry and craft.app.request.segment(3) == 'result' and entryId %}
     {% set resultEntry = craft.entries.id(entryId).status('live, expired').one %}
@@ -64,16 +58,16 @@
 {% endif %}
 
 {% set userModules = [] %}
-{% for role in account.userRole %}
+{% for role in cpdUser.userRole %}
     {% for roleModule in craft.entries.relatedTo(role).orderBy('title') %}
         {% set userModules = userModules|merge([roleModule]) %}
     {% endfor %}
 {% endfor %}
 {# result is locked when a result entry is pending or endorsed #}
-{% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{% set resultLocked = cpdUser.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {# undo result locked #}
 {% set resultLocked = false %}
-{% set metaTitle = achievementLabel|pluralize ~ ' > ' ~ account.fullname %}
+{% set metaTitle = achievementLabel|pluralize ~ ' > ' ~ cpdUser.fullname %}
 
 {% set section = craft.app.sections.getSectionByHandle('results') %}
 {% set entryType = craft.app.sections.getEntryTypesByHandle('userResult')[0] %}
@@ -87,7 +81,7 @@
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <h2>{{ achievementLabel }} for {{ account.fullname }}</h2>
+            <h2>{{ achievementLabel }} for {{ cpdUser.fullname }}</h2>
             <p>{% if moduleEntry %}{{ moduleEntry.title }} {{ moduleResultEntry ? moduleResultEntry.cycleName }}{% endif %}</p>
         </div>
         <div class="page-form">
@@ -119,7 +113,7 @@
 
                 {{ csrfInput() }}
                 <input type="hidden" name="action" value="entries/save-entry">
-                {{ redirectInput('cpd/' ~ account.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
+                {{ redirectInput('cpd/' ~ cpdUser.id ~ '/?ref=' ~ craft.app.request.getParam('ref')) }}
                 {% if resultEntry %}
                     <input type="hidden" name="fields[resultModuleResult][]" value="{{ resultEntry.resultModuleResult.one ? resultEntry.resultModuleResult.one.id }}" />
                 {% else %}
@@ -130,7 +124,7 @@
                 <input type="hidden" name="enabled" value="1">
                 <input type="hidden" name="entryId" value="{{ resultEntry ? resultEntry.id : '' }}">
                 {% if userId %}
-                    <input type="hidden" name="author[]" value="{{ account.id }}">
+                    <input type="hidden" name="author[]" value="{{ cpdUser.id }}">
                 {%  endif %}
                 <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry ? resultEntry.resultStatus : 'pending' }}">
                 <input type="hidden" name="fields[unitEndorsementManagerLevel]" value="1">
@@ -163,7 +157,7 @@
                     </div>
                 {% endif %}
                 {% if moduleEntry %}
-                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager, readOnly:readOnly} %}
+                    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:cpdUser.id, resultLocked:resultLocked, isManager:isManager, readOnly:readOnly} %}
                 {% endif %}
                 {% if not readOnly %}
                     {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}

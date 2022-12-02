@@ -1742,6 +1742,15 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @return User
+     */
+    public function cpdUser($userId = null)
+    {
+        return $this->getUser($userId);
+    }
+
+    /**
      * Get the user
      *
      * @param null $userId

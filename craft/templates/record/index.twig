@@ -1,40 +1,34 @@
 {% requireLogin %}
-{% set hierarchyNode = craft.app.request.getParam('node') %}
-{% set userId = craft.app.request.getSegment(2) %}
-{% extends "_layout" %}
 
-{% set isManager = false %}
 {% set isPackageManager = false %}
 {% set isExternalReviewer = false %}
 
-{% set userId = craft.app.request.getSegment(2) %}
-{% if not userId or userId == currentUser.id %}
-    {% set account = currentUser %}
-{% else %}
-    {% set isManager = true %}
-    {% set account = craft.users.id(userId).status(null).one %}
-{% endif %}
+{% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
+{% set isManager = cpdUser.id != currentUser.id %}
 
 {% if isManager %}
-    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
-    {% set isPackageManager = craft.lantra.isPackageManager(account.id, currentUser.id) %}
-    {% set isExternalReviewer = craft.lantra.isExternalReviewer(account.id, currentUser.id) %}
+    {% if not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
+    {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
+    {% set isExternalReviewer = craft.lantra.isExternalReviewer(cpdUser.id, currentUser.id) %}
 {% endif %}
 
+{% extends "_layout" %}
+
+{% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 {% set jobRoleLabel = craft.lantra.setting('labelJobRole', 'Job Role') %}
 
-{% set accountPhoto = account.getPhoto() %}
+{% set accountPhoto = cpdUser.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set metaTitle = 'CPD > ' ~ account.fullname %}
+{% set metaTitle = 'CPD > ' ~ cpdUser.fullname %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
     {% if isManager and not isPackageManager %}
         {% if craft.app.request.getSegment(3) == 'archive' %}
-            <a class="back-link" href="/cpd/{{ account.id }}">&laquo; back</a>
+            <a class="back-link" href="/cpd/{{ cpdUser.id }}">&laquo; back</a>
         {% else %}
             <a class="back-link" href="/management/hierarchy">&laquo; back to Hierarchy</a>
             <a class="back-link" href="/management/users">&laquo; back to Users</a>
@@ -47,37 +41,37 @@
     
         {% if isManager and not isPackageManager %}
             {% if hierarchyNode %}
-                <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                <a href="/management/hierarchy?node={{ hierarchyNode }}"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
             {% else %}
-                <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}"></a>
+                <a href="/management/users"><img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}"></a>
             {% endif %}
         {% else %}
-            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}">
         {% endif %}
             {% if pageClass == 'print' %}
-                <h2>{{ account.fullname ~ "'s" }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+                <h2>{{ cpdUser.fullname ~ "'s" }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
             {% elseif not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
-                <h2>Hello {{ account.firstName }}</h2>
+                <h2>Hello {{ cpdUser.firstName }}</h2>
                 <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
             {% else %}
-                <h2>{{ isManager ? account.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+                <h2>{{ isManager ? cpdUser.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
             {% endif %}
-        {% if account.userRole|length %}
-            <p style="padding:0;">Allocated {{ jobRoleLabel|pluralize(account.userRole|length) }}: {% for role in account.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+        {% if cpdUser.userRole|length %}
+            <p style="padding:0;">Allocated {{ jobRoleLabel|pluralize(cpdUser.userRole|length) }}: {% for role in cpdUser.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
         {% endif %}
         {% if craft.lantra.setting('taskbooks') and isManager and not isPackageManager %}
             <div class="header-controls">
                 <div class="container-btn primary-bg" style="margin-left:0;">
                     {% if isTaskbooks %}
-                        <a class="btn-add-new" href="/cpd/{{ account.id  }}">Dashboard</a>
+                        <a class="btn-add-new" href="/cpd/{{ cpdUser.id  }}">Dashboard</a>
                     {% else %}
-                        <a class="btn-add-new" href="/cpd/{{ account.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
+                        <a class="btn-add-new" href="/cpd/{{ cpdUser.id  }}/taskbooks">{{ taskbookLabel|pluralize }}</a>
                     {% endif %}
                 </div>
             </div>
         {% endif %}
     </div>
-    {% include '_includes/account' with{cpdUser:account} %}
+    {% include '_includes/account' %}
     <div class="page-content">
         <div id="endorsements" style="display:none;">
             <h4>Endorsements</h4>
@@ -94,9 +88,9 @@
             </table>
         </div>
         {% if isTaskbooks %}
-            {% include 'record/_taskbooks' with {cpdUser:account} %}
+            {% include 'record/_taskbooks' %}
         {% else %}
-            {% include 'record/_modules' with {cpdUser:account} %}
+            {% include 'record/_modules' %}
         {% endif %}
     </div>
 </section>

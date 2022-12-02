@@ -9,7 +9,7 @@
     {{ ui.errorList(entry.getFirstErrors()) }}
 {% endif %}
 {# result is locked when a result entry is pending or endorsed #}
-{% set resultLocked = account.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
+{% set resultLocked = cpdUser.id == currentUser.id and resultEntry and resultEntry.resultStatus == 'endorsed' %}
 {% set resultCompany = moduleResultEntry and moduleResultEntry.resultCompany ? moduleResultEntry.resultCompany.one : null %}
 {# undo result locked #}
 {% set resultLocked = false %}
@@ -46,9 +46,9 @@
     {% if resultEntry is defined and resultEntry and resultEntry.id %}
         <input type="hidden" name="entryId" value="{{ resultEntry.id }}">
     {% endif %}
-    {% if account.id != currentUser.id %}
+    {% if isManager %}
         <input type="hidden" name="author[]" value="{{ userId }}">
-        <input type="hidden" name="title" value="[unit {{ entry.id }}] {{ account.firstName }} {{ account.lastName }}">
+        <input type="hidden" name="title" value="[unit {{ entry.id }}] {{ cpdUser.firstName }} {{ cpdUser.lastName }}">
     {% endif %}
     <input type="hidden" name="fields[resultStatus]" value="{{ resultEntry.resultStatus|default('pending') }}">
     <input type="hidden" name="fields[resultUnit][]" value="{{ entry.id }}">
@@ -78,7 +78,7 @@
             />
         </div>
     {% endif %}
-    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:account.id, resultLocked:resultLocked, isManager:isManager} %}
+    {% include 'record/_units/fields' with {moduleGroup:moduleGroup, resultEntry:resultEntry, accountId:cpdUser.id, resultLocked:resultLocked, isManager:isManager} %}
     {% if not readOnly %}
         {% include 'record/_units/buttons' with {resultEntry:resultEntry, resultLocked:resultLocked, autoEndorse:moduleGroup.moduleGroupAutoEndorse} %}
     {% endif %}

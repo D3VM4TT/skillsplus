@@ -1,17 +1,15 @@
 {% requireLogin %}
 
+{% if not craft.lantra.setting('taskbooks')  %}{% exit 404 %}{% endif %}
+
+{% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
+{% set isManager = cpdUser.id != currentUser.id %}
+
+{% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
+
 {% extends "_layout" %}
-{% import "_macros" as ui %}
 
-{% set userId = craft.app.request.getSegment(2) %}
-{% if not userId or userId == currentUser.id %}
-    {% set account = currentUser %}
-{% else %}
-    {% set account = craft.users.id(userId).status(null).one %}
-    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
-{% endif %}
-
-{% set accountPhoto = account.getPhoto() %}
+{% set accountPhoto = cpdUser.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set packageId = craft.request.getParam('packageId') %}
@@ -20,7 +18,7 @@
 {% set payment = craft.request.getParam('payment') %}
 {% set package = craft.entries.section('packages').id(packageId).one() %}
 {% set unpaidCost = package.unpaidCost %}
-{% set redirect = 'cpd/' ~ account.id ~ '/taskbooks/' ~ package.id %}
+{% set redirect = 'cpd/' ~ cpdUser.id ~ '/taskbooks/' ~ package.id %}
 
 {% if not package %}
     {% exit 404 %}
@@ -44,7 +42,7 @@
         </div>
         <div class="page-header secondary-bg">
             <a href="/">
-                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+                <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}">
             </a>
             {{ currentUserCompany|default('') }}
             <h2>Add {{ singleType }} modules</h2>
@@ -61,7 +59,7 @@
                     'moduleGroupIds' : package.unpaidModuleGroupIds,
                     'redirect' : redirect
                 } %}
-                {{ craft.lantra.basePaypalButton(account.id, unpaidCost, 'optional-' ~ package.id, paymentMeta, 'Pay £' ~ unpaidCost)|raw }}
+                {{ craft.lantra.basePaypalButton(cpdUser.id, unpaidCost, 'optional-' ~ package.id, paymentMeta, 'Pay £' ~ unpaidCost)|raw }}
             </div>
         {% elseif not availableModuleGroups|length %}
             <div class="field--wrapper">
@@ -83,7 +81,7 @@
                 {{ csrfInput() }}
                 {{ actionInput('sp/packages/add-module-groups') }}
                 {{ hiddenInput('packageId', package.id) }}
-                {{ redirectInput('cpd/' ~ account.id ~ '/taskbooks/' ~ package.id ) }}
+                {{ redirectInput('cpd/' ~ cpdUser.id ~ '/taskbooks/' ~ package.id ) }}
                 {{ hiddenInput('singleType', singleType) }}
                 <div class="field--wrapper">
                     {% if cost %}

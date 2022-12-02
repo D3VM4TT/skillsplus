@@ -1,26 +1,21 @@
-{% if not craft.lantra.setting('taskbooks')  %}
-    {% exit 404 %}
-{% endif %}
-
 {% requireLogin %}
+
+{% if not craft.lantra.setting('taskbooks')  %}{% exit 404 %}{% endif %}
+
+{% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
+{% set isManager = cpdUser.id != currentUser.id %}
+
+{% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
 
 {% extends "_layout" %}
 
-{% set userId = craft.app.request.getSegment(2) %}
-{% if not userId or userId == currentUser.id %}
-    {% set account = currentUser %}
-{% else %}
-    {% set account = craft.users.id(userId).status(null).one %}
-    {% if not craft.lantra.isManager(account.id) %}{% exit 403 %}{% endif %}
-{% endif %}
-
-{% set accountPhoto = account.getPhoto() %}
+{% set accountPhoto = cpdUser.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 
-{% set unpaidPackages = craft.entries.section('packages').authorId(account.id).packagePaid('not 1') %}
-{% set paidPackages = craft.entries.section('packages').authorId(account.id).packagePaid('1') %}
+{% set unpaidPackages = craft.entries.section('packages').authorId(cpdUser.id).packagePaid('not 1') %}
+{% set paidPackages = craft.entries.section('packages').authorId(cpdUser.id).packagePaid('1') %}
 
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
@@ -32,7 +27,7 @@
     </div>
     <div class="page-header secondary-bg">
         <a href="/">
-            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ account.fullName }}">
+            <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}">
         </a>
         {{ currentUserCompany|default('') }}
         <h2>Manage {{ taskbookLabel|pluralize }}</h2>
@@ -68,7 +63,7 @@
                     'packageId' : package.id,
                     'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
                 } %}
-                {{ craft.lantra.basePaypalButton(account.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
+                {{ craft.lantra.basePaypalButton(cpdUser.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
                 <p>&nbsp;</p>
                 <p>&nbsp;</p>
             {% endfor %}
@@ -76,7 +71,7 @@
 
         {% if craft.lantra.setting('taskbookNew') %}
             <div class="container-btn">
-                <p><a href="/cpd/{{ account.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
+                <p><a href="/cpd/{{ cpdUser.id }}/taskbooks/new" class="button primary-bg">Add {{ taskbookLabel }}</a></p>
             </div>
         {% else %}
             {{ globalsHtml.pageNewDisabled }}
