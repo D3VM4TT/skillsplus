@@ -1,4 +1,4 @@
-dateModified: 1666618800
+dateModified: 1669995231
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -239,6 +239,7 @@ meta:
     46656fa8-cf4d-4c7e-93d0-800132d01aa2: 'Unit Points Override' # Unit Points Override
     48909e73-b939-470f-b472-53ee709db6e4: 'Module Group Read Only' # Module Group Read Only
     51519f2a-7a03-4f9e-9fc8-ea3fbac2d3a3: 'Package Evidence' # Package Evidence
+    58240fad-08ba-4e18-bc50-6a1ee991fb06: 'User Active User' # User Active User
     64769feb-a327-4c92-8224-bfd94a529f1a: 'CPD Target Hours' # CPD Target Hours
     67368df0-4936-4ba3-9b2a-82871f72d79d: 'User Licence Company' # User Licence Company
     72642c3b-23ee-4e9c-92a9-2daf8d5b62e8: Level # Level
@@ -273,6 +274,7 @@ meta:
     a8d84419-f7b9-4d64-b7cb-ce827c7ca810: 'Company Remaining Licences' # Company Remaining Licences
     a9a76741-6219-4e4d-8be5-4d7ee9808c4a: 'Review User Name' # Review User Name
     a14afbef-0a93-407a-92e5-5cae1d2ecb1e: 'Module Group Visibility' # Module Group Visibility
+    a45ed781-89d0-4ad7-a368-7367569ce265: 'Result Upskiller' # Result Upskiller
     a75d2fa6-54eb-4155-9483-d7729fb83004: 'Result Custom' # Result Custom
     a773e69f-0bf1-46fd-ae75-5182be37772c: 'Unit Entries' # Unit Entries
     a1969b12-a29f-4cbc-ad95-96798d730775: Theme # Theme
