@@ -498,24 +498,6 @@ $(document).ready(function () {
         });
     });
 
-    // select switch company
-    $('select#switchUser').on('change', function (e) {
-        $('body').addClass('loading');
-        var data = {userId1: $(this).data('user'), userId2: $(this).val()};
-        data[window.csrfTokenName] = window.csrfTokenValue;
-        $.post("/sp/users/switch-user", data, function (response) {
-            if (!response.success) {
-                $('body').removeClass('loading');
-                alert(response.message);
-            }
-            window.location = response.redirect;
-        }).fail(function (error) {
-            $('body').removeClass('loading');
-            console.log(error);
-            alert('Server error, check the console.');
-        });
-    });
-
     // select package assessor
     $('select.assessor').on('change', function (e) {
         $('body').addClass('loading');

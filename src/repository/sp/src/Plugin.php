@@ -497,7 +497,6 @@ class Plugin extends BasePlugin
             'sp/users/company-managers'                 => 'sp/users/company-managers',
             'sp/users/save-user'                        => 'sp/users/save-user',
             'sp/users/privacy-confirm'                  => 'sp/users/privacy-confirm',
-            'sp/users/switch-user'                      => 'sp/users/switch-user',
 
             'sp/results/refresh'                        => 'sp/users/refresh-results',
 

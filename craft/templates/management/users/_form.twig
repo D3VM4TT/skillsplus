@@ -189,18 +189,6 @@
                 {% endfor %}
             </select>
         </div>
-
-        <div class="field--wrapper">
-            <label for="userRole">Secondary Companies (optional):</label>
-            <input type="hidden" name="fields[userSecondaryCompanies]" value="" />
-            <select multiple class="js-select2" name="fields[userSecondaryCompanies][]" id="userSecondaryCompanies">
-                {% for companyEntry in companyEntries %}
-                    <option {% if account is defined and companyEntry.id in account.userSecondaryCompanies.ids() %} selected="selected{% endif %}
-                        value="{{ companyEntry.id }}">{{ companyEntry.companyLabel }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
         <div class="field--wrapper">
 
             {# just in case validation fails #}
