@@ -48,18 +48,16 @@
         {% else %}
             <img src="{{ accountPhotoUrl }}" width="150" height="150" class="right rounded-circle" alt="{{ cpdUser.fullName }}">
         {% endif %}
-            {% if pageClass == 'print' %}
-                <h2>{{ cpdUser.fullname ~ "'s" }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
-            {% elseif not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
-                <h2>Hello {{ cpdUser.firstName }}</h2>
-                <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
-            {% else %}
-                <h2>{{ isManager ? cpdUser.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
-            {% endif %}
-
-        {% if cpdUser.isLinked or cpdUser.hasLinkedUsers %}
-            {% include '_includes/switchUser' %}
+        {% if pageClass == 'print' %}
+            <h2>{{ cpdUser.fullname ~ "'s" }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
+        {% elseif not craft.lantra.setting('themeMyDashboard') and isTaskbooks %}
+            <h2>Hello {{ cpdUser.firstName }}</h2>
+            <p class="welcome-back"  style="padding:0;">welcome back to your {{ craft.lantra.setting('schemeName') }} dashboard.</p>
+        {% else %}
+            <h2>{{ isManager ? cpdUser.fullname ~ "'s" : 'My' }} {{ isTaskbooks ? taskbookLabel|pluralize : 'Dashboard' }}</h2>
         {% endif %}
+
+        {% include '_includes/switchUser' %}
 
         {% if cpdUser.userRole|length %}
             <p style="padding:0;">Allocated {{ jobRoleLabel|pluralize(cpdUser.userRole|length) }}: {% for role in cpdUser.userRole %}{{ role.title }}{% if not loop.last %}, {% endif %}{% endfor %}</p>

@@ -1,10 +1,12 @@
-<div style="margin-bottom:20px;">
-    <select data-user="{{ cpdUser.id }}" id="switchUser" name="switchUser">
-        {% for user in cpdUser.allLinkedUsers %}
-            {% set linkedCompany = user.userCompany.one %}
-            <option {% if user.id == cpdUser.id %}selected="selected"{% endif %}
-                    value="{{ user.id }}">{{ linkedCompany.title }}
-            </option>
-        {% endfor %}
-    </select>
-</div>
+{% if cpdUser.hasSwitchUsers %}
+    <div style="margin-bottom:20px;">
+        <select data-user="{{ cpdUser.id }}" id="switchUser" name="switchUser">
+            {% for user in cpdUser.switchUsers %}
+                {% set linkedCompany = user.userCompany.one %}
+                <option {% if user.id == cpdUser.id %}selected="selected"{% endif %}
+                        value="{{ user.id }}">{{ linkedCompany.title }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+{% endif %}

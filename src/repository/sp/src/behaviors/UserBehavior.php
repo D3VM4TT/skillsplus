@@ -60,6 +60,7 @@ class UserBehavior extends Behavior
     }
 
     private $_linkedUsers;
+    private $_switchUsers;
 
     /**
      * @return bool
@@ -111,6 +112,36 @@ class UserBehavior extends Behavior
     {
         $user = $this->getPrimaryUser();
         return array_merge([$user], $user->getLinkedUsers());
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSwitchUsers()
+    {
+        if ($this->_switchUsers == null) {
+            $allLinkedUsers = $this->getAllLinkedUsers();
+            $currentUser = LantraHelper::getUser();
+            ## logged in user can switch between all linked users
+            if ($currentUser && $currentUser->id == $this->owner->id) {
+                $this->_switchUsers = $allLinkedUsers;
+            }
+            else {
+                ## make sure the current user can manage each linked user
+                foreach ($allLinkedUsers as $user) {
+                    if (Lantra::$app->users->isManager($user->id)) {
+                        $this->_switchUsers[] = $user;
+                    }
+                }
+            }
+        }
+        return $this->_switchUsers;
+    }
+
+    public function getHasSwitchUsers()
+    {
+        return count($this->getSwitchUsers()) > 1;
     }
 
     /**
