@@ -182,6 +182,16 @@ class UsersController extends BaseController
                 $user->addErrors(['linkedUser' => 'Linked user not found.']);
                 return Craft::$app->urlManager->setRouteParams(['account' => $user]);
             }
+            $userCompany = $user->userCompany->one();
+            if (!$userCompany) {
+                $user->addErrors(['linkedUser' => 'Linked users require a user company.']);
+                return Craft::$app->urlManager->setRouteParams(['account' => $user]);
+            }
+            $companyIds = Lantra::$app->users->getLinkedUserCompanyIds($linkedUser);
+            if (in_array($userCompany->id, $companyIds)){
+                $user->addErrors(['linkedUser' => 'Linked user already exists for ' . $userCompany->title . '.']);
+                return Craft::$app->urlManager->setRouteParams(['account' => $user]);
+            }
             $user->email = Lantra::$app->users->generateEmail($user->firstName, $user->lastName);
             $user->firstName = $linkedUser->firstName;
             $user->lastName = $linkedUser->lastName;
