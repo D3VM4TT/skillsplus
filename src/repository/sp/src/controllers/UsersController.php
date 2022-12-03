@@ -419,16 +419,16 @@ class UsersController extends BaseController
         $user1 = Craft::$app->users->getUserById($userId1);
         $user2 = Craft::$app->users->getUserById($userId2);
 
-        if (!$user1 || ! $user2) {
+        if (!$user1 || !$user2) {
             return $this->_returnError('Invalid user IDs');
         }
 
         if (!Lantra::$app->users->areLinkedUsers($user1, $user2)) {
             return $this->_returnError('User are not linked');
         }
-        ## logged in user
-        if (LantraHelper::getUser()->id == $userId1) {
-            Craft::$app->user->loginByUserId($userId2);
+        ## login user
+        if (LantraHelper::getUser()->id == $userId1 && !Craft::$app->user->loginByUserId($userId2, 86400000000)) {
+            return $this->_returnError('Could not login user ' . $userId2);
         }
         return $this->_returnMessage('', true, '/cpd/' . $userId2);
     }

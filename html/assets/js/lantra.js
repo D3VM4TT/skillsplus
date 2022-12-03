@@ -907,11 +907,11 @@ $(document).ready(function () {
         var data = {userId1: $(this).data('user'), userId2: $(this).val()};
         data[window.csrfTokenName] = window.csrfTokenValue;
         $.post("/sp/users/switch-user", data, function (response) {
-            if (!response.success) {
-                $('body').removeClass('loading');
-                alert(response.message);
+            if (response.success) {
+                return window.location = response.redirect;
             }
-            window.location = response.redirect;
+            $('body').removeClass('loading');
+            alert(response.message);
         }).fail(function (error) {
             $('body').removeClass('loading');
             console.log(error);
