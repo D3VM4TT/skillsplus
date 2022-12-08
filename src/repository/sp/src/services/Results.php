@@ -1556,7 +1556,7 @@ class Results extends Component
      * @param string $results
      * @return array|string
      */
-    public function getPackageUserResults($packageId, $userId = null, $type = 'both')
+    public function getPackageUserResults($packageId, $userId = null, $type = 'both', $status = null)
     {
         if (null == $user = LantraHelper::getUser($userId)) {
             return [];
@@ -1569,12 +1569,12 @@ class Results extends Component
             foreach ($modules as $moduleEntry) {
                 if ($type == 'unit' || $type == 'both') {
                     // get unit results relating to module
-                    $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+                    $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id, false, null, $status);
                     $results = array_merge($results, $unitResults);
                 }
                 if ($type == 'user' || $type == 'both') {
                     // get user results relating to module
-                    $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false);
+                    $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false, 'all', $status);
                     $results = array_merge($results, $userResults);
                 }
             }
@@ -1607,10 +1607,12 @@ class Results extends Component
      * @param $moduleEntryId
      * @param $userId
      * @param $resultPoints
+     * @param $return
+     * @param $status
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntryIds, $userId, $resultPoints = true, $return = 'all')
+    function getModuleUserResults($moduleEntryIds, $userId, $resultPoints = true, $return = 'all', $status = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -1619,6 +1621,9 @@ class Results extends Component
         $criteria->status = 'live, expired';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntryIds, 'field' => 'resultModule'];
+        if ($status) {
+            $criteria->resultStatus = $status;
+        }
         if ($resultPoints) {
             $criteria->resultPoints = '> 0';
         }
@@ -1630,6 +1635,7 @@ class Results extends Component
      * @param $userId
      * @param bool $count
      * @param null $moduleResultId
+     * @param null|string $status
      * @return array|int|string
      */
     function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null, $status = null)
