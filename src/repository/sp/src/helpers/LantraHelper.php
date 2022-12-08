@@ -13,6 +13,7 @@ use craft\elements\Asset;
 use craft\elements\Entry;
 use craft\elements\MatrixBlock;
 use craft\elements\User;
+use craft\helpers\ElementHelper;
 use craft\models\VolumeFolder;
 use craft\web\View;
 use lantra\sp\models\Cycle;
@@ -528,5 +529,17 @@ class LantraHelper
     public static function taskbookLevels()
     {
 
+    }
+
+    /**
+     * @param $handle
+     * @return string|null
+     */
+    public static function getFieldColumn($handle)
+    {
+        if (null == $field = Craft::$app->getFields()->getFieldByHandle($handle)) {
+            return '';
+        }
+        return ElementHelper::fieldColumnFromField($field);
     }
 }

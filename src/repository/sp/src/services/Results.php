@@ -1750,6 +1750,9 @@ class Results extends Component
         $unitResultTypeId = $this->entryTypeId('results', 'unitResult');
         $userResultTypeId = $this->entryTypeId('results', 'userResult');
 
+        $cStatus = LantraHelper::getFieldColumn('resultStatus');
+        $cIsTaskbook = LantraHelper::getFieldColumn('resultIsTaskbook');
+
         $mysql .= "
             FROM {{%entries}} e
             LEFT JOIN {{%content}} c ON c.elementId = e.id
@@ -1758,7 +1761,8 @@ class Results extends Component
             WHERE e.sectionId = " . $sectionId . "
             AND u.suspended = 0
             AND u.pending = 0 
-            AND c.field_resultStatus = 'pending'
+            AND c." . $cStatus . " = 'pending'
+            AND (c." . $cIsTaskbook . " IS NULL OR c." . $cIsTaskbook . " = 0)
             AND el.enabled = 1
             AND el.revisionId IS NULL
             AND el.draftId IS NULL
@@ -1768,8 +1772,9 @@ class Results extends Component
 
         # add subordinates and level to query
         if ($onlySubordinates) {
+            $c = LantraHelper::getFieldColumn('unitEndorsementManagerLevel');
             $mysql .= " 
-            AND (c.field_unitEndorsementManagerLevel IS NULL OR c.field_unitEndorsementManagerLevel <= " . $level . ")
+            AND (c." . $c . " IS NULL OR c." . $c . " <= " . $level . ")
             AND authorId IN (" . implode(',', $subordinateIds) . ")";
         }
 
