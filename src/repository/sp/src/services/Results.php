@@ -1715,6 +1715,61 @@ class Results extends Component
     }
 
     /**
+     * @param User $manager
+     * @param null $limit
+     * @param false $count
+     * @param string $view
+     * @param string $users
+     * @param string $moduleId
+     * @param string $unitId
+     */
+    public function getManagerEndorsementCriteria(User $manager, $limit = null, $count = false, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    {
+        # check for manager subordinates (SM and admin show all)
+        if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, $users == 'all');
+            # make sure there are any subordinates
+            if (!count($subordinateIds)) {
+                return $count ? 0 : null;
+            }
+        }
+
+        $criteria = Entry::find();
+        $criteria->resultStatus = 'pending';
+        $criteria->section = 'results';
+        $criteria->limit = $view == 'users' ? null : $limit;
+        if (isset($subordinateIds)) {
+            $criteria->authorId = $subordinateIds;
+        }
+        if ($unitId != 'all') {
+            $criteria->relatedTo = ['and', [
+                'targetElement' => [$unitId],
+                'field' => 'resultUnit'
+            ]];
+        }
+        if ($moduleId != 'all') {
+            $criteria->relatedTo = ['and', [
+                'targetElement' => [$moduleId],
+                'field' => 'resultModule'
+            ]];
+        }
+
+        ## users returns the user criteria
+        if ($view == 'users') {
+            $userIds = [];
+            foreach ($criteria->all() as $result) {
+                $userIds[] = $result->authorId;
+            }
+            $criteria = User::find();
+            $criteria->id = $userIds;
+            $criteria->limit = $limit;
+        }
+
+        return $criteria;
+
+    }
+
+    /**
      * @param $manager
      * @param bool $directSubordinates
      * @return array|int

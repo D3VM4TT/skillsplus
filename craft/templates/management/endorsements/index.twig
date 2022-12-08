@@ -6,10 +6,19 @@
 {% set metaTitle = "Management > Endorsements" %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set pageLimit = craft.lantra.setting('themeDefaultLimit', 10) %}
-{% set filterDirect = craft.app.request.getParam('direct')|default(false) %}
 
-{% set criteria = craft.lantra.managerEndorsementUsers(null, pageLimit, false, filterDirect) %}
-{% if criteria %}{% paginate criteria as pageInfo, endorseUsers %}{% endif %}
+{% set filterEndorsedView = craft.app.request.getParam('filterEndorsedView', 'users') %}
+{% set filterEndorsedUsers = craft.app.request.getParam('filterEndorsedUsers', 'all') %}
+{% set filterUnit = craft.app.request.getParam('filterUnit', 'all') %}
+{% set filterModule = craft.app.request.getParam('filterModule', 'all') %}
+
+{% set filterUnitLabel = 'Units' %}
+
+{% set criteria = craft.lantra.managerEndorsementCriteria(null, pageLimit, false, filterEndorsedView, filterEndorsedUsers, filterModule, filterUnit) %}
+{% if criteria %}{% paginate criteria as pageInfo, endorsementResults %}{% endif %}
+
+{% set allUnitEntries = craft.entries.section('units').order('title').all() %}
+{% set allModuleEntries = craft.entries.section('modules').order('title').all() %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
@@ -17,34 +26,38 @@
 </div>
 <section class="page">
     <div class="page-header secondary-bg">
-        <h2>Endorsements - {{ filterDirect ? 'My Direct Members' : 'All Members' }}</h2>
-        <p>Display:
-        {% if filterDirect %}
-            <a href="/management/endorsements">All Members</a>
-        {% else %}
-            <a href="/management/endorsements?direct=true">My Direct Members</a>
-        {% endif %}
+        <h2>Endorsements</h2>
+        <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterHideSearch:true} %}</div>
+        <p style="clear: both">
+            <strong><a href="/management/endorsements">Reset all filters</a></strong>
         </p>
     </div>
     <div class="page-content">
-    {% if endorseUsers is defined and endorseUsers|length %}
-            {{ csrfInput() }}
-            <table width="100%" class="data">
+    {% if endorsementResults is defined and endorsementResults|length %}
+            <table class="data">
                 <thead>
                     <tr>
-                        <th class="title">ID</th>
+                        <th class="title">User ID</th>
                         <th class="title">Name</th>
                         <th class="title">Company</th>
                         <th class="title">Location</th>
+                        {% if filterEndorsedView == 'units' %}
+                            <th class="title">Unit Title</th>
+                        {% endif %}
                 </thead>
                 <tbody>
-                {% for user in endorseUsers %}
+                {% for result in endorsementResults %}
+                    {% set user = filterEndorsedView == 'users' ? result : result.author %}
                     {% set company = craft.lantra.userCompany(user.id) %}
                     <tr>
                         <td><p class="td-title-responsive">ID: </p>{{ user.id }}</td>
                         <td><p class="td-title-responsive">Name: </p><a href="/cpd/{{ user.id }}">{{ user.fullname }}</a></td>
                         <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                         <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
+                        {% if filterEndorsedView == 'units' %}
+                            {% set unitTitle = result.resultUnit ? result.resultUnit.one.title : 'Unknown' %}
+                            <td><p class="td-title-responsive">Unit Title: </p>{{ unitTitle }}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

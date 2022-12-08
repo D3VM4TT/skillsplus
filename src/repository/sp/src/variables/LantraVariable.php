@@ -1514,6 +1514,24 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @param int $limit
+     * @param false $count
+     * @param string $view
+     * @param string $users
+     * @param string $moduleId
+     * @param string $unitId
+     * @return void|null
+     */
+    public function managerEndorsementCriteria($userId = null, $limit = 10, $count = false, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getManagerEndorsementCriteria($user, ($count == false ? $limit : null), $count, $view, $users, $moduleId, $unitId);
+    }
+
+    /**
      * Get the individual company id
      *
      * @return int

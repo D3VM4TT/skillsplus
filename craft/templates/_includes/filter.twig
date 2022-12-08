@@ -1,4 +1,16 @@
 <form class="filter" action="">
+    {% if filterEndorsedView is defined %}
+        <select name="filterEndorsedView" class="sp-select" style="width: 220px;">
+            <option value="users"{% if filterEndorsedView == 'users' %} selected="selected"{% endif %}>Display: Users</option>
+            <option value="units"{% if filterEndorsedView == 'units' %} selected="selected"{% endif %}>Display: Units</option>
+        </select>
+    {% endif %}
+    {% if filterEndorsedUsers is defined %}
+        <select name="filterEndorsedUsers" class="sp-select" style="width: 220px;">
+            <option value="all"{% if filterEndorsedUsers == 'all' %} selected="selected"{% endif %}>All Users</option>
+            <option value="direct"{% if filterEndorsedUsers == 'direct' %} selected="selected"{% endif %}>Direct Subordinates</option>
+        </select>
+    {% endif %}
     {% if filterDays %}
     <p>Show results {% if reportType == 'modules-expiring' or reportType == 'units-expiring' %}expiring{% else %}completed{% endif %} in:&#160;
     <span>
@@ -52,6 +64,14 @@
             <option value="draft"{% if filterStatus == 'draft' %} selected="selected"{% endif %}>Draft</option>
         </select>
     {% endif %}
+    {% if filterModule is defined %}
+        <select name="filterModule" class="sp-select" style="width: 160px;">
+            <option value="all"{% if filterModule == 'all' %} selected="selected"{% endif %}>All Modules</option>
+            {% for moduleEntry in allModuleEntries %}
+                <option value="{{ moduleEntry.id }}"{% if filterModule == moduleEntry.id %} selected="selected"{% endif %}>{{ moduleEntry.title }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
     {% if filterUnitGroup is defined %}
         <select name="filterUnitGroup" class="sp-select" style="width: 160px;">
             <option value="all"{% if filterUnitGroup == 'all' %} selected="selected"{% endif %}>All Skill Groups</option>
@@ -62,7 +82,7 @@
     {% endif %}
     {% if filterUnit is defined %}
         <select name="filterUnit" class="sp-select" style="width: 160px;">
-            <option value="all"{% if filterUnit == 'all' %} selected="selected"{% endif %}>All Skills</option>
+            <option value="all"{% if filterUnit == 'all' %} selected="selected"{% endif %}>All {{ filterUnitLabel }}</option>
             {% for unitEntry in allUnitEntries %}
                 <option value="{{ unitEntry.id }}"{% if filterUnit == unitEntry.id %} selected="selected"{% endif %}>{{ unitEntry.title }}</option>
             {% endfor %}
