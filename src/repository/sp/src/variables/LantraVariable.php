@@ -1757,9 +1757,11 @@ class LantraVariable
     public function countPending($criteria)
     {
         $pending = 0;
-        foreach ($criteria->all() as $result) {
-            if ($result->resultStatus == 'pending') {
-                $pending++;
+        if ($criteria->count()) {
+            foreach ($criteria->all() as $result) {
+                if ($result->resultStatus == 'pending') {
+                    $pending++;
+                }
             }
         }
         return $pending;

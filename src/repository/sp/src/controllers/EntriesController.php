@@ -105,7 +105,14 @@ class EntriesController extends BaseController {
         $return = LantraHelper::returnRef();
         ## get all the posted entryId(s)
         if (false != $entryId = Craft::$app->request->getParam('entryId')) {
-            $results = [['entryId' => $entryId]];
+            if (is_array($entryId)) {
+                foreach($entryId as $id) {
+                    $results[] = ['entryId' => $id];
+                }
+            }
+            else {
+                $results = [['entryId' => $entryId]];
+            }
         }
         else {
             $results = Craft::$app->request->getParam('results');
