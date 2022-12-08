@@ -1751,6 +1751,21 @@ class LantraVariable
     }
 
     /**
+     * @param $criteria
+     * @return int
+     */
+    public function countPending($criteria)
+    {
+        $pending = 0;
+        foreach ($criteria->all() as $result) {
+            if ($result->resultStatus == 'pending') {
+                $pending++;
+            }
+        }
+        return $pending;
+    }
+
+    /**
      * Get the user
      *
      * @param null $userId

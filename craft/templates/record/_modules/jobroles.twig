@@ -36,8 +36,9 @@
                 <span>Dashboard</span>
             </a>
         {% else %}
+            {% set pending = craft.lantra.countPending(resultArchive) %}
             <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
-                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
+                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}{{ pending ? ' (' ~ pending ~ ' unendorsed)' : '' }}</span>
             </a>
         {% endif %}
     {% endif %}
