@@ -353,8 +353,11 @@ $(document).ready(function () {
     endorseRow = function(link) {
         let tr = link.closest('tr');
         if (tr.hasClass('summary')) {
+            let c = tr.siblings().length;
             tr.remove();
-            return;
+            if (c === 0) {
+                $('div#endorsements').remove();
+            }
         }
         else {
             tr.removeClass('endorse');
@@ -504,14 +507,16 @@ $(document).ready(function () {
         let table = $('a.endorse').eq(0).closest('table'),
             link = $('<a />').addClass('button no-shadow primary-bg action'),
             entryIds = [];
-        table.find('a.endorse').each(function () {
-            entryIds.push($(this).data('id'));
-        });
-        link.data('action', 'entries/endorse-evidence');
-        link.data('id', entryIds);
-        link.data('reload', true);
-        link.html('<span>Endorse All</span>');
-        table.after(link);
+        if (table.attr('id') == 'table-archive') {
+            table.find('a.endorse').each(function () {
+                entryIds.push($(this).data('id'));
+            });
+            link.data('action', 'entries/endorse-evidence');
+            link.data('id', entryIds);
+            link.data('reload', true);
+            link.html('<span>Endorse All</span>');
+            table.after(link);
+        }
     }
 
     // select package assessor
