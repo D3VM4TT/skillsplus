@@ -14,7 +14,7 @@
 
 {% set filterUnitLabel = 'Units' %}
 
-{% set criteria = craft.lantra.managerEndorsementCriteria(null, pageLimit, false, filterEndorsedView, filterEndorsedUsers, filterModule, filterUnit) %}
+{% set criteria = craft.lantra.managerEndorsementCriteria(null, pageLimit, filterEndorsedView, filterEndorsedUsers, filterModule, filterUnit) %}
 {% if criteria %}{% paginate criteria as pageInfo, endorsementResults %}{% endif %}
 
 {% set allUnitEntries = craft.entries.section('units').order('title').all() %}

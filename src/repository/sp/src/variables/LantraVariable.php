@@ -1501,16 +1501,16 @@ class LantraVariable
 
     /**
      * @param null $userId
-     * @param bool $directSubordinates
-     * @return array|int|null
-     * @throws \yii\db\Exception
+     * @param false $directSubordinates
+     * @return bool|int|string|null
      */
     public function managerCountEndorsementUsers($userId = null, $directSubordinates = false)
     {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
+        $criteria = Lantra::$app->results->getManagerEndorsementCriteria($user, null, 'users', ($directSubordinates ? 'direct' : 'all'));
+        return $criteria ? $criteria->count() : 0;
     }
 
     /**
@@ -1523,12 +1523,12 @@ class LantraVariable
      * @param string $unitId
      * @return void|null
      */
-    public function managerEndorsementCriteria($userId = null, $limit = 10, $count = false, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    public function managerEndorsementCriteria($userId = null, $limit = 10, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
     {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->results->getManagerEndorsementCriteria($user, ($count == false ? $limit : null), $count, $view, $users, $moduleId, $unitId);
+        return Lantra::$app->results->getManagerEndorsementCriteria($user, $limit, $view, $users, $moduleId, $unitId);
     }
 
     /**

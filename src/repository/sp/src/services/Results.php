@@ -1717,20 +1717,20 @@ class Results extends Component
     /**
      * @param User $manager
      * @param null $limit
-     * @param false $count
      * @param string $view
      * @param string $users
      * @param string $moduleId
      * @param string $unitId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|\craft\elements\db\UserQuery|null
      */
-    public function getManagerEndorsementCriteria(User $manager, $limit = null, $count = false, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    public function getManagerEndorsementCriteria(User $manager, $limit = null, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
     {
         # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
             $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, $users == 'all');
             # make sure there are any subordinates
             if (!count($subordinateIds)) {
-                return $count ? 0 : null;
+                return null;
             }
         }
 
@@ -1738,6 +1738,8 @@ class Results extends Component
         $criteria->resultStatus = 'pending';
         $criteria->section = 'results';
         $criteria->limit = $view == 'users' ? null : $limit;
+        $criteria->resultIsTaskbook = false;
+        
         if (isset($subordinateIds)) {
             $criteria->authorId = $subordinateIds;
         }
@@ -1766,7 +1768,6 @@ class Results extends Component
         }
 
         return $criteria;
-
     }
 
     /**
