@@ -950,9 +950,6 @@ class PackageBehavior extends Behavior
     {
         if (is_null($this->_requiresEndorsement)) {
             $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit', 'pending');
-            foreach($unitResults as $result) {
-                echo $result->id;
-            }
             $this->_requiresEndorsement = (bool) count($unitResults);
         }
         return $this->_requiresEndorsement;
