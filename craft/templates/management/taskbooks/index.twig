@@ -29,7 +29,7 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterPackage:filterValue} %}</div>
+                <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterPackage:filterValue} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}

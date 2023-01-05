@@ -18,7 +18,10 @@
 {% if criteria %}{% paginate criteria as pageInfo, endorsementResults %}{% endif %}
 
 {% set allUnitEntries = craft.entries.section('units').order('title').all() %}
-{% set allModuleEntries = craft.entries.section('modules').order('title').all() %}
+
+{% set taskbookModuleIds = craft.lantra.taskbookModuleIds() %}
+{% set taskbookModuleIdsString = 'not ' ~ taskbookModuleIds|join(', not ') %}
+{% set allModuleEntries = craft.entries.section('modules').id(taskbookModuleIdsString).order('title').all() %}
 
 {% block content %}
 <div class="page-subHeader primary-bg">
