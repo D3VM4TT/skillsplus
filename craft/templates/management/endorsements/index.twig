@@ -62,7 +62,7 @@
                         <td><p class="td-title-responsive">Company: </p>{{ company ? company.title }}</td>
                         <td><p class="td-title-responsive">Location: </p>{{ company ? company.companyLabel }}</td>
                         {% if filterEndorsedView == 'units' %}
-                            {% set unitTitle = result.resultUnit ? result.resultUnit.one.title : 'Unknown' %}
+                            {% set unitTitle = result.resultUnit.one ? result.resultUnit.one.title : 'Unknown' %}
                             <td><p class="td-title-responsive">Unit Title: </p>{{ unitTitle }}</td>
                         {% endif %}
                     </tr>
