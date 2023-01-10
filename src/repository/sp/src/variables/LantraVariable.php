@@ -1793,6 +1793,11 @@ class LantraVariable
         return $pending;
     }
 
+    public function primaryUserField($user, $field)
+    {
+        return LantraHelper::primaryUserField($user, $field);
+    }
+
     /**
      * Get the user
      *
