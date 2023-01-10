@@ -17,13 +17,17 @@
 {% set criteria = craft.lantra.managerEndorsementCriteria(null, pageLimit, filterEndorsedView, filterEndorsedUsers, filterModule, filterUnit) %}
 {% if criteria %}{% paginate criteria as pageInfo, endorsementResults %}{% endif %}
 
-{% set allUnitEntries = craft.entries.section('units').order('title').all() %}
-
 {% set taskbookModuleIds = craft.lantra.taskbookModuleIds() %}
 {% set taskbookModuleIdsString = 'not ' ~ taskbookModuleIds|join(', not ') %}
-{% set allModuleEntries = craft.entries.section('modules').id(taskbookModuleIdsString).order('title').all() %}
+{% set moduleEntriesCriteria = craft.entries.section('modules').id(taskbookModuleIdsString).order('title') %}
+{% set allModuleEntries = moduleEntriesCriteria.all() %}
 
-{% block content %}
+{% set allUnitEntries = craft.entries.section('units').order('title').relatedTo({
+    sourceElement: moduleEntriesCriteria.ids,
+    field: 'moduleUnitGroups.unitEntries'
+}).all() %}
+
+    {% block content %}
 <div class="page-subHeader primary-bg">
 {% include '_includes/topNavigation' %}
 </div>
