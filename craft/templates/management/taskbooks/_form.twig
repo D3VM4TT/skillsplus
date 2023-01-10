@@ -1,4 +1,4 @@
-{% do craft.lantra.requirePermission('editTaskbooks') %}
+{% do craft.lantra.requirePermission('editPackages') %}
 
 {% set authorId = craft.app.request.getRequiredParam('userId') %}
 {% set user = craft.app.users.getUserById(authorId) %}

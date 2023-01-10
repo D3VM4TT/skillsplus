@@ -1016,7 +1016,7 @@ class LantraVariable
         }
         $permission = false;
 
-        if (in_array($task, ['editCompanies', 'editTeams', 'editModules', 'editReports', 'editTaskbooks', 'editProducts'])){
+        if (in_array($task, ['editCompanies', 'editTeams', 'editModules', 'editReports', 'editTaskbooks', 'editPackages', 'editProducts'])){
             $section = strtolower(ltrim($task, 'edit'));
             $permission = 'editEntries:' . LantraHelper::sectionUid($section);
         }
