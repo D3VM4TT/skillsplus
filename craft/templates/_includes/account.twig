@@ -17,12 +17,12 @@
                 {% case 'fullName' %}
                 <div class="col">
                     <h5 class="primary-color">{{ row.label ?: 'Name' }}</h5>
-                    <p class="link-bold">{{ cpdUser.fullName }}</p>
+                    <p class="link-bold">{{ craft.lantra.primaryUserField(cpdUser, 'fullName') }}</p>
                 </div>
                 {% case 'email' %}
                 <div class="col">
                     <h5 class="primary-color">{{ row.label ?: 'Email' }}</h5>
-                    <p class="link-bold">{{ cpdUser.email }}</p>
+                    <p class="link-bold">{{ craft.lantra.primaryUserField(cpdUser, 'email') }}</p>
                 </div>
                 {% case 'userStartDate' %}
                     <div class="col">

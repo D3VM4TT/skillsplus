@@ -1751,6 +1751,15 @@ class LantraVariable
     }
 
     /**
+     * @param $user
+     * @param $field
+     */
+    public function primaryUserField($user, $field)
+    {
+        return LantraHelper::primaryUserField($user, $field);
+    }
+
+    /**
      * Get the user
      *
      * @param null $userId
