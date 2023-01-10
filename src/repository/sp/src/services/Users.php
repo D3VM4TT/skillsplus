@@ -1799,8 +1799,8 @@ class Users extends Component
     {
         ## both users are linked (share same linked user)
         if ($user1->isLinked && $user2->isLinked) {
-            $user1LinkedUser = $user1->userLinkedUser->one;
-            $user2LinkedUser = $user2->userLinkedUser->one;
+            $user1LinkedUser = $user1->userLinkedUser->one();
+            $user2LinkedUser = $user2->userLinkedUser->one();
             return $user1LinkedUser && $user2LinkedUser && $user1LinkedUser->id == $user2LinkedUser->id;
         }
 
