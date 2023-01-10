@@ -1395,6 +1395,34 @@ class LantraVariable
     }
 
     /**
+     * @param null $userId
+     * @param false $includeChildren
+     */
+    public function userCompanyCriteria($userId = null, $includeChildren = false)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        $criteria = Entry::find();
+        $criteria->section = 'companies';
+        $criteria->limit = null;
+
+        ## restrict to companies in hierarchy
+        if (!Lantra::$app->users->isLantraAdmin($user)) {
+            $companyIds = Lantra::$app->users->getCompanyManagerCompanyIds($user);
+            if ($includeChildren) {
+                $parentIds = $companyIds;
+                foreach ($parentIds as $companyId) {
+                    $companyIds = array_merge($companyIds, Lantra::$app->users->getCompanyChildrenIds($companyId));
+                }
+            }
+            $criteria->id = $companyIds;
+        }
+
+        return $criteria;
+    }
+
+    /**
      * Get manager reports
      *
      * @param null $userId

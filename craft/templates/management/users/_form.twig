@@ -24,7 +24,7 @@
 {% set hierarchyCompany = craft.app.request.getParam('company') %}
 {% set hierarchyTeam = craft.app.request.getParam('team') %}
 
-{% set companyEntries = craft.entries.section('companies').id('not ' ~ craft.lantra.individualCompanyId()).limit(null).orderBy('companyLabel').all() %}
+{% set companyEntries = craft.lantra.userCompanyCriteria(currentUser, true).orderBy('companyLabel').all() %}
 {% set isCompanyManager = account is defined and account.isInGroup('companyManagers') or craft.app.request.getParam('companyManagers') %}
 
 {% set taskbookEntries = craft.entries.section('taskbooks').limit(null).all() %}
