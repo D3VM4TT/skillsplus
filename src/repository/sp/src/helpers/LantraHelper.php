@@ -526,6 +526,16 @@ class LantraHelper
         return null;
     }
 
+    /**
+     * @param $user
+     * @param $field
+     * @return mixed
+     */
+    public static function primaryUserField($user, $field)
+    {
+        return $user->primaryUser->$field;
+    }
+
     public static function taskbookLevels()
     {
 

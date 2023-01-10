@@ -1501,42 +1501,16 @@ class LantraVariable
 
     /**
      * @param null $userId
-     * @param false $directSubordinates
-     * @return bool|int|string|null
+     * @param bool $directSubordinates
+     * @return array|int|null
+     * @throws \yii\db\Exception
      */
     public function managerCountEndorsementUsers($userId = null, $directSubordinates = false)
     {
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        $criteria = Lantra::$app->results->getManagerEndorsementCriteria($user, null, 'users', ($directSubordinates ? 'direct' : 'all'));
-        return $criteria ? $criteria->count() : 0;
-    }
-
-    /**
-     * @param null $userId
-     * @param int $limit
-     * @param false $count
-     * @param string $view
-     * @param string $users
-     * @param string $moduleId
-     * @param string $unitId
-     * @return void|null
-     */
-    public function managerEndorsementCriteria($userId = null, $limit = 10, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
-    {
-        if (false == $user = $this->getUser($userId)) {
-            return null;
-        }
-        return Lantra::$app->results->getManagerEndorsementCriteria($user, $limit, $view, $users, $moduleId, $unitId);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function taskbookModuleIds()
-    {
-        return Lantra::$app->modules->taskbookModuleIds();
+        return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
     }
 
     /**
@@ -1777,22 +1751,9 @@ class LantraVariable
     }
 
     /**
-     * @param $criteria
-     * @return int
+     * @param $user
+     * @param $field
      */
-    public function countPending($criteria)
-    {
-        $pending = 0;
-        if ($criteria->count()) {
-            foreach ($criteria->all() as $result) {
-                if ($result->resultStatus == 'pending') {
-                    $pending++;
-                }
-            }
-        }
-        return $pending;
-    }
-
     public function primaryUserField($user, $field)
     {
         return LantraHelper::primaryUserField($user, $field);
