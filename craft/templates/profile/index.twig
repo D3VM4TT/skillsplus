@@ -19,6 +19,10 @@
         </div>
         <div class="page-header secondary-bg">
             <h2>My profile</h2>
+
+            {% set cpdUser = currentUser %}
+            {% include '_includes/switchUser' with {redirect: '/profile'} %}
+
             <p>A snapshot of your personal information, Companies and Job roles.</p>
             <div class="header-controls">
                 {% if not readOnly %}
@@ -36,12 +40,12 @@
                 <img src="{{ (currentUserPhoto ? currentUserPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg') }}"class="rounded-circle" alt="{{ currentUser.fullName }}"></a>
             <div class="field--wrapper border-btm">
                 <div class="col-3">
-                    <h2>{{ currentUser.fullName }}</h2>
+                    <h2>{{ craft.lantra.primaryUserField(currentUser, 'fullName') }}</h2>
                 </div>
                 <div class="col-9">
                     {% set email = craft.lantra.userProfileField('email', 'profile') %}
                     {% if email %}
-                           <h6 class="primary">email: {{ currentUser.userDummyEmail ? 'Not Specified' : currentUser.email }}</h6>
+                           <h6 class="primary">email: {{ currentUser.userDummyEmail ? 'Not Specified' : craft.lantra.primaryUserField(currentUser, 'email') }}</h6>
                     {% endif %}
                     {% set userId = craft.lantra.userProfileField('id', 'profile') %}
                     {% if userId %}
@@ -60,7 +64,8 @@
                     {% case 'userStartDate' %}
                         <p>{{ row.label ?: 'Start Date' }}:  {{ currentUser.userStartDate ? currentUser.userStartDate|date(dateFormat) : '~' }}</p>
                     {% case 'userDateOfBirth' %}
-                        <p>{{ row.label ?: 'Date of Birth' }}: {{ currentUser.userDateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '~' }}</p>
+                        {% set dateOfBirth = craft.lantra.primaryUserField(currentUser, 'userDateOfBirth') %}
+                        <p>{{ row.label ?: 'Date of Birth' }}: {{ dateOfBirth ? currentUser.userDateOfBirth|date(dateFormat) : '~' }}</p>
                     {% case 'userAddress' %}
                         <p>{{ currentUser.userAddress }}</p>
                     {% case 'userTelephone' %}

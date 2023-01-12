@@ -425,6 +425,7 @@ class UsersController extends BaseController
 
         $userId1 = Craft::$app->request->getRequiredParam('userId1');
         $userId2 = Craft::$app->request->getRequiredParam('userId2');
+        $redirect = Craft::$app->request->getParam('redirect', '/cpd/' . $userId2);
 
         $user1 = Craft::$app->users->getUserById($userId1);
         $user2 = Craft::$app->users->getUserById($userId2);
@@ -440,7 +441,7 @@ class UsersController extends BaseController
         if (LantraHelper::getUser()->id == $userId1 && !Craft::$app->user->loginByUserId($userId2, 86400000000)) {
             return $this->_returnError('Could not login user ' . $userId2);
         }
-        return $this->_returnMessage('', true, '/cpd/' . $userId2);
+        return $this->_returnMessage('', true, $redirect);
     }
 
     /**

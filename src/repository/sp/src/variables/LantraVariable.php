@@ -1781,6 +1781,7 @@ class LantraVariable
     /**
      * @param $user
      * @param $field
+     * @return mixed
      */
     public function primaryUserField($user, $field)
     {

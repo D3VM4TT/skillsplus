@@ -14,8 +14,13 @@
             {% include '_includes/topNavigation' %}
         </div>
         <div class="page-header secondary-bg">
-            <a href="../"><img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
+            <a href="../">
+                <img src="{{ (currentUser.photoUrl ? currentUser.getPhotoUrl(150) : '/assets/img/img-team-management.jpg') }}" width="150" height="150" class="right rounded-circle" alt="{{ currentUser.fullName }}"></a>
             <h2>Edit profile</h2>
+
+            {% set cpdUser = currentUser %}
+            {% include '_includes/switchUser' with {redirect: '/profile/edit'} %}
+
         </div>
         {% if user is defined and user.hasErrors() %}
             {{ ui.errorList(user.getFirstErrors()) }}

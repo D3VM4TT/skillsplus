@@ -10,68 +10,51 @@
     {{ hiddenInput('userId', currentUser.id) }}
 
     {% if currentUser.isLinked %}
-        <p style="margin-bottom: 20px;"><strong>Linked to user account #{{ currentUser.linkedUser.id }}</strong></p>
+        <p style="margin-bottom: 20px;"><strong>Linked to user account #{{ currentUser.linkedUser.id }} {{ currentUser.linkedUser.fullName }}</strong></p>
+        <p style="margin-bottom: 20px;color:#FF0000">Switch to your primary account to change name, email or date of birth fields.</p>
+        </p>
     {% endif %}
 
     {% for row in craft.lantra.userProfileFields('userEdit') %}
         {% switch row.field %}
             {% case 'fullName' %}
-                <div class="field--wrapper">
-                    <label for="firstName" class="no-float">First Name</label>
-                    {% if currentUser.isLinked %}
-                        <p>{{ currentUser.linkedUser.firstName }}</p>
-                    {% else %}
-                        <input {{ row.required ? 'required' }} name="firstName" type="text" class="float-label" placeholder="Enter your first name"
-                            value="{{ formUser.firstName }}">
-                    {% endif %}
-                </div>
-                <div class="field--wrapper">
-                    <label for="lastName" class="no-float">Last Name</label>
-                    {% if currentUser.isLinked %}
-                        <p>{{ currentUser.linkedUser.lastName }}</p>
-                    {% else %}
-                        <input {{ row.required ? 'required' }} name="lastName" type="text" class="float-label" placeholder="Enter your last name"
-                            value="{{ formUser.lastName }}">
-                    {% endif %}
-                </div>
+                {% if not currentUser.isLinked %}
+                    <div class="field--wrapper">
+                        <label for="firstName" class="no-float">First Name</label>
+                            <input {{ row.required ? 'required' }} name="firstName" type="text" class="float-label" placeholder="Enter your first name"
+                                value="{{ formUser.firstName }}">
+                    </div>
+                    <div class="field--wrapper">
+                        <label for="lastName" class="no-float">Last Name</label>
+                            <input {{ row.required ? 'required' }} name="lastName" type="text" class="float-label" placeholder="Enter your last name"
+                                value="{{ formUser.lastName }}">
+                    </div>
+                {% endif %}
             {% case 'email' %}
+                {% if not currentUser.isLinked %}
                 <div class="field--wrapper">
                     <label for="email" class="no-float">{{ row.label ?: 'Email'  }}</label>
-                    {% if currentUser.isLinked %}
-                        <p>{{ currentUser.linkedUser.email }}</p>
-                    {% else %}
                         <input {{ row.required ? 'required' }} name="email" type="text" class="float-label" placeholder="Enter your email"
                             value="{{ formUser.email }}">
-                    {% endif %}
                 </div>
+                {% endif %}
             {% case 'userDateOfBirth' %}
+                {% if not currentUser.isLinked %}
                 <div class="field--wrapper">
-                    {% if currentUser.isLinked %}
-                        <label>Date of birth</label>
-                        <p>{{ currentUser.linkedUser.userDateOfBirth|date(dateFormat) }}</p>
-                    {% else %}
-                        {% include '_includes/date' with {label: row.label ?: 'Date of birth', name:'fields[userDateOfBirth]', value: formUser.userDateOfBirth, ys: now.year - 10, ye: now.year - 100} %}
-                    {% endif %}
+                    {% include '_includes/date' with {label: row.label ?: 'Date of birth', name:'fields[userDateOfBirth]', value: formUser.userDateOfBirth, ys: now.year - 10, ye: now.year - 100} %}
                 </div>
+                {%  endif %}
             {% case 'userAddress' %}
                 <div class="field--wrapper">
                     <label for="address" class="no-float">{{ row.label ?: 'Address' }}</label>
-                    {% if currentUser.isLinked %}
-                        <p>{{ currentUser.linkedUser.userAddress }}</p>
-                    {% else %}
-                        <textarea {{ row.required ? 'required' }} id="address" name="fields[userAddress]" class="float-label"
-                            placeholder="Enter the address">{{ formUser.userAddress|default('') }}</textarea>
-                    {% endif %}
+                    <textarea {{ row.required ? 'required' }} id="address" name="fields[userAddress]" class="float-label"
+                        placeholder="Enter the address">{{ formUser.userAddress|default('') }}</textarea>
                 </div>
             {% case 'userTelephone' %}
                 <div class="field--wrapper">
                     <label for="telephone" class="no-float">{{ row.label ?: 'Telephone' }}</label>
-                    {% if currentUser.isLinked %}
-                        <p>{{ currentUser.linkedUser.userTelephone }}</p>
-                    {% else %}
-                        <input {{ row.required ? 'required' }} type="text" id="telephone" name="fields[userTelephone]" class="float-label"
-                            placeholder="Enter the telephone" value="{{ formUser.userTelephone|default('') }}">
-                    {% endif %}
+                    <input {{ row.required ? 'required' }} type="text" id="telephone" name="fields[userTelephone]" class="float-label"
+                        placeholder="Enter the telephone" value="{{ formUser.userTelephone|default('') }}">
                 </div>
             {% case 'userStartDate' %}
                 <div class="field--wrapper">

@@ -925,7 +925,11 @@ $(document).ready(function () {
     // select switch company
     $('select#switchUser').on('change', function (e) {
         $('body').addClass('loading');
-        var data = {userId1: $(this).data('user'), userId2: $(this).val()};
+        var data = {
+            userId1: $(this).data('user'),
+            userId2: $(this).val(),
+            redirect: $(this).data('redirect')
+        };
         data[window.csrfTokenName] = window.csrfTokenValue;
         $.post("/sp/users/switch-user", data, function (response) {
             if (response.success) {
