@@ -74,7 +74,7 @@
                     <img src="/assets/img/delete.svg" alt="Delete">
                 </a>
             {% endif %}
-            {% if resultEntry and resultEntry.resultStatus == 'pending' %}
+            {% if resultEntry and resultEntry.resultStatus == 'pending' and managerEndorse %}
                 <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
                    data-label="{{ rowName|default(rowTitle)|trim }}"
                    {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
