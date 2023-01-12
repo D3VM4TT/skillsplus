@@ -1561,6 +1561,14 @@ class LantraVariable
     }
 
     /**
+     * @return mixed
+     */
+    public function taskbookModuleIds()
+    {
+        return Lantra::$app->modules->taskbookModuleIds();
+    }
+
+    /**
      * Get the individual company id
      *
      * @return int
