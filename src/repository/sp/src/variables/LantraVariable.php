@@ -1538,7 +1538,26 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
-        return Lantra::$app->results->countManagerEndorsementUsers($user, $directSubordinates);
+        $criteria = Lantra::$app->results->getManagerEndorsementCriteria($user, null, 'users', ($directSubordinates ? 'direct' : 'all'));
+        return $criteria ? $criteria->count() : 0;
+    }
+
+    /**
+     * @param null $userId
+     * @param int $limit
+     * @param false $count
+     * @param string $view
+     * @param string $users
+     * @param string $moduleId
+     * @param string $unitId
+     * @return void|null
+     */
+    public function managerEndorsementCriteria($userId = null, $limit = 10, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        return Lantra::$app->results->getManagerEndorsementCriteria($user, $limit, $view, $users, $moduleId, $unitId);
     }
 
     /**
