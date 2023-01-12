@@ -30,6 +30,8 @@
         </div>
     {% endif %}
     <input type="hidden" name="fields[resultModuleResult][]" value="{{ moduleResultEntry.id }}" />
+    <input type="hidden" name="fields[resultModule][]" value="{{ moduleEntry.id }}" />
+    <input type="hidden" name="fields[resultIsTaskbook]" value="{{ isTaskbook }}" />
     {# if rollover is off unit results are locked to package and module #}
     {% if resultPackageId is defined and resultPackageId %}
         <input type="hidden" name="fields[resultPackage][]" value="{{ resultPackageId }}" />

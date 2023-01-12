@@ -17,6 +17,7 @@ use craft\events\ModelEvent;
 
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
+use verbb\supertable\services\SuperTableService;
 
 class Modules extends Component
 {
@@ -47,6 +48,30 @@ class Modules extends Component
             $event->isValid = false;
             $entry->addError('moduleUnitGroups', 'You can only add one recurring unit per module.');
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function taskbookModuleIds()
+    {
+        $criteria = Entry::find()->section('taskbooks');
+
+        $moduleGroupIds = [];
+        foreach ($criteria->all() as $taskbook) {
+            foreach ($taskbook->taskbookModuleGroups as $row) {
+                $moduleGroupIds = array_merge($moduleGroupIds, $row->moduleGroup->ids());
+            }
+        }
+
+        $criteria = Entry::find()
+            ->section('modules')
+            ->relatedTo([
+                'targetElement' => $moduleGroupIds,
+                'field' => 'moduleGroup'
+            ]);
+
+        return $criteria->ids();
     }
 
     /**

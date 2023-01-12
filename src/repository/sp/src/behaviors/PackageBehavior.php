@@ -939,6 +939,23 @@ class PackageBehavior extends Behavior
     }
 
     /**
+     * @var
+     */
+    private $_requiresEndorsement;
+
+    /**
+     * @return false
+     */
+    public function getRequiresEndorsement()
+    {
+        if (is_null($this->_requiresEndorsement)) {
+            $unitResults = Lantra::$app->results->getPackageUserResults($this->owner->id, $this->owner->authorId, 'unit', 'pending');
+            $this->_requiresEndorsement = (bool) count($unitResults);
+        }
+        return $this->_requiresEndorsement;
+    }
+
+    /**
      * @todo this should be more general and elsewhere...
      *
      * @param $unitId

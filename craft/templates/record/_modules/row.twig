@@ -38,36 +38,9 @@
         <td>{{ craft.lantra.assessmentScore(unit, resultEntry, cpdUser.id) }}</td>
         <td>{{ craft.lantra.remainingAttempts(unit, resultEntry, cpdUser.id) }}</td>
     {% endif %}
-    {% if module.isSkillsMatrix %}
+    {% if module is defined and module.isSkillsMatrix %}
         <td>{{ resultEntry ? craft.lantra.skillLevel(resultEntry.skillLevel.one, resultEntry.resultStatus == 'endorsed', resultEntry.resultUpskiller)|raw : '' }}</td>
     {% endif %}
-    <td class="icons">
-        {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
-            {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
-            {% set managerEndorse = craft.lantra.canEndorse(resultEntry) and packageUnitEndorse %}
-            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
-                <a class="icon action" href="#" title="Delete this result" data-tooltip
-                    {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
-                   data-action="entries/delete-entry"
-                   data-id="{{ resultEntry.id }}"
-                >
-                    <img src="/assets/img/delete.svg" alt="Delete">
-                </a>
-            {% endif %}
-            {# ## remove unit endorse ticks
-            {% if managerEndorse and resultEntry and resultEntry.resultStatus == 'pending' %}
-                <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
-                   data-label="{{ rowName|default(rowTitle)|trim }}"
-                   {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
-                   data-action="entries/endorse-evidence"
-                   data-id="{{ resultEntry.id }}"
-                >
-                    <img src="/assets/img/endorse.svg" alt="Endorse">
-                </a>
-            {% endif %}
-            #}
-        {% endif %}
-    </td>
     <td class="icons">
         {% if editLink is defined and editLink and resultEntry %}
             <a class="icon" href="{{ editLink }}" data-tooltip title="Edit this result">
@@ -84,6 +57,31 @@
             {% if certificateUrl %}
                 <a target="_blank" class="icon" href="{{ certificateUrl }}" data-tooltip title="Download certificate">
                     <img src="/assets/img/certificate.svg" title="Download certificate" />
+                </a>
+            {% endif %}
+        {% endif %}
+    </td>
+    <td class="icons">
+        {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
+            {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
+            {% set managerEndorse = craft.lantra.canEndorse(resultEntry) and packageUnitEndorse %}
+            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+                <a class="icon action delete" href="#" title="Delete this result" data-tooltip
+                    {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
+                   data-action="entries/delete-entry"
+                   data-id="{{ resultEntry.id }}"
+                >
+                    <img src="/assets/img/delete.svg" alt="Delete">
+                </a>
+            {% endif %}
+            {% if resultEntry and resultEntry.resultStatus == 'pending' %}
+                <a class="icon action endorse" href="#" title="Endorse this result" data-tooltip
+                   data-label="{{ rowName|default(rowTitle)|trim }}"
+                   {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
+                   data-action="entries/endorse-evidence"
+                   data-id="{{ resultEntry.id }}"
+                >
+                    <img src="/assets/img/endorse.svg" alt="Endorse">
                 </a>
             {% endif %}
         {% endif %}

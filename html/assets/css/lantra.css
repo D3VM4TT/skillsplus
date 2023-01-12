@@ -2576,6 +2576,10 @@ div#endorsements table.data div.cpd-icons {
     display: none;
 }
 
+div#endorsements table.data a.delete {
+    display: none;
+}
+
 div.modal-wrapper {
     display: none;
     position: fixed;

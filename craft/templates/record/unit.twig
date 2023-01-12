@@ -14,7 +14,7 @@
 {% set isPackageManager = false %}
 
 {% if isManager %}
-    {% if not account or not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
+    {% if not cpdUser or not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
     {% set readOnly = currentUser.managerReadOnly %}
     {% set isPackageManager = craft.lantra.isPackageManager(cpdUser.id, currentUser.id) %}
 {% endif %}
@@ -199,7 +199,9 @@
                     entry: unitEntry,
                     resultEntry: resultEntry,
                     moduleGroup: moduleGroup,
+                    moduleEntry: moduleEntry,
                     isManager: isManager,
+                    isTaskbook: isPackage,
                     moduleResultEntry: moduleResultEntry,
                     readOnly: readOnly,
                     resultPackageId: resultPackageId,

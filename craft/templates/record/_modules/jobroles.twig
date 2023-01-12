@@ -26,6 +26,7 @@
         {% endfor %}
     {% endif %}
 </div>
+{% set resultArchivePending = craft.lantra.countPending(resultArchive) %}
 {% if not craft.lantra.setting('themeDisableResultHistory') and resultArchive|length %}
     {% include 'record/_archive' with {resultEntries:resultArchive, isManager:isManager, readOnly:readOnly} %}
 {% endif %}
@@ -37,7 +38,7 @@
             </a>
         {% else %}
             <a class="button no-shadow primary-bg" href="/cpd/{{ cpdUser.id }}/archive">
-                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}</span>
+                <span>{{ craft.lantra.setting('themeResultHistoryTitle', 'Result History') }}{{ resultArchivePending ? ' (' ~ resultArchivePending ~ ' unendorsed)' : '' }}</span>
             </a>
         {% endif %}
     {% endif %}

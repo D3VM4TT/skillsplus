@@ -29,7 +29,7 @@
             <h2>{{ pageTitle }}</h2>
             <p>View {{ taskbookLabel|pluralize }}</p>.</p>
             <div class="header-controls">
-                <div class="header-search">{% include '_includes/filter' with{filterDays:false, filterPackage:filterValue} %}</div>
+                <div class="header-search">{% include '_includes/filter' with {filterDays:false, filterPackage:filterValue} %}</div>
             </div>
         </div>
         {% if packageEntries is defined and packageEntries|length %}
@@ -44,6 +44,7 @@
                         <th>{{ taskbookLabel }}</th>
                         <th>Current Step</th>
                         <th>Current Reviewer</th>
+                        <th>Requires Endorsement</th>
                         {% if filterValue == 'all' %}
                         <th>&nbsp;</th>
                         {% endif %}
@@ -64,6 +65,7 @@
                             </td>
                             <td><p class="td-title-responsive">Next Step:</p>{{ package.nextStep ? package.nextStep.reviewStepName : 'Complete' }}</td>
                             <td><p class="td-title-responsive">Next Step Reviewer:</p>{{ package.nextStep and nextStepReviewer ? nextStepReviewer.fullName }}</td>
+                            <td><p class="td-title-responsive">Requires Endorsement:</p>{{ package.requiresEndorsement ? 'Yes' : 'No'}}</td>
                             {% if filterValue == 'all' %}
                             <td class="icons" style="width:140px;text-align:right">
                                 <a class="icon" href="/management/taskbooks/manage/{{ package.id }}">

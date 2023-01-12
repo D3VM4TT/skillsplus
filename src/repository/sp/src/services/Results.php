@@ -1556,7 +1556,7 @@ class Results extends Component
      * @param string $results
      * @return array|string
      */
-    public function getPackageUserResults($packageId, $userId = null, $type = 'both')
+    public function getPackageUserResults($packageId, $userId = null, $type = 'both', $status = null)
     {
         if (null == $user = LantraHelper::getUser($userId)) {
             return [];
@@ -1569,12 +1569,12 @@ class Results extends Component
             foreach ($modules as $moduleEntry) {
                 if ($type == 'unit' || $type == 'both') {
                     // get unit results relating to module
-                    $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id);
+                    $unitResults = $this->getModuleUnitResults($moduleEntry, $user->id, false, null, $status);
                     $results = array_merge($results, $unitResults);
                 }
                 if ($type == 'user' || $type == 'both') {
                     // get user results relating to module
-                    $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false);
+                    $userResults = $this->getModuleUserResults($moduleEntry->id, $user->id, false, 'all', $status);
                     $results = array_merge($results, $userResults);
                 }
             }
@@ -1607,10 +1607,12 @@ class Results extends Component
      * @param $moduleEntryId
      * @param $userId
      * @param $resultPoints
+     * @param $return
+     * @param $status
      * @return array
      * @throws Exception
      */
-    function getModuleUserResults($moduleEntryIds, $userId, $resultPoints = true, $return = 'all')
+    function getModuleUserResults($moduleEntryIds, $userId, $resultPoints = true, $return = 'all', $status = null)
     {
         $criteria = Entry::find();
         $criteria->section = 'results';
@@ -1619,6 +1621,9 @@ class Results extends Component
         $criteria->status = 'live, expired';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $moduleEntryIds, 'field' => 'resultModule'];
+        if ($status) {
+            $criteria->resultStatus = $status;
+        }
         if ($resultPoints) {
             $criteria->resultPoints = '> 0';
         }
@@ -1630,6 +1635,7 @@ class Results extends Component
      * @param $userId
      * @param bool $count
      * @param null $moduleResultId
+     * @param null|string $status
      * @return array|int|string
      */
     function getModuleUnitResults($moduleEntry, $userId, $count = false, $moduleResultId = null, $status = null)
@@ -1709,6 +1715,62 @@ class Results extends Component
     }
 
     /**
+     * @param User $manager
+     * @param null $limit
+     * @param string $view
+     * @param string $users
+     * @param string $moduleId
+     * @param string $unitId
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|\craft\elements\db\UserQuery|null
+     */
+    public function getManagerEndorsementCriteria(User $manager, $limit = null, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    {
+        # check for manager subordinates (SM and admin show all)
+        if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
+            $subordinateIds = Lantra::$app->users->getManagerSubordinateIds($manager, $users == 'all');
+            # make sure there are any subordinates
+            if (!count($subordinateIds)) {
+                return null;
+            }
+        }
+
+        $criteria = Entry::find();
+        $criteria->resultStatus = 'pending';
+        $criteria->section = 'results';
+        $criteria->limit = $view == 'users' ? null : $limit;
+        $criteria->resultIsTaskbook = false;
+        
+        if (isset($subordinateIds)) {
+            $criteria->authorId = $subordinateIds;
+        }
+        if ($unitId != 'all') {
+            $criteria->relatedTo = ['and', [
+                'targetElement' => [$unitId],
+                'field' => 'resultUnit'
+            ]];
+        }
+        if ($moduleId != 'all') {
+            $criteria->relatedTo = ['and', [
+                'targetElement' => [$moduleId],
+                'field' => 'resultModule'
+            ]];
+        }
+
+        ## users returns the user criteria
+        if ($view == 'users') {
+            $userIds = [];
+            foreach ($criteria->all() as $result) {
+                $userIds[] = $result->authorId;
+            }
+            $criteria = User::find();
+            $criteria->id = $userIds;
+            $criteria->limit = $limit;
+        }
+
+        return $criteria;
+    }
+
+    /**
      * @param $manager
      * @param bool $directSubordinates
      * @return array|int
@@ -1750,6 +1812,9 @@ class Results extends Component
         $unitResultTypeId = $this->entryTypeId('results', 'unitResult');
         $userResultTypeId = $this->entryTypeId('results', 'userResult');
 
+        $cStatus = LantraHelper::getFieldColumn('resultStatus');
+        $cIsTaskbook = LantraHelper::getFieldColumn('resultIsTaskbook');
+
         $mysql .= "
             FROM {{%entries}} e
             LEFT JOIN {{%content}} c ON c.elementId = e.id
@@ -1758,7 +1823,8 @@ class Results extends Component
             WHERE e.sectionId = " . $sectionId . "
             AND u.suspended = 0
             AND u.pending = 0 
-            AND c.field_resultStatus = 'pending'
+            AND c." . $cStatus . " = 'pending'
+            AND (c." . $cIsTaskbook . " IS NULL OR c." . $cIsTaskbook . " = 0)
             AND el.enabled = 1
             AND el.revisionId IS NULL
             AND el.draftId IS NULL
@@ -1768,8 +1834,9 @@ class Results extends Component
 
         # add subordinates and level to query
         if ($onlySubordinates) {
+            $c = LantraHelper::getFieldColumn('unitEndorsementManagerLevel');
             $mysql .= " 
-            AND (c.field_unitEndorsementManagerLevel IS NULL OR c.field_unitEndorsementManagerLevel <= " . $level . ")
+            AND (c." . $c . " IS NULL OR c." . $c . " <= " . $level . ")
             AND authorId IN (" . implode(',', $subordinateIds) . ")";
         }
 

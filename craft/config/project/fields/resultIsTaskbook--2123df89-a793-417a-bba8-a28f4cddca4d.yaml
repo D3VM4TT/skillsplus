@@ -1,0 +1,14 @@
+columnSuffix: hdyugjbk
+contentColumnType: boolean
+fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
+handle: resultIsTaskbook
+instructions: 'Taskbook unit results are not included in endorsement queue.'
+name: 'Is Taskbook?'
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

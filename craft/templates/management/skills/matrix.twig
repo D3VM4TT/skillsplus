@@ -12,6 +12,7 @@
 {% set filterStatus = craft.app.request.getParam('filterStatus')|default('all') %}
 {% set filterUnitGroup = craft.app.request.getParam('filterUnitGroup')|default('all') %}
 {% set filterUnit = craft.app.request.getParam('filterUnit')|default('all') %}
+{% set filterUnitLabel = 'Skills' %}
 {% set skillsMatrixUsersSetting = craft.lantra.setting('skillsMatrixUsers') %}
 {% set filterSkillMatrixUsers = craft.app.request.getParam('filterSkillMatrixUsers')|default(skillsMatrixUsersSetting) %}
 
