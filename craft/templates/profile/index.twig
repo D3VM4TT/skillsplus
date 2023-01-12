@@ -30,9 +30,11 @@
                         <a class="btn-add-new" href="/profile/edit">Edit profile</a>
                     </div>
                 {% endif %}
+                {% if not currentUser.isLinked %}
                 <div class="container-btn primary-bg">
                     <a class="btn-add-new" href="/profile/password">Edit password</a>
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="page-content">
