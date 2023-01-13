@@ -1743,18 +1743,26 @@ class Results extends Component
         if (isset($subordinateIds)) {
             $criteria->authorId = $subordinateIds;
         }
+
+        $relatedTo = [];
+
         if ($unitId != 'all') {
-            $criteria->relatedTo = ['and', [
+            $relatedTo[] = [
                 'targetElement' => [$unitId],
                 'field' => 'resultUnit'
-            ]];
+            ];
         }
         if ($moduleId != 'all') {
-            $criteria->relatedTo = ['and', [
+            $relatedTo[]  = [
                 'targetElement' => [$moduleId],
                 'field' => 'resultModule'
-            ]];
+            ];
         }
+
+        if (count($relatedTo)) {
+            $criteria->relatedTo = array_merge(['and'], $relatedTo);
+        }
+
 
         ## users returns the user criteria
         if ($view == 'users') {
