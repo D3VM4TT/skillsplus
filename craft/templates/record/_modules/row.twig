@@ -62,10 +62,10 @@
         {% endif %}
     </td>
     <td class="icons">
-        {% if not readOnly and resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
+        {% if resultEntry and craft.lantra.isManager(cpdUser.id) and resultEntry.resultStatus != 'incomplete' %}
             {% set managerDelete = resultEntry.resultOwner.count and resultEntry.resultOwner.one.id == currentUser.id %}
             {% set managerEndorse = craft.lantra.canEndorse(resultEntry) and packageUnitEndorse %}
-            {% if currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete %}
+            {% if not readOnly and (currentUser.admin or currentUser.isInGroup('schemeManagers') or managerDelete) %}
                 <a class="icon action delete" href="#" title="Delete this result" data-tooltip
                     {% if moduleElementId is defined %}data-ref="module{{ moduleElementId }}"{% endif %}
                    data-action="entries/delete-entry"
