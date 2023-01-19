@@ -409,8 +409,11 @@ class Results extends Component
     {
         ## userId of result
         $resultAuthorId = $comment->getOwner()->author->id;
-        $commentAuthorId = $comment->user->one()->id;
-        if (($resultAuthorId == $userId && $commentAuthorId != $userId) || ($resultAuthorId != $userId && $commentAuthorId == $resultAuthorId)) {
+        ## comment author suspended
+        if (null == $commentAuthor = $comment->user->one()) {
+            return;
+        }
+        if (($resultAuthorId == $userId && $commentAuthor->id != $userId) || ($resultAuthorId != $userId && $commentAuthor->id == $resultAuthorId)) {
             $comment->setFieldValue('read', true);
             Craft::$app->elements->saveElement($comment);
         }
