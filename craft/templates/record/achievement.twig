@@ -1,5 +1,7 @@
 {% requireLogin %}
 
+{% extends "_layout" %}
+
 {% set cpdUser = craft.lantra.cpdUser(craft.app.request.getSegment(2)) %}
 {% set isManager = cpdUser.id != currentUser.id %}
 {% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
