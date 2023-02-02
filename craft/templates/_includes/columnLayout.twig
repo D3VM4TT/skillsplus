@@ -1,5 +1,5 @@
 {% if header is defined %}
-    {% for row in columnLayout.all() %}
+    {% for row in columnLayout %}
         {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
             <th>
             {% if row.fieldType == 'resultOutcome' %}
@@ -11,7 +11,7 @@
         {% endif %}
     {% endfor %}
 {% else %}
-    {% for row in columnLayout.all() %}
+    {% for row in columnLayout %}
         {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
         {% if row.fieldType == 'unitType' %}
             <td class="unitType">

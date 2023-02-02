@@ -59,7 +59,7 @@
         {% for moduleItem in moduleGroupItem.modules %}
             {% set module = cpdUser.record.getElement(moduleItem.elementId) %}
             {% set moduleElementId = moduleGroupElementId ~ module.id %}
-            {% set columnLayout = module.columnLayout.count ?  module.columnLayout : (moduleGroup.columnLayout.count ? moduleGroup.columnLayout : globalsTheme.columnLayout) %}
+            {% set columnLayout = module.columnLayout.count() ?  module.columnLayout.all() : (moduleGroup.columnLayout.count() ? moduleGroup.columnLayout.all() : defaultColumnLayout.all()) %}
             {% include 'record/_modules/module' %}
         {% endfor %}
     </div>

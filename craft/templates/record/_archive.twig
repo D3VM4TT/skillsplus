@@ -1,4 +1,6 @@
 {% set isArchive = true %}
+
+{% set defaultColumnLayout = globalsTheme.columnLayout %}
 <p> </p>
 
 <section id="archive" class="{% if craft.lantra.setting('themeResultHistoryLink') %}hidden{% endif %}">
@@ -15,7 +17,7 @@
                             <thead>
                             <tr>
                                 <th>Result Title</th>
-                                {% include '_includes/columnLayout' with {header:true,  columnLayout:globalsTheme.columnLayout} %}
+                                {% include '_includes/columnLayout' with {header: true, columnLayout: defaultColumnLayout.all() } %}
                                 <th colspan="2"></th>
                             </tr>
                             </thead>
@@ -30,7 +32,7 @@
                                     unitPoints: resultEntry.unitPoints,
                                     resultEntry: resultEntry,
                                     editLink: '/result/' ~ resultEntry.id,
-                                    columnLayout: globalsTheme.columnLayout
+                                    columnLayout: defaultColumnLayout.all()
                                 } %}
                              {% endfor %}
                             </tbody>
