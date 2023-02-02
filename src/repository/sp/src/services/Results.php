@@ -602,6 +602,7 @@ class Results extends Component
     {
         $criteria = Entry::find();
         $criteria->sectionId = $this->sectionId('results');
+        $criteria->structureId = false;
         $criteria->typeId = $this->entryTypeId('results', 'unitResult');
         $criteria->limit = $limit;
         if (!$companyId) {
@@ -638,6 +639,7 @@ class Results extends Component
     {
         $criteria = Entry::find();
         $criteria->sectionId = $this->sectionId('results');
+        $criteria->structureId = false;
         if ($type != 'all') {
             $criteria->typeId = $this->entryTypeId('results', $type);
         }
@@ -3206,6 +3208,7 @@ class Results extends Component
 
         $criteria = Entry::find()
             ->sectionId($this->sectionId('results'))
+            ->structureId(null)
             ->authorId($userId)
             ->relatedTo(['targetElement' => [$unitId], 'field' => 'resultUnit'])
             ->andRelatedTo(['targetElement' => $skillLevelIds, 'field' => 'skillLevel']);
