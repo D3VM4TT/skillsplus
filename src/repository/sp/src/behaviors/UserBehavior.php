@@ -59,7 +59,8 @@ class UserBehavior extends Behavior
         return !$this->owner->userNotLicenced;
     }
 
-    private $_linkedUsers;
+    private $_linkedUser = false;
+    private $_linkedUsers = false;
     private $_switchUsers;
 
     /**
@@ -67,7 +68,10 @@ class UserBehavior extends Behavior
      */
     public function getLinkedUser()
     {
-        return $this->owner->userLinkedUser->one();
+        if ($this->_linkedUser === false) {
+            $this->_linkedUser = $this->owner->userLinkedUser->one();
+        }
+        return $this->_linkedUser;
     }
 
     /**
@@ -91,7 +95,7 @@ class UserBehavior extends Behavior
      */
     public function getLinkedUsers()
     {
-        if ($this->_linkedUsers == null) {
+        if ($this->_linkedUsers === false) {
             $this->_linkedUsers = Lantra::$app->users->getLinkedUsers($this->owner);
         }
         return $this->_linkedUsers;
