@@ -934,7 +934,8 @@ class Packages extends Component
 
         ## find related module groups
         $criteria = Category::find();
-        $criteria->group = 'moduleGroups';
+        $criteria->structureId = false;
+        $criteria->groupId = LantraHelper::groupId('moduleGroups');
         $criteria->relatedTo($moduleIds);
 
         return $criteria->ids();

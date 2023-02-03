@@ -16,6 +16,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 use craft\elements\Category;
 
+use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
 
 class Records extends Component
@@ -50,7 +51,8 @@ class Records extends Component
     public function getModuleGroups(ElementQueryInterface $modules, $taskbooks = false)
     {
         $criteria = Category::find();
-        $criteria->group = 'moduleGroups';
+        $criteria->structureId = false;
+        $criteria->groupId = LantraHelper::groupId('moduleGroups');
         $criteria->relatedTo($modules->ids());
         $criteria->moduleGroupTaskbooks = $taskbooks;
         return $criteria;

@@ -10,7 +10,8 @@ namespace lantra\sp\behaviors;
 
 use Craft;
 use craft\elements\MatrixBlock;
-use craft\elements\user;
+use craft\elements\User;
+use craft\elements\Category;
 use verbb\supertable\elements\SuperTableBlockElement;
 use yii\base\Behavior;
 
@@ -21,6 +22,7 @@ use lantra\sp\helpers\RecordHelper;
 class PackageBehavior extends Behavior
 {
     private $_moduleGroups = [];
+    private $_taskbook;
 
     /**
      * Returns the package taskbook element.
@@ -29,7 +31,10 @@ class PackageBehavior extends Behavior
      */
     public function getTaskbook()
     {
-        return $this->owner->packageTaskbook ? $this->owner->packageTaskbook->last() : null;
+        if ($this->_taskbook === null) {
+            $this->_taskbook = $this->owner->packageTaskbook ? $this->owner->packageTaskbook->last() : false;
+        }
+        return $this->_taskbook;
     }
 
     /**

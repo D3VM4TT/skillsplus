@@ -2697,6 +2697,7 @@ class Results extends Component
     {
         if (is_null($this->roles)) {
             $criteria = Category::find();
+            $criteria->structureId = false;
             $criteria->group = 'roles';
             $criteria->limit = null;
             foreach ($criteria->all() as $role) {
@@ -2743,6 +2744,7 @@ class Results extends Component
     {
         if (is_null($this->roleUnits)) {
             $criteria = Category::find();
+            $criteria->structureId = false;
             $criteria->group = 'roles';
             $criteria->limit = null;
             foreach ($criteria->all() as $role) {

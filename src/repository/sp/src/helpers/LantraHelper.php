@@ -168,6 +168,15 @@ class LantraHelper
 
     /**
      * @param $handle
+     * @return null
+     */
+    public static function groupStructureId($handle)
+    {
+        return self::groupProperty($handle, 'structureId');
+    }
+
+    /**
+     * @param $handle
      * @param $typeHandle
      * @return int|null
      */
