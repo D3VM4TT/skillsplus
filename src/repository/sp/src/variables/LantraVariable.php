@@ -1538,8 +1538,27 @@ class LantraVariable
         if (false == $user = $this->getUser($userId)) {
             return null;
         }
+        $name = 'endorsementCount' . $user->id;
+        if (false != $cache = Craft::$app->cache->get($name)) {
+            return $cache;
+        }
         $criteria = Lantra::$app->results->getManagerEndorsementCriteria($user, null, 'users', ($directSubordinates ? 'direct' : 'all'));
-        return $criteria ? $criteria->count() : 0;
+        $count = $criteria ? $criteria->count() : 0;
+        Craft::$app->cache->set($name, $count);
+        return $count;
+    }
+
+    /**
+     * @param null $userId
+     * @return void|null
+     */
+    public function resetEndorsementCount($userId = null)
+    {
+        if (false == $user = $this->getUser($userId)) {
+            return null;
+        }
+        $name = 'endorsementCount' . $user->id;
+        Craft::$app->cache->delete($name);
     }
 
     /**

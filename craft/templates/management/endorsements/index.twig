@@ -1,5 +1,7 @@
 {% if not craft.lantra.canManage() %}{% exit 404 %}{% endif %}
 
+{% do craft.lantra.resetEndorsementCount() %}
+
 {% extends "_layout" %}
 {% import "_macros" as ui %}
 
