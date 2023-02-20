@@ -6,7 +6,11 @@
 {% set isManager = cpdUser.id != currentUser.id %}
 {% if isManager and not craft.lantra.isManager(cpdUser.id) %}{% exit 403 %}{% endif %}
 
-{% set readOnly = cpdUser.managerReadOnly %}
+{% if cpdUser.id != currentUser.id %}
+        {% set readOnly = null %}
+    {% else %}
+        {% set readOnly = cpdUser.managerReadOnly %}
+{% endif %}
 {% set dashboardUri = '/cpd/' ~ cpdUser.id %}
 
 {# if save-entry fails #}
