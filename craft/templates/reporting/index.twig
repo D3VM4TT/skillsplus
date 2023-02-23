@@ -59,6 +59,7 @@
                                 {% endif %}
                             </td>
                             <td>
+                                {% if not standard %}
                                 {% if complete %}
                                     {% set asset = report.reportData.one %}
                                     <a class="icon" href="/internal/{{ asset.id }}" rel="external">
@@ -68,6 +69,7 @@
                                 <a class="icon" href="/sp/reports/run-custom-report/{{ report.id }}" data-id="{{ report.id }}">
                                     <img  src="/assets/img/run.svg" title="Run Now" />
                                 </a>
+                                {% endif %}
                             </td>
                             <td style="text-align: right;">
                                 <a class="icon" href="/reporting/edit/{{ report.id }}">
