@@ -60,7 +60,8 @@ class AssetsController extends BaseController
     {
         $this->requireAcceptsJson();
 
-        $user = LantraHelper::getUser(Craft::$app->request->getParam('userId'));
+        $user = LantraHelper::getUser(Craft::$app->request->getParam('userId', null));
+        if(is_null($user)) $user = Craft::$app->getUser()->getIdentity();
         $uploadId = Craft::$app->request->getParam('uploadId', $user->id);
         $tempFolder = rtrim(Craft::$app->path->tempPath, '/') . '/';
 

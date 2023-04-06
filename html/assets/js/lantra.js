@@ -944,4 +944,29 @@ $(document).ready(function () {
         });
     });
 
+    var evidenceAssetIdsArr = [];
+    $(document).on("click", "#evidence-upload-modal li.lantra-asset", function(){
+        $(this).toggleClass('grey-bg');
+        var id = $(this).data('id');
+        var evidenceAssetIds = $("input[name='evidenceAssetIds']").val();
+        if( $(this).hasClass('grey-bg') ){
+            evidenceAssetIdsArr.push(id);
+        }else{
+            evidenceAssetIdsArr = $.grep(evidenceAssetIdsArr, function(value) {
+                return value != id;
+            });            
+        }
+        $("input[name='evidenceAssetIds']").val(evidenceAssetIdsArr.join('|'));
+    })
+
+    $(document).on("click", "button#mark-all-complete", function(e){
+        $("input[name='resultStatus']").val('complete');
+        $("form#form-upload-new-evidence").submit();
+    })
+
+    $(document).on("click", "button#save-as-draft", function(e){
+        $("input[name='resultStatus']").val('draft');
+        $("form#form-upload-new-evidence").submit();
+    })
+
 });

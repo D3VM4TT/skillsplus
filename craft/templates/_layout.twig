@@ -169,6 +169,12 @@
                     {% include '_includes/evidence/browser' %}
                 </div>
             </div>
+
+            <div class="modal-wrapper" id="evidence-upload-modal">
+                <div class="modal-content">
+                    {% include '_includes/evidence/upload' %}
+                </div>
+            </div>
         {% endif %}
 
         {% if craft.lantra.setting('userPrivacyConfirm', false) and currentUser and not currentUser.userPrivacy %}

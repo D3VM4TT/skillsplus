@@ -524,6 +524,7 @@ class Plugin extends BasePlugin
             'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
             'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
             'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
+            'sp/packages/browse-packages'                 => 'sp/packages/browse-packages',
 
             'sp/paypal/process/<userId>/<paymentId>'    => 'sp/paypal/process',
         ];

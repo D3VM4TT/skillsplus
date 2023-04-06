@@ -1,0 +1,35 @@
+<section id="browser" class="lantra-browser">
+    <form class="page-form" method="post" role="form" accept-charset="UTF-8" id="form-upload-new-evidence">
+        {{ csrfInput() }}
+        {{ actionInput('sp/packages/save-units') }}
+        {{ redirectInput(craft.app.request.getPathInfo()) }}
+        <input type="hidden" name="evidenceAssetIds" value="" />
+        <input type="hidden" name="resultStatus" value="draft" />
+        <p style="color:#FF0000;text-align: center"><strong>WARNING</strong> large video files can be uploaded but may take a while to upload.</p>
+        <ul class="assets assets-evidence" data-volume="evidence"></ul>
+        <div class="browser-controls">
+            <a href="#" class="primary-bg button cancel">Cancel</a>
+            <span class="primary-bg button upload">
+                <span>Upload New File</span>
+                <input name="assets-upload" type="file">
+            </span>
+        </div>
+        <div class="loading">
+            <div class="progress"></div>
+            <p><a href="#" class="upload-cancel">[cancel upload]</a></p>
+        </div>
+
+        <div class="col-12">
+            <ul class="packages packages-evidence"></ul>
+            <br />
+            <div>
+                <textarea name="comments" rows="4" placeholder="Comments - to be shared on all units" style="width: 80%; padding: 10px;"></textarea>
+            </div>
+            <div class="browser-controls">
+                <button type="button" class="primary-bg button" id="mark-all-complete">Mark all Units as Complete</button>
+                <button type="button" class="primary-bg button" id="save-as-draft">Save as Draft</button>
+                <a href="#" class="primary-bg button cancel">Cancel</a>
+            </div>
+        </div>
+    </form>
+</section>

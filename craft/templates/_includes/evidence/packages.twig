@@ -1,0 +1,29 @@
+{% if package %}
+    {% for packageModuleGroup in package.packageModuleGroups.all() %}
+        <li>
+            <label style="padding-bottom: 0;" for="module-group-{{ packageModuleGroup.moduleGroup.one().slug }}">{{ packageModuleGroup.moduleGroup.one().title }}</label>
+            {% set packageModulesQuery = craft.entries.section('modules').relatedTo(packageModuleGroup.moduleGroup.one()) %}
+            {% if packageModulesQuery.count() %}
+                <ul style="padding-left: 30px;">
+                    {% for packageModule in packageModulesQuery.all() %}
+                        <li>
+                            <label style="padding-bottom: 0;" for="module-{{ packageModule.slug }}">{{ packageModule.title }}</label>
+                            {% set unitBlocks = packageModule.moduleUnitGroups.all() %}
+                            {% if unitBlocks|length %}
+                                <ul style="padding-left: 30px;">
+                                    {% for unitBlock in unitBlocks %}
+                                        {% for unitEntry in unitBlock.unitEntries.all() %}
+                                            <li>
+                                                <label style="padding-bottom: 0;" for="module-{{ unitEntry.slug }}"><input type="checkbox" name="packageUnits[]" id="module-{{ unitEntry.slug }}" value="{{ unitEntry.id ~ '|' ~ packageModule.id }}" />&nbsp;{{ unitEntry.title }}</label>
+                                            </li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endif %}

@@ -13,6 +13,7 @@ use Craft;
 use craft\elements\Entry;
 use craft\helpers\DateTimeHelper;
 use verbb\supertable\elements\SuperTableBlockElement;
+use verbb\supertable\SuperTable;
 
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\Plugin as Lantra;
@@ -287,5 +288,95 @@ class PackagesController extends BaseController
             $message = 'Assessor unassigned.';
         }
         $this->_returnMessage($message, 'true');
+    }
+
+    /**
+     * Get package units for pop-up
+     *
+    */
+    public function actionBrowsePackages()
+    {
+        $this->requireLogin();
+        $user = LantraHelper::getUser(Craft::$app->request->getParam('userId'));
+        $packageId = Craft::$app->request->getParam('packageId', false);
+
+        $response = [
+            'success' => false,
+            'message' => $packageId,
+            'html' => ''
+        ];
+
+        $template = '_includes/evidence/packages';
+
+        if ($packageId) {
+            $package = Craft::$app->entries->getEntryById($packageId);
+            $response['success'] = true;
+            $response['html'] = Craft::$app->view->renderTemplate($template, ['package' => $package]);
+            return $this->asJson($response);
+        }        
+    }
+
+    public function actionSaveUnits()
+    {
+        $this->requireLogin();
+        $this->requirePostRequest();
+        $comments = Craft::$app->request->getParam('comments');
+        $packageUnits = Craft::$app->request->getParam('packageUnits');
+        $evidenceAssetIds = Craft::$app->request->getParam('evidenceAssetIds');
+        $resultStatus = Craft::$app->request->getParam('resultStatus');
+        $evidenceAssetIdsArr = [];
+        if( $evidenceAssetIds ) $evidenceAssetIdsArr = explode('|', $evidenceAssetIds);
+        $modules = [];
+        $moduleUnits = [];
+
+        $currentUser = Craft::$app->getUser()->getIdentity();
+        $name = $currentUser->fullName;
+
+        $stField = Craft::$app->getFields()->getFieldByHandle('resultComments');
+        $stBlockTypes = SuperTable::$plugin->getService()->getBlockTypesByFieldId($stField->id);
+        $stBlockType = $stBlockTypes[0];
+
+        $resultComments = [];
+        $resultComments['new1'] = [
+            'type' => $stBlockType->id,
+            'enabled' => true,
+            'fields' => [
+                'user' => [$currentUser->id],
+                'comment' => $comments,
+                'date' => date('Y-m-d')
+            ]
+        ];
+
+        foreach ($packageUnits as $packageUnit) 
+        {
+            $packageArr = explode('|', $packageUnit);
+            $unitId = $packageArr[0];
+            $moduleId = $packageArr[1];
+            if(!in_array($moduleId, $modules))
+            {
+                array_push($modules, $moduleId);
+                // Save Module 
+            }
+
+            $moduleUnits[$moduleId] = $unitId;
+
+            // Save Unit
+            $unit = new Entry();
+            $unit->authorId = $currentUser->id;
+            $unit->enabled = true;
+            $unit->title = "unit {$unitId} " . $name;
+            $unit->sectionId = LantraHelper::sectionId('results');
+            $unit->typeId = 1; // Unit Result
+            $fields['resultUnit'] = [$unitId];
+            $fields['resultStatus'] = $resultStatus;
+            $fields['resultComments'] = $resultComments;
+            // $fields['resultNotes'] = $comments;
+            if(!empty($evidenceAssetIdsArr)){
+                $fields['resultEvidence'] = $evidenceAssetIdsArr;
+            }
+            $unit->setFieldValues($fields);
+            Craft::$app->elements->saveElement($unit);
+        }
+        return $this->redirectToPostedUrl();
     }
 }

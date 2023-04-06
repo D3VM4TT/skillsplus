@@ -2835,3 +2835,7 @@ tr.module-selected span.module-select i.fa-check {
     width:18px;
     z-index: 99;
 }
+
+.grey-bg {
+    background: rgba(0,0,0,0.2);
+}

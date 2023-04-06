@@ -18,11 +18,13 @@ function formatBytes(bytes,decimals) {
             $target = null,
             $element = $(element),
             $ulEvidence = $element.find('ul.assets-evidence'),
+            $ulPackages = $element.find('ul.packages-evidence'),
             $inputUpload = $element.find('span.upload').find('input'),
             $progress = $element.find('div.progress'),
             defaults = {
                 urlBrowser: '/sp/assets/browse-evidence',
-                urlUpload: '/sp/assets/upload-evidence'
+                urlUpload: '/sp/assets/upload-evidence',
+                urlPackages: '/sp/packages/browse-packages',
             };
 
         plugin.settings = {}
@@ -37,7 +39,7 @@ function formatBytes(bytes,decimals) {
             });
 
             // add select click
-            $element.on('click', 'li', function(e){
+            $element.on('click', '#browser-modal li.lantra-asset', function(e){
                 e.preventDefault();
                 plugin.selectAsset($(this).clone());
             });
@@ -87,6 +89,11 @@ function formatBytes(bytes,decimals) {
             }).on('fileuploadsend', function (e, data) {
                 $progress.text( '0%');
             });
+
+            $element.on('click', '#browser-modal li.lantra-asset', function(e){
+                e.preventDefault();
+                plugin.selectAsset($(this).clone());
+            });
         }
 
         plugin.cancelUpload = function() {
@@ -124,6 +131,11 @@ function formatBytes(bytes,decimals) {
             return plugin;
         }
 
+        plugin.refreshPackages = function($packageId) {
+            plugin.loadPackages($ulPackages, $packageId);
+            return plugin;
+        }
+
         plugin.loadAssets = function($ul) {
             let data = {
                 volume: $ul.data('volume'),
@@ -150,6 +162,28 @@ function formatBytes(bytes,decimals) {
             });
         }
 
+        plugin.loadPackages = function($ul, $packageId) {
+            let data = {
+                userId: userId,
+                packageId: $packageId
+            };
+            data[window.csrfTokenName] = window.csrfTokenValue;
+            $('body').addClass('loading');
+            $.post(this.settings.urlPackages, data, function(response) {
+                $('body').removeClass('loading');
+                if (!response.success) {
+                    alert(response.message ? response.message : 'Server error, check the console.');
+                    return;
+                }
+                $ul.empty();
+                $ul.prepend(response.html);
+
+            }).fail(function(error) {
+                $('body').removeClass('loading');
+                alert('Server error, check the console.');
+            });
+        }        
+
         plugin.selectAsset = function($asset) {
             $target.prepend($asset);
             plugin.closeModal();
@@ -172,8 +206,6 @@ function formatBytes(bytes,decimals) {
     }
 })(jQuery);
 
-
-
 $(document).ready(function(){
     $('.lantra-browser').lantraBrowser();
     $('.open-lantra-browser').click(function(e){
@@ -190,4 +222,36 @@ $(document).ready(function(){
             $.post('/', $form.serialize(), function(response) {}, "json");
         });
     });
+
+
+    $(document).on("click", "a.open-lantra-evidence-upload", function(e) {
+        e.preventDefault();
+        let t = $(this).data('target'),
+            $packageId = $(this).data('package-id'),
+            $element = $('#evidence-upload-modal').find('.lantra-browser').eq(0);
+        $element.data('lantraBrowser').setTarget($('#' + t)).refreshAssets().refreshPackages($packageId).openModal();
+        $("section.lantra-browser ul.assets").css('height', 'auto');
+    });
+    // $('ul.assets').on( 'click', 'i.delete', function(){
+    //     let $li = $(this).parents('li'),
+    //         $form = $(this).parents('form').eq(0);
+    //     $li.fadeOut('fast', function(){
+    //         $li.remove();
+    //         $.post('/', $form.serialize(), function(response) {}, "json");
+    //     });
+    // });
+
+    /*
+    $(document).on("click", "a.open-lantra-upload", function(e) {
+        e.preventDefault();
+        $element = $('#upload-evidence-modal').find('.lantra-browser').eq(0);
+        $element.parents('.modal-wrapper').addClass('modal-open');
+    })
+
+    $(document).on("click", "#upload-evidence-modal a.close", function(e) {
+        e.preventDefault();
+        $element = $('#upload-evidence-modal').find('.lantra-browser').eq(0);
+        $element.parents('.modal-wrapper').removeClass('modal-open');
+    })
+    */
 });
