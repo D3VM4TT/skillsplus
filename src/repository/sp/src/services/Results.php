@@ -1929,7 +1929,9 @@ class Results extends Component
             ];
         }
 
-        return $this->getModuleResults($days, $limit, false, 'active', $search, $subordinateIds, $relatedTo);
+        $criteria = $this->getModuleResults($days, $limit, false, ['active', 'complete'], $search, $subordinateIds, $relatedTo);
+        $criteria->orderBy = 'authorId';
+        return $criteria;
     }
 
     /**

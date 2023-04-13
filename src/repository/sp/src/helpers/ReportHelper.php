@@ -333,16 +333,18 @@ class ReportHelper
         $resultModule = $resultEntry->resultModule->one();
 
         $componentText = '';
-        foreach ($resultEntry->resultComponentResults as $componentRow) {
-            $componentText .= $componentRow['title'] . ' ';
-            if ($componentRow['targetHours']) {
-                $componentText .= $componentRow['endorsedHours'] . '/' . $componentRow['targetHours'] . ' hours ';
-            }
-            if ($componentRow['targetHours'] && $componentRow['targetPoints']) {
-                $componentText .= " ";
-            }
-            if ($componentRow['targetPoints']) {
-                $componentText .= $componentRow['endorsedPoints'] . '/' . $componentRow['targetPoints'] . ' points ';
+        if (is_iterable($resultEntry->resultComponentResults)) {
+            foreach ($resultEntry->resultComponentResults as $componentRow) {
+                $componentText .= $componentRow['title'] . ' ';
+                if ($componentRow['targetHours']) {
+                    $componentText .= $componentRow['endorsedHours'] . '/' . $componentRow['targetHours'] . ' hours ';
+                }
+                if ($componentRow['targetHours'] && $componentRow['targetPoints']) {
+                    $componentText .= " ";
+                }
+                if ($componentRow['targetPoints']) {
+                    $componentText .= $componentRow['endorsedPoints'] . '/' . $componentRow['targetPoints'] . ' points ';
+                }
             }
         }
 
@@ -352,12 +354,12 @@ class ReportHelper
             $user->fullName,
             $resultModule->id,
             $resultModule->title,
-            $resultModule->cycleStartDate ? $resultModule->cycleStartDate->format($dateFormat) : '~',
-            $resultModule->cycleFinishDate ? $resultModule->cycleFinishDate->format($dateFormat) : '~',
-            $resultModule->targetHours ? $resultModule->targetHours : 0,
-            $resultEntry->resultHours ? $resultEntry->resultHours : 0,
-            $resultModule->targetPoints ? $resultModule->targetPoints : 0,
-            $resultEntry->resultPoints ? $resultEntry->resultPoints : 0,
+            $resultEntry->cycleStartDate ? $resultEntry->cycleStartDate->format($dateFormat) : '~',
+            $resultEntry->cycleFinishDate ? $resultEntry->cycleFinishDate->format($dateFormat) : '~',
+            $resultModule->targetHours ?: 0,
+            $resultEntry->resultHours ?: 0,
+            $resultModule->targetPoints ?: 0,
+            $resultEntry->resultPoints ?: 0,
             $componentText
         ];
 
