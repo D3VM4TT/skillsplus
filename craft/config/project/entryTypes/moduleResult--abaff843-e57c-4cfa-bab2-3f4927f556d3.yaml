@@ -114,7 +114,16 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
+          -
+            fieldUid: b9aee86b-4af4-40aa-9673-848931e1e750 # Result Unendorsed Hours
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
           -
             fieldUid: a1d83c2a-d7f2-45d2-8430-7e2efd8d12ec # Result Points
             instructions: null
@@ -123,7 +132,16 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             warning: null
-            width: 100
+            width: 50
+          -
+            fieldUid: 53db6462-0ded-4ff9-babe-8ed1294eec1b # Result Unendorsed Points
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 50
           -
             fieldUid: 77c7c383-632e-462f-984c-7ab34eb2cd1e # Result Component Results
             instructions: null
