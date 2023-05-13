@@ -766,7 +766,21 @@ $(document).ready(function () {
         }
     });
 
-    $('.module-group-tabs ul.tabs li:first-child a').click();
+    // get the module from the hash (back button)
+    let hash = window.location.hash.slice(1);
+    // default for first tab link
+    let firstTabLink = $('.module-group-tabs ul.tabs li:first-child a');
+
+    if (hash && hash[0] === "m") {
+        let m = hash.slice(1);
+        let moduleElement = $('[data-m="' + m + '"]').eq(0);
+        if (moduleElement) {
+            let tab = moduleElement.closest('.groups-tab-group').attr('id');
+            firstTabLink = $('.module-group-tabs').find('a[href="#' + tab + '"]');
+            $('a[href="#' + moduleElement.attr('id') + '"]').click();
+        }
+    }
+    firstTabLink.click();
 
     $('select.module-menu').change(function () {
         if (!$(this).val()) return;

@@ -1,4 +1,4 @@
-<div id="module{{ moduleElementId }}" class="module open">
+<div id="module{{ moduleElementId }}" data-m="{{ module.id }}" class="module open">
     {% if  module.type == 'cpd' %}
         {% if module.cycleStartDate > date() %}
             <div class="header">
