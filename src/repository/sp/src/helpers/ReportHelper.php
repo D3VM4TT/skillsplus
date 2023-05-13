@@ -313,8 +313,10 @@ class ReportHelper
             'Cycle Finish',
             'Target Hours',
             'Result Hours',
+            'Unendorsed Hours',
             'Target Points',
             'Result Points',
+            'Unendorsed Points',
             'Module Components'
         ];
     }
@@ -358,8 +360,10 @@ class ReportHelper
             $resultEntry->cycleFinishDate ? $resultEntry->cycleFinishDate->format($dateFormat) : '~',
             $resultModule->targetHours ?: 0,
             $resultEntry->resultHours ?: 0,
+            $resultEntry->resultUnendorsedHours ?: 0,
             $resultModule->targetPoints ?: 0,
             $resultEntry->resultPoints ?: 0,
+            $resultEntry->resultUnendorsedPoints ?: 0,
             $componentText
         ];
 

@@ -1009,33 +1009,50 @@ class Results extends Component
                 $moduleResultExpiryTime = (time() + ($moduleEntry->moduleExpiryDays * 86400));
             }
         }
-        $points = 0;
-        $hours = 0;
+
+        $endorsedPoints = 0;
+        $endorsedHours = 0;
+        $unendorsedPoints = 0;
+        $unendorsedHours = 0;
+
         foreach ($resultEntries as $resultEntry) {
+            $points = 0;
+            $hours = 0;
+            if ((float)$resultEntry->resultHours) {
+                $hours += (float)$resultEntry->resultHours;
+            }
+            ## unit results value is unit value
+            if ($resultEntry->type == 'unitResult') {
+                $unitEntry = $resultEntry->resultUnit->one();
+                ## point overridden by unit group
+                $points += $this->getUnitPoints($unitEntry, $moduleEntry);
+            }
+            ## user result value is custom
+            elseif ($resultEntry->type == 'userResult') {
+                if ((int)$resultEntry->resultPoints) {
+                    $points += (int)$resultEntry->resultPoints;
+                }
+            }
             if ($resultEntry->resultStatus == 'endorsed') {
-                if ((float)$resultEntry->resultHours) {
-                    $hours += (float)$resultEntry->resultHours;
-                }
-                ## unit results value is unit value
-                if ($resultEntry->type == 'unitResult') {
-                    $unitEntry = $resultEntry->resultUnit->one();
-                    ## point overridden by unit group
-                    $points += $this->getUnitPoints($unitEntry, $moduleEntry);
-                } ## user result value is custom
-                elseif ($resultEntry->type == 'userResult') {
-                    if ((int)$resultEntry->resultPoints) {
-                        $points += (int)$resultEntry->resultPoints;
-                    }
-                }
+                $endorsedPoints += $points;
+                $endorsedHours += $hours;
                 ## check if result expiry is before default module expiry)
                 if ($resultEntry->expiryDate && (is_null($moduleResultExpiryTime) || $resultEntry->expiryDate->getTimestamp() < $moduleResultExpiryTime)) {
                     $moduleResultExpiryTime = $resultEntry->expiryDate->getTimestamp();
                 }
             }
+            else {
+                $unendorsedPoints += $points;
+                $unendorsedHours += $hours;
+            }
         }
         $componentResults = $this->getComponentResults($moduleEntry, $unitResultEntries, $userResultEntries);
-        $moduleResultEntry->setFieldValue('resultHours', $hours);
-        $moduleResultEntry->setFieldValue('resultPoints', $points);
+        $moduleResultEntry->setFieldValue('resultHours', $endorsedPoints);
+        $moduleResultEntry->setFieldValue('resultPoints', $endorsedHours);
+
+        $moduleResultEntry->setFieldValue('resultUnendorsedHours', $unendorsedHours);
+        $moduleResultEntry->setFieldValue('resultUnendorsedPoints', $unendorsedPoints);
+
         $moduleResultEntry->setFieldValue('resultComponentResults', $componentResults);
         Craft::$app->getElements()->saveElement($moduleResultEntry);
         ## update result status to complete or revert to active (if unit result was deleted)

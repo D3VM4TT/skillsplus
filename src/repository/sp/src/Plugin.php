@@ -66,7 +66,7 @@ class Plugin extends BasePlugin
     public static $plugin;
     public $hasCpSection = true;
 
-    public $schemaVersion = '0.0.1';
+    public $schemaVersion = '0.0.3';
 
     /**
      * @throws \yii\base\InvalidConfigException
