@@ -724,23 +724,6 @@ $(document).ready(function () {
         $("#account-details-expand").slideToggle(400);
     });
 
-    // get the module from the hash (back button)
-    let hash = window.location.hash.slice(1);
-    // default for first tab link
-    let tabLink = $('.module-group-tabs ul.tabs li:first-child a');
-    let firstTabLink = true;
-    if (hash && hash[0] === "m") {
-        let m = hash.slice(1);
-        let moduleElement = $('[data-m="' + m + '"]').eq(0);
-        if (moduleElement) {
-            let tab = moduleElement.closest('.groups-tab-group').attr('id');
-            tabLink = $('.module-group-tabs').find('a[href="#' + tab + '"]');
-            $('a[href="#' + moduleElement.attr('id') + '"]').click();
-        }
-    }
-    tabLink.click();
-    firstTabLink = false;
-
     /* cpd module groups and tabs */
     $('.tabgroup > div').hide();
     $('.module-group-tabs').hide();
@@ -774,7 +757,7 @@ $(document).ready(function () {
             }
         }
         // make sure first unit group is shown
-        if (!firstTabLink && target.match("^#tab")) {
+        if (target.match("^#tab")) {
             $(target).find('ul.tabs').eq(0).find('a').eq(0).click();
         }
         // update select if present
@@ -782,6 +765,26 @@ $(document).ready(function () {
             select.val(target);
         }
     });
+
+    // get the module from the hash (back button)
+    let hash = window.location.hash.slice(1);
+    // default for first tab link
+    let tabLink = $('.module-group-tabs ul.tabs li:first-child a');
+    let moduleTabLink = false;
+    if (hash && hash[0] === "m") {
+        let m = hash.slice(1);
+        let moduleElement = $('[data-m="' + m + '"]').eq(0);
+        if (moduleElement) {
+            let tab = moduleElement.closest('.groups-tab-group').attr('id');
+            tabLink = $('.module-group-tabs').find('a[href="#' + tab + '"]').eq(0);
+            // click the module tab link too
+            moduleTabLink = $('a[href="#' + moduleElement.attr('id') + '"]').eq(0);
+        }
+    }
+    tabLink.click();
+    if (moduleTabLink) {
+        moduleTabLink.click();
+    }
 
     $('select.module-menu').change(function () {
         if (!$(this).val()) return;
