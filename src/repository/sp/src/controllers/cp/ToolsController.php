@@ -11,6 +11,7 @@ namespace lantra\sp\controllers\cp;
 use Craft;
 use craft\elements\Entry;
 use craft\elements\User;
+use craft\helpers\App as AppHelper;
 use craft\helpers\Queue;
 use craft\web\Controller;
 
@@ -63,6 +64,8 @@ class ToolsController extends Controller
      */
     private function checkModuleResults()
     {
+        AppHelper::maxPowerCaptain();
+
         $criteria = Entry::find()
             ->section('modules')
             ->type('cpd');
