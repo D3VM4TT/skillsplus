@@ -56,6 +56,35 @@ class ToolsController extends Controller
     }
 
     /**
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     */
+    private function checkModuleResults()
+    {
+        $criteria = Entry::find()
+            ->section('modules')
+            ->type('cpd');
+
+        $cpdModuleIds = $criteria->ids();
+
+        $criteria = Entry::find()
+            ->section('results')
+            ->type('moduleResult')
+            ->relatedTo(['targetElement' => $cpdModuleIds, 'field' => 'resultModule']);
+
+        $moduleResults = $criteria->all();
+
+        foreach ($moduleResults as $result) {
+            Lantra::$app->results->checkModuleResult($result->resultModule->one(), $result->authorId, $result);
+        }
+
+        Craft::$app->session->setNotice(Craft::t('sp', count($moduleResults) . ' module results updated.'));
+        $this->redirectToPostedUrl();
+    }
+
+    /**
      * @param null $limit
      * @param null $dataCleanKey
      * @param bool $dataCleanValue
