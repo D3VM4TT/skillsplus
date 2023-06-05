@@ -39,7 +39,7 @@ function formatBytes(bytes,decimals) {
             });
 
             // add select click
-            $element.on('click', '#browser-modal li.lantra-asset', function(e){
+            $element.on('click', 'li.lantra-asset', function(e){
                 e.preventDefault();
                 plugin.selectAsset($(this).clone());
             });
@@ -88,11 +88,6 @@ function formatBytes(bytes,decimals) {
                 $progress.text( progress + '%');
             }).on('fileuploadsend', function (e, data) {
                 $progress.text( '0%');
-            });
-
-            $element.on('click', '#browser-modal li.lantra-asset', function(e){
-                e.preventDefault();
-                plugin.selectAsset($(this).clone());
             });
         }
 
