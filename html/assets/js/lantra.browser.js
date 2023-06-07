@@ -15,6 +15,7 @@ function formatBytes(bytes,decimals) {
             fieldName = null,
             userId = null,
             packageId = null,
+            isPackages = false,
             $target = null,
             $element = $(element),
             $ulEvidence = $element.find('ul.assets-evidence'),
@@ -41,7 +42,9 @@ function formatBytes(bytes,decimals) {
             // add select click
             $element.on('click', 'li.lantra-asset', function(e){
                 e.preventDefault();
-                plugin.selectAsset($(this).clone());
+                if (!isPackages) {
+                    plugin.selectAsset($(this).clone());
+                }
             });
 
             // add select click
@@ -108,6 +111,11 @@ function formatBytes(bytes,decimals) {
             fieldName = $target.data('field-name');
             userId = $target.data('user-id');
             packageId = $target.data('package-id');
+            return plugin;
+        }
+
+        plugin.isPackages = function(p) {
+            isPackages = p;
             return plugin;
         }
 
@@ -207,7 +215,7 @@ $(document).ready(function(){
         e.preventDefault();
         let t = $(this).data('target'),
             $element = $('#browser-modal').find('.lantra-browser').eq(0);
-        $element.data('lantraBrowser').setTarget($('#' + t)).refreshAssets().openModal();
+        $element.data('lantraBrowser').isPackages(false).setTarget($('#' + t)).refreshAssets().openModal();
     });
     $('ul.assets').on( 'click', 'i.delete', function(){
         let $li = $(this).parents('li'),
@@ -224,7 +232,7 @@ $(document).ready(function(){
         let t = $(this).data('target'),
             $packageId = $(this).data('package-id'),
             $element = $('#evidence-upload-modal').find('.lantra-browser').eq(0);
-        $element.data('lantraBrowser').setTarget($('#' + t)).refreshAssets().refreshPackages($packageId).openModal();
+        $element.data('lantraBrowser').isPackages(true).setTarget($('#' + t)).refreshAssets().refreshPackages($packageId).openModal();
         $("section.lantra-browser ul.assets").css('height', 'auto');
     });
     // $('ul.assets').on( 'click', 'i.delete', function(){
