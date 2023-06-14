@@ -360,22 +360,38 @@ class PackagesController extends BaseController
 
             $moduleUnits[$moduleId] = $unitId;
 
-            // Save Unit
-            $unit = new Entry();
-            $unit->authorId = $currentUser->id;
-            $unit->enabled = true;
-            $unit->title = "unit {$unitId} " . $name;
-            $unit->sectionId = LantraHelper::sectionId('results');
-            $unit->typeId = 1; // Unit Result
-            $fields['resultUnit'] = [$unitId];
-            $fields['resultStatus'] = $resultStatus;
-            $fields['resultComments'] = $resultComments;
-            // $fields['resultNotes'] = $comments;
-            if(!empty($evidenceAssetIdsArr)){
-                $fields['resultEvidence'] = $evidenceAssetIdsArr;
+            $resultEntry = Entry::find()->section('results')->relatedTo([$unitId])->one();
+
+            if( !is_null($resultEntry) )
+            {
+                $resultEvidenceIdsArr = $resultEntry->resultEvidence->ids();
+                if(!empty($evidenceAssetIdsArr)){
+                    $resultEvidenceIds = array_merge($resultEvidenceIdsArr, $evidenceAssetIdsArr);
+                    $fields['resultEvidence'] = array_unique($resultEvidenceIds);
+                }
+                $fields['resultStatus'] = $resultStatus;
+                $resultEntry->setFieldValues($fields);
+                Craft::$app->elements->saveElement($resultEntry);
             }
-            $unit->setFieldValues($fields);
-            Craft::$app->elements->saveElement($unit);
+            else
+            {
+                // Save Unit
+                $unit = new Entry();
+                $unit->authorId = $currentUser->id;
+                $unit->enabled = true;
+                $unit->title = "unit {$unitId} " . $name;
+                $unit->sectionId = LantraHelper::sectionId('results');
+                $unit->typeId = 1; // Unit Result
+                $fields['resultUnit'] = [$unitId];
+                $fields['resultStatus'] = $resultStatus;
+                // $fields['resultComments'] = $resultComments;
+                // $fields['resultNotes'] = $comments;
+                if(!empty($evidenceAssetIdsArr)){
+                    $fields['resultEvidence'] = $evidenceAssetIdsArr;
+                }
+                $unit->setFieldValues($fields);
+                Craft::$app->elements->saveElement($unit);
+            }
         }
         return $this->redirectToPostedUrl();
     }
