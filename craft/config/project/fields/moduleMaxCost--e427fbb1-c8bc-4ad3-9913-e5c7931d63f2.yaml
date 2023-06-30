@@ -1,17 +1,17 @@
 columnSuffix: null
-contentColumnType: integer(10)
+contentColumnType: 'decimal(12,2)'
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: moduleMaxCost
 instructions: ''
 name: 'Module Group Max Cost'
 searchable: true
 settings:
-  decimals: 0
+  decimals: '2'
   defaultValue: null
   max: null
   min: '0'
   prefix: null
-  previewCurrency: null
+  previewCurrency: ''
   previewFormat: decimal
   size: null
   suffix: null
