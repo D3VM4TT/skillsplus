@@ -1,4 +1,4 @@
-dateModified: 1683991399
+dateModified: 1688128814
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -149,7 +149,6 @@ meta:
     47b102e1-4aed-4206-8420-dfd6e6684f7c: 'Skills Plus (en-GB)' # Skills Plus (en-GB)
     51a18e4b-1a36-4210-8769-a5b8f28f3a5f: Attempts # Attempts
     53b87ea0-021a-4671-bfbd-8000933bcf0e: 'Custom Fields' # Custom Fields
-    53db6462-0ded-4ff9-babe-8ed1294eec1b: 'Result Unendorsed Points' # Result Unendorsed Points
     53ded07f-6c81-4e7c-8e25-520b62d1a532: 'Result Notes' # Result Notes
     53fe1ed0-e4fe-4a51-8235-3f3a1b123528: 'Package Taskbook' # Package Taskbook
     54ffd21d-f058-4546-b582-9f8c03da2f65: 'Page Membership' # Page Membership
@@ -301,7 +300,6 @@ meta:
     b3bb5932-8ec6-48a5-af26-7d974a69e57a: 'Auto Endorse?' # Auto Endorse?
     b7d6d158-4e92-4be7-ab53-c7e655c7e062: 'Legacy Group' # Legacy Group
     b8c430cf-c3d3-4d15-a8a8-21eb2fb94ace: Content # Content
-    b9aee86b-4af4-40aa-9673-848931e1e750: 'Result Unendorsed Hours' # Result Unendorsed Hours
     b44b14bb-77d3-4e81-9d72-9a478aa97053: 'Result Company' # Result Company
     b46f9aa2-ceed-4dee-ac99-835a93962438: 'Field Display' # Field Display
     b18328e8-46a5-482e-b83f-2ccfba7d2f20: 'Page Dashboard' # Page Dashboard
