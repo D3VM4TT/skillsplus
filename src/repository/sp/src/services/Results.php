@@ -1047,8 +1047,8 @@ class Results extends Component
             }
         }
         $componentResults = $this->getComponentResults($moduleEntry, $unitResultEntries, $userResultEntries);
-        $moduleResultEntry->setFieldValue('resultHours', $endorsedPoints);
-        $moduleResultEntry->setFieldValue('resultPoints', $endorsedHours);
+        $moduleResultEntry->setFieldValue('resultHours', $endorsedHours);
+        $moduleResultEntry->setFieldValue('resultPoints', $endorsedPoints);
 
         $moduleResultEntry->setFieldValue('resultUnendorsedHours', $unendorsedHours);
         $moduleResultEntry->setFieldValue('resultUnendorsedPoints', $unendorsedPoints);
