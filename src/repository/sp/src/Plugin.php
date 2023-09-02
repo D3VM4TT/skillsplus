@@ -192,8 +192,7 @@ class Plugin extends BasePlugin
             User::class,
             User::EVENT_AFTER_DELETE,
             function (Event $event) {
-                $user = $event->sender;
-                Lantra::$app->users->onAfterDeleteUser($user, $event);
+                Lantra::$app->users->onAfterDeleteUser($event->sender);
             }
         );
 
@@ -201,8 +200,7 @@ class Plugin extends BasePlugin
             Users::class,
             Users::EVENT_AFTER_SUSPEND_USER,
             function (Event $event) {
-                $user = $event->sender;
-                Lantra::$app->users->onAfterSuspendUser($user, $event);
+                Lantra::$app->users->onAfterSuspendUser($event->user);
             }
         );
 
@@ -210,8 +208,7 @@ class Plugin extends BasePlugin
             Users::class,
             Users::EVENT_AFTER_UNSUSPEND_USER,
             function (Event $event) {
-                $user = $event->sender;
-                Lantra::$app->users->onAfterUnsuspendUser($user, $event);
+                Lantra::$app->users->onAfterUnsuspendUser($event->user);
             }
         );
 
