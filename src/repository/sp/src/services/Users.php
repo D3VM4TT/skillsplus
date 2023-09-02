@@ -197,27 +197,27 @@ class Users extends Component
 
     /**
      * @param $user
-     * @param $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function onAfterDeleteUser($user, $event)
+    public function onAfterDeleteUser($user)
     {
         Lantra::$app->spbase->cancelLicence($user->id);
     }
 
     /**
      * @param $user
-     * @param $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function onAfterSuspendUser($user, $event)
+    public function onAfterSuspendUser($user)
     {
         Lantra::$app->spbase->cancelLicence($user->id);
     }
 
     /**
      * @param $user
-     * @param $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function onAfterUnsuspendUser($user, $event)
+    public function onAfterUnsuspendUser($user)
     {
         Lantra::$app->spbase->restoreLicence($user->id);
     }
