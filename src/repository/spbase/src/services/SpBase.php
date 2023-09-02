@@ -165,16 +165,25 @@ class SpBase
 
     /**
      * @param $userId
+     * @throws GuzzleException
      */
     public function cancelLicence($userId)
     {
         $licence = $this->client->getLicence($userId);
-
-        if ($licence->id) {
-            if (!$this->client->suspendEntry($licence)) {
-
-            }
+        if ($licence->id && $this->client->suspendEntry($licence)) {
             $this->log($licence, 'cancelled');
+        }
+    }
+
+    /**
+     * @param $userId
+     * @throws GuzzleException
+     */
+    public function restoreLicence($userId)
+    {
+        $licence = $this->client->getLicence($userId);
+        if ($licence->id && $this->client->unsuspendEntry($licence)) {
+            $this->log($licence, 'restored');
         }
     }
 

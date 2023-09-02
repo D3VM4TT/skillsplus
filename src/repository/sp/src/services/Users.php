@@ -204,6 +204,24 @@ class Users extends Component
         Lantra::$app->spbase->cancelLicence($user->id);
     }
 
+    /**
+     * @param $user
+     * @param $event
+     */
+    public function onAfterSuspendUser($user, $event)
+    {
+        Lantra::$app->spbase->cancelLicence($user->id);
+    }
+
+    /**
+     * @param $user
+     * @param $event
+     */
+    public function onAfterUnsuspendUser($user, $event)
+    {
+        Lantra::$app->spbase->restoreLicence($user->id);
+    }
+
     private $nodeId = 0;
     private $hierarchyFilter = [];
 

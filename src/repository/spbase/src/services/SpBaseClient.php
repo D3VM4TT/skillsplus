@@ -220,6 +220,28 @@ class SpBaseClient
 
     /**
      * @param $model
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function unsuspendEntry($model)
+    {
+        $query = 'mutation saveEntry($entryId: ID) {
+            save_' . $model->__typename . '(id: $entryId, enabled: true) {
+                id
+            }
+        }';
+
+        $variables = [
+            'entryId' => $model->id
+        ];
+
+        $response = $this->query($query, $variables);
+
+        return !$response->hasErrors();
+    }
+
+    /**
+     * @param $model
      * @param $process
      * @return bool
      */
