@@ -81,6 +81,10 @@ class Users extends Component
      */
     public function syncUserLicence(User $user)
     {
+        if (!LantraHelper::enableBase()) {
+            return false;
+        }
+
         ## manage cancellation
         if (!$user->isLicenced) {
             SpBase::log('user not licenced [' . $user->id . ']');

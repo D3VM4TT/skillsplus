@@ -148,7 +148,7 @@ class SpBaseClient
 
         $response = $this->query($query, $variables);
 
-        return $response->user ? $response->user->id : 0;
+        return $response->valid && $response->user ? $response->user->id : 0;
     }
 
     /**

@@ -77,7 +77,7 @@ return [
     ],
     'uat' => [
         'aliases' => [
-            '@spBaseUrl' => 'https://base.newuat.skills-plus.net'
+            '@spBaseUrl' => 'http://base.newuat.skills-plus.net'
         ]
     ],
     'prod' => [
