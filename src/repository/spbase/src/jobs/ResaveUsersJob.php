@@ -38,12 +38,13 @@ class ResaveUsersJob extends BaseJob
         }
         else {
             $criteria->group = ['users', 'companyManagers', 'teamManagers'];
-            $criteria->admin(0);
         }
 
         if ($this->hasLicence) {
             $criteria->userLicenceId(':notempty:');
         }
+
+        $criteria->anyStatus();
 
         $total = $criteria->count();
 
