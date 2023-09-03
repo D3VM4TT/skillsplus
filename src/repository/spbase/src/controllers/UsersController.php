@@ -27,7 +27,7 @@ class UsersController extends Controller {
     public function actionInfo($action = 'count')
     {
         $criteria = User::find();
-        $criteria->group('users');
+        $criteria->group(['users', 'companyManagers', 'teamManagers']);
         if (null != $this->request->getParam('notLicenced', null)) {
             $criteria->userNotLicenced(true);
         }
