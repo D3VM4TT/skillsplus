@@ -198,22 +198,6 @@ class Plugin extends BasePlugin
 
         Event::on(
             Users::class,
-            Users::EVENT_AFTER_SUSPEND_USER,
-            function (Event $event) {
-                Lantra::$app->users->onAfterSuspendUser($event->user);
-            }
-        );
-
-        Event::on(
-            Users::class,
-            Users::EVENT_AFTER_UNSUSPEND_USER,
-            function (Event $event) {
-                Lantra::$app->users->onAfterUnsuspendUser($event->user);
-            }
-        );
-
-        Event::on(
-            Users::class,
             Users::EVENT_AFTER_ACTIVATE_USER,
             function (UserEvent $event) {
                 Lantra::$app->users->onActivateUser($event, $event->user);

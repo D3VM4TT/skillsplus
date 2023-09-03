@@ -177,18 +177,6 @@ class SpBase
 
     /**
      * @param $userId
-     * @throws GuzzleException
-     */
-    public function restoreLicence($userId)
-    {
-        $licence = $this->client->getLicence($userId);
-        if ($licence->id && $this->client->unsuspendEntry($licence)) {
-            $this->log($licence, 'restored');
-        }
-    }
-
-    /**
-     * @param $userId
      * @param $month
      * @param $postDate
      * @param array $meta
