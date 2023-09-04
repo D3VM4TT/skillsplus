@@ -177,6 +177,30 @@ class SpBase
 
     /**
      * @param $userId
+     * @throws GuzzleException
+     */
+    public function suspendLicence($userId)
+    {
+        $licence = $this->client->getLicence($userId);
+        if ($licence->id && $this->client->suspendEntry($licence)) {
+            $this->log($licence, 'suspended');
+        }
+    }
+
+    /**
+     * @param $userId
+     * @throws GuzzleException
+     */
+    public function unsuspendLicence($userId)
+    {
+        $licence = $this->client->getLicence($userId);
+        if ($licence->id && $this->client->unsuspendEntry($licence)) {
+            $this->log($licence, 'unsuspended');
+        }
+    }
+
+    /**
+     * @param $userId
      * @param $month
      * @param $postDate
      * @param array $meta
