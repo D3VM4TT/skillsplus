@@ -28,23 +28,23 @@ class UsersController extends Controller {
     {
         $criteria = User::find();
         $criteria->group(['users']);
+        if (null != $admin = $this->request->getParam('admin', null)) {
+            $criteria->admin($admin);
+        }
         if (null != $this->request->getParam('licenced', null)) {
             $criteria->userNotLicenced(false);
-            $criteria->admin(0);
+            $criteria->admin(false);
             $criteria->status(['active']);
         }
+        elseif (null != $this->request->getParam('notLicenced', null)) {
+            $criteria->userNotLicenced(true);
+            $criteria->status(['active']);
+        }
+        elseif (null != $status = $this->request->getParam('status')) {
+            $criteria->status($status);
+        }
         else {
-            $criteria->admin(0);
-            if (null != $this->request->getParam('notLicenced', null)) {
-                $criteria->userNotLicenced(true);
-            } elseif (null != $this->request->getParam('admin', null)) {
-                $criteria->admin(1);
-            }
-            if (null == $status = $this->request->getParam('status')) {
-                $criteria->anyStatus();
-            } else {
-                $criteria->status($status);
-            }
+            $criteria->anyStatus();
         }
         $result = $action == 'count' ? $criteria->count() : $criteria->ids();
         return $this->response($result);
