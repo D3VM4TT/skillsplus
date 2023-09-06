@@ -165,38 +165,32 @@ class SpBase
 
     /**
      * @param $userId
+     * @return \Psr\Http\Message\ResponseInterface|string
      * @throws GuzzleException
      */
     public function cancelLicence($userId)
     {
-        $licence = $this->client->getLicence($userId);
-        if ($licence->id && $this->client->suspendEntry($licence)) {
-            $this->log($licence, 'cancelled');
-        }
+        return $this->client->licenceStatus($userId, 'deleted');
     }
 
     /**
      * @param $userId
+     * @return \Psr\Http\Message\ResponseInterface|string|void
      * @throws GuzzleException
      */
     public function suspendLicence($userId)
     {
-        $licence = $this->client->getLicence($userId);
-        if ($licence->id && $this->client->suspendEntry($licence)) {
-            $this->log($licence, 'suspended');
-        }
+        return $this->client->licenceStatus($userId, 'suspended');
     }
 
     /**
      * @param $userId
+     * @return \Psr\Http\Message\ResponseInterface|string|void
      * @throws GuzzleException
      */
     public function unsuspendLicence($userId)
     {
-        $licence = $this->client->getLicence($userId);
-        if ($licence->id && $this->client->unsuspendEntry($licence)) {
-            $this->log($licence, 'unsuspended');
-        }
+        return $this->client->licenceStatus($userId, 'unsuspended');
     }
 
     /**

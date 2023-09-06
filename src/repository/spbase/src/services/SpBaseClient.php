@@ -266,6 +266,7 @@ class SpBaseClient
     /**
      * @param $userId
      * @return Licence
+     * @throws GuzzleException
      */
     public function getLicence($userId)
     {
@@ -369,6 +370,25 @@ class SpBaseClient
     }
 
     /**
+     * @param $userId
+     * @param string $status
+     * @return \Psr\Http\Message\ResponseInterface|string
+     * @throws GuzzleException
+     */
+    public function licenceStatus($userId, $status = 'unsuspended')
+    {
+        $siteUser = Craft::$app->getUser()->getIdentity();
+
+        $params = [
+            'userId' => $userId,
+            'siteId' => $this->getSiteId(),
+            'siteUserId' => $siteUser ? $siteUser->id : 0,
+            'status' => $status
+        ];
+        return $this->request('spbase/licence/status', $params);
+    }
+
+    /**
      * Bypass GQL and call api directly (i.e. get button html)
      *
      * @param $method
@@ -379,7 +399,6 @@ class SpBaseClient
     public function request($method, array $params = [])
     {
         $response = '[[ empty response ]]';
-
         $endpoint = Craft::getAlias('@spBaseUrl') . '/actions/' . $method;
 
         try {
