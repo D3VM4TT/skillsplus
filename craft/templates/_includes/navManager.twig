@@ -4,7 +4,8 @@
     <li class="{% if craft.app.request.getSegment(1) == 'management' and not isProducts %}nav-open{% else %}nav-closed{% endif %}">
         <a class="secondary-bg-hover" href="#">Management</a>
         <ul>
-            {% if craft.lantra.canManage(null, true) %}
+            {#{% if craft.lantra.canManage(null, true) %}#}
+            {% if currentUser.admin %}
                 <li>
                     <a class="{% if craft.app.request.getSegment(2) == 'scheme' %}active{% endif %}" href="/management/scheme">Scheme</a>
                 </li>
