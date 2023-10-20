@@ -1,116 +1,118 @@
-{% if header is defined %}
-    {% for row in columnLayout %}
-        {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
-            <th>
-            {% if row.fieldType == 'resultOutcome' %}
-                Result {{ craft.lantra.setting('labelResultOutcome1') }}
-            {% else %}
-                {{ row.fieldLabel|default(row.fieldType.label) }}
-            {% endif %}
-            </th>
-        {% endif %}
-    {% endfor %}
-{% else %}
-    {% for row in columnLayout %}
-        {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
-        {% if row.fieldType == 'unitType' %}
-            <td class="unitType">
-                <p class="td-title-responsive">Unit type: </p>
-                {{ unitType == 'evidence' ? 'Evidence' : 'Assessment' }}
-            </td>
-        {% elseif row.fieldType == 'unitPoints'  %}
-            <td class="unitPoints">
-                <p class="td-title-responsive">Points: </p>
-                {{ unitPoints }}
-            </td>
-        {% elseif row.fieldType == 'resultStatus'  %}
-            <td class="resultStatus">
-                <p class="td-title-responsive">Status: </p>
-                {{ resultEntry ? resultEntry.resultStatus|ucwords|default('Incomplete') }}
-            </td>
-        {% elseif row.fieldType == 'resultEndorsedDate' %}
-            <td class="resultEndorsedDate">
-                <p class="td-title-responsive">Endorsed Date: </p>
-                {% if resultEntry and resultEntry.resultStatus == 'endorsed' %}
-                    {# fix bug when resultEndorsedDate wasn't saving, default to post date #}
-                    {% set endorsedDate = resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate : resultEntry.postDate %}
-                    {{ endorsedDate|date(dateFormat) }}
+{% cache using key "column-layout-" ~ currentUser.id %}
+    {% if header is defined %}
+        {% for row in columnLayout %}
+            {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
+                <th>
+                {% if row.fieldType == 'resultOutcome' %}
+                    Result {{ craft.lantra.setting('labelResultOutcome1') }}
                 {% else %}
-                    -
+                    {{ row.fieldLabel|default(row.fieldType.label) }}
                 {% endif %}
-            </td>
-        {% elseif row.fieldType == 'resultEndorsedUser'  %}
-            <td class="resultEndorsedUser">
-                <p class="td-title-responsive">Endorsed Manager: </p>
-                {% if resultEntry and resultEntry.resultEndorsedUser.count %}
-                    {% set resultEndorsedUser = resultEntry.resultEndorsedUser.one %}
-                    {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
-                {% elseif resultEntry %}
-                    -
-                {% endif %}
-            </td>
-        {% elseif row.fieldType == 'resultOutcome'  %}
-            <td class="resultOutcome">
-                <p class="td-title-responsive">Result {{ craft.lantra.setting('labelResultOutcome1') }}: </p>
-                {{ resultEntry and resultEntry.resultOutcome ? 'Yes' : 'No' }}
-            </td>
-        {% elseif row.fieldType == 'resultExpiryDate'  %}
-            <td class="expiryDate">
-                <p class="td-title-responsive">Expiry Date: </p>
-                {{ resultEntry and resultEntry.expiryDate ? resultEntry.expiryDate|date(dateFormat) : '-' }}
-            </td>
-        {% elseif row.fieldType == 'resultStartDate'  %}
-            <td class="resultStartDate">
-                <p class="td-title-responsive">Start Date: </p>
-                {{ resultEntry and resultEntry.resultStartDate ? resultEntry.resultStartDate|date(dateFormat) : '-' }}
-            </td>
-        {% elseif row.fieldType == 'resultFinishDate'  %}
-            <td class="resultFinishDate">
-                <p class="td-title-responsive">Finish Date: </p>
-                {{ resultEntry and resultEntry.resultFinishDate ? resultEntry.resultFinishDate|date(dateFormat) : '-' }}
-            </td>
-        {% elseif row.fieldType == 'resultLocation'  %}
-            <td class="resultLocation">
-                <p class="td-title-responsive">Location: </p>
-                {{ resultEntry ? resultEntry.resultLocation|default('-') }}
-            </td>
-        {% elseif row.fieldType == 'resultHours'  %}
-            <td class="resultHours">
-                <p class="td-title-responsive">Hours: </p>
-                {{ resultEntry ? resultEntry.resultHours|default('-') }}
-            </td>
-        {% elseif row.fieldType == 'resultPoints'  %}
-            <td class="resultPoints">
-                <p class="td-title-responsive">Points: </p>
-                {{ resultEntry ? resultEntry.resultPoints|default('-') }}
-            </td>
-        {% elseif row.fieldType == 'resultEvidence'  %}
-            {# try to move legacy result files #}
-            {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
-            <td class="resultEvidence">
-                <p class="td-title-responsive">Evidence: </p>
-                {% if resultEntry and resultEntry.resultEvidence|length %}
-                    {% for resultEvidenceAsset in resultEntry.resultEvidence %}
-                        <a data-tooltip title="{{ resultEvidenceAsset.filename }}" target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">
-                           Evidence {{ loop.index }} - {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}
-                        </a>
-                        <br />
-                    {% endfor %}
-                {% elseif resultEntry and resultEntry.legacyResultFiles %}
-                    file(s) exist
-                {% endif %}
-            </td>
-        {% elseif row.fieldType == 'resultCustom' %}
-            <td class="resultCustom">
-                {% if resultEntry and resultEntry.resultCustom|length  %}
-                    {% for customRow in resultEntry.resultCustom %}
-                        {% if customRow.customKey == row.fieldCustomKey %}
-                           {{ customRow.customValue }}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </td>
-        {% endif %}
-        {% endif %}
-    {% endfor %}
-{% endif %}
+                </th>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% for row in columnLayout %}
+            {% if row.fieldDisplay != 'form' and row.fieldType != 'resultNarrative' %}
+            {% if row.fieldType == 'unitType' %}
+                <td class="unitType">
+                    <p class="td-title-responsive">Unit type: </p>
+                    {{ unitType == 'evidence' ? 'Evidence' : 'Assessment' }}
+                </td>
+            {% elseif row.fieldType == 'unitPoints'  %}
+                <td class="unitPoints">
+                    <p class="td-title-responsive">Points: </p>
+                    {{ unitPoints }}
+                </td>
+            {% elseif row.fieldType == 'resultStatus'  %}
+                <td class="resultStatus">
+                    <p class="td-title-responsive">Status: </p>
+                    {{ resultEntry ? resultEntry.resultStatus|ucwords|default('Incomplete') }}
+                </td>
+            {% elseif row.fieldType == 'resultEndorsedDate' %}
+                <td class="resultEndorsedDate">
+                    <p class="td-title-responsive">Endorsed Date: </p>
+                    {% if resultEntry and resultEntry.resultStatus == 'endorsed' %}
+                        {# fix bug when resultEndorsedDate wasn't saving, default to post date #}
+                        {% set endorsedDate = resultEntry.resultEndorsedDate ? resultEntry.resultEndorsedDate : resultEntry.postDate %}
+                        {{ endorsedDate|date(dateFormat) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            {% elseif row.fieldType == 'resultEndorsedUser'  %}
+                <td class="resultEndorsedUser">
+                    <p class="td-title-responsive">Endorsed Manager: </p>
+                    {% if resultEntry and resultEntry.resultEndorsedUser.count() %}
+                        {% set resultEndorsedUser = resultEntry.resultEndorsedUser.one() %}
+                        {{ resultEndorsedUser.fullName }} ({{ resultEndorsedUser.id }})
+                    {% elseif resultEntry %}
+                        -
+                    {% endif %}
+                </td>
+            {% elseif row.fieldType == 'resultOutcome'  %}
+                <td class="resultOutcome">
+                    <p class="td-title-responsive">Result {{ craft.lantra.setting('labelResultOutcome1') }}: </p>
+                    {{ resultEntry and resultEntry.resultOutcome ? 'Yes' : 'No' }}
+                </td>
+            {% elseif row.fieldType == 'resultExpiryDate'  %}
+                <td class="expiryDate">
+                    <p class="td-title-responsive">Expiry Date: </p>
+                    {{ resultEntry and resultEntry.expiryDate ? resultEntry.expiryDate|date(dateFormat) : '-' }}
+                </td>
+            {% elseif row.fieldType == 'resultStartDate'  %}
+                <td class="resultStartDate">
+                    <p class="td-title-responsive">Start Date: </p>
+                    {{ resultEntry and resultEntry.resultStartDate ? resultEntry.resultStartDate|date(dateFormat) : '-' }}
+                </td>
+            {% elseif row.fieldType == 'resultFinishDate'  %}
+                <td class="resultFinishDate">
+                    <p class="td-title-responsive">Finish Date: </p>
+                    {{ resultEntry and resultEntry.resultFinishDate ? resultEntry.resultFinishDate|date(dateFormat) : '-' }}
+                </td>
+            {% elseif row.fieldType == 'resultLocation'  %}
+                <td class="resultLocation">
+                    <p class="td-title-responsive">Location: </p>
+                    {{ resultEntry ? resultEntry.resultLocation|default('-') }}
+                </td>
+            {% elseif row.fieldType == 'resultHours'  %}
+                <td class="resultHours">
+                    <p class="td-title-responsive">Hours: </p>
+                    {{ resultEntry ? resultEntry.resultHours|default('-') }}
+                </td>
+            {% elseif row.fieldType == 'resultPoints'  %}
+                <td class="resultPoints">
+                    <p class="td-title-responsive">Points: </p>
+                    {{ resultEntry ? resultEntry.resultPoints|default('-') }}
+                </td>
+            {% elseif row.fieldType == 'resultEvidence'  %}
+                {# try to move legacy result files #}
+                {% set resultEntry = craft.lantra.legacyResultFiles(resultEntry) %}
+                <td class="resultEvidence">
+                    <p class="td-title-responsive">Evidence: </p>
+                    {% if resultEntry and resultEntry.resultEvidence|length %}
+                        {% for resultEvidenceAsset in resultEntry.resultEvidence %}
+                            <a data-tooltip title="{{ resultEvidenceAsset.filename }}" target="_blank" href="/internal/{{ resultEvidenceAsset.id }}">
+                               Evidence {{ loop.index }} - {{ resultEvidenceAsset.dateCreated|date('d/m/Y') }}
+                            </a>
+                            <br />
+                        {% endfor %}
+                    {% elseif resultEntry and resultEntry.legacyResultFiles %}
+                        file(s) exist
+                    {% endif %}
+                </td>
+            {% elseif row.fieldType == 'resultCustom' %}
+                <td class="resultCustom">
+                    {% if resultEntry and resultEntry.resultCustom|length  %}
+                        {% for customRow in resultEntry.resultCustom %}
+                            {% if customRow.customKey == row.fieldCustomKey %}
+                               {{ customRow.customValue }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+            {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endcache %}
