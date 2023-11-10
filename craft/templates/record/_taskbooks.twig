@@ -24,102 +24,98 @@
 {% else %}
     {{ globalsHtml.pageCurrent }}
     {% if unpaidPackages|length %}
-        {% cache using key "unpaid-packages-" ~ cpdUser.id for 1 day %}
-            <h4>Unpaid {{ taskbookLabel|lower }} packages</h4>
-            <table class="data">
-                <thead>
+        <h4>Unpaid {{ taskbookLabel|lower }} packages</h4>
+        <table class="data">
+            <thead>
+            <tr>
+                <th>{{ taskbookLabel }}</th>
+                {% if craft.lantra.setting('taskbookLevels') %}
+                    <th>Level</th>
+                {% endif %}
+                <th>Date Created</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for package in unpaidPackages %}
+                {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
                 <tr>
-                    <th>{{ taskbookLabel }}</th>
+                    <td>{{ packageTitle }}</td>
                     {% if craft.lantra.setting('taskbookLevels') %}
-                        <th>Level</th>
+                        <td>
+                            {{ craft.lantra.taskbookLevel(package.packageLevel) }}
+                        </td>
                     {% endif %}
-                    <th>Date Created</th>
-                    <th></th>
+                    <td>
+                        {{ package.dateCreated|date(dateFormat) }}
+                    </td>
+                    <td>
+                        {% set paymentMeta = {
+                            'product' : packageTitle,
+                            'packageId' : package.id,
+                            'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
+                        } %}
+                        {{ craft.lantra.basePaypalButton(cpdUser.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for package in unpaidPackages %}
-                    {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
-                    <tr>
-                        <td>{{ packageTitle }}</td>
-                        {% if craft.lantra.setting('taskbookLevels') %}
-                            <td>
-                                {{ craft.lantra.taskbookLevel(package.packageLevel) }}
-                            </td>
-                        {% endif %}
-                        <td>
-                            {{ package.dateCreated|date(dateFormat) }}
-                        </td>
-                        <td>
-                            {% set paymentMeta = {
-                                'product' : packageTitle,
-                                'packageId' : package.id,
-                                'redirect' : '/cpd/' ~ userId ~ '/taskbooks'
-                            } %}
-                            {{ craft.lantra.basePaypalButton(cpdUser.id, package.packageCost, 'new-' ~ package.id, paymentMeta, 'Pay £' ~ package.packageCost)|raw }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endcache %}
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
     {% if cpdUser.record.packages|length %}
-        {% cache using key "paid-packages-" ~ cpdUser.id for 1 day %}
-            <table class="data">
-                <thead>
+    <table class="data">
+        <thead>
+        <tr>
+            <th>{{ taskbookLabel }}</th>
+            {% if craft.lantra.setting('taskbookLevels') %}
+                <th>Level</th>
+            {% endif %}
+            <th>Date Created</th>
+            <th>Payment Method</th>
+            <th>Payment Reference</th>
+            <th>Cost</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for packageItem in cpdUser.record.packages %}
+                {% set package = cpdUser.record.getElement(packageItem.elementId) %}
+                {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
                 <tr>
-                    <th>{{ taskbookLabel }}</th>
+                    <td>
+                        <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
+                    </td>
                     {% if craft.lantra.setting('taskbookLevels') %}
-                        <th>Level</th>
+                    <td>
+                        {{ craft.lantra.taskbookLevel(package.packageLevel) }}
+                    </td>
                     {% endif %}
-                    <th>Date Created</th>
-                    <th>Payment Method</th>
-                    <th>Payment Reference</th>
-                    <th>Cost</th>
-                    <th>Status</th>
-                    <th></th>
+                    <td>
+                        {{ package.dateCreated|date(dateFormat) }}
+                    </td>
+                    <td>
+                        {{ package.paymentMethod|ucwords }}
+                    </td>
+                    <td>
+                        {{ package.paymentReference }}
+                    </td>
+                    <td>£{{ package.packageCost }}</td>
+                    <td>
+                        {{ package.packageStatus|title }}
+                    </td>
+                    <td>
+                        {% set certificateUrl = craft.lantra.certificateUrl(package) %}
+                        {% if certificateUrl %}
+                            <a target="_blank" class="icon" href="{{ certificateUrl }}" data-tooltip title="Download certificate">
+                                <img src="/assets/img/certificate.svg" title="Download certificate" />
+                            </a>
+                        {% endif %}
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                    {% for packageItem in cpdUser.record.packages %}
-                        {% set package = cpdUser.record.getElement(packageItem.elementId) %}
-                        {% set packageTitle = package.taskbook ? package.taskbook.title : package.title %}
-                        <tr>
-                            <td>
-                                <a href="{{ craft.lantra.packageUrl(cpdUser.id, package.id) }}">{{ package.taskbook.title }}</a>
-                            </td>
-                            {% if craft.lantra.setting('taskbookLevels') %}
-                            <td>
-                                {{ craft.lantra.taskbookLevel(package.packageLevel) }}
-                            </td>
-                            {% endif %}
-                            <td>
-                                {{ package.dateCreated|date(dateFormat) }}
-                            </td>
-                            <td>
-                                {{ package.paymentMethod|ucwords }}
-                            </td>
-                            <td>
-                                {{ package.paymentReference }}
-                            </td>
-                            <td>£{{ package.packageCost }}</td>
-                            <td>
-                                {{ package.packageStatus|title }}
-                            </td>
-                            <td>
-                                {% set certificateUrl = craft.lantra.certificateUrl(package) %}
-                                {% if certificateUrl %}
-                                    <a target="_blank" class="icon" href="{{ certificateUrl }}" data-tooltip title="Download certificate">
-                                        <img src="/assets/img/certificate.svg" title="Download certificate" />
-                                    </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endcache %}
+            {% endfor %}
+        </tbody>
+    </table>
     {% else %}
         <p>You have no {{ taskbookLabel|lower }} packages.</p>
         <p>&nbsp;</p>
