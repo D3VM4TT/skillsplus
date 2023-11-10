@@ -1396,11 +1396,9 @@ class Packages extends Component
                         ];
 
                         if (getenv('SITE') == 'bics') {
-                            if (is_iterable($result->resultCustom) && count($result->resultCustom)) {
-                                foreach ($result->resultCustom as $r) {
-                                    if ($r->customKey == 'sa_status' || $r->customKey == 'ae_status') {
-                                        $row[] = $r->customValue;
-                                    }
+                            foreach ($result->resultCustom as $r) {
+                                if ($r->customKey == 'sa_status' || $r->customKey == 'ae_status') {
+                                    $row[] = $r->customValue;
                                 }
                             }
                         }
