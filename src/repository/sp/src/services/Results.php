@@ -451,7 +451,7 @@ class Results extends Component
         $criteria->authorId = $userId;
         $criteria->status = null;
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
-        return $criteria->cache()->count() ? true : false;
+        return $criteria->count() ? true : false;
     }
 
     /**
@@ -480,7 +480,7 @@ class Results extends Component
         if ($moduleGroupId) {
             $criteria->andRelatedTo(['targetElement' => $moduleGroupId, 'field' => 'resultModuleGroup']);
         }
-        return $criteria->cache()->count();
+        return $criteria->count();
     }
 
     /**
@@ -517,7 +517,7 @@ class Results extends Component
         if ($moduleGroupId !== null) {
             $criteria->relatedTo[] = ['targetElement' => $moduleGroupId, 'field' => 'resultModuleGroup'];
         }
-        return $criteria->cache()->one();
+        return $criteria->one();
     }
 
     /**
@@ -692,7 +692,7 @@ class Results extends Component
         if ($resultStatus) {
             $criteria->resultStatus($resultStatus);
         }
-        return $count ? $criteria->cache()->count() : $criteria->cache()->all();
+        return $count ? $criteria->count() : $criteria->all();
     }
 
     /**
@@ -754,7 +754,7 @@ class Results extends Component
         if ($postDate) {
             $criteria->postDate = $postDate;
         }
-        $existing = $criteria->cache()->one();
+        $existing = $criteria->one();
         if (!$existing && $create) {
             return $this->createModuleResult($userId, $moduleId, $postDate);
         }
@@ -780,7 +780,7 @@ class Results extends Component
         }
         $unitIds = $this->getModuleUnitIds($moduleEntry);
         $unitResults = $this->getUnitResultsQuery($userId, $unitIds, null);
-        foreach ($unitResults->cache()->all() as $resultEntry) {
+        foreach ($unitResults->all() as $resultEntry) {
             if (!$resultEntry->resultCompany->count()) {
                 $this->_setResultUserCompany($resultEntry, $moduleEntry, $userId);
             }
@@ -954,7 +954,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoles, 'field' => 'moduleRoles'];
-        $moduleEntries = $criteria->cache()->all();
+        $moduleEntries = $criteria->all();
         ## search for the relevant module (this unit may be part of multiple modules)
         foreach ($moduleEntries as $moduleEntry) {
             $unitIds = $this->getModuleUnitIds($moduleEntry);
@@ -1441,7 +1441,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $jobRoleIds, 'field' => 'moduleRoles'];
-        return $criteria->cache()->all();
+        return $criteria->all();
     }
 
     /**
@@ -1508,7 +1508,7 @@ class Results extends Component
     {
         $ids = [];
         $criteria = $this->getCompanyResultsQuery($companyId);
-        $results = $criteria->cache()->all();
+        $results = $criteria->all();
         foreach ($results as $result) {
             $ids[] = $result->id;
             Craft::$app->elements->deleteElementById($result->id);
@@ -1649,7 +1649,7 @@ class Results extends Component
         if ($resultPoints) {
             $criteria->resultPoints = '> 0';
         }
-        return $return == 'ids' ? $criteria->cache()->ids() : $criteria->cache()->all();
+        return $return == 'ids' ? $criteria->ids() : $criteria->all();
     }
 
     /**
@@ -1682,9 +1682,9 @@ class Results extends Component
             $criteria->relatedTo = ['targetElement' => $unitIds, 'field' => 'resultUnit'];
         }
         if ($count) {
-            return $criteria->cache()->count();
+            return $criteria->count();
         }
-        return $criteria->cache()->all();
+        return $criteria->all();
     }
 
     /**
@@ -1789,7 +1789,7 @@ class Results extends Component
         ## users returns the user criteria
         if ($view == 'users') {
             $userIds = [];
-            foreach ($criteria->cache()->all() as $result) {
+            foreach ($criteria->all() as $result) {
                 $userIds[] = $result->authorId;
             }
             $criteria = User::find();
@@ -2052,7 +2052,7 @@ class Results extends Component
             $criteria->authorId = $authorId;
         }
         $criteria->limit = null;
-        return $criteria->cache()->all();
+        return $criteria->all();
     }
 
     /**
@@ -2490,7 +2490,7 @@ class Results extends Component
         if ($return == 'criteria') {
             return $criteria;
         }
-        $results = $criteria->cache()->all();
+        $results = $criteria->all();
 
         // arrange as useful array [userId][id] = [result]
         $data = [];
@@ -2658,7 +2658,7 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->status = 'expired';
         $criteria->authorId = $user->id;
-        $results = $criteria->cache()->all();
+        $results = $criteria->all();
         foreach ($results as $result) {
             $company = Lantra::$app->users->userCompany($user);
             $role = $user->userRole->one();
@@ -2820,7 +2820,7 @@ class Results extends Component
         $criteria->relatedTo = ['targetElement' => $unitId, 'field' => 'resultUnit'];
         $criteria->status = ['live', 'expired'];
         $criteria->authorId = $user->id;
-        return $criteria->cache()->one();
+        return $criteria->one();
     }
 
     /**
@@ -2838,7 +2838,7 @@ class Results extends Component
             $criteria->limit = null;
             $this->roleModules[$role->id] = $criteria;
         }
-        return $criteria->cache()->all();
+        return $criteria->all();
     }
 
     /**
@@ -2869,7 +2869,7 @@ class Results extends Component
         $criteria->section = 'units';
         $criteria->limit = null;
         $units = [];
-        foreach ($criteria->cache()->all() as $unit) {
+        foreach ($criteria->all() as $unit) {
             $units[$unit->id] = $unit;
         }
         return $units;
@@ -2942,7 +2942,7 @@ class Results extends Component
         $criteria->section = 'modules';
         $criteria->limit = null;
         $criteria->relatedTo = ['targetElement' => $roleId, 'field' => 'moduleRoles'];
-        return $criteria->cache()->count() ? $criteria->cache()->all() : [];
+        return $criteria->count() ? $criteria->all() : [];
     }
 
     /**
@@ -3062,7 +3062,7 @@ class Results extends Component
         if ($dateUpdated) {
             $criteria->dateUpdated('> ' . $dateUpdated);
         }
-        $results = $criteria->cache()->all();
+        $results = $criteria->all();
         $users = [];
         foreach ($results as $result) {
             if (!isset($users[$result->authorId])) {
@@ -3081,7 +3081,7 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->orderBy('dateUpdated desc');
         $criteria->limit(1);
-        $result = $criteria->cache()->one();
+        $result = $criteria->one();
         return $result ? $result->dateUpdated : null;
     }
 
@@ -3238,6 +3238,6 @@ class Results extends Component
             $criteria->resultStatus = $status;
         }
 
-        return $criteria->cache()->one();
+        return $criteria->one();
     }
 }
