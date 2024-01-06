@@ -8,8 +8,9 @@
  * @see craft\config\DbConfig
  */
 
+$environment = getenv('ENVIRONMENT');
 $dbPort = '3306';
-$dbServer = '10.1.4.6';
+$dbServer = $environment == 'PROD' ? '10.1.4.4' : '10.1.4.6';
 
 define('DB_SERVER', $dbServer);
 define('DB_PORT', $dbPort);
