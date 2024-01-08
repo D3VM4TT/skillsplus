@@ -8,11 +8,9 @@
  * @see craft\config\DbConfig
  */
 
-// $environment = getenv('ENVIRONMENT');
-// $dbServer = $environment == 'prod' ? '10.1.4.4' : '10.1.4.6';
+$environment = getenv('ENVIRONMENT');
 $dbPort = '3306';
-$dbProdServer = '10.1.4.4';
-$dbServer = '10.1.4.6';
+$dbServer = $environment == 'prod' ? '10.1.4.4' : '10.1.4.6';
 
 define('DB_SERVER', $dbServer);
 define('DB_PORT', $dbPort);
@@ -47,7 +45,7 @@ return [
         'database' => 'uat-' . getenv('SITE'),
     ],
     'prod' => [
-        'server' => $dbProdServer,
+        'server' => $dbServer,
         'database' => 'prod-' . getenv('SITE'),
     ]
 ];
