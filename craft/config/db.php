@@ -8,6 +8,7 @@
  * @see craft\config\DbConfig
  */
 
+//update to include neew dbServer
 $environment = getenv('ENVIRONMENT');
 $dbServer = $environment == 'prod' ? '10.1.4.4' : '10.1.4.6';
 $dbPort = '3306';
