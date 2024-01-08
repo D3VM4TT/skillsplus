@@ -14,8 +14,8 @@ $dbPort = '3306';
 $dbProdServer = '10.1.4.4';
 $dbServer = '10.1.4.6';
 
-define('DB_SERVER', $dbServer);
-define('DB_PORT', $dbPort);
+// define('DB_SERVER', $dbServer);
+// define('DB_PORT', $dbPort);
 
 return [
     '*' => [
