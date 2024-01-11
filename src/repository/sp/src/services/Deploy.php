@@ -13,7 +13,6 @@ use craft\base\Component;
 
 class Deploy extends Component
 {
-    public $server;
     public $user;
     public $password;
     public $message;
@@ -25,7 +24,6 @@ class Deploy extends Component
     public function copyDatabase($target = 'dev')
     {
         $dbConfig = Craft::$app->getConfig()->getDb();
-        $this->server = $dbConfig->server;
         $this->user = $dbConfig->user;
         $this->password = $dbConfig->password;
 
@@ -37,11 +35,19 @@ class Deploy extends Component
 
         $filename = '/tmp/' . date('ymd') . '.' . $site . '.sql';
 
-        if ($this->export($currentDatabase, $filename)) {
+        ## switch server if on prod
+        $dbServerProd = getenv('DB_HOST_PROD');
+        $dbServerDev = getenv('DB_HOST_DEV');
+        $environment = getenv('ENVIRONMENT');
+
+        $currentServer = $environment == 'prod' ? $dbServerProd : $dbServerDev;
+        $targetServer = $target == 'prod' ? $dbServerProd : $dbServerDev;
+
+        if ($this->export($currentServer, $currentDatabase, $filename)) {
             $this->message = 'Database export failed.';
             return false;
         }
-        if ($this->import($targetDatabase, $filename)) {
+        if ($this->import($targetServer, $targetDatabase, $filename)) {
             $this->message = 'Database import failed.';
             return false;
         }
@@ -54,8 +60,8 @@ class Deploy extends Component
      * @param $filename
      * @return bool
      */
-    public function export($database, $filename) {
-        $command = "mysqldump --opt -h " . $this->server . " -u " . $this->user . " -p'". $this->password . "' " . $database . " > " . $filename;
+    public function export($server, $database, $filename) {
+        $command = "mysqldump --opt -h " . $server . " -u " . $this->user . " -p'". $this->password . "' " . $database . " > " . $filename;
         exec($command, $output, $return);
         return $return != 0;
     }
@@ -65,8 +71,8 @@ class Deploy extends Component
      * @param $filename
      * @return bool
      */
-    public function import($database, $filename) {
-        $command = "mysql -h " . $this->server . " -u " . $this->user . " -p'" . $this->password . "' " . $database . " < " . $filename;
+    public function import($server, $database, $filename) {
+        $command = "mysql -h " . $server . " -u " . $this->user . " -p'" . $this->password . "' " . $database . " < " . $filename;
         exec($command, $output, $return);
         return $return != 0;
     }

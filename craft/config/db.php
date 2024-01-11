@@ -8,13 +8,18 @@
  * @see craft\config\DbConfig
  */
 
-//update to include neew dbServer
-$environment = getenv('ENVIRONMENT');
-$dbServer = $environment == 'prod' ? '10.1.4.4' : '10.1.4.6';
-$dbPort = '3306';
+$dbServerProd = '10.1.4.4';
+$dbServerDev = '10.1.4.6';
 
-define('DB_SERVER', $dbServer);
-define('DB_PORT', $dbPort);
+## these are defined here so they can be used in db copy
+define('DB_HOST_PROD', $dbServerProd);
+define('DB_HOST_DEV', $dbServerDev);
+
+## switch db server if on prod
+$environment = getenv('ENVIRONMENT');
+$dbServer = $environment == 'prod' ? $dbServerProd : $dbServerDev;
+
+$dbPort = '3306';
 
 return [
     '*' => [
@@ -27,10 +32,6 @@ return [
     ],
     'cbd' => [
         'server' => 'localhost',
-        'database' => getenv('DB_DATABASE'),
-    ],
-    'local' => [
-        'server' => getenv('DB_SERVER'),
         'database' => getenv('DB_DATABASE'),
     ],
     'jason' => [
