@@ -102,9 +102,6 @@ class Cycles extends Component
         $total = 0;
         ## loop modules and see which start today
         foreach($modules as $moduleEntry) {
-            if (!Lantra::$app->modules->isUserModule($moduleEntry)) {
-                continue;
-            }
             $cycle = CycleHelper::getModuleCurrentCycle($moduleEntry);
             if ($cycle->startsToday()) {
                 ## get users
