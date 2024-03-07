@@ -606,7 +606,6 @@ class Notify extends Component
         $resultEntries = Entry::find()
             ->anyStatus()
             ->expiryDate(['and', ">= $startAtom", "< $endAtom"])
-            ->cycleFinishDate(['and', ">= $startAtom", "< $endAtom"])
             ->all();
 
         $details = [];
