@@ -612,7 +612,7 @@ class Notify extends Component
 
         foreach ($resultEntries as $resultEntry) {
             $user = $resultEntry->getAuthor();
-            $title = $resultEntry->resultUnit->count() ? $resultEntry->resultUnit->one()->title : $resultEntry->title;
+            $title = $resultEntry->resultUnit && $resultEntry->resultUnit->count() ? $resultEntry->resultUnit->one()->title : $resultEntry->title;
             $subject = $this->getNotifySetting('subjectResultExpiry' . $number, 'Result Expiry');
             $cc = $this->getNotifySetting('ccResultExpiry');
             $variables = ['entry' => $resultEntry, 'user' => $user, 'resultTitle' => $title];
