@@ -379,9 +379,13 @@ class SpBaseClient
     {
         $siteUser = Craft::$app->getUser()->getIdentity();
 
+        if (null == $siteId = $this->getSiteId()) {
+            return '[[ empty response ]]';
+        }
+
         $params = [
             'userId' => $userId,
-            'siteId' => $this->getSiteId(),
+            'siteId' => $siteId,
             'siteUserId' => $siteUser ? $siteUser->id : 0,
             'status' => $status
         ];
