@@ -10,14 +10,14 @@ BRANCH="${REF[2]}"
 
 # call lantra script /home/git/bin/lantra
 if [ "$BRANCH" == "develop" ]; then
-  lantra dev tag
-  lantra dev all
+  #craft3 dev tag
+  #craft3 dev all
 # see special craft3 -> demo3 script
 elif [ "$BRANCH" == "craft3" ]; then
   craft3
 elif [ "$BRANCH" == "uat" ]; then
-  lantra uat tag
-  lantra uat all
+  # craft3 uat tag
+  # craft3 uat all
 elif [ "$BRANCH" == "master" ]; then
-  lantra prod tag
+  craft3 prod tag
 fi
