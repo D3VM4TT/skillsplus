@@ -94,7 +94,7 @@ REPO_DIR="$TMP_DIR/src/repository"
 
 # checkout repo to temp directory
 git --work-tree=$TMP_DIR --git-dir="/git/cpd.git" checkout -f $BRANCH
-RELEASE_TAG=$(git --git-dir="/git/cpd.git" describe --abbrev=0 --tags)
+RELEASE_TAG=$(git --git-dir="/git/cpd.git" tag -l --points-at HEAD)
 COMMIT=$(git --git-dir="/git/cpd.git" rev-parse --short HEAD)
 
 # add release tag
