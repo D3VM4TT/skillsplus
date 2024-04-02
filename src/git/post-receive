@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "GIT SAYS - POST RECEIVE" > $1
+
 # get branch name from ref head
 if ! [ -t 0 ]; then
   read -a ref
@@ -10,14 +12,12 @@ BRANCH="${REF[2]}"
 
 # call lantra script /home/git/bin/lantra
 if [ "$BRANCH" == "develop" ]; then
-  #craft3 dev tag
-  #craft3 dev all
-# see special craft3 -> demo3 script
-elif [ "$BRANCH" == "craft3" ]; then
-  craft3
+  # craft3 dev tag
+  # craft3 dev all
 elif [ "$BRANCH" == "uat" ]; then
   # craft3 uat tag
   # craft3 uat all
 elif [ "$BRANCH" == "master" ]; then
+  echo "Tagging PROD with release tag" > $1
   craft3 prod tag
 fi
