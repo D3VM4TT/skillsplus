@@ -1745,7 +1745,7 @@ class Results extends Component
      * @param string $unitId
      * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery|\craft\elements\db\UserQuery|null
      */
-    public function getManagerEndorsementCriteria(User $manager, $limit = null, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all')
+    public function getManagerEndorsementCriteria(User $manager, $limit = null, $view = 'users', $users = 'all', $moduleId = 'all', $unitId = 'all', $expiredPendingCpd = false)
     {
         # check for manager subordinates (SM and admin show all)
         if (!$manager->isInGroup('schemeManagers') && !$manager->admin) {
@@ -1761,6 +1761,14 @@ class Results extends Component
         $criteria->section = 'results';
         $criteria->limit = $view == 'users' ? null : $limit;
         $criteria->resultIsTaskbook = false;
+
+        if (!$expiredPendingCpd) {
+            ## exclude expired pending cpd results
+            $expiredPendingCpdResultIds = $this->getExpiredPendingCpdResultIds();
+            if (count($expiredPendingCpdResultIds)) {
+                $criteria->id = 'and, not ' . implode(', not ', $expiredPendingCpdResultIds);
+            }
+        }
         
         if (isset($subordinateIds)) {
             $criteria->authorId = $subordinateIds;
@@ -1785,7 +1793,6 @@ class Results extends Component
             $criteria->relatedTo = array_merge(['and'], $relatedTo);
         }
 
-
         ## users returns the user criteria
         if ($view == 'users') {
             $userIds = [];
@@ -1809,6 +1816,70 @@ class Results extends Component
     public function countManagerEndorsementUsers(User $manager, $directSubordinates = false)
     {
         return $this->getManagerEndorsementUserIds($manager, $directSubordinates, true);
+    }
+
+    /**
+     * @param null $userIds
+     * @return \craft\elements\db\ElementQueryInterface|\craft\elements\db\EntryQuery
+     */
+    public function expiredCpdModuleResultCriteria()
+    {
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = 'moduleResult';
+        $criteria->cycleFinishDate = '<' . time();
+        return $criteria;
+    }
+
+    /**
+     * @return array|int[]|mixed
+     */
+    public function expiredCpdModuleResultIds()
+    {
+        $name = 'expiredCpdModuleResultIds';
+        if (false != $cache = Craft::$app->cache->get($name)) {
+            return $cache;
+        }
+        $criteria = $this->expiredCpdModuleResultCriteria();
+        $ids = $criteria->ids();
+        ## save expired ids for one day
+        Craft::$app->cache->set($name, $ids, 86400);
+        return $ids;
+    }
+
+    /**
+     * @param null $userIds
+     * @return array|int[]
+     */
+    public function getExpiredPendingCpdResultIds($userIds = NULL)
+    {
+        $userId = Craft::$app->getUser()->id;
+        $name = 'expiredPendingCpdResultIds' . $userId;
+        if (false != $cache = Craft::$app->cache->get($name)) {
+            return $cache;
+        }
+
+        ## get all module results where cpd cycle is in the past
+        $expiredCpdModuleResultIds = $this->expiredCpdModuleResultIds($userIds);
+
+        $criteria = Entry::find();
+        $criteria->section = 'results';
+        $criteria->type = ['userResult', 'unitResult'];
+        $criteria->resultStatus = 'pending';
+        $criteria->status = null;
+        $criteria->relatedTo  = [
+            'targetElement' => $expiredCpdModuleResultIds,
+            'field' => 'resultModuleResult'
+        ];
+
+        if ($userIds) {
+            $criteria->authorId = $userIds;
+        }
+
+        $ids = $criteria->ids();
+        ## save expired ids for one day
+        Craft::$app->cache->set($name, $ids, 86400);
+        return $ids;
     }
 
     /**
