@@ -2,7 +2,7 @@
 
 echo "GIT SAYS - POST RECEIVE"
 
-# TESTING POST-RECEIVE 1 #
+# TESTING POST-RECEIVE 2 #
 
 # get branch name from ref head
 if ! [ -t 0 ]; then
