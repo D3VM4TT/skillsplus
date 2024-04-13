@@ -43,11 +43,11 @@ class Deploy extends Component
         $currentServer = $environment == 'prod' ? $dbServerProd : $dbServerDev;
         $targetServer = $target == 'prod' ? $dbServerProd : $dbServerDev;
 
-        if ($this->export($currentServer, $currentDatabase, $filename)) {
+        if (!$this->export($currentServer, $currentDatabase, $filename)) {
             $this->message = 'Database export failed.';
             return false;
         }
-        if ($this->import($targetServer, $targetDatabase, $filename)) {
+        if (!$this->import($targetServer, $targetDatabase, $filename)) {
             $this->message = 'Database import failed.';
             return false;
         }
