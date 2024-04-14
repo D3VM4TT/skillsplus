@@ -143,15 +143,17 @@ class Results extends Component
             if (!$request->isCpRequest && $hasDates) {
                 $dateFormat = 'Y-m-d H:i:s';
                 if ($userStartDate && false != $date = $dateTime->createFromFormat($dateFormat, $userStartDate)) {
-                    $userStartDate = $date->format(DATE_ATOM);
-                    $entry->setFieldValue('resultStartDate', $userStartDate);
+                    $userStartDate = $date->getTimestamp();
+                    $resultStartDate = $date->format(DATE_ATOM);
+                    $entry->setFieldValue('resultStartDate', $resultStartDate);
                 }
                 else {
                     $entry->setFieldValue('resultStartDate', null);
                 }
                 if ($userFinishDate && false != $date = $dateTime->createFromFormat($dateFormat, $userFinishDate)) {
-                    $userFinishDate = $date->format(DATE_ATOM);
-                    $entry->setFieldValue('resultFinishDate', $userFinishDate);
+                    $userFinishDate = $date->getTimestamp();
+                    $resultFinishDate = $date->format(DATE_ATOM);
+                    $entry->setFieldValue('resultFinishDate', $resultFinishDate);
                 }
                 else {
                     $entry->setFieldValue('resultFinishDate', null);
