@@ -97,7 +97,7 @@ fields:
       decimals: 0
       defaultValue: null
       max: null
-      min: '0'
+      min: 0
       prefix: null
       previewCurrency: null
       previewFormat: decimal
@@ -138,7 +138,7 @@ fields:
       decimals: 0
       defaultValue: null
       max: null
-      min: '0'
+      min: 0
       prefix: null
       previewCurrency: null
       previewFormat: decimal
@@ -157,9 +157,9 @@ fields:
     searchable: true
     settings:
       decimals: 0
-      defaultValue: '0'
+      defaultValue: 0
       max: null
-      min: '0'
+      min: 0
       prefix: null
       previewCurrency: null
       previewFormat: decimal

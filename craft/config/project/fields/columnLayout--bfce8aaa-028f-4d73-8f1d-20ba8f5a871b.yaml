@@ -69,6 +69,7 @@ settings:
   maxRows: ''
   minRows: ''
   placeholderKey: null
+  propagationKeyFormat: null
   propagationMethod: all
   selectionLabel: 'Add a row'
   staticField: ''

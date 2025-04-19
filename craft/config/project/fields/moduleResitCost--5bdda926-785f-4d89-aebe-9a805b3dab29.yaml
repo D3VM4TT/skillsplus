@@ -7,9 +7,9 @@ name: 'Module Group Resit Cost'
 searchable: true
 settings:
   decimals: '2'
-  defaultValue: '0'
+  defaultValue: 0
   max: null
-  min: '0'
+  min: 0
   prefix: null
   previewCurrency: ''
   previewFormat: decimal

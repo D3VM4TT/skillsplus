@@ -8,7 +8,6 @@ searchable: true
 settings:
   availableTransforms: '*'
   availableVolumes: '*'
-  cleanupHtml: '1'
   columnType: text
   configSelectionMode: choose
   defaultTransform: ''

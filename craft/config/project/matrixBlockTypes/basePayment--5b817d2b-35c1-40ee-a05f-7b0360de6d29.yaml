@@ -146,7 +146,7 @@ fields:
       decimals: 0
       defaultValue: null
       max: null
-      min: '0'
+      min: 0
       prefix: null
       previewCurrency: ''
       previewFormat: decimal

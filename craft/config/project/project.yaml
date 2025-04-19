@@ -1,4 +1,4 @@
-dateModified: 1745092184
+dateModified: 1745096082
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -423,6 +423,10 @@ meta:
     fe9133b9-1ac4-4551-9989-99fd7865a70c: Cycles # Cycles
     feebdaae-888d-4c75-b0ed-d99114744179: Date # Date
 plugins:
+  ckeditor:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
   dashboard-begone:
     edition: standard
     enabled: true

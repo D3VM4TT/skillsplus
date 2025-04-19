@@ -102,9 +102,9 @@ fields:
     searchable: true
     settings:
       decimals: 0
-      defaultValue: '1'
-      max: '10'
-      min: '1'
+      defaultValue: 1
+      max: 10
+      min: 1
       prefix: null
       previewCurrency: null
       previewFormat: decimal
@@ -140,7 +140,7 @@ fields:
       decimals: 0
       defaultValue: null
       max: null
-      min: '0'
+      min: 0
       prefix: null
       previewCurrency: null
       previewFormat: decimal

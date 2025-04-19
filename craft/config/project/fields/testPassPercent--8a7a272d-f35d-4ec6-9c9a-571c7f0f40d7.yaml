@@ -8,8 +8,8 @@ searchable: true
 settings:
   decimals: 0
   defaultValue: null
-  max: '100'
-  min: '0'
+  max: 100
+  min: 0
   prefix: null
   previewCurrency: null
   previewFormat: decimal

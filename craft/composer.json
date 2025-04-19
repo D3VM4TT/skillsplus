@@ -2,6 +2,7 @@
   "require": {
     "amici/craft-super-pdf": "1.1.1",
     "besteadfast/craft-preparse-field": "1.5.1",
+    "craftcms/ckeditor": "1.5.0",
     "craftcms/cms": "3.9.15",
     "craftcms/redactor": "2.10.12",
     "dompdf/dompdf": "^2.0",
@@ -42,6 +43,11 @@
     {
       "type": "path",
       "url": "../src/repository/sp"
+    },
+    {
+      "type": "composer",
+      "url": "https://composer.craftcms.com",
+      "canonical": false
     }
   ]
 }

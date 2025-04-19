@@ -7,9 +7,9 @@ name: 'Cycle Duration Length'
 searchable: true
 settings:
   decimals: 0
-  defaultValue: '1'
+  defaultValue: 1
   max: null
-  min: '0'
+  min: 0
   prefix: null
   previewCurrency: null
   previewFormat: decimal

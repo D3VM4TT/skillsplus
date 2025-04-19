@@ -3,58 +3,58 @@ handle: editors
 name: Editors
 permissions:
   - accesscp
-  - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'publishpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'deletepeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'editpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'publishpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'editpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
-  - 'editentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'createentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'createentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
-  - 'publishentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'deleteentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'deleteentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
-  - 'publishpeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deletepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'deletepeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'deletepeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
-  - 'editpeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
-  - 'publishpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'deletepeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'deletepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'deletepeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'deletepeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
-  - 'editpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'editcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'editentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
   - 'editentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
-  - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'publishpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'deletepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'editpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'publishpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'deletepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'editpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'editentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
-  - 'createentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'publishentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'deleteentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'publishpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'deletepeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'editpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'publishpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'deletepeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'editpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'editentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
-  - 'createentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'editpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'deletepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'editpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'editpeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'editpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - 'editpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'editentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
-  - 'editcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
-  - 'editcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'editpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'editpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'editpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'editpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - managejobroles
   - managemodules
+  - 'publishentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'publishentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'publishpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishpeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'publishpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'publishpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'publishpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'publishpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'publishpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'publishpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules

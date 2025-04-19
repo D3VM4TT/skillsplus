@@ -37,7 +37,6 @@ fields:
       availableTransforms: '*'
       availableVolumes:
         - f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9 # Uploads
-      cleanupHtml: true
       columnType: text
       configSelectionMode: choose
       defaultTransform: ''
