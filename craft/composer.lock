@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18890af6d52b95b2e92fdf0a436c5d0c",
+    "content-hash": "bfeb841bc4b3edae48f0869f1230b818",
     "packages": [
         {
             "name": "amici/craft-super-pdf",
-            "version": "1.0.8.7",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amici-infotech/craft-super-pdf.git",
-                "reference": "16c09deb21ccb3d2e2cce13b6b392fe82b0fb626"
+                "reference": "e60b467024a21add1ca7852b1029ae78b4139656"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amici-infotech/craft-super-pdf/zipball/16c09deb21ccb3d2e2cce13b6b392fe82b0fb626",
-                "reference": "16c09deb21ccb3d2e2cce13b6b392fe82b0fb626",
+                "url": "https://api.github.com/repos/amici-infotech/craft-super-pdf/zipball/e60b467024a21add1ca7852b1029ae78b4139656",
+                "reference": "e60b467024a21add1ca7852b1029ae78b4139656",
                 "shasum": ""
             },
             "require": {
-                "craftcms/cms": "^3.6.0",
-                "dompdf/dompdf": "^1.0.2"
+                "craftcms/cms": "^3.9",
+                "dompdf/dompdf": "^2.0"
             },
             "type": "craft-plugin",
             "extra": {
@@ -68,7 +68,7 @@
                 "issues": "https://github.com/mufi/craft-super-pdf/issues?state=open",
                 "source": "https://github.com/mufi/craft-super-pdf"
             },
-            "time": "2023-08-26T04:52:12+00:00"
+            "time": "2024-06-29T07:09:51+00:00"
         },
         {
             "name": "besteadfast/craft-preparse-field",
@@ -1400,23 +1400,24 @@
         },
         {
             "name": "dompdf/dompdf",
-            "version": "v1.2.2",
+            "version": "v2.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "5031045d9640b38cfc14aac9667470df09c9e090"
+                "reference": "c20247574601700e1f7c8dab39310fca1964dc52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/5031045d9640b38cfc14aac9667470df09c9e090",
-                "reference": "5031045d9640b38cfc14aac9667470df09c9e090",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/c20247574601700e1f7c8dab39310fca1964dc52",
+                "reference": "c20247574601700e1f7c8dab39310fca1964dc52",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-mbstring": "*",
-                "phenx/php-font-lib": "^0.5.4",
-                "phenx/php-svg-lib": "^0.3.3 || ^0.4.0",
+                "masterminds/html5": "^2.0",
+                "phenx/php-font-lib": ">=0.5.4 <1.0.0",
+                "phenx/php-svg-lib": ">=0.5.2 <1.0.0",
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
@@ -1447,25 +1448,17 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Ménager",
-                    "email": "fabien.menager@gmail.com"
-                },
-                {
-                    "name": "Brian Sweeney",
-                    "email": "eclecticgeek@gmail.com"
-                },
-                {
-                    "name": "Gabriel Bull",
-                    "email": "me@gabrielbull.com"
+                    "name": "The Dompdf Community",
+                    "homepage": "https://github.com/dompdf/dompdf/blob/master/AUTHORS.md"
                 }
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
             "support": {
                 "issues": "https://github.com/dompdf/dompdf/issues",
-                "source": "https://github.com/dompdf/dompdf/tree/v1.2.2"
+                "source": "https://github.com/dompdf/dompdf/tree/v2.0.8"
             },
-            "time": "2022-04-27T13:50:54+00:00"
+            "time": "2024-04-29T13:06:17+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -3570,21 +3563,21 @@
         },
         {
             "name": "phenx/php-svg-lib",
-            "version": "0.4.1",
+            "version": "0.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/php-svg-lib.git",
-                "reference": "4498b5df7b08e8469f0f8279651ea5de9626ed02"
+                "reference": "46b25da81613a9cf43c83b2a8c2c1bdab27df691"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/4498b5df7b08e8469f0f8279651ea5de9626ed02",
-                "reference": "4498b5df7b08e8469f0f8279651ea5de9626ed02",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/46b25da81613a9cf43c83b2a8c2c1bdab27df691",
+                "reference": "46b25da81613a9cf43c83b2a8c2c1bdab27df691",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^7.1 || ^7.2 || ^7.3 || ^7.4 || ^8.0",
+                "php": "^7.1 || ^8.0",
                 "sabberworm/php-css-parser": "^8.4"
             },
             "require-dev": {
@@ -3598,7 +3591,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0"
+                "LGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -3610,9 +3603,9 @@
             "homepage": "https://github.com/PhenX/php-svg-lib",
             "support": {
                 "issues": "https://github.com/dompdf/php-svg-lib/issues",
-                "source": "https://github.com/dompdf/php-svg-lib/tree/0.4.1"
+                "source": "https://github.com/dompdf/php-svg-lib/tree/0.5.4"
             },
-            "time": "2022-03-07T12:52:04+00:00"
+            "time": "2024-04-08T12:52:34+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
