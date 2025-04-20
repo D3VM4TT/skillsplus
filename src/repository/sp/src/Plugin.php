@@ -30,7 +30,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
-use craft\log\FileTarget;
+use yii\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\models\Record;
 use yii\base\Event;
@@ -64,9 +64,9 @@ class Plugin extends BasePlugin
      */
     public static $app;
     public static $plugin;
-    public $hasCpSection = true;
+    public bool $hasCpSection = true;
 
-    public $schemaVersion = '0.0.3';
+    public string $schemaVersion = '0.0.3';
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -410,18 +410,19 @@ class Plugin extends BasePlugin
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?\craft\base\Model
     {
         return new Settings();
     }
 
     /**
-     * @return mixed|\yii\web\Response
+     * @return mixed
      */
-    public function getSettingsResponse()
+    public function getSettingsResponse(): mixed
     {
-        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('sp/settings'));
+        return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('sp/settings'));
     }
+
 
     /**
      * @return array

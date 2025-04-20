@@ -61,7 +61,7 @@ class App extends Component
     /**
      *
      */
-    public function init()
+    public function init() : void
     {
         $this->evidence = new Evidence();
         $this->attempts = new Attempts();
