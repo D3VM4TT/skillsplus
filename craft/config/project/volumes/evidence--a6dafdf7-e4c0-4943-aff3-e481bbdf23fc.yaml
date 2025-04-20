@@ -23,7 +23,7 @@ fieldLayouts:
             step: null
             tip: null
             title: null
-            type: craft\fieldlayoutelements\AssetTitleField
+            type: craft\fieldlayoutelements\assets\AssetTitleField
             warning: null
             width: 100
           -
@@ -37,13 +37,11 @@ fieldLayouts:
             width: 100
         name: Location
         sortOrder: 1
+fs: evidence
 handle: evidence
 hasUrls: false
 name: Evidence
-settings:
-  path: '@assetsPath/evidence'
 sortOrder: 1
 titleTranslationKeyFormat: null
 titleTranslationMethod: site
-type: craft\volumes\Local
 url: null
