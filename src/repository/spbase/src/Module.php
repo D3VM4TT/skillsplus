@@ -5,7 +5,7 @@ use Craft;
 
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
-use craft\log\FileTarget;
+use yii\log\FileTarget;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\web\View;
 
