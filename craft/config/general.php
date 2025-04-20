@@ -38,7 +38,6 @@ return [
         ],
     ],
     'cbd' => [
-        'siteUrl' => 'http://sp.coffeebean.design',
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
@@ -48,7 +47,6 @@ return [
         ],
     ],
     'local' => [
-        'siteUrl' => 'http://skills-plus.local',
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
@@ -58,7 +56,6 @@ return [
         ],
     ],
     'jason' => [
-        'siteUrl' => 'http://cpd.lantra.co.uk:8888',
         'devMode' => true,
         'allowAdminChanges' => true,
         'aliases' => [
