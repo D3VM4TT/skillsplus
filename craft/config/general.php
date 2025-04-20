@@ -23,7 +23,6 @@ return [
         'setPasswordSuccessPath' => '/',
         'useEmailAsUsername' => false,
         'securityKey' => getenv('SECURITY_KEY'),
-        'useProjectConfigFile' => true,
         'backupOnUpdate' => false,
         'autoLoginAfterAccountActivation' => true,
         'userSessionDuration' => 7200,
