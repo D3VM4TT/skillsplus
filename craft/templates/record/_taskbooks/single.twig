@@ -12,10 +12,10 @@
 {% set accountPhoto = cpdUser.getPhoto() %}
 {% set accountPhotoUrl = accountPhoto ? accountPhoto.getUrl('thumb') : '/assets/img/img-team-management.jpg' %}
 
-{% set packageId = craft.request.getParam('packageId') %}
-{% set moduleGroupId = craft.request.getParam('moduleGroupId') %}
-{% set singleType = craft.request.getParam('type') %}
-{% set payment = craft.request.getParam('payment') %}
+{% set packageId = craft.app.request.getParam('packageId') %}
+{% set moduleGroupId = craft.app.request.getParam('moduleGroupId') %}
+{% set singleType = craft.app.request.getParam('type') %}
+{% set payment = craft.app.request.getParam('payment') %}
 {% set package = craft.entries.section('packages').id(packageId).one() %}
 {% set unpaidCost = package.unpaidCost %}
 {% set redirect = 'cpd/' ~ cpdUser.id ~ '/taskbooks/' ~ package.id %}

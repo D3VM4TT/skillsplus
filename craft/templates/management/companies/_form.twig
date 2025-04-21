@@ -14,7 +14,7 @@
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set hierarchyParent = craft.app.request.getParam('parent') %}
 
-{% set section = craft.sections.getSectionByHandle('companies') %}
+{% set section = craft.app.sections.getSectionByHandle('companies') %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 
 {% block content %}

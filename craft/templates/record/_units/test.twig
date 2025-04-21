@@ -1,4 +1,4 @@
-    {% set section = craft.sections.getSectionByHandle('attempts') %}
+    {% set section = craft.app.sections.getSectionByHandle('attempts') %}
     {% import "_macros" as ui %}
     {% if unitEntry is defined %}
         {{ ui.errorList(unitEntry.getFirstErrors()) }}

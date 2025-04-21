@@ -19,7 +19,7 @@
 
 {% if not currentUser.id == entry.authorId and not isManager %}{% exit 403 %}{% endif %}
 
-{% set section = craft.sections.getSectionByHandle('results') %}
+{% set section = craft.app.sections.getSectionByHandle('results') %}
 
 {% block content %}
     <div class="page-subHeader primary-bg">

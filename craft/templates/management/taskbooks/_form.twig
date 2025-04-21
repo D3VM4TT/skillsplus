@@ -9,7 +9,7 @@
 {% set metaTitle = "Management > Taskbooks" %}
 
 {% set packageModuleGroup = entry is defined and entry.packageModuleGroup ? entry.packageModuleGroup.one : null %}
-{% set section = craft.sections.getSectionByHandle('packages') %}
+{% set section = craft.app.sections.getSectionByHandle('packages') %}
 {% set isTaskbooks = true %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 

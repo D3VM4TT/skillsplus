@@ -1,6 +1,6 @@
 {% import "_macros" as ui %}
 
-{% set section = craft.sections.getSectionByHandle('results') %}
+{% set section = craft.app.sections.getSectionByHandle('results') %}
 {% set entryType = craft.app.sections.getEntryTypesByHandle('productResult')[0] %}
 
 {% set entry = entry ?? create('craft\\elements\\Entry') %}

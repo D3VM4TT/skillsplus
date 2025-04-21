@@ -10,7 +10,7 @@
     {% set product = craft.entries.id(productId).one %}
 {% endif %}
 
-{% set section = craft.sections.getSectionByHandle('products') %}
+{% set section = craft.app.sections.getSectionByHandle('products') %}
 {% if isAdmin %}
     {% set companyEntries = craft.entries.section('companies').all() %}
 {% else %}

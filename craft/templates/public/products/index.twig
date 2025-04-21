@@ -1,7 +1,7 @@
 {% set sidebar = 'closed' %}
 {% extends "_layout" %}
 
-{% set ref = craft.request.param('ref') %}
+{% set ref = craft.app.request.param('ref') %}
 {% set dateFormat = craft.lantra.setting('themeDateFormat', 'd-m-Y') %}
 {% set productResultLabel = craft.lantra.setting('productResultLabel', 'Result') %}
 

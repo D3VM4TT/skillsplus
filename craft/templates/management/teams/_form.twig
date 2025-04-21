@@ -11,7 +11,7 @@
 {% set hierarchyNode = craft.app.request.getParam('node') %}
 {% set hierarchyCompany = craft.app.request.getParam('company') %}
 
-{% set section = craft.sections.getSectionByHandle('teams') %}
+{% set section = craft.app.sections.getSectionByHandle('teams') %}
 
     {% block content %}
 <div class="page-subHeader primary-bg">

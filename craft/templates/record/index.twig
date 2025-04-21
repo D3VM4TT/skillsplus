@@ -17,7 +17,7 @@
 {% set defaultColumnLayout = globalsTheme.columnLayout %}
 
 {% set hierarchyNode = craft.app.request.getParam('node') %}
-{% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.request.getSegment(3) == 'taskbooks' %}
+{% set isTaskbooks = craft.lantra.setting('taskbooks') and craft.app.request.getSegment(3) == 'taskbooks' %}
 {% set taskbookLabel = craft.lantra.setting('taskbookLabel', 'Taskbook') %}
 {% set jobRoleLabel = craft.lantra.setting('labelJobRole', 'Job Role') %}
 
