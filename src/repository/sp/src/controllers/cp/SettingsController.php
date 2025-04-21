@@ -95,7 +95,7 @@ class SettingsController extends Controller
     private function _settings()
     {
         $settingsModel = new SettingsModel;
-        $settingsModel->setAttributes(Lantra::getInstance()->getSettings());
+        $settingsModel->setAttributes(Lantra::getInstance()->getSettings()->toArray());
         return $settingsModel;
     }
 
