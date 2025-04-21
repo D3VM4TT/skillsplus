@@ -1,6 +1,6 @@
 <?php
 /**
- * Lantra Skills Plus for Craft CMS 3.x
+ * Lantra Skills Plus for Craft CMS 4.x
  *
  * @link      https://coffeebean.design
  * @copyright Copyright (c) 2020 Coffee Bean Design
@@ -380,7 +380,7 @@ class Settings extends Model
     /**
      * @throws \Exception
      */
-    public function init ()
+    public function init (): void
     {
         parent::init();
 
@@ -444,7 +444,7 @@ class Settings extends Model
     /**
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
 

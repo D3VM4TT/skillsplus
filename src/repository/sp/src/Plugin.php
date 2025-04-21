@@ -1,6 +1,6 @@
 <?php
 /**
- * Lantra Skills Plus for Craft CMS 3.x
+ * Lantra Skills Plus for Craft CMS 4.x
  *
  * @link      https://coffeebean.design
  * @copyright Copyright (c) 2020 Coffee Bean Design
@@ -30,6 +30,7 @@ use craft\web\twig\variables\CraftVariable;
 use craft\helpers\App as AppHelper;
 use craft\helpers\UrlHelper;
 use craft\helpers\ElementHelper;
+use lantra\sp\models\Settings;
 use yii\log\FileTarget;
 use craft\web\UrlManager;
 use lantra\sp\models\Record;
@@ -47,7 +48,6 @@ use lantra\sp\behaviors\TaskbookBehavior;
 use lantra\sp\behaviors\MagicTitleBehavior;
 use lantra\sp\helpers\LantraHelper;
 use lantra\sp\services\App;
-use lantra\sp\models\Settings;
 use lantra\sp\variables\LantraVariable;
 use lantra\sp\assetbundles\SpCpAsset;
 
