@@ -10,7 +10,7 @@
     {% endif %}
     <div class="field--wrapper" style="">
         <label for="loginName" style="" class="float">Username or Email Address</label>
-        <input type="text" id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.session.rememberedUsername }}">
+        <input type="text" id="loginName" name="loginName" class="float-label" placeholder="Email address" value="{{ craft.app.user.rememberedUsername }}">
     </div>
     <div class="field--wrapper last" style="">
         <label for="password" style="" class="float">Password</label>
