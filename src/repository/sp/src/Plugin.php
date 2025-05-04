@@ -106,7 +106,7 @@ class Plugin extends BasePlugin
                 if ($request->isCpRequest) {
                     $view = Craft::$app->getView();
                     $view->registerAssetBundle(SpCpAsset::class);
-                    $js = "Craft.schemeName='" . Lantra::$app->settings->getSetting('schemeName') ."'";
+                    $js = "Craft.schemeName='" . Lantra::$app->settings->getSetting('schemeName') . "'";
                     $view->registerJs($js, View::POS_END);
                 }
             }
@@ -223,7 +223,7 @@ class Plugin extends BasePlugin
         Event::on(
             Users::class,
             Users::EVENT_AFTER_ASSIGN_USER_TO_DEFAULT_GROUP,
-            function(UserAssignGroupEvent $event) {
+            function (UserAssignGroupEvent $event) {
                 Lantra::$app->users->onAssignUser($event, $event->user);
             }
         );
@@ -285,7 +285,7 @@ class Plugin extends BasePlugin
                 } elseif ($entry->sectionId == $this->sectionId('workflows')) {
                     Lantra::$app->packages->onSavePackageWorkflow($event, $entry);
                 }
-        });
+            });
 
         Event::on(
             Entry::class,
@@ -315,7 +315,7 @@ class Plugin extends BasePlugin
         Event::on(
             Entry::class,
             Entry::EVENT_DEFINE_BEHAVIORS,
-            function(DefineBehaviorsEvent $event) {
+            function (DefineBehaviorsEvent $event) {
                 if ($event->sender->sectionId == $this->sectionId('packages')) {
                     $event->behaviors[] = PackageBehavior::class;
                 }
@@ -336,7 +336,7 @@ class Plugin extends BasePlugin
         Event::on(
             Category::class,
             Category::EVENT_DEFINE_BEHAVIORS,
-            function(DefineBehaviorsEvent $event) {
+            function (DefineBehaviorsEvent $event) {
                 if ($event->sender->groupId == $this->groupId('moduleGroups')) {
                     $event->behaviors[] = ModuleGroupBehavior::class;
                     $event->behaviors[] = MagicTitleBehavior::class;
@@ -347,22 +347,26 @@ class Plugin extends BasePlugin
         Event::on(
             User::class,
             User::EVENT_DEFINE_BEHAVIORS,
-            function(DefineBehaviorsEvent $event) {
+            function (DefineBehaviorsEvent $event) {
                 $event->behaviors[] = UserBehavior::class;
             });
 
         Event::on(
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
-            function(RegisterUserPermissionsEvent $event) {
-                $event->permissions['Lantra Skills Plus'] = [
-                    'manageCompanies' => ['label' => 'Manage Companies'],
-                    'manageTeams' => ['label' => 'Manage Teams'],
-                    'manageJobRoles' => ['label' => 'Manage Job Roles'],
-                    'manageModules' => ['label' => 'Manage Modules'],
-                    'accessReports' => ['label' => 'Access Reports'],
+            function (RegisterUserPermissionsEvent $event) {
+                $event->permissions[] = [
+                    'heading' => 'Lantra Skills Plus',
+                    'permissions' => [
+                        'manageCompanies' => ['label' => 'Manage Companies'],
+                        'manageTeams' => ['label' => 'Manage Teams'],
+                        'manageJobRoles' => ['label' => 'Manage Job Roles'],
+                        'manageModules' => ['label' => 'Manage Modules'],
+                        'accessReports' => ['label' => 'Access Reports'],
+                    ],
                 ];
-            });
+            }
+        );
 
         ## add geo location to assets
         Event::on(
@@ -430,15 +434,15 @@ class Plugin extends BasePlugin
     private function getCpUrlRules()
     {
         return [
-            'sp'                                => 'sp/cp/settings/index',
-            'sp/settings'                       => 'sp/cp/settings/index',
-            'sp/notifications'                  => 'sp/cp/settings/notifications',
-            'sp/queue'                          => 'sp/cp/settings/queue',
-            'sp/cache'                          => 'sp/cp/settings/cache',
-            'sp/tools'                          => 'sp/cp/tools',
-            'sp/spbase'                         => 'sp/cp/spbase',
-            'sp/import'                         => 'sp/cp/import/index',
-            'sp/queue/delete-job'               => 'sp/cp/settings/delete-job',
+            'sp' => 'sp/cp/settings/index',
+            'sp/settings' => 'sp/cp/settings/index',
+            'sp/notifications' => 'sp/cp/settings/notifications',
+            'sp/queue' => 'sp/cp/settings/queue',
+            'sp/cache' => 'sp/cp/settings/cache',
+            'sp/tools' => 'sp/cp/tools',
+            'sp/spbase' => 'sp/cp/spbase',
+            'sp/import' => 'sp/cp/import/index',
+            'sp/queue/delete-job' => 'sp/cp/settings/delete-job',
         ];
     }
 
@@ -449,100 +453,100 @@ class Plugin extends BasePlugin
     {
         return [
             ## public routes
-            'public/certificate/<section>/<userId>/<resultId>'    => ['template' => 'public/certificate'],
-            'public/passport/<userId>'                  => ['template' => 'public/passport'],
-            'public/licence/thanks'                     => ['template' => 'public/licence'],
+            'public/certificate/<section>/<userId>/<resultId>' => ['template' => 'public/certificate'],
+            'public/passport/<userId>' => ['template' => 'public/passport'],
+            'public/licence/thanks' => ['template' => 'public/licence'],
 
             ## membership routes
-            'public/register/membership/thanks'         => ['template' => 'public/register/membership'],
+            'public/register/membership/thanks' => ['template' => 'public/register/membership'],
 
             ## internal assets
-            'internal/<assetId>'                        => 'sp/assets/internal',
+            'internal/<assetId>' => 'sp/assets/internal',
 
             ## cpd routes
 
             ## product routes
-            'cpd/<userId>/products'                            => ['template' => 'record/index'],
+            'cpd/<userId>/products' => ['template' => 'record/index'],
 
             ## taskbook routes
-            'cpd/<userId>/taskbooks'                            => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/manage'                     => ['template' => 'record/_taskbooks/manage'],
-            'cpd/<userId>/taskbooks/new'                        => ['template' => 'record/_taskbooks/new'],
-            'cpd/<userId>/taskbooks/single'                     => ['template' => 'record/_taskbooks/single'],
-            'cpd/<userId>/taskbooks/<entryId>'                  => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/<entryId>/<moduleGroupId>'  => ['template' => 'record/index'],
-            'cpd/<userId>/taskbooks/<entryId>/pay'              => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks' => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/manage' => ['template' => 'record/_taskbooks/manage'],
+            'cpd/<userId>/taskbooks/new' => ['template' => 'record/_taskbooks/new'],
+            'cpd/<userId>/taskbooks/single' => ['template' => 'record/_taskbooks/single'],
+            'cpd/<userId>/taskbooks/<entryId>' => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/<moduleGroupId>' => ['template' => 'record/index'],
+            'cpd/<userId>/taskbooks/<entryId>/pay' => ['template' => 'record/index'],
 
-            'profile'                                   => ['template' => 'profile/index'],
-            'cpd/<userId>/achievement/<entryId>'        => ['template' => 'record/achievement'],
-            'cpd/<userId>/result/<entryId>'             => ['template' => 'record/achievement'],
-            'cpd/<userId>/<moduleId>/<unitId>/add'      => ['template' => 'record/unit'],
-            'cpd/<userId>/<moduleId>/<unitId>/test'     => ['template' => 'record/unit'],
-            'cpd/<userId>/<moduleId>/<unitId>/<resultId>'   => ['template' => 'record/unit'],
-            'cpd/<userId>/<moduleId>/<unitId>'          => ['template' => 'record/unit'],
-            'cpd/<userId>/archive'                      => ['template' => 'record/index'],
-            'cpd/<userId>/print'                        => ['template' => 'record/index'],
-            'cpd/<userId>'                              => ['template' => 'record/index'],
-            'result/<resultId>'                         => ['template' => 'result/_form'],
+            'profile' => ['template' => 'profile/index'],
+            'cpd/<userId>/achievement/<entryId>' => ['template' => 'record/achievement'],
+            'cpd/<userId>/result/<entryId>' => ['template' => 'record/achievement'],
+            'cpd/<userId>/<moduleId>/<unitId>/add' => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/test' => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>/<resultId>' => ['template' => 'record/unit'],
+            'cpd/<userId>/<moduleId>/<unitId>' => ['template' => 'record/unit'],
+            'cpd/<userId>/archive' => ['template' => 'record/index'],
+            'cpd/<userId>/print' => ['template' => 'record/index'],
+            'cpd/<userId>' => ['template' => 'record/index'],
+            'result/<resultId>' => ['template' => 'result/_form'],
 
             ## taskbook review
             'management/taskbooks/manage/<elementId>/review' => ['template' => 'management/taskbooks/manage'],
-            'management/taskbooks/manage/<elementId>'   => ['template' => 'management/taskbooks/manage'],
+            'management/taskbooks/manage/<elementId>' => ['template' => 'management/taskbooks/manage'],
 
             ## management routes
-            'management/companies/results/<companyId>'  => ['template' => 'management/companies/results'],
-            'management/<section>/edit/<elementId>'     => ['template' => 'management/index'],
-            'management/<section>/new'                  => ['template' => 'management/index'],
-            'management/users/company/<companyId>'      => ['template' => 'management/users'],
-            'management/products/results/<productId>'   => ['template' => 'management/products/results'],
-            'management/skills/matrix/<moduleId>'       => ['template' => 'management/skills/matrix'],
+            'management/companies/results/<companyId>' => ['template' => 'management/companies/results'],
+            'management/<section>/edit/<elementId>' => ['template' => 'management/index'],
+            'management/<section>/new' => ['template' => 'management/index'],
+            'management/users/company/<companyId>' => ['template' => 'management/users'],
+            'management/products/results/<productId>' => ['template' => 'management/products/results'],
+            'management/skills/matrix/<moduleId>' => ['template' => 'management/skills/matrix'],
             'management/skills/matrix/<moduleId>/<tableView>' => ['template' => 'management/skills/matrix'],
 
             ## reporting routes
-            'reporting/edit/<reportId>'                 => ['template' => 'reporting/_form'],
-            'reporting/data/<reportId>'                 => ['template' => 'reporting/_data'],
-            'reporting/new'                             => ['template' => 'reporting/_form'],
-            'reporting/user/<userId>'                   => ['template' => 'reporting/user'],
+            'reporting/edit/<reportId>' => ['template' => 'reporting/_form'],
+            'reporting/data/<reportId>' => ['template' => 'reporting/_data'],
+            'reporting/new' => ['template' => 'reporting/_form'],
+            'reporting/user/<userId>' => ['template' => 'reporting/user'],
 
             ## action routes
-            'sp/users/hierarchy'                        => 'sp/users/hierarchy',
-            'sp/users/refresh-hierarchy'                => 'sp/users/refresh-hierarchy',
-            'sp/users/suspend-user'                     => 'sp/users/suspend-user',
-            'sp/users/delete-user'                      => 'sp/users/delete-user',
-            'sp/users/restore-user'                     => 'sp/users/restore-user',
-            'sp/users/company-managers'                 => 'sp/users/company-managers',
-            'sp/users/save-user'                        => 'sp/users/save-user',
-            'sp/users/privacy-confirm'                  => 'sp/users/privacy-confirm',
-            'sp/users/switch-user'                      => 'sp/users/switch-user',
+            'sp/users/hierarchy' => 'sp/users/hierarchy',
+            'sp/users/refresh-hierarchy' => 'sp/users/refresh-hierarchy',
+            'sp/users/suspend-user' => 'sp/users/suspend-user',
+            'sp/users/delete-user' => 'sp/users/delete-user',
+            'sp/users/restore-user' => 'sp/users/restore-user',
+            'sp/users/company-managers' => 'sp/users/company-managers',
+            'sp/users/save-user' => 'sp/users/save-user',
+            'sp/users/privacy-confirm' => 'sp/users/privacy-confirm',
+            'sp/users/switch-user' => 'sp/users/switch-user',
 
-            'sp/results/refresh'                        => 'sp/users/refresh-results',
+            'sp/results/refresh' => 'sp/users/refresh-results',
 
-            'sp/entries/reset-result'                   => 'sp/entries/reset-result',
-            'sp/entries/delete-entry'                   => 'sp/entries/delete-entry',
-            'sp/entries/endorse-evidence'               => 'sp/entries/endorse-evidence',
-            'sp/entries/pending-result'                 => 'sp/entries/pending-result',
+            'sp/entries/reset-result' => 'sp/entries/reset-result',
+            'sp/entries/delete-entry' => 'sp/entries/delete-entry',
+            'sp/entries/endorse-evidence' => 'sp/entries/endorse-evidence',
+            'sp/entries/pending-result' => 'sp/entries/pending-result',
 
-            'sp/packages/request-assessment'            => 'sp/packages/request-assessment',
-            'sp/packages/update-package'                => 'sp/packages/update-package',
-            'sp/packages/reset-package/<entryId>'       => 'sp/packages/reset-package',
-            'sp/packages/export-package/<entryId>'      => 'sp/packages/export-package',
-            'sp/packages/delete-results'                => 'sp/packages/delete-results',
-            'sp/packages/load-template'                 => 'sp/packages/load-template',
-            'sp/packages/external-status'               => 'sp/packages/external-status',
+            'sp/packages/request-assessment' => 'sp/packages/request-assessment',
+            'sp/packages/update-package' => 'sp/packages/update-package',
+            'sp/packages/reset-package/<entryId>' => 'sp/packages/reset-package',
+            'sp/packages/export-package/<entryId>' => 'sp/packages/export-package',
+            'sp/packages/delete-results' => 'sp/packages/delete-results',
+            'sp/packages/load-template' => 'sp/packages/load-template',
+            'sp/packages/external-status' => 'sp/packages/external-status',
 
-            'sp/categories/delete-category'             => 'sp/categories/delete-category',
+            'sp/categories/delete-category' => 'sp/categories/delete-category',
 
-            'sp/reports/save-report'                    => 'sp/reports/save-report',
-            'sp/reports/delete-report'                  => 'sp/reports/delete-report',
-            'sp/reports/run-custom-report/<entryId>'    => 'sp/reports/run-custom-report',
-            'sp/reports/download-report/<ext>/<entryId>'=> 'sp/reports/download-report',
+            'sp/reports/save-report' => 'sp/reports/save-report',
+            'sp/reports/delete-report' => 'sp/reports/delete-report',
+            'sp/reports/run-custom-report/<entryId>' => 'sp/reports/run-custom-report',
+            'sp/reports/download-report/<ext>/<entryId>' => 'sp/reports/download-report',
 
-            'sp/assets/delete-evidence'                 => 'sp/assets/delete-evidence',
-            'sp/assets/upload-evidence'                 => 'sp/assets/upload-evidence',
-            'sp/assets/browse-evidence'                 => 'sp/assets/browse-evidence',
-            'sp/packages/browse-packages'                 => 'sp/packages/browse-packages',
+            'sp/assets/delete-evidence' => 'sp/assets/delete-evidence',
+            'sp/assets/upload-evidence' => 'sp/assets/upload-evidence',
+            'sp/assets/browse-evidence' => 'sp/assets/browse-evidence',
+            'sp/packages/browse-packages' => 'sp/packages/browse-packages',
 
-            'sp/paypal/process/<userId>/<paymentId>'    => 'sp/paypal/process',
+            'sp/paypal/process/<userId>/<paymentId>' => 'sp/paypal/process',
         ];
     }
 
