@@ -2,18 +2,18 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultSearch
-instructions: ''
+instructions: null
 name: 'Result Search'
 searchable: true
 settings:
-  allowSelect: ''
+  allowSelect: false
   columnType: text
-  decimals: '0'
+  decimals: 0
   displayType: hidden
   fieldTwig: "{% if entry.type == 'unitResult' %}{{ entry.resultUnit.first.title|raw }}{% else %}{{ entry.resultModule.first.title|raw }}{% endif %} \r\n{{ entry.author.userTeam.first.title|raw }} {{ entry.au"
-  parseBeforeSave: ''
-  parseOnMove: ''
-  showField: '1'
+  parseBeforeSave: false
+  parseOnMove: false
+  showField: true
   textareaRows: 5
 translationKeyFormat: null
 translationMethod: none

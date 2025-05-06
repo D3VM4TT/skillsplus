@@ -2,13 +2,13 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
 handle: testQuestions
-instructions: ''
+instructions: null
 name: 'Test Questions'
 searchable: true
 settings:
   contentTable: '{{%matrixcontent_testquestions_1}}'
-  maxBlocks: ''
-  minBlocks: ''
+  maxBlocks: null
+  minBlocks: null
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

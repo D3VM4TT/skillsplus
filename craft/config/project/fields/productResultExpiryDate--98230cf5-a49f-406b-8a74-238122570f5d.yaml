@@ -2,13 +2,13 @@ columnSuffix: wjkytpnn
 contentColumnType: datetime
 fieldGroup: 7ac02e26-c0e2-4b21-b756-bfe7243fa353 # Products
 handle: productResultExpiryDate
-instructions: ''
+instructions: null
 name: 'Product Result Expiry Date'
 searchable: false
 settings:
   max: null
   min: null
-  minuteIncrement: '30'
+  minuteIncrement: 30
   showDate: true
   showTime: false
   showTimeZone: false

@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: cycleGrace
-instructions: ''
+instructions: null
 name: 'Cycle Grace'
 searchable: true
 settings:

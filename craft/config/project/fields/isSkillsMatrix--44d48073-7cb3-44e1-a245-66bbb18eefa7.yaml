@@ -2,7 +2,7 @@ columnSuffix: hlmuhzgj
 contentColumnType: boolean
 fieldGroup: fa8667ae-97e6-4811-8904-29e4cfd55fdd # Skill Matrix
 handle: isSkillsMatrix
-instructions: ''
+instructions: null
 name: 'Is Skills Matrix?'
 searchable: false
 settings:

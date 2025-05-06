@@ -2,11 +2,11 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageStatus
-instructions: ''
+instructions: null
 name: 'Package Status'
 searchable: true
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

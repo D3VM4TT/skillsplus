@@ -2,15 +2,15 @@ columnSuffix: null
 contentColumnType: datetime
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userDateOfBirth
-instructions: ''
+instructions: null
 name: 'User Date of Birth'
 searchable: true
 settings:
   max: null
   min: null
-  minuteIncrement: '30'
-  showDate: 1
-  showTime: 0
+  minuteIncrement: 30
+  showDate: true
+  showTime: false
   showTimeZone: false
 translationKeyFormat: null
 translationMethod: none

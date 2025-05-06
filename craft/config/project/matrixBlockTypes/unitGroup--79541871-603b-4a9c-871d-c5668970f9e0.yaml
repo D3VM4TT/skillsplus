@@ -3,79 +3,102 @@ fieldLayouts:
   11bf57e1-f8b5-4045-9861-210b0d80c82b:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 45d289dd-249a-42e9-95ae-62ab979e8b02 # Name
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: c0db2e82-1ef8-42cd-befc-56d6948ab1d8
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: de561917-2808-45e4-b7db-324c21a2aebf # Notes
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 88b60004-ec37-4e73-9f52-e0ba5aec7f7f
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: a773e69f-0bf1-46fd-ae75-5182be37772c # Unit Entries
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e27d21be-7b4d-4f2c-9bfc-6c23e6745eac
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9 # Enable Multiple Results?
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: b59dd2a4-5156-4262-b8fa-8c1948ee5453
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 46656fa8-cf4d-4c7e-93d0-800132d01aa2 # Unit Points Override
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d7ba23ef-dec3-4c14-9471-741ce8218bad
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 7b47144d-bd9e-4b97-bd0c-6b7ff206d9e0 # CPD Target Points
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 69c98b72-d9a6-450d-a5d3-4c4f345d3746
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 64769feb-a327-4c92-8224-bfd94a529f1a # CPD Target Hours
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: fb82a079-d318-436a-8da0-b3e5d4799f38
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: 3f5dbb19-8560-41d3-a608-d1d09006a6ba
+        userCondition: null
 fields:
   1a03c2db-7359-4f1c-8ed2-3de20e4fd7e9: # Enable Multiple Results?
     columnSuffix: null
     contentColumnType: boolean
     fieldGroup: null
     handle: enableSubmissions
-    instructions: ''
+    instructions: null
     name: 'Enable Multiple Results?'
     searchable: true
     settings:
@@ -111,16 +134,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: groupName
-    instructions: ''
+    instructions: null
     name: Name
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -173,16 +196,18 @@ fields:
     contentColumnType: string
     fieldGroup: null
     handle: unitEntries
-    instructions: ''
+    instructions: null
     name: 'Unit Entries'
     searchable: true
     settings:
       allowSelfRelations: false
-      limit: ''
+      branchLimit: null
       localizeRelations: false
-      selectionLabel: ''
+      maintainHierarchy: false
+      maxRelations: null
+      minRelations: null
+      selectionLabel: null
       showSiteMenu: true
-      source: null
       sources:
         - 'section:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
       targetSiteId: null
@@ -196,16 +221,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: groupNotes
-    instructions: ''
+    instructions: null
     name: Notes
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: null
-      initialRows: '4'
-      multiline: '1'
+      initialRows: 4
+      multiline: true
       placeholder: null
       uiMode: normal
     translationKeyFormat: null

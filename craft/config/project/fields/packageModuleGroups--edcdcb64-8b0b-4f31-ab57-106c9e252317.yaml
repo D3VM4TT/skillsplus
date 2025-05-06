@@ -2,10 +2,12 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageModuleGroups
-instructions: ''
+instructions: null
 name: 'Package Module Groups'
 searchable: true
 settings:
+  blockTypeFields: 0
+  changedFieldIndicator: null
   columns:
     __assoc__:
       -
@@ -45,13 +47,12 @@ settings:
               - ''
   contentTable: '{{%stc_packagemodulegroups}}'
   fieldLayout: table
-  maxRows: ''
-  minRows: ''
-  placeholderKey: null
+  maxRows: null
+  minRows: null
   propagationKeyFormat: null
   propagationMethod: all
-  selectionLabel: ''
-  staticField: ''
+  selectionLabel: null
+  staticField: null
 translationKeyFormat: null
 translationMethod: site
 type: verbb\supertable\fields\SuperTableField

@@ -1,94 +1,121 @@
+changedFieldIndicator: null
 field: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
 fieldLayouts:
   bc118b5e-ef7a-4c5c-9c98-6879c1a89a21:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 8fec0242-3542-431e-8a9a-d2d86b3e3b06 # Field Type
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 95e6b1e7-83cd-4d95-9263-791086f638d3
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 19794a8d-aa57-4cea-9297-7c4ccfb2d561 # Field Label
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 42514fd4-30b9-40d7-a88e-185e9097003a
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 31a1729c-6625-4e9e-9ffe-3fcce0da9bbd # Field Manager Only
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 667fd6e1-a12b-460a-a386-02cb53f5eff9
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 74329152-64bf-43a9-95b3-0458edd36e4f # Field Custom Key
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 45cb634d-4291-4545-a865-45b82909c226
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6cb593e0-eb38-45a0-bd9b-22a23586dfbe # Field Custom Type
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 04a16de0-e9e7-4f29-9fb6-dbac394afa1f
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: a37728d1-3a88-46ca-b9d5-ec79b66ba635 # Field Custom Options
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 9ecaf331-9509-437f-aa01-0c4ffb9feab8
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 7ed267ff-a262-4e68-81b8-be3bcaa5c178 # Field Required
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 6b6db730-d314-45ec-83ce-fec322a101ac
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: b46f9aa2-ceed-4dee-ac99-835a93962438 # Field Display
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 977f7ec1-6a13-4f79-a54c-4ac32affb991
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: fd682dcf-5b1c-4328-9bed-59f48a3f000c
+        userCondition: null
 fields:
   6cb593e0-eb38-45a0-bd9b-22a23586dfbe: # Field Custom Type
     columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: fieldCustomType
-    instructions: ''
+    instructions: null
     name: 'Field Custom Type'
     searchable: true
     settings:
-      optgroups: true
+      columnType: string
       options:
         -
           __assoc__:
@@ -120,7 +147,7 @@ fields:
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldRequired
-    instructions: ''
+    instructions: null
     name: 'Field Required'
     searchable: true
     settings:
@@ -135,11 +162,11 @@ fields:
     contentColumnType: string
     fieldGroup: null
     handle: fieldType
-    instructions: ''
+    instructions: null
     name: 'Field Type'
     searchable: true
     settings:
-      optgroups: true
+      columnType: string
       options:
         -
           __assoc__:
@@ -314,7 +341,7 @@ fields:
     contentColumnType: boolean
     fieldGroup: null
     handle: fieldManagerOnly
-    instructions: ''
+    instructions: null
     name: 'Field Manager Only'
     searchable: true
     settings:
@@ -329,16 +356,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: fieldLabel
-    instructions: ''
+    instructions: null
     name: 'Field Label'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -349,16 +376,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomKey
-    instructions: ''
+    instructions: null
     name: 'Field Custom Key'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -369,16 +396,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: fieldCustomOptions
-    instructions: ''
+    instructions: null
     name: 'Field Custom Options'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -389,11 +416,11 @@ fields:
     contentColumnType: string
     fieldGroup: null
     handle: fieldDisplay
-    instructions: ''
+    instructions: null
     name: 'Field Display'
     searchable: true
     settings:
-      optgroups: true
+      columnType: string
       options:
         -
           __assoc__:

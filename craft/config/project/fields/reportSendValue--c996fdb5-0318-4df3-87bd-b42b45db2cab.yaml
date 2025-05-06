@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportSendValue
-instructions: ''
+instructions: null
 name: 'Report Send Value'
 searchable: true
 settings:

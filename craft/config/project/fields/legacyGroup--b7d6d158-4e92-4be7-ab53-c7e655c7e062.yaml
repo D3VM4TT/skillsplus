@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8 # Legacy
 handle: legacyGroup
-instructions: ''
+instructions: null
 name: 'Legacy Group'
 searchable: true
 settings:
@@ -10,8 +10,8 @@ settings:
   charLimit: null
   code: false
   columnType: text
-  initialRows: '4'
-  multiline: ''
+  initialRows: 4
+  multiline: false
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

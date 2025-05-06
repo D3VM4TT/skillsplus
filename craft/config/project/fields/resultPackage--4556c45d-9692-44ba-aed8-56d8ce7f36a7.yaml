@@ -7,11 +7,13 @@ name: 'Result Package'
 searchable: false
 settings:
   allowSelfRelations: false
-  limit: ''
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: false
-  source: null
   sources:
     - 'section:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   targetSiteId: null

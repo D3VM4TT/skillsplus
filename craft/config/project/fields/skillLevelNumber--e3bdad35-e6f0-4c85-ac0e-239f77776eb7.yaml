@@ -2,18 +2,18 @@ columnSuffix: winjxerx
 contentColumnType: 'decimal(11,1)'
 fieldGroup: fa8667ae-97e6-4811-8904-29e4cfd55fdd # Skill Matrix
 handle: skillLevelNumber
-instructions: ''
+instructions: null
 name: 'Skill Level Number'
 searchable: false
 settings:
-  decimals: '1'
+  decimals: 1
   defaultValue: null
   max: null
   min: 0
   prefix: null
-  previewCurrency: ''
+  previewCurrency: null
   previewFormat: decimal
-  size: '1'
+  size: 1
   suffix: null
 translationKeyFormat: null
 translationMethod: none

@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userMembershipNumber
-instructions: ''
+instructions: null
 name: 'User Membership Number'
 searchable: true
 settings:
@@ -10,8 +10,8 @@ settings:
   charLimit: null
   code: false
   columnType: text
-  initialRows: '4'
-  multiline: ''
+  initialRows: 4
+  multiline: false
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

@@ -2,6 +2,7 @@ fieldLayouts:
   46202269-1d4b-4803-aef3-1a626eaf5054:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -9,7 +10,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -24,32 +27,44 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: b247be53-8a57-4f66-8e3f-f66e10c2cbf8
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: fbd50700-a63f-4a13-b729-1947510b8a14 # Attempt Unit
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e08be85c-705b-4e30-8467-3eab6c642c91
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 4b25bd1b-f51c-4175-8db7-e871de866f2f # Attempt Answers
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 7c19aacb-c41c-40bc-adf5-4380a39f7e83
+            userCondition: null
             warning: null
             width: 100
         name: Attempt
-        sortOrder: 1
+        uid: 9d77b284-286b-45de-8174-0bb95795b373
+        userCondition: null
 handle: attempt
 hasTitleField: false
 name: Attempt
 section: 51a18e4b-1a36-4210-8769-a5b8f28f3a5f # Attempts
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: '[unit {attemptUnit.one.id}] {author.firstName} {author.lastName}'
 titleTranslationKeyFormat: null

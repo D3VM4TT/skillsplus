@@ -2,13 +2,13 @@ columnSuffix: javfpubs
 contentColumnType: datetime
 fieldGroup: 7ac02e26-c0e2-4b21-b756-bfe7243fa353 # Products
 handle: productResultStartDate
-instructions: ''
+instructions: null
 name: 'Product Result Start Date'
 searchable: false
 settings:
   max: null
   min: null
-  minuteIncrement: '30'
+  minuteIncrement: 30
   showDate: true
   showTime: false
   showTimeZone: false

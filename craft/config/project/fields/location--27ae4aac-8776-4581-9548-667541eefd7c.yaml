@@ -2,10 +2,12 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
 handle: location
-instructions: ''
+instructions: null
 name: Location
 searchable: true
 settings:
+  defaultCenterCoordinates: null
+  defaultZoomLevel: null
   googleApiKey: $GOOGLE_API_KEY
 translationKeyFormat: null
 translationMethod: none

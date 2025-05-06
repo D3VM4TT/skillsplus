@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: smallint(3)
 fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
 handle: testPassPercent
-instructions: ''
+instructions: null
 name: 'Test Pass Percent'
 searchable: true
 settings:

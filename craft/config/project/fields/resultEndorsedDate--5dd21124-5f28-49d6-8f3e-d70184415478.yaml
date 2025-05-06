@@ -2,15 +2,15 @@ columnSuffix: null
 contentColumnType: datetime
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultEndorsedDate
-instructions: ''
+instructions: null
 name: 'Result Endorsed Date'
 searchable: true
 settings:
   max: null
   min: null
-  minuteIncrement: '30'
-  showDate: 1
-  showTime: 0
+  minuteIncrement: 30
+  showDate: true
+  showTime: false
   showTimeZone: false
 translationKeyFormat: null
 translationMethod: none

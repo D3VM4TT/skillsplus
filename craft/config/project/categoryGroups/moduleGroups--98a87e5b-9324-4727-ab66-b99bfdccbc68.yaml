@@ -3,6 +3,7 @@ fieldLayouts:
   af614df0-8160-4a85-9005-ec5b4a45a7ed:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -10,7 +11,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -25,110 +28,150 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\TitleField
+            uid: 8c8560a7-ded2-4256-975a-41448bc61941
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 8000e425-3fbd-4bbe-aa1d-7be23711d94b
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: c3c65d33-35c6-416d-9e88-c5a678f09161 # Include Add Achievement? 
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 04f9e76a-0dee-4353-8998-4bc8618a231e
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: 48909e73-b939-470f-b472-53ee709db6e4 # Module Group Read Only
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: ae23fd21-0273-443b-a469-ac268e4b18c6
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: b3bb5932-8ec6-48a5-af26-7d974a69e57a # Auto Endorse?
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: b517c7fe-e2d9-4a8e-81cf-8f3c27b9eef4
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: 1d522b30-9aa0-4fc8-afd1-84e738233479 # Certificate
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: bd12e2d8-57a9-4a1f-b66e-1cb39532003c
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             type: craft\fieldlayoutelements\HorizontalRule
+            uid: a383aed4-bda3-48b0-ac61-fbb38c9be13c
+            userCondition: null
           -
+            elementCondition: null
             fieldUid: a14afbef-0a93-407a-92e5-5cae1d2ecb1e # Module Group Visibility
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 2f2c8010-11ca-4a54-a4e5-7315d6a5d95b
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: fb5bee58-9ee4-4a57-b03f-59c886c40cad # Module Group Menu
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e8d00bbb-fd45-44c2-a781-2114306d3a42
+            userCondition: null
             warning: null
             width: 50
         name: Settings
-        sortOrder: 1
+        uid: 9588aa9a-ddeb-423a-8167-ee1aece565b0
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: c238a4f7-3d96-4f09-8cd9-30e7f82abf92
+            userCondition: null
             warning: null
             width: 100
         name: 'Column Layout'
-        sortOrder: 2
+        uid: a46d2225-9c75-45a2-8a37-198856c0ea65
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: e510ee00-626f-454c-8022-6f855080c882 # All Companies
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 5e7aa1d4-7342-402f-8bde-e2268bcf94ff
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: f2e34bbd-dc9f-4253-90fc-178dc6742141 # Companies
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 6297c6a7-f99c-4f81-b306-b05cfe12b48f
+            userCondition: null
             warning: null
             width: 100
         name: 'Company Results'
-        sortOrder: 3
+        uid: 40160869-46a5-4520-9168-728f2ba8f4ca
+        userCondition: null
 handle: moduleGroups
 name: 'Module Groups'
 siteSettings:

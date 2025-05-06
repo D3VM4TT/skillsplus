@@ -3,6 +3,7 @@ fieldLayouts:
   6b497f1f-cd55-4082-9ba0-463e8dd5acfc:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -10,8 +11,10 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
-            instructions: ''
+            inputType: null
+            instructions: null
             label: Type
             max: null
             min: null
@@ -25,19 +28,25 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\TitleField
+            uid: 72ea42c1-14de-4122-80b4-fb60fde06e83
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: dba3c960-8963-4b09-810f-2b7bf1b3ab77 # Product Result Custom Fields
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: f65b72ff-9c5c-48c6-8fe3-4fc8e52a1caa
+            userCondition: null
             warning: null
             width: 100
         name: 'Product Type'
-        sortOrder: 1
+        uid: 0e619a25-1b66-4e03-8aa7-70dce1eee2e6
+        userCondition: null
 handle: productTypes
 name: 'Product Types'
 siteSettings:

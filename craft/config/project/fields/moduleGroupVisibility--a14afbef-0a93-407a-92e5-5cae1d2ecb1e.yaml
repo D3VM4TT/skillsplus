@@ -2,11 +2,11 @@ columnSuffix: xedqzvgw
 contentColumnType: string
 fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: moduleGroupVisibility
-instructions: ''
+instructions: null
 name: 'Module Group Visibility'
 searchable: false
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

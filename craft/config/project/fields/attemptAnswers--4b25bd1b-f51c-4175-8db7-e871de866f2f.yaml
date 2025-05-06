@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
 handle: attemptAnswers
-instructions: ''
+instructions: null
 name: 'Attempt Answers'
 searchable: true
 settings:

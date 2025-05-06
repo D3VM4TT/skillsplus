@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: boolean
 fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: cycleUserStartDate
-instructions: ''
+instructions: null
 name: 'Cycle User Start Date'
 searchable: true
 settings:

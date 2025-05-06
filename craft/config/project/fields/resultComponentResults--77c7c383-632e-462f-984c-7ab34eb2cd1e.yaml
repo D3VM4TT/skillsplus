@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultComponentResults
-instructions: ''
+instructions: null
 name: 'Result Component Results'
 searchable: true
 settings:
@@ -122,8 +122,9 @@ settings:
             -
               - type
               - lightswitch
-  maxRows: ''
-  minRows: ''
+  maxRows: null
+  minRows: null
+  staticRows: false
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Table

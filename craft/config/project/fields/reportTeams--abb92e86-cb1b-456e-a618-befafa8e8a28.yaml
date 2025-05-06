@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportTeams
-instructions: ''
+instructions: null
 name: 'Report Teams'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: ''
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources: 'section:5'
   targetSiteId: null
   validateRelatedElements: false

@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: boolean
 fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportIncludeExpired
-instructions: ''
+instructions: null
 name: 'Report Include Expired'
 searchable: true
 settings:

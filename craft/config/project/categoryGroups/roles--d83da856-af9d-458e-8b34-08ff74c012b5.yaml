@@ -3,6 +3,7 @@ fieldLayouts:
   33adba6b-22c9-44dc-9937-48757ba24cf2:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -10,7 +11,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -25,90 +28,121 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\TitleField
+            uid: c08291ee-d873-4c69-967c-a51c26d4083b
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 09dd9f6b-4143-4e66-adc3-f156a34cdfe0 # Reviewer
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: f120b81b-5e1d-453b-850b-efd636d18f0f
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: 0b7c55cd-d5b0-44f1-ba0a-882e155ae4bf # External
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: a6ebe59d-2138-4c4a-9d01-1a39d1d16034
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: 585cec7d-218d-4241-a113-0a7ab6f7503e # Dashboard
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 6496f7c0-a310-453f-9a4e-ac6beca380c5
+            userCondition: null
             warning: null
             width: 25
         name: 'Job Role'
-        sortOrder: 1
+        uid: 8c137b68-512e-4211-8dd3-6b73cc38ae54
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 32a14957-b145-4e24-9ac6-6e70cb4dd5fd # Role Module Count
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 62c0ec9a-4487-4612-b7eb-39d8b0bab693
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: eafc63ea-2bd3-4998-9ce8-c8fd129bbe1b # Role Unit Count
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e3a30b58-3b59-4b52-9e6d-9da04d1acc9c
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: 5d67e162-9058-47ba-aa41-a025b21fce64 # Linked Data
-            instructions: ''
+            instructions: null
             label: __blank__
-            required: ''
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 78a39bd3-b39e-446b-a58b-4e06e19c0fa5
+            userCondition: null
             warning: null
             width: 100
         name: Data
-        sortOrder: 2
+        uid: 53924a31-b281-4a9d-aa56-19168aa1705d
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: dc88c84b-17f2-4b8b-8cc6-124b5115c9cc # Legacy ID
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 669beb35-c943-4dc6-acb9-c5feb896a162
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: 440ee4d2-9c90-47a0-a2e7-9ec4d1a97683 # Data Imported
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 4ed489a5-3357-47a8-a951-1625ec641f80
+            userCondition: null
             warning: null
             width: 50
         name: Legacy
-        sortOrder: 3
+        uid: 091af41c-117c-4d50-ae85-199a8bdef487
+        userCondition: null
 handle: roles
 name: 'Job Roles'
 siteSettings:

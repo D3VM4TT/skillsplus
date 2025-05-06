@@ -2,13 +2,13 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 47ae7220-5336-4c43-9d2c-e7dedf6003df # Globals
 handle: customFields
-instructions: ''
+instructions: null
 name: 'Custom Fields'
 searchable: true
 settings:
   contentTable: '{{%matrixcontent_customfields}}'
-  maxBlocks: ''
-  minBlocks: ''
+  maxBlocks: null
+  minBlocks: null
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

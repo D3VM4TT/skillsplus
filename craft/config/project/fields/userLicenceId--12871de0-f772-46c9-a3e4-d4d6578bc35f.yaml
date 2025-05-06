@@ -2,18 +2,18 @@ columnSuffix: jxeigeam
 contentColumnType: text
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userLicenceId
-instructions: ''
+instructions: null
 name: 'User Licence ID'
 searchable: false
 settings:
   byteLimit: null
   charLimit: null
-  code: ''
+  code: false
   columnType: null
-  initialRows: '4'
+  initialRows: 4
   mode: readonly
   modeOverride: ''
-  multiline: ''
+  multiline: false
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

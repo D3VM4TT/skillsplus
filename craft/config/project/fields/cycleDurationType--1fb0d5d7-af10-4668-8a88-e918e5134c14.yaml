@@ -2,11 +2,11 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: cycleDurationType
-instructions: ''
+instructions: null
 name: 'Cycle Duration Type'
 searchable: true
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

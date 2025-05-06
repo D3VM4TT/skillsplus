@@ -2,6 +2,7 @@ fieldLayouts:
   cc195c64-b902-4637-9825-d5fc0d27b48e:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -9,7 +10,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -24,72 +27,98 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: cc5a5d73-1eb0-4c77-897f-f5996825f34b
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 892d5048-f63d-468f-a926-c89daebf07f9 # Short Title
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 3fc01264-e859-465c-ab8e-54d2080abf80
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 57f129b9-c872-49ad-9f42-c2b3c1f84753 # Code
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 6d7a703a-73c9-4cf2-9ce7-e4b87a13c09d
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4 # Module Group
             instructions: null
             label: null
-            required: '1'
+            required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 24d70e40-8181-4a7e-a102-6aa67df7f065
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: b06e23fe-36a6-4fbb-95a7-a6cf29d848e9
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831 # Unit Groups
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: da22090f-e01d-4753-a129-05bc3ad18703
+            userCondition: null
             warning: null
             width: 100
         name: Module
-        sortOrder: 1
+        uid: 9256196f-5057-4e0a-b753-5675b8835ee4
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 5ac0ff71-f61d-4741-8525-e671ddfd3e31
+            userCondition: null
             warning: null
             width: 100
         name: 'Column Layout'
-        sortOrder: 2
+        uid: 728279de-9bae-4c4e-ad36-9ef44022d05d
+        userCondition: null
 handle: taskbook
 hasTitleField: true
 name: Taskbook
 section: e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a # Modules
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 3
 titleFormat: null
 titleTranslationKeyFormat: null

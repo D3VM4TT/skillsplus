@@ -2,10 +2,12 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultCustom
-instructions: ''
+instructions: null
 name: 'Result Custom'
 searchable: true
 settings:
+  blockTypeFields: 0
+  changedFieldIndicator: null
   columns:
     __assoc__:
       -
@@ -26,7 +28,6 @@ settings:
   fieldLayout: table
   maxRows: null
   minRows: null
-  placeholderKey: null
   propagationKeyFormat: null
   propagationMethod: all
   selectionLabel: 'Add a row'

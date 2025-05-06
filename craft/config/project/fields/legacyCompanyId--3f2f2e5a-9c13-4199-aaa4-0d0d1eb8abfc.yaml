@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8 # Legacy
 handle: legacyCompanyId
-instructions: ''
+instructions: null
 name: 'Legacy Company ID'
 searchable: true
 settings:

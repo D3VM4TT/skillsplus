@@ -2,13 +2,13 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: moduleUnitGroups
-instructions: ''
+instructions: null
 name: 'Unit Groups'
 searchable: true
 settings:
   contentTable: '{{%matrixcontent_moduleunitgroups}}'
-  maxBlocks: ''
-  minBlocks: ''
+  maxBlocks: null
+  minBlocks: null
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

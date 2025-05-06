@@ -2,13 +2,13 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 3f934bd7-b755-4330-88af-dd41d6ea990b # Theme
 handle: homeSlider
-instructions: ''
+instructions: null
 name: 'Home Slider'
 searchable: true
 settings:
   contentTable: '{{%matrixcontent_homeslider}}'
-  maxBlocks: ''
-  minBlocks: ''
+  maxBlocks: null
+  minBlocks: null
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

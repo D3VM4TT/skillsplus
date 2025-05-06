@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultAttempts
-instructions: ''
+instructions: null
 name: 'Result Attempts'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: ''
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'section:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
   targetSiteId: null

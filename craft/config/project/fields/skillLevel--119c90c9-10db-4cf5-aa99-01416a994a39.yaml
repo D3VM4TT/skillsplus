@@ -2,20 +2,19 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: fa8667ae-97e6-4811-8904-29e4cfd55fdd # Skill Matrix
 handle: skillLevel
-instructions: ''
+instructions: null
 name: 'Skill Level'
 searchable: false
 settings:
-  allowLimit: false
-  allowMultipleSources: false
   allowSelfRelations: false
-  branchLimit: '1'
-  limit: null
+  branchLimit: 1
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: true
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: false
   source: 'group:24f73b0f-4768-4a11-a61c-52cabf296f38' # Skill Levels
-  sources: '*'
   targetSiteId: null
   validateRelatedElements: false
   viewMode: null

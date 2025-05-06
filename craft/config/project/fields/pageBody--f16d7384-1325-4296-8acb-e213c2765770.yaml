@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
 handle: pageBody
-instructions: ''
+instructions: null
 name: Body
 searchable: true
 settings:
@@ -12,8 +12,8 @@ settings:
   configSelectionMode: choose
   defaultTransform: ''
   manualConfig: ''
-  purifierConfig: ''
-  purifyHtml: '1'
+  purifierConfig: null
+  purifyHtml: true
   redactorConfig: Standard.json
   removeEmptyTags: true
   removeInlineStyles: true

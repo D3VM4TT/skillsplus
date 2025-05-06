@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageWorkflow
-instructions: ''
+instructions: null
 name: 'Package Workflow'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: '1'
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'section:c0a51ffd-8054-40a9-824f-32657b83f14c' # Taskbook Workflows
   targetSiteId: null

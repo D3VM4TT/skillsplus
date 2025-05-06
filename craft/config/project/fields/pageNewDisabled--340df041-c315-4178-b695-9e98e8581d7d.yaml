@@ -2,7 +2,7 @@ columnSuffix: ntqzwutu
 contentColumnType: text
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: pageNewDisabled
-instructions: ''
+instructions: null
 name: 'Taskbook Page New Disabled'
 searchable: false
 settings:
@@ -12,13 +12,13 @@ settings:
   configSelectionMode: choose
   defaultTransform: ''
   manualConfig: ''
-  purifierConfig: ''
-  purifyHtml: '1'
-  redactorConfig: ''
-  removeEmptyTags: '1'
-  removeInlineStyles: '1'
-  removeNbsp: '1'
-  showHtmlButtonForNonAdmins: ''
+  purifierConfig: null
+  purifyHtml: true
+  redactorConfig: null
+  removeEmptyTags: true
+  removeInlineStyles: true
+  removeNbsp: true
+  showHtmlButtonForNonAdmins: false
   showUnpermittedFiles: false
   showUnpermittedVolumes: false
   uiMode: enlarged

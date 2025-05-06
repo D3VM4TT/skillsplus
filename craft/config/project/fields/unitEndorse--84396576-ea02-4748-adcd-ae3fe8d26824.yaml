@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: boolean
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: unitEndorse
-instructions: ''
+instructions: null
 name: 'Unit Endorse'
 searchable: true
 settings:

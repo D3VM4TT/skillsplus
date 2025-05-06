@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 24e619f3-3a4b-47a9-beea-4dc60343c548 # Results
 handle: resultModuleResult
-instructions: ''
+instructions: null
 name: 'Result Module Result'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: '1'
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'section:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
   targetSiteId: null

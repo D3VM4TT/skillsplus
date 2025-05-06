@@ -2,11 +2,11 @@ columnSuffix: rkaastuh
 contentColumnType: string
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userLicenceMonth
-instructions: ''
+instructions: null
 name: 'User Licence Month'
 searchable: false
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

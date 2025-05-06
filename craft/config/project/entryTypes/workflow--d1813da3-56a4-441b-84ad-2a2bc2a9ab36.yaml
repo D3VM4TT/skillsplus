@@ -2,6 +2,7 @@ fieldLayouts:
   c4b22db3-609f-427d-b427-8b75e7bc7161:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -9,7 +10,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -24,32 +27,44 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 55840a46-fea2-4684-9203-7bf8ea64bf45
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 92ccaa51-76c7-4264-982d-a778fe460342 # Auto Complete?
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 75bb9766-9f11-4051-a3d2-3b01e9f98163
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 31c31961-f4f1-4f09-9c8e-cbbd46d62e97 # Workflow
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 6cc65db0-6fdf-42bf-9cfd-6d882f5507b8
+            userCondition: null
             warning: null
             width: 100
         name: 'Package Workflow'
-        sortOrder: 1
+        uid: 81b46664-fe1c-4950-99e5-33d47937c3ed
+        userCondition: null
 handle: workflow
 hasTitleField: true
 name: Workflow
 section: c0a51ffd-8054-40a9-824f-32657b83f14c # Taskbook Workflows
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: null
 titleTranslationKeyFormat: null

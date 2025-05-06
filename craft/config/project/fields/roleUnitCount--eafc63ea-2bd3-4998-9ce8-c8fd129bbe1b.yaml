@@ -8,12 +8,12 @@ searchable: false
 settings:
   byteLimit: null
   charLimit: null
-  code: ''
+  code: false
   columnType: null
-  initialRows: '4'
+  initialRows: 4
   mode: readonly
   modeOverride: ''
-  multiline: ''
+  multiline: false
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

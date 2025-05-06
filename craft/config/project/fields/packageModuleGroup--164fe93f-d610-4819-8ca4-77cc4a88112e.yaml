@@ -2,20 +2,19 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageModuleGroup
-instructions: ''
+instructions: null
 name: 'Package Module Group'
 searchable: true
 settings:
-  allowLimit: false
-  allowMultipleSources: false
   allowSelfRelations: false
-  branchLimit: '1'
-  limit: null
+  branchLimit: 1
   localizeRelations: false
+  maintainHierarchy: true
+  maxRelations: null
+  minRelations: null
   selectionLabel: 'Select module group'
   showSiteMenu: true
   source: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
-  sources: '*'
   targetSiteId: null
   validateRelatedElements: false
   viewMode: null

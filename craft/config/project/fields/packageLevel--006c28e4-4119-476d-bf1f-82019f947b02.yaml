@@ -11,9 +11,9 @@ settings:
   max: 10
   min: 1
   prefix: null
-  previewCurrency: ''
+  previewCurrency: null
   previewFormat: decimal
-  size: '1'
+  size: 1
   suffix: null
 translationKeyFormat: null
 translationMethod: none

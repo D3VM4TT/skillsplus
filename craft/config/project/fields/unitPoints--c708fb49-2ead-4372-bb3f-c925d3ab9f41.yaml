@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: unitPoints
-instructions: ''
+instructions: null
 name: 'Unit Points'
 searchable: true
 settings:

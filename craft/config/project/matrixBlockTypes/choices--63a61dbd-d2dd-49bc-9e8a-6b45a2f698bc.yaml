@@ -3,46 +3,59 @@ fieldLayouts:
   f0eab96c-214e-4799-b2e8-091e277ad5ce:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 29245631-dbe4-4182-85d0-ae4290604622 # Question
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 46d49f5b-e49e-44b1-a3a9-cfb83c61c831
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6e83784c-1c34-4973-9929-0307ffb6cff0 # Answers
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d284ba11-21b4-447d-91ed-02c2294f6a9d
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: f523e5d2-5acc-48c3-ab1d-fba29e427581 # Asset
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e4e2123e-8296-4640-b8c8-16d5cf89361b
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: 2bed4f5f-9a1f-430f-a68b-a76c2e6d55a0
+        userCondition: null
 fields:
   6e83784c-1c34-4973-9929-0307ffb6cff0: # Answers
     columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: answers
-    instructions: ''
+    instructions: null
     name: Answers
     searchable: true
     settings:
+      blockTypeFields: 0
+      changedFieldIndicator: null
       columns:
         __assoc__:
           -
@@ -68,13 +81,12 @@ fields:
                   - ''
       contentTable: '{{%stc_3_answers}}'
       fieldLayout: table
-      maxRows: ''
-      minRows: ''
-      placeholderKey: null
+      maxRows: null
+      minRows: null
       propagationKeyFormat: null
       propagationMethod: all
-      selectionLabel: ''
-      staticField: ''
+      selectionLabel: null
+      staticField: null
     translationKeyFormat: null
     translationMethod: site
     type: verbb\supertable\fields\SuperTableField
@@ -83,16 +95,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: question
-    instructions: ''
+    instructions: null
     name: Question
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -103,29 +115,33 @@ fields:
     contentColumnType: string
     fieldGroup: null
     handle: asset
-    instructions: ''
+    instructions: null
     name: Asset
     searchable: true
     settings:
       allowSelfRelations: false
+      allowSubfolders: false
       allowUploads: true
       allowedKinds: null
+      branchLimit: null
       defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
-      defaultUploadLocationSubpath: ''
-      limit: ''
+      defaultUploadLocationSubpath: null
       localizeRelations: false
+      maintainHierarchy: false
+      maxRelations: null
+      minRelations: null
       previewMode: full
-      restrictFiles: ''
-      selectionLabel: ''
+      restrictFiles: false
+      restrictLocation: false
+      restrictedDefaultUploadSubpath: null
+      restrictedLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+      restrictedLocationSubpath: null
+      selectionLabel: null
       showSiteMenu: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: true
-      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-      singleUploadLocationSubpath: ''
-      source: null
       sources: '*'
       targetSiteId: null
-      useSingleFolder: false
       validateRelatedElements: false
       viewMode: list
     translationKeyFormat: null

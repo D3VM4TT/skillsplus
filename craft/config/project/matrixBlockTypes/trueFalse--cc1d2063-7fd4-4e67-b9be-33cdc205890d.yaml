@@ -3,65 +3,80 @@ fieldLayouts:
   18bf33fe-444c-4031-b481-cd8db9cd2ecb:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 265e7462-688b-4c0b-a1b2-6f25d1b08525 # Question
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 28260886-62d3-4c76-aefd-563fdb275704
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 9bb07531-d5ed-4c48-9a33-67ca0c17882b # Answer
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: a074181a-d024-4db2-9b91-cb46cc30e2a9
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6f6554bf-571c-46f8-a4eb-37e34c65b1a8 # Asset
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d035aa9a-354e-403a-9cc6-a045877c827a
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: 6a875028-92a9-46a8-b31f-8e8447527e66
+        userCondition: null
 fields:
   6f6554bf-571c-46f8-a4eb-37e34c65b1a8: # Asset
     columnSuffix: null
     contentColumnType: string
     fieldGroup: null
     handle: asset
-    instructions: ''
+    instructions: null
     name: Asset
     searchable: true
     settings:
       allowSelfRelations: false
+      allowSubfolders: false
       allowUploads: true
       allowedKinds: null
+      branchLimit: null
       defaultUploadLocationSource: 'volume:f6dc0b30-2f16-4c2d-ad2e-849d3de5d0f9' # Uploads
-      defaultUploadLocationSubpath: ''
-      limit: '1'
+      defaultUploadLocationSubpath: null
       localizeRelations: false
+      maintainHierarchy: false
+      maxRelations: 1
+      minRelations: null
       previewMode: full
-      restrictFiles: ''
-      selectionLabel: ''
+      restrictFiles: false
+      restrictLocation: false
+      restrictedDefaultUploadSubpath: null
+      restrictedLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+      restrictedLocationSubpath: null
+      selectionLabel: null
       showSiteMenu: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: true
-      singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-      singleUploadLocationSubpath: ''
-      source: null
       sources: '*'
       targetSiteId: null
-      useSingleFolder: false
       validateRelatedElements: false
       viewMode: list
     translationKeyFormat: null
@@ -87,16 +102,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: question
-    instructions: ''
+    instructions: null
     name: Question
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null

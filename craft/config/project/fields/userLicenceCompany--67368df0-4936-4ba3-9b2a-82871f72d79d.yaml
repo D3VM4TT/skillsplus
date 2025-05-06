@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userLicenceCompany
-instructions: ''
+instructions: null
 name: 'User Licence Company'
 searchable: false
 settings:
   allowSelfRelations: false
-  limit: ''
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: false
-  source: null
   sources:
     - 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
   targetSiteId: null

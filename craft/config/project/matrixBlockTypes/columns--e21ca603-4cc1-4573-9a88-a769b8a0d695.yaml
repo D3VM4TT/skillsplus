@@ -3,34 +3,42 @@ fieldLayouts:
   33a2cd8b-939a-4112-af78-f861c965887f:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 56f0758a-86e6-4c78-ae70-e09843a275a2 # Title
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: f7091b99-09ec-491f-93ad-8b626d0a09d9
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 9a8e1aa6-c705-41e6-ab80-8c987022d24b # HTML
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: a76f51b8-0b5b-4621-bc17-ebf53e589ec5
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: 897563b3-c12c-47c5-9c93-fa7d03b684f4
+        userCondition: null
 fields:
   9a8e1aa6-c705-41e6-ab80-8c987022d24b: # HTML
     columnSuffix: null
     contentColumnType: text
     fieldGroup: null
     handle: columnHtml
-    instructions: ''
+    instructions: null
     name: HTML
     searchable: true
     settings:
@@ -41,12 +49,12 @@ fields:
       configSelectionMode: choose
       defaultTransform: ''
       manualConfig: ''
-      purifierConfig: ''
-      purifyHtml: ''
+      purifierConfig: null
+      purifyHtml: false
       redactorConfig: Standard.json
-      removeEmptyTags: '1'
-      removeInlineStyles: '1'
-      removeNbsp: '1'
+      removeEmptyTags: true
+      removeInlineStyles: true
+      removeNbsp: true
       showHtmlButtonForNonAdmins: true
       showUnpermittedFiles: false
       showUnpermittedVolumes: false
@@ -59,16 +67,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: columnTitle
-    instructions: ''
+    instructions: null
     name: Title
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null

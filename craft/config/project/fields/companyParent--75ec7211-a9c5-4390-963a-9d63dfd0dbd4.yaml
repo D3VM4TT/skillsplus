@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
 handle: companyParent
-instructions: ''
+instructions: null
 name: 'Company Parent'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: '1'
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
   targetSiteId: null

@@ -2,13 +2,13 @@ columnSuffix: mckldiyg
 contentColumnType: string
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: basePayments
-instructions: ''
+instructions: null
 name: 'Base Payments'
 searchable: false
 settings:
   contentTable: '{{%matrixcontent_basepayments}}'
-  maxBlocks: ''
-  minBlocks: ''
+  maxBlocks: null
+  minBlocks: null
   propagationKeyFormat: null
   propagationMethod: all
 translationKeyFormat: null

@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: boolean
 fieldGroup: f5eec841-a56b-474d-b01a-8ad8158d89b8 # Legacy
 handle: dataImported
-instructions: ''
+instructions: null
 name: 'Data Imported'
 searchable: true
 settings:

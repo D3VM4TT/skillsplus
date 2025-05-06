@@ -2,11 +2,11 @@ columnSuffix: krfnpvlj
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: externalStatus
-instructions: ''
+instructions: null
 name: 'External Status'
 searchable: false
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

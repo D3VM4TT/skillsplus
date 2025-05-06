@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: boolean
 fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
 handle: dataCleanResultCache
-instructions: ''
+instructions: null
 name: 'Data Clean Result Cache'
 searchable: true
 settings:

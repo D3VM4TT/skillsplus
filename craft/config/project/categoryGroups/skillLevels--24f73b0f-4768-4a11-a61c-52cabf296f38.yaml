@@ -3,6 +3,7 @@ fieldLayouts:
   e4641130-2c90-42a4-8392-a308af83bcf5:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -10,7 +11,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -25,28 +28,37 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\TitleField
+            uid: e20a7b19-32e7-46fb-97e5-c506d3061db3
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: 96a57c04-a9bc-4f29-97e3-d09fcfa07d37 # Skill Level Colour
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 350632d6-7d57-490b-8f54-7fe054076970
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: e3bdad35-e6f0-4c85-ac0e-239f77776eb7 # Skill Level Number
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 082d4669-8222-485a-b041-a532680ed653
+            userCondition: null
             warning: null
             width: 25
         name: Content
-        sortOrder: 1
+        uid: bd45ef4a-7b75-4aa9-bcd6-557ace2a2163
+        userCondition: null
 handle: skillLevels
 name: 'Skill Levels'
 siteSettings:

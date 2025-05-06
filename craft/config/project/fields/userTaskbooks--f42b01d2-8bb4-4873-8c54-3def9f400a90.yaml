@@ -7,11 +7,13 @@ name: 'User Taskbooks'
 searchable: false
 settings:
   allowSelfRelations: false
-  limit: ''
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: null
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'section:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   targetSiteId: null

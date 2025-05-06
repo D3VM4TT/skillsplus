@@ -2,16 +2,16 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 169df08f-5dca-4d57-8005-9e0226ec5dcc # Reports
 handle: reportFilter
-instructions: ''
+instructions: null
 name: 'Report Filter'
 searchable: true
 settings:
   byteLimit: null
   charLimit: null
-  code: ''
+  code: false
   columnType: null
-  initialRows: '2'
-  multiline: '1'
+  initialRows: 2
+  multiline: true
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

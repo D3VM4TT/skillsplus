@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
 handle: companyRemainingLicences
-instructions: ''
+instructions: null
 name: 'Company Remaining Licences'
 searchable: true
 settings:

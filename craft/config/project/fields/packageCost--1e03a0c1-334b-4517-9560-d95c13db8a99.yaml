@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: packageCost
-instructions: ''
+instructions: null
 name: 'Package Cost'
 searchable: true
 settings:

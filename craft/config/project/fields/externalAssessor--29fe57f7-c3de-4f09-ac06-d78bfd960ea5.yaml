@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: externalAssessor
-instructions: ''
+instructions: null
 name: 'External Assessor'
 searchable: false
 settings:
   allowSelfRelations: false
-  limit: '1'
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources: '*'
   targetSiteId: null
   validateRelatedElements: false

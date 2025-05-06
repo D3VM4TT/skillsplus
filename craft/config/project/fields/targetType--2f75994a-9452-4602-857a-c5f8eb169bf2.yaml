@@ -6,7 +6,7 @@ instructions: 'Select when the module will be completed.'
 name: 'Target Type'
 searchable: true
 settings:
-  optgroups: true
+  columnType: string
   options:
     -
       __assoc__:

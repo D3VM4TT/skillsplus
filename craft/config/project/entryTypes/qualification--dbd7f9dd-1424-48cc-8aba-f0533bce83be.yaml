@@ -2,6 +2,7 @@ fieldLayouts:
   70e84763-f654-4aea-8ba8-7ef0b4a62538:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -9,7 +10,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -24,134 +27,182 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 843d51a8-5a35-4607-99d2-8f7bc6c5bfb6
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4 # Module Group
             instructions: null
             label: null
-            required: '1'
+            required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 0f6a739d-14b5-47fc-a429-9b1c7c864bba
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6b431a5f-e1ee-4520-ab30-89ca72993c00 # Heading
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: c0bd7dac-bca7-494e-810e-201cb1d630a5
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: d99d90fa-6251-4b71-9340-542bc9c3feb9 # Module Notes
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 32249295-8470-401d-9c52-c34235c8b50d
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 646454e2-66f9-4f03-bac7-b94a89aba17a # Module Expiry Days
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 12764cf5-ae26-489e-ad47-66393f373601
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 3bfea235-c57e-4998-b079-8c15a1ebbf0e # Hide Add Achievement?
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 39dd0289-b362-41e8-bbb0-33d0b8dab150
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6b856e7c-77f4-4646-9dc9-81cd812d3919 # Achievement Label
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 5a02e349-a4fb-4ea1-9937-171d8094a3c5
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 6f94bf9b-3168-437e-b8f2-7d082dcdd831 # Unit Groups
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d38d89b6-06e3-40e7-8170-ed00e7389567
+            userCondition: null
             warning: null
             width: 100
         name: Module
-        sortOrder: 1
+        uid: 78cf5fa1-d2aa-4887-9cb5-3a12eb56d9b7
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: f08f684f-1af1-417b-94f2-5df2f3ac7da6 # Job Roles
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 894ca399-075f-4bdc-97af-bc77204d9104
+            userCondition: null
             warning: null
             width: 50
           -
+            elementCondition: null
             fieldUid: 3e71d4f7-d155-457a-9e53-497f9c3ff348 # Module Optional
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: f6842001-0377-4ebe-87a3-e00f94a1d6a4
+            userCondition: null
             warning: null
             width: 50
         name: 'Job Roles'
-        sortOrder: 2
+        uid: 23b65cde-96ab-4efb-945d-a520bf80e5ed
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: bfce8aaa-028f-4d73-8f1d-20ba8f5a871b # Column Layout
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: e04bd072-e4de-4ece-b78f-1dd871783803
+            userCondition: null
             warning: null
             width: 100
         name: 'Column Layout'
-        sortOrder: 3
+        uid: 93ff498a-128c-403e-b891-cdaf0a18cce2
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 44d48073-7cb3-44e1-a245-66bbb18eefa7 # Is Skills Matrix?
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: be77d89e-9dbc-40c5-8b67-3f7fae7b164e
+            userCondition: null
             warning: null
             width: 25
           -
+            elementCondition: null
             fieldUid: d34de3f0-4642-49dd-a796-fa9098339e54 # Skill Levels
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 24df0077-453c-40c6-9062-7567b0beca9e
+            userCondition: null
             warning: null
             width: 75
         name: 'Skills Matrix'
-        sortOrder: 4
+        uid: 377ec1a0-9e7a-4941-81ec-e29e74c751cf
+        userCondition: null
 handle: qualification
 hasTitleField: true
 name: Qualification
 section: e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a # Modules
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: null
 titleTranslationKeyFormat: null

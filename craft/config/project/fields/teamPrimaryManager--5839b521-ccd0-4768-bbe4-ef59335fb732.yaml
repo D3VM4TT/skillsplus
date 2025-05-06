@@ -2,16 +2,18 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: f09af15b-015a-415a-b707-81fa9d1a1d69 # Structure
 handle: teamPrimaryManager
-instructions: ''
+instructions: null
 name: 'Team Primary Manager'
 searchable: true
 settings:
   allowSelfRelations: false
-  limit: '1'
+  branchLimit: null
   localizeRelations: false
-  selectionLabel: ''
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
   showSiteMenu: true
-  source: null
   sources:
     - 'group:7765376d-5d95-4bb2-ad49-e9dbcd7acf4a' # Team Managers
   targetSiteId: null

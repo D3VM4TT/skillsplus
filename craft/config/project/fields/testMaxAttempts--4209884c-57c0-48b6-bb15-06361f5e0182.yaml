@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: integer(10)
 fieldGroup: cce231c0-8af7-4fa9-8bba-17840a90fcc2 # Tests
 handle: testMaxAttempts
-instructions: ''
+instructions: null
 name: 'Max Attempts'
 searchable: true
 settings:

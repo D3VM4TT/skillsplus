@@ -2,71 +2,95 @@ fieldLayouts:
   12aee44f-6a97-442b-913a-6c6d8eda32e6:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 5df92654-19a4-446e-a578-2b359d4bc88f # Taskbook Page Create
             instructions: 'Shown when users are purchasing/selecting a new taskbook.'
             label: 'Taskbook Create'
-            required: ''
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: c2e1f50f-dbbc-40ed-9bea-a2f682c45865
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: f4f743d8-8e66-4bb5-920a-01bd366d6ba2 # Taskbook Page Current
             instructions: 'Shown above the table of users taskbooks.'
             label: 'Taskbook Current '
-            required: ''
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 52c39e7a-b5ad-48a4-bc25-de146782bda6
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 840f8f48-be42-4008-ae9e-1fa132183769 # Taskbook Page New
             instructions: 'Shown above unpaid taskbooks and PayPal button.'
             label: 'Taskbook New'
-            required: ''
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d75046d0-f9e8-469a-8109-3a39ff804c36
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 340df041-c315-4178-b695-9e98e8581d7d # Taskbook Page New Disabled
             instructions: 'Shown if new taskbooks is disabled in Lantra Skills+ settings.'
             label: 'Taskbook New (disabled)'
-            required: ''
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 9748527c-4601-4c32-b3fc-92763a6c90fd
+            userCondition: null
             warning: null
             width: 100
         name: Taskbooks
-        sortOrder: 1
+        uid: e6531ac1-9394-4715-a61d-0737ba244d1a
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 54ffd21d-f058-4546-b582-9f8c03da2f65 # Page Membership
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 07419930-d267-4f59-98be-96f77196c226
+            userCondition: null
             warning: null
             width: 100
         name: Membership
-        sortOrder: 2
+        uid: 0e1a3f95-0da6-4e0a-b66f-1d635c4e3e1e
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: b18328e8-46a5-482e-b83f-2ccfba7d2f20 # Page Dashboard
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: d8f6bc82-3d7f-497d-bed8-969e6372d03e
+            userCondition: null
             warning: null
             width: 100
         name: Dashboard
-        sortOrder: 3
+        uid: 0273e2a4-a3bb-4247-9655-7005a46e47f0
+        userCondition: null
 handle: globalsHtml
 name: 'HTML Content'
 sortOrder: 1

@@ -2,7 +2,7 @@ columnSuffix: afcgultu
 contentColumnType: boolean
 fieldGroup: 7f07c2bb-4fec-43ab-a281-bcb564148b2b # Users
 handle: userPrivacy
-instructions: ''
+instructions: null
 name: 'User Privacy'
 searchable: false
 settings:

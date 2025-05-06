@@ -2,31 +2,35 @@ columnSuffix: null
 contentColumnType: string
 fieldGroup: 0d277023-1a22-42a9-9b23-8d89a23cc677 # Pages
 handle: pageImage
-instructions: ''
+instructions: null
 name: Image
 searchable: true
 settings:
   allowSelfRelations: false
+  allowSubfolders: false
   allowUploads: true
   allowedKinds:
     - image
+  branchLimit: null
   defaultUploadLocationSource: 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
-  defaultUploadLocationSubpath: ''
-  limit: '1'
+  defaultUploadLocationSubpath: null
   localizeRelations: false
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
   previewMode: full
-  restrictFiles: '1'
-  selectionLabel: ''
+  restrictFiles: true
+  restrictLocation: false
+  restrictedDefaultUploadSubpath: null
+  restrictedLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  restrictedLocationSubpath: null
+  selectionLabel: null
   showSiteMenu: true
   showUnpermittedFiles: false
   showUnpermittedVolumes: true
-  singleUploadLocationSource: 'volume:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
-  singleUploadLocationSubpath: ''
-  source: null
   sources:
     - 'volume:f2ee622f-5058-4e7d-a3d0-1d003dc32c29' # Theme
   targetSiteId: null
-  useSingleFolder: false
   validateRelatedElements: false
   viewMode: list
 translationKeyFormat: null

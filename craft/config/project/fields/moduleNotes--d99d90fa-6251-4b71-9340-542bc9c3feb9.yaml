@@ -2,16 +2,16 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: 67ac5777-9885-4cde-bb93-527d48b311e0 # Modules
 handle: moduleNotes
-instructions: ''
+instructions: null
 name: 'Module Notes'
 searchable: true
 settings:
   byteLimit: null
   charLimit: null
-  code: ''
+  code: false
   columnType: null
-  initialRows: '4'
-  multiline: '1'
+  initialRows: 4
+  multiline: true
   placeholder: null
   uiMode: normal
 translationKeyFormat: null

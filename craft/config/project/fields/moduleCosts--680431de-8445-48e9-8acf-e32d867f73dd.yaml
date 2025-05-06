@@ -2,7 +2,7 @@ columnSuffix: null
 contentColumnType: text
 fieldGroup: f4fdf728-2474-483c-8746-0b3bfcdb988a # Taskbooks
 handle: moduleCosts
-instructions: ''
+instructions: null
 name: 'Module Group Costs'
 searchable: true
 settings:
@@ -51,8 +51,9 @@ settings:
         -
           - col2
           - ''
-  maxRows: ''
-  minRows: ''
+  maxRows: null
+  minRows: null
+  staticRows: false
 translationKeyFormat: null
 translationMethod: none
 type: craft\fields\Table

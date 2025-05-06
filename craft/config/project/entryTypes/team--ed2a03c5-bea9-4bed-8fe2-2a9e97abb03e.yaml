@@ -2,6 +2,7 @@ fieldLayouts:
   bcaf5920-c460-4465-a5db-e7f4bad29958:
     tabs:
       -
+        elementCondition: null
         elements:
           -
             autocapitalize: true
@@ -9,7 +10,9 @@ fieldLayouts:
             autocorrect: true
             class: null
             disabled: false
+            elementCondition: null
             id: null
+            inputType: null
             instructions: null
             label: null
             max: null
@@ -24,54 +27,74 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 7e1f647d-11e3-4e6f-b6e9-6d92a499b537
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: fcef71c8-c93e-4e97-a8f3-4fc223b2d223 # Team Name
             instructions: null
             label: null
-            required: '1'
+            required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 2e270f23-44a3-480d-a1ad-1ebb16f48d28
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 0578b9f0-6e63-4ecd-b386-295f3b276282 # Team Company
             instructions: null
             label: null
-            required: '1'
+            required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 62675daa-a26b-4935-8055-9f1a38e46407
+            userCondition: null
             warning: null
             width: 100
         name: Team
-        sortOrder: 1
+        uid: 3e46568c-a06e-469c-ad53-706af4deed4e
+        userCondition: null
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 5839b521-ccd0-4768-bbe4-ef59335fb732 # Team Primary Manager
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 881694db-868c-4e7d-bdb9-85b4b8ca63b4
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 838b996f-8f5d-4df2-9a75-0d1692348632 # Team Secondary Managers
             instructions: null
             label: null
-            required: '0'
+            required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: caa08abc-efbb-4fa5-af71-41e794917d18
+            userCondition: null
             warning: null
             width: 100
         name: Managers
-        sortOrder: 2
+        uid: 3ab6a3e1-69a0-4f67-89bd-5ec5b8ac1f30
+        userCondition: null
 handle: team
 hasTitleField: false
 name: Team
 section: bcf0ea1d-9495-423e-ac83-ef089790460c # Teams
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: '{teamCompany.one.title} - {teamName}'
 titleTranslationKeyFormat: null

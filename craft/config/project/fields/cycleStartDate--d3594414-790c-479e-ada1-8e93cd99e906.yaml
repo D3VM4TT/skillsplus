@@ -2,13 +2,13 @@ columnSuffix: null
 contentColumnType: datetime
 fieldGroup: fe9133b9-1ac4-4551-9989-99fd7865a70c # Cycles
 handle: cycleStartDate
-instructions: ''
+instructions: null
 name: 'Cycle Start Date'
 searchable: true
 settings:
   max: null
   min: null
-  minuteIncrement: '30'
+  minuteIncrement: 30
   showDate: true
   showTime: false
   showTimeZone: false

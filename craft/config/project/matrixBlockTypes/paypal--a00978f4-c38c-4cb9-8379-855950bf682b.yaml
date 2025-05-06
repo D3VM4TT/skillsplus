@@ -3,52 +3,66 @@ fieldLayouts:
   aca00fb2-fff5-4778-bbcb-48193d2a64ec:
     tabs:
       -
+        elementCondition: null
         elements:
           -
+            elementCondition: null
             fieldUid: 70223568-9924-4df6-a581-7134a87dc443 # Payer Email
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 7658bd66-ca57-407c-90c6-eb9bd859bf56
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 0507fd56-62a9-42b1-a4ce-7f5e221df8a2 # Payment Amount
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 7b0df384-aa58-499b-9dd5-b8f1f6e2c5ed
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: c82b9786-ae99-4b9d-89ef-a97b92d4366d # Transaction ID
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 022430d0-293d-4299-b284-fbe3b9dc76bd
+            userCondition: null
             warning: null
             width: 100
           -
+            elementCondition: null
             fieldUid: 8e163b19-5447-4841-852c-c7c3ba58f29e # Synced To Base
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
+            uid: 003a50f0-b2fd-4e6b-b405-b0545f9d0d01
+            userCondition: null
             warning: null
             width: 100
         name: Content
-        sortOrder: 1
+        uid: 9e87f7a7-a759-429a-85d1-6435866e9c50
+        userCondition: null
 fields:
   8e163b19-5447-4841-852c-c7c3ba58f29e: # Synced To Base
     columnSuffix: fmepwveg
     contentColumnType: boolean
     fieldGroup: null
     handle: syncedToBase
-    instructions: ''
+    instructions: null
     name: 'Synced To Base'
     searchable: false
     settings:
@@ -63,16 +77,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: mc_gross
-    instructions: ''
+    instructions: null
     name: 'Payment Amount'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -83,16 +97,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: payer_email
-    instructions: ''
+    instructions: null
     name: 'Payer Email'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
@@ -103,16 +117,16 @@ fields:
     contentColumnType: text
     fieldGroup: null
     handle: txn_id
-    instructions: ''
+    instructions: null
     name: 'Transaction ID'
     searchable: true
     settings:
       byteLimit: null
       charLimit: null
-      code: ''
+      code: false
       columnType: text
-      initialRows: '4'
-      multiline: ''
+      initialRows: 4
+      multiline: false
       placeholder: null
       uiMode: normal
     translationKeyFormat: null
