@@ -8,6 +8,11 @@
  * @see \craft\config\GeneralConfig
  */
 
+/*
+ * TODO: Update general config
+ * TODO: Add to github traffic developers
+ */
+
 return [
     '*' => [
         'enableGql' => false,

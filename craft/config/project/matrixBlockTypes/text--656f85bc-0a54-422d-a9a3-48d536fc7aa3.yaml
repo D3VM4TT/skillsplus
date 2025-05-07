@@ -13,7 +13,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 6d09ff36-3058-42ad-836e-a22c480ab271
+            uid: 48ffcd25-d077-4456-84c4-999c6df04f76
             userCondition: null
             warning: null
             width: 100
@@ -25,12 +25,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 8c9d02da-f1e4-4155-91e1-3cba72a4a735
+            uid: 8ee04119-7537-4b17-9baf-e3c07e797cc1
             userCondition: null
             warning: null
             width: 100
         name: Content
-        uid: 254f85dc-c1dd-4f18-9185-d4346a4cb5cf
+        uid: 206ee083-5feb-4ff5-85a4-5cffa149710a
         userCondition: null
 fields:
   08a001af-8773-420d-ab49-41848341478c: # Asset

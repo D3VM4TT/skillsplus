@@ -28,7 +28,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\TitleField
-            uid: e20a7b19-32e7-46fb-97e5-c506d3061db3
+            uid: c0bd120a-98ae-4d1e-a8d8-77e757dac7d0
             userCondition: null
             warning: null
             width: 50
@@ -40,7 +40,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 350632d6-7d57-490b-8f54-7fe054076970
+            uid: 9cdba822-a135-4c0f-bcb4-403a413e006f
             userCondition: null
             warning: null
             width: 25
@@ -52,12 +52,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 082d4669-8222-485a-b041-a532680ed653
+            uid: 7a9344a7-df4e-4c2e-80d8-03a9f754415b
             userCondition: null
             warning: null
             width: 25
         name: Content
-        uid: bd45ef4a-7b75-4aa9-bcd6-557ace2a2163
+        uid: 7b4f149f-d015-4b71-90e3-5259af499789
         userCondition: null
 handle: skillLevels
 name: 'Skill Levels'

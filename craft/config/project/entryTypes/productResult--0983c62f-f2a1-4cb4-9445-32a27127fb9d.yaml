@@ -27,7 +27,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
-            uid: 9b8f263c-805b-4b3e-8650-76e1a6b867a3
+            uid: 2eccfd54-2157-466c-9b5b-ad36419b5b30
             userCondition: null
             warning: null
             width: 100
@@ -39,7 +39,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 85f32d99-ba7d-4181-bfbf-40a76a118595
+            uid: 98b06851-0fd1-4631-b586-7c320754aaf9
             userCondition: null
             warning: null
             width: 25
@@ -51,7 +51,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 365e7ae7-b6c3-4fe8-9196-f0d899dc41de
+            uid: a834323e-da01-4cd1-a2cb-e3977651ab2f
             userCondition: null
             warning: null
             width: 25
@@ -63,12 +63,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: dd69a4eb-565e-4b17-8017-c9bd04dffdae
+            uid: 5ba9b2c6-4190-47f7-b39e-2cfa28cb4060
             userCondition: null
             warning: null
             width: 100
         name: Content
-        uid: 30d9e6f7-1bcf-4acf-9df1-9fbae0d5fd3f
+        uid: 7099187a-6e5d-4af0-8440-0063a8bc7585
         userCondition: null
       -
         elementCondition: null
@@ -81,12 +81,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: bd536438-66c4-42ed-94cd-876f65a60c31
+            uid: 6d220f98-08bd-4fae-9249-adeb60ca7a7a
             userCondition: null
             warning: null
             width: 100
         name: 'Custom Values'
-        uid: d1f55def-3aa9-4522-8aa3-fcf99ac8392f
+        uid: 40073809-38ef-473c-a2c7-fc00eb7f9105
         userCondition: null
 handle: productResult
 hasTitleField: true

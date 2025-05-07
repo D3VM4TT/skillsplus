@@ -27,7 +27,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
-            uid: cc5a5d73-1eb0-4c77-897f-f5996825f34b
+            uid: a65a3fb1-448e-4e77-9227-cb898083d56a
             userCondition: null
             warning: null
             width: 100
@@ -39,7 +39,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 3fc01264-e859-465c-ab8e-54d2080abf80
+            uid: 4dbc9964-381e-425e-bd7f-e5640ef69a3b
             userCondition: null
             warning: null
             width: 100
@@ -51,7 +51,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 6d7a703a-73c9-4cf2-9ce7-e4b87a13c09d
+            uid: bcdaae2d-91e6-4229-8e7e-da71f7ad57c5
             userCondition: null
             warning: null
             width: 100
@@ -63,7 +63,7 @@ fieldLayouts:
             required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 24d70e40-8181-4a7e-a102-6aa67df7f065
+            uid: 86545edc-a7a2-497f-bc6d-ff10395864d6
             userCondition: null
             warning: null
             width: 100
@@ -75,7 +75,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: b06e23fe-36a6-4fbb-95a7-a6cf29d848e9
+            uid: 38329cfe-77ca-4775-ba52-f5e3d4f0ad31
             userCondition: null
             warning: null
             width: 100
@@ -87,12 +87,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: da22090f-e01d-4753-a129-05bc3ad18703
+            uid: a8d7749a-9581-4da5-a758-cf1d6285cd70
             userCondition: null
             warning: null
             width: 100
         name: Module
-        uid: 9256196f-5057-4e0a-b753-5675b8835ee4
+        uid: 760e826c-958e-4316-9935-94e5f060ad56
         userCondition: null
       -
         elementCondition: null
@@ -105,12 +105,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 5ac0ff71-f61d-4741-8525-e671ddfd3e31
+            uid: 7f14ea30-4a7a-4e22-8096-90f7237734f0
             userCondition: null
             warning: null
             width: 100
         name: 'Column Layout'
-        uid: 728279de-9bae-4c4e-ad36-9ef44022d05d
+        uid: 761b4491-70b5-4327-b545-fd41d04da40d
         userCondition: null
 handle: taskbook
 hasTitleField: true

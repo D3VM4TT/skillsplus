@@ -15,6 +15,7 @@
     "phpoffice/phpspreadsheet": "^1.18",
     "putyourlightson/craft-dashboard-begone": "2.0.0",
     "robuust/craft-reverserelations": "2.0.0",
+    "servd/craft-asset-storage": "3.5.25",
     "verbb/super-table": "3.0.15",
     "vlucas/phpdotenv": "5.6.1"
   },

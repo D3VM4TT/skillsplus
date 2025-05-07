@@ -8,11 +8,15 @@ permissions:
   - 'createentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'createentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
   - 'createentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'deletecategories:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'deletecategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
   - 'deleteentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
   - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deleteentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
   - 'deleteentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
   - 'deleteentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'deletepeercategorydrafts:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'deletepeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
   - 'deletepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
   - 'deletepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deletepeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
@@ -25,3 +29,42 @@ permissions:
   - 'deletepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
   - managejobroles
   - managemodules
+  - 'savecategories:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'savecategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'saveentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'saveentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'saveentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'saveentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'saveentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'savepeercategorydrafts:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'savepeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'savepeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'savepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'savepeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'savepeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'savepeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'savepeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'savepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'savepeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'savepeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'savepeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'viewcategories:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'viewcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'viewentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'viewentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'viewentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'viewentries:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+  - 'viewentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'viewpeercategorydrafts:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+  - 'viewpeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'viewpeerentries:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'viewpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewpeerentries:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'viewpeerentries:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'viewpeerentries:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+  - 'viewpeerentrydrafts:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+  - 'viewpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewpeerentrydrafts:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+  - 'viewpeerentrydrafts:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+  - 'viewpeerentrydrafts:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules

@@ -13,7 +13,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 7658bd66-ca57-407c-90c6-eb9bd859bf56
+            uid: 288d23b7-eb43-427b-8410-c5c8612bff6e
             userCondition: null
             warning: null
             width: 100
@@ -25,7 +25,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 7b0df384-aa58-499b-9dd5-b8f1f6e2c5ed
+            uid: f8e447de-6c61-40a9-bc73-c3f47b3b203f
             userCondition: null
             warning: null
             width: 100
@@ -37,7 +37,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 022430d0-293d-4299-b284-fbe3b9dc76bd
+            uid: f427bdf3-c32e-423e-8a46-bc5dde46c3e9
             userCondition: null
             warning: null
             width: 100
@@ -49,12 +49,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 003a50f0-b2fd-4e6b-b405-b0545f9d0d01
+            uid: b2358193-dbfe-4d20-92db-f8de3c619fe1
             userCondition: null
             warning: null
             width: 100
         name: Content
-        uid: 9e87f7a7-a759-429a-85d1-6435866e9c50
+        uid: 03afa7f3-8206-4936-bca0-2374564f9520
         userCondition: null
 fields:
   8e163b19-5447-4841-852c-c7c3ba58f29e: # Synced To Base

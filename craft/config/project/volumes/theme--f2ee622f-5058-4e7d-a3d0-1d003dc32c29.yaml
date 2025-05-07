@@ -27,12 +27,12 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\assets\AssetTitleField
-            uid: 80778e68-e0f8-4aca-8c0f-f95f656e0e94
+            uid: 364e633e-e00b-47a8-a29d-c335fef78aa6
             userCondition: null
             warning: null
             width: 100
         name: Content
-        uid: 272ae4b8-ca9e-4e5b-8956-755c2cbffa3e
+        uid: d8907f76-9cf4-4b93-a515-ed517b87bbb4
         userCondition: null
 fs: theme
 handle: theme

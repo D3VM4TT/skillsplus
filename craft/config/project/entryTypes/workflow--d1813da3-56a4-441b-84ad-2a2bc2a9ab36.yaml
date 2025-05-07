@@ -27,7 +27,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
-            uid: 55840a46-fea2-4684-9203-7bf8ea64bf45
+            uid: 5031e7e6-a77c-4557-a420-f1ecd733b057
             userCondition: null
             warning: null
             width: 100
@@ -39,7 +39,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 75bb9766-9f11-4051-a3d2-3b01e9f98163
+            uid: edbc301d-e656-48df-b117-b96bdbdad327
             userCondition: null
             warning: null
             width: 100
@@ -51,12 +51,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 6cc65db0-6fdf-42bf-9cfd-6d882f5507b8
+            uid: 9f4d49d3-75b5-41f9-9660-7ba3a83ce3c4
             userCondition: null
             warning: null
             width: 100
         name: 'Package Workflow'
-        uid: 81b46664-fe1c-4950-99e5-33d47937c3ed
+        uid: 69a98925-34dc-4867-a751-82cfe09d54cb
         userCondition: null
 handle: workflow
 hasTitleField: true

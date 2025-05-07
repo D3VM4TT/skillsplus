@@ -10,13 +10,53 @@ permissions:
   - assignuserpermissions
   - 'createentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'createentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'createfolders:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'createfolders:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'deleteassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'deleteassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'deletecategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
   - 'deleteentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deleteentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'deletepeerassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'deletepeerassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'deletepeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
   - 'deletepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deletepeerentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - 'deletepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
   - 'deletepeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628' # Reports
   - deleteusers
+  - 'editimages:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'editimages:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'editpeerimages:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'editpeerimages:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
   - editusers
   - moderateusers
   - registerusers
+  - 'replacefiles:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'replacefiles:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'replacepeerfiles:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'replacepeerfiles:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'saveassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'saveassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'savecategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'saveentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'saveentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'savepeerassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'savepeerassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'savepeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'savepeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'savepeerentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'savepeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'savepeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'viewassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'viewassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'viewcategories:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'viewentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'viewpeerassets:a6dafdf7-e4c0-4943-aff3-e481bbdf23fc' # Evidence
+  - 'viewpeerassets:e1099881-d76d-4c4c-9b8b-607658d27413' # Data
+  - 'viewpeercategorydrafts:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+  - 'viewpeerentries:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewpeerentries:1d590683-b16e-4955-be62-315accb3e628' # Reports
+  - 'viewpeerentrydrafts:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+  - 'viewpeerentrydrafts:1d590683-b16e-4955-be62-315accb3e628' # Reports

@@ -27,7 +27,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
-            uid: 9589af50-b740-447d-a41e-22e9ab53b511
+            uid: b5d5a176-b3ad-459e-ba9c-b5575a778bab
             userCondition: null
             warning: null
             width: 100
@@ -39,7 +39,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 2b78be04-3db9-4253-b763-37a2e1b5f945
+            uid: 23f18c18-0077-4099-ae50-714411ca2daa
             userCondition: null
             warning: null
             width: 100
@@ -51,7 +51,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 1ec6a3e8-856d-4cf7-b59a-b02b6b006122
+            uid: a1e9e875-918e-4121-aebf-15f87074ab07
             userCondition: null
             warning: null
             width: 100
@@ -63,12 +63,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 54691ac8-d472-43c9-93da-3732768fe3bd
+            uid: f1205aa0-3fdd-41e7-8d84-d6c34726aa02
             userCondition: null
             warning: null
             width: 100
         name: Pages
-        uid: de02e034-03cb-4177-8709-8fa34eda871f
+        uid: fd5be65a-3560-4891-a01c-b450cd109d57
         userCondition: null
 handle: pages
 hasTitleField: true

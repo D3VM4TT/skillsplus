@@ -1,4 +1,158 @@
-dateModified: 1746567697
+dateModified: 1746655231
+elementSources:
+  craft\elements\Category:
+    -
+      key: 'group:98a87e5b-9324-4727-ab66-b99bfdccbc68' # Module Groups
+      tableAttributes:
+        - link
+      type: native
+    -
+      key: 'group:d83da856-af9d-458e-8b34-08ff74c012b5' # Job Roles
+      type: native
+    -
+      key: 'group:7b89d06c-f8a7-409a-8e43-562476090b7f' # Product Types
+      type: native
+    -
+      heading: ''
+      type: heading
+    -
+      key: 'group:24f73b0f-4768-4a11-a61c-52cabf296f38' # Skill Levels
+      tableAttributes:
+        - link
+        - 'field:96a57c04-a9bc-4f29-97e3-d09fcfa07d37' # Skill Level Colour
+        - 'field:e3bdad35-e6f0-4c85-ac0e-239f77776eb7' # Skill Level Number
+      type: native
+  craft\elements\Entry:
+    -
+      key: '*'
+      type: native
+    -
+      key: 'section:090b3c24-a9ac-4935-a919-c4fc8a3099b0' # Units
+      tableAttributes:
+        - 'field:dc88c84b-17f2-4b8b-8cc6-124b5115c9cc' # Legacy ID
+        - id
+        - 'field:f2ab3047-5922-481b-a6bc-d1ced215dc10' # Unit Heading
+        - postDate
+        - author
+        - 'field:995ba33c-928b-43a5-8d39-53c4c36782ed' # Unit Type
+        - 'field:fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4' # Module Group
+        - type
+        - 'field:c708fb49-2ead-4372-bb3f-c925d3ab9f41' # Unit Points
+      type: native
+    -
+      key: 'section:e9e30b72-2c16-4035-b4b9-e1e4c42ebb3a' # Modules
+      tableAttributes:
+        - 'field:6b431a5f-e1ee-4520-ab30-89ca72993c00' # Heading
+        - 'field:fbd8c758-3ca5-4ccb-8452-d1d82d3f97e4' # Module Group
+        - author
+        - postDate
+        - 'field:f08f684f-1af1-417b-94f2-5df2f3ac7da6' # Job Roles
+        - type
+      type: native
+    -
+      key: 'section:0db8b604-3d85-4638-bc64-f1d73e2e9aba' # Taskbooks
+      type: native
+    -
+      key: 'section:c0a51ffd-8054-40a9-824f-32657b83f14c' # Taskbook Workflows
+      type: native
+    -
+      heading: ''
+      type: heading
+    -
+      heading: ''
+      type: heading
+    -
+      key: 'section:c0345752-9e56-4de1-a2d2-da641c3708e0' # Results
+      tableAttributes:
+        - expiryDate
+        - postDate
+        - type
+        - 'field:295e5043-483c-4ad9-bfaa-bac22b99dc19' # Result Module
+        - 'field:5af516f7-8267-4333-b0d0-0ff4f5ee41bb' # Result Score
+        - 'field:3ccae116-4500-45d0-a56a-024f2e8d4d03' # Result Status
+        - 'field:5dd21124-5f28-49d6-8f3e-d70184415478' # Result Endorsed Date
+        - author
+        - 'field:d363cf24-3e53-4eea-b5f4-e9c72a3e9f65' # Result Location
+      type: native
+    -
+      key: 'section:0c63d248-a060-4ecd-b881-00607c9f4024' # Taskbook Packages
+      type: native
+    -
+      heading: ''
+      type: heading
+    -
+      key: 'section:3d20ce59-1bf4-4cb2-a4b9-1c04d290e5ad' # Products
+      type: native
+    -
+      heading: ''
+      type: heading
+    -
+      key: 'section:8c1af673-0f01-4434-a6f0-86f01675d799' # Pages
+      type: native
+    -
+      heading: Channels
+      type: heading
+    -
+      key: 'section:86faf121-d218-4348-8ab8-de457b46aa63' # Companies
+      tableAttributes:
+        - 'field:75ec7211-a9c5-4390-963a-9d63dfd0dbd4' # Company Parent
+        - 'field:fa734878-4241-4654-86c9-50964d8a8692' # Company Primary Managers
+        - 'field:8a8d1ecb-3c6c-4ade-a2e7-8e6996e7fe86' # Company Secondary Managers
+        - 'field:a8d84419-f7b9-4d64-b7cb-ce827c7ca810' # Company Remaining Licences
+      type: native
+    -
+      key: 'section:bcf0ea1d-9495-423e-ac83-ef089790460c' # Teams
+      tableAttributes:
+        - 'field:5839b521-ccd0-4768-bbe4-ef59335fb732' # Team Primary Manager
+      type: native
+    -
+      key: singles
+      type: native
+    -
+      key: 'section:1d590683-b16e-4955-be62-315accb3e628' # Reports
+      type: native
+    -
+      key: 'section:51a18e4b-1a36-4210-8769-a5b8f28f3a5f' # Attempts
+      tableAttributes:
+        - 'field:fbd50700-a63f-4a13-b729-1947510b8a14' # Attempt Unit
+        - postDate
+      type: native
+fs:
+  data:
+    hasUrls: false
+    name: Data
+    settings:
+      path: '@assetsPath/data'
+    type: craft\fs\Local
+    url: null
+  evidence:
+    hasUrls: false
+    name: Evidence
+    settings:
+      path: '@assetsPath/evidence'
+    type: craft\fs\Local
+    url: null
+  photos:
+    hasUrls: true
+    name: Photos
+    settings:
+      path: '@basePath/html/assets/photos'
+    type: craft\fs\Local
+    url: /assets/photos
+  theme:
+    hasUrls: true
+    name: Theme
+    settings:
+      path: '@basePath/html/assets/theme'
+    type: craft\fs\Local
+    url: /assets/theme/
+  uploads:
+    hasUrls: true
+    name: Uploads
+    settings:
+      path: '@basePath/html/assets/uploads'
+    type: craft\fs\Local
+    url: /assets/uploads/
 meta:
   __names__:
     0ab87047-3af7-4556-92f5-2a8f396e025a: 'Data Clean Username' # Data Clean Username
@@ -110,6 +264,7 @@ meta:
     9bbb42a9-a0e6-4d9b-8029-3d0c95243dae: 'Users [Taskbook Pending]' # Users [Taskbook Pending]
     09dd9f6b-4143-4e66-adc3-f156a34cdfe0: Reviewer # Reviewer
     9e4f32de-898b-4f03-b31a-af2c18541d54: Dashboard # Dashboard
+    9e1556e3-de1c-4484-9445-5878b2162535: Simple # Simple
     09efb818-9488-45a7-b860-1fc9d3c99155: Question # Question
     013c6627-71a4-44cd-a46e-06e43e886a59: 'Payment ID' # Payment ID
     14b8c677-a8a8-4df3-a74e-a30106bd5398: 'Result Owner' # Result Owner
@@ -448,6 +603,10 @@ plugins:
     edition: standard
     enabled: true
     schemaVersion: 1.0.1
+  servd-asset-storage:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0
   sp:
     edition: standard
     enabled: true

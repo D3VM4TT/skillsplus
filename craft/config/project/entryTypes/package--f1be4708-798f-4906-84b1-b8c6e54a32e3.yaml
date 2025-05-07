@@ -27,7 +27,7 @@ fieldLayouts:
             tip: null
             title: null
             type: craft\fieldlayoutelements\entries\EntryTitleField
-            uid: bed78404-7611-4385-b20e-84df695f423f
+            uid: 7d468b3b-98f2-477c-8186-3d37f841559a
             userCondition: null
             warning: null
             width: 100
@@ -39,7 +39,7 @@ fieldLayouts:
             required: true
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 7a683967-6b05-462d-87f2-d3f23cd1ce24
+            uid: 381d7007-04e4-4a8f-9b11-93c48551a3a5
             userCondition: null
             warning: null
             width: 25
@@ -51,7 +51,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 4ed1f107-89b5-4065-962a-dc66b5ead266
+            uid: 4338a065-efd0-47fd-a57f-a2b9209ef159
             userCondition: null
             warning: null
             width: 25
@@ -63,7 +63,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 1980e734-5480-4744-bfb3-92888bfb5ca0
+            uid: 7611a4f3-aa33-485b-8df6-6dc1aa94f59d
             userCondition: null
             warning: null
             width: 25
@@ -75,7 +75,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: a5eb2f01-87a7-4752-b2ee-26668b6be19f
+            uid: 8ef522eb-7242-4a21-9c16-580de307097b
             userCondition: null
             warning: null
             width: 25
@@ -87,12 +87,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 49203360-aadf-4791-94fb-a5dc2cd8090a
+            uid: e4888472-6cd4-4667-84a9-79aec4cb139c
             userCondition: null
             warning: null
             width: 100
         name: Modules
-        uid: d69fb72e-1f45-42e8-a10a-f9fae0570b2c
+        uid: 7e29f947-5619-428f-b89e-fa5f50c909ef
         userCondition: null
       -
         elementCondition: null
@@ -105,7 +105,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: b76decde-219a-41d2-8220-132a8a6f7381
+            uid: 93693c94-22f6-47b3-8d88-43e4b74a5937
             userCondition: null
             warning: null
             width: 50
@@ -117,7 +117,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 4a251a9b-6aa5-407d-b167-95268aa8b078
+            uid: c635f13a-8e3f-4e73-8916-8339506b1c0e
             userCondition: null
             warning: null
             width: 50
@@ -129,7 +129,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: d0984e93-6cb1-4a24-96e2-5a44fb49aef1
+            uid: 5e560d55-a5d2-48b6-8865-f57d8b7e3d26
             userCondition: null
             warning: null
             width: 100
@@ -141,7 +141,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: c3b18fb2-3687-4023-bf11-509e8a36a3e6
+            uid: 1b7cabbe-c938-4dc2-842a-9c6d4ca7998f
             userCondition: null
             warning: null
             width: 50
@@ -153,12 +153,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 0bcf286e-7518-4efb-bba1-8567c3207b3c
+            uid: 0b39d2cd-ba8f-4355-9b72-11d09e73aa3c
             userCondition: null
             warning: null
             width: 50
         name: Reviews
-        uid: faa20d66-2209-4fd6-a5cf-f09a2dfddab7
+        uid: 8a499a29-403f-48a6-a71f-c945fab60ed0
         userCondition: null
       -
         elementCondition: null
@@ -171,12 +171,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 8885df66-2e1f-480e-8dab-78e526158368
+            uid: e2eea4c3-7565-491f-a0ce-b07cf1d7bc26
             userCondition: null
             warning: null
             width: 100
         name: Assessment
-        uid: 6fbbacb3-bd9b-481e-9a5a-2e66a368abbe
+        uid: 416cc00a-0bd8-4c69-be0a-7c4b7f885321
         userCondition: null
       -
         elementCondition: null
@@ -189,7 +189,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: d8967ae1-7805-4fc4-832b-1d9fc50d882a
+            uid: dc575a5f-df28-4caf-ab88-c6ccc4c5c69d
             userCondition: null
             warning: null
             width: 50
@@ -201,7 +201,7 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: d3cc3b29-36d7-4b3f-8a93-dbedae714665
+            uid: 6f616e69-28bd-48a5-985f-5883fe3105fc
             userCondition: null
             warning: null
             width: 50
@@ -213,12 +213,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 9ba025dc-c673-49d0-bd67-016407fdd3ad
+            uid: c1157736-d979-4317-a6f1-a974934a882e
             userCondition: null
             warning: null
             width: 100
         name: Payments
-        uid: 300d4ce6-7822-4b15-9881-14da01721100
+        uid: cbb56b48-af9f-410a-8aa3-dcf3b0b14c91
         userCondition: null
       -
         elementCondition: null
@@ -231,12 +231,12 @@ fieldLayouts:
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: 3383cd36-3658-4892-9c81-bbaeb5e8c847
+            uid: e9bc655d-68d9-4199-b75e-ea102697eb9e
             userCondition: null
             warning: null
             width: 100
         name: Log
-        uid: 9fe8b175-e716-415e-b16e-11f50d147220
+        uid: 3a7e8288-d6de-44a4-a528-12f29b8ad820
         userCondition: null
 handle: package
 hasTitleField: true

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85060afdbd398f1b8b600b61b677fb30",
+    "content-hash": "bfaab32615e4e5537b630f7b9770e648",
     "packages": [
         {
             "name": "amici/craft-super-pdf",
@@ -66,6 +66,114 @@
                 "rss": "https://github.com/amici-infotech/craft-super-pdf/commits/v2.atom"
             },
             "time": "2024-06-29T07:07:10+00:00"
+        },
+        {
+            "name": "aws/aws-crt-php",
+            "version": "v1.2.7",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/awslabs/aws-crt-php/zipball/d71d9906c7bb63a28295447ba12e74723bd3730e",
+                "reference": "d71d9906c7bb63a28295447ba12e74723bd3730e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "suggest": {
+                "ext-awscrt": "Make sure you install awscrt native extension to use any of the functionality."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "AWS SDK Common Runtime Team",
+                    "email": "aws-sdk-common-runtime@amazon.com"
+                }
+            ],
+            "description": "AWS Common Runtime for PHP",
+            "homepage": "https://github.com/awslabs/aws-crt-php",
+            "keywords": [
+                "amazon",
+                "aws",
+                "crt",
+                "sdk"
+            ],
+            "time": "2024-10-18T22:15:13+00:00"
+        },
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.319.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b39a56786bef9e922c8bdd0e47c73ba828cc512e",
+                "reference": "b39a56786bef9e922c8bdd0e47c73ba828cc512e",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-crt-php": "^1.2.3",
+                "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-simplexml": "*",
+                "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
+                "guzzlehttp/promises": "^1.4.0 || ^2.0",
+                "guzzlehttp/psr7": "^1.9.1 || ^2.4.5",
+                "mtdowling/jmespath.php": "^2.6",
+                "php": ">=7.2.5",
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "suggest": {
+                "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
+                "doctrine/cache": "To use the DoctrineCacheAdapter",
+                "ext-curl": "To send requests using cURL",
+                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
+                "ext-sockets": "To use client-side monitoring"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Aws\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "src/data/"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Amazon Web Services",
+                    "homepage": "http://aws.amazon.com"
+                }
+            ],
+            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
+            "homepage": "http://aws.amazon.com/sdkforphp",
+            "keywords": [
+                "amazon",
+                "aws",
+                "cloud",
+                "dynamodb",
+                "ec2",
+                "glacier",
+                "s3",
+                "sdk"
+            ],
+            "time": "2024-08-13T18:04:50+00:00"
         },
         {
             "name": "besteadfast/craft-preparse-field",
@@ -862,6 +970,50 @@
                 "rss": "https://github.com/craftcms/cms/releases.atom"
             },
             "time": "2025-05-06T17:37:30+00:00"
+        },
+        {
+            "name": "craftcms/flysystem",
+            "version": "1.0.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/craftcms/flysystem/zipball/04ad4b85a04d4c660b33ee8859e3db0cee6c3c85",
+                "reference": "04ad4b85a04d4c660b33ee8859e3db0cee6c3c85",
+                "shasum": ""
+            },
+            "require": {
+                "craftcms/cms": "^4.0.0-alpha.1",
+                "league/flysystem": "^3.0.0",
+                "php": "^8.0.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "craft\\flysystem\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pixel & Tonic",
+                    "homepage": "https://pixelandtonic.com/"
+                }
+            ],
+            "description": "Base Flysystem implementation for Craft CMS",
+            "keywords": [
+                "craftcms",
+                "flysystem",
+                "yii2"
+            ],
+            "support": {
+                "email": "support@craftcms.com",
+                "issues": "https://github.com/craftcms/flysystem/issues?state=open",
+                "source": "https://github.com/craftcms/flysystem",
+                "docs": "https://github.com/craftcms/flysystem",
+                "rss": "https://github.com/craftcms/flysystem/commits/master.atom"
+            },
+            "time": "2024-03-22T18:38:04+00:00"
         },
         {
             "name": "craftcms/html-field",
@@ -2285,6 +2437,146 @@
             "time": "2025-03-28T06:52:04+00:00"
         },
         {
+            "name": "league/flysystem",
+            "version": "3.29.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/edc1bb7c86fab0776c3287dbd19b5fa278347319",
+                "reference": "edc1bb7c86fab0776c3287dbd19b5fa278347319",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem-local": "^3.0.0",
+                "league/mime-type-detection": "^1.0.0",
+                "php": "^8.0.2"
+            },
+            "conflict": {
+                "async-aws/core": "<1.19.0",
+                "async-aws/s3": "<1.14.0",
+                "aws/aws-sdk-php": "3.209.31 || 3.210.0",
+                "guzzlehttp/guzzle": "<7.0",
+                "guzzlehttp/ringphp": "<1.1.1",
+                "phpseclib/phpseclib": "3.0.15",
+                "symfony/http-client": "<5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "File storage abstraction for PHP",
+            "keywords": [
+                "WebDAV",
+                "aws",
+                "cloud",
+                "file",
+                "files",
+                "filesystem",
+                "filesystems",
+                "ftp",
+                "s3",
+                "sftp",
+                "storage"
+            ],
+            "time": "2024-10-08T08:58:34+00:00"
+        },
+        {
+            "name": "league/flysystem-aws-s3-v3",
+            "version": "3.29.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/c6ff6d4606e48249b63f269eba7fabdb584e76a9",
+                "reference": "c6ff6d4606e48249b63f269eba7fabdb584e76a9",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.295.10",
+                "league/flysystem": "^3.10.0",
+                "league/mime-type-detection": "^1.0.0",
+                "php": "^8.0.2"
+            },
+            "conflict": {
+                "guzzlehttp/guzzle": "<7.0",
+                "guzzlehttp/ringphp": "<1.1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\AwsS3V3\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "AWS S3 filesystem adapter for Flysystem.",
+            "keywords": [
+                "Flysystem",
+                "aws",
+                "file",
+                "files",
+                "filesystem",
+                "s3",
+                "storage"
+            ],
+            "time": "2024-08-17T13:10:48+00:00"
+        },
+        {
+            "name": "league/flysystem-local",
+            "version": "3.29.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/e0e8d52ce4b2ed154148453d321e97c8e931bd27",
+                "reference": "e0e8d52ce4b2ed154148453d321e97c8e931bd27",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "league/flysystem": "^3.0.0",
+                "league/mime-type-detection": "^1.0.0",
+                "php": "^8.0.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Local\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Local filesystem adapter for Flysystem.",
+            "keywords": [
+                "Flysystem",
+                "file",
+                "files",
+                "filesystem",
+                "local"
+            ],
+            "time": "2024-08-09T21:24:39+00:00"
+        },
+        {
             "name": "league/html-to-markdown",
             "version": "5.1.1",
             "dist": {
@@ -2336,6 +2628,37 @@
                 "markdown"
             ],
             "time": "2023-07-12T21:21:09+00:00"
+        },
+        {
+            "name": "league/mime-type-detection",
+            "version": "1.16.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/mime-type-detection/zipball/2d6702ff215bf922936ccc1ad31007edc76451b9",
+                "reference": "2d6702ff215bf922936ccc1ad31007edc76451b9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\MimeTypeDetection\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Mime-type detection for Flysystem",
+            "time": "2024-09-21T08:32:55+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -2866,6 +3189,58 @@
                 "psr-3"
             ],
             "time": "2024-11-12T12:43:37+00:00"
+        },
+        {
+            "name": "mtdowling/jmespath.php",
+            "version": "2.8.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/a2a865e05d5f420b50cc2f85bb78d565db12a6bc",
+                "reference": "a2a865e05d5f420b50cc2f85bb78d565db12a6bc",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2.5 || ^8.0",
+                "symfony/polyfill-mbstring": "^1.17"
+            },
+            "bin": [
+                "bin/jp.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/JmesPath.php"
+                ],
+                "psr-4": {
+                    "JmesPath\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Declaratively specify how to extract elements from a JSON document",
+            "keywords": [
+                "json",
+                "jsonpath"
+            ],
+            "time": "2024-09-04T18:46:31+00:00"
         },
         {
             "name": "mundschenk-at/php-typography",
@@ -4298,6 +4673,58 @@
                 "unix"
             ],
             "time": "2023-09-03T09:24:00+00:00"
+        },
+        {
+            "name": "servd/craft-asset-storage",
+            "version": "3.5.25",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/servdhost/craft-asset-storage/zipball/d94863348f10f33a237acf07f9ba3b5dbbed795c",
+                "reference": "d94863348f10f33a237acf07f9ba3b5dbbed795c",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "3.319.4",
+                "craftcms/cms": "^4.0.0-beta.2",
+                "craftcms/flysystem": "^1.0.0",
+                "league/flysystem-aws-s3-v3": "^3.0.0",
+                "php": "^8.0.2",
+                "yiisoft/yii2-redis": "^2.0.0"
+            },
+            "type": "craft-plugin",
+            "extra": {
+                "name": "Servd Assets and Helpers",
+                "handle": "servd-asset-storage",
+                "documentationUrl": "https://github.com/servdhost/craft-asset-storage"
+            },
+            "autoload": {
+                "psr-4": {
+                    "servd\\AssetStorage\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Servd",
+                    "homepage": "https://servd.host/"
+                }
+            ],
+            "description": "Servd Asset Storage and Helpers integration for Craft CMS",
+            "keywords": [
+                "cms",
+                "craftcms",
+                "servd",
+                "yii2"
+            ],
+            "support": {
+                "email": "hello@servd.host",
+                "issues": "https://github.com/servdhost/craft-asset-storage/issues",
+                "source": "https://github.com/servdhost/craft-asset-storage",
+                "docs": "https://github.com/servdhost/craft-asset-storage"
+            },
+            "time": "2025-02-13T14:32:59+00:00"
         },
         {
             "name": "symfony/console",
@@ -7171,6 +7598,80 @@
                 "yii"
             ],
             "time": "2024-04-29T09:40:52+00:00"
+        },
+        {
+            "name": "yiisoft/yii2-redis",
+            "version": "2.0.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-redis.git",
+                "reference": "81a4a562873bca9f383d5b95db57d161d5828e24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-redis/zipball/81a4a562873bca9f383d5b95db57d161d5828e24",
+                "reference": "81a4a562873bca9f383d5b95db57d161d5828e24",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "yiisoft/yii2": "~2.0.39"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "<7",
+                "yiisoft/yii2-dev": "~2.0.39"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\redis\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc"
+                }
+            ],
+            "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
+            "keywords": [
+                "active-record",
+                "cache",
+                "redis",
+                "session",
+                "yii2"
+            ],
+            "support": {
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/yii2-redis/issues",
+                "source": "https://github.com/yiisoft/yii2-redis",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/yiisoft/yii2-redis",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-02-13T21:03:06+00:00"
         },
         {
             "name": "yiisoft/yii2-symfonymailer",
